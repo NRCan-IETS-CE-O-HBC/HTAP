@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class Object - RDoc Documentation</title>
+
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">BasicObject
+  
+</div>
+
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">Benchmark</span>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-declare_regexes_and_replacements">#declare_regexes_and_replacements</a>
+    
+    <li ><a href="#method-i-false-3F">#false?</a>
+    
+    <li ><a href="#method-i-get_elements_from_filename">#get_elements_from_filename</a>
+    
+    <li ><a href="#method-i-get_format">#get_format</a>
+    
+    <li ><a href="#method-i-get_lines">#get_lines</a>
+    
+    <li ><a href="#method-i-get_output">#get_output</a>
+    
+    <li ><a href="#method-i-make_incrementer">#make_incrementer</a>
+    
+    <li ><a href="#method-i-most_common_words">#most_common_words</a>
+    
+    <li ><a href="#method-i-perform_replacements_on_contents">#perform_replacements_on_contents</a>
+    
+    <li ><a href="#method-i-perform_replacements_on_filename-21">#perform_replacements_on_filename!</a>
+    
+    <li ><a href="#method-i-return_proc">#return_proc</a>
+    
+    <li ><a href="#method-i-softwrap">#softwrap</a>
+    
+    <li ><a href="#method-i-softwrap_line">#softwrap_line</a>
+    
+    <li ><a href="#method-i-strip_tags">#strip_tags</a>
+    
+    <li ><a href="#method-i-tag_count">#tag_count</a>
+    
+    <li ><a href="#method-i-to_b">#to_b</a>
+    
+    <li ><a href="#method-i-true-3F">#true?</a>
+    
+    <li ><a href="#method-i-well_formed-3F">#well_formed?</a>
+    
+    <li ><a href="#method-i-word_count">#word_count</a>
+    
+    <li ><a href="#method-i-word_count_for_file">#word_count_for_file</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-Object">
+  <h1 id="class-Object" class="class">
+    class Object
+  </h1>
+
+  <section class="description">
+    
+<p>This is intended merely to add handy true? and false? methods to every
+object. The most succinct way seemed to be declaring these particular
+methods in this order. Note that <a
+href="Object.html#method-i-to_b">#to_b</a> (“to Boolean”) is an alias to
+the true?() method.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="BAR_LENGTH">BAR_LENGTH
+        
+        <dd>
+        
+      
+        <dt id="CHOMP_TAG">CHOMP_TAG
+        
+        <dd><p>xml_text_extractor.rb</p>
+        
+      
+        <dt id="DAYS_IN_A_PAY_PERIOD">DAYS_IN_A_PAY_PERIOD
+        
+        <dd><p>check_payday.rb</p>
+        
+      
+        <dt id="DONT_PLAY_FILE_PROC">DONT_PLAY_FILE_PROC
+        
+        <dd>
+        
+      
+        <dt id="EMPTY_STRING">EMPTY_STRING
+        
+        <dd><p>html_tidy.rb cleans up html files</p>
+        
+      
+        <dt id="FUDGE_FACTOR">FUDGE_FACTOR
+        
+        <dd><p>to match these calculations with the output of some word processors</p>
+        
+      
+        <dt id="FUNC_OF_FILE">FUNC_OF_FILE
+        
+        <dd>
+        
+      
+        <dt id="LOG_FILE">LOG_FILE
+        
+        <dd><p>a/usr/bin/env ruby</p>
+
+<pre>radio_player2.rb</pre>
+        
+      
+        <dt id="PLAYERS">PLAYERS
+        
+        <dd>
+        
+      
+        <dt id="PLAY_FILE_PROC">PLAY_FILE_PROC
+        
+        <dd><p>a/usr/bin/env ruby</p>
+
+<pre>radio_player1.rb</pre>
+        
+      
+        <dt id="SECONDS_IN_A_DAY">SECONDS_IN_A_DAY
+        
+        <dd>
+        
+      
+        <dt id="SIMPLE_TAG_REPLACEMENTS">SIMPLE_TAG_REPLACEMENTS
+        
+        <dd>
+        
+      
+        <dt id="TIDY_EXTENSION">TIDY_EXTENSION
+        
+        <dd>
+        
+      
+        <dt id="TIDY_OPTIONS">TIDY_OPTIONS
+        
+        <dd>
+        
+      
+        <dt id="UNWANTED_REGEXES">UNWANTED_REGEXES
+        
+        <dd>
+        
+      
+        <dt id="UPPER_OF_FILE">UPPER_OF_FILE
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-declare_regexes_and_replacements" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">declare_regexes_and_replacements</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="declare_regexes_and_replacements-source">
+            <pre><span class="ruby-comment"># File html_tidy.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">declare_regexes_and_replacements</span>()
+  <span class="ruby-identifier">replacement_of</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>()
+  <span class="ruby-constant">UNWANTED_REGEXES</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">discard</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">replacement_of</span>[<span class="ruby-identifier">discard</span>] = <span class="ruby-constant">EMPTY_STRING</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">replacement_of</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-constant">SIMPLE_TAG_REPLACEMENTS</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-false-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">false?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="false-3F-source">
+            <pre><span class="ruby-comment"># File boolean_golf.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">false?</span>()
+  <span class="ruby-keyword">not</span> <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_elements_from_filename" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_elements_from_filename</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns DOM elements of a given filename.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="get_elements_from_filename-source">
+            <pre><span class="ruby-comment"># File xml_tag_counter.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_elements_from_filename</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">filename</span>)).<span class="ruby-identifier">elements</span>()
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_format" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_format</span><span
+            class="method-args">(lines)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_format-source">
+            <pre><span class="ruby-comment"># File line_num.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_format</span>(<span class="ruby-identifier">lines</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;%0#{lines.size.to_s.size}d&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_lines" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_lines</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>line_num.rb</p>
+          
+          
+
+          
+          <div class="method-source-code" id="get_lines-source">
+            <pre><span class="ruby-comment"># File line_num.rb, line 4</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_lines</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-string">&#39;r&#39;</span>).<span class="ruby-identifier">readlines</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-get_output" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_output</span><span
+            class="method-args">(lines)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_output-source">
+            <pre><span class="ruby-comment"># File line_num.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_output</span>(<span class="ruby-identifier">lines</span>)
+  <span class="ruby-identifier">format</span> = <span class="ruby-identifier">get_format</span>(<span class="ruby-identifier">lines</span>)
+  <span class="ruby-identifier">output</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span>,<span class="ruby-identifier">i</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">output</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{sprintf(format, i+1)}: #{line}&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">output</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-make_incrementer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">make_incrementer</span><span
+            class="method-args">(delta)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>make_incrementer.rb</p>
+          
+          
+
+          
+          <div class="method-source-code" id="make_incrementer-source">
+            <pre><span class="ruby-comment"># File make_incrementer.rb, line 4</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">make_incrementer</span>(<span class="ruby-identifier">delta</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">delta</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-most_common_words" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">most_common_words</span><span
+            class="method-args">(input, limit=25)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="most_common_words-source">
+            <pre><span class="ruby-comment"># File most_common_words.rb, line 13</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">most_common_words</span>(<span class="ruby-identifier">input</span>, <span class="ruby-identifier">limit</span>=<span class="ruby-value">25</span>)
+  <span class="ruby-identifier">freq</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>()
+  <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">input</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\W/</span>)
+  <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">freq</span>[<span class="ruby-identifier">word</span>] = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">count_of</span>(<span class="ruby-identifier">word</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">word</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">words</span> = <span class="ruby-identifier">freq</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">freq</span>[<span class="ruby-identifier">word</span>]
+  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">reverse</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word</span><span class="ruby-operator">|</span>
+    <span class="ruby-node">&quot;#{word} #{freq[word]}&quot;</span> 
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">words</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">limit</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-perform_replacements_on_contents" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">perform_replacements_on_contents</span><span
+            class="method-args">(contents)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This lacks a ! suffix, because it duplicates the argument, and  returns the
+changes made to that duplicate, rather than overwriting.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="perform_replacements_on_contents-source">
+            <pre><span class="ruby-comment"># File html_tidy.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">perform_replacements_on_contents</span>(<span class="ruby-identifier">contents</span>)
+  <span class="ruby-identifier">output</span> = <span class="ruby-identifier">contents</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-identifier">replacement_of</span> = <span class="ruby-identifier">declare_regexes_and_replacements</span>()
+  <span class="ruby-identifier">replacement_of</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_s</span> }.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">regex</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">replace</span> = <span class="ruby-identifier">replacement_of</span>[<span class="ruby-identifier">regex</span>]
+    <span class="ruby-identifier">output</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-identifier">regex</span>, <span class="ruby-identifier">replace</span>) }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">output</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-perform_replacements_on_filename-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">perform_replacements_on_filename!</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This has the ! suffix, because it destructively writes into the filename
+argument provided.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="perform_replacements_on_filename-21-source">
+            <pre><span class="ruby-comment"># File html_tidy.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">perform_replacements_on_filename!</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">system</span>(<span class="ruby-string">&#39;which tidy &gt; /dev/null&#39;</span>))
+    <span class="ruby-identifier">new_filename</span> = <span class="ruby-identifier">filename</span> <span class="ruby-operator">+</span> <span class="ruby-constant">TIDY_EXTENSION</span>
+    <span class="ruby-identifier">system</span>(<span class="ruby-node">&quot;tidy #{TIDY_OPTIONS} #{filename} &gt; #{new_filename} 2&gt; /dev/null&quot;</span>) 
+    <span class="ruby-identifier">contents</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">new_filename</span>, <span class="ruby-string">&#39;r&#39;</span>).<span class="ruby-identifier">readlines</span>()
+    <span class="ruby-identifier">new_contents</span> = <span class="ruby-identifier">perform_replacements_on_contents</span>(<span class="ruby-identifier">contents</span>)
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">new_filename</span>, <span class="ruby-string">&#39;w&#39;</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-identifier">new_contents</span>) }
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;Please install tidy.\n&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-return_proc" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">return_proc</span><span
+            class="method-args">(criterion, further_criterion=1)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>return_proc.rb</p>
+          
+          
+
+          
+          <div class="method-source-code" id="return_proc-source">
+            <pre><span class="ruby-comment"># File return_proc.rb, line 4</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">return_proc</span>(<span class="ruby-identifier">criterion</span>, <span class="ruby-identifier">further_criterion</span>=<span class="ruby-value">1</span>)
+
+  <span class="ruby-identifier">proc_of_criterion</span> = {
+    <span class="ruby-string">&#39;div_by?&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">if</span> (<span class="ruby-identifier">i</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">further_criterion</span>).<span class="ruby-identifier">zero?</span> },
+    <span class="ruby-string">&#39;is?&#39;</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">lambda</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">further_criterion</span> }
+  }
+
+  <span class="ruby-comment"># allow &#39;is_even&#39; as an alias for divisible by 2</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">return_proc</span>(<span class="ruby-string">&#39;div_by?&#39;</span>, <span class="ruby-value">2</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">criterion</span> <span class="ruby-operator">==</span> (<span class="ruby-string">&#39;is_even&#39;</span>)
+ 
+  <span class="ruby-identifier">proc_to_return</span> = <span class="ruby-identifier">proc_of_criterion</span>[<span class="ruby-identifier">criterion</span>]
+  <span class="ruby-identifier">fail</span> <span class="ruby-node">&quot;I don&#39;t understand the criterion #{criterion}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">proc_to_return</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">proc_to_return</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-softwrap" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">softwrap</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>“Softwrap” a filename argument, preserving “nn” between paragraphs but
+compressing “n” and other whitespace within each paragraph into a single
+space.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="softwrap-source">
+            <pre><span class="ruby-comment"># File softwrap.rb, line 9</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">softwrap</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-string">&#39;r&#39;</span>).<span class="ruby-identifier">readlines</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-string">&#39;&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">output</span>,<span class="ruby-identifier">line</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">output</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">softwrap_line</span>(<span class="ruby-identifier">line</span>)
+  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/\t+/</span>, <span class="ruby-string">&#39; &#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">/ +/</span>, <span class="ruby-string">&#39; &#39;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-softwrap_line" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">softwrap_line</span><span
+            class="method-args">(line)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Return “nn” if the <strong>String</strong> argument has no length after
+being chomped (signifying that it was a blank line separating paragraphs),
+otherwise  return the chomped line with a trailing space for  padding.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="softwrap_line-source">
+            <pre><span class="ruby-comment"># File softwrap.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">softwrap_line</span>(<span class="ruby-identifier">line</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;\n\n&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;\n&quot;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">line</span>.<span class="ruby-identifier">chomp</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39; &#39;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-strip_tags" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">strip_tags</span><span
+            class="method-args">(elements)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a <strong>String</strong> consisting of the text of a given XML
+document  with the tags stripped.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="strip_tags-source">
+            <pre><span class="ruby-comment"># File xml_text_extracter.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">strip_tags</span>(<span class="ruby-identifier">elements</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-string">&#39;&#39;</span> <span class="ruby-keyword">unless</span> (<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">elements</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">tag</span>.<span class="ruby-identifier">texts</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-constant">CHOMP_TAG</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;&#39;</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">strip_tags</span>(<span class="ruby-identifier">tag</span>.<span class="ruby-identifier">elements</span>)
+  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39; &#39;</span>) 
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-tag_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">tag_count</span><span
+            class="method-args">(elements)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a <strong>Hash</strong> with keys of XML tags and values  of those
+tags&#39; counts within a given XML document.  Calls itself recursively on
+each tag&#39;s elements.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="tag_count-source">
+            <pre><span class="ruby-comment"># File xml_tag_counter.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">tag_count</span>(<span class="ruby-identifier">elements</span>)
+  <span class="ruby-identifier">count_of</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">0</span>) <span class="ruby-comment"># note the default value of 0</span>
+  <span class="ruby-identifier">elements</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">tag</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">count_of</span>[<span class="ruby-identifier">tag</span>.<span class="ruby-identifier">name</span>()] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">count_of</span>.<span class="ruby-identifier">merge_totals</span>(<span class="ruby-identifier">tag_count</span>(<span class="ruby-identifier">tag</span>.<span class="ruby-identifier">elements</span>))
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">count_of</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-to_b" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">to_b</span><span
+            class="method-args">()</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Object.html#method-i-true-3F">true?</a>
+        </div>
+        
+      </div>
+
+    
+      <div id="method-i-true-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">true?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="true-3F-source">
+            <pre><span class="ruby-comment"># File boolean_golf.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">true?</span>()
+  <span class="ruby-keyword">not</span> <span class="ruby-identifier">false?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Object.html#method-i-to_b">to_b</a>
+        </div>
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-well_formed-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">well_formed?</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="well_formed-3F-source">
+            <pre><span class="ruby-comment"># File xml_well_formedness_checker.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">well_formed?</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">filename</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-string">&#39;r&#39;</span>).<span class="ruby-identifier">well_formed_xml?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-word_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">word_count</span><span
+            class="method-args">(files)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="word_count-source">
+            <pre><span class="ruby-comment"># File word_count.rb, line 17</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">word_count</span>(<span class="ruby-identifier">files</span>)
+  <span class="ruby-identifier">output</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">total_word_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filename</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">file_word_count</span> = <span class="ruby-identifier">word_count_for_file</span>(<span class="ruby-identifier">filename</span>)
+    <span class="ruby-identifier">output</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{filename} has #{file_word_count} words.\n&quot;</span>
+    <span class="ruby-identifier">total_word_count</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">file_word_count</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment"># each file</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">output</span> <span class="ruby-operator">+</span> 
+    <span class="ruby-string">&#39;-&#39;</span> <span class="ruby-operator">*</span> <span class="ruby-constant">BAR_LENGTH</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;\n&quot;</span> <span class="ruby-operator">+</span> 
+    <span class="ruby-node">&quot;Total word count = #{total_word_count}&quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot; (#{(total_word_count * FUDGE_FACTOR)})&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-word_count_for_file" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">word_count_for_file</span><span
+            class="method-args">(filename)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="word_count_for_file-source">
+            <pre><span class="ruby-comment"># File word_count.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">word_count_for_file</span>(<span class="ruby-identifier">filename</span>)
+  <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-string">&#39;r&#39;</span>)
+  <span class="ruby-identifier">contents</span> = <span class="ruby-identifier">f</span>.<span class="ruby-identifier">read</span>()
+  <span class="ruby-identifier">f</span>.<span class="ruby-identifier">close</span>()
+  <span class="ruby-identifier">spaces</span> = <span class="ruby-identifier">contents</span>.<span class="ruby-identifier">num_matches</span>(<span class="ruby-string">&#39; &#39;</span>)
+  <span class="ruby-identifier">breaks</span> = <span class="ruby-identifier">contents</span>.<span class="ruby-identifier">num_matches</span>(<span class="ruby-string">&quot;\n&quot;</span>)
+  <span class="ruby-identifier">false_doubles</span> = <span class="ruby-identifier">contents</span>.<span class="ruby-identifier">num_matches</span>(<span class="ruby-string">&quot; \n&quot;</span>)
+  <span class="ruby-identifier">double_spaces</span> = <span class="ruby-identifier">contents</span>.<span class="ruby-identifier">num_matches</span>(<span class="ruby-string">&#39;  &#39;</span>)
+  <span class="ruby-identifier">hyphens</span> = <span class="ruby-identifier">contents</span>.<span class="ruby-identifier">num_matches</span>(<span class="ruby-string">&#39;-&#39;</span>)
+  <span class="ruby-identifier">false_doubles</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">double_spaces</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">hyphens</span>
+  <span class="ruby-identifier">words</span> = <span class="ruby-identifier">spaces</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">breaks</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">false_doubles</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">words</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

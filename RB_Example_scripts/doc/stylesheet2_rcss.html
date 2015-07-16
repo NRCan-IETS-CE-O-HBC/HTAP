@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>stylesheet2.rcss - RDoc Documentation</title>
+
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./extras/DOS_file_txt.html">DOS_file</a>
+  
+    <li><a href="./extras/Einstein_quotes_txt.html">Einstein_quotes</a>
+  
+    <li><a href="./extras/currency_exchange_rates/CAD_yaml.html">CAD.yaml</a>
+  
+    <li><a href="./extras/currency_exchange_rates/INR_yaml.html">INR.yaml</a>
+  
+    <li><a href="./extras/currency_exchange_rates/USD_yaml.html">USD.yaml</a>
+  
+    <li><a href="./extras/eh_html.html">eh.html</a>
+  
+    <li><a href="./extras/httpd_conf/rcss_txt.html">rcss</a>
+  
+    <li><a href="./extras/httpd_conf/rhtml_txt.html">rhtml</a>
+  
+    <li><a href="./mod_ruby_demo_conf.html">mod_ruby_demo.conf</a>
+  
+    <li><a href="./mod_ruby_demo_rhtml.html">mod_ruby_demo.rhtml</a>
+  
+    <li><a href="./stylesheet_rcss.html">stylesheet.rcss</a>
+  
+    <li><a href="./stylesheet2_rcss.html">stylesheet2.rcss</a>
+  
+    <li><a href="./tests/CVS/Entries.html">Entries</a>
+  
+    <li><a href="./tests/CVS/Repository.html">Repository</a>
+  
+    <li><a href="./tests/CVS/Root.html">Root</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page stylesheet2.rcss">
+
+<p>This file outputs CSS data customized by user_agent using eruby.</p>
+
+<p>&lt;% # define functions def width(type, user_agent)</p>
+
+<pre class="ruby"><span class="ruby-identifier">small</span> = {
+  <span class="ruby-string">&#39;alpha&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">11.8</span>,
+  <span class="ruby-string">&#39;beta&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-value">15.8</span>,
+}
+<span class="ruby-identifier">large</span> = {
+  <span class="ruby-string">&#39;alpha&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">14</span>,
+  <span class="ruby-string">&#39;beta&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-value">18</span>,
+}
+<span class="ruby-identifier">palm</span> = {
+  <span class="ruby-string">&#39;alpha&#39;</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">5</span>,
+  <span class="ruby-string">&#39;beta&#39;</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-value">7</span>,
+}
+<span class="ruby-identifier">width</span> = 
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">user_agent</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Windows/</span>)
+    <span class="ruby-identifier">small</span>[<span class="ruby-identifier">type</span>] <span class="ruby-keyword">if</span> (<span class="ruby-identifier">user_agent</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Opera/</span>)
+    <span class="ruby-identifier">small</span>[<span class="ruby-identifier">type</span>] <span class="ruby-keyword">if</span> (<span class="ruby-identifier">user_agent</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/MSIE 6/</span>)
+    <span class="ruby-identifier">large</span>[<span class="ruby-identifier">type</span>] <span class="ruby-keyword">if</span> (<span class="ruby-identifier">user_agent</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/MSIE/</span>)
+    <span class="ruby-identifier">small</span>[<span class="ruby-identifier">type</span>]
+  <span class="ruby-keyword">elsif</span> (<span class="ruby-identifier">user_agent</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/Palm/</span>)
+    <span class="ruby-identifier">palm</span>[<span class="ruby-identifier">type</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">small</span>[<span class="ruby-identifier">type</span>]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">return</span> <span class="ruby-node">%Q[\twidth:#{width}em;]</span>
+</pre>
+
+<p>end</p>
+
+<p>def margin_left(user_agent)</p>
+
+<pre>margin = 
+  if (user_agent =~ /Mac/)
+    3   if (user_agent =~ /Opera/)
+    1   if (user_agent =~ /MSIE/)
+    2.5 if (user_agent =~ /Safari/)
+    2   if (user_agent =~ /Gecko/)
+    2.7
+  elsif (user_agent =~ /Windows/)
+    1.5
+  else
+    2   if (user_agent =~ /Opera/)
+    2   if (user_agent =~ /onqueror/)
+    1.8 if (user_agent =~ /Galeon/)
+    2.5
+  end
+return %Q[margin-left:-#{margin}em;]</pre>
+
+<p>end %&gt;</p>
+
+<p>li { &lt;%= <a href="'HTTP_USER_AGENT'">margin_left(ENV</a>) %&gt; }</p>
+
+<p>navAlpha {</p>
+
+<pre>position:absolute;
+&lt;%= width(&#39;alpha&#39;, ENV[&#39;HTTP_USER_AGENT&#39;]) %&gt;
+top:2em;
+left:2em;
+border:0.5em double #333;
+background-color:#ada;
+padding:1em;
+z-index:2;</pre>
+
+<p>}</p>
+
+<p>navBeta {</p>
+
+<pre>position:absolute;
+&lt;%= width(&#39;beta&#39;, ENV[&#39;HTTP_USER_AGENT&#39;]) %&gt;
+top:2em;
+right:2em;
+border:0.5em double #333;
+background-color:#ada;
+padding:1em;
+z-index:1;</pre>
+
+<p>}</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

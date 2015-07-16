@@ -1,0 +1,7 @@
+  # handle *.rcss as eruby files.
+  <Files *.rcss>
+    AddType text/css .rcss
+    AddType application/x-httpd-ruby *.rb
+    SetHandler ruby-object
+    RubyHandler Apache::ERubyRun.instance
+  </Files>

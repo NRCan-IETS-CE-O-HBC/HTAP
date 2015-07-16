@@ -1,0 +1,75 @@
+/*
+This file outputs CSS data customized by user_agent using eruby.
+*/
+<%
+# define functions
+def width(type, user_agent)
+  small = {
+    'alpha' => 11.8,
+    'beta'  => 15.8,
+  }
+  large = {
+    'alpha' => 14,
+    'beta'  => 18,
+  }
+  palm = {
+    'alpha' => 5,
+    'beta'  => 7,
+  }
+  width = 
+    if (user_agent =~ /Windows/)
+      small[type] if (user_agent =~ /Opera/)
+      small[type] if (user_agent =~ /MSIE 6/)
+      large[type] if (user_agent =~ /MSIE/)
+      small[type]
+    elsif (user_agent =~ /Palm/)
+      palm[type]
+    else
+      small[type]
+    end
+  return %Q[\twidth:#{width}em;]
+end
+
+def margin_left(user_agent)
+  margin = 
+    if (user_agent =~ /Mac/)
+      3   if (user_agent =~ /Opera/)
+      1   if (user_agent =~ /MSIE/)
+      2.5 if (user_agent =~ /Safari/)
+      2   if (user_agent =~ /Gecko/)
+      2.7
+    elsif (user_agent =~ /Windows/)
+      1.5
+    else
+      2   if (user_agent =~ /Opera/)
+      2   if (user_agent =~ /onqueror/)
+      1.8 if (user_agent =~ /Galeon/)
+      2.5
+    end
+  return %Q[margin-left:-#{margin}em;]
+end
+%>
+
+li { <%= margin_left(ENV['HTTP_USER_AGENT']) %> }
+
+#navAlpha {
+  position:absolute;
+  <%= width('alpha', ENV['HTTP_USER_AGENT']) %>
+  top:2em;
+  left:2em;
+  border:0.5em double #333;
+  background-color:#ada;
+  padding:1em;
+  z-index:2;
+}    
+
+#navBeta {
+  position:absolute;
+  <%= width('beta', ENV['HTTP_USER_AGENT']) %>
+  top:2em;
+  right:2em;
+  border:0.5em double #333;
+  background-color:#ada;
+  padding:1em;
+  z-index:1;
+}  

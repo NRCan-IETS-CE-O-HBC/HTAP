@@ -1,0 +1,50 @@
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<title>Mod Ruby</title>
+<style>
+code { 
+ background-color: #ddf;
+ color: #f00;
+ padding: 0.3em;
+}
+</style>
+</head>
+
+<body>
+<h1>Mod Ruby</h1>
+
+<p>
+The eRuby command below should print <q>Hello, world!</q>
+</p>
+
+<p>
+<q><% print "Hello, world!" %></q>
+</p>
+
+<p>
+Welcome to <em><%= ENV['SERVER_NAME'] %></em>. If you see a server name, 
+<%= 'e' + 'Ruby' %> is probably working. 
+</p>
+
+<p>
+The current time is <%= Time.now %>.
+</p>
+
+<p>
+<% 
+def function_within_mod_ruby(input)
+  "#{input} was passed through a function.\n"
+end
+
+print function_within_mod_ruby("Some sample input")
+print '<br />'
+print function_within_mod_ruby("Some other sample input")
+%>
+</p>
+
+</body>
+</html>
