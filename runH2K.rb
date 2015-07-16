@@ -12,7 +12,8 @@ include REXML		# This allows for no "REXML::" prefix to REXML methods
 Returns DOM elements of a given filename. DOM: Document Object Model -- a programming interface for HTML, XML and SVG documents.
 =end
 def get_elements_from_filename(filename)
-  $XMLdoc = Document.new(File.open(filename))
+  $h2kFile = File.open(filename)
+  $XMLdoc = Document.new($h2kFile)
   return $XMLdoc.elements()
 end
 
@@ -45,8 +46,11 @@ XPath.each( $XMLdoc, locationText) do |element|
   element.text = "22113A3000"
   puts " - New ceiling code is: #{element.text}"
 end
-$XMLdoc.write(File.open("WizardHouseChanged.xml", "w"))
+newXMLFile = File.open("WizardHouseChanged.xml", "w")
+$XMLdoc.write(newXMLFile)
+newXMLFile.close
 
+$h2kFile.close
 puts("\n---------------------------------------------------------------\n")
 
 # Start H2K using specified file. This returns control to the calling program (this)
@@ -64,7 +68,7 @@ runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in  path!
 puts "\nStart #{runThis} with file #{ARGV[0]} (y/n)?"
 answer = STDIN.gets.chomp           # Specify STDIN or gets text from ARGV!
 if answer.capitalize == 'Y' then
-  if system(runThis, ARGV[0]) then
+  if system(runThis, ARGV[0]) then		#"#{runThis} #{ARGV[0]}"
     puts "The program ran as expected!"
   else
     puts "It didn't work! Return code follows:"
@@ -94,16 +98,5 @@ Dir.chdir(path) do
 end #returns to original working folder
 
 puts "Back in main program (Folder: #{Dir.pwd})."
-
-puts "\nRun the DOS batch runH2KTest.bat file with parameter #{fileToLoad} (y/n)?"
-answer = STDIN.gets.chomp           # Need STDIN or gets text from ARGV!
-if answer.capitalize == 'Y' then
-  if system("runH2KTest.bat", fileToLoad) then
-    puts "The program ran as expected!"
-  else
-    puts "It didn't work! Return code follows:"
-    puts $?
-  end
-end
 
 exit(0)	#Don't really need this!
