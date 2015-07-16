@@ -74,6 +74,8 @@ end
 
 # Try running the H2K file provided
 # H2K command line option to run loaded file is "-inp" (first argument) --> NOT WORKING!
+# Must specify folder BELOW main HOT2000 installed folder!  Example:
+#    > C:\HOT2000_v11_75\hot2000.exe -inp User\WizardHouse.h2k
 fileToLoad = "user\\" + h2kFileName
 optionSwitch = "-inp"
 Dir.chdir(path) do 
