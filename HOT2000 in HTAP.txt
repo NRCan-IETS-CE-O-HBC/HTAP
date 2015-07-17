@@ -1,0 +1,46 @@
+HOT2000 in HTAP Design Considerations
+-------------------------------------
+Each HOT2000 v11 House File contains the following XML contents (ext .h2k):
+  - House model data under tag <HouseFile><House>. The following subordinate tags are 
+    available: <Specifications>, <WindowTightness>, <Temperatures>, <Baseloads>,
+	<Generation>, <NaturalAirInfiltration>, <Ventilation>, <Components>. The Components 
+	tag contains all envelope data for multiple surfaces.
+  - Weather file name is specified under <ProgramInformation><Weather><library>
+    (e.g., "Wth110.dir"). The weather directory (dir) file is NOT XML -- it is an ASCII
+	file that contains a list of all region and city names.  The associated ".dat" file is
+	also NOT XML and contains the design and bin data for all locations listed in the .dir
+	file. The weather <Region> and <Location> (i.e., city) are also specified in this
+	section.
+  - Envelope code data for only those codes used reference in the house model are specified
+    under tag <HouseFile><Codes>. The envelope code is specified in the section
+	<House><Components> and multiple envelope components each contain a section. For example,
+	if there are two ceiling components, there will be two <Ceiling> tags, each containing
+	a reference to detailed data in the <Codes> section. Note that "User Specified" codes is 
+	an exception to this since all that is required is the effective R-value.
+  - Fuel cost data (rates) for all fuels used in the house are specified under the tag
+    <HouseFile><FuelCosts>. Note that only one rate from the fuel cost library file
+	(i.e., the "default") is specified in this section. 
+  - Last run results under tag <HouseFile><AllResults>. This does NOT include an ERS number!
+  
+Each HOT2000 v11 Code Library file contains the following XML contents (ext .cod):
+  - Envelope codes for Wall, Ceiling, CeilingFlat, Floor, Lintel, Window, BasementWall,
+    CrawlspaceWall, and FloorHeader. Tags use these names under <Codes>.
+  - Two types of codes in each section: <Favorite> or <UserDefined>
+  - The code library file used by the "current invocation" of HOT2000 is referenced in the
+    HOT2000.ini file, which is an ASCII file residing in the main HOT2000 folder. It
+	contains a line that provides this reference. 
+	e.g.: CODELIB_FILE=C:\HOT2000_v11_71\StdLibs\codeLib.cod
+	Note that there is NO reference to the code library file name in the house data file!
+	
+Each Fuel Cost Library file contains he following XML contents (ext .flc):
+  - Rate structure tags for an unlimited number of fuels of the following types 
+   (tag names): <Electricity>, <NaturalGas>, <Oil>, <Propane>, <Wood>.
+  - Each rate has a unit specifier, a single annual minimum rate charge, and up to four 
+    block charges. There are no TOU specifications for electricity.
+  - The fuel cost library file used by the "current invocation" of HOT2000 is referenced 
+    in the HOT2000.ini file, which is an ASCII file residing in the main HOT2000 folder. It
+	contains a line that provides this reference. 
+	e.g.: FUELCOST_FILE=C:\HOT2000_v11_71\StdLibs\fuelLib.flc
+	Note that the fuel cost library file name IS ALSO specified in the house data section
+	<HouseFile><FuelCosts><library>.
+
