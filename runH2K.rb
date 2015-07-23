@@ -50,7 +50,8 @@ newXMLFile = File.open("WizardHouseChanged.xml", "w")
 $XMLdoc.write(newXMLFile)
 newXMLFile.close
 
-$h2kFile.close
+$h2kFile.close	# Need to close XML source file before trying to load it into H2K below!
+
 puts("\n---------------------------------------------------------------\n")
 
 # Start H2K using specified file. This returns control to the calling program (this)
@@ -61,10 +62,9 @@ puts("\n---------------------------------------------------------------\n")
 #%x[C:\\HOT2000_v11_75\\hot2000.exe C:\\HOT2000_v11_75\\User\\WizardHouse.h2k]
 
 # To run H2K but pass a command line argument for the file to open in H2K
-# NOTE: The following cases work in debug mode only!  WHY? *******************
 (path, h2kFileName) = File.split(ARGV[0])
 path = File.dirname(path)	        # Removes outermost path portion (\\user)
-runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in  path!
+runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in path!
 puts "\nStart #{runThis} with file #{ARGV[0]} (y/n)?"
 answer = STDIN.gets.chomp           # Specify STDIN or gets text from ARGV!
 if answer.capitalize == 'Y' then
@@ -77,7 +77,7 @@ if answer.capitalize == 'Y' then
 end
 
 # Try running the H2K file provided
-# H2K command line option to run loaded file is "-inp" (first argument) --> NOT WORKING!
+# H2K command line option to run loaded file is "-inp" (first argument)
 # Must specify folder BELOW main HOT2000 installed folder!  Example:
 #    > C:\HOT2000_v11_75\hot2000.exe -inp User\WizardHouse.h2k
 fileToLoad = "user\\" + h2kFileName
@@ -87,7 +87,6 @@ Dir.chdir(path) do
   puts "\nRun #{runThis} with switch #{optionSwitch} and file #{fileToLoad} (y/n)?"
   answer = STDIN.gets.chomp           # Need STDIN or gets text from ARGV!
   if answer.capitalize == 'Y' then
-    #STDIN.ungetc('\n')      # Buffer a CR character - NOT WORKING!
     if system(runThis, optionSwitch, fileToLoad) then
       puts "The run worked!"
     else
