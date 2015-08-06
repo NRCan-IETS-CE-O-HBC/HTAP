@@ -60,36 +60,80 @@ Opt-Location --> Weather region & location
 Opt-Attachment --> Set detached, semi-detached or row house.
 	<HouseFile><House><Specifications><HouseType> att:code, <English> value=name
 
-Opt-ACH --> 
-
-Opt-OverhangWidth --> 
-
-Opt-AirTightness --> 
+Opt-ACH --> Change ACH@50 value
+	<HouseFile><House><NaturalAirInfiltration><Specifications><BlowerTest> att:airChangeRate
 
 Envelope Options
 ----------------
-Opt-MainWall --> 
-Opt-GenericWall_2Layer_definitions --> 
-Opt-ExtraDrywall --> 
+Opt-MainWall --> Change wall insulation
+Method 1) Use Specified R-value for ALL walls
+	<HouseFile><House><Components>
+	For each wall
+		..<Wall><Construction><Type> att:rValue  [always SI]
+
+Method 2) Wall Code (Standard)
+	<HouseFile><House><Components>
+	For each wall
+		..<Wall><Construction><Type> att:idref, tag value="10 alphaNum code"
+		idref must appear in <Codes> section with full layered description!
+		<Codes><Wall><Standard><Code> att:id=idref, tag value="10 alphaNum code"...
+		<Codes><Wall><Standard><Code><Layers> ... Must be filled - Use code lookups!
+
+Method 3) Wall Code (Favorite -- US spelling!)
+	<HouseFile><House><Components>
+	For each wall
+		..<Wall><Construction><Type> att:idref, tag value="10 alphaNum code"
+		idref must appear in <Codes> section with full layered description!
+		<Codes><Wall><Favorite><Code> att:id=idref, tag value="10 alphaNum code"...
+		<Codes><Wall><Favorite><Code><Layers> ... Must be filled - Copy from Library!
+
+Method 4) Wall Code (User Defined)
+	<HouseFile><House><Components>
+	For each wall
+		..<Wall><Construction><Type> att:idref, tag value="Name of code"
+		idref must appear in <Codes> section with full layered description!
+		<Codes><Wall><UserDefined><Code> att:id=idref, <Label>tag value="Name of code"...
+		<Codes><Wall><UserDefined><Code><Layers> ... Must be filled -- copy from Library!
+		
 Opt-FloorSurface --> 
+
 Opt-Ceilings --> 
+
 Opt-BasementSlabInsulation --> 
+
 Opt-BasementWallInsulation --> 
+
 Opt-CasementWindows --> 
+
+Opt-OverhangWidth --> Overhang dimension for all windows
+	<HouseFile><House><Components>
+	For each wall
+		..<Wall><Components><Window><Measurements> att:overhangWidth
+
 Opt-ExposedFloor --> 
+
 Opt-RoofPitch --> 
 
 Systems
 -------
 Opt-StandoffPV --> 
+
 Opt-DWHRandSDHW --> 
+
 Opt-ElecLoadScale --> 
+
 Opt-DHWLoadScale --> 
+
 Opt-DHWSystem --> 
+
 Opt-HVACSystem --> 
+
 Opt-Cooling-Spec --> 
+
 Opt-HRVspec --> 
+
 Opt-HRVduct --> 
+
 
 Options not required in H2K
 ---------------------------
@@ -112,6 +156,13 @@ Opt-BaseWindows --> N/A
 Opt-geometry --> N/A
 	Used for defining simple ESP-r geometries. This is unnecessary for H2K.
 
+Opt-AirTightness --> Specified individual .aim files in ESP-r
+	-> Redundant option for H2K!
+	
 Opt-WindowOrientation --> N/A
 	Used for ESP-r only.
 	
+Opt-GenericWall_2Layer_definitions --> N/A for HOT2000
+
+Opt-ExtraDrywall --> N/A for HOT2000 (thermal mass insensitive)
+
