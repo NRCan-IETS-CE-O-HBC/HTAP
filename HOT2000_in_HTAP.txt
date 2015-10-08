@@ -10,15 +10,19 @@ Each HOT2000 v11 House File contains the following XML contents (ext .h2k):
 	also NOT XML and contains the design and bin data for all locations listed in the .dir
 	file. The weather <Region> and <Location> (i.e., city) are also specified in this
 	section.
-  - Envelope code data for only those codes used reference in the house model are specified
+  - Envelope code data for those codes referenced in the house model are specified
     under tag <HouseFile><Codes>. The envelope code is specified in the section
 	<House><Components> and multiple envelope components each contain a section. For example,
 	if there are two ceiling components, there will be two <Ceiling> tags, each containing
-	a reference to detailed data in the <Codes> section. Note that "User Specified" codes is an exception to this since all that is required is the effective R-value.
+	a reference to detailed data in the <Codes> section. Note that "User Specified" codes is an exception to this since all that is required is the effective R-value and no <Codes> section
+	reference.
   - Fuel cost data (rates) for all fuels used in the house are specified under the tag
     <HouseFile><FuelCosts>. Note that only one rate from the fuel cost library file
 	(i.e., the "default") is specified in this section. 
   - Last run results under tag <HouseFile><AllResults>. This does NOT include an ERS number!
+    The ERS number can be extracted from the text output file "Browse.Rpt" that is generated
+	with an old ERS number when the magic file "Set_EGH.H2k" is present ("NoRound.H2K" allows for
+	non-rounded ERS number).
   
 Each HOT2000 v11 Code Library file contains the following XML contents (ext .cod):
   - Envelope codes for Wall, Ceiling, CeilingFlat, Floor, Lintel, Window, BasementWall,
@@ -47,7 +51,7 @@ Options used for ESP-r HTAP --> Mapping to H2K:
 General Options
 ---------------
 Opt-DBFiles --> Code library file name
-	This can be any valid H2K v11 code library file name.
+	This can be any valid H2K v11 code library file name (e.g., codelib.cod).
 	
 GOconfig_rotate --> Change orientation of wall/windows
 	House rotation: Will only work if each wall orientation is entered in H2K model.
@@ -60,18 +64,26 @@ Opt-Location --> Weather region & location
 Opt-Attachment --> Set detached, semi-detached or row house.
 	<HouseFile><House><Specifications><HouseType> att:code, <English> value=name
 
+Opt-AirTightness --> Specified individual .aim files in ESP-r
+	-> Set to "Generic" for H2K!
+
 Opt-ACH --> Change ACH@50 value
 	<HouseFile><House><NaturalAirInfiltration><Specifications><BlowerTest> att:airChangeRate
 
 Envelope Options
 ----------------
-Opt-MainWall --> Change wall insulation
+Opt-MainWall : GenericWall_1Layer
+Opt-GenericWall_1Layer_definitions : Stud_2x6_1in_Polyiso_R-24
+
 Method 1) Use Specified R-value for ALL walls
+          --> Add a :value:2 to generic section that contains the H2K User Specified R-value
+              This should match the value specified in the title (for most)
 	<HouseFile><House><Components>
 	For each wall
 		..<Wall><Construction><Type> att:rValue  [always SI]
 
-Method 2) Wall Code (Standard)
+Method 2) Wall Code (Standard) AVOID!
+          --> Enter name in Codes section (not in library) ==> AVOID THIS METHOD!
 	<HouseFile><House><Components>
 	For each wall
 		..<Wall><Construction><Type> att:idref, tag value="10 alphaNum code"
@@ -80,6 +92,7 @@ Method 2) Wall Code (Standard)
 		<Codes><Wall><Standard><Code><Layers> ... Must be filled - Use code lookups!
 
 Method 3) Wall Code (Favorite -- US spelling!)
+          --> Enter name in Code Library
 	<HouseFile><House><Components>
 	For each wall
 		..<Wall><Construction><Type> att:idref, tag value="10 alphaNum code"
@@ -88,6 +101,7 @@ Method 3) Wall Code (Favorite -- US spelling!)
 		<Codes><Wall><Favorite><Code><Layers> ... Must be filled - Copy from Library!
 
 Method 4) Wall Code (User Defined)
+          --> Enter name in Code Library
 	<HouseFile><House><Components>
 	For each wall
 		..<Wall><Construction><Type> att:idref, tag value="Name of code"
@@ -141,8 +155,8 @@ Opt-calcmode --> N/A
 	Setting ending day & month + disabling shading
 
 OPT-HRV_ctl --> N/A
-	H2K using old ERS method of HRV operation. Could use v11 method by renaming
-	Set_EGH.H2k file.
+	H2K using old ERS method of HRV operation. 
+	Could use "new" method by removing file "Set_EGH.H2k".
 	
 Opt-CTL-Strategy --> N/A
 	No longer used!
@@ -156,9 +170,6 @@ Opt-BaseWindows --> N/A
 Opt-geometry --> N/A
 	Used for defining simple ESP-r geometries. This is unnecessary for H2K.
 
-Opt-AirTightness --> Specified individual .aim files in ESP-r
-	-> Redundant option for H2K!
-	
 Opt-WindowOrientation --> N/A
 	Used for ESP-r only.
 	
