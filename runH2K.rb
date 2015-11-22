@@ -36,28 +36,39 @@ $h2kElements = get_elements_from_filename(ARGV[0])
 # Load a HOT2000 code library file and assign contents to a Hash
 $h2kCodeLibElements = get_elements_from_codelib("c:\\HOT2000_v11_76\\StdLibs\\codeLib.cod")
 
+print("Application Name: ")
+$h2kElements.each("HouseFile/Application/Name") { |element| print "#{element.text}\n" }
 
-puts("Application Name:")
-$h2kElements.each("HouseFile/Application/Name") { |element| puts element.to_a }	
-
-puts("IDs and Labels of main house components:")
+puts("\nIDs and Labels of main house components:")
 $h2kElements.each("HouseFile/House/Components/*") { |element1| 
-  puts element1.attributes["id"]
-}	  
+   print "#{element1.attributes["id"]}: #{element1.get_text("Label")}\n" 
+}
 
-puts("rValue of Ceilings:")
+print("\nWeather file name: ")
+XPath.each( $XMLdoc, "HouseFile/ProgramInformation/Weather") { |element| 
+  print "#{element.attributes["library"]} "
+}
+# XPath.first(..) DOESN'T WORK
+print "  or other method: #{$h2kElements["HouseFile/ProgramInformation/Weather"].attributes["library"]}\n"
+
+puts("\nrValue of all ceilings:")
 locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
 $h2kElements.each(locationText) { |element| 
   puts element.attributes["rValue"] 
 }
+# Alternate method 1
+puts("rValue of all ceilings (using XPath):")
+XPath.each( $XMLdoc, locationText) { |element| 
+  puts element.attributes["rValue"] 
+}
+# Alternate method 2
+puts("rValue of first ceiling (more direct method):")
+puts $h2kElements[locationText].attributes["rValue"]
 
 =begin rdoc
-Changing all envelope codes (i.e., walls, ceilings, exposed floors, basement walls and floors, windows, doors)
-to User Specified is the simplest change since we don't need to reference the <Codes> section. However, we 
-need "system" effective R-values.
-pre-determined.
+Changing all envelope codes (i.e., walls, ceilings, exposed floors, basement walls and floors, windows, doors) to User Specified is the simplest change since we don't need to reference the <Codes> section. However, we need "system" effective R-values pre-determined.
 =end
-puts("Change all existing wall codes to User Specified: ")
+puts("\nChange all existing wall codes to User Specified: ")
 locationText = "HouseFile/House/Components/Wall/Construction/Type"
 XPath.each( $XMLdoc, locationText) do |element| 
   puts " - Existing wall code is: #{element.text} and R-Value is #{element.attributes["rValue"]}."
@@ -70,11 +81,7 @@ XPath.each( $XMLdoc, locationText) do |element|
 end
 
 =begin rdoc
-Changing all codes to a Standard, Favourite or UserDefined code involves setting
-a reference in the <House><Components> section to an entry reference that must be created in the
-<Codes> section of the house file.  This can be done by referencing an existing code name (e.g., "Attic28")
-in the Codes Library file and copy-and-paste the contents of either <Favorite><Code>... or <UserDefined><Code>... from the codes library file (.cod) file into the <Codes> section of the house 
-file (.h2k).
+Changing all codes to a Standard, Favourite or UserDefined code involves setting a reference in the <House><Components> section to an entry reference that must be created in the <Codes> section of the house file.  This can be done by referencing an existing code name (e.g., "Attic28") in the Codes Library file and copy-and-paste the contents of either <Favorite><Code>... or <UserDefined><Code>... from the codes library file (.cod) file into the <Codes> section of the house file (.h2k).
 =end
 codeNameToUse = "Attic28"
 puts("Change all ceiling standard codes to #{codeNameToUse}... ")
@@ -127,9 +134,7 @@ $h2kElements.each(locationText) { |element|
 }
 
 =begin rdoc
-Test HVAC changes : Code below only works for Furnaces! Need to check on existance of each 
-Type 1 system (Baseboards, Furnace, Boiler, Combo or P9) to know which XML tag to inspect
-and change.
+Test HVAC changes : Code below only works for Furnaces! Need to check on existance of each Type 1 system (Baseboards, Furnace, Boiler, Combo or P9) to know which XML tag to inspect and change.
 =end
 puts "\n---------------------------------------------------------------\n"
 puts("Current heating system is: ")
@@ -169,19 +174,21 @@ puts("\n---------------------------------------------------------------\n")
 
 # To run H2K and wait until exited. Pass H2K a command line argument for the file to open.
 path = File.dirname(path)	        # Removes outermost path portion (\\user)
-runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in path!
-puts "\nStart #{runThis} with file #{newFileName} (y/n)?"
-answer = STDIN.gets.chomp           # Specify STDIN or gets text from ARGV!
-if answer.capitalize == 'Y' then
-  if system(runThis, newFileName) then
-    puts "The program ran as expected!"
-  else
-    puts "It didn't work! Return code follows:"
-    puts $?
-  end
+if ( path !~ /V11_1_CLI/ )
+   runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in path!
+   puts "\nStart #{runThis} with file #{newFileName} (y/n)?"
+   answer = STDIN.gets.chomp           # Specify STDIN or gets text from ARGV!
+   if answer.capitalize == 'Y' then
+     if system(runThis, newFileName) then
+       puts "The program ran as expected!"
+     else
+       puts "It didn't work! Return code follows:"
+       puts $?
+     end
+   end
 end
 
-# Open H2K with XML file provided (.h2k), run the analysis and close the file.
+# Run H2K with XML file provided (.h2k), run the analysis and close the file.
 # H2K command line option to run loaded file is "-inp" (first argument)
 # Must specify folder BELOW main HOT2000 installed folder!  Example:
 #    > C:\HOT2000_v11_76\hot2000.exe -inp User\WizardHouse.h2k
