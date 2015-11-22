@@ -217,20 +217,28 @@ def debug_out(debmsg)
   end
 end
 
-# Search through the HOT2000 working file (copy of input file specified on command line) 
-# and change values for settings defined in choice/options files. 
-def processFile(filespec)
-
-   wthPath = $run_path + "\\Dat"
-   
-   fH2KFile = File.new(filespec, "r") 
+# Returns XML elements of HOT2000 file.
+def get_elements_from_filename(filename)
+   fH2KFile = File.new(filename, "r") 
    if fH2KFile == nil then
       fatalerror("Could not read #{filespec}.\n")
    end
   
+   # Need to add error checking on failed open of existing file!
    $XMLdoc = Document.new(fH2KFile)
+
+   # Close the HOT2000 file since content read
+   fH2KFile.close()
+  
+   return $XMLdoc.elements()
+end
+
+# Search through the HOT2000 working file (copy of input file specified on command line) 
+# and change values for settings defined in choice/options files. 
+def processFile(filespec)
+
    # Load all XML elements from HOT2000 file
-   $h2kElements = $XMLdoc.elements()
+   h2kElements = get_elements_from_filename(filespec)
    
    $gChoiceOrder.each do |choiceEntry|
       if ( $gOptions[choiceEntry]["type"] == "internal" )
@@ -252,19 +260,19 @@ def processFile(filespec)
                   # Weather file to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather"
                   # Check on existence of H2K weather file
-                  if ( !File.exist?(wthPath + "\\" + value) )
+                  if ( !File.exist?($run_path + "\\Dat" + "\\" + value) )
                      fatalerror("Weather file #{value} not found in folder !")
                   else
-                     $h2kElements[locationText].attributes["library"] = value
+                     h2kElements[locationText].attributes["library"] = value
                   end
                elsif ( tag =~ /OPT-H2K-Region/ )
                   # Weather region to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Region"
-                  $h2kElements[locationText].attributes["code"] = value
+                  h2kElements[locationText].attributes["code"] = value
                elsif ( tag =~ /OPT-H2K-Location/ )
                   # Weather location to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Location"
-                  $h2kElements[locationText].attributes["code"] = value
+                  h2kElements[locationText].attributes["code"] = value
                elsif ( tag =~ /OPT-WEATHER-FILE/ ) # Do nothing
                elsif ( tag =~ /OPT-Latitude/ ) # Do nothing
                elsif ( tag =~ /OPT-Longitude/ ) # Do nothing
@@ -274,11 +282,11 @@ def processFile(filespec)
                
             elsif ( tag =~ /Opt-ACH/ )
                locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-               $h2kElements[locationText].attributes["airChangeRate"] = value
-               
-            elsif ( tag =~ /Opt-GenericWall_1Layer_definitions/ )
+               h2kElements[locationText].attributes["airChangeRate"] = value
                
             elsif ( tag =~ /Opt-Ceilings/ )
+               
+            elsif ( tag =~ /Opt-GenericWall_1Layer_definitions/ )
                
             elsif ( tag =~ /Opt-ExposedFloor/ )
                
@@ -314,9 +322,6 @@ def processFile(filespec)
       end
    end
    
-   # Close the working copy file so can overwrite
-   fH2KFile.close()
-  
    # Save changes to the XML doc in existing working H2K file (overwrite original)
    newXMLFile = File.open(filespec, "w")
    $XMLdoc.write(newXMLFile)
@@ -332,20 +337,15 @@ def runsims( direction )
    $gRotationAngle = $RotationAngle
   
    Dir.chdir( $run_path )
-   
-   if ( !$gSkipSims )
-      #system ("del out.*")
-   end
-  
    debug_out ("\n\n Moved to path: #{Dir.getwd()}\n") 
    
-   # Rotate the model, if necessary
-   # Need to determine how to do this in HOT2000. The OnRotate() function in HOT2000 *interface*
-   # is not accessible from the CLI version of HOT2000 and hasn't been well tested.
+   # Rotate the model, if necessary:
+   #   Need to determine how to do this in HOT2000. The OnRotate() function in HOT2000 *interface*
+   #   is not accessible from the CLI version of HOT2000 and hasn't been well tested.
    
-   runThis = $run_path + "\\HOT2000.exe"     # NOTE: Doesn't work if space in path!
+   runThis = "HOT2000.exe"
    optionSwitch = "-inp"
-   fileToLoad = "Working-Opt\\#{$h2kFileName}"
+   fileToLoad = "#{$WorkingSimFolderName}\\#{$h2kFileName}"
    
    if ( system(runThis, optionSwitch, fileToLoad) )      # Run HOT2000!
       stream_out( "The run was successful!\n" )
@@ -353,18 +353,26 @@ def runsims( direction )
       fatalerror( "Problems with the run! Return code: #{$?}\n" )
    end
    
+   Dir.chdir( $master_path )
+   
    # Save output files
-   if ( ! Dir.exist?("#{$master_path}\\sim-output") )
-      if ( ! system("mkdir #{$master_path}\\sim-output") )
-         debug_out ("Could not create #{$master_path}\\sim-output!\n")
+   if ( ! Dir.exist?("sim-output") )
+      if ( ! system("mkdir sim-output") )
+         debug_out ("Could not create sim-output below #{$master_path}!\n")
+      end
+   else
+      if ( File.exist?("sim-output\\Browse.rpt") )
+         if ( ! system("del sim-output\\Browse.rpt") )    # Delete existing Browse.Rpt
+            debug_out ("Could not delete existing Browse.rpt fil in sim-output!\n")
+         end
       end
    end
    
-   if ( Dir.exist?("#{$master_path}/sim-output") )
-      system("copy #{$run_path}\\Browse.rpt $master_path\\sim-output")
+   # Copy simulation results to sim-output folder in master (for ERS number)
+   # Note that most of the output is contained in the HOT2000 file in XML!
+   if ( Dir.exist?("sim-output") )
+      system("copy #{$run_path}\\Browse.rpt .\\sim-output\\")
    end
-         
-   Dir.chdir( $master_path )
 end
 
 # Post-process results
@@ -676,76 +684,37 @@ def postprocess( scaleData )
    $EffGasRates["Montreal"]["9.9E99"] = 0.3749
    $EffGasRates["Quebec"] = $EffGasRates["Montreal"] 
 
-   # ------ READ IN Summary Data.                            
-=begin rdoc  
-   # Move to working directory, and parse out.summary file
-   Dir.chdir( $gWorkingCfgPath )  #************************************
-   debug_out ("\n\n Moved to path: #{Dir.getwd()}\n")
+   # ------ READ IN Summary Data from HOT2000 working file (XML)
+
+   # Load all XML elements from HOT2000 file (post-run results now available)
+   h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
+
+   $Locale = $gChoices["Opt-Location"] 
+   if ( $Locale =~ /London/ || $Locale =~ /Windsor/ || $Locale =~ /ThunderBay/ )
+      $Locale = "Toronto"
+   end
   
-   open (fSIMRESULTS, "out.summary") or fatalerror("Could not open ".getcwd()."/out.summary!");
-
-   $gSimResults = Hash.new()
-
-   while ( my $line = <SIMRESULTS> ){
-
-      ( $token, $value, $units ) = split / /, $line; 
-    
-      if ( $units =~ /GJ/ || $units =~ /kWh\/s/ || $units =~ /m3\/s/ || $units =~ /l\/s/  || $units =~ /tonne\/s/ ) {
-      
-      $gSimResults{$token} = $value; 
-      }
-   }
-   close(fSIMRESULTS);
-
-   # Read in timestep data
-   stream_out("\n\n Reading timestep data...") ; 
-
-   open (fTSRESULTS, "out.csv") or fatalerror("Could not open ".getcwd()."/out.csv!");
-
-   my $RowNumber = 0; 
-   my $firstline = 1;
-   my @headers;
-   my @numbers;
-   my %data = () ; 
-   while ( my $line = <fTSRESULTS> ){
-      if ( $firstline ){
-         @headers = split /,/, $line;  
-         $firstline = 0;
-      }else{
-         @numbers = split /,/, $line; 
-         my $index = 0;
-      
-         for( $index=0; $index<$#headers; $index++){
-            my $header = $headers[$index];
-            my $value  = $numbers[$index];
-            $data{$header}[$RowNumber] = $value; 
-            #if ( $RowNumber == 0 ) {debug_out (" > header: >$header<\n");}
-         }
-         $RowNumber++;
-      }
-   }
-   close (fTSRESULTS);
-
-   my $Locale = $gChoices{"Opt-Location"}; 
-  
-   if ( $Locale =~ /London/ || $Locale =~ /Windsor/ || $Locale =~ /ThunderBay/ ){ $Locale = "Toronto";}
-  
-   if ( $SaveVPOutput ) {
-      fcopy ( "out.csv","$gMasterPath/../VP-sim-output/$Locale-$gDirection-out.csv" );  
-   }
-  
-   if ( $gCustomCostAdjustment ) { 
-      $gRegionalCostAdj = $gCostAdjustmentFactor; 
-   }else{
-      $gRegionalCostAdj = $RegionalCostFactors{$Locale};
-   }
-  
-   my $NumberOfRows = scalar(@{$data{$headers[0]}});
-
-   stream_out("done (parsed $NumberOfRows rows)\n"); 
-
-   # Recover electrical, natural gas, oil, propane, wood, or pellet consumption data 
-   my @Electrical_Use = @{ $data{" total fuel use:electricity:all end uses:quantity (kWh/s)"} };
+   if ( $gCustomCostAdjustment ) 
+      $gRegionalCostAdj = $gCostAdjustmentFactor
+   else
+      $gRegionalCostAdj = $RegionalCostFactors[$Locale]
+   end
+   
+   # Recover monthly electrical, natural gas, oil, propane, wood, or pellet consumption data 
+   monthArray = [ "january", "february", "march", "april", "may", "june", 
+                  "july", "august", "september", "october", "november", "december" ]
+   $Electrical_Use = Array.new()
+   locationText = "HouseFile/AllResults/Results/Monthly/ElectricalConsumption/Gross"
+   monthArray.each_index do |mth|
+      $Electrical_Use[mth] = h2kPostElements[locationText].attributes[monthArray[mth]]
+   end
+   # ONLY ANNUAL AVAILABLE FOR ALL FUELS! Above is for electrical space heating only!
+   
+   
+   
+   
+   
+=begin 
    my @NaturalGas_Use = @{ $data{" total fuel use:natural gas:all end uses:quantity (m3/s)"}  };
    my @Oil_Use        = @{ $data{" total fuel use:oil:all end uses:quantity (l/s)"}  };
    my @Propane_Use    = @{ $data{" total fuel use:propane:all end uses:quantity (m3/s)"}  };
@@ -2089,7 +2058,8 @@ end
 
 # Now create a copy of our HOT2000 file for manipulation.
 stream_out("\n\n Creating a copy of HOT2000 file for optimization work...\n")
-$gWorkingModelFile = $gBaseModelFile.sub(/User/, 'Working-Opt')
+$WorkingSimFolderName = "Working-Opt"
+$gWorkingModelFile = $gBaseModelFile.sub(/User/, $WorkingSimFolderName)
 # Remove any existing file first!
 if ( File.exist?($gWorkingModelFile) )
    system ("del #{$gWorkingModelFile}")
@@ -2097,10 +2067,8 @@ end
 system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}")
 stream_out("File #{$gWorkingModelFile} created.\n")
 
-=begin rdoc
-Process the working file by replacing all existing values with the values 
-specified in the attributes $gChoices and corresponding $gOptions
-=end
+# Process the working file by replacing all existing values with the values 
+# specified in the attributes $gChoices and corresponding $gOptions
 processFile($gWorkingModelFile)
 
 # Orientation changes. For now, we assume the arrays must always point south.
@@ -2110,7 +2078,6 @@ $angles[ "S" => 0 , "E" => 90, "N" => 180, "W" => 270 ]
 # Orientations is an array we populate with a single member if the orientation 
 # is specified, or with all of the orientations to be run if 'AVG' is spec'd.               
 orientations = Array.new()
-
 if ( $gRotate =~ /AVG/ ) 
    orientations = [ 'S', 'N', 'E', 'W' ]
 else 
@@ -2166,7 +2133,11 @@ orientations.each do |direction|
       runsims( direction )
    end
    
-   postprocess($ScaleResults)
+   # post-process simulation results from a successful run. 
+   # The output data are contained in two places:
+   # 1) HOT2000 run file in XML -> HouseFile/AllResults
+   # 2) Browse.rpt file for the ERS number (ASCII, at "Energuide Rating (not rounded) =")
+   postprocess( $ScaleResults )
    
 end
 
