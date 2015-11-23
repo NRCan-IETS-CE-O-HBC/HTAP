@@ -254,7 +254,7 @@ def processFile(filespec)
                value = ""
             end
             
-            # Replace existing values in H2K file
+            # Replace existing values in H2K file ....................................
             if ( choiceEntry =~ /Opt-Location/ )
                if ( tag =~ /OPT-H2K-WTH-FILE/ )
                   # Weather file to use for HOT2000 run
@@ -277,42 +277,126 @@ def processFile(filespec)
                elsif ( tag =~ /OPT-Latitude/ ) # Do nothing
                elsif ( tag =~ /OPT-Longitude/ ) # Do nothing
                else
-                  fatalerror("Missing H2K Opt-Location tag:#{tag}")
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
                end
                
-            elsif ( tag =~ /Opt-ACH/ )
-               locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-               h2kElements[locationText].attributes["airChangeRate"] = value
+            elsif ( choiceEntry =~ /Opt-FuelCost/ )
+               # HOT2000 Fuel costing data selections
                
-            elsif ( tag =~ /Opt-Ceilings/ )
                
-            elsif ( tag =~ /Opt-GenericWall_1Layer_definitions/ )
                
-            elsif ( tag =~ /Opt-ExposedFloor/ )
+            elsif ( choiceEntry =~ /Opt-ACH/ )
+               if ( tag =~ /Opt-ACH/ )
+                  locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+                  h2kElements[locationText].attributes["airChangeRate"] = value
+               else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
+            
+            elsif ( choiceEntry =~ /Opt-Ceilings/ )
+               if ( tag =~ /Opt-Ceiling/ )
+                  # Set Favourites code from library
+                  # Have problems with this method! 
+                  # NEEDS MORE WORK! ******************************
+               elsif ( tag =~ /OPT-H2K-EffRValue/ )
+                  # Change ALL existing ceiling codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+                  XPath.each( $XMLdoc, locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = value
+                     if element.attributes["idref"] then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
                
-            elsif ( tag =~ /Opt-CasementWindows/ )
+            elsif ( choiceEntry =~ /Opt-MainWall/ )
+               if ( tag =~ /Opt-MainWall-Bri/ )
+                  # Set Favourites code from library
+                  # Have problems with this method! 
+                  # NEEDS MORE WORK! ******************************
+               elsif ( tag =~ /Opt-MainWall-Vin/ )    # Do nothing
+               elsif ( tag =~ /Opt-MainWall-Dry/ )    # Do nothing
+               else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
+
+               elsif ( choiceEntry =~ /Opt-Opt-GenericWall_1Layer_definitions/ )
+               if ( tag =~ /OPT-H2K-EffRValue/ )
+                  # Change ALL existing wall codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Wall/Construction/Type"
+                  XPath.each( $XMLdoc, locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = value
+                     if element.attributes["idref"] then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               elsif ( tag =~ /Opt-GenInsulLayerInboard-a/ )   # Do nothing
+               else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
                
-            elsif ( tag =~ /Opt-BasementSlabInsulation/ )
+            elsif ( choiceEntry =~ /Opt-ExposedFloor/ )
+               if ( tag =~ /Opt-ExposedFloor/ )
+                  # Set Favourites code: Not working yet
+                  # WORK ON!
+               elsif ( tag =~ /OPT-H2K-EffRValue/ )
+                  # Change ALL existing floor codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Floor/Construction/Type"
+                  XPath.each( $XMLdoc, locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = value
+                     if element.attributes["idref"] then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               elsif ( tag =~ /Opt-ExposedFloor-r/ )   # Do nothing
+               else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
                
-            elsif ( tag =~ /Opt-BasementWallInsulation/ )
                
-            elsif ( tag =~ /Opt-DWHRandSDHW / )
+            elsif ( choiceEntry =~ /Opt-CasementWindows/ )
                
-            elsif ( tag =~ /Opt-ElecLoadScale/ )
                
-            elsif ( tag =~ /Opt-DHWLoadScale/ )
+            elsif ( choiceEntry =~ /Opt-BasementSlabInsulation/ )
                
-            elsif ( tag =~ /Opt-DHWSystem/ )
                
-            elsif ( tag =~ /Opt-HVACSystem/ )
+            elsif ( choiceEntry =~ /Opt-BasementWallInsulation/ )
                
-            elsif ( tag =~ /OPT-Furnace-Fan-Ctl/ )
                
-            elsif ( tag =~ /Opt-Cooling-Spec/ )
+            elsif ( choiceEntry =~ /Opt-DWHRandSDHW / )
                
-            elsif ( tag =~ /Opt-HRVspec/ )
                
-            elsif ( tag =~ /Opt-StandoffPV/ )
+            elsif ( choiceEntry =~ /Opt-ElecLoadScale/ )
+               
+               
+            elsif ( choiceEntry =~ /Opt-DHWLoadScale/ )
+               
+               
+            elsif ( choiceEntry =~ /Opt-DHWSystem/ )
+               
+               
+            elsif ( choiceEntry =~ /Opt-HVACSystem/ )
+               
+               
+            elsif ( choiceEntry =~ /OPT-Furnace-Fan-Ctl/ )
+               
+               
+            elsif ( choiceEntry =~ /Opt-Cooling-Spec/ )
+               
+               
+            elsif ( choiceEntry =~ /Opt-HRVspec/ )
+               
+               
+            elsif ( choiceEntry =~ /Opt-StandoffPV/ )
+               
                
             else
                # Do nothing as we're ignoring all other tags!
@@ -378,314 +462,6 @@ end
 # Post-process results
 def postprocess( scaleData )
   
-   $TSLength = 3600.0   # Seconds
-
-   # First day of the year: 
-   $FirstDay_Day_Of_Week = 7   # 2011 starts on a Saturday
-
-   #Which days are statutory holidays in Ontario? (Days of year)
-   holidays = [     3,    # New years (falls on sat, observed on Monday)
-                   52,    # Family day
-                  115,    # Good Friday
-                  143,    # Victoria day
-                  182,    # Canada day
-                  248,    # Labour day
-                  283,    # Thanksgiving
-                  360,    # Christmans (falls on Sunday, observed on Monday)
-                  361 ]  # Boxing day (shifted to Tuesday b/c christmas)
-                  
-   #=======================================================================
-   # Fuel cost parameters: ELECTRICITY
-
-   $ElecRateEsc = 1.0       # 1.49; 
-
-   # Which months are summer, and which are winter?
-   $ElecRatePeriods =     [ "winter",   # Jan 
-                          "winter",   # Feb 
-                          "winter",   # Mar 
-                          "winter",   # Apr 
-                          "summer",   # May 
-                          "summer",   # Jun 
-                          "summer",   # Jul 
-                          "summer",   # Aug 
-                          "summer",   # Sep 
-                          "summer",   # Oct 
-                          "winter",   # Nov 
-                          "winter" ]  # Dec 
-
-   # which hours are on-peak, mid-peak and off-peak?
-   $ElecPeakSchedule = {
-                       "summer" => [ "off-peak",     # 00:00 -> #01:00
-                                   "off-peak",     # 01:00 -> #02:00
-                                   "off-peak",     # 02:00 -> #03:00
-                                   "off-peak",     # 03:00 -> #04:00
-                                   "off-peak",     # 04:00 -> #05:00
-                                   "off-peak",     # 05:00 -> #06:00
-                                   "off-peak",     # 06:00 -> #07:00
-                                   "mid-peak",     # 07:00 -> #08:00
-                                   "mid-peak",     # 08:00 -> #09:00
-                                   "mid-peak",     # 09:00 -> #10:00
-                                   "mid-peak",     # 10:00 -> #11:00
-                                   "on-peak",      # 11:00 -> #12:00
-                                   "on-peak",      # 12:00 -> #11:00
-                                   "on-peak",      # 11:00 -> #12:00
-                                   "on-peak",      # 12:00 -> #13:00
-                                   "on-peak",      # 13:00 -> #14:00
-                                   "on-peak",      # 14:00 -> #15:00
-                                   "on-peak",      # 15:00 -> #16:00
-                                   "on-peak",      # 16:00 -> #17:00
-                                   "mid-peak",     # 17:00 -> #18:00
-                                   "mid-peak",     # 18:00 -> #19:00
-                                   "off-peak",     # 19:00 -> #20:00
-                                   "off-peak",     # 20:00 -> #21:00
-                                   "off-peak",     # 21:00 -> #22:00
-                                   "off-peak",     # 22:00 -> #23:00
-                                   "off-peak",     # 23:00 -> #00:00
-                                   "off-peak"      # 00:00 -> #22:00 
-                                 ],
-                       "winter" => [ "off-peak",     # 00:00 -> #01:00
-                                   "off-peak",     # 01:00 -> #02:00
-                                   "off-peak",     # 02:00 -> #03:00
-                                   "off-peak",     # 03:00 -> #04:00
-                                   "off-peak",     # 04:00 -> #05:00
-                                   "off-peak",     # 05:00 -> #06:00
-                                   "off-peak",     # 06:00 -> #07:00
-                                   "on-peak",      # 07:00 -> #08:00
-                                   "on-peak",      # 08:00 -> #09:00
-                                   "on-peak",      # 09:00 -> #10:00
-                                   "on-peak",      # 10:00 -> #11:00
-                                   "mid-peak",     # 11:00 -> #12:00
-                                   "mid-peak",     # 12:00 -> #11:00
-                                   "mid-peak",     # 11:00 -> #12:00
-                                   "mid-peak",     # 12:00 -> #13:00
-                                   "mid-peak",     # 13:00 -> #14:00
-                                   "mid-peak",     # 14:00 -> #15:00
-                                   "mid-peak",     # 15:00 -> #16:00
-                                   "mid-peak",     # 16:00 -> #17:00
-                                   "on-peak",      # 17:00 -> #18:00
-                                   "on-peak",      # 18:00 -> #19:00
-                                   "off-peak",     # 19:00 -> #20:00
-                                   "off-peak",     # 20:00 -> #21:00
-                                   "off-peak",     # 21:00 -> #22:00
-                                   "off-peak",     # 22:00 -> #23:00
-                                   "off-peak",     # 23:00 -> #00:00
-                                   "off-peak"      # 00:00 -> #22:00 
-                                 ]    
-                     } 
-        
-   # How much do we change for on-peak, mid-peak and off peak?      
-   $ElecPeakCharges = Hash.new()
-
-   #=======================================================================                           
-   # Fuel cost parameters: 
-
-   $NGasIncreaseFrac    = 1.0    #1.53;      # Scale for future forecast
-  
-   $NGasFixedCharge = 0.0
-   $NGasSupplyCharge = 0.0
-   $NGasDeliveryTier = Hash.new()
-   $NGasTrasportCharge = 0.0
-  
-   $ElecFixedCharge = 0.0
-   $ElecTotalOtherCharges = 0.0
-  
-   $OilFixedCharge  = 0.0 
-   #  my $OilSupplyCharge     = 1.34    # Whitehorse cost of furnace oil / arctic stove oil is $1.34/l  (Yukon energy statistics)
-
-   # Adding Local Oil costs
-   $OilSupplyCharge   = {     "Halifax"      =>  0.99 ,
-                             "Edmonton"     =>  0.99 ,
-                             "Calgary"      =>  0.99 ,
-                             "Vancouver"    =>  0.99 ,
-                             "PrinceGeorge" =>  0.99 ,
-                             "Kamloops"     =>  0.99 ,
-                             "Ottawa"       =>  0.99 , 
-                             "Regina"       =>  0.99 ,
-                             "Winnipeg"     =>  0.99 ,
-                             "Toronto"      =>  0.99 , 
-                             "Montreal"     =>  0.99 , 
-                             "Quebec"       =>  0.99 ,
-                             "Fredricton"   =>  0.99 ,
-                             "Whitehorse"   =>  1.34 ,
-                             "Yellowknife"  =>  1.28 ,
-                             "Inuvik"       =>  1.50 ,
-                             "Alert"        =>  1.50 
-                       }
-    
-   $OilTransportCharge = 0.0
-   $OilDeliveryCharge = 0.0
-   
-   $PropaneFixedCharge     = 0.0
-   $PropaneSupplyCharge    = 0.855   # Yukon cost of propane supply (LPG) $0.855 per litre. YK bureau of statistics.Aug 2013. http://www.eco.gov.yk.ca/stats/pdf/fuel_aug13.pdf  1l of LPG expands to about 270l gaseous propane at 1bar. 
-   $PropaneDeliveryCharge = 0.0
-   $PropaneTrasportCharge = 0.0
-  
-   $WoodFixedCharge = 0.0
-   $WoodSupplyCharge = 325.0  # Northern Fuel Cost Library Spring 2014 # 260.0;   ESC Heat Info Sheet - Assumes 18700 MJ / cord
-   #WoodDeliveryTier = Hash.new()
-   #$WoodTrasportCharge
-  
-   $PelletsFixedCharge = 0.0
-   $PelletsSupplyCharge = 337.0 # Northern Fuel Cost Library Spring 2014  #340.0;   ESC Heat Info Sheet - Assumes 18000 MJ/ton of pellets
-   #PelletsDeliveryTier = Hash.new() 
-   #$PelletsTrasportCharge
-   
-   $NGTierType = ""
-
-   # Assume summer and winter rates are the same. 
-   #$ElecPeakCharges{"winter"}{"off-peak"} = $ElecPeakCharges{"summer"}{"off-peak"} ;
-   #$ElecPeakCharges{"winter"}{"mid-peak"} = $ElecPeakCharges{"summer"}{"mid-peak"} ;
-   #s$ElecPeakCharges{"winter"}{"on-peak"}  = $ElecPeakCharges{"summer"}{"on-peak"}  ;
-  
-   #------------------------- New rates ! -------------------------
-   
-   # Base charges for electricity ($/month)
-   $Elec_BaseCharge = {    "Halifax"      =>  10.83  ,
-                          "Edmonton"     =>  21.93  ,
-                          "Calgary"      =>  17.55  ,
-                          "Ottawa"       =>  9.42   ,
-                          "Toronto"      =>  18.93  ,
-                          "Quebec"       =>  12.36  ,
-                          "Montreal"     =>  12.36  ,
-                          "Vancouver"    =>  5.06   , # April 1, 2014: $0.1664/day * 365/12 = $5.06
-                          "PrinceGeorge" =>  4.58   ,
-                          "Kamloops"     =>  4.58   ,
-                          "Regina"       =>  20.22  ,
-                          "Winnipeg"     =>  6.85   ,
-                          "Fredricton"   =>  19.73  ,
-                          "Whitehorse"   =>  16.25  ,
-                          "Yellowknife"  =>  18.52  , #From Artic Energy Alliance Spring 2014
-                          "Inuvik"       =>  18.00  , #From Artic Energy Alliance Spring 2014
-                          "Alert"        =>  18.00  
-                     }
-   
-   # Base charges for natural gas ($/month)
-   $NG_BaseCharge = {    "Halifax"      =>  21.87 ,
-                        "Edmonton"     =>  28.44 ,
-                        "Calgary"      =>  28.44 ,
-                        "Ottawa"       =>  20.00 ,
-                        "Toronto"      =>  20.00 ,
-                        "Quebec"       =>  14.01 ,
-                        "Montreal"     =>  14.01 ,
-                        "Vancouver"    =>  11.83 , # April 1, 2015: $0.389/day * 365/12 = $11.83
-                        "Kamloops"     =>  11.83 ,
-                        "PrinceGeorge" =>  11.83 ,
-                        "Regina"       =>  18.85 ,
-                        "Winnipeg"     =>  14.00 ,
-                        "Fredricton"   =>  16.00 ,
-                        "Whitehorse"   =>  "nil" ,
-                        "Yellowknife"  =>  "nil" , 
-                        "Inuvik"       =>  "nil" , 
-                        "Alert"        =>  "nil"
-                    }
-
-   $Elec_TierType  = {     "Halifax"      =>  "none" ,
-                          "Edmonton"     =>  "none" ,
-                          "Calgary"      =>  "none" ,
-                          "Ottawa"       =>  "OntTOU" ,
-                          "Toronto"      =>  "OntTOU" ,
-                          "Quebec"       =>  "1-day" ,
-                          "Montreal"     =>  "1-day" ,
-                          "Vancouver"    =>  "2-month",
-                          "PrinceGeorge" =>  "2-month",
-                          "Kamloops"     =>  "2-month",
-                          "Regina"       =>  "none" ,
-                          "Winnipeg"     =>  "none" ,
-                          "Fredricton"   =>  "none" ,
-                          "Whitehorse"   =>  "1-month" ,
-                          "Yellowknife"  =>  "none" ,
-                          "Inuvik"       =>  "none"  ,
-                          "Alert"        =>  "none"
-                     }
- 
-   $NG_TierType  = {      "Halifax"      =>  "none" ,
-                          "Edmonton"     =>  "none" ,
-                          "Calgary"      =>  "none" ,
-                          "Ottawa"       =>  "1-month" ,
-                          "Toronto"      =>  "1-month" ,
-                          "Quebec"       =>  "1-month" ,
-                          "Montreal"     =>  "1-month" ,
-                          "Vancouver"    =>  "none",
-                          "PrinceGeorge" =>  "none",
-                          "Kamloops"     =>  "none",
-                          "Regina"       =>  "none" ,
-                          "Winnipeg"     =>  "none" ,
-                          "Fredricton"   =>  "none" ,
-                          "Whitehorse"   =>  "NA"   ,
-                          "Yellowknife"  =>  "NA"   ,
-                          "Inuvik"       =>  "NA"   ,
-                          "Alert"        =>  "NA"
-                  }
- 
-   $EffElectricRates = Hash.new(&$blk)
-   $EffElectricRates["Halifax"] = 0.1436
-   $EffElectricRates["Edmonton"] = 0.1236
-   $EffElectricRates["Calgary"] = 0.1224
-   $EffElectricRates["Regina"] = 0.1113
-   $EffElectricRates["Winnipeg"] = 0.0694
-   $EffElectricRates["Fredricton"] = 0.0985
-   $EffElectricRates["Yellowknife"] = 0.29 # Arctic Energy Alliance Spring 2014
-   $EffElectricRates["Inuvik"] = 0.29 # Arctic Energy Alliance Spring 2014
-   $EffElectricRates["Alert"] = 0.29
-
-   # TOU for Ottawa (As of May 2014), Toronto (Feb 2013).
-   $EffElectricRates["Ottawa"]["off-peak"] =  0.1243
-   $EffElectricRates["Ottawa"]["mid-peak"] =  0.1626
-   $EffElectricRates["Ottawa"]["on-peak"]  =  0.1865
-        
-   $EffElectricRates["Toronto"]["off-peak"] =  0.0967
-   $EffElectricRates["Toronto"]["mid-peak"] =  0.1327
-   $EffElectricRates["Toronto"]["on-peak"]  =  0.1517
-  
-   # Tiers for Montreal, Quebec 
-   $EffElectricRates["Montreal"]["30"]   = 0.0532
-   $EffElectricRates["Montreal"]["9.9E99"] = 0.0751
-   $EffElectricRates["Quebec"] = $EffElectricRates["Montreal"]
-    
-   # Tiers for Vancouver, PrinceGeorge and Kamloops
-   $EffElectricRates["Vancouver"]["1350"] = 0.0752       # April 1, 2014
-   $EffElectricRates["Vancouver"]["9.9E99"] = 0.11127    # April 1, 2014
-   $EffElectricRates["Kamloops"]["1350"] = 0.0714
-   $EffElectricRates["Kamloops"]["9.9E99"] = 0.1070
-   $EffElectricRates["PrinceGeorge"]["1350"] = 0.0714
-   $EffElectricRates["PrinceGeorge"]["9.9E99"] = 0.1070
- 
-   # Tiers for Whitehorse 
-   $EffElectricRates["Whitehorse"]["1000"] =  0.0967
-   $EffElectricRates["Whitehorse"]["2500"] =  0.1327
-   $EffElectricRates["Whitehorse"]["9.9E99"] =  0.1517
-  
-   $EffGasRates = Hash.new(&$blk)
-   $EffGasRates["Halifax"] = 0.5124
-   $EffGasRates["Edmonton"] = 0.1482 
-   $EffGasRates["Calgary"] = 0.1363 
-   $EffGasRates["Vancouver"] = 0.3455  # April 1, 2015 (7.643+1.4898)*1.004 * 1.055/28 = $0].455/m
-   $EffGasRates["PrinceGeorge"] =  0.2923 
-   $EffGasRates["Kamloops"] = 0.2923 
-   $EffGasRates["Regina"] = 0.2163 
-   $EffGasRates["Winnipeg"] = 0.2298 
-   $EffGasRates["Fredricton"] = 0.6458 
-   $EffGasRates["Whitehorse"] = 99999.9
-   $EffGasRates["Yellowknife"] = 99999.9
-   $EffGasRates["Inuvik"] = 99999.9 
-   $EffGasRates["A]lert"] = 99999.9
-   
-   # Tiers for Ottawa (Apr. 1, 2014), Toronto
-   $EffGasRates["Ottawa"]["30"]     = 0.3090
-   $EffGasRates["Ottawa"]["85"]     = 0.3043
-   $EffGasRates["Ottawa"]["790"]    = 0.3006
-   $EffGasRates["Ottawa"]["9.9E99"] = 0.2978
-   $EffGasRates["Toronto"] = $EffGasRates["Ottawa"]
-  
-   # Tiers for Montreal, Quebec 
-   $EffGasRates["Montreal"]["30"]     = 0.5001
-   $EffGasRates["Montreal"]["100"]    = 0.4229
-   $EffGasRates["Montreal"]["300"]    = 0.4106
-   $EffGasRates["Montreal"]["9.9E99"] = 0.3749
-   $EffGasRates["Quebec"] = $EffGasRates["Montreal"] 
-
-   # ------ READ IN Summary Data from HOT2000 working file (XML)
-
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
 
@@ -700,366 +476,20 @@ def postprocess( scaleData )
       $gRegionalCostAdj = $RegionalCostFactors[$Locale]
    end
    
-   # Recover monthly electrical, natural gas, oil, propane, wood, or pellet consumption data 
    monthArray = [ "january", "february", "march", "april", "may", "june", 
                   "july", "august", "september", "october", "november", "december" ]
-   $Electrical_Use = Array.new()
-   locationText = "HouseFile/AllResults/Results/Monthly/ElectricalConsumption/Gross"
-   monthArray.each_index do |mth|
-      $Electrical_Use[mth] = h2kPostElements[locationText].attributes[monthArray[mth]]
-   end
-   # ONLY ANNUAL AVAILABLE FOR ALL FUELS! Above is for electrical space heating only!
+   
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption"
+   $gAvgEnergy_Total += h2kPostElements[locationText].attributes["total"].to_f * scaleData
+   
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/Electrical"
+   $gAvgElecCons_KWh += h2kPostElements[locationText].attributes["total"].to_f * scaleData
    
    
    
    
-   
-=begin 
-   my @NaturalGas_Use = @{ $data{" total fuel use:natural gas:all end uses:quantity (m3/s)"}  };
-   my @Oil_Use        = @{ $data{" total fuel use:oil:all end uses:quantity (l/s)"}  };
-   my @Propane_Use    = @{ $data{" total fuel use:propane:all end uses:quantity (m3/s)"}  };
-   my @Wood_Use       = @{ $data{" total fuel use:mixed wood:all end uses:quantity (tonne/s)"}  };
-   my @Pellets_Use    = @{ $data{" total fuel use:wood pellets:all end uses:quantity (tonne/s)"}  };
-   #my @Wood_Use       = @{ $data{" total fuel use:wood:all end uses:quantity (cord/s)"}  };
-   #my @Pellets_Use    = @{ $data{" total fuel use:pellets:all end uses:quantity (ton/s)"}  };
-   # Recover Day, Hour & Month
-   my @DayOfYear   = @{  $data{" building:day:future (day)"}     } ;
-   my @HourOfDay   = @{  $data{" building:hour:future (hours)"}  } ;
-   my @MonthOfYear = @{  $data{" building:month (-)"}            } ; 
-  
-   # Track peak heating and cooling loads
-   my @HeatingLoads = @{ $data{" building:all zones:supplied energy:heating (W)"} };
-   my @CoolingLoads = @{ $data{" building:all zones:supplied energy:cooling (W)"} }; 
-  
-   # Now loop through data and apply energy rates
 
-   # Variables to track running tallies for energy consumption 
-   my $row; 
-
-   my $ElecConsumptionCost = 0; 
-   my $MonthGasConsumption = 0; 
-   my $GasConsumptionCost  = 0; 
-   my $OilConsumptionCost  = 0; 
-   my $PropaneConsumptionCost  = 0; 
-   my $WoodConsumptionCost  = 0; 
-   my $PelletsConsumptionCost  = 0; 
-
-   my $GasCurrConsumpionForTiers = 0; 
-   my $ElecCurrConsumpionForTiers = 0; 
-
-   my $CurrDayOfWeek = $FirstDay_Day_Of_Week; 
-
-   my $OldDay   = 1; 
-   my $OldMonth = 1; 
-
-   my $BiMonthCounter = 1; 
-
-   my $CountRows = 0; 
-
-   for ( $row = 0; $row < $NumberOfRows; $row++){
-
-      $CountRows++; 
-  
-      my $DayRollover = 0; 
-      my $MonthRollover = 0; 
-      my $BiMonthRollover = 0; 
-  
-      # Get current hour, day & month as integers
-      my $CurrDay   =  int($DayOfYear[$row])   ;
-      my $CurrMonth =  int($MonthOfYear[$row]) ;
-      my $CurrHour  =  int($HourOfDay[$row])   ;  
-   
-      # Check to see if this is a new day, and increment day of week as needed
-      if ( $CurrDay != $OldDay ) {
-         $CurrDayOfWeek++; 
-         $DayRollover = 1; 
-      
-         # Roll over week after 7 days. 
-         if ( $CurrDayOfWeek > 7 ){ 
-            $CurrDayOfWeek = 1; 
-         }
-         $OldDay = $CurrDay; 
-      }
-    
-      # Check to see if this is a new month for billing tiers 
-      if ( $CurrMonth != $OldMonth ) {
-         $MonthRollover = 1;
-         # Increment counter for bi-monthly billing periods       
-         $BiMonthCounter++; 
-         $OldMonth = $CurrMonth ; 
-      }
- 
-      # Check to see if bi-monthly counter has reached 3 for bimonthly 
-      # billing tiers. 
-      if ( $BiMonthCounter > 2 ){
-        $BiMonthRollover = 1; 
-        $BiMonthCounter = 1; 
-      } 
-            
-    
-      # Determine if this is a weekday, weekend, or holiday for 
-      # TOU calculations
-      my $WeekendOrHoliday = 0; 
-
-      foreach (@holidays){
-         if ( $CurrDay == $_ ) { $WeekendOrHoliday = "holiday"} ;
-      }
-    
-      if ( $CurrDayOfWeek == 1 || $CurrDayOfWeek == 7 ){$WeekendOrHoliday = "weekend"} ; 
-      
-      my $CurrElecRatePeriod = $ElecRatePeriods[$CurrMonth-1]; 
-    
-      my $CurrPeakPeriod; 
-    
-      if ( $WeekendOrHoliday ){
-         $CurrPeakPeriod = "off-peak";
-      }else{
-         $CurrPeakPeriod = $ElecPeakSchedule{$CurrElecRatePeriod}[$CurrHour-1]
-      }
-    
-    # For Tiered energy use, check tier type and possibly reset energy 
-    # consumption for tier period 
-    
-    my $ElecTierType = $Elec_TierType{$Locale}; 
-    my $GasTierType  = $NG_TierType{$Locale}; 
-    if ( ( $ElecTierType eq "1-day"   && $DayRollover     ) || 
-         ( $ElecTierType eq "1-month" && $MonthRollover   ) || 
-         ( $ElecTierType eq "2-month" && $BiMonthRollover )    ){
-       $ElecCurrConsumpionForTiers = 0; 
-    }
-    if ( ( $GasTierType eq "1-day"   && $DayRollover     ) || 
-         ( $GasTierType eq "1-month" && $MonthRollover   ) || 
-         ( $GasTierType eq "2-month" && $BiMonthRollover )    ){
-       $GasCurrConsumpionForTiers = 0; 
-    }    
-    
-    # ELECTRICITY---------------------------------------------------------
-    
-    # Now apply electrical rates.
-    
-    my $ElecConsumption = $Electrical_Use[$row] * $TSLength;  # kWh 
-    
-    my $EffElecRate; 
-    
-    if ( $Elec_TierType{$Locale} eq "none" ) {
-      # No tier --- province has a single rate`   
-      $EffElecRate = $EffElectricRates{$Locale}; 
-      $ElecConsumptionCost += $ElecConsumption * $EffElecRate
-    
-    }elsif ( $Elec_TierType{$Locale} eq "OntTOU" ) {
-      # Ontario TOU
-      $EffElecRate = $EffElectricRates{$Locale}{$CurrPeakPeriod} ;
-#      system ("echo $EffElecRate >> fileYouWantToPrintTo.txt") ; 
-	  
-      $ElecConsumptionCost += $ElecConsumption * $EffElecRate ; 
-#      stream_out ( " S Charging $ElecConsumption kwh to tiers: ( TOU Period: $CurrPeakPeriod ) -> $ElecConsumptionCost @  $EffElecRate \n"); 
-    }else {
-      # Standard consumption tier. $ElecCurrConsumpionForTiers contains 
-      # current consumption in Tier billing period.  
-       
-      my $ElecTiersRef = $EffElectricRates{$Locale}; 
-      my %ElecTiers = %$ElecTiersRef; 
-      my $Done = 0;  
-      my $UnbilledConsumption = $ElecConsumption; 
- 
-      SKIPme: foreach my $tier (sort {$a <=> $b} (keys %ElecTiers)){
-
-        my $BilledConsumption = 0; 
-        # Rate for this tier: 
-        $EffElecRate = $ElecTiers{$tier}; 
-        
-        if ( $ElecCurrConsumpionForTiers >= $tier ) { 
-        
-            # Next tier 
-        
-        }elsif ($UnbilledConsumption > 0.001 ) { 
-        
-          # Bill only for the amount that 'fits' in the current tier. 
-          $BilledConsumption = 
-              $ElecCurrConsumpionForTiers + $UnbilledConsumption > $tier ? 
-              $tier - $ElecCurrConsumpionForTiers : $UnbilledConsumption   ; 
-              
-          # Save remaining amount of unbilled consumption for the 
-          # next tier ( maybe zero). 
-          
-          $UnbilledConsumption -= $BilledConsumption; 
-
-          # Add billed consumption to current amount in tier. 
-          $ElecCurrConsumpionForTiers += $BilledConsumption; 
-          
-          # Compute cost of billed consumption
-          $ElecConsumptionCost += $BilledConsumption * $EffElecRate ; 
-          
-        }
-        
-        
-       # stream_out ( " >ELE Charging $ElecConsumption kwh to tiers: ( is $ElecCurrConsumpionForTiers > $tier ?) -> $BilledConsumption @  $EffElecRate \n"); 
-        
-        #stream_out ( "> Tiers: $tier \n" ); 
-        #if ( $Done ) { last SKIPme; } 
-      }
-      
-    }
-    
-         
-    # Natural GAS ========================================================
-    
-    # Use current month's gas consumption to figure out tier of current 
-    # gas consumption. 
-    # stream_out ("> raw NG: $NaturalGas_Use[$row] \n"); 
-    my $GasConsumption = $NaturalGas_Use[$row] < 0 ?
-                         0 : $NaturalGas_Use[$row] * $TSLength; # M3
-    
-    #$$$$$$$$$$$$$$$$$$$$$$$$$$
-    
-    
-    my $EffGasRate; 
-    if ( $NG_TierType{$Locale} eq "NA" ) {
-    
-        if ($GasConsumption > 0.000001 ) {
-          fatalerror ( " GAS FOUND ($GasConsumption m3), But no gas rate for $Locale !" ); 
-        }else{
-            $GasConsumptionCost  = 0; 
-            $EffGasRate = 0; 
-        }
-    
-    }elsif ( $NG_TierType{$Locale} eq "none" ) {
-      # No tier --- province has a single rate`   
-      $EffGasRate = $EffGasRates{$Locale}; 
-      $GasConsumptionCost += $GasConsumption * $EffGasRate
-    
-    }else {
-      # Standard consumption tier. $GasCurrConsumpionForTiers contains 
-      # current consumption in Tier billing period.  
-       
-      my $GasTiersRef = $EffGasRates{$Locale}; 
-      my %GasTiers = %$GasTiersRef; 
-      my $UnbilledConsumption = $GasConsumption; 
-      SKIPme: foreach my $tier (sort {$a <=> $b} (keys %GasTiers)){
-     
-        my $BilledConsumption = 0; 
-        # Rate for this tier: 
-        $EffGasRate = $GasTiers{$tier}; 
-        
-        if ( $GasCurrConsumpionForTiers >= $tier ) { 
-        
-            # Next tier 
-        
-        }elsif ($UnbilledConsumption > 0.001 ) { 
-        
-          # Bill only for the amount that 'fits' in the current tier. 
-          $BilledConsumption = 
-              $GasCurrConsumpionForTiers + $UnbilledConsumption > $tier ? 
-              $tier - $GasCurrConsumpionForTiers : $UnbilledConsumption   ; 
-              
-          # Save remaining amount of unbilled consumption for the 
-          # next tier ( maybe zero). 
-          
-          $UnbilledConsumption -= $BilledConsumption; 
-
-          # Add billed consumption to current amount in tier. 
-          $GasCurrConsumpionForTiers += $BilledConsumption; 
-          
-          # Compute cost of billed consumption
-          $GasConsumptionCost += $BilledConsumption * $EffGasRate ; 
-          
-        }
-        
-        #print  " >GAS Charging $GasConsumption m3 to tiers: ( is $GasCurrConsumpionForTiers > $tier ?) -> $BilledConsumption @  $EffGasRate \n"; 
-
-      }
-    }    
-    
-    #$$$$$$$$$$$$$$$$$$$$$$$$$
-    
-    #### OIL 
-    
-    my $CurrentOilConsumption = $Oil_Use[$row] * $TSLength; # l
-    
-    $OilConsumptionCost += $CurrentOilConsumption * ( $OilSupplyCharge{$Locale} ); 
-
-    #if ( $CurrMonth > 2 ) { die(); }
-         
-    #debug_out (" $Locale: TIER: $Elec_TierType{$Locale}  $CurrMonth $CurrDay $CurrHour | $CurrElecRatePeriod - $CurrPeakPeriod ($WeekendOrHoliday)  $ElecConsumption [kWh] * ( old:  vs new: $EffElecRate [\$/kWh] ) = $ElecConsumptionCost  \n");        
-
-    #debug_out ("  $CurrMonth $CurrDay $CurrHour | $MonthGasConsumption -> $CurrGasTarrif | $GasConsumptionCost += $CurrentGasConsumption * $CurrGasTarrif \n"); 
-  
-  
-    #### PROPANE
-    
-    my $CurrentPropaneConsumption = $Propane_Use[$row] * $TSLength; # l
-    
-    $PropaneConsumptionCost += $CurrentPropaneConsumption * ( $PropaneSupplyCharge ); 
-  
-    # debug_out ("###Debug Note $PropaneConsumptionCost  += $CurrentPropaneConsumption * ( $PropaneSupplyCharge ) \n"); 
-    #if ( $CurrMonth > 2 ) { die(); }
-         
-    #debug_out (" $Locale: TIER: $Elec_TierType{$Locale}  $CurrMonth $CurrDay $CurrHour | $CurrElecRatePeriod - $CurrPeakPeriod ($WeekendOrHoliday)  $ElecConsumption [kWh] * ( old:  vs new: $EffElecRate [\$/kWh] ) = $ElecConsumptionCost  \n");        
-
-    #debug_out ("  $CurrMonth $CurrDay $CurrHour | $MonthGasConsumption -> $CurrGasTarrif | $GasConsumptionCost += $CurrentGasConsumption * $CurrGasTarrif \n");  
-	
-	#### Wood
-    
-    my $CurrentWoodConsumption = $Wood_Use[$row] * $TSLength; # l
-    
-    $WoodConsumptionCost += $CurrentWoodConsumption * ( $WoodSupplyCharge ); 
-
-		
-	#### Pellets
-    
-    my $CurrentPelletsConsumption = $Pellets_Use[$row] * $TSLength; # l
-    
-    $PelletsConsumptionCost += $CurrentPelletsConsumption * ( $PelletsSupplyCharge ); 
-	
-	## PEAK heating / cooling / electrical load
-	
-	if ( $HeatingLoads[$row] > $gPeakHeatingLoadW ) { 
-	  $gPeakHeatingLoadW = $HeatingLoads[$row] ; 
-	  stream_out  "PEAK Heating LOAD: $gPeakHeatingLoadW ($row) \n"; 
-	   
-	}
-	
-	if ( $CoolingLoads[$row] > $gPeakCoolingLoadW ) { 
-	  $gPeakCoolingLoadW = $CoolingLoads[$row] ; 
-	  stream_out  "PEAK COOLING LOAD: $gPeakCoolingLoadW ($row) \n"; 
-	}	
-  }
-
-  my $FracOfYear          = ( $CountRows * $TSLength )/(3600*8760); 
-  my $MonthsForBaseCharge = $FracOfYear * 12 ; 
-  
-
-  my $TotalElecBill = $Elec_BaseCharge{$Locale}* $MonthsForBaseCharge + $ElecConsumptionCost ; 
-  my $TotalGasBill  = $GasConsumptionCost < 0.01 ? 0 : $NG_BaseCharge{$Locale} * $MonthsForBaseCharge + $GasConsumptionCost  ; 
-  
-  my $TotalOilBill  = $OilFixedCharge * $MonthsForBaseCharge. + $OilConsumptionCost  ; 	
-    
-  my $TotalPropaneBill  = $PropaneFixedCharge * $MonthsForBaseCharge + $PropaneConsumptionCost  ; 
-  
-  my $TotalWoodBill  = $WoodFixedCharge * $MonthsForBaseCharge + $WoodConsumptionCost  ; 
-	
-  my $TotalPelletBill  = $PelletsFixedCharge * $MonthsForBaseCharge + $PelletsConsumptionCost  ; 
-  
-  # Add data from externally computed SDHW (Legacy code)
-  #my $sizeSDHW = $gChoices{"Opt-SolarDHW"}; 
-  #$gSimResults{"SDHW production::AnnualTotal"} = -1.0 * $gOptions{"Opt-SolarDHW"}{"options"}{$sizeSDHW}{"ext-result"}{"production-DHW"};
-  
-    
-  # Adjust solar DHW energy credit to reflect actual consumption. Assume 
-  # SDHW credit cannot be more than 60% of total water load. 
-  
-  #$gSimResults{"SDHW production::AnnualTotal"} = min( $gSimResults{"SDHW production::AnnualTotal"}*-1.,
-  #                                       0.6 * $gSimResults{"total_fuel_use/test/all_fuels/water_heating/energy_content::AnnualTotal"} 
-  #                                     ) * (-1.) ; 
-  
-
-  # Add data from externally computed PVs. 
-  
-  
-  my $PVsize = $gChoices{"Opt-StandoffPV"}; 
-  my $PVArrayCost;
-  my $PVArraySized; 
-  
+=begin  
   if ( $PVsize !~ /SizedPV/ ){
     
     # Use spec'd PV sizes. This only works for NoPV. 
@@ -1130,7 +560,10 @@ def postprocess( scaleData )
   }
   $gChoices{"Opt-StandoffPV"}=$PVsize;
   $gOptions{"Opt-StandoffPV"}{"options"}{$PVsize}{"cost"} = $PVArrayCost;
+=end
 
+
+=begin
   stream_out("\n\n Energy Consumption: \n\n") ; 
 
   my $gTotalEnergy = 0;
@@ -1278,7 +711,10 @@ def postprocess( scaleData )
   stream_out("  - ".round($gEnergyPellet* 8760. * 60. * 60.)." (Pellet, tonnes)\n");
   
   stream_out ("> SCALE scaleData \n"); 
-  
+=end
+
+
+=begin  
   # Estimate total cost of upgrades
 
   $gTotalCost = 0;         

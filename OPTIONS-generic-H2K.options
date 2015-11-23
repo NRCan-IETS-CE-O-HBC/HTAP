@@ -28,6 +28,48 @@
 
 *attribute:end 
 
+!-----------------------------------------------------------------------
+! HOT2000 Fuel Costs
+!-----------------------------------------------------------------------
+*attribute:start
+*attribute:name     = Opt-FuelCost
+*attribute:tag:1    = <OPT-LibraryFile>
+*attribute:tag:2    = <OPT-FuelType>
+*attribute:tag:3    = <OPT-FuelName>
+*attribute:tag:4    = <OPT-FuelID>
+*attribute:default  = Ottawa08
+
+*option:Ottawa08:value:1  = fuelLib.flc
+*option:Ottawa08:value:2  = Electricity
+*option:Ottawa08:value:3  = Ottawa08
+*option:Ottawa08:value:4  = 16
+*option:Ottawa08:cost:total = 0
+
+*option:Ottawa08:value:1  = fuelLib.flc
+*option:Ottawa08:value:2  = Gas
+*option:Ottawa08:value:3  = Ottawa08
+*option:Ottawa08:value:4  = 17
+*option:Ottawa08:cost:total = 0
+
+*option:Ottawa08:value:1  = fuelLib.flc
+*option:Ottawa08:value:2  = Oil
+*option:Ottawa08:value:3  = Ottawa08
+*option:Ottawa08:value:4  = 18
+*option:Ottawa08:cost:total = 0
+
+*option:Ottawa08:value:1  = fuelLib.flc
+*option:Ottawa08:value:2  = Propane
+*option:Ottawa08:value:3  = Ottawa08
+*option:Ottawa08:value:4  = 19
+*option:Ottawa08:cost:total = 0
+
+*option:Ottawa08:value:1  = fuelLib.flc
+*option:Ottawa08:value:2  = Wood
+*option:Ottawa08:value:3  = Ottawa08
+*option:Ottawa08:value:4  = 7
+*option:Ottawa08:cost:total = 0
+
+*attribute:end
 
 !-----------------------------------------------------------------------
 ! This option can be used to load construction databases from the CEF,
@@ -1308,51 +1350,51 @@
    
 *attribute:name = Opt-Ceilings
 *attribute:tag:1  = <Opt-Ceiling>
-!*attribute:tag:2  = <Opt-CeilingR>
+*attribute:tag:2  = <OPT-H2K-EffRValue>
 *attribute:default = CeilR50
 
 *option:CeilR40:value:1 =   CeilR40
-!*option:CeilR40:value:2 =   CeilR40R
+*option:CeilR40:value:2 =   40
 *option:CeilR40:cost:total    =   0    ! BC-LEEP base
 *option:CeilR40:alias    =   1600
 
-*option:CeilR50:value:1 =   CeilR50                ! Name of entry in H2K code library
-!*option:CeilR50:value:2 =   CeilR50R              ! OR, Add a 3rd value for User-Spec'd R? ******
+*option:CeilR50:value:1 = CeilR50                
+*option:CeilR50:value:2 = 50              
 *option:CeilR50:cost:total    =   255     ! BC-LEEP
 *option:CeilR50:alias    =   1601
 
 *option:CeilR60:value:1 =   CeilR60
-!*option:CeilR60:value:2 =   CeilR60R
-*option:CeilR60:cost:total    =   440	! BC-LEEP
+*option:CeilR60:value:2 =   60
+*option:CeilR60:cost:total    =   440  ! BC-LEEP
 *option:CeilR60:alias    =   1602
 
 *option:CeilR70:value:1 =   CeilR70
-!*option:CeilR70:value:2 =   CeilR70R
-*option:CeilR70:cost:total  =   725		! BC-LEEP
+*option:CeilR70:value:2 =  70
+*option:CeilR70:cost:total  =   725    ! BC-LEEP
 *option:CeilR70:alias  =   1603
 
 *option:CeilR80:value:1 =   CeilR80
-!*option:CeilR80:value:2 =   CeilR80R
+*option:CeilR80:value:2 =   80
 *option:CeilR80:cost:total    =   970	! BC-LEEP
 *option:CeilR80:alias    =   1604
 
 *option:CeilR90:value:1 =   CeilR90
-!*option:CeilR90:value:2 =   CeilR90R
+*option:CeilR90:value:2 =   90
 *option:CeilR90:cost:total    =   1220	! BC-LEEP
 *option:CeilR90:alias    =   1605
 
 *option:CeilR100:value:1 =  CeilR100
-!*option:CeilR100:value:2 =  CeilR100R
+*option:CeilR100:value:2 =  100
 *option:CeilR100:cost:total    = 1465 	! BC-LEEP 
 *option:CeilR100:alias    =  1606
 
 *option:CeilR110:value:1 =  CeilR110
-!*option:CeilR110:value:2 =  CeilR110R
+*option:CeilR110:value:2 =  110
 *option:CeilR110:cost:total    =  2788  
 *option:CeilR110:alias    =  1607
 
 *option:CeilR120:value:1 =  CeilR120
-!*option:CeilR120:value:2 =  CeilR120R
+*option:CeilR120:value:2 =  120
 *option:CeilR120:cost:total    =  3257  
 *option:CeilR120:alias    =  1608
 
@@ -1360,27 +1402,27 @@
 !   Retrofit Ceilings options
 !-----------------------------------------------------------------------
 *option:retro_roof:value:1 =   retro_roof
-!*option:retro_roof:value:2 =  retro_roofR
+*option:retro_roof:value:2 =  30    #???????????????????????????????
 *option:retro_roof:cost:total    =  0
 *option:retro_roof:alias    =  1609
 
 *option:retro_attic-2_962:value:1 =   retro-att-3
-!*option:retro_attic-2_962:value:2 =  retro-att-3R
+*option:retro_attic-2_962:value:2 =  30    #???????????????????????????????
 *option:retro_attic-2_962:cost:total    =  0
 *option:retro_attic-2_962:alias    =  1610
 
 *option:retro_attic-4_152:value:1 =   retro-att-4
-!*option:retro_attic-4_152:value:2 =  retro-att-4R
+*option:retro_attic-4_152:value:2 =  40    #???????????????????????????????
 *option:retro_attic-4_152:cost:total    =  0
 *option:retro_attic-4_152:alias    =  1611
 
 *option:retro_attic-4_152_6cell:value:1 =   retroatt_6
-!*option:retro_attic-4_152_6cell:value:2 =  retroatt_6 
+*option:retro_attic-4_152_6cell:value:2 =  60    #???????????????????????????????
 *option:retro_attic-4_152_6cell:cost:total    =  1308    !This value based on Vancouver geometry
 *option:retro_attic-4_152_6cell:alias    =  1612
 
 *option:retro_attic-4_152_12cell:value:1 =   retroatt_12
-!*option:retro_attic-4_152_12cell:value:2 =  retroatt_12
+*option:retro_attic-4_152_12cell:value:2 =  120    #???????????????????????????????
 *option:retro_attic-4_152_12cell:cost:total    =  1422   !This value based on Vancouver geometry
 *option:retro_attic-4_152_12cell:alias    =  1613
 
@@ -1388,22 +1430,22 @@
 !   NWT Retrofit Ceilings options
 !-----------------------------------------------------------------------
 *option:NWTCeilR40:value:1 =   NWTCeilR40
-!*option:NWTCeilR40:value:2 =  NWTCeilR40R
+*option:NWTCeilR40:value:2 =  40
 *option:NWTCeilR40:cost:total    =  0
 *option:NWTCeilR40:alias    =  1614
 
 *option:NWTCeilR50:value:1 =   NWTCeilR50
-!*option:NWTCeilR50:value:2 =  NWTCeilR50R
+*option:NWTCeilR50:value:2 =  50
 *option:NWTCeilR50:cost:total    =  0
 *option:NWTCeilR50:alias    =  1615
 
 *option:NWTCeilR60:value:1 =   NWTCeilR60
-!*option:NWTCeilR60:value:2 =  NWTCeilR60R
+*option:NWTCeilR60:value:2 =  60
 *option:NWTCeilR60:cost:total    =  0
 *option:NWTCeilR60:alias    =  1616
 
 *option:NWTCeilR70:value:1 =   NWTCeilR70
-!*option:NWTCeilR70:value:2 =  NWTCeilR70R
+*option:NWTCeilR70:value:2 =  70
 *option:NWTCeilR70:cost:total    =  0
 *option:NWTCeilR70:alias    =  1617
 
@@ -1415,10 +1457,12 @@
 *attribute:start 
 *attribute:name = Opt-GenericWall_1Layer_definitions
 *attribute:tag:1  = <Opt-GenInsulLayerInboard-a>
+*attribute:tag:2  = <OPT-H2K-EffRValue>
 *attribute:default = Stud_2x6_R20
  
 ! Thicknesses are defined in meters. Format * must * be #.#### (4 decimals)
 *option:Stud_2x6_R20:value:1 = 0.08748 
+*option:Stud_2x6_R20:value:2 = 20 
 *option:Stud_2x6_R20:cost    = 0
 *option:Stud_2x6_R20:alias = 1750
 
@@ -1426,102 +1470,124 @@
 ! BC LEEP Wall systems
 
 *option:Stud_2x4_2in_XPS_R-24:value:1 = 0.1366     ! For H2K add a new tag for User-Specified R-value
+*option:Stud_2x4_2in_XPS_R-24:value:2 = 24
 *option:Stud_2x4_2in_XPS_R-24:cost = 2235     ! BC-LEEP
 *option:Stud_2x4_2in_XPS_R-24:alias = 1751
 
 *option:Stud_2x6_1in_XPS_R-23:value:1 = 0.1329
+*option:Stud_2x6_1in_XPS_R-23:value:2 = 23
 *option:Stud_2x6_1in_XPS_R-23:cost = 2075     ! BC-LEEP
 *option:Stud_2x6_1in_XPS_R-23:alias = 1752
 
 *option:Stud_2x6_1.5in_XPS_R-25:value:1 = 0.1457
+*option:Stud_2x6_1.5in_XPS_R-25:value:2 = 25
 *option:Stud_2x6_1.5in_XPS_R-25:cost = 2775     ! BC-LEEP
 *option:Stud_2x6_1.5in_XPS_R-25:alias = 1753
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
+*option:Stud_2x6_2in_XPS_R-29:value:2 = 29
 *option:Stud_2x6_2in_XPS_R-29:cost = 3475     ! BC-LEEP
 *option:Stud_2x6_2in_XPS_R-29:alias = 1754
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
+*option:Stud_2x6_3in_XPS_R-34:value:2 = 34
 *option:Stud_2x6_3in_XPS_R-34:cost = 4880     ! BC-LEEP
 *option:Stud_2x6_3in_XPS_R-34:alias = 1755
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
+*option:Stud_2x6_4in_XPS_R-39:value:2 = 39
 *option:Stud_2x6_4in_XPS_R-39:cost = 7805     ! BC-LEEP
 *option:Stud_2x6_4in_XPS_R-39:alias = 1756
 
 *option:Stud_2x6_1.5in_MWB_R-25:value:1 = 0.14
+*option:Stud_2x6_1.5in_MWB_R-25:value:2 = 25
 *option:Stud_2x6_1.5in_MWB_R-25:cost = 5045     ! BC-LEEP
 *option:Stud_2x6_1.5in_MWB_R-25:alias = 1757
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
+*option:Stud_2x6_2in_MWB_R-27:value:2 = 27
 *option:Stud_2x6_2in_MWB_R-27:cost = 5275     ! BC-LEEP
 *option:Stud_2x6_2in_MWB_R-27:alias = 1758
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
+*option:Stud_2x6_3in_MWB_R-31:value:2 = 31
 *option:Stud_2x6_3in_MWB_R-31:cost = 6970     ! BC-LEEP
 *option:Stud_2x6_3in_MWB_R-31:alias = 1759
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
+*option:Stud_2x6_4in_MWB_R-35:value:2 = 35
 *option:Stud_2x6_4in_MWB_R-35:cost = 8465     ! BC-LEEP
 *option:Stud_2x6_4in_MWB_R-35:alias = 1760
 
 *option:Stud_2x4_2in_Polyiso_R-25:value:1 = 0.1422
+*option:Stud_2x4_2in_Polyiso_R-25:value:2 = 25
 *option:Stud_2x4_2in_Polyiso_R-25:cost = 2845     ! BC-LEEP
 *option:Stud_2x4_2in_Polyiso_R-25:alias = 1761
 
 *option:Stud_2x6_1in_Polyiso_R-24:value:1 = 0.1358
+*option:Stud_2x6_1in_Polyiso_R-24:value:2 = 24
 *option:Stud_2x6_1in_Polyiso_R-24:cost = 2900     ! BC-LEEP
 *option:Stud_2x6_1in_Polyiso_R-24:alias = 1762
 
 *option:Stud_2x6_2in_Polyiso_R-30:value:1 = 0.1726
+*option:Stud_2x6_2in_Polyiso_R-30:value:2 = 30
 *option:Stud_2x6_2in_Polyiso_R-30:cost = 3855     ! BC-LEEP
 *option:Stud_2x6_2in_Polyiso_R-30:alias = 1763
 
 *option:Stud_2x6_3in_Polyiso_R-35:value:1 = 0.208
+*option:Stud_2x6_3in_Polyiso_R-35:value:2 = 35
 *option:Stud_2x6_3in_Polyiso_R-35:cost = 5145     ! BC-LEEP
 *option:Stud_2x6_3in_Polyiso_R-35:alias = 1764
 
 *option:Stud_2x6_4in_Polyiso_R-41:value:1 = 0.2432
+*option:Stud_2x6_4in_Polyiso_R-41:value:2 = 41
 *option:Stud_2x6_4in_Polyiso_R-41:cost = 6740     ! BC-LEEP
 *option:Stud_2x6_4in_Polyiso_R-41:alias = 1765
 
 *option:Stud_2x4_2in_EPS_R-21:value:1 = 0.1203
+*option:Stud_2x4_2in_EPS_R-21:value:2 = 21
 *option:Stud_2x4_2in_EPS_R-21:cost = 2460     ! BC-LEEP
 *option:Stud_2x4_2in_EPS_R-21:alias = 1766
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
+*option:Stud_2x6_1.5in_EPS_R-24:value:2 = 24
 *option:Stud_2x6_1.5in_EPS_R-24:cost = 2910     ! BC-LEEP
 *option:Stud_2x6_1.5in_EPS_R-24:alias = 1767
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
+*option:Stud_2x6_2in_EPS_R-26:value:2 = 26
 *option:Stud_2x6_2in_EPS_R-26:cost = 3470     ! BC-LEEP
 *option:Stud_2x6_2in_EPS_R-26:alias = 1768
 
 *option:Stud_2x6_3in_EPS_R-30:value:1 = 0.1754
+*option:Stud_2x6_3in_EPS_R-30:value:2 = 30
 *option:Stud_2x6_3in_EPS_R-30:cost = 4695     ! BC-LEEP
 *option:Stud_2x6_3in_EPS_R-30:alias = 1769
 
 *option:Stud_2x6_4in_EPS_R-34:value:1 = 0.2003
+*option:Stud_2x6_4in_EPS_R-34:value:2 = 34
 *option:Stud_2x6_4in_EPS_R-34:cost = 5830     ! BC-LEEP
 *option:Stud_2x6_4in_EPS_R-34:alias = 1770
 
 *option:SIPS_6.5in_EPS_R-24:value:1 = 0.1367
+*option:SIPS_6.5in_EPS_R-24:value:2 = 24
 *option:SIPS_6.5in_EPS_R-24:cost = 9140     ! BC-LEEP
 *option:SIPS_6.5in_EPS_R-24:alias = 1771
 
 *option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256
+*option:SIPS_10.5in_EPS_R-38:value:2 = 38
 *option:SIPS_10.5in_EPS_R-38:cost = 11945     ! BC-LEEP
 *option:SIPS_10.5in_EPS_R-38:alias = 1772
 
 *option:DblStud_12in_cell_R-41:value:1 = 0.2464
+*option:DblStud_12in_cell_R-41:value:2 = 41
 *option:DblStud_12in_cell_R-41:cost = 13030     ! BC-LEEP
 *option:DblStud_12in_cell_R-41:alias = 1773
 
 *option:DblStud_10in_cell_R-34:value:1 = 0.1982
+*option:DblStud_10in_cell_R-34:value:2 = 34
 *option:DblStud_10in_cell_R-34:cost = 11130     ! BC-LEEP
 *option:DblStud_10in_cell_R-34:alias = 1774
-
-
 
 *attribute:end
 
@@ -2126,21 +2192,24 @@ Whitehorse Wall Options (Code is R28)
 *attribute:name   =Opt-ExposedFloor 
 *attribute:tag:1  =<Opt-ExposedFloor>
 *attribute:tag:2  =<Opt-ExposedFloor-r>
+*attribute:tag:3  =<OPT-H2K-EffRValue>
 *attribute:default = BaseExpFloor-R31
-
 
 *option:BaseExpFloor-R31:value:1 = ExpFlR31
 *option:BaseExpFloor-R31:value:2 = ExpFlR31r
+*option:BaseExpFloor-R31:value:3 = 31
 *option:BaseExpFloor-R31:cost:total    = 0
 *option:BaseExpFloor-R31:alias = 2000
 
 *option:ExpFloorFlash&Batt-R36:value:1 = ExpFlR36
 *option:ExpFloorFlash&Batt-R36:value:2 = ExpFlR36r
+*option:ExpFloorFlash&Batt-R36:value:3 = 36
 *option:ExpFloorFlash&Batt-R36:cost:total    = 659.86
 *option:ExpFloorFlash&Batt-R36:alias = 2001
 
 *option:ExpFloorFoamed-R52:value:1 = ExpFlR52
 *option:ExpFloorFoamed-R52:value:2 = ExpFlR52r
+*option:ExpFloorFoamed-R52:value:3 = 52
 *option:ExpFloorFoamed-R52:cost:total    = 1720.82
 *option:ExpFloorFoamed-R52:alias = 2002
 
@@ -2148,6 +2217,7 @@ Whitehorse Wall Options (Code is R28)
 ! NWT Crawl Space Floor is Exposed
 *option:NWTCrawlFlr:value:1 = NWTCrawlFlr
 *option:NWTCrawlFlr:value:2 = NWTCrawlFlrr
+*option:NWTCrawlFlr:value:3 = 30       # ??????????????????????????????????????
 *option:NWTCrawlFlr:cost:total    = 0
 *option:NWTCrawlFlr:alias = 2003
 
