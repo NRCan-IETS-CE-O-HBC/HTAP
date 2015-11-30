@@ -140,11 +140,7 @@ puts "\n---------------------------------------------------------------\n"
 puts("Current heating system is: ")
 locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
 $h2kElements.each(locationText) { |element| 
-  print "Type #{element.attributes["code"]} : "
-}
-locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType/English"
-$h2kElements.each(locationText) { |element| 
-  print "#{element.text}\n\n"
+  puts "Type #{element.attributes["code"]} : #{element.get_text("English")}\n"
 }
 
 
@@ -174,8 +170,8 @@ puts("\n---------------------------------------------------------------\n")
 
 # To run H2K and wait until exited. Pass H2K a command line argument for the file to open.
 path = File.dirname(path)	        # Removes outermost path portion (\\user)
+runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in path!
 if ( path !~ /V11_1_CLI/ )
-   runThis = path + "\\HOT2000.exe"	# NOTE: Doesn't work if space in path!
    puts "\nStart #{runThis} with file #{newFileName} (y/n)?"
    answer = STDIN.gets.chomp           # Specify STDIN or gets text from ARGV!
    if answer.capitalize == 'Y' then

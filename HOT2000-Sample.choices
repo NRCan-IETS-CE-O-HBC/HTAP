@@ -12,7 +12,9 @@ Opt-DBFiles  : H2KCodeLibFile
 GOconfig_rotate      : S
 
 ! Weather location 
-Opt-Location : Ottawa
+Opt-Location : Toronto
+
+Opt-FuelCost : Ottawa08
 
 ! By default using Set_EGH.H2k file to force old method. Could add this attribute to switch methods
 !OPT-HRV_ctl  : 
@@ -50,13 +52,11 @@ Opt-CasementWindows  :  DoubleLowEHardCoatArgFill
 ! Exposed floor over garage (affects floor
 Opt-ExposedFloor     : BaseExpFloor-R31
 
-Opt-StandoffPV       : NoPV   !SizedPV|8kW
-
 ! Hot water reduction technologies (SDHW, DHWR) 
 Opt-DWHRandSDHW         : none          
 
 ! Electric LOAD SCALES 
-Opt-ElecLoadScale    : NoReduction   
+Opt-ElecLoadScale    : NoReduction
 
 ! Hot water numbers
 Opt-DHWLoadScale     : No-Reduction
@@ -76,3 +76,5 @@ Opt-Cooling-Spec     : 2TonStdCooling
 ! HRV spec 
 Opt-HRVspec : BaseHRV_SRE70
 Opt-HRVduct : interlock
+
+Opt-StandoffPV       : NoPV   !SizedPV|8kW

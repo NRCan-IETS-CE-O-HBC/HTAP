@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # substitute-h2k.rb
 
-# This is essentially a Ruby version of the substitute.pl script -- customized for HOT2000 runs.
+# This is essentially a Ruby version of the substitute-h2k.pl script -- customized for HOT2000 runs.
 
 require 'rexml/document'
 require 'optparse'
@@ -18,7 +18,7 @@ $gChoiceFile  = ""
 $gOptionFile  = ""
 
 $gTotalCost          = 0 
-$gIncBaseCosts       = 11727
+$gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
 
 $gRotate             = "S"
@@ -47,7 +47,6 @@ $gEnergyWaterHeating = 0
 $gEnergyEquipment = 0
 $gERSNum = 0  # ERS number
 $gERSNum_noVent = 0  # ERS number
-$gERSCalcMode = 0
 
 $gRegionalCostAdj = 0
 
@@ -71,7 +70,10 @@ $gPeakCoolingLoadW    = 0
 $gPeakHeatingLoadW    = 0 
 $gPeakElecLoadW    = 0 
 
+# Path where this script was started and considered master
+# When running GenOpt, it will be a Tmp folder!
 $gMasterPath = Dir.getwd()
+$gMasterPath.gsub!(/\//, '\\')
 
 #Variables that store the average utility costs, energy amounts.  
 $gAvgCost_NatGas    = 0 
@@ -131,78 +133,33 @@ $RegionalCostFactors  = {  "Halifax"     =>  0.95 ,
                             "Inuvik"     =>  1.38 , 
                           "Alert"        =>  1.38   }
 
-# Heating Degree Days (18C base), Source = HOT2000 v10.x (V10WeatherRPT.doc)
-$RegionalHDD = Hash.new
-$RegionalHDD                = { "Halifax"    =>  4100,
-                            "Edmonton"       =>  5400,
-                            "Calgary"        =>  5200,
-                            "Ottawa"         =>  4600,
-                            "Toronto"        =>  3650,
-                            "Quebec"         =>  5200,
-                            "Montreal"       =>  4250,
-                            "Vancouver"      =>  2925,
-                            "PrinceGeorge"   =>  5250,
-                            "Kamloops"       =>  3650,
-                            "Regina"         =>  5750,
-                            "Winnipeg"       =>  5900,
-                            "Fredricton"     =>  4650,
-                            "Whitehorse"     =>  6900,
-                            "Yellowknife"    =>  8500,
-                            "Inuvik"         =>  10050,
-                            "Alert"          =>  12822  }
-
-# Water main temperature (C)
-$RegionalWaterMainTemp = Hash.new
-$RegionalWaterMainTemp =   { "Halifax"       =>  11.02,
-                            "Edmonton"       =>  8.02,
-                            "Calgary"        =>  9.02,
-                            "Ottawa"         =>  12.03,
-                            "Toronto"        =>  14.04,
-                            "Quebec"         =>  10.02,
-                            "Montreal"       =>  11.03,
-                            "Vancouver"      =>  14.02,
-                            "PrinceGeorge"   =>  9.02,
-                            "Kamloops"       =>  13.03,
-                            "Regina"         =>  9.02,
-                            "Winnipeg"       =>  9.02,
-                            "Fredricton"     =>  11.02,
-                            "Whitehorse"     =>  6.01,
-                            "Yellowknife"    =>  4.01,
-                            "Inuvik"         =>  1.01,
-                            "Alert"          =>  1.01 }
-
-
 =begin rdoc
---------------------------------------------------------------------------
+ ---------------------------------------------------------------------------
  METHODS: Routines called in this file must be defined before use in Ruby
           (can't put at bottom of listing).
---------------------------------------------------------------------------
+ ---------------------------------------------------------------------------
 =end
-
+def fatalerror( err_msg )
 # Display a fatal error and quit. -----------------------------------
-def fatalerror(err_msg)
-  if ( $gTest_params["verbosity"] == "very_verbose" )
-    #puts echo_config()
-  end
-  if ($gTest_params[:logfile])
-    $fLOG.write("\nsubstitute.pl -> Fatal error: \n")
+  if ($gTest_params["logfile"])
+    $fLOG.write("\nsubstitute-h2k.pl -> Fatal error: \n")
     $fLOG.write("#{err_msg}\n")
   end
   print "\n=========================================================\n"
-  print "substitute.pl -> Fatal error: \n\n"
+  print "substitute-h2k.pl -> Fatal error: \n\n"
   print "     #{err_msg}\n"
   print "\n\n"
-  print "substitute.pl -> Error and warning messages:\n\n"
+  print "substitute-h2k.pl -> Other Error or warning messages:\n\n"
   print "#{$ErrorBuffer}\n"
   exit() # Run stopped
 end
 
 # Optionally write text to buffer -----------------------------------
 def stream_out(msg)
-  if ($gTest_params[:verbosity] != "quiet")
+  if ($gTest_params["verbosity"] != "quiet")
     print msg
   end
-  if ($gTest_params[:logfile])
+  if ($gTest_params["logfile"])
     $fLOG.write(msg)
   end
 end
@@ -210,9 +167,9 @@ end
 # Write debug output ------------------------------------------------
 def debug_out(debmsg)
   if $gDebug 
-    print debmsg
+    puts debmsg
   end
-  if ($gTest_params[:logfile])
+  if ($gTest_params["logfile"])
     $fLOG.write(debmsg)
   end
 end
@@ -239,6 +196,12 @@ def processFile(filespec)
 
    # Load all XML elements from HOT2000 file
    h2kElements = get_elements_from_filename(filespec)
+
+   # H2K version numbers can be used to determine availability of some data in the file
+   locationText = "HouseFile/Application/Version"
+   $versionMajor_H2K = h2kElements[locationText].attributes["major"]
+   $versionMinor_H2K = h2kElements[locationText].attributes["minor"]
+   $versionBuild_H2K = h2kElements[locationText].attributes["build"]
    
    $gChoiceOrder.each do |choiceEntry|
       if ( $gOptions[choiceEntry]["type"] == "internal" )
@@ -255,64 +218,154 @@ def processFile(filespec)
             end
             
             # Replace existing values in H2K file ....................................
+            
+            # Weather Location
+            #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
                if ( tag =~ /OPT-H2K-WTH-FILE/ )
-                  # Weather file to use for HOT2000 run
-                  locationText = "HouseFile/ProgramInformation/Weather"
-                  # Check on existence of H2K weather file
-                  if ( !File.exist?($run_path + "\\Dat" + "\\" + value) )
-                     fatalerror("Weather file #{value} not found in folder !")
-                  else
-                     h2kElements[locationText].attributes["library"] = value
+                  if ( value !~ /NA/ )
+                     # Weather file to use for HOT2000 run
+                     locationText = "HouseFile/ProgramInformation/Weather"
+                     # Check on existence of H2K weather file
+                     if ( !File.exist?($h2k_src_path + "\\Dat" + "\\" + value) )
+                        fatalerror("Weather file #{value} not found in Dat folder !")
+                     else
+                        h2kElements[locationText].attributes["library"] = value
+                     end
                   end
                elsif ( tag =~ /OPT-H2K-Region/ )
-                  # Weather region to use for HOT2000 run
-                  locationText = "HouseFile/ProgramInformation/Weather/Region"
-                  h2kElements[locationText].attributes["code"] = value
+                  if ( value !~ /NA/ )
+                     # Weather region to use for HOT2000 run
+                     locationText = "HouseFile/ProgramInformation/Weather/Region"
+                     h2kElements[locationText].attributes["code"] = value
+                     # Match Client Street address province ID to avoid H2K dialog!
+                     locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
+                     provArr = [ "BC", "AB", "SK", "MB", "ON", "QC", "NB", "NS", "PE", "NL", "YT", "NT", "NU" ]
+                     h2kElements[locationText].attributes["code"] = provArr[value.to_i - 1]
+                  end
                elsif ( tag =~ /OPT-H2K-Location/ )
-                  # Weather location to use for HOT2000 run
-                  locationText = "HouseFile/ProgramInformation/Weather/Location"
-                  h2kElements[locationText].attributes["code"] = value
+                  if ( value !~ /NA/ )
+                     # Weather location to use for HOT2000 run
+                     locationText = "HouseFile/ProgramInformation/Weather/Location"
+                     h2kElements[locationText].attributes["code"] = value
+                  end
                elsif ( tag =~ /OPT-WEATHER-FILE/ ) # Do nothing
                elsif ( tag =~ /OPT-Latitude/ ) # Do nothing
                elsif ( tag =~ /OPT-Longitude/ ) # Do nothing
                else
                   fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
                end
-               
+            
+            
+            # Fuel Costs
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FuelCost/ )
                # HOT2000 Fuel costing data selections
-               
-               
-               
-            elsif ( choiceEntry =~ /Opt-ACH/ )
-               if ( tag =~ /Opt-ACH/ )
-                  locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-                  h2kElements[locationText].attributes["airChangeRate"] = value
+               if ( tag =~ /OPT-LibraryFile/ )
+                  if ( value !~ /NA/ )
+                     # Fuel Cost file to use for HOT2000 run
+                     locationText = "HouseFile/FuelCosts"
+                     # Check on existence of H2K weather file
+                     if ( !File.exist?($h2k_src_path + "\\StdLibs" + "\\" + value) )
+                        fatalerror("Fuel cost file #{value} not found in StdLibs folder !")
+                     else
+                        h2kElements[locationText].attributes["library"] = value
+                     end
+                  end
+               elsif ( tag =~ /OPT-ElecName/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
+                     h2kElements[locationText].text = value
+                  end
+               elsif ( tag =~ /OPT-ElecID/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
+                     h2kElements[locationText].attributes["id"] = value
+                  end
+               elsif ( tag =~ /OPT-GasName/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Label"
+                     h2kElements[locationText].text = value
+                  end
+               elsif ( tag =~ /OPT-GasID/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Label"
+                     h2kElements[locationText].attributes["id"] = value
+                  end
+               elsif ( tag =~ /OPT-OilName/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Oil/Fuel/Label"
+                     h2kElements[locationText].text = value
+                  end
+               elsif ( tag =~ /OPT-OilID/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Oil/Fuel/Label"
+                     h2kElements[locationText].attributes["id"] = value
+                  end
+               elsif ( tag =~ /OPT-PropaneName/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Propane/Fuel/Label"
+                     h2kElements[locationText].text = value
+                  end
+               elsif ( tag =~ /OPT-PropaneID/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Propane/Fuel/Label"
+                     h2kElements[locationText].attributes["id"] = value
+                  end
+               elsif ( tag =~ /OPT-WoodName/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Wood/Fuel/Label"
+                     h2kElements[locationText].text = value
+                  end
+               elsif ( tag =~ /OPT-WoodID/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/FuelCosts/Wood/Fuel/Label"
+                     h2kElements[locationText].attributes["id"] = value
+                  end
                else
                   fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
                end
             
+            
+            # Air Infiltration Rate
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-ACH/ )
+               if ( tag =~ /Opt-ACH/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+                     h2kElements[locationText].attributes["airChangeRate"] = value
+                  end
+               else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
+            
+            # Ceilings
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Ceilings/ )
                if ( tag =~ /Opt-Ceiling/ )
                   # Set Favourites code from library
                   # Have problems with this method! 
                   # NEEDS MORE WORK! ******************************
                elsif ( tag =~ /OPT-H2K-EffRValue/ )
-                  # Change ALL existing ceiling codes to User Specified R-value
-                  locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
-                  XPath.each( $XMLdoc, locationText) do |element| 
-                     element.text = "User specified"
-                     element.attributes["rValue"] = value
-                     if element.attributes["idref"] then
-                        # Must delete attribute for User Specified!
-                        element.delete_attribute("idref")
+                  if ( value !~ /NA/ )
+                     # Change ALL existing ceiling codes to User Specified R-value
+                     locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+                     XPath.each( $XMLdoc, locationText) do |element| 
+                        element.text = "User specified"
+                        element.attributes["rValue"] = value
+                        if element.attributes["idref"] then
+                           # Must delete attribute for User Specified!
+                           element.delete_attribute("idref")
+                        end
                      end
                   end
                else
                   fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
                end
                
+               
+            # Main Wall Codes (Not Available Yet)
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-MainWall/ )
                if ( tag =~ /Opt-MainWall-Bri/ )
                   # Set Favourites code from library
@@ -323,17 +376,22 @@ def processFile(filespec)
                else
                   fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
                end
-
-               elsif ( choiceEntry =~ /Opt-Opt-GenericWall_1Layer_definitions/ )
+               
+               
+            # Wall user Specified R-Values
+            #--------------------------------------------------------------------------
+               elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
                if ( tag =~ /OPT-H2K-EffRValue/ )
-                  # Change ALL existing wall codes to User Specified R-value
-                  locationText = "HouseFile/House/Components/Wall/Construction/Type"
-                  XPath.each( $XMLdoc, locationText) do |element| 
-                     element.text = "User specified"
-                     element.attributes["rValue"] = value
-                     if element.attributes["idref"] then
-                        # Must delete attribute for User Specified!
-                        element.delete_attribute("idref")
+                  if ( value !~ /NA/ )
+                     # Change ALL existing wall codes to User Specified R-value
+                     locationText = "HouseFile/House/Components/Wall/Construction/Type"
+                     XPath.each( $XMLdoc, locationText) do |element| 
+                        element.text = "User specified"
+                        element.attributes["rValue"] = value
+                        if element.attributes["idref"] then
+                           # Must delete attribute for User Specified!
+                           element.delete_attribute("idref")
+                        end
                      end
                   end
                elsif ( tag =~ /Opt-GenInsulLayerInboard-a/ )   # Do nothing
@@ -341,19 +399,24 @@ def processFile(filespec)
                   fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
                end
                
+               
+            # Exposed Floor User-Specified R-Values
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ExposedFloor/ )
                if ( tag =~ /Opt-ExposedFloor/ )
                   # Set Favourites code: Not working yet
                   # WORK ON!
                elsif ( tag =~ /OPT-H2K-EffRValue/ )
-                  # Change ALL existing floor codes to User Specified R-value
-                  locationText = "HouseFile/House/Components/Floor/Construction/Type"
-                  XPath.each( $XMLdoc, locationText) do |element| 
-                     element.text = "User specified"
-                     element.attributes["rValue"] = value
-                     if element.attributes["idref"] then
-                        # Must delete attribute for User Specified!
-                        element.delete_attribute("idref")
+                  if ( value !~ /NA/ )
+                     # Change ALL existing floor codes to User Specified R-value
+                     locationText = "HouseFile/House/Components/Floor/Construction/Type"
+                     XPath.each( $XMLdoc, locationText) do |element| 
+                        element.text = "User specified"
+                        element.attributes["rValue"] = value
+                        if element.attributes["idref"] then
+                           # Must delete attribute for User Specified!
+                           element.delete_attribute("idref")
+                        end
                      end
                   end
                elsif ( tag =~ /Opt-ExposedFloor-r/ )   # Do nothing
@@ -362,45 +425,105 @@ def processFile(filespec)
                end
                
                
+            # Windows
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-CasementWindows/ )
+               if ( tag =~ /XXXX/ )
+               #<Opt-win-S-CON>
+               #<Opt-win-S-OPT>
+               #<Opt-win-E-CON>
+               #<Opt-win-E-OPT>
+               #<Opt-win-N-CON>
+               #<Opt-win-N-OPT>
+               #<Opt-win-W-CON>
+               #<Opt-win-W-OPT>
+               elsif ( tag =~ /XXX/ )
+                  # Change ALL existing window...
+                  locationText = "HouseFile/House/Components/Wall/Components/Window"
+                  #XPath.each( $XMLdoc, locationText) do |element| 
+                     #element.text = ""
+                     #element.attributes["shgc"] = value
+                  #end
+               else
+                  #fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
                
-               
+            # Basement Slab
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-BasementSlabInsulation/ )
                
                
+            # Basement Walls
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-BasementWallInsulation/ )
                
                
+            # DWHR (+SDHW)
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DWHRandSDHW / )
                
                
+            # Electrical Loads
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ElecLoadScale/ )
                
                
+            # DHW Loads (Hot Water Use)
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DHWLoadScale/ )
                
                
+            # DHW System
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DHWSystem/ )
                
                
+            # HVAC System (Type 1)
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
+               if ( tag =~ /XXXX/ )
+                  if ( value !~ /NA/ )
+                     locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
+                     h2kElements[locationText].attributes["code"] = value
+                  end
+               else
+                  #fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
                
                
+            # Furance Fan Control
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /OPT-Furnace-Fan-Ctl/ )
                
                
+            # Cooling System
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Cooling-Spec/ )
                
                
+            # HRV System
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
                
                
+            # PV - Use H2K model
+            #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-StandoffPV/ )
+               if ( tag =~ /Opt-StandoffPV/ )
+                  #locationText1 = "HouseFile/House/Generation/Photovoltaic/Array"
+                  #locationText2 = "HouseFile/House/Generation/Photovoltaic/Module/Type"
+                  #h2kElements[locationText1].attributes["area"] = value
+                  #h2kElements[locationText1].attributes["slope"] = value
+                  #h2kElements[locationText1].attributes["azimuth"] = value
+                  #h2kElements[locationText2].attributes["code"] = value
+               else
+                  #fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+               end
                
                
             else
                # Do nothing as we're ignoring all other tags!
-               debug_out("Tag #{tag} ignored!\n")
+               #debug_out("Tag #{tag} ignored!\n")
             end
          end
       end
@@ -421,7 +544,7 @@ def runsims( direction )
    $gRotationAngle = $RotationAngle
   
    Dir.chdir( $run_path )
-   debug_out ("\n\n Moved to path: #{Dir.getwd()}\n") 
+   debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n") 
    
    # Rotate the model, if necessary:
    #   Need to determine how to do this in HOT2000. The OnRotate() function in HOT2000 *interface*
@@ -429,25 +552,28 @@ def runsims( direction )
    
    runThis = "HOT2000.exe"
    optionSwitch = "-inp"
-   fileToLoad = "#{$WorkingSimFolderName}\\#{$h2kFileName}"
+   fileToLoad = "..\\" + $h2kFileName
    
    if ( system(runThis, optionSwitch, fileToLoad) )      # Run HOT2000!
-      stream_out( "The run was successful!\n" )
+      stream_out( "\n The run was successful!\n" )
    else
-      fatalerror( "Problems with the run! Return code: #{$?}\n" )
+      # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
+      fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
    end
    
-   Dir.chdir( $master_path )
+   Dir.chdir( $gMasterPath )
+   debug_out ("\n Moved to path: #{Dir.getwd()}\n") 
    
    # Save output files
-   if ( ! Dir.exist?("sim-output") )
-      if ( ! system("mkdir sim-output") )
-         debug_out ("Could not create sim-output below #{$master_path}!\n")
+   $OutputFolder = "sim-output"
+   if ( ! Dir.exist?($OutputFolder) )
+      if ( ! system("mkdir #{$OutputFolder}") )
+         debug_out ("Could not create #{$OutputFolder} below #{$gMasterPath}!\n")
       end
    else
-      if ( File.exist?("sim-output\\Browse.rpt") )
-         if ( ! system("del sim-output\\Browse.rpt") )    # Delete existing Browse.Rpt
-            debug_out ("Could not delete existing Browse.rpt fil in sim-output!\n")
+      if ( File.exist?("#{$OutputFolder}\\Browse.rpt") )
+         if ( ! system("del #{$OutputFolder}\\Browse.rpt") )    # Delete existing Browse.Rpt
+            debug_out ("Could not delete existing Browse.rpt file in #{$OutputFolder}!\n")
          end
       end
    end
@@ -457,7 +583,8 @@ def runsims( direction )
    if ( Dir.exist?("sim-output") )
       system("copy #{$run_path}\\Browse.rpt .\\sim-output\\")
    end
-end
+
+end   # runsims
 
 # Post-process results
 def postprocess( scaleData )
@@ -476,319 +603,282 @@ def postprocess( scaleData )
       $gRegionalCostAdj = $RegionalCostFactors[$Locale]
    end
    
-   monthArray = [ "january", "february", "march", "april", "may", "june", 
-                  "july", "august", "september", "october", "november", "december" ]
+   # Some data needs to be extracted from Browse.rpt ASCII file because it's not in H2K XML file!
+   fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
+   if fBrowseRpt == nil then
+      fatalerror("Could not read Browse.Rpt.\n")
+   end
+
+   bReadFuelCosts = false
+   if ( $versionMajor_H2K.to_i >= 11 && $versionMinor_H2K.to_i >= 1 && $versionBuild_H2K.to_i >= 82 )
+      bReadFuelCosts = true
+   else
+      # H2K V11.1 b82 contains "ActualFuelCosts" (previous version did not)!
+      locationText = "HouseFile/AllResults/Results/Annual/ActualFuelCosts"
+      $gAvgCost_Electr += h2kPostElements[locationText].attributes["electrical"].to_f * scaleData
+      $gAvgCost_NatGas += h2kPostElements[locationText].attributes["naturalGas"].to_f * scaleData
+      $gAvgCost_Propane += h2kPostElements[locationText].attributes["propane"].to_f * scaleData
+      $gAvgCost_Oil += h2kPostElements[locationText].attributes["oil"].to_f * scaleData
+      $gAvgCost_Wood += h2kPostElements[locationText].attributes["wood"].to_f * scaleData
+      $gAvgCost_Total += ($gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood) * scaleData
+   end
+
+   while !fBrowseRpt.eof? do
+      lineIn = fBrowseRpt.readline
+      lineIn.strip!                 # Remove leading and trailing whitespace
+      if ( lineIn !~ /^\s*$/ )   # Not an empty line!
+         if ( lineIn =~ /^Energuide Rating \(not rounded\) =/ )
+            lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
+            lineIn.strip!
+            $gERSNum = lineIn.to_f     # Use * scaleData?
+         elsif ( bReadFuelCosts && lineIn =~ /^\$/ )
+            valuesArr = lineIn.split()   # Uses spaces by default to split-up line
+            $gAvgCost_Electr += valuesArr[1].to_f * scaleData
+            $gAvgCost_NatGas += valuesArr[2].to_f * scaleData
+            $gAvgCost_Oil += valuesArr[3].to_f * scaleData
+            $gAvgCost_Propane += valuesArr[4].to_f * scaleData
+            $gAvgCost_Wood += valuesArr[5].to_f * scaleData    # Includes pellets until separated out
+            $gAvgCost_Total += valuesArr[6].to_f * scaleData
+            break    # Got what we want -- exit the while loop because this is last item to find in file!
+         end
+      end
+   end
+   fBrowseRpt.close()
+
+   $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
    
+   $gERSNum_noVent = $gERSNum    # Check ????????????????????????????????????????????????
+   
+   # Total energy: H2K value in GJ
    locationText = "HouseFile/AllResults/Results/Annual/Consumption"
    $gAvgEnergy_Total += h2kPostElements[locationText].attributes["total"].to_f * scaleData
    
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/SpaceHeating"
+   $gAvgEnergyHeatingGJ += h2kPostElements[locationText].attributes["total"].to_f * scaleData
+   
    locationText = "HouseFile/AllResults/Results/Annual/Consumption/Electrical"
-   $gAvgElecCons_KWh += h2kPostElements[locationText].attributes["total"].to_f * scaleData
+   $gAvgEnergyCoolingGJ += h2kPostElements[locationText].attributes["airConditioning"].to_f * scaleData
+   $gAvgEnergyVentilationGJ += h2kPostElements[locationText].attributes["ventilation"].to_f * scaleData
+   $gAvgEnergyEquipmentGJ += h2kPostElements[locationText].attributes["appliance"].to_f * scaleData
    
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/HotWater"
+   $gAvgEnergyWaterHeatingGJ += h2kPostElements[locationText].attributes["total"].to_f * scaleData
    
+   # H2K Electicity value in GJ * 277.778 -> kWh
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/Electrical"
+   $gAvgElecCons_KWh += h2kPostElements[locationText].attributes["total"].to_f * 277.778 * scaleData
    
+   # H2K Natural Gas value in GJ * 26.839 -> m3 NG
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/NaturalGas"
+   $gAvgNGasCons_m3 += h2kPostElements[locationText].attributes["total"].to_f * 26.839 * scaleData
    
+   # H2K Oil value in GJ * 25.958 -> Lites oil
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/Oil"
+   $gAvgOilCons_l += h2kPostElements[locationText].attributes["total"].to_f * 25.958 * scaleData
+   
+   # H2K Wood value in GJ * 0.07167 -> 1000 kg wood (Is this correct since HC varies with wood type?)
+   locationText = "HouseFile/AllResults/Results/Annual/Consumption/Wood"
+   $gEnergyWood = h2kPostElements[locationText].attributes["total"].to_f * 0.07167 * scaleData
+   # Note that avgWoodCons_tonne is NOT output. Jeff created here for comparison purposes
+   $gAvgPelletCons_tonne = 0  
+   
+   # Design heat loss (W)
+   locationText = "HouseFile/AllResults/Results/Other/"
+   $gPeakHeatingLoadW += h2kPostElements[locationText].attributes["designHeatLossRate"].to_f * scaleData
+   
+   # Design heat loss (W)
+   locationText = "HouseFile/AllResults/Results/Other/"
+   $gPeakCoolingLoadW += h2kPostElements[locationText].attributes["designCoolLossRate"].to_f * scaleData
+   
+   # PV Data...
+   $PVArrayCost = 0.0
+   $PVArraySized = 0.0
+   $PVsize = $gChoices["Opt-StandoffPV"]
+   $PVcapacity = $PVsize
+   $PVcapacity.gsub(/[a-zA-Z:\s'\|]/, '')
+   if ( $PVcapacity == "" || $PVcapacity == "NoPV")
+      $PVcapacity = 0.0
+   end
+   
+   if ( $PVsize !~ /SizedPV/ )
+      # Use spec'd PV sizes. This only works for NoPV. 
+      $gPVProduction = 0.0
+      $PVArrayCost = 0.0
+   else
+      # Size PV according to user specification, to max, or to size required to reach Net-Zero. 
+      # User-specified PV size (format is 'SizedPV|XkW', PV will be sized to X kW'.
+      if ( $gExtraDataSpecd["Opt-StandoffPV"] =~ /kW/ )
+         $PVArraySized = $gExtraDataSpecd["Opt-StandoffPV"].to_f  # ignores "kW" in string
+         $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f
+         $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["cost"].to_f
+         $PVArrayCost = $PVUnitCost * $PVArraySized 
+         $gPVProduction = -1.0 * $PVUnitOutput * $PVArraySized
+         $PVsize = "spec'd SizedPV | $PVArraySized kW"
+      else
+         # USER Hasn't specified PV size, Size PV to attempt to get to net-zero. 
+         # First, get the home's total energy requirement. 
+         $prePVEnergy = $gAvgEnergy_Total
+         if ( $prePVEnergy > 0 )
+            # This should always be the case!
+            $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"][$PVsize]["ext-result"]["production-elec-perKW"].to_f
+            $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"].to_f
+            $PVArraySized = $prePVEnergy / $PVUnitOutput    # KW Capacity
+            $PVmultiplier = 1.0 
+            if ( $PVArraySized > 14.0 ) 
+               $PVmultiplier = 2.0
+            end
+            $PVArrayCost  = $PVArraySized * $PVUnitCost * $PVmultiplier
+            $PVsize = " scaled: " + "#{$PVArraySized.round(1)} kW"
+            $gPVProduction = -1.0 * $PVUnitOutput * $PVArraySized
+         else
+            # House is already energy positive, no PV needed. Shouldn't happen!
+            $PVsize = "0.0 kW"
+            $PVArrayCost  = 0.0
+         end
+         # Degbug: How big is the sized array?
+         debug_out (" PV array is #{$PVsize}  ...\n")
+      end
+   end
+   $gChoices["Opt-StandoffPV"] = $PVsize
+   $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
-=begin  
-  if ( $PVsize !~ /SizedPV/ ){
-    
-    # Use spec'd PV sizes. This only works for NoPV. 
-    $gSimResults{"PV production::AnnualTotal"}= 0.0 ; #-1.0*$gExtOptions{"Opt-StandoffPV"}{"options"}{$PVsize}{"ext-result"}{"production-elec-perKW"}; 
-    $PVArrayCost = 0.0 ;
-	
-  } else {
-    # Size PV according to user specification, to max, or to size required to reach Net-Zero. 
-    
-    # User-specified PV size (format is 'SizedPV|XkW', PV will be sized to X kW'.
-    if ( $gExtraDataSpecd{"Opt-StandoffPV"} =~ /kW/ ){
+   # PV energy from HOT2000 model run (GJ) OR Size provided in Choice file!
+   # ----------------------------------------------------------------------
+   #locationText = "HouseFile/AllResults/Results/Monthly/Load/PhotoVoltaicUtilized"
+   #monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+   #monthArr.each do |mth|
+   #   $gEnergyPV += h2kPostElements[locationText].attributes[mth].to_f
+   #end
+   
+   # PV energy shouldn't be cumulative for orientation runs (GJ * 277.778 -> kWh)!!
+   $gAvgPVOutput_kWh   = -1.0 * $gEnergyPV * 277.778 * scaleData
+
+   stream_out  "\n Peak Heating Load (W): #{$gPeakHeatingLoadW} \n"
+   stream_out  " Peak Cooling Load (W): #{$gPeakCoolingLoadW} \n"
+   
+   stream_out("\n Energy Consumption: \n\n")
+   stream_out ( "  #{$gAvgEnergyHeatingGJ} ( Space Heating, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyWaterHeatingGJ} ( Hot Water, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyVentilationGJ} ( Ventilator Electrical, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyCoolingGJ} ( Space Cooling, GJ ) \n")
+   stream_out ( " --------------------------------------------------------\n")
+   stream_out ( "    #{$gAvgEnergyHeatingGJ + $gAvgEnergyWaterHeatingGJ + $gAvgEnergyVentilationGJ} ( H2K Annual Space+DHW, GJ ) \n")
+   
+   stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
+   stream_out("  + \$ #{$gAvgCost_Electr.round} (Electricity)\n")
+   stream_out("  + \$ #{$gAvgCost_NatGas.round} (Natural Gas)\n")
+   stream_out("  + \$ #{$gAvgCost_Oil.round} (Oil)\n")
+   stream_out("  + \$ #{$gAvgCost_Propane.round} (Propane)\n")
+   stream_out("  + \$ #{$gAvgCost_Wood.round} (Wood)\n")
+   stream_out("  + \$ #{$gAvgCost_Pellet.round} (Pellet)\n")
+   stream_out ( " --------------------------------------------------------\n")
+   stream_out ( "    \$ #{$gAvgCost_Total.round} (All utilities).\n")
+   stream_out ( "\n")
+   stream_out ( "  - \$ #{$gAvgPVRevenue.round} (PV revenue, #{($gAvgPVRevenue * 1e06 / 3600).round} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
+   stream_out ( " --------------------------------------------------------\n")
+   stream_out ( "    \$ #{($gAvgCost_Total - $gAvgPVRevenue).round} (Net utility costs).\n")
+   stream_out ( "\n\n")
+   
+   stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
+   stream_out("  - #{$gAvgElecCons_KWh.round} (Electricity, kWh)\n")
+   stream_out("  - #{$gAvgNGasCons_m3} (Natural Gas, m3)\n")
+   stream_out("  - #{$gAvgOilCons_l} (Oil, l)\n")
+   stream_out("  - #{$gEnergyWood} (Wood, cord)\n")
+   stream_out("  - #{$gAvgPelletCons_tonne} (Pellet, tonnes)\n")
+   stream_out ("> SCALE #{scaleData} \n"); 
+   
+   # Estimate total cost of upgrades
+   $gTotalCost = 0
+   
+   stream_out ("\n\n Estimated costs in #{$Locale} (x #{$gRegionalCostAdj} Ottawa costs) : \n\n")
+
+   $gChoices.sort.to_h
+   for attribute in $gChoices.keys()
+      choice = $gChoices[attribute]
+      cost = $gOptions[attribute]["options"][choice]["cost"].to_f
+      $gTotalCost += cost
+      stream_out( " +  #{cost.round()} ( #{attribute} : #{choice} ) \n")
+   end
+   stream_out ( " - #{($gIncBaseCosts * $gRegionalCostAdj).round} (Base costs for windows)  \n")
+   stream_out ( " --------------------------------------------------------\n")
+   stream_out ( " =   #{($gTotalCost-$gIncBaseCosts * $gRegionalCostAdj).round} ( Total incremental cost ) \n\n")
+   $gRegionalCostAdj != 0 ? val = $gTotalCost / $gRegionalCostAdj : val = 0
+   stream_out ( " ( Unadjusted upgrade costs: \$ #{val} )\n\n")
+   
+   if ( $gERSNum > 0 )
+      $tmpval = $gERSNum.round(1)
+      stream_out(" ERS value: #{$tmpval}\n")
       
-      $PVArraySized = $gExtraDataSpecd{"Opt-StandoffPV"};     
-      $PVArraySized =~ s/kW//g; 
-      
-      my $PVUnitOutput = $gOptions{"Opt-StandoffPV"}{"options"}{"SizedPV"}{"ext-result"}{"production-elec-perKW"};
-      my $PVUnitCost   = $gOptions{"Opt-StandoffPV"}{"options"}{"SizedPV"}{"cost"};
-      
-      $PVArrayCost = $PVUnitCost * $PVArraySized ; 
-      
-      $gSimResults{"PV production::AnnualTotal"} = -1.0 * $PVUnitOutput * $PVArraySized; 
-            
-      # JTB May 12/2015: Removed $PVsize, replaced with "SizedPV" to resolve growing string $PVsize
-	  #                  when either seasonal runs or ERS mode used (multiple passes of this code).
-	  $PVsize = "spec'd SizedPV | $PVArraySized kW";
-    
-    } else { 
-        
-        # USER Hasn't specified PV size, Size PV to attempt to get to net-zero. 
-        # First, compute the home's total energy requirement. 
-    
-        my $prePVEnergy = 0;
-
-        # gSimResults contains all sorts of data. Filter by annual energy consumption (rows containing AnnualTotal).
-        foreach my $token ( sort keys %gSimResults ){
-          if ( $token =~ /AnnualTotal/  && $token =~ /all_fuels/ ){ 
-            my $value = $gSimResults{$token};
-            $prePVEnergy += $value; 
-          }    
-        }
-
-        if ( $prePVEnergy > 0 ){
-        
-          # This should always be the case!
-          
-          my $PVUnitOutput = $gOptions{"Opt-StandoffPV"}{"options"}{$PVsize}{"ext-result"}{"production-elec-perKW"};
-          my $PVUnitCost   = $gOptions{"Opt-StandoffPV"}{"options"}{$PVsize}{"cost"};
-         
-         $PVArraySized = $prePVEnergy / $PVUnitOutput ; # KW Capacity
-          my $PVmultiplier = 1. ; 
-          if ( $PVArraySized > 14. ) { $PVmultiplier = 2. ; }
-          
-          $PVArrayCost  = $PVArraySized * $PVUnitCost * $PVmultiplier;
-                    
-          $PVsize = " scaled: ".eval(round1d($PVArraySized))." kW" ;
-
-          $gSimResults{"PV production::AnnualTotal"}=-1.0*$PVUnitOutput*$PVArraySized; 
-        
-        } else {
-          # House is already energy positive, no PV needed. Shouldn't happen!
-          $PVsize = "0.0 kW" ;
-          $PVArrayCost  = 0. ;
-        }
-        # Degbug: How big is the sized array?
-        debug_out (" PV array is $PVsize  ...\n"); 
-        
-    }  
-  }
-  $gChoices{"Opt-StandoffPV"}=$PVsize;
-  $gOptions{"Opt-StandoffPV"}{"options"}{$PVsize}{"cost"} = $PVArrayCost;
-=end
-
-
-=begin
-  stream_out("\n\n Energy Consumption: \n\n") ; 
-
-  my $gTotalEnergy = 0;
-
-  foreach my $token ( sort keys %gSimResults ){
-    if ( $token =~ /AnnualTotal/ && $token =~ /all_fuels/){
-        my $value = $gSimResults{$token};
-		$gTotalEnergy += $value; 
-        stream_out ( "  + $value ( $token, GJ ) \n");
-    }
-  }
-  
-  stream_out ( " --------------------------------------------------------\n");
-  stream_out ( "    $gTotalEnergy ( Total energy, GJ ) \n");
-
-
-  # Save Energy consumption for later
-   
-  $gEnergyPV = defined( $gSimResults{"PV production::AnnualTotal"} ) ? 
-                         $gSimResults{"PV production::AnnualTotal"} : 0 ;  
-
-  #$gEnergySDHW = defined( $gSimResults{"SDHW production"} ) ? 
-  #                       $gSimResults{"SDHW production"} : 0 ;  
-
-  $gEnergyHeating = defined( $gSimResults{"total_fuel_use/test/all_fuels/space_heating/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/all_fuels/space_heating/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyCooling = defined( $gSimResults{"total_fuel_use/test/all_fuels/space_cooling/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/all_fuels/space_cooling/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyVentilation = defined( $gSimResults{"total_fuel_use/test/all_fuels/ventilation/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/all_fuels/ventilation/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyWaterHeating = defined( $gSimResults{"total_fuel_use/test/all_fuels/water_heating/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/all_fuels/water_heating/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyEquipment = defined( $gSimResults{"total_fuel_use/test/all_fuels/equipment/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/all_fuels/equipment/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyElec  =  defined($gSimResults{"total_fuel_use/electricity/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/electricity/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-  
-  $gEnergyGas   = defined($gSimResults{"total_fuel_use/natural_gas/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/natural_gas/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-  
-  $gEnergyOil   = defined($gSimResults{"total_fuel_use/oil/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/oil/all_end_uses/quantity::Total_Average"}  * $FracOfYear : 0 ;  
-
-  $gEnergyWood  = defined($gSimResults{"total_fuel_use/mixed_wood/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/mixed_wood/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  	
-  $gEnergyPellet = defined($gSimResults{"total_fuel_use/wood_pellets/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/wood_pellets/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-  $gEnergyHardWood = defined( $gSimResults{"total_fuel_use/hard_wood/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/hard_wood/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-  $gEnergyMixedWood = defined( $gSimResults{"total_fuel_use/mixed_wood/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/mixed_wood/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-  $gEnergySoftWood = defined( $gSimResults{"total_fuel_use/soft_wood/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/soft_wood/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-  
-  # New variables required for ERS calculation
-  $gEnergyHeatingElec = defined( $gSimResults{"total_fuel_use/test/electricity/space_heating/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/electricity/space_heating/energy_content::AnnualTotal"} : 0 ;  
-						 
-  $gEnergyVentElec = defined( $gSimResults{"total_fuel_use/test/electricity/ventilation/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/electricity/ventilation/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyHeatingFossil = defined( $gSimResults{"total_fuel_use/test/fossil_fuels/space_heating/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/fossil_fuels/space_heating/energy_content::AnnualTotal"} : 0 ;  
-						 
-  $gEnergyWaterHeatingElec = defined( $gSimResults{"total_fuel_use/test/electricity/water_heating/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/electricity/water_heating/energy_content::AnnualTotal"} : 0 ;  
-
-  $gEnergyWaterHeatingFossil = defined( $gSimResults{"total_fuel_use/test/fossil_fuels/water_heating/energy_content::AnnualTotal"} ) ? 
-                         $gSimResults{"total_fuel_use/test/fossil_fuels/water_heating/energy_content::AnnualTotal"} : 0 ;  
-  
-  $gEnergyTotalWood = $gEnergyHardWood + $gEnergyMixedWood + $gEnergySoftWood + $gEnergyPellet;
-
-  $gAmtOil = defined( $gSimResults{"total_fuel_use/oil/all_end_uses/quantity::Total_Average"} ) ? 
-                         $gSimResults{"total_fuel_use/oil/all_end_uses/quantity::Total_Average"} * $FracOfYear : 0 ;  
-
-						 
-  my $PVRevenue = $gEnergyPV * 1e06 / 3600. *$PVTarrifDollarsPerkWh; 
-  
-  my $TotalBill = $TotalElecBill+$TotalGasBill+$TotalOilBill+$TotalPropaneBill+$TotalWoodBill+$TotalPelletBill; 
-  my $NetBill   = $TotalBill-$PVRevenue ;
-  
-  stream_out("\n\n Energy Cost (not including credit for PV, direction $gRotationAngle ): \n\n") ; 
-  
-  stream_out("  + \$ ".round($TotalElecBill)." (Electricity)\n");
-  stream_out("  + \$ ".round($TotalGasBill)." (Natural Gas)\n");
-  stream_out("  + \$ ".round($TotalOilBill)." (Oil)\n");
-  stream_out("  + \$ ".round($TotalPropaneBill)." (Propane)\n");
-  stream_out("  + \$ ".round($TotalWoodBill)." (Wood)\n");
-  stream_out("  + \$ ".round($TotalPelletBill)." (Pellet)\n");
-  
-  stream_out ( " --------------------------------------------------------\n");
-  stream_out ( "    \$ ".round($TotalBill) ." (All utilities).\n"); 
-
-  stream_out ( "\n") ;
-
-  stream_out ( "  - \$ ".round($PVRevenue )." (PV revenue, ". eval($gEnergyPV * 1e06 / 3600.). " kWh at \$ $PVTarrifDollarsPerkWh / kWh)\n"); 
-  stream_out ( " --------------------------------------------------------\n");
-  stream_out ( "    \$ ".round($NetBill) ." (Net utility costs).\n"); 
-  
-  stream_out ( "\n\n") ; 
-  
-  # Update global parameters for use in summary. Scalar scaleData averages across orientations
-  # when multiple orientations run. When seasonal run in effect these parameters are cumulative. 
-  $gAvgCost_NatGas    += $TotalGasBill  * scaleData; 
-  $gAvgCost_Electr    += $TotalElecBill * scaleData;  
-  $gAvgCost_Propane   += $TotalPropaneBill * scaleData; 
-  $gAvgCost_Oil       += $TotalOilBill * scaleData; 
-  $gAvgCost_Wood      += $TotalWoodBill * scaleData; 
-  $gAvgCost_Pellet    += $TotalPelletBill * scaleData; 
-   
-  $gAvgEnergy_Total   += $gTotalEnergy  * scaleData; 
-  $gAvgNGasCons_m3    += $gEnergyGas * 8760. * 60. * 60.  * scaleData ; 
-  $gAvgOilCons_l      += $gEnergyOil * 8760. * 60. * 60.  * scaleData ;  
-  $gAvgPelletCons_tonne+= $gEnergyPellet * 8760. * 60. * 60.  * scaleData ;
-  
-  $gAvgElecCons_KWh   += $gEnergyElec * 8760. * 60. * 60. * scaleData ; 
-  
-  # Shouldn't be cumulative for seasonal runs or orientation runs!!
-  $gAvgPVOutput_kWh   = -1.0 * $gEnergyPV * 1e06 / 3600. * scaleData;  
-  
-  $gAvgEnergyHeatingGJ      += $gEnergyHeating         * scaleData; 
-  $gAvgEnergyCoolingGJ      += $gEnergyCooling         * scaleData; 
-  $gAvgEnergyVentilationGJ  += $gEnergyVentilation     * scaleData; 
-  $gAvgEnergyWaterHeatingGJ += $gEnergyWaterHeating    * scaleData; 
-  $gAvgEnergyEquipmentGJ    += $gEnergyEquipment       * scaleData; 
-
-  # Added for ERS calculation
-  $gAvgEnergyHeatingElec        += $gEnergyHeatingElec        * scaleData;		# GJ
-  $gAvgEnergyVentElec           += $gEnergyVentElec           * scaleData;		# GJ
-  $gAvgEnergyHeatingFossil      += $gEnergyHeatingFossil      * scaleData;		# GJ
-  $gAvgEnergyWaterHeatingElec   += $gEnergyWaterHeatingElec   * scaleData;		# GJ
-  $gAvgEnergyWaterHeatingFossil += $gEnergyWaterHeatingFossil * scaleData;		# GJ
-
-  stream_out("\n\n Energy Use (not including credit for PV, direction $gRotationAngle ): \n\n") ; 
-  
-  stream_out("  - ".round($gEnergyElec* 8760. * 60. * 60.)." (Electricity, kWh)\n");
-  stream_out("  - ".round($gEnergyGas* 8760. * 60. * 60.)." (Natural Gas, m3)\n");
-  stream_out("  - ".round($gEnergyOil* 8760. * 60. * 60.)." (Oil, l)\n");
-  stream_out("  - ".round($gEnergyWood* 8760. * 60. * 60.)." (Wood, cord)\n");
-  stream_out("  - ".round($gEnergyPellet* 8760. * 60. * 60.)." (Pellet, tonnes)\n");
-  
-  stream_out ("> SCALE scaleData \n"); 
-=end
-
-
-=begin  
-  # Estimate total cost of upgrades
-
-  $gTotalCost = 0;         
-  
-  stream_out ("\n\n Estimated costs in $Locale (x$gRegionalCostAdj Ottawa costs) : \n\n");
-
-  foreach my  $attribute ( sort keys %gChoices ){
-    
-    my $choice = $gChoices{$attribute}; 
-    my $cost; 
-    $cost  = $gOptions{$attribute}{"options"}{$choice}{"cost"} * $gRegionalCostAdj;
-    $gTotalCost += $cost ;
-
-    stream_out( " +  ".round($cost)." ( $attribute : $choice ) \n");
-    
-  }
-  stream_out ( " - ".round($gIncBaseCosts * $gRegionalCostAdj)." (Base costs for windows)  \n"); 
-  stream_out ( " --------------------------------------------------------\n");
-  stream_out ( " =   ".round($gTotalCost-$gIncBaseCosts* $gRegionalCostAdj )." ( Total incremental cost ) \n\n");
-
-  
-  stream_out ( " ( Unadjusted upgrade costs: \$".eval( $gTotalCost  /  $gRegionalCostAdj )." )\n\n");
-  
-  if ( $gERSCalcMode && $gERSNum > 0 ) {
-	my $tmpval = round($gERSNum * 10) / 10.;
-	stream_out(" ERS value: ".$tmpval."\n");
-  
-    $tmpval = round($gERSNum_noVent * 10) / 10.;
-    stream_out(" ERS value_noVent:   ".$tmpval."\n\n");
-  }
-  
-  chdir($gMasterPath);
-  my $fileexists; 
-=end
+      $tmpval = $gERSNum_noVent.round(1)
+      stream_out(" ERS value_noVent:   #{$tmpval}\n\n")
+   end
 
 end  # End of postprocess
 
+def fix_H2K_INI()
+   # Adjust paths in HOT2000.ini file to match copied location
+   fH2K_ini_file = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "r") 
+   if fH2K_ini_file == nil then
+      fatalerror("Could not read HOT2000.ini file!\n")
+   end
+   linecount = 0
+   lineout = ""
+   while !fH2K_ini_file.eof? do
+      linecount += 1
+      linein = fH2K_ini_file.readline
+      if ( linein =~ /_FILE/ )
+         # Using $h2k_src_path to determine what to change in ini file. Regexp.escape is used
+         # to properly handle the "\\" characters in the path (i=case insensitive)!
+         linein.sub!(/#{Regexp.escape($h2k_src_path)}/i, "#{$gMasterPath}\\H2K") 
+      end
+      lineout += linein
+   end
+   fH2K_ini_file.close
+
+   fH2K_ini_file_OUT = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "w") 
+   if fH2K_ini_file_OUT == nil then
+      fatalerror("Could not write modified HOT2000.ini file!\n")
+   end
+   fH2K_ini_file_OUT.write(lineout)
+   fH2K_ini_file_OUT.close
+end
+
 =begin rdoc
- END OF METHODS
+ ---------------------------------------------------------------------------
+ END OF ALL METHODS 
+ ---------------------------------------------------------------------------
 =end
+
 
 $gChoiceOrder = Array.new
 
-$master_path = Dir.getwd()   #Main path where this script was started and considered master
+$gTest_params["verbosity"] = "quiet"
+$gTest_params["logfile"]   = $gMasterPath + "\\SubstitutePL-log.txt"
 
-$gTest_params[:verbosity] = "quiet"
-$gTest_params[:logfile]   = $master_path + "\\SubstitutePL-log.txt"
-
-$fLOG = File.new($gTest_params[:logfile], mode="w") 
+$fLOG = File.new($gTest_params["logfile"], "w") 
 if $fLOG == nil then
    fatalerror("Could not open #{$gTest_params["logfile"]}.\n")
 end
-
                      
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
 $help_msg = "
 
- substitute.pl: 
+ substitute-h2k.pl: 
  
  This script searches through a suite of model input files 
  and substitutes values from a specified input file. 
  
- use: ./substitute.pl --options options.opt
-                      --choices choices.options
-                      --base_folder BaseFolderName
+ use: ruby substitute-h2k.pl --options options.opt
+                             --choices choices.options
+                             --base_file Base model path & file name
                       
  example use for optimization work:
  
-  ./substitute.pl -c optimization-choices.opt
-                  -o optimization-options.opt
-                  -b BaseFolderName
-                  -v(v)
+  ruby substitute-h2k.pl -c optimization-choices.choices
+                         -o optimization-options.options
+                         -b \\HOT2000V11_1_CLI\\MyModel.h2k
       
 "
 
@@ -802,7 +892,8 @@ end
 Command line argument processing ------------------------------
 Using Ruby's "optparse" for command line argument processing (http://ruby-doc.org/stdlib-2.2.0/libdoc/optparse/rdoc/OptionParser.html)!
 =end   
-$cmdlineopts = Hash.new
+$cmdlineopts = {  "verbose" => false,
+                  "debug"   => false }
 
 optparse = OptionParser.new do |opts|
   
@@ -814,23 +905,18 @@ optparse = OptionParser.new do |opts|
    end
   
    opts.on("-v", "--verbose", "Run verbosely") do 
-      $cmdlineopts[:verbose] = true
-      $gTest_params[:verbosity] = "verbose"
+      $cmdlineopts["verbose"] = true
+      $gTest_params["verbosity"] = "verbose"
    end
 
-   opts.on("-vv", "--very_verbose", "Run very verbosely") do
-      $cmdlineopts[:v_verbose] = true
-      $gTest_params[:verbosity] = "very_verbose"
-   end
-    
-   opts.on("-vvv", "--very_very_verbose", "Run very very verbosely") do
-      $cmdlineopts[:vv_verbose] = true
-      $gTest_params[:verbosity] = "very_very_verbose"
+   opts.on("-d", "--debug", "Run in debug mode") do
+      $cmdlineopts["verbose"] = true
+      $gTest_params["verbosity"] = "debug"
       $gDebug = true
    end
 
    opts.on("-c", "--choices FILE", "Specified choice file (mandatory)") do |c|
-      $cmdlineopts[:choices] = c
+      $cmdlineopts["choices"] = c
       $gChoiceFile = c
       if ( !File.exist?($gChoiceFile) )
          fatalerror("Valid path to choice file must be specified with --choices (or -c) option!")
@@ -838,7 +924,7 @@ optparse = OptionParser.new do |opts|
    end
   
    opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
-      $cmdlineopts[:options] = o
+      $cmdlineopts["options"] = o
       $gOptionFile = o
       if ( !File.exist?($gOptionFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
@@ -847,7 +933,7 @@ optparse = OptionParser.new do |opts|
 
    # This may not be required for HOT2000! ***********************************
    opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
-      $cmdlineopts[:base_model] = b
+      $cmdlineopts["base_model"] = b
       $gBaseModelFile = b
       if !$gBaseModelFile
          fatalerror("Base folder file name missing after --base_folder (or -b) option!")
@@ -862,17 +948,19 @@ end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
 if $gDebug 
-  p $cmdlineopts
+  debug_out( $cmdlineopts )
 end
 
-($run_path, $h2kFileName) = File.split( $gBaseModelFile )
-$run_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $run_path
+($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
+$h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
+$run_path = $gMasterPath + "\\H2K"
 
-stream_out (" > substitute-h2k.rb path: #{$master_path} \n")
+stream_out (" > substitute-h2k.rb path: #{$gMasterPath} \n")
 stream_out (" >               ChoiceFile: #{$gChoiceFile} \n")
 stream_out (" >               OptionFile: #{$gOptionFile} \n")
 stream_out (" >               Base model: #{$gBaseModelFile} \n")
-stream_out (" >               HOT2000 run folder: #{$run_path} n")
+stream_out (" >               HOT2000 source folder: #{$h2k_src_path} \n")
+stream_out (" >               HOT2000 run folder: #{$run_path} \n")
 
 =begin rdoc
  Parse option file. This file defines the available choices and costs
@@ -1092,7 +1180,7 @@ stream_out ("...done.\n")
 =end
 
 stream_out("\n\nReading #{$gChoiceFile}...\n")
-fCHOICES = File.new($gChoiceFile, mode="r") 
+fCHOICES = File.new($gChoiceFile, "r") 
 if fCHOICES == nil then
    fatalerror("Could not read #{$gChoiceFile}.\n")
 end
@@ -1485,23 +1573,33 @@ end   #end of do each gChoices loop
 
 if ( !$allok )
    stream_out("\n--------------------------------------------------------------\n")
-   stream_out("\nSubstitute.pl encountered the following errors:\n")
+   stream_out("\nSubstitute-h2k.pl encountered the following errors:\n")
    stream_out($ErrorBuffer)
    fatalerror(" Choices in #{$gChoiceFile} do not match options in #{$gOptionFile}!")
 else
    stream_out (" done.\n")
 end
 
-# Now create a copy of our HOT2000 file for manipulation.
+# Create a copy of HOT2000 below master
+if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
+   if ( ! system("mkdir #{$gMasterPath}\\H2K") )
+      debug_out ("Could not create H2K folder below #{$gMasterPath}!\n")
+   end
+end
+if ( ! system ("xcopy #{$h2k_src_path} #{$gMasterPath}\\H2K /S /Y /Q") )
+   debug_out ("Could not create xcopy of HOT2000 in H2K folder below #{$gMasterPath}!\n")
+end
+fix_H2K_INI()  # Fixes the paths in HOT2000.ini file in H2K folder created above
+
+# Create a copy of the HOT2000 file into the master folder for manipulation.
 stream_out("\n\n Creating a copy of HOT2000 file for optimization work...\n")
-$WorkingSimFolderName = "Working-Opt"
-$gWorkingModelFile = $gBaseModelFile.sub(/User/, $WorkingSimFolderName)
-# Remove any existing file first!
+$gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
+# Remove any existing file first!  
 if ( File.exist?($gWorkingModelFile) )
    system ("del #{$gWorkingModelFile}")
 end
 system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}")
-stream_out("File #{$gWorkingModelFile} created.\n")
+stream_out("File #{$gWorkingModelFile} created.\n\n")
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
@@ -1612,18 +1710,10 @@ end
 # Proxy for cost of ownership 
 $payback = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
 
-sumFileSpec = "#{$gMasterPath}/SubstitutePL-output.txt"
-fSUMMARY = File.new(sumFileSpec, mode="w")
+sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
+fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
-   fatalerror("Could not open #{$gMasterPath}\\SubstitutePL-output.txt")
-end
-
-$PVcapacity = $gChoices["Opt-StandoffPV"]
-
-$PVcapacity.gsub(/[a-zA-Z:\s'\|]/, '')
-
-if ( $PVcapacity == "" )
-   $PVcapacity = 0.0
+   fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gAvgEnergy_Total} \n" )
@@ -1652,8 +1742,8 @@ fSUMMARY.write( "Upgrade-cost      =  #{$gTotalCost-$gIncBaseCosts}\n" )
 fSUMMARY.write( "SimplePaybackYrs  =  #{$payback} \n" )
 
 # These #s are not yet averaged for orientations!
-fSUMMARY.write( "PEAK-Heating-W    = #{$gPeakHeatingLoadW}\n" )
-fSUMMARY.write( "PEAK-Cooling-W    = #{$gPeakCoolingLoadW}\n" )
+fSUMMARY.write( "PEAK-Heating-W    =  #{$gPeakHeatingLoadW}\n" )
+fSUMMARY.write( "PEAK-Cooling-W    =  #{$gPeakCoolingLoadW}\n" )
 
 fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity}\n" )
 
@@ -1663,52 +1753,3 @@ fSUMMARY.write( "ERS-Value_noVent  =  #{$gERSNum_noVent}\n" )
 fSUMMARY.close() 
 
 $fLOG.close() 
-
-
-=begin rdoc
-==================================================================================
-NOTHING BELOW THIS POINT CONVERTED TO Ruby!
-==================================================================================
-
-sub round($){
-  my ($var) = @_; 
-  my $tmpRounded = int( abs($var) + 0.5);
-  my $finalRounded = $var >= 0 ? 0 + $tmpRounded : 0 - $tmpRounded;
-  return $finalRounded;
-}
-
-sub round1d($){
-  my ($var) = @_; 
-  my $tmpRounded = int( abs($var*10) + 0.5);
-  my $finalRounded = $var >= 0 ? 0 + $tmpRounded : 0 - $tmpRounded;
-  return $finalRounded/10;
-}
-
-#--------------------------------------------------------------------
-# Perform system commands with optional redirection
-#--------------------------------------------------------------------
-sub execute($){
-  my($command) =@_;
-  my $result;
-  if ($gTest_params{"verbosity"} eq "very_verbose" || $gTest_params{"verbosity"} eq "very_very_verbose" ){    
-    debug_out("\n > executing $command \n");
-    debug_out(" > from path ".getcwd()."\n");
-    system($command);
-  }else{
-    $result = `$command 2>&1`;
-    if ($gTest_params{"logfile"}){
-      print fLOG $result."\n\n\n"; 
-    }
-  }
-  return;
-}
-
-sub min($$){
-  my ($a,$b) = @_; 
-  if ($a > $b ) {return $b;}
-  else {return $a;}
-  
-  return 1;
-}
-
-=end
