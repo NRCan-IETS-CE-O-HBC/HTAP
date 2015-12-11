@@ -2,55 +2,47 @@
 ! Choice file for use in exercising HOT2000
 !-----------------------------------------------------------------------  
 
-! HOT2000 code library file to be used
+! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
 Opt-DBFiles  : H2KCodeLibFile
 
+! Weather location 
+Opt-Location : NA !Ottawa
+
+Opt-FuelCost : NA !Ottawa08
+
+! ACH substitutions
+Opt-ACH : NA
+
+Opt-Ceilings : CeilR60
+
+Opt-MainWall : NA
+
+! Exposed floor
+Opt-ExposedFloor : NA   !ExpFloorFoamed-R52
+
+! Optical and thermal characteristics of casement windows (all)
+Opt-CasementWindows  :  NA !DoubleLowEHardCoatAirFill 
+
+Opt-H2KFoundation : OBCminR12-Slab0R
+
+Opt-StandoffPV : NoPV   !SizedPV|8kW
+
+!---------------------------------------------------------------------------
+! The following options don't do anything for HOT2000 but may be implemented
+!---------------------------------------------------------------------------  
 ! Set the orientation for the model (N,S,E,W, or AVG to run all four directions
 ! and compute an average result). 
 ! ***NOTE: As of Nov 21/2015 This attribute only determines numbers of runs (1 or 4) 
 !          but doesn't rotate the model yet.
 GOconfig_rotate      : S
 
-! Weather location 
-Opt-Location : Toronto
-
-Opt-FuelCost : Ottawa08
-
-! By default using Set_EGH.H2k file to force old method. Could add this attribute to switch methods
-!OPT-HRV_ctl  : 
-
 !Attachment options
 Opt-Attachment : single
 
-! Air-Tightness: 
-Opt-AirTightness   : Generic
-
-! ACH substitutions
-Opt-ACH       : retro_ACH_2_5
-
 Opt-OverhangWidth : BaseOverhang
-
-! Main wall insulation 
-Opt-MainWall         : GenericWall_1Layer
-Opt-GenericWall_1Layer_definitions : Stud_2x6_1in_Polyiso_R-24
 
 ! Add concrete to floors (internal partitions only)
 Opt-FloorSurface     : wood
-
-Opt-Ceilings         : CeilR50
-
-! Basement slab insulation 
-Opt-BasementSlabInsulation  : NoInsulation
-
-! Foundation walls. 
-Opt-BasementWallInsulation  : OBC-min-R12
-
-! Optical and thermal characteristics of casement windows (currently 
-! all windows in model. 
-Opt-CasementWindows  :  DoubleLowEHardCoatArgFill 
-
-! Exposed floor over garage (affects floor
-Opt-ExposedFloor     : BaseExpFloor-R31
 
 ! Hot water reduction technologies (SDHW, DHWR) 
 Opt-DWHRandSDHW         : none          
@@ -76,5 +68,3 @@ Opt-Cooling-Spec     : 2TonStdCooling
 ! HRV spec 
 Opt-HRVspec : BaseHRV_SRE70
 Opt-HRVduct : interlock
-
-Opt-StandoffPV       : NoPV   !SizedPV|8kW

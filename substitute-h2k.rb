@@ -8,9 +8,13 @@ require 'optparse'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
+# Constants in Ruby start with upper case letters and, by convention, all upper case
+CONV_R_2_RSI = 5.678263
+
 # Global variable names  (i.e., variables that maintain their content and use (scope) 
 # throughout this file). 
-# Note loose convention to start global variables with a 'g'. Ruby requires globals to start with '$'.
+# Note loose convention to start global variables with a 'g'. 
+# Ruby *requires* globals to start with '$'.
 $gDebug = false
 $gSkipSims = false
 $gTest_params = Hash.new        # test parameters
@@ -46,7 +50,6 @@ $gEnergyVentilation = 0
 $gEnergyWaterHeating = 0
 $gEnergyEquipment = 0
 $gERSNum = 0  # ERS number
-$gERSNum_noVent = 0  # ERS number
 
 $gRegionalCostAdj = 0
 
@@ -175,19 +178,40 @@ def debug_out(debmsg)
 end
 
 # Returns XML elements of HOT2000 file.
-def get_elements_from_filename(filename)
-   fH2KFile = File.new(filename, "r") 
-   if fH2KFile == nil then
-      fatalerror("Could not read #{filespec}.\n")
+def get_elements_from_filename(fileSpec)
+   # Split fileSpec into path and filename
+   (tempPath, tempFileName) = File.split( fileSpec )
+   # Determine file extension
+   tempExt = File.extname(tempFileName)
+   
+   # Open file...
+   fFileHANDLE = File.new(fileSpec, "r") 
+   if fFileHANDLE == nil then
+      fatalerror("Could not read #{fileSpec}.\n")
    end
   
-   # Need to add error checking on failed open of existing file!
-   $XMLdoc = Document.new(fH2KFile)
-
-   # Close the HOT2000 file since content read
-   fH2KFile.close()
+   # Global variable $XMDoc is used elsewhere for access to 
+   # HOT2000 model file elements access using Path.
+   if ( tempExt.downcase == ".h2k" )
+      $XMLdoc = Document.new(fFileHANDLE)
+   elsif ( tempExt.downcase == ".flc" )
+      $XMLFueldoc = Document.new(fFileHANDLE)
+   elsif ( tempExt.downcase == ".cod" )
+      $XMLCodedoc = Document.new(fFileHANDLE)
+   else
+      $XMLOtherdoc = Document.new(fFileHANDLE)
+   end
+   fFileHANDLE.close()  # Close the since content read
   
-   return $XMLdoc.elements()
+   if ( tempExt.downcase == ".h2k" )
+      return $XMLdoc.elements()
+   elsif ( tempExt.downcase == ".flc" )
+      return $XMLFueldoc.elements()
+   elsif ( tempExt.downcase == ".cod" )
+      return $XMLCodedoc.elements()
+   else
+      return $XMLOtherdoc.elements()
+   end
 end
 
 # Search through the HOT2000 working file (copy of input file specified on command line) 
@@ -196,12 +220,29 @@ def processFile(filespec)
 
    # Load all XML elements from HOT2000 file
    h2kElements = get_elements_from_filename(filespec)
+   
+   # Load all XML elements from HOT2000 code library file. This file is specified
+   # in option Opt-DBFiles 
+   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
+   h2kCodeFile = $run_path + "\\StdLibs" + "\\" + codeLibName
+   if ( !File.exist?(h2kCodeFile) )
+      fatalerror("Code library file #{codeLibName} not found in #{$run_path + "\\StdLibs" + "\\"}!")
+   else
+      h2kCodeElements = get_elements_from_filename(h2kCodeFile)
+   end
 
-   # H2K version numbers can be used to determine availability of some data in the file
+   # Will contain XML elements for fuel cost file, if pt-Location is processed! 
+   # Initialized here outside of Opt-Locations check to make scope broader
+   h2kFuelElements = nil
+
+   # H2K version numbers can be used to determine availability of data in the H2K file.
+   # Made global so available outide of this subroutine definition
    locationText = "HouseFile/Application/Version"
    $versionMajor_H2K = h2kElements[locationText].attributes["major"]
    $versionMinor_H2K = h2kElements[locationText].attributes["minor"]
    $versionBuild_H2K = h2kElements[locationText].attributes["build"]
+
+   windowFacingH2K = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
    
    $gChoiceOrder.each do |choiceEntry|
       if ( $gOptions[choiceEntry]["type"] == "internal" )
@@ -222,38 +263,33 @@ def processFile(filespec)
             # Weather Location
             #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
-               if ( tag =~ /OPT-H2K-WTH-FILE/ )
-                  if ( value !~ /NA/ )
-                     # Weather file to use for HOT2000 run
-                     locationText = "HouseFile/ProgramInformation/Weather"
-                     # Check on existence of H2K weather file
-                     if ( !File.exist?($h2k_src_path + "\\Dat" + "\\" + value) )
-                        fatalerror("Weather file #{value} not found in Dat folder !")
-                     else
-                        h2kElements[locationText].attributes["library"] = value
-                     end
+               if ( tag =~ /OPT-H2K-WTH-FILE/ && value != "NA" )
+                  # Weather file to use for HOT2000 run
+                  locationText = "HouseFile/ProgramInformation/Weather"
+                  # Check on existence of H2K weather file
+                  if ( !File.exist?($run_path + "\\Dat" + "\\" + value) )
+                     fatalerror("Weather file #{value} not found in Dat folder !")
+                  else
+                     h2kElements[locationText].attributes["library"] = value
                   end
-               elsif ( tag =~ /OPT-H2K-Region/ )
-                  if ( value !~ /NA/ )
-                     # Weather region to use for HOT2000 run
-                     locationText = "HouseFile/ProgramInformation/Weather/Region"
-                     h2kElements[locationText].attributes["code"] = value
-                     # Match Client Street address province ID to avoid H2K dialog!
-                     locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-                     provArr = [ "BC", "AB", "SK", "MB", "ON", "QC", "NB", "NS", "PE", "NL", "YT", "NT", "NU" ]
-                     h2kElements[locationText].attributes["code"] = provArr[value.to_i - 1]
-                  end
-               elsif ( tag =~ /OPT-H2K-Location/ )
-                  if ( value !~ /NA/ )
-                     # Weather location to use for HOT2000 run
-                     locationText = "HouseFile/ProgramInformation/Weather/Location"
-                     h2kElements[locationText].attributes["code"] = value
-                  end
+               elsif ( tag =~ /OPT-H2K-Region/ && value != "NA" )
+                  # Weather region to use for HOT2000 run
+                  locationText = "HouseFile/ProgramInformation/Weather/Region"
+                  h2kElements[locationText].attributes["code"] = value
+                  # Match Client Street address province ID to avoid H2K dialog!
+                  locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
+                  provArr = [ "BC", "AB", "SK", "MB", "ON", "QC", "NB", "NS", "PE", "NL", "YT", "NT", "NU" ]
+                  h2kElements[locationText].attributes["code"] = provArr[value.to_i - 1]
+               elsif ( tag =~ /OPT-H2K-Location/ && value != "NA" )
+                  # Weather location to use for HOT2000 run
+                  locationText = "HouseFile/ProgramInformation/Weather/Location"
+                  h2kElements[locationText].attributes["code"] = value
                elsif ( tag =~ /OPT-WEATHER-FILE/ ) # Do nothing
                elsif ( tag =~ /OPT-Latitude/ ) # Do nothing
                elsif ( tag =~ /OPT-Longitude/ ) # Do nothing
                else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
             
@@ -261,201 +297,1185 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FuelCost/ )
                # HOT2000 Fuel costing data selections
-               if ( tag =~ /OPT-LibraryFile/ )
-                  if ( value !~ /NA/ )
-                     # Fuel Cost file to use for HOT2000 run
-                     locationText = "HouseFile/FuelCosts"
-                     # Check on existence of H2K weather file
-                     if ( !File.exist?($h2k_src_path + "\\StdLibs" + "\\" + value) )
-                        fatalerror("Fuel cost file #{value} not found in StdLibs folder !")
-                     else
-                        h2kElements[locationText].attributes["library"] = value
+               if ( tag =~ /OPT-LibraryFile/ && value != "NA" )
+                  # Fuel Cost file to use for HOT2000 run
+                  locationText = "HouseFile/FuelCosts"
+                  # Check on existence of H2K weather file
+                  h2kWthFile = $run_path + "\\StdLibs" + "\\" + value
+                  if ( !File.exist?(h2kWthFile) )
+                     fatalerror("Fuel cost file #{value} not found in #{$run_path + "\\StdLibs" + "\\"}!")
+                  else
+                     h2kElements[locationText].attributes["library"] = value
+                     # Open weather file and read elements to use below. This assumes that this tag
+                     # always comes before the remainderof the weather location tags below!!
+                     h2kFuelElements = get_elements_from_filename(h2kWthFile)
+                  end
+               elsif ( tag =~ /OPT-ElecName/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
+                  h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-ElecID/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Electricity/Fuel"
+                  h2kElements[locationText].attributes["id"] = value
+                  # Set using rate blocks for this id from library file!
+                  locationFuelText = "FuelCosts/Electricity/Fuel"
+                  h2kFuelElements.each(locationFuelText) do |element| 
+                     if h2kFuelElements[locationFuelText].attributes["id"] == value
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/Units"
+                        h2kElements[locationText].attributes["code"] = h2kFuelElements[locationFuelText][5].attributes["code"]
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/Minimum"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][7].attributes["units"]
+                        h2kElements[locationText].attributes["charge"] = h2kFuelElements[locationFuelText][7].attributes["charge"]
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block1"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][1].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][1].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block2"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][3].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][3].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block3"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][5].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][5].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block4"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][7].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][7].attributes["costPerUnit"]
                      end
                   end
-               elsif ( tag =~ /OPT-ElecName/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
-                     h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-GasName/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Label"
+                  h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-GasID/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/NaturalGas/Fuel"
+                  h2kElements[locationText].attributes["id"] = value
+                  # Set using rate blocks for this id from library file!
+                  locationFuelText = "FuelCosts/NaturalGas/Fuel"
+                  h2kFuelElements.each(locationFuelText) do |element| 
+                     if h2kFuelElements[locationFuelText].attributes["id"] == value
+                        locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Units"
+                        h2kElements[locationText].attributes["code"] = h2kFuelElements[locationFuelText][5].attributes["code"]
+                        locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Minimum"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][7].attributes["units"]
+                        h2kElements[locationText].attributes["charge"] = h2kFuelElements[locationFuelText][7].attributes["charge"]
+                        locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/RateBlocks/Block1"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][1].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][1].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/RateBlocks/Block2"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][3].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][3].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/RateBlocks/Block3"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][5].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][5].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/RateBlocks/Block4"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][7].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][7].attributes["costPerUnit"]
+                     end
                   end
-               elsif ( tag =~ /OPT-ElecID/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
-                     h2kElements[locationText].attributes["id"] = value
+               elsif ( tag =~ /OPT-OilName/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Oil/Fuel/Label"
+                  h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-OilID/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Oil/Fuel"
+                  h2kElements[locationText].attributes["id"] = value
+                  # Set using rate blocks for this id from library file!
+                  locationFuelText = "FuelCosts/Oil/Fuel"
+                  h2kFuelElements.each(locationFuelText) do |element| 
+                     if h2kFuelElements[locationFuelText].attributes["id"] == value
+                        locationText = "HouseFile/FuelCosts/Oil/Fuel/Units"
+                        h2kElements[locationText].attributes["code"] = h2kFuelElements[locationFuelText][5].attributes["code"]
+                        locationText = "HouseFile/FuelCosts/Oil/Fuel/Minimum"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][7].attributes["units"]
+                        h2kElements[locationText].attributes["charge"] = h2kFuelElements[locationFuelText][7].attributes["charge"]
+                        locationText = "HouseFile/FuelCosts/Oil/Fuel/RateBlocks/Block1"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][1].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][1].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Oil/Fuel/RateBlocks/Block2"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][3].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][3].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Oil/Fuel/RateBlocks/Block3"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][5].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][5].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Oil/Fuel/RateBlocks/Block4"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][7].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][7].attributes["costPerUnit"]
+                     end
                   end
-               elsif ( tag =~ /OPT-GasName/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Label"
-                     h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-PropaneName/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Propane/Fuel/Label"
+                  h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-PropaneID/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Propane/Fuel"
+                  h2kElements[locationText].attributes["id"] = value
+                  # Set using rate blocks for this id from library file!
+                  locationFuelText = "FuelCosts/Propane/Fuel"
+                  h2kFuelElements.each(locationFuelText) do |element| 
+                     if h2kFuelElements[locationFuelText].attributes["id"] == value
+                        locationText = "HouseFile/FuelCosts/Propane/Fuel/Units"
+                        h2kElements[locationText].attributes["code"] = h2kFuelElements[locationFuelText][5].attributes["code"]
+                        locationText = "HouseFile/FuelCosts/Propane/Fuel/Minimum"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][7].attributes["units"]
+                        h2kElements[locationText].attributes["charge"] = h2kFuelElements[locationFuelText][7].attributes["charge"]
+                        locationText = "HouseFile/FuelCosts/Propane/Fuel/RateBlocks/Block1"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][1].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][1].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Propane/Fuel/RateBlocks/Block2"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][3].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][3].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Propane/Fuel/RateBlocks/Block3"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][5].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][5].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Propane/Fuel/RateBlocks/Block4"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][7].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][7].attributes["costPerUnit"]
+                     end
                   end
-               elsif ( tag =~ /OPT-GasID/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Label"
-                     h2kElements[locationText].attributes["id"] = value
-                  end
-               elsif ( tag =~ /OPT-OilName/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Oil/Fuel/Label"
-                     h2kElements[locationText].text = value
-                  end
-               elsif ( tag =~ /OPT-OilID/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Oil/Fuel/Label"
-                     h2kElements[locationText].attributes["id"] = value
-                  end
-               elsif ( tag =~ /OPT-PropaneName/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Propane/Fuel/Label"
-                     h2kElements[locationText].text = value
-                  end
-               elsif ( tag =~ /OPT-PropaneID/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Propane/Fuel/Label"
-                     h2kElements[locationText].attributes["id"] = value
-                  end
-               elsif ( tag =~ /OPT-WoodName/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Wood/Fuel/Label"
-                     h2kElements[locationText].text = value
-                  end
-               elsif ( tag =~ /OPT-WoodID/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/FuelCosts/Wood/Fuel/Label"
-                     h2kElements[locationText].attributes["id"] = value
+               elsif ( tag =~ /OPT-WoodName/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Wood/Fuel/Label"
+                  h2kElements[locationText].text = value
+               elsif ( tag =~ /OPT-WoodID/ && value != "NA" )
+                  locationText = "HouseFile/FuelCosts/Wood/Fuel"
+                  h2kElements[locationText].attributes["id"] = value
+                  # Set using rate blocks for this id from library file!
+                  locationFuelText = "FuelCosts/Wood/Fuel"
+                  h2kFuelElements.each(locationFuelText) do |element| 
+                     if h2kFuelElements[locationFuelText].attributes["id"] == value
+                        locationText = "HouseFile/FuelCosts/Wood/Fuel/Units"
+                        h2kElements[locationText].attributes["code"] = h2kFuelElements[locationFuelText][5].attributes["code"]
+                        locationText = "HouseFile/FuelCosts/Wood/Fuel/Minimum"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][7].attributes["units"]
+                        h2kElements[locationText].attributes["charge"] = h2kFuelElements[locationFuelText][7].attributes["charge"]
+                        locationText = "HouseFile/FuelCosts/Wood/Fuel/RateBlocks/Block1"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][1].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][1].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Wood/Fuel/RateBlocks/Block2"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][3].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][3].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Wood/Fuel/RateBlocks/Block3"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][5].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][5].attributes["costPerUnit"]
+                        locationText = "HouseFile/FuelCosts/Wood/Fuel/RateBlocks/Block4"
+                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][7].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][7].attributes["costPerUnit"]
+                     end
                   end
                else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
             
             # Air Infiltration Rate
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ACH/ )
-               if ( tag =~ /Opt-ACH/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-                     h2kElements[locationText].attributes["airChangeRate"] = value
-                  end
+               if ( tag =~ /Opt-ACH/ && value != "NA" )
+                  locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+                  h2kElements[locationText].attributes["airChangeRate"] = value
                else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
+            
             
             # Ceilings
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Ceilings/ )
-               if ( tag =~ /Opt-Ceiling/ )
-                  # Set Favourites code from library
-                  # Have problems with this method! 
-                  # NEEDS MORE WORK! ******************************
-               elsif ( tag =~ /OPT-H2K-EffRValue/ )
-                  if ( value !~ /NA/ )
-                     # Change ALL existing ceiling codes to User Specified R-value
-                     locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
-                     XPath.each( $XMLdoc, locationText) do |element| 
-                        element.text = "User specified"
-                        element.attributes["rValue"] = value
-                        if element.attributes["idref"] then
-                           # Must delete attribute for User Specified!
-                           element.delete_attribute("idref")
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all surfaces of this type. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 99"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Ceiling/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
                         end
                      end
                   end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Ceiling/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Ceiling/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Ceiling"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Ceiling")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Ceiling"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Ceiling"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     # Change all existing surface references of this type to useThisCodeID
+                     locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if each house entry has an "idref" attribute and add if it doesn't.
+                        if element.attributes["idref"] != nil
+                           element.attributes["idref"] = useThisCodeID
+                        else
+                           element.add_attribute("idref", useThisCodeID)
+                        end
+                        element.text = value
+                        element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                     end
+                  else
+                     # Code name not found in the code library
+                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  # Change ALL existing ceiling codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+                  h2kElements.each(locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
                else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
                
-            # Main Wall Codes (Not Available Yet)
+            # Main Walls
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-MainWall/ )
-               if ( tag =~ /Opt-MainWall-Bri/ )
-                  # Set Favourites code from library
-                  # Have problems with this method! 
-                  # NEEDS MORE WORK! ******************************
+               if ( tag =~ /OPT-H2K-CodeName/ && value != "NA" )
+                  # If this surface type code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all surfaces. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 89"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Wall/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Wall/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Wall/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Wall/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Wall"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Wall")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Wall"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Wall"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     # Change all existing surface references of this type to useThisCodeID
+                     locationText = "HouseFile/House/Components/Wall/Construction/Type"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if each house entry has an "idref" attribute and add if it doesn't.
+                        if element.attributes["idref"] != nil
+                           element.attributes["idref"] = useThisCodeID
+                        else
+                           element.add_attribute("idref", useThisCodeID)
+                        end
+                        element.text = value
+                        element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                     end
+                  else
+                     # Code name not found in the code library
+                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  # Change ALL existing wall codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Wall/Construction/Type"
+                  h2kElements.each(locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+                  
+               elsif ( tag =~ /Opt-MainWall-Bri/ )    # Do nothing
                elsif ( tag =~ /Opt-MainWall-Vin/ )    # Do nothing
                elsif ( tag =~ /Opt-MainWall-Dry/ )    # Do nothing
                else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
-               end
-               
-               
-            # Wall user Specified R-Values
-            #--------------------------------------------------------------------------
-               elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
-               if ( tag =~ /OPT-H2K-EffRValue/ )
-                  if ( value !~ /NA/ )
-                     # Change ALL existing wall codes to User Specified R-value
-                     locationText = "HouseFile/House/Components/Wall/Construction/Type"
-                     XPath.each( $XMLdoc, locationText) do |element| 
-                        element.text = "User specified"
-                        element.attributes["rValue"] = value
-                        if element.attributes["idref"] then
-                           # Must delete attribute for User Specified!
-                           element.delete_attribute("idref")
-                        end
-                     end
-                  end
-               elsif ( tag =~ /Opt-GenInsulLayerInboard-a/ )   # Do nothing
-               else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
                
             # Exposed Floor User-Specified R-Values
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ExposedFloor/ )
-               if ( tag =~ /Opt-ExposedFloor/ )
-                  # Set Favourites code: Not working yet
-                  # WORK ON!
-               elsif ( tag =~ /OPT-H2K-EffRValue/ )
-                  if ( value !~ /NA/ )
-                     # Change ALL existing floor codes to User Specified R-value
-                     locationText = "HouseFile/House/Components/Floor/Construction/Type"
-                     XPath.each( $XMLdoc, locationText) do |element| 
-                        element.text = "User specified"
-                        element.attributes["rValue"] = value
-                        if element.attributes["idref"] then
-                           # Must delete attribute for User Specified!
-                           element.delete_attribute("idref")
+               if ( tag =~ /OPT-H2K-CodeName/ &&  value != "NA" )
+                  # If this code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all entries. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 79"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Floor/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Floor/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
                         end
                      end
                   end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Floor/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Floor/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Floor"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Floor")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Floor"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Floor"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     # Change all existing surface references of this type to useThisCodeID
+                     locationText = "HouseFile/House/Components/Floor/Construction/Type"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if each house entry has an "idref" attribute and add if it doesn't.
+                        if element.attributes["idref"] != nil
+                           element.attributes["idref"] = useThisCodeID
+                        else
+                           element.add_attribute("idref", useThisCodeID)
+                        end
+                        element.text = value
+                        element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                     end
+                  else
+                     # Code name not found in the code library
+                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" )
+                  # Change ALL existing floor codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Floor/Construction/Type"
+                  h2kElements.each(locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               elsif ( tag =~ /Opt-ExposedFloor/ )   # Do nothing
                elsif ( tag =~ /Opt-ExposedFloor-r/ )   # Do nothing
                else
-                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
                
-            # Windows
+            # Windows (by facing direction)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-CasementWindows/ )
-               if ( tag =~ /XXXX/ )
-               #<Opt-win-S-CON>
-               #<Opt-win-S-OPT>
-               #<Opt-win-E-CON>
-               #<Opt-win-E-OPT>
-               #<Opt-win-N-CON>
-               #<Opt-win-N-OPT>
-               #<Opt-win-W-CON>
-               #<Opt-win-W-OPT>
-               elsif ( tag =~ /XXX/ )
-                  # Change ALL existing window...
-                  locationText = "HouseFile/House/Components/Wall/Components/Window"
-                  #XPath.each( $XMLdoc, locationText) do |element| 
-                     #element.text = ""
-                     #element.attributes["shgc"] = value
-                  #end
+               if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+                  # Change ALL existing S-facing windows to this library code name.
+                  # If this code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all entries facing S. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 199"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Window/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Window/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Window/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Window")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     
+                     # Windows in walls elements
+                     locationText = "HouseFile/House/Components/Wall/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["S"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in basement wall elements
+                     locationText = "HouseFile/House/Components/Basement/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["S"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in walkout wall elements
+                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["S"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in crawlspace elements             [******** Skip for now ********]
+                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
+                     # Windows in door elements                   [******** Skip for now ********]
+                  else
+                     # Code name not found in the code library
+                     # Since no User Specified option for windows this must be an error!
+                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+               
+               elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+                  # Change ALL existing E-facing windows to this library code name.
+                  # If this code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all entries facing E. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 189"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Window/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Window/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Window/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Window")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     
+                     # Windows in walls elements
+                     locationText = "HouseFile/House/Components/Wall/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["E"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in basement wall elements
+                     locationText = "HouseFile/House/Components/Basement/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["E"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in walkout wall elements
+                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["E"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in crawlspace elements             [******** Skip for now ********]
+                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
+                     # Windows in door elements                   [******** Skip for now ********]
+                  else
+                     # Code name not found in the code library
+                     # Since no User Specified option for windows this must be an error!
+                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+
+               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )    # Do nothing
+                  # Change ALL existing N-facing windows to this library code name.
+                  # If this code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all entries facing N. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 179"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Window/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Window/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Window/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Window")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     
+                     # Windows in walls elements
+                     locationText = "HouseFile/House/Components/Wall/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["N"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in basement wall elements
+                     locationText = "HouseFile/House/Components/Basement/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["N"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in walkout wall elements
+                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["N"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in crawlspace elements             [******** Skip for now ********]
+                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
+                     # Windows in door elements                   [******** Skip for now ********]
+                  else
+                     # Code name not found in the code library
+                     # Since no User Specified option for windows this must be an error!
+                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+               
+               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )    # Do nothing
+                  # Change ALL existing W-facing windows to this library code name.
+                  # If this code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all entries facing W. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 169"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  locationCodeFavText = "Codes/Window/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     if ( foundFavLibCode )
+                        locationText = "HouseFile/Codes/Window/Favorite"
+                     else
+                        locationText = "HouseFile/Codes/Window/UserDefined"
+                     end
+                     h2kElements.each(locationText + "/Code") do |element| 
+                        if ( element.get_text("Label") == value )
+                           thisCodeInHouse = true
+                           useThisCodeID = element.attributes["id"]
+                           break
+                        end
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
+                           # No section ofthis type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("Window")
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
+                           else
+                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
+                           end
+                        end
+                        h2kElements[locationText].add(foundCodeLibElement)
+                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
+                     end
+                     
+                     # Windows in walls elements
+                     locationText = "HouseFile/House/Components/Wall/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["W"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in basement wall elements
+                     locationText = "HouseFile/House/Components/Basement/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["W"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in walkout wall elements
+                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
+                     h2kElements.each(locationText) do |element| 
+                        # 9=FacingDirection
+                        if ( element[9].attributes["code"] == windowFacingH2K["W"].to_s )
+                           # Check if each house entry has an "idref" attribute and add if it doesn't.
+                           # Change each house entry to reference a new <Codes> section useThisCodeID
+                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+                              element[3][1].attributes["idref"] = useThisCodeID
+                           else
+                              element[3][1].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3][1].text = value
+                        end
+                     end
+                     # Windows in crawlspace elements             [******** Skip for now ********]
+                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
+                     # Windows in door elements                   [******** Skip for now ********]
+                  else
+                     # Code name not found in the code library
+                     # Since no User Specified option for windows this must be an error!
+                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+               
+               elsif ( tag =~ /Opt-win-S-OPT/ )    # Do nothing
+               elsif ( tag =~ /Opt-win-E-OPT/ )    # Do nothing
+               elsif ( tag =~ /Opt-win-N-OPT/ )    # Do nothing
+               elsif ( tag =~ /Opt-win-W-OPT/ )    # Do nothing
                else
-                  #fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
-            # Basement Slab
+            # Foundations
+            #  - All types: Basement, Walkout, Crawlspace, Slab-On-Grade
+            #  - Interior & Exterior wall insulation, below slab insulation
+            #    based on insulaion configuration type
             #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-BasementSlabInsulation/ )
-               
-               
-            # Basement Walls
-            #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-BasementWallInsulation/ )
+            elsif ( choiceEntry =~ /Opt-H2KFoundation/ )
+               # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change!
+               config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
+               (configType, configSubType, fndTypes) = config.split('_')
+                  
+               if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
+                  # Set the configuration type for the fnd types specified (A=All)
+                  if ( fndTypes == "B" || fndTypes == "A" )
+                     locationText = "HouseFile/House/Components/Basement/Configuration"
+                     h2kElements.each(locationText) do |element| 
+                        element.attributes["type"] = configType
+                        element.attributes["subtype"] = configSubType
+                        element.attributes["overlap"] = "0"
+                        element.text = configType + "_" + configSubType
+                     end
+                  elsif ( fndTypes == "W" || fndTypes == "A" )
+                     locationText = "HouseFile/House/Components/Walkout/Configuration"
+                     h2kElements.each(locationText) do |element| 
+                        element.attributes["type"] = configType
+                        element.attributes["subtype"] = configSubType
+                        element.text = configType + "_" + configSubType
+                     end
+                  elsif ( fndTypes == "C" || fndTypes == "A" )
+                     locationText = "HouseFile/House/Components/Crawlspace/Configuration"
+                     h2kElements.each(locationText) do |element| 
+                        element.attributes["type"] = configType
+                        element.attributes["subtype"] = configSubType
+                        element.text = configType + "_" + configSubType
+                     end
+                  elsif ( fndTypes == "S" || fndTypes == "A" )
+                     locationText = "HouseFile/House/Components/Slab/Configuration"
+                     h2kElements.each(locationText) do |element| 
+                        element.attributes["type"] = configType
+                        element.attributes["subtype"] = configSubType
+                        element.text = configType + "_" + configSubType
+                     end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-IntWallCode/ &&  value != "NA" )
+                  # If this code name exists in the code library, use the code 
+                  # (either Fav or UsrDef) for all entries. Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 110"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  # Note: Both Basement and Walkout interior wall codes saved under "BasementWall"
+                  locTextArr1 = [ "BasementWall", "CrawlspaceWall" ]
+                  locTextArr1.each do |txt|
+                     locationCodeFavText = "Codes/#{txt}/Favorite/Code"
+                     h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundFavLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  # Code library names are unique so also check User Defined codes
+                  if ( ! foundFavLibCode )
+                     locTextArr1.each do |txt|
+                        locationCodeUsrDefText = "Codes/" + txt + "/Favorite/Code"
+                        h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                           if ( codeElement.get_text("Label") == value )
+                              foundUsrDefLibCode = true
+                              foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                              break
+                           end
+                        end
+                     end
+                  end
+                  locStr = ""
+                  locTextArr2 = [ "Favorite", "UserDefined" ]
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     locTextArr1.each do |fndTypeTxt|
+                        locTextArr2.each do |favOrUsrDefTxt|
+                           locStr = "HouseFile/Codes/#{fndTypeTxt}/#{favOrUsrDefTxt}/Code"
+                           h2kElements.each(locStr) do |element| 
+                              if ( element.get_text("Label") == value )
+                                 thisCodeInHouse = true
+                                 useThisCodeID = element.attributes["id"]
+                                 break
+                              end
+                           end
+                           break if thisCodeInHouse   # break Fav/UsrDef loop if found
+                        end
+                        break if thisCodeInHouse      # break fnd type loop if found
+                     end
+                     if ( ! thisCodeInHouse )
+                        if ( fndTypes == "B" || fndTypes == "W" || (fndTypes == "A" && configType =~ /^B/) )
+                           locStr = "HouseFile/Codes/BasementWall"
+                        elsif ( fndTypes == "C" || (fndTypes == "A" && configType =~ /^S/) )
+                           locStr = "HouseFile/Codes/CrawlspaceWall"
+                        end
+                        if ( h2kElements[locStr] == nil )
+                           # No section of this type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element(FndTypeTxt)
+                        end
+                        if ( foundFavLibCode )
+                           locationText = locStr + "/Favorite"
+                        else
+                           locationText = locStr + "/UserDefined"
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements[locStr].add_element("Favorite")
+                           else
+                              h2kElements[locStr].add_element("UserDefined")
+                           end
+                        end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
+                        h2kElements[locationText].add(foundCodeLibElement)
+                     end
+                     # Change all interior insulated surface references of this type to useThisCodeID
+                     locHouseStr = [ "", "" ]
+                     if ( fndTypes == "B" )
+                        locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+                     elsif ( fndTypes == "W" )
+                        locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+                     elsif ( fndTypes == "C" || ( fndTypes == "A" && configType =~ /^S/ ) )
+                        locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+                     elsif ( fndTypes == "A" && configType =~ /^B/ )
+                        locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+                        locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+                     end
+                     locHouseStr.each do |locationString|
+                        if ( locationString != "" )
+                           h2kElements.each(locationString) do |element| 
+                              # Check if each house entry has an "idref" attribute and add if it doesn't.
+                              if element.attributes["idref"] != nil
+                                 element.attributes["idref"] = useThisCodeID
+                              else
+                                 element.add_attribute("idref", useThisCodeID)
+                              end
+                              element[1].text = value    # Description tag
+                              element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                           end
+                        end
+                     end
+                  else
+                     # Code name not found in the code library
+                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-IntWall-RValue/ &&  value != "NA" )
+                  # Change ALL existing interior wall codes to User Specified R-value
+                  locHouseStr = [ "", "" ]
+                  if ( fndTypes == "B" )
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+                  elsif ( fndTypes == "W" )
+                     locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+                  elsif ( fndTypes == "C" || ( fndTypes == "A" && configType =~ /^S/ ) )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+                  elsif ( fndTypes == "A" && configType =~ /^B/ )
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+                     locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           element[1].text = "User specified"     # Description tag
+                           element[3][1].attributes["rsi"] = (value.to_f / CONV_R_2_RSI).to_s
+                           element[3][1].attributes["rank"] = "1"
+                           element[3][1].attributes["percentage"] = "100"
+                           if element.attributes["idref"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("idref")
+                           end
+                        end
+                      end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-ExtWall-RVal/ &&  value != "NA" ) 
+                  # Change ALL existing exterior wall codes to User Specified R-value
+                  locHouseStr = [ "", "" ]
+                  if ( fndTypes == "B" )
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
+                  elsif ( fndTypes == "W" )
+                     locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
+                  elsif ( fndTypes == "A" && configType =~ /^B/ )
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
+                     locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           element[1].text = "User specified"     # Description tag
+                           element[3][1].attributes["rsi"] = (value.to_f / CONV_R_2_RSI).to_s
+                           element[3][1].attributes["rank"] = "1"
+                           element[3][1].attributes["percentage"] = "100"
+                           if element.attributes["code"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("code")
+                           end
+                        end
+                      end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-BelowSlab-RVal/ &&  value != "NA" )
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
                
                
             # DWHR (+SDHW)
@@ -481,13 +1501,12 @@ def processFile(filespec)
             # HVAC System (Type 1)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
-               if ( tag =~ /XXXX/ )
-                  if ( value !~ /NA/ )
-                     locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
-                     h2kElements[locationText].attributes["code"] = value
-                  end
+               if ( tag =~ /XXXX/ &&  value != "NA" )
+                  locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
+                  h2kElements[locationText].attributes["code"] = value
                else
-                  #fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  #if ( value == "NA" ) # Don't change anything
+                  #else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
                
@@ -509,7 +1528,7 @@ def processFile(filespec)
             # PV - Use H2K model
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-StandoffPV/ )
-               if ( tag =~ /Opt-StandoffPV/ )
+               if ( tag =~ /Opt-StandoffPV/ &&  value != "NA" )
                   #locationText1 = "HouseFile/House/Generation/Photovoltaic/Array"
                   #locationText2 = "HouseFile/House/Generation/Photovoltaic/Module/Type"
                   #h2kElements[locationText1].attributes["area"] = value
@@ -517,12 +1536,13 @@ def processFile(filespec)
                   #h2kElements[locationText1].attributes["azimuth"] = value
                   #h2kElements[locationText2].attributes["code"] = value
                else
-                  #fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                  #if ( value == "NA" ) # Don't change anything
+                  #else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
                
             else
-               # Do nothing as we're ignoring all other tags!
+               # Do nothing -- we're ignoring all other tags!
                #debug_out("Tag #{tag} ignored!\n")
             end
          end
@@ -647,8 +1667,6 @@ def postprocess( scaleData )
 
    $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
    
-   $gERSNum_noVent = $gERSNum    # Check ????????????????????????????????????????????????
-   
    # Total energy: H2K value in GJ
    locationText = "HouseFile/AllResults/Results/Annual/Consumption"
    $gAvgEnergy_Total += h2kPostElements[locationText].attributes["total"].to_f * scaleData
@@ -753,38 +1771,38 @@ def postprocess( scaleData )
    # PV energy shouldn't be cumulative for orientation runs (GJ * 277.778 -> kWh)!!
    $gAvgPVOutput_kWh   = -1.0 * $gEnergyPV * 277.778 * scaleData
 
-   stream_out  "\n Peak Heating Load (W): #{$gPeakHeatingLoadW} \n"
-   stream_out  " Peak Cooling Load (W): #{$gPeakCoolingLoadW} \n"
+   stream_out  "\n Peak Heating Load (W): #{$gPeakHeatingLoadW.round(1)} \n"
+   stream_out  " Peak Cooling Load (W): #{$gPeakCoolingLoadW.round(1)} \n"
    
    stream_out("\n Energy Consumption: \n\n")
-   stream_out ( "  #{$gAvgEnergyHeatingGJ} ( Space Heating, GJ ) \n")
-   stream_out ( "  #{$gAvgEnergyWaterHeatingGJ} ( Hot Water, GJ ) \n")
-   stream_out ( "  #{$gAvgEnergyVentilationGJ} ( Ventilator Electrical, GJ ) \n")
-   stream_out ( "  #{$gAvgEnergyCoolingGJ} ( Space Cooling, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyHeatingGJ.round(1)} ( Space Heating, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyWaterHeatingGJ.round(1)} ( Hot Water, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyVentilationGJ.round(1)} ( Ventilator Electrical, GJ ) \n")
+   stream_out ( "  #{$gAvgEnergyCoolingGJ.round(1)} ( Space Cooling, GJ ) \n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    #{$gAvgEnergyHeatingGJ + $gAvgEnergyWaterHeatingGJ + $gAvgEnergyVentilationGJ} ( H2K Annual Space+DHW, GJ ) \n")
+   stream_out ( "    #{($gAvgEnergyHeatingGJ + $gAvgEnergyWaterHeatingGJ + $gAvgEnergyVentilationGJ).round(1)} ( H2K Annual Space+DHW, GJ ) \n")
    
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
-   stream_out("  + \$ #{$gAvgCost_Electr.round} (Electricity)\n")
-   stream_out("  + \$ #{$gAvgCost_NatGas.round} (Natural Gas)\n")
-   stream_out("  + \$ #{$gAvgCost_Oil.round} (Oil)\n")
-   stream_out("  + \$ #{$gAvgCost_Propane.round} (Propane)\n")
-   stream_out("  + \$ #{$gAvgCost_Wood.round} (Wood)\n")
-   stream_out("  + \$ #{$gAvgCost_Pellet.round} (Pellet)\n")
+   stream_out("  + \$ #{$gAvgCost_Electr.round(2)} (Electricity)\n")
+   stream_out("  + \$ #{$gAvgCost_NatGas.round(2)} (Natural Gas)\n")
+   stream_out("  + \$ #{$gAvgCost_Oil.round(2)} (Oil)\n")
+   stream_out("  + \$ #{$gAvgCost_Propane.round(2)} (Propane)\n")
+   stream_out("  + \$ #{$gAvgCost_Wood.round(2)} (Wood)\n")
+   stream_out("  + \$ #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    \$ #{$gAvgCost_Total.round} (All utilities).\n")
+   stream_out ( "    \$ #{$gAvgCost_Total.round(2)} (All utilities).\n")
    stream_out ( "\n")
-   stream_out ( "  - \$ #{$gAvgPVRevenue.round} (PV revenue, #{($gAvgPVRevenue * 1e06 / 3600).round} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
+   stream_out ( "  - \$ #{$gAvgPVRevenue.round(2)} (PV revenue, #{($gAvgPVRevenue * 1e06 / 3600).round} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    \$ #{($gAvgCost_Total - $gAvgPVRevenue).round} (Net utility costs).\n")
+   stream_out ( "    \$ #{($gAvgCost_Total - $gAvgPVRevenue).round(2)} (Net utility costs).\n")
    stream_out ( "\n\n")
    
    stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
-   stream_out("  - #{$gAvgElecCons_KWh.round} (Electricity, kWh)\n")
-   stream_out("  - #{$gAvgNGasCons_m3} (Natural Gas, m3)\n")
-   stream_out("  - #{$gAvgOilCons_l} (Oil, l)\n")
-   stream_out("  - #{$gEnergyWood} (Wood, cord)\n")
-   stream_out("  - #{$gAvgPelletCons_tonne} (Pellet, tonnes)\n")
+   stream_out("  - #{$gAvgElecCons_KWh.round(1)} (Electricity, kWh)\n")
+   stream_out("  - #{$gAvgNGasCons_m3.round(1)} (Natural Gas, m3)\n")
+   stream_out("  - #{$gAvgOilCons_l.round(1)} (Oil, l)\n")
+   stream_out("  - #{$gEnergyWood.round(1)} (Wood, cord)\n")
+   stream_out("  - #{$gAvgPelletCons_tonne.round(1)} (Pellet, tonnes)\n")
    stream_out ("> SCALE #{scaleData} \n"); 
    
    # Estimate total cost of upgrades
@@ -808,9 +1826,6 @@ def postprocess( scaleData )
    if ( $gERSNum > 0 )
       $tmpval = $gERSNum.round(1)
       stream_out(" ERS value: #{$tmpval}\n")
-      
-      $tmpval = $gERSNum_noVent.round(1)
-      stream_out(" ERS value_noVent:   #{$tmpval}\n\n")
    end
 
 end  # End of postprocess
@@ -828,7 +1843,7 @@ def fix_H2K_INI()
       linein = fH2K_ini_file.readline
       if ( linein =~ /_FILE/ )
          # Using $h2k_src_path to determine what to change in ini file. Regexp.escape is used
-         # to properly handle the "\\" characters in the path (i=case insensitive)!
+         # to properly handle the "\\" characters in the path (i=case insensitive).
          linein.sub!(/#{Regexp.escape($h2k_src_path)}/i, "#{$gMasterPath}\\H2K") 
       end
       lineout += linein
@@ -968,7 +1983,7 @@ stream_out (" >               HOT2000 run folder: #{$run_path} \n")
 =end
 
 stream_out("\n\nReading #{$gOptionFile}...")
-fOPTIONS = File.new($gOptionFile, mode="r") 
+fOPTIONS = File.new($gOptionFile, "r") 
 if fOPTIONS == nil then
    fatalerror("Could not read #{$gOptionFile}.\n")
 end
@@ -1716,39 +2731,38 @@ if fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
 
-fSUMMARY.write( "Energy-Total-GJ   =  #{$gAvgEnergy_Total} \n" )
-fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total}   \n" )
-fSUMMARY.write( "Util-PV-revenue   =  #{$gAvgPVRevenue}    \n" )
-fSUMMARY.write( "Util-Bill-Net     =  #{$gAvgCost_Total-$gAvgPVRevenue} \n" )
-fSUMMARY.write( "Util-Bill-Elec    =  #{$gAvgCost_Electr}  \n" )
-fSUMMARY.write( "Util-Bill-Gas     =  #{$gAvgCost_NatGas}  \n" )
-fSUMMARY.write( "Util-Bill-Prop    =  #{$gAvgCost_Propane} \n" )
-fSUMMARY.write( "Util-Bill-Oil     =  #{$gAvgCost_Oil} \n" )
-fSUMMARY.write( "Util-Bill-Wood    =  #{$gAvgCost_Wood} \n" )
-fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet} \n" )
+fSUMMARY.write( "Energy-Total-GJ   =  #{$gAvgEnergy_Total.round(1)} \n" )
+fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total.round(2)}   \n" )
+fSUMMARY.write( "Util-PV-revenue   =  #{$gAvgPVRevenue.round(2)}    \n" )
+fSUMMARY.write( "Util-Bill-Net     =  #{($gAvgCost_Total-$gAvgPVRevenue).round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Elec    =  #{$gAvgCost_Electr.round(2)}  \n" )
+fSUMMARY.write( "Util-Bill-Gas     =  #{$gAvgCost_NatGas.round(2)}  \n" )
+fSUMMARY.write( "Util-Bill-Prop    =  #{$gAvgCost_Propane.round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Oil     =  #{$gAvgCost_Oil.round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Wood    =  #{$gAvgCost_Wood.round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )
 
-fSUMMARY.write( "Energy-PV-kWh     =  #{$gAvgPVOutput_kWh} \n" )
-#fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW} \n" )
-fSUMMARY.write( "Energy-HeatingGJ  =  #{$gAvgEnergyHeatingGJ} \n" )
-fSUMMARY.write( "Energy-CoolingGJ  =  #{$gAvgEnergyCoolingGJ} \n" )
-fSUMMARY.write( "Energy-VentGJ     =  #{$gAvgEnergyVentilationGJ} \n" )
-fSUMMARY.write( "Energy-DHWGJ      =  #{$gAvgEnergyWaterHeatingGJ} \n" )
-fSUMMARY.write( "Energy-PlugGJ     =  #{$gAvgEnergyEquipmentGJ} \n" )
-fSUMMARY.write( "EnergyEleckWh     =  #{$gAvgElecCons_KWh} \n" )
-fSUMMARY.write( "EnergyGasM3       =  #{$gAvgNGasCons_m3}  \n" )
-fSUMMARY.write( "EnergyOil_l       =  #{$gAvgOilCons_l}    \n" )
-fSUMMARY.write( "EnergyPellet_t    =  #{$gAvgPelletCons_tonne}   \n" )
-fSUMMARY.write( "Upgrade-cost      =  #{$gTotalCost-$gIncBaseCosts}\n" )
-fSUMMARY.write( "SimplePaybackYrs  =  #{$payback} \n" )
+fSUMMARY.write( "Energy-PV-kWh     =  #{$gAvgPVOutput_kWh.round(1)} \n" )
+#fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
+fSUMMARY.write( "Energy-HeatingGJ  =  #{$gAvgEnergyHeatingGJ.round(1)} \n" )
+fSUMMARY.write( "Energy-CoolingGJ  =  #{$gAvgEnergyCoolingGJ.round(1)} \n" )
+fSUMMARY.write( "Energy-VentGJ     =  #{$gAvgEnergyVentilationGJ.round(1)} \n" )
+fSUMMARY.write( "Energy-DHWGJ      =  #{$gAvgEnergyWaterHeatingGJ.round(1)} \n" )
+fSUMMARY.write( "Energy-PlugGJ     =  #{$gAvgEnergyEquipmentGJ.round(1)} \n" )
+fSUMMARY.write( "EnergyEleckWh     =  #{$gAvgElecCons_KWh.round(1)} \n" )
+fSUMMARY.write( "EnergyGasM3       =  #{$gAvgNGasCons_m3.round(1)}  \n" )
+fSUMMARY.write( "EnergyOil_l       =  #{$gAvgOilCons_l.round(1)}    \n" )
+fSUMMARY.write( "EnergyPellet_t    =  #{$gAvgPelletCons_tonne.round(1)}   \n" )
+fSUMMARY.write( "Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
+fSUMMARY.write( "SimplePaybackYrs  =  #{$payback.round(1)} \n" )
 
 # These #s are not yet averaged for orientations!
-fSUMMARY.write( "PEAK-Heating-W    =  #{$gPeakHeatingLoadW}\n" )
-fSUMMARY.write( "PEAK-Cooling-W    =  #{$gPeakCoolingLoadW}\n" )
+fSUMMARY.write( "PEAK-Heating-W    =  #{$gPeakHeatingLoadW.round(1)}\n" )
+fSUMMARY.write( "PEAK-Cooling-W    =  #{$gPeakCoolingLoadW.round(1)}\n" )
 
-fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity}\n" )
+fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity.round(1)}\n" )
 
-fSUMMARY.write( "ERS-Value         =  #{$gERSNum}\n" )
-fSUMMARY.write( "ERS-Value_noVent  =  #{$gERSNum_noVent}\n" )
+fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 
 fSUMMARY.close() 
 

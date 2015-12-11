@@ -12,22 +12,22 @@ include REXML		# This allows for no "REXML::" prefix to REXML methods
 Returns DOM elements of a given filename. DOM: Document Object Model -- a programming interface for HTML, XML and SVG documents.
 =end
 def get_elements_from_filename(filename)
-  $h2kFile = File.open(filename)
-  # Need to add error checking on failed open of existing file!
-  $XMLdoc = Document.new($h2kFile)
-  return $XMLdoc.elements()
+   $h2kFile = File.open(filename)
+   # Need to add error checking on failed open of existing file!
+   $XMLdoc = Document.new($h2kFile)
+   return $XMLdoc.elements()
 end
 
 def get_elements_from_codelib(filename)
-  $h2kCodeFile = File.open(filename)
-  $XMLCodedoc = Document.new($h2kCodeFile)
-  return $XMLCodedoc.elements()
+   $h2kCodeFile = File.open(filename)
+   $XMLCodedoc = Document.new($h2kCodeFile)
+   return $XMLCodedoc.elements()
 end
 
 
 if ARGV.empty? then
-  puts("Need a command line argument with full path to the h2k file!")
-  exit()
+   puts("Need a command line argument with full path to the h2k file!")
+   exit()
 end
 
 # Load a HOT2000 file using command line parameter and assign contents to a Hash
@@ -46,7 +46,7 @@ $h2kElements.each("HouseFile/House/Components/*") { |element1|
 
 print("\nWeather file name: ")
 XPath.each( $XMLdoc, "HouseFile/ProgramInformation/Weather") { |element| 
-  print "#{element.attributes["library"]} "
+   print "#{element.attributes["library"]} "
 }
 # XPath.first(..) DOESN'T WORK
 print "  or other method: #{$h2kElements["HouseFile/ProgramInformation/Weather"].attributes["library"]}\n"
@@ -54,16 +54,18 @@ print "  or other method: #{$h2kElements["HouseFile/ProgramInformation/Weather"]
 puts("\nrValue of all ceilings:")
 locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
 $h2kElements.each(locationText) { |element| 
-  puts element.attributes["rValue"] 
+   puts element.attributes["rValue"] 
 }
 # Alternate method 1
 puts("rValue of all ceilings (using XPath):")
 XPath.each( $XMLdoc, locationText) { |element| 
-  puts element.attributes["rValue"] 
+   puts element.attributes["rValue"] 
 }
 # Alternate method 2
 puts("rValue of first ceiling (more direct method):")
 puts $h2kElements[locationText].attributes["rValue"]
+
+
 
 =begin rdoc
 Changing all envelope codes (i.e., walls, ceilings, exposed floors, basement walls and floors, windows, doors) to User Specified is the simplest change since we don't need to reference the <Codes> section. However, we need "system" effective R-values pre-determined.
@@ -71,13 +73,13 @@ Changing all envelope codes (i.e., walls, ceilings, exposed floors, basement wal
 puts("\nChange all existing wall codes to User Specified: ")
 locationText = "HouseFile/House/Components/Wall/Construction/Type"
 XPath.each( $XMLdoc, locationText) do |element| 
-  puts " - Existing wall code is: #{element.text} and R-Value is #{element.attributes["rValue"]}."
-  element.text = "User specified"
-  element.attributes["rValue"] = 3.99
-  if element.attributes["idref"] then
-    element.delete_attribute("idref")	# Must delete attribute for User Specified!
-  end
-  puts " - New wall code is: #{element.text} and R-Value is #{element.attributes["rValue"]}."
+   puts " - Existing wall code is: #{element.text} and R-Value is #{element.attributes["rValue"]}."
+   element.text = "User specified"
+   element.attributes["rValue"] = 3.99
+   if element.attributes["idref"] then
+      element.delete_attribute("idref")	# Must delete attribute for User Specified!
+   end
+   puts " - New wall code is: #{element.text} and R-Value is #{element.attributes["rValue"]}."
 end
 
 =begin rdoc
@@ -87,34 +89,34 @@ codeNameToUse = "Attic28"
 puts("Change all ceiling standard codes to #{codeNameToUse}... ")
 locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
 XPath.each( $XMLdoc, locationText) do |element| 
-  puts " - Existing ceiling code is: #{element.text}"
-  if !element.attributes["idref"] then
-    # Need to add attribute code to use in <Codes> section Since doing all ceilings
-	# with same code, no need to be concerned with existing ceiling codes in <Codes>
-	element.add_attribute("idref", "Code 99") 
-  else
-    element.attributes["idref"] = "Code 99"
-  end
-  element.text = codeNameToUse    # "Attic28"
+   puts " - Existing ceiling code is: #{element.text}"
+   if !element.attributes["idref"] then
+      # Need to add attribute code to use in <Codes> section Since doing all ceilings
+      # with same code, no need to be concerned with existing ceiling codes in <Codes>
+      element.add_attribute("idref", "Code 99") 
+   else
+      element.attributes["idref"] = "Code 99"
+   end
+   element.text = codeNameToUse    # "Attic28"
 end
 # Copy-and-paste from code library entry to <Codes> section of house file for 
 # the desired code name
 codeLibLocation = "Codes/Ceiling/Favorite/Code" 
 XPath.each( $XMLCodedoc, codeLibLocation) do |codeLibElement|
-  if codeLibElement[1].text == codeNameToUse then
-    # This is the code we want to use
-	codeLibElement.attributes["id"] = "Code 99"
+   if codeLibElement[1].text == codeNameToUse then
+      # This is the code we want to use
+      codeLibElement.attributes["id"] = "Code 99"
     
-    #elementToReplace = $XMLdoc.elements["HouseFile/Codes/Ceiling/Standard/Code"]
-	#Replace this element with codeLibElement - Can't seem to do this! ***************************
-    #Or insert a new element before or after it - Can't seem to do this! *************************
+      #elementToReplace = $XMLdoc.elements["HouseFile/Codes/Ceiling/Standard/Code"]
+      #Replace this element with codeLibElement - Can't seem to do this! ***************************
+      #Or insert a new element before or after it - Can't seem to do this! *************************
     
-	# Hardcoded loaction works but indices (always odd) depend on codes present in file!
-	# [9] = Codes (Always 9)
-	# [3] = Ceilings if there are Wall codes present, otherwise [1]!
-	# Need t check other combinations of existing data for other surfaces: floors, windows, etc.
-	$XMLdoc.root[9][3][1][1] = codeLibElement  
-  end
+      # Hardcoded location works but indices (always odd) depend on codes present in file!
+      # [9] = Codes (Always 9)
+      # [3] = Ceilings if there are Wall codes present, otherwise [1]!
+      # Need to check other combinations of existing data for other surfaces: floors, windows, etc.
+      $XMLdoc.root[9][3][1][1] = codeLibElement  
+   end
 end
 # Alternate method for locating code library element to copy
 #$h2kCodeLibElements.each(codeLibLocation) { |codeLibElement|
@@ -175,12 +177,12 @@ if ( path !~ /V11_1_CLI/ )
    puts "\nStart #{runThis} with file #{newFileName} (y/n)?"
    answer = STDIN.gets.chomp           # Specify STDIN or gets text from ARGV!
    if answer.capitalize == 'Y' then
-     if system(runThis, newFileName) then
-       puts "The program ran as expected!"
-     else
-       puts "It didn't work! Return code follows:"
-       puts $?
-     end
+      if system(runThis, newFileName) then
+         puts "The program ran as expected!"
+      else
+         puts "It didn't work! Return code follows:"
+         puts $?
+      end
    end
 end
 
@@ -191,17 +193,17 @@ end
 fileToLoad = "user\\WizardHouseChanged.h2k"
 optionSwitch = "-inp"
 Dir.chdir(path) do 
-  puts "The current path is: #{Dir.pwd}"
-  puts "\nRun #{runThis} with switch #{optionSwitch} and file #{fileToLoad} (y/n)?"
-  answer = STDIN.gets.chomp           # Need STDIN or gets text from ARGV!
-  if answer.capitalize == 'Y' then
-    if system(runThis, optionSwitch, fileToLoad) then
-      puts "The run worked!"
-    else
-      puts "The run did NOT work"
-      puts $?
-    end
-  end
+   puts "The current path is: #{Dir.pwd}"
+   puts "\nRun #{runThis} with switch #{optionSwitch} and file #{fileToLoad} (y/n)?"
+   answer = STDIN.gets.chomp           # Need STDIN or gets text from ARGV!
+   if answer.capitalize == 'Y' then
+      if system(runThis, optionSwitch, fileToLoad) then
+         puts "The run worked!"
+      else
+         puts "The run did NOT work"
+         puts $?
+      end
+   end
 end #returns to original working folder
 
 # The ERS number is in Browse.rpt in a separate line that reads:
