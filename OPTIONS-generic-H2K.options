@@ -473,9 +473,9 @@
 *attribute:tag:1 = <OPT-WEATHER-FILE>
 *attribute:tag:2 = <OPT-Latitude>
 *attribute:tag:3 = <OPT-Longitude>
-*attribute:tag:4 = <OPT-H2K-WTH-FILE>
-*attribute:tag:5 = <OPT-H2K-Region>
-*attribute:tag:6 = <OPT-H2K-Location>
+*attribute:tag:4 = OPT-H2K-WTH-FILE
+*attribute:tag:5 = OPT-H2K-Region
+*attribute:tag:6 = OPT-H2K-Location
 *attribute:default = Ottawa 
 
 *option:NA:value:1 = NA
@@ -2091,7 +2091,7 @@
    
 *attribute:name = Opt-Ceilings
 *attribute:tag:1  = <Opt-Ceiling>
-*attribute:tag:2  = <OPT-H2K-EffRValue>   ! H2K R-value (Imperial)
+*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial)
 *attribute:default = CeilR50
 
 *option:NA:value:1 = NA     ! No change
@@ -2303,8 +2303,8 @@
 *attribute:tag:1  = <Opt-MainWall-Bri>
 *attribute:tag:2  = <Opt-MainWall-Vin>
 *attribute:tag:3  = <Opt-MainWall-Dry>
-*attribute:tag:4  = <OPT-H2K-CodeName>    ! Use "NA" (or non-existent name) for user-Specified case
-*attribute:tag:5  = <OPT-H2K-EffRValue>   ! User-Specified R-value (Imperial)
+*attribute:tag:4  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
+*attribute:tag:5  = OPT-H2K-EffRValue   ! User-Specified R-value (Imperial)
 *attribute:default = BaseR21
 
 ! GENERIC wall definitions: thickness of insulation layers
@@ -2635,11 +2635,11 @@ Whitehorse Wall Options (Code is R28)
 !--------------------------------------------------------------------------------------------
 *attribute:start
 *attribute:name   = Opt-H2KFoundation
-*attribute:tag:1  = <OPT-H2K-ConfigType>     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
-*attribute:tag:2  = <OPT-H2K-IntWallCode>    ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
-*attribute:tag:3  = <OPT-H2K-IntWall-RValue> ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
-*attribute:tag:4  = <OPT-H2K-ExtWall-RVal>   ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
-*attribute:tag:5  = <OPT-H2K-BelowSlab-RVal> ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
+*attribute:tag:2  = OPT-H2K-IntWallCode    ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*attribute:tag:3  = OPT-H2K-IntWall-RValue ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*attribute:tag:4  = OPT-H2K-ExtWall-RVal   ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*attribute:tag:5  = OPT-H2K-BelowSlab-RVal ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
 *attribute:default = NA
 
 *option:NA:value:1 = NA
@@ -2656,19 +2656,27 @@ Whitehorse Wall Options (Code is R28)
 *option:OBCminR12-Slab0R:value:5 = NA
 *option:OBCminR12-Slab0R:cost:total = 0
 
-*option:OBCminR12-Slab24R:value:1 = BCIB_4_ALL  ! Ref# 22 - change ALL foundations in model
+*option:OBCminR12-Slab24R:value:1 = BCIB_4_ALL  ! Ref# 22 - change ALL foundations in model (that apply)
 *option:OBCminR12-Slab24R:value:2 = BsmWllR12
 *option:OBCminR12-Slab24R:value:3 = NA          ! R for userSpec option (set to NA if use int wall code in tag 2)
-*option:OBCminR12-Slab24R:value:4 = NA
-*option:OBCminR12-Slab24R:value:5 = 24
+*option:OBCminR12-Slab24R:value:4 = NA          ! External wall added R-value (Imp)
+*option:OBCminR12-Slab24R:value:5 = 24          ! Below slab R-value
 *option:OBCminR12-Slab24R:cost:total = 3800
 
 *option:Rigid+BattR30-R24BSlab:value:1 = BCIB_4_B  ! Ref# 22 - change Basements in model
 *option:Rigid+BattR30-R24BSlab:value:2 = BsmIntR20
 *option:Rigid+BattR30-R24BSlab:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
-*option:Rigid+BattR30-R24BSlab:value:4 = 10        ! Ext R-value
+*option:Rigid+BattR30-R24BSlab:value:4 = NA        ! Ext wall added R-value
 *option:Rigid+BattR30-R24BSlab:value:5 = 24
 *option:Rigid+BattR30-R24BSlab:cost:total = 8442   ! 4642+3800
+
+*option:Rigid+BattR30-R10BSlab:value:1 = BCCB_4_B  ! Ref# 69 - change Basements in model
+*option:Rigid+BattR30-R10BSlab:value:2 = NA        !BsmIntR20
+*option:Rigid+BattR30-R10BSlab:value:3 = 20        ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:Rigid+BattR30-R10BSlab:value:4 = 10        ! Ext wall added R-value
+*option:Rigid+BattR30-R10BSlab:value:5 = 10        ! Under slab added R-value
+*option:Rigid+BattR30-R10BSlab:cost:total = 7362   ! 4642+2720
+
 
 *attribute:end
 
@@ -2896,8 +2904,8 @@ Whitehorse Wall Options (Code is R28)
 *attribute:name   = Opt-ExposedFloor 
 *attribute:tag:1  = <Opt-ExposedFloor>
 *attribute:tag:2  = <Opt-ExposedFloor-r>
-*attribute:tag:3  = <OPT-H2K-CodeName>    ! Use "NA" (or non-existent name) for user-Specified case
-*attribute:tag:4  = <OPT-H2K-EffRValue>   ! User-Specified R-value (Imperial)
+*attribute:tag:3  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
+*attribute:tag:4  = OPT-H2K-EffRValue   ! User-Specified R-value (Imperial)
 *attribute:default = BaseExpFloor-R31
 
 *option:NA:value:1 = NA
@@ -3385,6 +3393,7 @@ Reflects southern Ontario costs
 *attribute:name    = Opt-DHWLoadScale 
 *attribute:tag:1   = <DUMMY-TAG-Not-USED>
 *attribute:default = No-Reduction
+
 !!220 L/day 
 !*option:NoReduction:value:1  = 4.0
 !*option:NoReduction:cost:total     = 0
@@ -3418,23 +3427,61 @@ Reflects southern Ontario costs
 ! DHW System
 !-----------------------------------------------------------------------
 *attribute:start
-*attribute:name     = Opt-DHWSystem
-*attribute:tag:1    = <Opt-DHWInputFile>
+*attribute:name  = Opt-DHWSystem
+*attribute:tag:1 = <Opt-DHWInputFile>
+*attribute:tag:2 = Opt-H2K-Fuel
+*attribute:tag:3 = Opt-H2K-TankType
+*attribute:tag:4 = Opt-H2K-TankSize
+*attribute:tag:5 = Opt-H2K-EF
+*attribute:tag:6 = Opt-H2K-InputCapacity
 *attribute:default = BaseDHW 
 
-*option:BaseDHW:value:1     = BaseDHW.dhw
-*option:BaseDHW:cost:total        = 0
+*option:NA:value:1 = NA.dhw
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA
+*option:NA:value:6 = NA
+*option:NA:cost:total = 0
+
+*option:BaseDHW:value:1 = BaseDHW.dhw
+*option:BaseDHW:value:2 = 2         ! Gas
+*option:BaseDHW:value:3 = 2         ! Conventional Tank
+*option:BaseDHW:value:4 = 151.4     ! Litres (40 USGal)
+*option:BaseDHW:value:5 = 0.5543    ! EF
+*option:BaseDHW:value:6 = NA        ! Watts
+*option:BaseDHW:cost:total = 0
 
 *option:ElecInstantaneous:value:1 = ElecInstant.dhw
-*option:ElecInstantaneous:cost:total    = -245.0
+*option:ElecInstantaneous:value:2 = 1         ! Elec
+*option:ElecInstantaneous:value:3 = 4         ! Instantaneous
+*option:ElecInstantaneous:value:4 = 0         ! Litres
+*option:ElecInstantaneous:value:5 = 0.936     ! EF
+*option:ElecInstantaneous:value:6 = NA        ! Watts
+*option:ElecInstantaneous:cost:total = -245.0
 
 *option:ElectricStorage:value:1 = ElecStorage.dhw
+*option:ElectricStorage:value:2 = 1         ! Elec
+*option:ElectricStorage:value:3 = 2         ! Conventional Tank
+*option:ElectricStorage:value:4 = 189.3     ! Litres (50 USGal)
+*option:ElectricStorage:value:5 = 0.8217    ! EF
+*option:ElectricStorage:value:6 = NA        ! Watts
 *option:ElectricStorage:cost:total    = -605.0
 
 *option:GasInstantaneous:value:1 = GasInstantaneous.dhw
+*option:GasInstantaneous:value:2 = 2         ! Gas
+*option:GasInstantaneous:value:3 = 5         ! Instantaneous
+*option:GasInstantaneous:value:4 = 0         ! Litres
+*option:GasInstantaneous:value:5 = 0.571     ! EF
+*option:GasInstantaneous:value:6 = NA        ! Watts
 *option:GasInstantaneous:cost:total    = 550    ! BC-LEEP
 
 *option:ElectricHP:value:1 = ElecHP.dhw
+*option:ElectricHP:value:2 = 1         ! Elec
+*option:ElectricHP:value:3 = 6         ! Heat Pump
+*option:ElectricHP:value:4 = 0         ! Litres 
+*option:ElectricHP:value:5 = 1.91      ! COP
+*option:ElectricHP:value:6 = NA        ! Watts
 *option:ElectricHP:cost:total    = 825    ! BC-LEEP
 
 ! retrofit costs---------------------
@@ -3473,6 +3520,10 @@ Reflects southern Ontario costs
 *attribute:name     = Opt-DWHRandSDHW
 *attribute:tag:1    = <Opt-DHWDailyDrawLperDay>
 *attribute:default  = none
+
+! NA for HOT2000
+*option:NA:value:1 = NA
+*option:NA:cost:total = 0
 
 ! No DWHR or SDHW
 *option[ Opt-DHWLoadScale>OldERS       ]:none:value:1 =225

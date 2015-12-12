@@ -13,17 +13,23 @@ Opt-FuelCost : NA !Ottawa08
 ! ACH substitutions
 Opt-ACH : NA
 
-Opt-Ceilings : CeilR60
+Opt-Ceilings : NA
 
 Opt-MainWall : NA
 
 ! Exposed floor
-Opt-ExposedFloor : NA   !ExpFloorFoamed-R52
+Opt-ExposedFloor : ExpFloorFoamed-R52
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  :  NA !DoubleLowEHardCoatAirFill 
+Opt-CasementWindows  :  DoubleLowEHardCoatAirFill 
 
-Opt-H2KFoundation : OBCminR12-Slab0R
+Opt-H2KFoundation : Rigid+BattR30-R10BSlab
+
+! Hot water reduction technologies (SDHW, DHWR) 
+Opt-DWHRandSDHW : NA    !none          
+
+! Hot water system. Choices:
+Opt-DHWSystem : BaseDHW
 
 Opt-StandoffPV : NoPV   !SizedPV|8kW
 
@@ -44,19 +50,10 @@ Opt-OverhangWidth : BaseOverhang
 ! Add concrete to floors (internal partitions only)
 Opt-FloorSurface     : wood
 
-! Hot water reduction technologies (SDHW, DHWR) 
-Opt-DWHRandSDHW         : none          
-
 ! Electric LOAD SCALES 
 Opt-ElecLoadScale    : NoReduction
 
-! Hot water numbers
-Opt-DHWLoadScale     : No-Reduction
-
 Opt-RoofPitch : 6-12
-
-! Hot water system. Choices:
-Opt-DHWSystem        : BaseDHW
 
 ! HVAC system 
 Opt-HVACSystem       : basefurnace
@@ -68,3 +65,6 @@ Opt-Cooling-Spec     : 2TonStdCooling
 ! HRV spec 
 Opt-HRVspec : BaseHRV_SRE70
 Opt-HRVduct : interlock
+
+! Hot water numbers
+Opt-DHWLoadScale : No-Reduction

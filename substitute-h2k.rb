@@ -1268,37 +1268,36 @@ def processFile(filespec)
                # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change!
                config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
                (configType, configSubType, fndTypes) = config.split('_')
-                  
+               
+               locHouseStr = [ "", "", "", "" ]
                if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
                   # Set the configuration type for the fnd types specified (A=All)
-                  if ( fndTypes == "B" || fndTypes == "A" )
-                     locationText = "HouseFile/House/Components/Basement/Configuration"
-                     h2kElements.each(locationText) do |element| 
-                        element.attributes["type"] = configType
-                        element.attributes["subtype"] = configSubType
-                        element.attributes["overlap"] = "0"
-                        element.text = configType + "_" + configSubType
+                  if ( fndTypes == "B" )
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
+                  elsif ( fndTypes == "W" )
+                     locHouseStr[0] = "HouseFile/House/Components/Walkout/Configuration"
+                  elsif ( fndTypes == "C" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
+                  elsif ( fndTypes == "S" )
+                     locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
+                  elsif ( fndTypes == "A" )
+                     # Check to avoid configs starting with "S" used in B or W and
+                     # configs starting with "B" used in C or S!
+                     if ( configType =~ /^B/ )
+                        locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
+                        locHouseStr[1] = "HouseFile/House/Components/Walkout/Configuration"
+                     elsif ( configType =~ /^S/ )
+                        locHouseStr[2] = "HouseFile/House/Components/Crawlspace/Configuration"
+                        locHouseStr[3] = "HouseFile/House/Components/Slab/Configuration"
                      end
-                  elsif ( fndTypes == "W" || fndTypes == "A" )
-                     locationText = "HouseFile/House/Components/Walkout/Configuration"
-                     h2kElements.each(locationText) do |element| 
-                        element.attributes["type"] = configType
-                        element.attributes["subtype"] = configSubType
-                        element.text = configType + "_" + configSubType
-                     end
-                  elsif ( fndTypes == "C" || fndTypes == "A" )
-                     locationText = "HouseFile/House/Components/Crawlspace/Configuration"
-                     h2kElements.each(locationText) do |element| 
-                        element.attributes["type"] = configType
-                        element.attributes["subtype"] = configSubType
-                        element.text = configType + "_" + configSubType
-                     end
-                  elsif ( fndTypes == "S" || fndTypes == "A" )
-                     locationText = "HouseFile/House/Components/Slab/Configuration"
-                     h2kElements.each(locationText) do |element| 
-                        element.attributes["type"] = configType
-                        element.attributes["subtype"] = configSubType
-                        element.text = configType + "_" + configSubType
+                  end
+                  locHouseStr.each do |locStr|
+                     if ( locStr != "" )
+                        h2kElements.each(locStr) do |element| 
+                           element.attributes["type"] = configType
+                           element.attributes["subtype"] = configSubType
+                           element.text = configType + "_" + configSubType
+                        end
                      end
                   end
                   
@@ -1365,7 +1364,7 @@ def processFile(filespec)
                         end
                         if ( h2kElements[locStr] == nil )
                            # No section of this type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element(FndTypeTxt)
+                           h2kElements["HouseFile/Codes"].add_element("BasementWall")
                         end
                         if ( foundFavLibCode )
                            locationText = locStr + "/Favorite"
@@ -1441,7 +1440,7 @@ def processFile(filespec)
                               element.delete_attribute("idref")
                            end
                         end
-                      end
+                     end
                   end
                   
                elsif ( tag =~ /OPT-H2K-ExtWall-RVal/ &&  value != "NA" ) 
@@ -1467,10 +1466,37 @@ def processFile(filespec)
                               element.delete_attribute("code")
                            end
                         end
-                      end
+                     end
                   end
                   
                elsif ( tag =~ /OPT-H2K-BelowSlab-RVal/ &&  value != "NA" )
+                  locHouseStr = [ "", "", "", "" ]
+                  if ( fndTypes == "B" )
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes == "W" )
+                     locHouseStr[0] = "HouseFile/House/Components/Walkout/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes == "C" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes == "S" )
+                     locHouseStr[0] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes == "A")
+                     locHouseStr[0] = "HouseFile/House/Components/Basement/Floor/Construction/AddedToSlab"
+                     locHouseStr[1] = "HouseFile/House/Components/Walkout/Floor/Construction/AddedToSlab"
+                     locHouseStr[2] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
+                     locHouseStr[3] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           element.text = "User specified"     # Description tag
+                           element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                           if element.attributes["code"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("code")
+                           end
+                        end
+                     end
+                  end
                   
                else
                   if ( value == "NA" ) # Don't change anything
@@ -1478,25 +1504,61 @@ def processFile(filespec)
                end
                
                
-            # DWHR (+SDHW)
+            # DWHR (+SDHW) - Doesn't use DWHR model - uses values in options file!
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DWHRandSDHW / )
-               
+               if ( tag =~ /Opt-DHWDailyDrawLperDay/ &&  value != "NA" )
+                  # Turn off DWHR model flag in DHW system
+                  locationText = "HouseFile/House/Components/HotWater/Primary"
+                  h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = "false"
+                  # Set draw based on options file settings for Opt-DHWLoadScale, location & plate options
+                  locationText = "HouseFile/House/BaseLoads/Summary"
+                  h2kElements[locationText].attributes["hotWaterLoad"] = value
+               end
                
             # Electrical Loads
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ElecLoadScale/ )
-               
-               
-            # DHW Loads (Hot Water Use)
-            #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-DHWLoadScale/ )
-               
+               if ( tag =~ /Opt-ElecLoadScale/ &&  value != "NA" )
+                  # Do nothing until determine how to handle!
+               end
                
             # DHW System
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DHWSystem/ )
-               
+               if ( tag =~ /Opt-H2K-Fuel/ &&  value != "NA" )
+                  locationText1 = "HouseFile/House/Components/HotWater/Primary"
+                  locationText2 = "HouseFile/House/Components/HotWater/Primary/EnergySource"
+                  if ( h2kElements[locationText].attributes["pilotEnergy"] == nil )
+                     if ( value != 1 ) # Not electricity
+                        h2kElements[locationText].add_attribute("pilotEnergy", "0")
+                     end
+                  else
+                     if ( value == 1 ) # Electricity
+                        h2kElements[locationText].delete_attribute("pilotEnergy")
+                     end
+                  end
+                  h2kElements[locationText].attributes["code"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-TankType/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary/TankType"
+                  h2kElements[locationText].attributes["code"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-TankSize/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary/TankVolume"
+                  h2kElements[locationText].attributes["code"] = "1"    # User Specified option
+                  h2kElements[locationText].attributes["value"] = value # Volume in Lites
+                  
+               elsif ( tag =~ /Opt-H2K-EF/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary/EnergyFactor"
+                  h2kElements[locationText].attributes["code"] = 2      # User Specified option
+                  h2kElements[locationText].attributes["value"] = value # EF value (fraction)
+                  
+               elsif ( tag =~ /Opt-H2K-InputCapacity/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary/EnergyFactor"
+                  h2kElements[locationText].attributes["inputCapacity"] = value  # Capacity in Watts
+                  
+               end
                
             # HVAC System (Type 1)
             #--------------------------------------------------------------------------
@@ -1525,7 +1587,7 @@ def processFile(filespec)
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
                
                
-            # PV - Use H2K model
+            # PV - Use H2K PV model or not?
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-StandoffPV/ )
                if ( tag =~ /Opt-StandoffPV/ &&  value != "NA" )
