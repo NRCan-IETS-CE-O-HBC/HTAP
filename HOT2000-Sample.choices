@@ -18,18 +18,21 @@ Opt-Ceilings : NA
 Opt-MainWall : NA
 
 ! Exposed floor
-Opt-ExposedFloor : ExpFloorFoamed-R52
+Opt-ExposedFloor : NA   !ExpFloorFoamed-R52
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  :  DoubleLowEHardCoatAirFill 
+Opt-CasementWindows  :  NA !DoubleLowEHardCoatAirFill 
 
-Opt-H2KFoundation : Rigid+BattR30-R10BSlab
+Opt-H2KFoundation : NA  !Rigid+BattR30-R10BSlab
 
 ! Hot water reduction technologies (SDHW, DHWR) 
 Opt-DWHRandSDHW : NA    !none          
 
 ! Hot water system. Choices:
-Opt-DHWSystem : BaseDHW
+Opt-DHWSystem : NA   !BaseDHW
+
+! HVAC system 
+Opt-HVACSystem  : basefurnace
 
 Opt-StandoffPV : NoPV   !SizedPV|8kW
 
@@ -54,9 +57,6 @@ Opt-FloorSurface     : wood
 Opt-ElecLoadScale    : NoReduction
 
 Opt-RoofPitch : 6-12
-
-! HVAC system 
-Opt-HVACSystem       : basefurnace
 
 OPT-Furnace-Fan-Ctl  : Auto
 

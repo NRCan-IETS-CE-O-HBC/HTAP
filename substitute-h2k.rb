@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # substitute-h2k.rb
 
-# This is essentially a Ruby version of the substitute-h2k.pl script -- customized for HOT2000 runs.
+# This is essentially a Ruby version of the substitute-h2k.rb script -- customized for HOT2000 runs.
 
 require 'rexml/document'
 require 'optparse'
@@ -10,11 +10,14 @@ include REXML   # This allows for no "REXML::" prefix to REXML methods
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
 CONV_R_2_RSI = 5.678263
+KWH_PER_GJ = 277.778
+W_PER_KW = 1000.0
 
 # Global variable names  (i.e., variables that maintain their content and use (scope) 
 # throughout this file). 
 # Note loose convention to start global variables with a 'g'. 
 # Ruby *requires* globals to start with '$'.
+startProcessTime = Time.now
 $gDebug = false
 $gSkipSims = false
 $gTest_params = Hash.new        # test parameters
@@ -30,7 +33,7 @@ $gRotate             = "S"
 $gGOStep             = 0
 $gArchGOChoiceFile   = 0
 
-# Use lambda function  to avoid the extra lines of creating each hash nesting
+# Use lambda function to avoid the extra lines of creating each hash nesting
 $blk = lambda { |h,k| h[k] = Hash.new(&$blk) }
 $gOptions = Hash.new(&$blk)
 $gChoices = Hash.new(&$blk)
@@ -119,22 +122,22 @@ $gAmtOil = 0
 # Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
 $RegionalCostFactors  = {  "Halifax"     =>  0.95 ,
-                          "Edmonton"     =>  1.12 ,
-                          "Calgary"      =>  1.12 ,  # Assume same as Edmonton?
-                          "Ottawa"       =>  1.00 ,
-                          "Toronto"      =>  1.00 ,
-                          "Quebec"       =>  1.00 ,  # Assume same as Montreal?
-                          "Montreal"     =>  1.00 ,
-                          "Vancouver"    =>  1.10 ,
-                          "PrinceGeorge" =>  1.10 ,
-                          "Kamloops"     =>  1.10 ,
-                          "Regina"       =>  1.08 ,  # Same as Winnipeg?
-                          "Winnipeg"     =>  1.08 ,
-                          "Fredricton"   =>  1.00 ,  # Same as Quebec?
-                          "Whitehorse"   =>  1.00 ,
-                          "Yellowknife"  =>  1.38 ,
-                            "Inuvik"     =>  1.38 , 
-                          "Alert"        =>  1.38   }
+                           "Edmonton"     =>  1.12 ,
+                           "Calgary"      =>  1.12 ,  # Assume same as Edmonton?
+                           "Ottawa"       =>  1.00 ,
+                           "Toronto"      =>  1.00 ,
+                           "Quebec"       =>  1.00 ,  # Assume same as Montreal?
+                           "Montreal"     =>  1.00 ,
+                           "Vancouver"    =>  1.10 ,
+                           "PrinceGeorge" =>  1.10 ,
+                           "Kamloops"     =>  1.10 ,
+                           "Regina"       =>  1.08 ,  # Same as Winnipeg?
+                           "Winnipeg"     =>  1.08 ,
+                           "Fredricton"   =>  1.00 ,  # Same as Quebec?
+                           "Whitehorse"   =>  1.00 ,
+                           "Yellowknife"  =>  1.38 ,
+                           "Inuvik"     =>  1.38 , 
+                           "Alert"        =>  1.38   }
 
 =begin rdoc
  ---------------------------------------------------------------------------
@@ -144,37 +147,37 @@ $RegionalCostFactors  = {  "Halifax"     =>  0.95 ,
 =end
 def fatalerror( err_msg )
 # Display a fatal error and quit. -----------------------------------
-  if ($gTest_params["logfile"])
-    $fLOG.write("\nsubstitute-h2k.pl -> Fatal error: \n")
-    $fLOG.write("#{err_msg}\n")
-  end
-  print "\n=========================================================\n"
-  print "substitute-h2k.pl -> Fatal error: \n\n"
-  print "     #{err_msg}\n"
-  print "\n\n"
-  print "substitute-h2k.pl -> Other Error or warning messages:\n\n"
-  print "#{$ErrorBuffer}\n"
-  exit() # Run stopped
+   if ($gTest_params["logfile"])
+      $fLOG.write("\nsubstitute-h2k.rb -> Fatal error: \n")
+      $fLOG.write("#{err_msg}\n")
+   end
+   print "\n=========================================================\n"
+   print "substitute-h2k.rb -> Fatal error: \n\n"
+   print "     #{err_msg}\n"
+   print "\n\n"
+   print "substitute-h2k.rb -> Other Error or warning messages:\n\n"
+   print "#{$ErrorBuffer}\n"
+   exit() # Run stopped
 end
 
 # Optionally write text to buffer -----------------------------------
 def stream_out(msg)
-  if ($gTest_params["verbosity"] != "quiet")
-    print msg
-  end
-  if ($gTest_params["logfile"])
-    $fLOG.write(msg)
-  end
+   if ($gTest_params["verbosity"] != "quiet")
+      print msg
+   end
+   if ($gTest_params["logfile"])
+      $fLOG.write(msg)
+   end
 end
 
 # Write debug output ------------------------------------------------
 def debug_out(debmsg)
-  if $gDebug 
-    puts debmsg
-  end
-  if ($gTest_params["logfile"])
-    $fLOG.write(debmsg)
-  end
+   if $gDebug 
+      puts debmsg
+   end
+   if ($gTest_params["logfile"])
+      $fLOG.write(debmsg)
+   end
 end
 
 # Returns XML elements of HOT2000 file.
@@ -478,7 +481,8 @@ def processFile(filespec)
             elsif ( choiceEntry =~ /Opt-Ceilings/ )
                if ( tag =~ /Opt-Ceiling/ && value != "NA" )
                   # If this surface code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all surfaces of this type. Code names in library are unique.
+                  # (either Fav or UsrDef) for ceiling and ceiling_flat surfaces. 
+                  # Code names in library are unique.
                   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
                   
                   # Look for this code name in code library (Favorite and UserDefined)
@@ -486,33 +490,70 @@ def processFile(filespec)
                   useThisCodeID = "Code 99"
                   foundFavLibCode = false
                   foundUsrDefLibCode = false
+                  foundAtticCeil = false
+                  foundCathCeil = false
+                  ceilngType = ""
                   foundCodeLibElement = ""
+                  # Check in Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
                   locationCodeFavText = "Codes/Ceiling/Favorite/Code"
                   h2kCodeElements.each(locationCodeFavText) do |codeElement| 
                      if ( codeElement.get_text("Label") == value )
                         foundFavLibCode = true
+                        foundAtticCeil = true
                         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
                         break
                      end
                   end
-                  # Code library names are also unique across Favorite and User Defined codes
                   if ( ! foundFavLibCode )
-                     locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                     # Also check in CeilingFlat Codes used for: Cathedral and Flat
+                     locationCodeFavText = "Codes/CeilingFlat/Favorite/Code"
+                     h2kCodeElements.each(locationCodeFavText) do |codeElement| 
                         if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
+                           foundFavLibCode = true
+                           foundCathCeil = true
                            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
                            break
                         end
                      end
                   end
+                  # Code library names are also unique across Favorite and User Defined codes
+                  if ( ! foundFavLibCode )
+                     # Check in Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
+                     locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundAtticCeil = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( ! foundFavLibCode && ! foundUsrDefLibCode )
+                     # Also check in CeilingFlat Codes used for: Cathedral and Flat
+                     locationCodeUsrDefText = "Codes/CeilingFlat/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCathCeil = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  if ( foundAtticCeil )
+                     ceilngType = "Ceiling"
+                  else
+                     ceilngType = "CeilingFlat"
+                  end
+                  
                   if ( foundFavLibCode || foundUsrDefLibCode )
                      # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Avoid duplicates!
+                     # Code references are in the <Codes> section. Can't have duplicates!
                      if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/Ceiling/Favorite"
+                        locationText = "HouseFile/Codes/#{ceilngType}/Favorite"
                      else
-                        locationText = "HouseFile/Codes/Ceiling/UserDefined"
+                        locationText = "HouseFile/Codes/#{ceilngType}/UserDefined"
                      end
                      h2kElements.each(locationText + "/Code") do |element| 
                         if ( element.get_text("Label") == value )
@@ -522,22 +563,25 @@ def processFile(filespec)
                         end
                      end
                      if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/Ceiling"] == nil )
+                        if ( h2kElements["HouseFile/Codes/#{ceilngType}"] == nil )
                            # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element("Ceiling")
+                           h2kElements["HouseFile/Codes"].add_element(ceilngType)
                         end
                         if ( h2kElements[locationText] == nil )
                            # No Favorite or UserDefined section in house file Codes section -- add it!
                            if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/Ceiling"].add_element("Favorite")
+                              h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("Favorite")
                            else
-                              h2kElements["HouseFile/Codes/Ceiling"].add_element("UserDefined")
+                              h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
+                     
                      # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
                      locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
                      h2kElements.each(locationText) do |element| 
                         # Check if each house entry has an "idref" attribute and add if it doesn't.
@@ -553,7 +597,7 @@ def processFile(filespec)
                      # Code name not found in the code library
                      # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
                      # or NA in OPT-H2K-EffRValue
-                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                   
                elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
@@ -634,8 +678,8 @@ def processFile(filespec)
                               h2kElements["HouseFile/Codes/Wall"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
                      # Change all existing surface references of this type to useThisCodeID
                      locationText = "HouseFile/House/Components/Wall/Construction/Type"
@@ -653,7 +697,7 @@ def processFile(filespec)
                      # Code name not found in the code library
                      # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
                      # or NA in OPT-H2K-EffRValue
-                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                   
                elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
@@ -738,8 +782,8 @@ def processFile(filespec)
                               h2kElements["HouseFile/Codes/Floor"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
                      # Change all existing surface references of this type to useThisCodeID
                      locationText = "HouseFile/House/Components/Floor/Construction/Type"
@@ -757,7 +801,7 @@ def processFile(filespec)
                      # Code name not found in the code library
                      # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
                      # or NA in OPT-H2K-EffRValue
-                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                   
                elsif ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" )
@@ -841,8 +885,8 @@ def processFile(filespec)
                               h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
                      
                      # Windows in walls elements
@@ -896,7 +940,7 @@ def processFile(filespec)
                   else
                      # Code name not found in the code library
                      # Since no User Specified option for windows this must be an error!
-                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                
                elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
@@ -958,8 +1002,8 @@ def processFile(filespec)
                               h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
                      
                      # Windows in walls elements
@@ -1013,7 +1057,7 @@ def processFile(filespec)
                   else
                      # Code name not found in the code library
                      # Since no User Specified option for windows this must be an error!
-                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
 
                elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )    # Do nothing
@@ -1075,8 +1119,8 @@ def processFile(filespec)
                               h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
                      
                      # Windows in walls elements
@@ -1130,7 +1174,7 @@ def processFile(filespec)
                   else
                      # Code name not found in the code library
                      # Since no User Specified option for windows this must be an error!
-                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                
                elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )    # Do nothing
@@ -1192,8 +1236,8 @@ def processFile(filespec)
                               h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
                            end
                         end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
                         h2kElements[locationText].add(foundCodeLibElement)
-                        h2kElements[locationText + "/Code"].attributes["id"] = useThisCodeID
                      end
                      
                      # Windows in walls elements
@@ -1247,7 +1291,7 @@ def processFile(filespec)
                   else
                      # Code name not found in the code library
                      # Since no User Specified option for windows this must be an error!
-                     fatalerror("Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}")
+                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                
                elsif ( tag =~ /Opt-win-S-OPT/ )    # Do nothing
@@ -1268,8 +1312,8 @@ def processFile(filespec)
                # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change!
                config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
                (configType, configSubType, fndTypes) = config.split('_')
-               
                locHouseStr = [ "", "", "", "" ]
+               
                if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
                   # Set the configuration type for the fnd types specified (A=All)
                   if ( fndTypes == "B" )
@@ -1280,7 +1324,7 @@ def processFile(filespec)
                      locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
                   elsif ( fndTypes == "S" )
                      locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
-                  elsif ( fndTypes == "A" )
+                  elsif ( fndTypes == "ALL" )
                      # Check to avoid configs starting with "S" used in B or W and
                      # configs starting with "B" used in C or S!
                      if ( configType =~ /^B/ )
@@ -1314,6 +1358,7 @@ def processFile(filespec)
                   foundCodeLibElement = ""
                   # Note: Both Basement and Walkout interior wall codes saved under "BasementWall"
                   locTextArr1 = [ "BasementWall", "CrawlspaceWall" ]
+                  fndWallNum = 0
                   locTextArr1.each do |txt|
                      locationCodeFavText = "Codes/#{txt}/Favorite/Code"
                      h2kCodeElements.each(locationCodeFavText) do |codeElement| 
@@ -1327,7 +1372,7 @@ def processFile(filespec)
                   # Code library names are unique so also check User Defined codes
                   if ( ! foundFavLibCode )
                      locTextArr1.each do |txt|
-                        locationCodeUsrDefText = "Codes/" + txt + "/Favorite/Code"
+                        locationCodeUsrDefText = "Codes/#{txt}/UserDefined/Code"
                         h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
                            if ( codeElement.get_text("Label") == value )
                               foundUsrDefLibCode = true
@@ -1357,14 +1402,15 @@ def processFile(filespec)
                         break if thisCodeInHouse      # break fnd type loop if found
                      end
                      if ( ! thisCodeInHouse )
-                        if ( fndTypes == "B" || fndTypes == "W" || (fndTypes == "A" && configType =~ /^B/) )
-                           locStr = "HouseFile/Codes/BasementWall"
-                        elsif ( fndTypes == "C" || (fndTypes == "A" && configType =~ /^S/) )
-                           locStr = "HouseFile/Codes/CrawlspaceWall"
+                        if ( fndTypes == "B" || fndTypes == "W" || (fndTypes == "ALL" && configType =~ /^B/) )
+                           fndWallNum = 0
+                        elsif ( fndTypes == "C" || (fndTypes == "ALL" && configType =~ /^S/) )
+                           fndWallNum = 1
                         end
+                        locStr = "HouseFile/Codes/#{locTextArr1[fndWallNum]}"
                         if ( h2kElements[locStr] == nil )
                            # No section of this type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element("BasementWall")
+                           h2kElements["HouseFile/Codes"].add_element(locTextArr1[fndWallNum])
                         end
                         if ( foundFavLibCode )
                            locationText = locStr + "/Favorite"
@@ -1388,9 +1434,9 @@ def processFile(filespec)
                         locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
                      elsif ( fndTypes == "W" )
                         locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
-                     elsif ( fndTypes == "C" || ( fndTypes == "A" && configType =~ /^S/ ) )
+                     elsif ( fndTypes == "C" || ( fndTypes == "ALL" && configType =~ /^S/ ) )
                         locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
-                     elsif ( fndTypes == "A" && configType =~ /^B/ )
+                     elsif ( fndTypes == "ALL" && configType =~ /^B/ )
                         locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
                         locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
                      end
@@ -1412,7 +1458,7 @@ def processFile(filespec)
                      # Code name not found in the code library
                      # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
                      # or NA in OPT-H2K-EffRValue
-                     debug_out("Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}")
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
                   
                elsif ( tag =~ /OPT-H2K-IntWall-RValue/ &&  value != "NA" )
@@ -1422,9 +1468,9 @@ def processFile(filespec)
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
                   elsif ( fndTypes == "W" )
                      locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
-                  elsif ( fndTypes == "C" || ( fndTypes == "A" && configType =~ /^S/ ) )
+                  elsif ( fndTypes == "C" || ( fndTypes == "ALL" && configType =~ /^S/ ) )
                      locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
-                  elsif ( fndTypes == "A" && configType =~ /^B/ )
+                  elsif ( fndTypes == "ALL" && configType =~ /^B/ )
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
                      locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
                   end
@@ -1450,7 +1496,7 @@ def processFile(filespec)
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
                   elsif ( fndTypes == "W" )
                      locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
-                  elsif ( fndTypes == "A" && configType =~ /^B/ )
+                  elsif ( fndTypes == "ALL" && configType =~ /^B/ )
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
                      locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
                   end
@@ -1479,7 +1525,7 @@ def processFile(filespec)
                      locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
                   elsif ( fndTypes == "S" )
                      locHouseStr[0] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
-                  elsif ( fndTypes == "A")
+                  elsif ( fndTypes == "ALL")
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Floor/Construction/AddedToSlab"
                      locHouseStr[1] = "HouseFile/House/Components/Walkout/Floor/Construction/AddedToSlab"
                      locHouseStr[2] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
@@ -1527,8 +1573,6 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DHWSystem/ )
                if ( tag =~ /Opt-H2K-Fuel/ &&  value != "NA" )
-                  locationText1 = "HouseFile/House/Components/HotWater/Primary"
-                  locationText2 = "HouseFile/House/Components/HotWater/Primary/EnergySource"
                   if ( h2kElements[locationText].attributes["pilotEnergy"] == nil )
                      if ( value != 1 ) # Not electricity
                         h2kElements[locationText].add_attribute("pilotEnergy", "0")
@@ -1560,46 +1604,253 @@ def processFile(filespec)
                   
                end
                
-            # HVAC System (Type 1)
+            # Heating & Cooling Systems (Type 1 & 2)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
-               if ( tag =~ /XXXX/ &&  value != "NA" )
-                  locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
+               sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
+               sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
+               
+               if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
+                  locationText = "HouseFile/House/HeatingCooling/Type1"
+                  if ( h2kElements[locationText + "/#{value}"] == nil )
+                     # Create a new system type 1 element with default values for all of its sub-elements
+                     createH2KSysType1(h2kElements,value)
+                     # Delete the system element that was there (and all of its sub-elements)!
+                     sysType1.each do |sysType1Name|
+                        if ( h2kElements[locationText + "/#{sysType1Name}"] != nil && sysType1Name != value )
+                           h2kElements[locationText].delete_element(sysType1Name)
+                        end
+                     end
+                  else
+                     # System type 1 is already set to this value -- do nothing!
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-SysType2/ &&  value != "NA" )
+                  locationText = "HouseFile/House/HeatingCooling/Type2"
+                  if ( h2kElements[locationText + "/#{value}"] == nil )
+                     # Create a new system type 2 element with default values for all of its sub-elements
+                     # unless "None" is specified
+                     if ( value != "None" )
+                        createH2KSysType2(h2kElements,value)
+                     end
+                     # Delete the system element that was there (and all of its sub-elements)!
+                     sysType2.each do |sysType2Name|
+                        if ( h2kElements[locationText + "/#{sysType2Name}"] != nil && sysType2Name != value )
+                           h2kElements[locationText].delete_element(sysType2Name)
+                        end
+                     end
+                  else
+                     # System type 2 is already set to this value -- do nothing!
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1Fuel/ &&  value != "NA" )
+                  # Apply to all Type 1 systems except Baseboards, which are electric by definition!
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name != "Baseboards" )
+                        if ( sysType1Name == "P9" )
+                           locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/EnergySource"
+                        else
+                           locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EnergySource"
+                        end
+                        if ( h2kElements[locationText] != nil )
+                           h2kElements[locationText].attributes["code"] = value
+                        end
+                     end
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1EqpType/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name != "Baseboards" && sysType1Name != "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EquipmentType"
+                     else
+                        locationText = ""
+                     end
+                     if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["code"] = value
+                     end
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1CapOpt/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name != "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
+                     else
+                        locationText = ""
+                     end
+                     if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["code"] = value
+                     end
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1CapVal/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name != "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
+                     else
+                        locationText = ""
+                     end
+                     if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["value"] = value
+                     end
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1EffType/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name != "P9" && sysType1Name != "Baseboards" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
+                     else
+                        locationText = ""
+                     end
+                     if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["isSteadyState"] = value
+                     end
+                  end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1EffVal/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name != "P9" && sysType1Name != "Baseboards" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
+                     else
+                        locationText = ""
+                     end
+                     if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["efficiency"] = value
+                     end
+                  end
+
+               elsif ( tag =~ /Opt-H2K-Type1FanCtl/ &&  value != "NA" )
+                  locationText = "HouseFile/House/HeatingCooling/Type1/FansAndPump/Mode"
                   h2kElements[locationText].attributes["code"] = value
-               else
-                  #if ( value == "NA" ) # Don't change anything
-                  #else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+                  
+               elsif ( tag =~ /Opt-H2K-Type1EEMotor/ &&  value != "NA" )
+                  locationText = "HouseFile/House/HeatingCooling/Type1/FansAndPump"
+                  h2kElements[locationText].attributes["hasEnergyEfficientMotor"] = value
+                  
                end
-               
-               
-            # Furance Fan Control
-            #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /OPT-Furnace-Fan-Ctl/ )
-               
-               
-            # Cooling System
-            #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-Cooling-Spec/ )
                
                
             # HRV System
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
+               if ( tag =~ /OPT-H2K-FlowReq/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Ventilation/Requirements/Use"
+                  h2kElements[locationText].attributes["code"] = value
+                  
+                  roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
+                  numRooms = 0
+                  locationText = "HouseFile/House/Ventilation/Rooms"
+                  roomLabels.each do |roommName|
+                     numRooms += h2kElements[locationText].attributes[roommName].to_i
+                  end
+                  if ( value == 1 && numRooms == 0 )
+                     debug_out("Choice: #{choiceEntry} Tag: #{tag} \n  No rooms entered for F326 Ventilation requirement!")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-AirDistType/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Ventilation/WholeHouse/AirDistributionType"
+                  h2kElements[locationText].attributes["code"] = value
+                  
+               elsif ( tag =~ /OPT-H2K-OpSched/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Ventilation/WholeHouse/OperationSchedule"
+                  h2kElements[locationText].attributes["code"] = "0"    # User Specified
+                  h2kElements[locationText].attributes["value"] = value
+                  
+               elsif ( tag =~ /OPT-H2K-HRVSupply/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+                  if ( h2kElements[locationText] == nil )
+                     createHRV(h2kElements)
+                  end
+                  h2kElements[locationText].attributes["supplyFlowrate"] = value    # L/s supply
+                  h2kElements[locationText].attributes["exhaustFlowrate"] = value   # Exhaust = Supply 
+                  
+               elsif ( tag =~ /OPT-H2K-Rating1/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+                  if ( h2kElements[locationText] == nil )
+                     createHRV(h2kElements)
+                  end
+                  h2kElements[locationText].attributes["efficiency1"] = value    # Rating 1 Efficiency
+                  
+               elsif ( tag =~ /OPT-H2K-Rating2/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+                  if ( h2kElements[locationText] == nil )
+                     createHRV(h2kElements)
+                  end
+                  h2kElements[locationText].attributes["efficiency2"] = value    # Rating 1 Efficiency
+                  
+               end
+
                
-               
-            # PV - Use H2K PV model or not?
+            # Roof Pitch - change slope of all ext. ceilings (i.e., roofs)
             #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-RoofPitch/ )
+               if ( tag =~ /Opt-H2K-RoofSlope/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/Ceiling/Measurements/Slope"
+                  h2kElements.each(locationText) do |element| 
+                     element.attributes["code"] = "0"    # User Specified slope
+                     element.attributes["value"] = value
+                  end
+               end
+               
+                  
+            # PV - external (does not use H2K model but choice file option for sizing)
+            # Available for 16 Opt-Locations and 3 roof pitches
+            #-----------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-StandoffPV/ )
-               if ( tag =~ /Opt-StandoffPV/ &&  value != "NA" )
-                  #locationText1 = "HouseFile/House/Generation/Photovoltaic/Array"
-                  #locationText2 = "HouseFile/House/Generation/Photovoltaic/Module/Type"
-                  #h2kElements[locationText1].attributes["area"] = value
-                  #h2kElements[locationText1].attributes["slope"] = value
-                  #h2kElements[locationText1].attributes["azimuth"] = value
-                  #h2kElements[locationText2].attributes["code"] = value
-               else
-                  #if ( value == "NA" ) # Don't change anything
-                  #else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               if ( tag =~ /Opt-StandoffPV/ &&  value != "NA" && value != "NoPV" )
+                  # All processing done after the run in post-process()
+                  # Turn off H2K internal model, if it is on!
+                  locationText = "HouseFile/House/Generation/Systems"
+                  if ( h2kElements[locationText].attributes["photovoltaic"] == "true" )
+                     h2kElements[locationText].attributes["photovoltaic"] = false
+                     locationText = "HouseFile/House/Generation"
+                     h2kElements[locationText].delete_element("Photovoltaic")
+                  end
+               end
+               
+               
+            # PV - internal. Uses H2K PV Generation model
+            # Limited number of parameters available in options file.
+            #-----------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-H2K-PV/ )
+               if ( tag =~ /Opt-H2K-Area/ &&  value != "NA" )
+                  # Check if specified area is possible for this house file
+                  totalCeilArea = 0.0
+                  locationText = "HouseFile/House/Components/Ceiling/Measurements"
+                  h2kElements.each(locationText) do |element| 
+                     totalCeilArea += element.attributes["area"].to_f
+                  end
+                  if ( value.to_f > totalCeilArea )
+                     debug_out("WARNING: Specified PV area (#{value} sq.m.) is greater than available roof area (#{totalCeilArea.round().to_s} sq.m.)")
+                  end
+                  checkCreatePV( h2kElements )
+                  locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+                  h2kElements[locationText].attributes["area"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-Slope/ &&  value != "NA" )
+                  checkCreatePV( h2kElements )
+                  locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+                  h2kElements[locationText].attributes["slope"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-Azimuth/ &&  value != "NA" )
+                  checkCreatePV( h2kElements )
+                  locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+                  h2kElements[locationText].attributes["azimuth"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-PVModuleType/ &&  value != "NA" )
+                  checkCreatePV( h2kElements )
+                  locationText = "HouseFile/House/Generation/Photovoltaic/Module/Type"
+                  h2kElements[locationText].attributes["code"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-GridAbsRate/ &&  value != "NA" )
+                  checkCreatePV( h2kElements )
+                  locationText = "HouseFile/House/Generation/Photovoltaic/Efficiency"
+                  h2kElements[locationText].attributes["gridAbsorptionRate"] = value
+                  
+               elsif ( tag =~ /Opt-H2K-InvEff/ &&  value != "NA" )
+                  checkCreatePV( h2kElements )
+                  locationText = "HouseFile/House/Generation/Photovoltaic/Efficiency"
+                  h2kElements[locationText].attributes["inverterEfficiency"] = value
+                  
                end
                
                
@@ -1616,6 +1867,563 @@ def processFile(filespec)
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
 end
+
+def checkCreatePV( elements )
+   if ( elements["HouseFile/House/Generation/Photovoltaic"] == nil )
+      locationText = "HouseFile/House/Generation/Systems"
+      elements[locationText].attributes["photovoltaic"] = "true"
+      locationText = "HouseFile/House/Generation"
+      elements[locationText].add_element("Photovoltaic")
+      locationText = "HouseFile/House/Generation/Photovoltaic"
+      elements[locationText].add_element("EquipmentInformation")
+      elements[locationText].add_element("Array")
+      locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+      elements[locationText].attributes["area"] = "50"
+      elements[locationText].attributes["slope"] = "42"
+      elements[locationText].attributes["azimuth"] = "0"
+      
+      locationText = "HouseFile/House/Generation/Photovoltaic"
+      elements[locationText].add_element("Efficiency")
+      locationText = "HouseFile/House/Generation/Photovoltaic/Efficiency"
+      elements[locationText].attributes["miscellaneousLosses"] = "3"
+      elements[locationText].attributes["otherPowerLosses"] = "1"
+      elements[locationText].attributes["inverterEfficiency"] = "90"
+      elements[locationText].attributes["gridAbsorptionRate"] = "90"
+      
+      locationText = "HouseFile/House/Generation/Photovoltaic"
+      elements[locationText].add_element("Module")
+      locationText = "HouseFile/House/Generation/Photovoltaic/Module"
+      elements[locationText].attributes["efficiency"] = "13"
+      elements[locationText].attributes["cellTemperature"] = "45"
+      elements[locationText].attributes["coefficientOfEfficiency"] = "0.4"
+      elements[locationText].add_element("Type")
+      locationText = "HouseFile/House/Generation/Photovoltaic/Module/Type"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+   end
+end
+
+def createHRV( elements )
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+   elements[locationText].add_element("Hrv")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+   elements[locationText].attributes["supplyFlowrate"] = "60"
+   elements[locationText].attributes["exhaustFlowrate"] = "60"
+   elements[locationText].attributes["fanPower1"] = "123.7"
+   elements[locationText].attributes["isDefaultFanpower"] = "true"
+   elements[locationText].attributes["isEnergyStar"] = "false"
+   elements[locationText].attributes["isHomeVentilatingInstituteCertified"] = "false"
+   elements[locationText].attributes["isSupplemental"] = "false"
+   elements[locationText].attributes["temperatureCondition1"] = "0"
+   elements[locationText].attributes["temperatureCondition2"] = "-25"
+   elements[locationText].attributes["fanPower2"] = "145.6"
+   elements[locationText].attributes["efficiency1"] = "64"
+   elements[locationText].attributes["efficiency2"] = "64"
+   elements[locationText].attributes["preheaterCapacity"] = "0"
+   elements[locationText].attributes["lowTempVentReduction"] = "0"
+   elements[locationText].attributes["coolingEfficiency"] = "25"
+   elements[locationText].add_element("EquipmentInformation")
+   elements[locationText].add_element("VentilatorType")
+
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/VentilatorType"
+   elements[locationText].attributes["code"] = "1"    # HRV
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+   elements[locationText].add_element("ColdAirDucts")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts"
+   elements[locationText].add_element("Supply")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
+   elements[locationText].attributes["length"] = "1.5"
+   elements[locationText].attributes["diameter"] = "152.4"
+   elements[locationText].attributes["insulation"] = "0.7"
+   elements[locationText].add_element("Location")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Location"
+   elements[locationText].attributes["code"] = "4" # Main Floor
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
+   elements[locationText].add_element("Type")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Type"
+   elements[locationText].attributes["code"] = "1" # Flexible
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
+   elements[locationText].add_element("Sealing")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Sealing"
+   elements[locationText].attributes["code"] = "2" # Sealed
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts"
+   elements[locationText].add_element("Exhaust")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
+   elements[locationText].attributes["length"] = "1.5"
+   elements[locationText].attributes["diameter"] = "152.4"
+   elements[locationText].attributes["insulation"] = "0.7"
+   elements[locationText].add_element("Location")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Location"
+   elements[locationText].attributes["code"] = "4" # Main Floor
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
+   elements[locationText].add_element("Type")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Type"
+   elements[locationText].attributes["code"] = "1" # Flexible
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
+   elements[locationText].add_element("Sealing")
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Sealing"
+   elements[locationText].attributes["code"] = "2" # Sealed
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+end
+
+# Procedure to create a new H2K system Type 1 in the XML house file
+def createH2KSysType1( elements, sysType1Name )
+   locationText = "HouseFile/House/HeatingCooling/Type1"
+   elements[locationText].add_element(sysType1Name)
+   if ( sysType1Name == "Baseboards" )
+      locationText = "HouseFile/House/HeatingCooling/Type1/Baseboards"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Baseboards/EquipmentInformation"
+      elements[locationText].attributes["numberOfElectronicThermostats"] = "0"
+      
+      locationText = "HouseFile/House/HeatingCooling/Type1/Baseboards"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Baseboards/Specifications"
+      elements[locationText].attributes["sizingFactor"] = "1.1"
+      elements[locationText].attributes["efficiency"] = "100"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Baseboards/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "2"    # Calculated
+      elements[locationText].attributes["value"] = "0"   # Calculated value - will be replaced!
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+   elsif ( sysType1Name == "Furnace" )
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/EquipmentInformation"
+      elements[locationText].attributes["energystar"] = "false"
+      elements[locationText].add_element("Manufacturer")
+
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment"
+      elements[locationText].attributes["isBiEnergy"] = "false"
+      elements[locationText].attributes["switchoverTemperature"] = "0"
+      elements[locationText].add_element("EnergySource")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EnergySource"
+      elements[locationText].attributes["code"] = "2"    # Gas
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment"
+      elements[locationText].add_element("EquipmentType")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
+      elements[locationText].attributes["code"] = "1"    # Furnace with cont. pilot
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Specifications"
+      elements[locationText].attributes["sizingFactor"] = "1.1"
+      elements[locationText].attributes["efficiency"] = "78"
+      elements[locationText].attributes["isSteadyState"] = "true"
+      elements[locationText].attributes["pilotLight"] = "0"
+      elements[locationText].attributes["flueDiameter"] = "127"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "2"    # Calculated
+      elements[locationText].attributes["value"] = "0"   # Calculated value - will be replaced!
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+   elsif ( sysType1Name == "Boiler" )
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/EquipmentInformation"
+      elements[locationText].attributes["energystar"] = "false"
+      elements[locationText].add_element("Manufacturer")
+
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment"
+      elements[locationText].attributes["isBiEnergy"] = "false"
+      elements[locationText].attributes["switchoverTemperature"] = "0"
+      elements[locationText].add_element("EnergySource")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EnergySource"
+      elements[locationText].attributes["code"] = "2"    # Gas
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment"
+      elements[locationText].add_element("EquipmentType")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EquipmentType"
+      elements[locationText].attributes["code"] = "1"    # Boiler with cont. pilot
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/Specifications"
+      elements[locationText].attributes["sizingFactor"] = "1.1"
+      elements[locationText].attributes["efficiency"] = "78"
+      elements[locationText].attributes["isSteadyState"] = "true"
+      elements[locationText].attributes["pilotLight"] = "0"
+      elements[locationText].attributes["flueDiameter"] = "127"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type1/Boiler/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "2"    # Calculated
+      elements[locationText].attributes["value"] = "0"   # Calculated value - will be replaced!
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+   elsif ( sysType1Name == "ComboHeatDhw" )
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/EquipmentInformation"
+      elements[locationText].attributes["energystar"] = "false"
+      elements[locationText].add_element("Manufacturer")
+
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment"
+      elements[locationText].add_element("EnergySource")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EnergySource"
+      elements[locationText].attributes["code"] = "2"    # Gas
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment"
+      elements[locationText].add_element("EquipmentType")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EquipmentType"
+      elements[locationText].attributes["code"] = "1"    # ComboHeatDhw with cont. pilot
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Specifications"
+      elements[locationText].attributes["sizingFactor"] = "1.1"
+      elements[locationText].attributes["efficiency"] = "78"
+      elements[locationText].attributes["isSteadyState"] = "true"
+      elements[locationText].attributes["pilotLight"] = "25.3"
+      elements[locationText].attributes["flueDiameter"] = "152.4"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "2"    # Calculated
+      elements[locationText].attributes["value"] = "0"   # Calculated value - will be replaced!
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[locationText].add_element("ComboTankAndPump")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[locationText].add_element("TankCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump/TankCapacity"
+      elements[locationText].attributes["code"] = "3"
+      elements[locationText].attributes["value"] = "151.4"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[locationText].add_element("EnergyFactor")
+      elements[locationText].attributes["useDefaults"] = "true"
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[locationText].add_element("TankLocation")
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[locationText].add_element("CirculationPump")
+      elements[locationText].attributes["isCalculated"] = "true"
+      elements[locationText].attributes["value"] = "0"
+      elements[locationText].attributes["hasEnergyEfficientMotor"] = "false"
+      
+   elsif ( sysType1Name == "P9" )
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9"
+      elements[locationText].attributes["id"] = "0"
+      elements[locationText].attributes["numberOfSystems"] = "1"
+      elements[locationText].attributes["thermalPerformanceFactor"] = "0"
+      elements[locationText].attributes["annualElectricity"] = "0"
+      elements[locationText].attributes["spaceHeatingCapacity"] = "0"
+      elements[locationText].attributes["spaceHeatingEfficiency"] = "0"
+      elements[locationText].attributes["waterHeatingPerformanceFactor"] = "0"
+      elements[locationText].attributes["burnerInput"] = "0"
+      elements[locationText].attributes["recoveryEfficiency"] = "0"
+      elements[locationText].attributes["isUserSpecified"] = "false"
+      elements[locationText].add_element("EquipmentInformation")
+
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9"
+      elements[locationText].add_element("TestData")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[locationText].attributes["controlsPower"] = "0"
+      elements[locationText].attributes["circulationPower"] = "0"
+      elements[locationText].attributes["dailyUse"] = "0"
+      elements[locationText].attributes["standbyLossWithFan"] = "0"
+      elements[locationText].attributes["standbyLossWithoutFan"] = "0"
+      elements[locationText].attributes["oneHourRatingHotWater"] = "0"
+      elements[locationText].attributes["oneHourRatingConcurrent"] = "0"
+      elements[locationText].add_element("EnergySource")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/EnergySource"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[locationText].add_element("NetEfficiency")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/NetEfficiency"
+      elements[locationText].attributes["loadPerformance15"] = "0"
+      elements[locationText].attributes["loadPerformance40"] = "0"
+      elements[locationText].attributes["loadPerformance100"] = "0"
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[locationText].add_element("ElectricalUse")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/ElectricalUse"
+      elements[locationText].attributes["loadPerformance15"] = "0"
+      elements[locationText].attributes["loadPerformance40"] = "0"
+      elements[locationText].attributes["loadPerformance100"] = "0"
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[locationText].add_element("BlowerPower")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/BlowerPower"
+      elements[locationText].attributes["loadPerformance15"] = "0"
+      elements[locationText].attributes["loadPerformance40"] = "0"
+      elements[locationText].attributes["loadPerformance100"] = "0"
+   end
+end   # createH2KSysType1
+
+# Procedure to create a new H2K system Type 2 in the XML house file
+def createH2KSysType2( elements, sysType2Name )
+   locationText = "HouseFile/House/HeatingCooling/Type2"
+   elements[locationText].add_element(sysType2Name)
+   elements[locationText].attributes["shadingInF280Cooling"] = "AccountedFor"
+   
+   if ( sysType2Name == "AirHeatPump" )
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/EquipmentInformation"
+      elements[locationText].attributes["energystar"] = "false"
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment"
+      elements[locationText].attributes["crankcaseHeater"] = "60"
+      elements[locationText].add_element("Type")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment/Type"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment"
+      elements[locationText].add_element("Function")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment/Function"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["value"] = "7"
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications"
+      elements[locationText].add_element("HeatingEfficiency")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/HeatingEfficiency"
+      elements[locationText].attributes["isCop"] = "true"
+      elements[locationText].attributes["value"] = "2"
+
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[locationText].add_element("Temperature")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
+      elements[locationText].add_element("CutOffType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/CutOffType"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
+      elements[locationText].add_element("RatingType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/RatingType"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["value"] = "8.3"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+   elsif ( sysType2Name == "WaterHeatPump" )
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/EquipmentInformation"
+      elements[locationText].attributes["canCsaC448"] = "false"
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Equipment"
+      elements[locationText].attributes["crankcaseHeater"] = "0"
+      elements[locationText].add_element("Function")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Equipment/Function"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].attributes["value"] = "21.5"
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications"
+      elements[locationText].add_element("HeatingEfficiency")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications/HeatingEfficiency"
+      elements[locationText].attributes["isCop"] = "true"
+      elements[locationText].attributes["value"] = "3"
+
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[locationText].add_element("Temperature")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature"
+      elements[locationText].add_element("CutOffType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature/CutOffType"
+      elements[locationText].attributes["code"] = "3"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature"
+      elements[locationText].add_element("RatingType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature/RatingType"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["value"] = "8.3"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[locationText].add_element("SourceTemperature")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/SourceTemperature"
+      elements[locationText].attributes["depth"] = "1.5"
+      elements[locationText].add_element("Use")
+      locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/SourceTemperature/Use"
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+   elsif ( sysType2Name == "GroundHeatPump" )
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/EquipmentInformation"
+      elements[locationText].attributes["canCsaC448"] = "false"
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Equipment"
+      elements[locationText].attributes["crankcaseHeater"] = "0"
+      elements[locationText].add_element("Function")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Equipment/Function"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications"
+      elements[locationText].add_element("OutputCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/OutputCapacity"
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].attributes["value"] = "21.5"
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications"
+      elements[locationText].add_element("HeatingEfficiency")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/HeatingEfficiency"
+      elements[locationText].attributes["isCop"] = "true"
+      elements[locationText].attributes["value"] = "3"
+
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[locationText].add_element("Temperature")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature"
+      elements[locationText].add_element("CutOffType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature/CutOffType"
+      elements[locationText].attributes["code"] = "3"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature"
+      elements[locationText].add_element("RatingType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature/RatingType"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["value"] = "8.3"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[locationText].add_element("SourceTemperature")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/SourceTemperature"
+      elements[locationText].attributes["depth"] = "1.5"
+      elements[locationText].add_element("Use")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/SourceTemperature/Use"
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+   elsif ( sysType2Name == "AirConditioning" )
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/EquipmentInformation"
+      elements[locationText].attributes["energystar"] = "false"
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[locationText].add_element("Equipment")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Equipment"
+      elements[locationText].attributes["crankcaseHeater"] = "60"
+      elements[locationText].add_element("CentralType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Equipment/CentralType"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[locationText].add_element("Specifications")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications"
+      elements[locationText].attributes["sizingFactor"] = "1"
+      elements[locationText].add_element("RatedCapacity")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications/RatedCapacity"
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].attributes["value"] = "0"
+      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications"
+      elements[locationText].add_element("Efficiency")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications/Efficiency"
+      elements[locationText].attributes["isCop"] = "true"
+      elements[locationText].attributes["value"] = "3"
+
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[locationText].add_element("CoolingParameters")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters"
+      elements[locationText].attributes["sensibleHeatRatio"] = "0.76"
+      elements[locationText].attributes["openableWindowArea"] = "0"
+      elements[locationText].add_element("FansAndPump")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump"
+      elements[locationText].attributes["flowRate"] = "0"
+      elements[locationText].add_element("Mode")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump/Mode"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump"
+      elements[locationText].add_element("Power")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump/Power"
+      elements[locationText].attributes["isCalculated"] = "true"
+   end
+end   # createH2KSysType2
 
 # Procedure to run HOT2000
 def runsims( direction )
@@ -1636,8 +2444,11 @@ def runsims( direction )
    optionSwitch = "-inp"
    fileToLoad = "..\\" + $h2kFileName
    
+   startRun = Time.now
    if ( system(runThis, optionSwitch, fileToLoad) )      # Run HOT2000!
-      stream_out( "\n The run was successful!\n" )
+      endRun = Time.now
+      $runH2KTime = endRun - startRun
+      stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
    else
       # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
       fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
@@ -1650,12 +2461,12 @@ def runsims( direction )
    $OutputFolder = "sim-output"
    if ( ! Dir.exist?($OutputFolder) )
       if ( ! system("mkdir #{$OutputFolder}") )
-         debug_out ("Could not create #{$OutputFolder} below #{$gMasterPath}!\n")
+         debug_out (" Could not create #{$OutputFolder} below #{$gMasterPath}!\n")
       end
    else
       if ( File.exist?("#{$OutputFolder}\\Browse.rpt") )
          if ( ! system("del #{$OutputFolder}\\Browse.rpt") )    # Delete existing Browse.Rpt
-            debug_out ("Could not delete existing Browse.rpt file in #{$OutputFolder}!\n")
+            debug_out (" Could not delete existing Browse.rpt file in #{$OutputFolder}!\n")
          end
       end
    end
@@ -1664,6 +2475,7 @@ def runsims( direction )
    # Note that most of the output is contained in the HOT2000 file in XML!
    if ( Dir.exist?("sim-output") )
       system("copy #{$run_path}\\Browse.rpt .\\sim-output\\")
+      stream_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
    end
 
 end   # runsims
@@ -1704,7 +2516,16 @@ def postprocess( scaleData )
       $gAvgCost_Wood += h2kPostElements[locationText].attributes["wood"].to_f * scaleData
       $gAvgCost_Total += ($gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood) * scaleData
    end
-
+   
+   if ( $gChoices["Opt-H2K-PV"] != "NA" )
+      bReadPV = true
+      bUseNextPVLine = false
+      bMonthlyPVData = false
+      mthlyPVPower = [ 0,0,0,0,0,0,0,0,0,0,0,0 ]
+      mthlyPVEnergy = [ 0,0,0,0,0,0,0,0,0,0,0,0 ]
+      iMonth = 0
+   end
+   
    while !fBrowseRpt.eof? do
       lineIn = fBrowseRpt.readline
       lineIn.strip!                 # Remove leading and trailing whitespace
@@ -1721,7 +2542,17 @@ def postprocess( scaleData )
             $gAvgCost_Propane += valuesArr[4].to_f * scaleData
             $gAvgCost_Wood += valuesArr[5].to_f * scaleData    # Includes pellets until separated out
             $gAvgCost_Total += valuesArr[6].to_f * scaleData
-            break    # Got what we want -- exit the while loop because this is last item to find in file!
+         elsif ( ( bReadPV && lineIn =~ /PHOTOVOLTAIC SYSTEM MONTHLY PERFORMANCE/ ) || ( bReadPV && bUseNextPVLine ) )
+            bUseNextPVLine = true
+            if ( bMonthlyPVData || lineIn =~ /^Jan/ )
+               valuesArr = lineIn.split()   # Uses spaces by default to split-up line
+               mthlyPVPower[iMonth] = valuesArr[4].to_f   # Watts
+               mthlyPVEnergy[iMonth] = valuesArr[5].to_f  # kWh
+               iMonth += 1
+               lineIn =~ /^Dec/ ? break : bMonthlyPVData = true
+            else
+               bMonthlyPVData = false
+            end
          end
       end
    end
@@ -1746,7 +2577,7 @@ def postprocess( scaleData )
    
    # H2K Electicity value in GJ * 277.778 -> kWh
    locationText = "HouseFile/AllResults/Results/Annual/Consumption/Electrical"
-   $gAvgElecCons_KWh += h2kPostElements[locationText].attributes["total"].to_f * 277.778 * scaleData
+   $gAvgElecCons_KWh += h2kPostElements[locationText].attributes["total"].to_f * KWH_PER_GJ * scaleData
    
    # H2K Natural Gas value in GJ * 26.839 -> m3 NG
    locationText = "HouseFile/AllResults/Results/Annual/Consumption/NaturalGas"
@@ -1773,15 +2604,23 @@ def postprocess( scaleData )
    # PV Data...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
-   $PVsize = $gChoices["Opt-StandoffPV"]
+   $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
+   $PVInt = $gChoices["Opt-H2K-PV"]   # Input examples: "MonoSi-50m2", "NA"
    $PVcapacity = $PVsize
    $PVcapacity.gsub(/[a-zA-Z:\s'\|]/, '')
-   if ( $PVcapacity == "" || $PVcapacity == "NoPV")
+   if ( $PVcapacity == "" || $PVcapacity == "NoPV" && $PVInt == "NA" ) 
       $PVcapacity = 0.0
+   end
+   if ( $PVInt != "NA" )
+      $PVUnitCost = $gOptions["Opt-H2K-PV"]["options"][ $gChoices["Opt-H2K-PV"] ]["cost"].to_f
+      $PVUnitOutput = 0.0  # Calculated in H2K
+   elsif ( $PVsize != "NoPV" )
+      $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["cost"].to_f
+      $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f
    end
    
    if ( $PVsize !~ /SizedPV/ )
-      # Use spec'd PV sizes. This only works for NoPV. 
+      # NoPV
       $gPVProduction = 0.0
       $PVArrayCost = 0.0
    else
@@ -1789,8 +2628,6 @@ def postprocess( scaleData )
       # User-specified PV size (format is 'SizedPV|XkW', PV will be sized to X kW'.
       if ( $gExtraDataSpecd["Opt-StandoffPV"] =~ /kW/ )
          $PVArraySized = $gExtraDataSpecd["Opt-StandoffPV"].to_f  # ignores "kW" in string
-         $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f
-         $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["cost"].to_f
          $PVArrayCost = $PVUnitCost * $PVArraySized 
          $gPVProduction = -1.0 * $PVUnitOutput * $PVArraySized
          $PVsize = "spec'd SizedPV | $PVArraySized kW"
@@ -1800,8 +2637,6 @@ def postprocess( scaleData )
          $prePVEnergy = $gAvgEnergy_Total
          if ( $prePVEnergy > 0 )
             # This should always be the case!
-            $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"][$PVsize]["ext-result"]["production-elec-perKW"].to_f
-            $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"].to_f
             $PVArraySized = $prePVEnergy / $PVUnitOutput    # KW Capacity
             $PVmultiplier = 1.0 
             if ( $PVArraySized > 14.0 ) 
@@ -1816,22 +2651,49 @@ def postprocess( scaleData )
             $PVArrayCost  = 0.0
          end
          # Degbug: How big is the sized array?
-         debug_out (" PV array is #{$PVsize}  ...\n")
+         debug_out ("\n PV array is #{$PVsize}  ...\n")
       end
    end
    $gChoices["Opt-StandoffPV"] = $PVsize
    $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
-   # PV energy from HOT2000 model run (GJ) OR Size provided in Choice file!
-   # ----------------------------------------------------------------------
-   #locationText = "HouseFile/AllResults/Results/Monthly/Load/PhotoVoltaicUtilized"
-   #monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
-   #monthArr.each do |mth|
-   #   $gEnergyPV += h2kPostElements[locationText].attributes[mth].to_f
-   #end
+   # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
+   if ( $PVInt != "NA" )
+      locationText = "HouseFile/AllResults/Results/Monthly/Load/PhotoVoltaicUtilized"
+      monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+      monthArr.each do |mth|
+         $gEnergyPV += h2kPostElements[locationText].attributes[mth].to_f  # GJ
+      end
+      totalGJperkW = 0.0
+      mthlyPVPower.each_index do |iMth|
+         if ( mthlyPVPower[iMth] > 0 )
+            totalGJperkW += mthlyPVEnergy[iMth] * W_PER_KW / ( mthlyPVPower[iMth] * KWH_PER_GJ )
+         else
+            wthCity = h2kPostElements["HouseFile/ProgramInformation/Weather/Location/English"].text
+            debug_out("\n H2K PV power for #{monthArr[iMth].capitalize} is 0!(Weather for #{wthCity})\n")
+         end
+      end
+      $PVUnitOutput = totalGJperkW / 12
+      $PVArraySized = $gEnergyPV / $PVUnitOutput   # kW 
+      $PVcapacity = $PVArraySized                  # kW used only in substitutePL-output.txt!
+      $PVsize = " H2K: " + "#{$PVArraySized.round(1)} kW"
+      $PVmultiplier = 1.0 
+      if ( $PVArraySized > 14.0 ) 
+         $PVmultiplier = 2.0
+      end
+      $PVArrayCost  = $PVArraySized * $PVUnitCost * $PVmultiplier
+      
+      debug_out ("\n PV array is #{$PVsize}  ...\n")
+   else
+      # PV energy comes from an estimate using Opt-StandoffPV specification. Uses options file
+      # number for GJ/kW PV energy production for location and roof pitch.
+      $gEnergyPV = $gPVProduction * -1.0 
+   end
    
    # PV energy shouldn't be cumulative for orientation runs (GJ * 277.778 -> kWh)!!
-   $gAvgPVOutput_kWh   = -1.0 * $gEnergyPV * 277.778 * scaleData
+   $gAvgPVOutput_kWh   = -1.0 * $gEnergyPV * KWH_PER_GJ * scaleData
+   
+   $gAvgPVRevenue = $gEnergyPV * KWH_PER_GJ * $PVTarrifDollarsPerkWh
 
    stream_out  "\n Peak Heating Load (W): #{$gPeakHeatingLoadW.round(1)} \n"
    stream_out  " Peak Cooling Load (W): #{$gPeakCoolingLoadW.round(1)} \n"
@@ -1942,18 +2804,18 @@ end
 #-------------------------------------------------------------------
 $help_msg = "
 
- substitute-h2k.pl: 
+ substitute-h2k.rb: 
  
  This script searches through a suite of model input files 
  and substitutes values from a specified input file. 
  
- use: ruby substitute-h2k.pl --options options.opt
+ use: ruby substitute-h2k.rb --options options.opt
                              --choices choices.options
                              --base_file Base model path & file name
                       
  example use for optimization work:
  
-  ruby substitute-h2k.pl -c optimization-choices.choices
+  ruby substitute-h2k.rb -c optimization-choices.choices
                          -o optimization-options.options
                          -b \\HOT2000V11_1_CLI\\MyModel.h2k
       
@@ -2256,7 +3118,7 @@ stream_out ("...done.\n")
  Parse configuration (choice) file. 
 =end
 
-stream_out("\n\nReading #{$gChoiceFile}...\n")
+stream_out("\n\nReading #{$gChoiceFile}...\n\n")
 fCHOICES = File.new($gChoiceFile, "r") 
 if fCHOICES == nil then
    fatalerror("Could not read #{$gChoiceFile}.\n")
@@ -2317,7 +3179,7 @@ while !fCHOICES.eof? do
 end
 
 fCHOICES.close
-stream_out ("...done.\n")
+stream_out ("...done.\n\n")
 
 $gExtOptions = Hash.new(&$blk)
 # Report 
@@ -2353,7 +3215,7 @@ end
 =begin rdoc
  Validate choices and options. 
 =end
-stream_out(" Validating choices and options...\n");  
+stream_out(" Validating choices and options...\n\n");  
 
 # Search through optons and determine if they are usedin Choices file (warn if not). 
 $gOptions.each do |option, ignore|
@@ -2650,14 +3512,15 @@ end   #end of do each gChoices loop
 
 if ( !$allok )
    stream_out("\n--------------------------------------------------------------\n")
-   stream_out("\nSubstitute-h2k.pl encountered the following errors:\n")
+   stream_out("\nSubstitute-h2k.rb encountered the following errors:\n")
    stream_out($ErrorBuffer)
    fatalerror(" Choices in #{$gChoiceFile} do not match options in #{$gOptionFile}!")
 else
-   stream_out (" done.\n")
+   stream_out (" done.\n\n")
 end
 
 # Create a copy of HOT2000 below master
+stream_out (" Creating a copying of HOT2000 executable directory below master... \n")
 if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
    if ( ! system("mkdir #{$gMasterPath}\\H2K") )
       debug_out ("Could not create H2K folder below #{$gMasterPath}!\n")
@@ -2669,14 +3532,14 @@ end
 fix_H2K_INI()  # Fixes the paths in HOT2000.ini file in H2K folder created above
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
-stream_out("\n\n Creating a copy of HOT2000 file for optimization work...\n")
+stream_out("\n\n Creating a copy of HOT2000 model file for optimization work...\n")
 $gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
 # Remove any existing file first!  
 if ( File.exist?($gWorkingModelFile) )
    system ("del #{$gWorkingModelFile}")
 end
 system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}")
-stream_out("File #{$gWorkingModelFile} created.\n\n")
+stream_out(" File #{$gWorkingModelFile} created.\n\n")
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
@@ -2828,4 +3691,8 @@ fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 
 fSUMMARY.close() 
 
-$fLOG.close() 
+endProcessTime = Time.now
+totalDiff = endProcessTime - startProcessTime
+stream_out( "\n Total processing time: #{totalDiff.round(2).to_s} seconds (H2K run: #{$runH2KTime.round(2).to_s} seconds)\n\n" )
+
+$fLOG.close()

@@ -1,6 +1,5 @@
 ! Optimization substitutions 
 
-
 !-----------------------------------------------------------------------
 ! Placeholder for oreintation.  
 !-----------------------------------------------------------------------
@@ -93,7 +92,7 @@
 *attribute:name     = Opt-DBFiles
 *attribute:tag:1    = <OPT-ConstDBFile>
 *attribute:tag:2    = <OPT-OptDBFile>
-*attribute:default  = CEF
+*attribute:default  = H2KCodeLibFile
 
 *option:CEF:value:1  = NZEH-CEF.constrdb
 *option:CEF:value:2  = optics-CEF.db2
@@ -458,9 +457,8 @@
 *option:Continuous:cost:total    = 0
   
 *option:Auto:value:1 = 1
-*option:Auto:cost:total    = 0
+*option:Auto:cost:total = 0
   
-
 *attribute:end
 
 
@@ -1672,47 +1670,47 @@
 *option:NA:value:1  = NA    ! Means "no change" to H2K
 *option:NA:cost:total  =  0
 
-*option:retro_ACH_7:value:1  = 7.0
-*option:retro_ACH_7:cost:total  =  0
+*option:ACH_7:value:1  = 7.0
+*option:ACH_7:cost:total  =  0
 
-*option:retro_ACH_6_5:value:1  = 6.5
-*option:retro_ACH_6_5:cost:total  =  0
+*option:ACH_6_5:value:1  = 6.5
+*option:ACH_6_5:cost:total  =  0
 
-*option:retro_ACH_6:value:1  = 6.0
-*option:retro_ACH_6:cost:total  =  0
+*option:ACH_6:value:1  = 6.0
+*option:ACH_6:cost:total  =  0
 
-*option:retro_ACH_5_5:value:1  = 5.5
-*option:retro_ACH_5_5:cost:total  =  0
+*option:ACH_5_5:value:1  = 5.5
+*option:ACH_5_5:cost:total  =  0
 
-*option:retro_ACH_5:value:1  = 5.0
-*option:retro_ACH_5:cost:total  =  0
+*option:ACH_5:value:1  = 5.0
+*option:ACH_5:cost:total  =  0
 
-*option:retro_ACH_4_5:value:1  = 4.5
-*option:retro_ACH_4_5:cost:total  =  0
+*option:ACH_4_5:value:1  = 4.5
+*option:ACH_4_5:cost:total  =  0
 
-*option:retro_ACH_4:value:1  = 4.0
-*option:retro_ACH_4:cost:total  =  0
+*option:ACH_4:value:1  = 4.0
+*option:ACH_4:cost:total  =  0
 
-*option:retro_ACH_3_5:value:1  = 3.5
-*option:retro_ACH_3_5:cost:total  =  160
+*option:ACH_3_5:value:1  = 3.5
+*option:ACH_3_5:cost:total  =  160
 
-*option:retro_ACH_3:value:1  = 3.0
-*option:retro_ACH_3:cost:total  =  0
+*option:ACH_3:value:1  = 3.0
+*option:ACH_3:cost:total  =  0
 
-*option:retro_ACH_2_5:value:1  = 2.5
-*option:retro_ACH_2_5:cost:total  =  318
+*option:ACH_2_5:value:1  = 2.5
+*option:ACH_2_5:cost:total  =  318
 
-*option:retro_ACH_2:value:1  = 2.0
-*option:retro_ACH_2:cost:total  =  0
+*option:ACH_2:value:1  = 2.0
+*option:ACH_2:cost:total  =  0
 
-*option:retro_ACH_1_5:value:1  = 1.5
-*option:retro_ACH_1_5:cost:total  =  588
+*option:ACH_1_5:value:1  = 1.5
+*option:ACH_1_5:cost:total  =  588
 
-*option:retro_ACH_1:value:1  = 1.0
-*option:retro_ACH_1:cost:total  =  658
+*option:ACH_1:value:1  = 1.0
+*option:ACH_1:cost:total  =  658
 
-*option:retro_ACH_0_1:value:1  = 0.11
-*option:retro_ACH_0_1:cost:total  =  658
+*option:ACH_0_1:value:1  = 0.11
+*option:ACH_0_1:cost:total  =  658
 
 *attribute:end
 
@@ -2090,21 +2088,21 @@
 *attribute:start 
    
 *attribute:name = Opt-Ceilings
-*attribute:tag:1  = <Opt-Ceiling>
-*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial)
+*attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
+*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
 *attribute:default = CeilR50
 
 *option:NA:value:1 = NA     ! No change
 *option:NA:value:2 = NA
 *option:NA:cost:total = 0
 
+*option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name must NOT exist in code library
+*option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+*option:UsrSpecR40:cost:total = 0
+
 *option:CeilR40:value:1 =  CeilR40     ! H2K: Code name must exist in code library
 *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
 *option:CeilR40:cost:total = 0
-
-*option:UsrSpecR40:value:1 =  NA          ! H2K: NA or code name must NOT exist in code library
-*option:UsrSpecR40:value:2 =  40          ! H2K R-value (Imperial)
-*option:UsrSpecR40:cost:total = 0
 
 *option:CeilR50:value:1 = CeilR50                
 *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
@@ -2338,7 +2336,7 @@
 *option:BaseR20:value:1 =   BaseR20Bri   ! Added by JTB for MB base wall
 *option:BaseR20:value:2 =   BaseR20Vin
 *option:BaseR20:value:3 =   BaseR20Dry 
-*option:BaseR20:value:4 =   xBaseR20      ! Existing H2K code library wall name
+*option:BaseR20:value:4 =   NA            ! Existing H2K code library wall name
 *option:BaseR20:value:5 =   20            ! OR, User-specified R-value (Imperial), but not both!
 *option:BaseR20:cost:total    =   0
 
@@ -2996,14 +2994,34 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:4   = <OPT-VENTisHRV>
 *attribute:tag:5   = <OPT-WHisIMS>
 *attribute:tag:6   = <Opt-HVACCtlFile>
+*attribute:tag:7   = Opt-H2K-SysType1     ! Baseboards, Furnace, Boiler, ComboHeatDhw, P9
+*attribute:tag:8   = Opt-H2K-SysType2     ! None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning
+*attribute:tag:9   = Opt-H2K-Type1Fuel    ! 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*attribute:tag:10  = Opt-H2K-Type1EqpType ! Heating system equipment type --> depends on fuel and SysType1
+*attribute:tag:11  = Opt-H2K-Type1CapOpt  ! 1:UserSpec, 2:Calculated
+*attribute:tag:12  = Opt-H2K-Type1CapVal
+*attribute:tag:13  = Opt-H2K-Type1EffType ! true=SS, false=AFUE
+*attribute:tag:14  = Opt-H2K-Type1EffVal
+*attribute:tag:15  = Opt-H2K-Type1FanCtl  ! 1:Auto, 2:Continuous
+*attribute:tag:16  = Opt-H2K-Type1EEMotor ! true/false
 *attribute:default  = NA
 
-*option:NA:value:1 = NA
-*option:NA:value:2 = #-no-GSHP-file
-*option:NA:value:3 = #No-IMS: 
-*option:NA:value:4 = 
-*option:NA:value:5 = 
-*option:NA:value:6 = shoulder-ideal.ctl
+*option:NA:value:1 = NA    ! For H2K Only
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA
+*option:NA:value:6 = NA
+*option:NA:value:7 = NA
+*option:NA:value:8 = NA
+*option:NA:value:9 = NA
+*option:NA:value:10 = NA
+*option:NA:value:11 = NA
+*option:NA:value:12 = NA
+*option:NA:value:13 = NA
+*option:NA:value:14 = NA
+*option:NA:value:15 = NA
+*option:NA:value:16 = NA
 *option:NA:cost:total    = 0
 
 !--- Consider using psc variety as base furnace from now on. 
@@ -3013,7 +3031,17 @@ Whitehorse Wall Options (Code is R28)
 *option:basefurnace:value:4 = 
 *option:basefurnace:value:5 = 
 *option:basefurnace:value:6 = shoulder-ideal.ctl
-*option:basefurnace:cost:total    = 0
+*option:basefurnace:value:7 = Furnace
+*option:basefurnace:value:8 = AirConditioning
+*option:basefurnace:value:9 = 2
+*option:basefurnace:value:10 = 2       ! Spark ignition
+*option:basefurnace:value:11 = 2       ! Calculated
+*option:basefurnace:value:12 = NA      ! Capacity value will be calculated
+*option:basefurnace:value:13 = true    ! SS
+*option:basefurnace:value:14 = 75      ! Efficiency
+*option:basefurnace:value:15 = 1       ! Auto fan control
+*option:basefurnace:value:16 = false   ! EE motor
+*option:basefurnace:cost:total = 0
 
 *option:gas-furnace-ecm:value:1 = basefurnace_AC-gas-ecm-motor.hvac
 *option:gas-furnace-ecm:value:2 = #-no-GSHP-file
@@ -3106,6 +3134,16 @@ Whitehorse Wall Options (Code is R28)
 *option:elec-baseboard:value:4 = 
 *option:elec-baseboard:value:5 = 
 *option:elec-baseboard:value:6 = shoulder-ideal.ctl
+*option:elec-baseboard:value:7 = Baseboards
+*option:elec-baseboard:value:8 = NA
+*option:elec-baseboard:value:9 = NA
+*option:elec-baseboard:value:10 = NA
+*option:elec-baseboard:value:11 = NA
+*option:elec-baseboard:value:12 = NA
+*option:elec-baseboard:value:13 = NA
+*option:elec-baseboard:value:14 = NA
+*option:elec-baseboard:value:15 = NA
+*option:elec-baseboard:value:16 = NA
 *option:elec-baseboard:cost:total       = -3870
 
 *option:elec-baseboard-noAC:value:1 = Baseboardv2-noAC.hvac
@@ -3294,10 +3332,32 @@ Reflects southern Ontario costs
 *attribute:name    = Opt-HRVspec 
 *attribute:tag:1   = <Opt-HRVInputFile>
 *attribute:tag:2   = <Opt-CommentOutMVNT>
+*attribute:tag:3   = OPT-H2K-FlowReq
+*attribute:tag:4   = OPT-H2K-AirDistType  ! 1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable
+*attribute:tag:5   = OPT-H2K-OpSched      ! 1: Forced air heating ductwork, 2: Dedecated low volume ductwork, 3: 2 with transfer fans
+*attribute:tag:6   = OPT-H2K-HRVSupply
+*attribute:tag:7   = OPT-H2K-Rating1
+*attribute:tag:8   = OPT-H2K-Rating2
 *attribute:default = CEF_SPEC
 
-*option:CEF_SPEC:value:1         = HRV.vnt
-*option:CEF_SPEC:value:2         = 
+*option:NA:value:1 = 
+*option:NA:value:2 = 
+*option:NA:value:3 = NA     ! F326
+*option:NA:value:4 = NA     ! Forced air heating ductwork
+*option:NA:value:5 = NA   ! Min./Day
+*option:NA:value:6 = NA    ! L/s (exhaust = supply)
+*option:NA:value:7 = NA    ! Eff% @ Rating1
+*option:NA:value:8 = NA    ! Eff% @ Rating2
+*option:NA:cost:total = 0
+
+*option:CEF_SPEC:value:1 = HRV.vnt
+*option:CEF_SPEC:value:2 = 
+*option:CEF_SPEC:value:3 = 1     ! F326
+*option:CEF_SPEC:value:4 = 1     ! Forced air heating ductwork
+*option:CEF_SPEC:value:5 = 480   ! Min./Day
+*option:CEF_SPEC:value:6 = 60    ! L/s (exhaust = supply)
+*option:CEF_SPEC:value:7 = 64    ! Eff% @ Rating1
+*option:CEF_SPEC:value:8 = 64    ! Eff% @ Rating2
 *option:CEF_SPEC:cost:total = 0
 
 *option:BaseHRV_SRE70:value:1    = HRV-base.vnt
@@ -3322,6 +3382,7 @@ Reflects southern Ontario costs
 *option:DisableMVNT:cost:total = 0
 
 *attribute:end 
+
 
 *attribute:start 
 *attribute:name    = Opt-HRVduct 
@@ -4071,25 +4132,63 @@ Reflects southern Ontario costs
 
 
 !-----------------------------------------------------------------------
-! Roof pitch. Used for PV calculation. Tag doesn't do anything!
+! Roof pitch. Used for PV calculation. Tag doesn't do anything in ESP-r!
+!
+! Tag does set roof pitch in each roof surface associated with a ceiling
+! in HOT2000
 !-----------------------------------------------------------------------
-
 *attribute:start
 *attribute:name     = Opt-RoofPitch
-*attribute:tag:1    = <zippo>
+*attribute:tag:1    = Opt-H2K-RoofSlope
 *attribute:default  = 8-12 
 
-*option:3-12:value:1 = nil
+*option:NA:value:1 = NA
+*option:NA:cost:total  = 0
+
+*option:3-12:value:1 = 0.250
 *option:3-12:cost:total  = 0
 
-*option:6-12:value:1 = nil
+*option:6-12:value:1 = 0.500
 *option:6-12:cost:total  = 0
 
-*option:8-12:value:1 = nil
+*option:8-12:value:1 = 0.667
 *option:8-12:cost:total  = 0
 
-*option:12-12:value:1 = nil
+*option:12-12:value:1 = 1.000
 *option:12-12:cost:total  = 0
+
+*attribute:end
+
+!-----------------------------------------------------------------------
+! PV internal
+! Use internal HOT2000 PV Generation model
+! Choice file used to specify Internal PV OR External PV but not both!
+!-----------------------------------------------------------------------
+*attribute:start
+*attribute:name  = Opt-H2K-PV
+*attribute:tag:1 = Opt-H2K-Area           ! m2
+*attribute:tag:2 = Opt-H2K-Slope          ! degrees from horizontal
+*attribute:tag:3 = Opt-H2K-Azimuth        ! degrees from S
+*attribute:tag:4 = Opt-H2K-PVModuleType   ! 1:Mono-Si, 2:Poly-Si, 3:a-Si, 4:CdTe, 5:CIS, 6:UsrSpec
+*attribute:tag:5 = Opt-H2K-GridAbsRate    ! %
+*attribute:tag:6 = Opt-H2K-InvEff         ! %
+*attribute:default = NA
+
+*option:NA:value:1 = NA
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA
+*option:NA:value:6 = NA
+*option:NA:cost:total  = 0
+
+*option:MonoSi-50m2:value:1 = 50 
+*option:MonoSi-50m2:value:2 = 43
+*option:MonoSi-50m2:value:3 = 0
+*option:MonoSi-50m2:value:4 = 1
+*option:MonoSi-50m2:value:5 = 90
+*option:MonoSi-50m2:value:6 = 90
+*option:MonoSi-50m2:cost:total = 4696  ! PV cost/kW - Total cost will be calculated using this
 
 *attribute:end
 
@@ -4097,62 +4196,61 @@ Reflects southern Ontario costs
 ! External PV. Production data from PV Watts.
 !-----------------------------------------------------------------------
 
-
 *ext-attribute:start 
 *attribute:name      = Opt-StandoffPV
 *attribute:default   = NoPV 
 
-*option[Opt-Location>Calgary    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.630 ! GH/kW Installed
-*option[Opt-Location>Calgary    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.733 ! GH/kW Installed
-*option[Opt-Location>Calgary    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.814 ! GH/kW Installed
-*option[Opt-Location>Edmonton   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.13208 ! GH/kW Installed
-*option[Opt-Location>Edmonton   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.24764 ! GH/kW Installed
-*option[Opt-Location>Edmonton   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.32324 ! GH/kW Installed
-*option[Opt-Location>Vancouver  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GH/kW Installed
-*option[Opt-Location>Vancouver  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GH/kW Installed
-*option[Opt-Location>Vancouver  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GH/kW Installed
-*option[Opt-Location>Kamloops  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GH/kW Installed
-*option[Opt-Location>Kamloops  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GH/kW Installed
-*option[Opt-Location>Kamloops  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GH/kW Installed
-*option[Opt-Location>PrinceGeorge  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GH/kW Installed
-*option[Opt-Location>PrinceGeorge  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GH/kW Installed
-*option[Opt-Location>PrinceGeorge  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GH/kW Installed
-*option[Opt-Location>Regina     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.78764  ! GH/kW Installed
-*option[Opt-Location>Regina     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.94604  ! GH/kW Installed
-*option[Opt-Location>Regina     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 5.05584  ! GH/kW Installed
-*option[Opt-Location>Winnipeg   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.49568	 ! GH/kW Installed
-*option[Opt-Location>Winnipeg   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.60476	 ! GH/kW Installed
-*option[Opt-Location>Winnipeg   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.66416	 ! GH/kW Installed
-*option[Opt-Location>Toronto    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.9168	 ! GH/kW Installed
-*option[Opt-Location>Toronto    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.942	 ! GH/kW Installed
-*option[Opt-Location>Toronto    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.8844	 ! GH/kW Installed
-*option[Opt-Location>Ottawa     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.16088	 ! GH/kW Installed
-*option[Opt-Location>Ottawa     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.21956    ! GH/kW Installed
-*option[Opt-Location>Ottawa     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.21164	 ! GH/kW Installed
-*option[Opt-Location>Montreal   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.93192	 ! GH/kW Installed
-*option[Opt-Location>Montreal   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.9852	   ! GH/kW Installed
-*option[Opt-Location>Montreal   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.9654	 ! GH/kW Installed
-*option[Opt-Location>Quebec     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.1526	 ! GH/kW Installed
-*option[Opt-Location>Quebec     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.22496	 ! GH/kW Installed
-*option[Opt-Location>Quebec     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.23216	 ! GH/kW Installed
-*option[Opt-Location>Fredricton ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.93732 ! GH/kW Installed
-*option[Opt-Location>Fredricton ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.00608 ! GH/kW Installed
-*option[Opt-Location>Fredricton ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.01544 ! GH/kW Installed
-*option[Opt-Location>Halifax    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.85848! GH/kW Installed
-*option[Opt-Location>Halifax    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.90168! GH/kW Installed
-*option[Opt-Location>Halifax    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.86892! GH/kW Installed
-*option[Opt-Location>Whitehorse ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GH/kW Installed
-*option[Opt-Location>Whitehorse ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GH/kW Installed
-*option[Opt-Location>Whitehorse ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GH/kW Installed
-*option[Opt-Location>Yellowknife ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GH/kW Installed
-*option[Opt-Location>Yellowknife ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GH/kW Installed
-*option[Opt-Location>Yellowknife ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GH/kW Installed
-*option[Opt-Location>Inuvik ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GH/kW Installed
-*option[Opt-Location>Inuvik ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GH/kW Installed
-*option[Opt-Location>Inuvik ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GH/kW Installed
+*option[Opt-Location>Calgary    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.630 ! GJ/kW Installed
+*option[Opt-Location>Calgary    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.733 ! GJ/kW Installed
+*option[Opt-Location>Calgary    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.814 ! GJ/kW Installed
+*option[Opt-Location>Edmonton   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.13208 ! GJ/kW Installed
+*option[Opt-Location>Edmonton   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.24764 ! GJ/kW Installed
+*option[Opt-Location>Edmonton   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.32324 ! GJ/kW Installed
+*option[Opt-Location>Vancouver  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GJ/kW Installed
+*option[Opt-Location>Vancouver  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GJ/kW Installed
+*option[Opt-Location>Vancouver  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GJ/kW Installed
+*option[Opt-Location>Kamloops  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GJ/kW Installed
+*option[Opt-Location>Kamloops  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GJ/kW Installed
+*option[Opt-Location>Kamloops  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GJ/kW Installed
+*option[Opt-Location>PrinceGeorge  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GJ/kW Installed
+*option[Opt-Location>PrinceGeorge  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GJ/kW Installed
+*option[Opt-Location>PrinceGeorge  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GJ/kW Installed
+*option[Opt-Location>Regina     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.78764  ! GJ/kW Installed
+*option[Opt-Location>Regina     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.94604  ! GJ/kW Installed
+*option[Opt-Location>Regina     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 5.05584  ! GJ/kW Installed
+*option[Opt-Location>Winnipeg   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.49568	 ! GJ/kW Installed
+*option[Opt-Location>Winnipeg   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.60476	 ! GJ/kW Installed
+*option[Opt-Location>Winnipeg   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.66416	 ! GJ/kW Installed
+*option[Opt-Location>Toronto    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.9168	 ! GJ/kW Installed
+*option[Opt-Location>Toronto    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.942	 ! GJ/kW Installed
+*option[Opt-Location>Toronto    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.8844	 ! GJ/kW Installed
+*option[Opt-Location>Ottawa     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.16088	 ! GJ/kW Installed
+*option[Opt-Location>Ottawa     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.21956    ! GJ/kW Installed
+*option[Opt-Location>Ottawa     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.21164	 ! GJ/kW Installed
+*option[Opt-Location>Montreal   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.93192	 ! GJ/kW Installed
+*option[Opt-Location>Montreal   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.9852	   ! GJ/kW Installed
+*option[Opt-Location>Montreal   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.9654	 ! GJ/kW Installed
+*option[Opt-Location>Quebec     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.1526	 ! GJ/kW Installed
+*option[Opt-Location>Quebec     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.22496	 ! GJ/kW Installed
+*option[Opt-Location>Quebec     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.23216	 ! GJ/kW Installed
+*option[Opt-Location>Fredricton ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.93732 ! GJ/kW Installed
+*option[Opt-Location>Fredricton ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.00608 ! GJ/kW Installed
+*option[Opt-Location>Fredricton ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.01544 ! GJ/kW Installed
+*option[Opt-Location>Halifax    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.85848! GJ/kW Installed
+*option[Opt-Location>Halifax    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.90168! GJ/kW Installed
+*option[Opt-Location>Halifax    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.86892! GJ/kW Installed
+*option[Opt-Location>Whitehorse ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
+*option[Opt-Location>Whitehorse ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
+*option[Opt-Location>Whitehorse ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
+*option[Opt-Location>Yellowknife ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
+*option[Opt-Location>Yellowknife ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
+*option[Opt-Location>Yellowknife ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
+*option[Opt-Location>Inuvik ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
+*option[Opt-Location>Inuvik ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
+*option[Opt-Location>Inuvik ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
 *option:SizedPV:cost:PerKW = 4696 ! $/kW installed
 
-*option:NoPV:production-elec-perKW  = 0	! GH/kW Installed
+*option:NoPV:production-elec-perKW  = 0	! GJ/kW Installed
 *option:NoPV:cost:PerKW = 0 
 
 *option:SizedPV|3kW:dummy
