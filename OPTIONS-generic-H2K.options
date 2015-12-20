@@ -1778,43 +1778,43 @@
 *option:DoubleLowEHardCoatAirFill:value:8 = DblLeHcAir
 *option:DoubleLowEHardCoatAirFill:cost:total    = 0.0 ! Value changed for Van_2st_80_retro geometry. Originally 10584
 
-*option:DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg   ! Also H2K 
 *option:DoubleLowEHardCoatArgFill:value:2 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:3 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:3 = DblLeHcArg   ! Also H2K 
 *option:DoubleLowEHardCoatArgFill:value:4 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:5 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:5 = DblLeHcArg   ! Also H2K 
 *option:DoubleLowEHardCoatArgFill:value:6 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg   ! Also H2K 
 *option:DoubleLowEHardCoatArgFill:value:8 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:cost:total    = 0 ! Value changed for Van_2st_80_retro geometry. Originally 11727
 
-*option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:2 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:3 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:4 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:5 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:6 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:7 = TplLeHcKry
+*option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:2 = TplLeHcKry 
+*option:TripleLowEHardCoatKryFill:value:3 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:4 = TplLeHcKry 
+*option:TripleLowEHardCoatKryFill:value:5 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:6 = TplLeHcKry 
+*option:TripleLowEHardCoatKryFill:value:7 = TplLeHcKry   ! Also H2K
 *option:TripleLowEHardCoatKryFill:value:8 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:cost:total    = 1436 ! Value changed for Van_2st_80_retro geometry. Originally 20871
 
-*option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:2 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:3 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:4 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:5 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:6 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:7 = TplLeScKry
+*option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:2 = TplLeScKry 
+*option:TripleLowESoftCoatKryFill:value:3 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:4 = TplLeScKry 
+*option:TripleLowESoftCoatKryFill:value:5 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:6 = TplLeScKry 
+*option:TripleLowESoftCoatKryFill:value:7 = TplLeScKry   ! Also H2K
 *option:TripleLowESoftCoatKryFill:value:8 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:cost:total    = 1665 ! Value changed for Van_2st_80_retro geometry. Originally 19310
 
-*option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:2 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:3 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:4 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:5 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:6 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:7 = DblLeScArg
+*option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:2 = DblLeScArg 
+*option:DoubleLowESoftCoatArgFill:value:3 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:4 = DblLeScArg 
+*option:DoubleLowESoftCoatArgFill:value:5 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:6 = DblLeScArg 
+*option:DoubleLowESoftCoatArgFill:value:7 = DblLeScArg   ! Also H2K
 *option:DoubleLowESoftCoatArgFill:value:8 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:cost:total    = 229 	! Base for BC-LEEP (Vancouver)
 														! Was 2440 from last use
@@ -1850,53 +1850,53 @@
 !*option:TripleKrypton_HighGainOnSouth:cost:total = 690	! Mattamy Ott incr. cost for N
 !*option:TripleKrypton_HighGainOnSouth:cost:total = 880	! Mattamy Ott incr. cost for E
 
-*option:Wind1_trp_CL :value:1 = Wind1_trp_CL   
-*option:Wind1_trp_CL :value:2 = Wind1_trp_CL   
-*option:Wind1_trp_CL :value:3 = Wind1_trp_CL   
-*option:Wind1_trp_CL :value:4 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:5 = Wind1_trp_CL   
-*option:Wind1_trp_CL :value:6 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:7 = Wind1_trp_CL   
+*option:Wind1_trp_CL :value:1 = Wind1_trp_CL   ! Also H2K   
+*option:Wind1_trp_CL :value:2 = Wind1_trp_CL    
+*option:Wind1_trp_CL :value:3 = Wind1_trp_CL   ! Also H2K   
+*option:Wind1_trp_CL :value:4 = Wind1_trp_CL 
+*option:Wind1_trp_CL :value:5 = Wind1_trp_CL   ! Also H2K   
+*option:Wind1_trp_CL :value:6 = Wind1_trp_CL 
+*option:Wind1_trp_CL :value:7 = Wind1_trp_CL   ! Also H2K   
 *option:Wind1_trp_CL :value:8 = Wind1_trp_CL
 *option:Wind1_trp_CL :cost:total    = 0   ! this is used as the base case for NWT, so no cost. origianlly $20551
 
-*option:Win2scLE1_tr:value:1 = Win2scLE1_tr
-*option:Win2scLE1_tr:value:2 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:3 = Win2scLE1_tr
-*option:Win2scLE1_tr:value:4 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:5 = Win2scLE1_tr
-*option:Win2scLE1_tr:value:6 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:7 = Win2scLE1_tr
+*option:Win2scLE1_tr:value:1 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:2 = Win2scLE1_tr  
+*option:Win2scLE1_tr:value:3 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:4 = Win2scLE1_tr  
+*option:Win2scLE1_tr:value:5 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:6 = Win2scLE1_tr  
+*option:Win2scLE1_tr:value:7 = Win2scLE1_tr   ! Also H2K
 *option:Win2scLE1_tr:value:8 = Win2scLE1_tr 
 *option:Win2scLE1_tr:cost:total   = 22883
 
-*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:3 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:4 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:5 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:6 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:7 = Win3hcLE1_tr
+*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr 
+*option:Win3hcLE1_tr:value:3 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:4 = Win3hcLE1_tr 
+*option:Win3hcLE1_tr:value:5 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:6 = Win3hcLE1_tr 
+*option:Win3hcLE1_tr:value:7 = Win3hcLE1_tr   ! Also H2K
 *option:Win3hcLE1_tr:value:8 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:cost:total   = 23550
 
-*option:Win4scLE2_tr:value:1 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:2 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:3 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:4 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:5 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:6 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:7 = Win4scLE2_tr 
+*option:Win4scLE2_tr:value:1 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:2 = Win4scLE2_tr 
+*option:Win4scLE2_tr:value:3 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:4 = Win4scLE2_tr 
+*option:Win4scLE2_tr:value:5 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:6 = Win4scLE2_tr 
+*option:Win4scLE2_tr:value:7 = Win4scLE2_tr   ! Also H2K 
 *option:Win4scLE2_tr:value:8 = Win4scLE2_tr
 *option:Win4scLE2_tr:cost:total   = 23824
 
-*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:3 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:4 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:5 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:6 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:7 = Win5hcLE2_tr
+*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr 
+*option:Win5hcLE2_tr:value:3 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:4 = Win5hcLE2_tr 
+*option:Win5hcLE2_tr:value:5 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:6 = Win5hcLE2_tr 
+*option:Win5hcLE2_tr:value:7 = Win5hcLE2_tr   ! Also H2K
 *option:Win5hcLE2_tr:value:8 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:cost:total   = 24491
 
@@ -2108,31 +2108,31 @@
 *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
 *option:CeilR50:cost:total    =   255     ! BC-LEEP
 
-*option:CeilR60:value:1 =   CeilR60
-*option:CeilR60:value:2 =   NA
+*option:CeilR60:value:1 =  CeilR60
+*option:CeilR60:value:2 =  NA
 *option:CeilR60:cost:total    =   440  ! BC-LEEP
 
-*option:CeilR70:value:1 =   CeilR70
-*option:CeilR70:value:2 =  70
+*option:CeilR70:value:1 =  CeilR70
+*option:CeilR70:value:2 =  NA
 *option:CeilR70:cost:total  =   725    ! BC-LEEP
 
-*option:CeilR80:value:1 =   CeilR80
+*option:CeilR80:value:1 =   NA   !CeilR80
 *option:CeilR80:value:2 =   80
 *option:CeilR80:cost:total    =   970	! BC-LEEP
 
-*option:CeilR90:value:1 =   CeilR90
+*option:CeilR90:value:1 =   NA   !CeilR90
 *option:CeilR90:value:2 =   90
 *option:CeilR90:cost:total    =   1220	! BC-LEEP
 
-*option:CeilR100:value:1 =  CeilR100
+*option:CeilR100:value:1 =  NA   !CeilR100
 *option:CeilR100:value:2 =  100
 *option:CeilR100:cost:total    = 1465 	! BC-LEEP 
 
-*option:CeilR110:value:1 =  CeilR110
+*option:CeilR110:value:1 =  NA   !CeilR110
 *option:CeilR110:value:2 =  110
 *option:CeilR110:cost:total    =  2788  
 
-*option:CeilR120:value:1 =  CeilR120
+*option:CeilR120:value:1 =  NA   !CeilR120
 *option:CeilR120:value:2 =  120
 *option:CeilR120:cost:total    =  3257  
 
@@ -2162,19 +2162,19 @@
 !-----------------------------------------------------------------------
 !   NWT Retrofit Ceilings options
 !-----------------------------------------------------------------------
-*option:NWTCeilR40:value:1 =   NWTCeilR40
+*option:NWTCeilR40:value:1 =  NWTCeilR40
 *option:NWTCeilR40:value:2 =  40
 *option:NWTCeilR40:cost:total    =  0
 
-*option:NWTCeilR50:value:1 =   NWTCeilR50
+*option:NWTCeilR50:value:1 =  NWTCeilR50
 *option:NWTCeilR50:value:2 =  50
 *option:NWTCeilR50:cost:total    =  0
 
-*option:NWTCeilR60:value:1 =   NWTCeilR60
+*option:NWTCeilR60:value:1 =  NWTCeilR60
 *option:NWTCeilR60:value:2 =  60
 *option:NWTCeilR60:cost:total    =  0
 
-*option:NWTCeilR70:value:1 =   NWTCeilR70
+*option:NWTCeilR70:value:1 =  NWTCeilR70
 *option:NWTCeilR70:value:2 =  70
 *option:NWTCeilR70:cost:total    =  0
 
@@ -2186,6 +2186,7 @@
 *attribute:start 
 *attribute:name = Opt-GenericWall_1Layer_definitions
 *attribute:tag:1  = <Opt-GenInsulLayerInboard-a>
+*attribute:tag:2  = Opt-H2K-EffRValue
 *attribute:default = Stud_2x6_R20
  
 *option:NA:value:1 = NA 
@@ -2194,81 +2195,105 @@
 
 ! Thicknesses are defined in meters. Format * must * be #.#### (4 decimals)
 *option:Stud_2x6_R20:value:1 = 0.08748 
+*option:Stud_2x6_R20:value:2 = 20
 *option:Stud_2x6_R20:cost    = 0
-
 
 ! BC LEEP Wall systems
 
 *option:Stud_2x4_2in_XPS_R-24:value:1 = 0.1366
+*option:Stud_2x4_2in_XPS_R-24:value:2 = 24
 *option:Stud_2x4_2in_XPS_R-24:cost = 2235     ! BC-LEEP
 
 *option:Stud_2x6_1in_XPS_R-23:value:1 = 0.1329
+*option:Stud_2x6_1in_XPS_R-23:value:2 = 23
 *option:Stud_2x6_1in_XPS_R-23:cost = 2075     ! BC-LEEP
 
 *option:Stud_2x6_1.5in_XPS_R-25:value:1 = 0.1457
+*option:Stud_2x6_1.5in_XPS_R-25:value:2 = 25
 *option:Stud_2x6_1.5in_XPS_R-25:cost = 2775     ! BC-LEEP
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
+*option:Stud_2x6_2in_XPS_R-29:value:2 = 29
 *option:Stud_2x6_2in_XPS_R-29:cost = 3475     ! BC-LEEP
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
+*option:Stud_2x6_3in_XPS_R-34:value:2 = 34
 *option:Stud_2x6_3in_XPS_R-34:cost = 4880     ! BC-LEEP
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
+*option:Stud_2x6_4in_XPS_R-39:value:2 = 39
 *option:Stud_2x6_4in_XPS_R-39:cost = 7805     ! BC-LEEP
 
 *option:Stud_2x6_1.5in_MWB_R-25:value:1 = 0.14
+*option:Stud_2x6_1.5in_MWB_R-25:value:2 = 25
 *option:Stud_2x6_1.5in_MWB_R-25:cost = 5045     ! BC-LEEP
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
+*option:Stud_2x6_2in_MWB_R-27:value:2 = 27
 *option:Stud_2x6_2in_MWB_R-27:cost = 5275     ! BC-LEEP
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
+*option:Stud_2x6_3in_MWB_R-31:value:2 = 31
 *option:Stud_2x6_3in_MWB_R-31:cost = 6970     ! BC-LEEP
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
+*option:Stud_2x6_4in_MWB_R-35:value:2 = 35
 *option:Stud_2x6_4in_MWB_R-35:cost = 8465     ! BC-LEEP
 
 *option:Stud_2x4_2in_Polyiso_R-25:value:1 = 0.1422
+*option:Stud_2x4_2in_Polyiso_R-25:value:2 = 25
 *option:Stud_2x4_2in_Polyiso_R-25:cost = 2845     ! BC-LEEP
 
 *option:Stud_2x6_1in_Polyiso_R-24:value:1 = 0.1358
+*option:Stud_2x6_1in_Polyiso_R-24:value:2 = 24
 *option:Stud_2x6_1in_Polyiso_R-24:cost = 2900     ! BC-LEEP
 
 *option:Stud_2x6_2in_Polyiso_R-30:value:1 = 0.1726
+*option:Stud_2x6_2in_Polyiso_R-30:value:2 = 30
 *option:Stud_2x6_2in_Polyiso_R-30:cost = 3855     ! BC-LEEP
 
 *option:Stud_2x6_3in_Polyiso_R-35:value:1 = 0.208
+*option:Stud_2x6_3in_Polyiso_R-35:value:2 = 35
 *option:Stud_2x6_3in_Polyiso_R-35:cost = 5145     ! BC-LEEP
 
 *option:Stud_2x6_4in_Polyiso_R-41:value:1 = 0.2432
+*option:Stud_2x6_4in_Polyiso_R-41:value:2 = 41
 *option:Stud_2x6_4in_Polyiso_R-41:cost = 6740     ! BC-LEEP
 
 *option:Stud_2x4_2in_EPS_R-21:value:1 = 0.1203
+*option:Stud_2x4_2in_EPS_R-21:value:2 = 21
 *option:Stud_2x4_2in_EPS_R-21:cost = 2460     ! BC-LEEP
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
+*option:Stud_2x6_1.5in_EPS_R-24:value:2 = 24
 *option:Stud_2x6_1.5in_EPS_R-24:cost = 2910     ! BC-LEEP
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
+*option:Stud_2x6_2in_EPS_R-26:value:2 = 26
 *option:Stud_2x6_2in_EPS_R-26:cost = 3470     ! BC-LEEP
 
 *option:Stud_2x6_3in_EPS_R-30:value:1 = 0.1754
+*option:Stud_2x6_3in_EPS_R-30:value:2 = 30
 *option:Stud_2x6_3in_EPS_R-30:cost = 4695     ! BC-LEEP
 
 *option:Stud_2x6_4in_EPS_R-34:value:1 = 0.2003
+*option:Stud_2x6_4in_EPS_R-34:value:2 = 34
 *option:Stud_2x6_4in_EPS_R-34:cost = 5830     ! BC-LEEP
 
 *option:SIPS_6.5in_EPS_R-24:value:1 = 0.1367
+*option:SIPS_6.5in_EPS_R-24:value:2 = 24
 *option:SIPS_6.5in_EPS_R-24:cost = 9140     ! BC-LEEP
 
 *option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256
+*option:SIPS_10.5in_EPS_R-38:value:2 = 38
 *option:SIPS_10.5in_EPS_R-38:cost = 11945     ! BC-LEEP
 
 *option:DblStud_12in_cell_R-41:value:1 = 0.2464
+*option:DblStud_12in_cell_R-41:value:2 = 41
 *option:DblStud_12in_cell_R-41:cost = 13030     ! BC-LEEP
 
 *option:DblStud_10in_cell_R-34:value:1 = 0.1982
+*option:DblStud_10in_cell_R-34:value:2 = 34
 *option:DblStud_10in_cell_R-34:cost = 11130     ! BC-LEEP
 
 *attribute:end
@@ -2343,14 +2368,14 @@
 *option:BaseR21:value:1 =   BaseR21Bri
 *option:BaseR21:value:2 =   BaseR21Vin
 *option:BaseR21:value:3 =   BaseR21Dry 
-*option:BaseR21:value:4 =   xBaseR21       ! Existing H2K code library wall name
+*option:BaseR21:value:4 =   NA             ! Existing H2K code library wall name
 *option:BaseR21:value:5 =   21             ! OR, User-specified R-value (Imperial), but not both!
 *option:BaseR21:cost:total    =   0
 
 !*option:ICFR22:value:1 =   IcfR22Bri
 !*option:ICFR22:value:2 =   IcfR22Vin
 !*option:ICFR22:value:3 =   IcfR22Dry 
-!*option:ICFR22:value:4 =   xICFR22        ! Existing H2K code library wall name
+!*option:ICFR22:value:4 =   NA             ! Existing H2K code library wall name
 !*option:ICFR22:value:5 =   22             ! OR, User-specified R-value (Imperial), but not both!
 !*option:ICFR22:cost:total    =   18438.04 ! updated for Vancouver geometry. originally 25150
 

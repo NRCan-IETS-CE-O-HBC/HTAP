@@ -9,7 +9,7 @@ require 'optparse'
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
-CONV_R_2_RSI = 5.678263
+R_PER_RSI = 5.678263
 KWH_PER_GJ = 277.778
 W_PER_KW = 1000.0
 
@@ -121,7 +121,7 @@ $gAmtOil = 0
 
 # Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
-$RegionalCostFactors  = {  "Halifax"     =>  0.95 ,
+$RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
                            "Edmonton"     =>  1.12 ,
                            "Calgary"      =>  1.12 ,  # Assume same as Edmonton?
                            "Ottawa"       =>  1.00 ,
@@ -136,14 +136,14 @@ $RegionalCostFactors  = {  "Halifax"     =>  0.95 ,
                            "Fredricton"   =>  1.00 ,  # Same as Quebec?
                            "Whitehorse"   =>  1.00 ,
                            "Yellowknife"  =>  1.38 ,
-                           "Inuvik"     =>  1.38 , 
+                           "Inuvik"       =>  1.38 , 
                            "Alert"        =>  1.38   }
 
 =begin rdoc
- ---------------------------------------------------------------------------
+=========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
           (can't put at bottom of listing).
- ---------------------------------------------------------------------------
+=========================================================================================
 =end
 def fatalerror( err_msg )
 # Display a fatal error and quit. -----------------------------------
@@ -160,7 +160,9 @@ def fatalerror( err_msg )
    exit() # Run stopped
 end
 
+# =========================================================================================
 # Optionally write text to buffer -----------------------------------
+# =========================================================================================
 def stream_out(msg)
    if ($gTest_params["verbosity"] != "quiet")
       print msg
@@ -170,7 +172,9 @@ def stream_out(msg)
    end
 end
 
+# =========================================================================================
 # Write debug output ------------------------------------------------
+# =========================================================================================
 def debug_out(debmsg)
    if $gDebug 
       puts debmsg
@@ -180,7 +184,9 @@ def debug_out(debmsg)
    end
 end
 
+# =========================================================================================
 # Returns XML elements of HOT2000 file.
+# =========================================================================================
 def get_elements_from_filename(fileSpec)
    # Split fileSpec into path and filename
    (tempPath, tempFileName) = File.split( fileSpec )
@@ -217,8 +223,10 @@ def get_elements_from_filename(fileSpec)
    end
 end
 
+# =========================================================================================
 # Search through the HOT2000 working file (copy of input file specified on command line) 
 # and change values for settings defined in choice/options files. 
+# =========================================================================================
 def processFile(filespec)
 
    # Load all XML elements from HOT2000 file
@@ -605,7 +613,7 @@ def processFile(filespec)
                   locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
                   h2kElements.each(locationText) do |element| 
                      element.text = "User specified"
-                     element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
                      if element.attributes["idref"] != nil then
                         # Must delete attribute for User Specified!
                         element.delete_attribute("idref")
@@ -616,7 +624,7 @@ def processFile(filespec)
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
-               
+            
             # Main Walls
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-MainWall/ )
@@ -705,7 +713,7 @@ def processFile(filespec)
                   locationText = "HouseFile/House/Components/Wall/Construction/Type"
                   h2kElements.each(locationText) do |element| 
                      element.text = "User specified"
-                     element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
                      if element.attributes["idref"] != nil then
                         # Must delete attribute for User Specified!
                         element.delete_attribute("idref")
@@ -720,6 +728,22 @@ def processFile(filespec)
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
                
+               
+            # Generic wall insulation thickness settings: - one layer
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
+               if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+                  # Change ALL existing wall codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Wall/Construction/Type"
+                  h2kElements.each(locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               end
                
             # Exposed Floor User-Specified R-Values
             #--------------------------------------------------------------------------
@@ -809,7 +833,7 @@ def processFile(filespec)
                   locationText = "HouseFile/House/Components/Floor/Construction/Type"
                   h2kElements.each(locationText) do |element| 
                      element.text = "User specified"
-                     element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
                      if element.attributes["idref"] != nil then
                         # Must delete attribute for User Specified!
                         element.delete_attribute("idref")
@@ -1478,7 +1502,7 @@ def processFile(filespec)
                      if ( locationString != "" )
                         h2kElements.each(locationString) do |element| 
                            element[1].text = "User specified"     # Description tag
-                           element[3][1].attributes["rsi"] = (value.to_f / CONV_R_2_RSI).to_s
+                           element[3][1].attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
                            element[3][1].attributes["rank"] = "1"
                            element[3][1].attributes["percentage"] = "100"
                            if element.attributes["idref"] != nil then
@@ -1504,7 +1528,7 @@ def processFile(filespec)
                      if ( locationString != "" )
                         h2kElements.each(locationString) do |element| 
                            element[1].text = "User specified"     # Description tag
-                           element[3][1].attributes["rsi"] = (value.to_f / CONV_R_2_RSI).to_s
+                           element[3][1].attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
                            element[3][1].attributes["rank"] = "1"
                            element[3][1].attributes["percentage"] = "100"
                            if element.attributes["code"] != nil then
@@ -1535,7 +1559,7 @@ def processFile(filespec)
                      if ( locationString != "" )
                         h2kElements.each(locationString) do |element| 
                            element.text = "User specified"     # Description tag
-                           element.attributes["rValue"] = (value.to_f / CONV_R_2_RSI).to_s
+                           element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
                            if element.attributes["code"] != nil then
                               # Must delete attribute for User Specified!
                               element.delete_attribute("code")
@@ -1868,6 +1892,9 @@ def processFile(filespec)
    newXMLFile.close
 end
 
+# =========================================================================================
+#  Check if there is a PV section and add, if not.
+# =========================================================================================
 def checkCreatePV( elements )
    if ( elements["HouseFile/House/Generation/Photovoltaic"] == nil )
       locationText = "HouseFile/House/Generation/Systems"
@@ -1904,6 +1931,9 @@ def checkCreatePV( elements )
    end
 end
 
+# =========================================================================================
+# Add an HRV section (check done external to this method)
+# =========================================================================================
 def createHRV( elements )
    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
    elements[locationText].add_element("Hrv")
@@ -1983,6 +2013,9 @@ def createHRV( elements )
 end
 
 # Procedure to create a new H2K system Type 1 in the XML house file
+# =========================================================================================
+# Add a System Type 1 section (check for existence done external to this method)
+# =========================================================================================
 def createH2KSysType1( elements, sysType1Name )
    locationText = "HouseFile/House/HeatingCooling/Type1"
    elements[locationText].add_element(sysType1Name)
@@ -2196,7 +2229,9 @@ def createH2KSysType1( elements, sysType1Name )
    end
 end   # createH2KSysType1
 
-# Procedure to create a new H2K system Type 2 in the XML house file
+# =========================================================================================
+# Procedure to create a new H2K system Type 2 in the XML house file. Check done external.
+# =========================================================================================
 def createH2KSysType2( elements, sysType2Name )
    locationText = "HouseFile/House/HeatingCooling/Type2"
    elements[locationText].add_element(sysType2Name)
@@ -2425,7 +2460,9 @@ def createH2KSysType2( elements, sysType2Name )
    end
 end   # createH2KSysType2
 
+# =========================================================================================
 # Procedure to run HOT2000
+# =========================================================================================
 def runsims( direction )
 
    $RotationAngle = $angles[direction]
@@ -2480,7 +2517,9 @@ def runsims( direction )
 
 end   # runsims
 
+# =========================================================================================
 # Post-process results
+# =========================================================================================
 def postprocess( scaleData )
   
    # Load all XML elements from HOT2000 file (post-run results now available)
@@ -2754,6 +2793,9 @@ def postprocess( scaleData )
 
 end  # End of postprocess
 
+# =========================================================================================
+# Fix the paths specified in the HOT2000.ini file
+# =========================================================================================
 def fix_H2K_INI()
    # Adjust paths in HOT2000.ini file to match copied location
    fH2K_ini_file = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "r") 
@@ -2783,9 +2825,9 @@ def fix_H2K_INI()
 end
 
 =begin rdoc
- ---------------------------------------------------------------------------
- END OF ALL METHODS 
- ---------------------------------------------------------------------------
+=========================================================================================
+  END OF ALL METHODS 
+=========================================================================================
 =end
 
 
