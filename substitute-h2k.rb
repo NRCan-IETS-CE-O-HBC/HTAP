@@ -1639,7 +1639,7 @@ def processFile(filespec)
                   if ( h2kElements[locationText + "/#{value}"] == nil )
                      # Create a new system type 1 element with default values for all of its sub-elements
                      createH2KSysType1(h2kElements,value)
-                     # Delete the system element that was there (and all of its sub-elements)!
+                     # Delete the HVAC element that was there (and all of its sub-elements)!
                      sysType1.each do |sysType1Name|
                         if ( h2kElements[locationText + "/#{sysType1Name}"] != nil && sysType1Name != value )
                            h2kElements[locationText].delete_element(sysType1Name)
@@ -1657,7 +1657,7 @@ def processFile(filespec)
                      if ( value != "None" )
                         createH2KSysType2(h2kElements,value)
                      end
-                     # Delete the system element that was there (and all of its sub-elements)!
+                     # Delete the HVAC element that was there (and all of its sub-elements)!
                      sysType2.each do |sysType2Name|
                         if ( h2kElements[locationText + "/#{sysType2Name}"] != nil && sysType2Name != value )
                            h2kElements[locationText].delete_element(sysType2Name)
@@ -2498,12 +2498,12 @@ def runsims( direction )
    $OutputFolder = "sim-output"
    if ( ! Dir.exist?($OutputFolder) )
       if ( ! system("mkdir #{$OutputFolder}") )
-         debug_out (" Could not create #{$OutputFolder} below #{$gMasterPath}!\n")
+         fatalerror( " Fatal Error! Could not create #{$OutputFolder} below #{$gMasterPath}!\n MKDir Return code: #{$?}\n" )
       end
    else
       if ( File.exist?("#{$OutputFolder}\\Browse.rpt") )
          if ( ! system("del #{$OutputFolder}\\Browse.rpt") )    # Delete existing Browse.Rpt
-            debug_out (" Could not delete existing Browse.rpt file in #{$OutputFolder}!\n")
+            fatalerror(" Fatal Error! Could not delete existing Browse.rpt file in #{$OutputFolder}!\n Del Return code: #{$?}\n" )
          end
       end
    end
@@ -2511,8 +2511,11 @@ def runsims( direction )
    # Copy simulation results to sim-output folder in master (for ERS number)
    # Note that most of the output is contained in the HOT2000 file in XML!
    if ( Dir.exist?("sim-output") )
-      system("copy #{$run_path}\\Browse.rpt .\\sim-output\\")
-      stream_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
+      if ( ! system("copy #{$run_path}\\Browse.rpt .\\sim-output\\") )
+         fatalerror(" Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
+      else
+         stream_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
+      end
    end
 
 end   # runsims
@@ -3565,11 +3568,11 @@ end
 stream_out (" Creating a copying of HOT2000 executable directory below master... \n")
 if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
    if ( ! system("mkdir #{$gMasterPath}\\H2K") )
-      debug_out ("Could not create H2K folder below #{$gMasterPath}!\n")
+      fatalerror ("Fatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
    end
 end
 if ( ! system ("xcopy #{$h2k_src_path} #{$gMasterPath}\\H2K /S /Y /Q") )
-   debug_out ("Could not create xcopy of HOT2000 in H2K folder below #{$gMasterPath}!\n")
+   fatalerror ("Fatal Error! Could not copy content to H2K folder below #{$gMasterPath}!\n XCopy return error code #{$?}\n")
 end
 fix_H2K_INI()  # Fixes the paths in HOT2000.ini file in H2K folder created above
 
@@ -3578,9 +3581,13 @@ stream_out("\n\n Creating a copy of HOT2000 model file for optimization work...\
 $gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
 # Remove any existing file first!  
 if ( File.exist?($gWorkingModelFile) )
-   system ("del #{$gWorkingModelFile}")
+   if ( ! system ("del #{$gWorkingModelFile}") )
+      fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
+   end
 end
-system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}")
+if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
+   fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
+end
 stream_out(" File #{$gWorkingModelFile} created.\n\n")
 
 # Process the working file by replacing all existing values with the values 
