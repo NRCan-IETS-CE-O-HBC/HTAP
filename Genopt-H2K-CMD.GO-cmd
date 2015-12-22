@@ -13,7 +13,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
-      Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax, Whitehorse"; 
+      Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax"; 
 
    // 116 H2K locations (One already enetred for ESP-r in lower case):
    //Values = "ABBOTSFORD, CASTLEGAR, FORTNELSON, FORTSTJOHN, Kamloops, PORTHARDY, PrinceGeorge, PRINCERUPERT, SMITHERS, SUMMERLAND, Vancouver, VICTORIA, WILLIAMSLAKE, COMOX, CRANBROOK, QUESNEL, SANDSPIT, TERRACE, TOFINO, WHISTLER, Calgary, Edmonton, FORTMCMURRAY, LETHBRIDGE, ROCKYMOUNTAINHOUSE, SUFFIELD, COLDLAKE, CORONATION, GRANDEPRAIRIE, MEDICINEHAT, PEACERIVER, REDDEER, ESTEVAN, PRINCEALBERT, Regina, SASKATOON, SWIFTCURRENT, URANIUMCITY, BROADVIEW, MOOSEJAW, NORTHBATTLEFORD, YORKTON, BRANDON, CHURCHILL, THEPAS, THOMPSON, Winnipeg, DAUPHIN, PORTAGELAPRAIRIE, BIGTROUTLAKE, KINGSTON, LONDON, MUSKOKA, NORTHBAY, Ottawa, SAULTSTEMARIE, SIMCOE, SUDBURY, THUNDERBAY, TIMMINS, Toronto, WINDSOR, GOREBAY, KAPUSKASING, KENORA, SIOUXLOOKOUT, TORONTOMETRESSTN, TRENTON, WIARTON, BAGOTVILLE, KUUJJUAQ, Montreal, KUUJJUARAPIK, Quebec, SCHEFFERVILLE, SEPTILES, SHERBROOKE, VALDOR, BAIECOMEAU, LAGRANDERIVIERE, MONTJOLI, MONTREALMIRABEL, STHUBERT, STEAGATHEDESMONTS, CHATHAM, Fredricton, MONCTON, SAINTJOHN, CHARLO, GREENWOOD, Halifax, SYDNEY, TRURO, YARMOUTH, CHARLOTTETOWN, SUMMERSIDE, BONAVISTA, GANDER, GOOSEBAY, SAINTJOHNS, STEPHENVILLE, CARTWRIGHT, DANIELSHARBOUR, DEERLAKE, WABUSHLAKE, Whitehorse, DAWSONCITY, FORTSMITH, Inuvik, NORMANWELLS, Yellowknife, BAKERLAKE, IQALUIT, RESOLUTE, CORALHARBOUR, HALLBEACH";
@@ -34,20 +34,20 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-ACH; 
       Ini  = 1;
-      Values = "ACH_2_5";    //"ACH_7, ACH_5, ACH_4, ACH_3, ACH_2, ACH_1, ACH_0_1"; 
+      Values = "ACH_2_5";
    }
 
    // Mainwalls
    Parameter{   // 
       Name    =  GOtag:Opt-MainWall;
       Ini     =  1;
-      Values  =  "BaseR20, SIPS-R22-Wall, Stud-R275-Wall, SIPS-R28-Wall, Stud-R305-Wall, Stud-R35-Wall, Stud-R40-Wall, DblStud-R52-Wall"; 
+      Values  =  "NA"; 
    }
 
    Parameter{   // 
       Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
       Ini     =  1;
-      Values  =  "NA"; 
+      Values  =  "Stud_2x6_R20, Stud_2x4_2in_XPS_R-24, Stud_2x6_1in_XPS_R-23, Stud_2x6_2in_XPS_R-29, Stud_2x6_4in_XPS_R-39, DblStud_12in_cell_R-41"; 
    }
 
    // H2K Foundations : OBC-min-R12
@@ -61,14 +61,14 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-BasementWallInsulation;
       Ini     =  1;
-      Values  =  "OBC-min-R12";
+      Values  =  "GenericFoundationWall";
    } 
 
    // Basement Slab:
    Parameter{   // 
       Name    =  GOtag:Opt-BasementSlabInsulation;
       Ini     =  1;
-      Values  =  "NoInsulation";
+      Values  =  "GenericFoundationSlab";
    } 
 
    // Exposed floor
@@ -82,7 +82,7 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-Ceilings;
       Ini     =  1;
-      Values  = "CeilR50";     //"CeilR40, CeilR50, CeilR60, CeilR70, CeilR80, CeilR90, CeilR100";
+      Values  = "CeilR50";
    }    
   
   // Windows

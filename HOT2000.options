@@ -2704,218 +2704,212 @@ Whitehorse Wall Options (Code is R28)
 *attribute:end
 
 !-----------------------------------------------------------------------
-! Basement Wall
+! Basement definitions 
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name    = Opt-BasementConfiguration
+*attribute:tag:1   = <Opt-GenFdnInsulLayer>
+*attribute:tag:2   = <Opt-GenSlbInsulLayer>
+*attribute:tag:3   = <OPT-BsmRSIValue>
+*attribute:tag:4   = <OPT-BsmCnnIndex>
+*attribute:default = GHG-bsm-1-RSI_0.66
+
+*option:GHG-bsm-1-RSI_0.66:value:1  = 0.0067
+*option:GHG-bsm-1-RSI_0.66:value:2  = 0.0001
+*option:GHG-bsm-1-RSI_0.66:value:3  = 0.6612
+*option:GHG-bsm-1-RSI_0.66:value:4  = 10
+*option:GHG-bsm-1-RSI_0.66:cost:total  =  0
+*option:GHG-bsm-1-RSI_0.66:alias  =222
+
+*option:GHG-bsm-2-RSI_0.68:value:1  = 0.0074
+*option:GHG-bsm-2-RSI_0.68:value:2  = 0.0006
+*option:GHG-bsm-2-RSI_0.68:value:3  = 0.6812
+*option:GHG-bsm-2-RSI_0.68:value:4  = 10
+*option:GHG-bsm-2-RSI_0.68:cost:total  =  0
+*option:GHG-bsm-2-RSI_0.68:alias  =222
+
+*option:GHG-bsm-3-RSI_0.58:value:1  = 0.0034
+*option:GHG-bsm-3-RSI_0.58:value:2  = 0.0002
+*option:GHG-bsm-3-RSI_0.58:value:3  = 0.5832
+*option:GHG-bsm-3-RSI_0.58:value:4  = 10
+*option:GHG-bsm-3-RSI_0.58:cost:total  =  0
+*option:GHG-bsm-3-RSI_0.58:alias  =222
+
+*option:GHG-bsm-4-RSI_0.83:value:1  = 0.0139
+*option:GHG-bsm-4-RSI_0.83:value:2  = 0.0001
+*option:GHG-bsm-4-RSI_0.83:value:3  = 0.8324
+*option:GHG-bsm-4-RSI_0.83:value:4  = 2
+*option:GHG-bsm-4-RSI_0.83:cost:total  =  0
+*option:GHG-bsm-4-RSI_0.83:alias  =222
+
+*option:GHG-bsm-5-RSI_0.86:value:1  = 0.0146
+*option:GHG-bsm-5-RSI_0.86:value:2  = 0.0013
+*option:GHG-bsm-5-RSI_0.86:value:3  = 0.8596
+*option:GHG-bsm-5-RSI_0.86:value:4  = 2
+*option:GHG-bsm-5-RSI_0.86:cost:total  =  0
+*option:GHG-bsm-5-RSI_0.86:alias  =222
+
+*option:GHG-bsm-6-RSI_0.77:value:1  = 0.0106
+*option:GHG-bsm-6-RSI_0.77:value:2  = 0.002
+*option:GHG-bsm-6-RSI_0.77:value:3  = 0.7652
+*option:GHG-bsm-6-RSI_0.77:value:4  = 2
+*option:GHG-bsm-6-RSI_0.77:cost:total  =  0
+*option:GHG-bsm-6-RSI_0.77:alias  =222
+
+*option:GHG-bsm-7-RSI_1.66:value:1  = 0.0448
+*option:GHG-bsm-7-RSI_1.66:value:2  = 0.0182
+*option:GHG-bsm-7-RSI_1.66:value:3  = 1.6552
+*option:GHG-bsm-7-RSI_1.66:value:4  = 2
+*option:GHG-bsm-7-RSI_1.66:cost:total  =  0
+*option:GHG-bsm-7-RSI_1.66:alias  =222
+
+*option:GHG-bsm-8-RSI_1.66:value:1  = 0.0448
+*option:GHG-bsm-8-RSI_1.66:value:2  = 0.02
+*option:GHG-bsm-8-RSI_1.66:value:3  = 1.6612
+*option:GHG-bsm-8-RSI_1.66:value:4  = 2
+*option:GHG-bsm-8-RSI_1.66:cost:total  =  0
+*option:GHG-bsm-8-RSI_1.66:alias  =222
+
+*option:GHG-bsm-9-RSI_1.53:value:1  = 0.0391
+*option:GHG-bsm-9-RSI_1.53:value:2  = 0.0214
+*option:GHG-bsm-9-RSI_1.53:value:3  = 1.5252
+*option:GHG-bsm-9-RSI_1.53:value:4  = 2
+*option:GHG-bsm-9-RSI_1.53:cost:total  =  0
+*option:GHG-bsm-9-RSI_1.53:alias  =222
+
+*option:GHG-bsm-10-RSI_1.72:value:1  = 0.047
+*option:GHG-bsm-10-RSI_1.72:value:2  = 0.0218
+*option:GHG-bsm-10-RSI_1.72:value:3  = 1.72
+*option:GHG-bsm-10-RSI_1.72:value:4  = 2
+*option:GHG-bsm-10-RSI_1.72:cost:total  =  0
+*option:GHG-bsm-10-RSI_1.72:alias  =222
+
+*option:GHG-bsm-11-RSI_1.67:value:1  = 0.0448
+*option:GHG-bsm-11-RSI_1.67:value:2  = 0.0236
+*option:GHG-bsm-11-RSI_1.67:value:3  = 1.6732
+*option:GHG-bsm-11-RSI_1.67:value:4  = 2
+*option:GHG-bsm-11-RSI_1.67:cost:total  =  0
+*option:GHG-bsm-11-RSI_1.67:alias  =222
+
+*option:GHG-bsm-12-RSI_1.69:value:1  = 0.0448
+*option:GHG-bsm-12-RSI_1.69:value:2  = 0.0294
+*option:GHG-bsm-12-RSI_1.69:value:3  = 1.6924
+*option:GHG-bsm-12-RSI_1.69:value:4  = 2
+*option:GHG-bsm-12-RSI_1.69:cost:total  =  0
+*option:GHG-bsm-12-RSI_1.69:alias  =222
+
+*option:GHG-bsm-13-RSI_1.75:value:1  = 0.047
+*option:GHG-bsm-13-RSI_1.75:value:2  = 0.0304
+*option:GHG-bsm-13-RSI_1.75:value:3  = 1.7488
+*option:GHG-bsm-13-RSI_1.75:value:4  = 72
+*option:GHG-bsm-13-RSI_1.75:cost:total  =  0
+*option:GHG-bsm-13-RSI_1.75:alias  =222
+
+*option:GHG-bsm-14-RSI_1.8:value:1  = 0.0488
+*option:GHG-bsm-14-RSI_1.8:value:2  = 0.033
+*option:GHG-bsm-14-RSI_1.8:value:3  = 1.8012
+*option:GHG-bsm-14-RSI_1.8:value:4  = 72
+*option:GHG-bsm-14-RSI_1.8:cost:total  =  0
+*option:GHG-bsm-14-RSI_1.8:alias  =222
+
+*option:GHG-bsm-15-RSI_1.98:value:1  = 0.0564
+*option:GHG-bsm-15-RSI_1.98:value:2  = 0.0326
+*option:GHG-bsm-15-RSI_1.98:value:3  = 1.9848
+*option:GHG-bsm-15-RSI_1.98:value:4  = 72
+*option:GHG-bsm-15-RSI_1.98:cost:total  =  0
+*option:GHG-bsm-15-RSI_1.98:alias  =222
+
+*option:GHG-bsm-16-RSI_2.95:value:1  = 0.0916
+*option:GHG-bsm-16-RSI_2.95:value:2  = 0.0621
+*option:GHG-bsm-16-RSI_2.95:value:3  = 2.9456
+*option:GHG-bsm-16-RSI_2.95:value:4  = 72
+*option:GHG-bsm-16-RSI_2.95:cost:total  =  0
+*option:GHG-bsm-16-RSI_2.95:alias  =222
+
+*option:GHG-bsm-17-RSI_2.95:value:1  = 0.0916
+*option:GHG-bsm-17-RSI_2.95:value:2  = 0.0621
+*option:GHG-bsm-17-RSI_2.95:value:3  = 2.9456
+*option:GHG-bsm-17-RSI_2.95:value:4  = 72
+*option:GHG-bsm-17-RSI_2.95:cost:total  =  0
+*option:GHG-bsm-17-RSI_2.95:alias  =222
+
+*option:GHG-bsm-18-RSI_2.95:value:1  = 0.0916
+*option:GHG-bsm-18-RSI_2.95:value:2  = 0.0621
+*option:GHG-bsm-18-RSI_2.95:value:3  = 2.9456
+*option:GHG-bsm-18-RSI_2.95:value:4  = 72
+*option:GHG-bsm-18-RSI_2.95:cost:total  =  0
+*option:GHG-bsm-18-RSI_2.95:alias  =222
+
+*option:GHG-bsm-19-RSI_3.73:value:1  = 0.1237
+*option:GHG-bsm-19-RSI_3.73:value:2  = 0.0621
+*option:GHG-bsm-19-RSI_3.73:value:3  = 3.7288
+*option:GHG-bsm-19-RSI_3.73:value:4  = 72
+*option:GHG-bsm-19-RSI_3.73:cost:total  =  0
+*option:GHG-bsm-19-RSI_3.73:alias  =222
+
+*option:GHG-bsm-20-RSI_3.73:value:1  = 0.1237
+*option:GHG-bsm-20-RSI_3.73:value:2  = 0.0621
+*option:GHG-bsm-20-RSI_3.73:value:3  = 3.7288
+*option:GHG-bsm-20-RSI_3.73:value:4  = 72
+*option:GHG-bsm-20-RSI_3.73:cost:total  =  0
+*option:GHG-bsm-20-RSI_3.73:alias  =222
+
+*option:GHG-bsm-21-RSI_3.73:value:1  = 0.1237
+*option:GHG-bsm-21-RSI_3.73:value:2  = 0.0621
+*option:GHG-bsm-21-RSI_3.73:value:3  = 3.7288
+*option:GHG-bsm-21-RSI_3.73:value:4  = 72
+*option:GHG-bsm-21-RSI_3.73:cost:total  =  0
+*option:GHG-bsm-21-RSI_3.73:alias  =222
+
+*option:GHG-bsm-22-RSI_5.46:value:1  = 0.1867
+*option:GHG-bsm-22-RSI_5.46:value:2  = 0.1183
+*option:GHG-bsm-22-RSI_5.46:value:3  = 5.456
+*option:GHG-bsm-22-RSI_5.46:value:4  = 72
+*option:GHG-bsm-22-RSI_5.46:cost:total  =  0
+*option:GHG-bsm-22-RSI_5.46:alias  =222
+
+*option:GHG-bsm-23-RSI_5.46:value:1  = 0.1867
+*option:GHG-bsm-23-RSI_5.46:value:2  = 0.1183
+*option:GHG-bsm-23-RSI_5.46:value:3  = 5.456
+*option:GHG-bsm-23-RSI_5.46:value:4  = 72
+*option:GHG-bsm-23-RSI_5.46:cost:total  =  0
+*option:GHG-bsm-23-RSI_5.46:alias  =222
+
+*option:GHG-bsm-24-RSI_5.46:value:1  = 0.1867
+*option:GHG-bsm-24-RSI_5.46:value:2  = 0.1183
+*option:GHG-bsm-24-RSI_5.46:value:3  = 5.456
+*option:GHG-bsm-24-RSI_5.46:value:4  = 72
+*option:GHG-bsm-24-RSI_5.46:cost:total  =  0
+*option:GHG-bsm-24-RSI_5.46:alias  =222
+
+*attribute:end
+
+ 
+!-----------------------------------------------------------------------
+! Foundation Wall start
 !-----------------------------------------------------------------------
 *attribute:start
-*attribute:name   = Opt-BasementWallInsulation
-*attribute:tag:1  = <OPT-BsmWall>
-*attribute:default = OBC-min-R12
+*attribute:name    = Opt-BasementWallInsulation
+*attribute:tag:1   = <OPT-BsmWall>
+*attribute:default = GenericFoundationWall
 
-*option:OBC-min-R12:value:1 = BsmWllR12
-*option:OBC-min-R12:meta    = Int
-*option:OBC-min-R12:cost:total    = 0
-
-*option:MB-IntBatt-R20:value:1 = BsmW2x4R20		! JTB 31-Jan-14 for MB Base
-*option:MB-IntBatt-R20:meta    = Int
-*option:MB-IntBatt-R20:cost:total    = 0
-
-*option:MB-Comb-R20:value:1 = MBR20Comb		    ! JTB 31-Jan-14 for MB Upgrade
-*option:MB-Comb-R20:meta    = Comb
-*option:MB-Comb-R20:cost:total    = 2110 
-
-*option:Rigid+Batt-R20:value:1 = BsmWllR20
-*option:Rigid+Batt-R20:meta    = Comb
-*option:Rigid+Batt-R20:cost:total    = 2410		! JTB 31-Jan-14 for Ottawa LEEP
-
-*option:Rigid+Batt-R30:value:1 = BsmWllR30
-*option:Rigid+Batt-R30:meta    = Comb
-*option:Rigid+Batt-R30:cost:total    = 4642
-
-*option:Rigid+Batt-R37:value:1 = BsmWllR37
-*option:Rigid+Batt-R37:meta    = Comb
-*option:Rigid+Batt-R37:cost:total    = 5689
-
-*option:Rigid+Blown-R43:value:1 = BsmWllR43
-*option:Rigid+Blown-R43:meta    = Int
-*option:Rigid+Blown-R43:cost:total    = 7790
-
-*option:ICF-base-R22:value:1 = BsmIcfR22
-*option:ICF-base-R22:meta    = Comb
-*option:ICF-base-R22:cost:total    = 3805
-
-*option:ICF-base-R26:value:1 = BsmIcfR26
-*option:ICF-base-R26:meta    = Comb
-*option:ICF-base-R26:cost:total    = 5894
-
-*option:ICF-base-R32:value:1 = BsmIcfR32
-*option:ICF-base-R32:meta    = Comb
-*option:ICF-base-R32:cost:total    = 8844
-
-*option:ICF-base-R41:value:1 = BsmIcfR41
-*option:ICF-base-R41:meta    = Comb
-*option:ICF-base-R41:cost:total    = 10011
-
-*option:ICF-base-R51:value:1 = BsmIcfR51
-*option:ICF-base-R51:meta    = Comb
-*option:ICF-base-R51:cost:total    = 12000            ! Check with Mark!
-
-*option:ICF-base-R51r:value:1 = BsmIcfR51r
-*option:ICF-base-R51r:meta    = Comb
-*option:ICF-base-R51r:cost:total    = 12000            ! Check with Mark!
-
-!-------------------------------------------------------------------------------
-!Whitehorse Foundation Options (Code is R28)
-!-------------------------------------------------------------------------------
-*option:Fnd0PWF_R28:value:1 = Fnd0PWF_R28
-*option:Fnd0PWF_R28:meta    = Int
-*option:Fnd0PWF_R28:cost:total   = 0
-
-*option:Fnd1PWF_R36:value:1 = Fnd1PWF_R36
-*option:Fnd1PWF_R36:meta    = Int
-*option:Fnd1PWF_R36:cost:total   = 1362
-
-*option:Fnd2PWF_R56:value:1 = Fnd2PWF_R56
-*option:Fnd2PWF_R56:meta    = Int
-*option:Fnd2PWF_R56:cost:total   = 5103
-
-*option:Fnd3PWF_R76:value:1 = Fnd3PWF_R76
-*option:Fnd3PWF_R76:meta    = Int
-*option:Fnd3PWF_R76:cost:total   = 8843
-
-*option:Fnd8ICF_R28:value:1 = Fnd8ICF_R28
-*option:Fnd8ICF_R28:meta    = Comb
-*option:Fnd8ICF_R28:cost:total   = 19782
-
-!-------------------------------------------------------------------------------
-! Retrofit Foundation Options
-!-------------------------------------------------------------------------------
-*option:TripleBrick:value:1 = Fnd_trp_br
-*option:TripleBrick:meta    = Int
-*option:TripleBrick:cost:total   = 0
-
-*option:PouredConcrete_RSI0_925:value:1 = Fnd_0_925
-*option:PouredConcrete_RSI0_925:meta    = Int
-*option:PouredConcrete_RSI0_925:cost:total  = 0
-
-*option:PouredConcrete_NoIns:value:1 = NoInsulation
-*option:PouredConcrete_NoIns:meta    = Int
-*option:PouredConcrete_NoIns:cost:total  = 0
-
-*option:Retro_added_R20_ext:value:1 = Fnd-4XPS-ext
-*option:Retro_added_R20_ext:meta    = Int
-*option:Retro_added_R20_ext:cost:total  = 10751
-
-*option:Retro_added_spray_int:value:1 = Fnd-2spr-int
-*option:Retro_added_spray_int:meta    = Int
-*option:Retro_added_spray_int:cost:total  = 5262
-
-!-------------------------------------------------------------------------------
-! NWT Retrofit Crawl Space Options
-!-------------------------------------------------------------------------------
-*option:NWTCrawlWll:value:1 = NWTCrawlWll
-*option:NWTCrawlWll:meta    = Int
-*option:NWTCrawlWll:cost:total   = 0
+*option:GenericFoundationWall:value:1    = GenFdnWal
+*option:GenericFoundationWall:cost:total = 0
+*option:GenericFoundationWall:alias = 1800
 
 *attribute:end
 
 !-----------------------------------------------------------------------
-! SubSlab insulation
+! Foundation Slab start
 !-----------------------------------------------------------------------
 *attribute:start
 *attribute:name    = Opt-BasementSlabInsulation
 *attribute:tag:1   = <OPT-BsmFloor>
-*attribute:tag:2   = <OPT-BsmCnnIndex>
-*attribute:tag:3   = <OPT-BsmRSIValue>
-*attribute:default = NoInsulation 
+*attribute:default = GenericFoundationSlab
 
-*option:NoInsulation:value:1 = BsmFlrR0
-*option[Opt-BasementWallInsulation>OBC-min-R12|Rigid+Blown-R43|MB-IntBatt-R20|AdvFrm-R20-Wall]:NoInsulation:value:2 = 1 ! BCIN_1 (interior wall, no below slab insulation)
-*option[else                                                  ]:NoInsulation:value:2 = 68 ! BCCN_3 (comb in+out wall, no below slab insulation)
-*option:NoInsulation:value:3       = 0.10  ! concrete wall+floor UNINSULATED (0.10 RSI)
-*option:NoInsulation:cost:total    = 0
-
-*option:R24UnderSlab+edge:value:1 = BsmFlrR24
-*option[Opt-BasementWallInsulation>OBC-min-R12|Rigid+Blown-R43]:R24UnderSlab+edge:value:2 = 22  ! BCIB_4
-*option[else                                                  ]:R24UnderSlab+edge:value:2 = 69  ! BCCB_4
-*option:R24UnderSlab+edge:value:3       = 4.23  ! Wall+Floor RSI
-*option:R24UnderSlab+edge:cost:total    = 3800              ! updated for Vancouver geometry      
-
-*option:R10UnderSlab+edge:value:1 = BsmFlrR10
-*option[Opt-BasementWallInsulation>OBC-min-R12|Rigid+Blown-R43]:R10UnderSlab+edge:value:2 = 22  ! BCIB_4
-*option[else                                                  ]:R10UnderSlab+edge:value:2 = 69  ! BCCB_4
-*option:R10UnderSlab+edge:value:3       = 1.76  ! Wall+Floor RSI
-*option:R10UnderSlab+edge:cost:total    = 2720              
-
-
-! Perimeter, sub-slab 0.6m skirt insulation
-
-*option:R12EdgeP6:value:1 = BsmFlrR0
-*option[Opt-BasementWallInsulation>OBC-min-R12|Rigid+Blown-R43]:R12EdgeP6:value:2 = 23    ! BCIB_5
-*option[else                                                  ]:R12EdgeP6:value:2 = 69    ! BCCB_4
-*option:R10UnderSlab+edge:value:3       = 1.76  ! Wall+Floor RSI
-*option:R12EdgeP6:cost:total    = 450              ! updated for Vancouver geometry        
-
-! Perimeter, sub-slab 1.0m skirt insulation
-
-*option:R12EdgeP10:value:1 = BsmFlrR0
-*option[Opt-BasementWallInsulation>OBC-min-R12|Rigid+Blown-R43]:R12EdgeP10:value:2 = 24    ! BCIB_6
-*option[else                                                  ]:R12EdgeP10:value:2 = 69    ! BCCB_4
-*option:R12UnderSlab+edge:value:3   = 2.11  ! Wall+Floor RSI
-*option:R12EdgeP10:cost:total    = 745              ! updated for Vancouver geometry 
-       
-*option:MB-Comb-Insulation:value:1 = BsmFlrR0
-*option:MB-Comb-Insulation:value:2 = 96   ! BCCN_5
-*option:MB-Comb-Insulation:value:3 = 0.10	! Concrete RSI --> ***Should NOT allow in+out wall insulation @ 0 RSI
-*option:MB-Comb-Insulation:cost:total = 0
-
-# Whitehorse data 
-# NOTE: These options should only be used with specific Opt-BasementWallInsulation options!
-# Not all insulation options in Opt-BasementWallInsulation are compatible with these.
-
-*option:Slab_5_R10:value:1 = Slab_5_R10
-*option:Slab_5_R10:value:2 = 69     ! BCCB_4
-*option:Slab_5_R10:value:3 = 1.76   ! Wall+Floor RSI
-*option:Slab_5_R10:cost:total   = 2645
-
-*option:Slab_6_R20:value:1 = Slab_6_R20
-*option:Slab_6_R20:value:2 = 69     ! BCCB_4
-*option:Slab_6_R20:value:3 = 3.52   ! Wall+Floor RSI
-*option:Slab_6_R20:cost:total   = 1330         
-
-*option:Slab_7_R30:value:1 = Slab_7_R30
-*option:Slab_7_R30:value:2 = 69     ! BCCB_4
-*option:Slab_7_R30:value:3 = 5.28   ! Wall+Floor RSI
-*option:Slab_7_R30:cost:total   = 2804     
-
-*option:Slab_8_R40:value:1 = Slab_8_R40
-*option:Slab_8_R40:value:2 = 69     ! BCCB_4
-*option:Slab_8_R40:value:3 = 7.04   ! Wall+Floor RSI
-*option:Slab_8_R40:cost:total   = 4269  
-
-*option:NoSOGInsulation:value:1 = BsmFlrR0	
-*option:NoSOGInsulation:value:2 = 28		! SCN_1 SOG with no insulation
-*option:NoSOGInsulation:value:3 = 0.10		! Concrete wall+floor only
-*option:NoSOGInsulation:cost:total   = 0
-
-*option:R8UnderSlab+edge:value:1 = BsmFlrR8
-*option:R8UnderSlab+edge:value:2 = 52		! SCB_25 Configuration number for SOG insulation below slab without skirt
-*option:R8UnderSlab+edge:value:3 = 1.41   ! Wall+Floor RSI
-*option:R8UnderSlab+edge:cost:total   = 0     ! BC-LEEP base  
-
-*option:R12UnderSlab+edge:value:1 = BsmFlrR12
-*option:R12UnderSlab+edge:value:2 = 52		! SCB_25 Configuration number for SOG insulation below slab without skirt
-*option:R12UnderSlab+edge:value:3 = 2.11  ! Wall+Floor RSI
-*option:R12UnderSlab+edge:cost:total   = 655     ! BC-LEEP
-
-*option:R13UnderSlab+edge:value:1 = BsmFlrR13
-*option:R13UnderSlab+edge:value:2 = 52		! SCB_25 Configuration number for SOG insulation below slab without skirt
-*option:R13UnderSlab+edge:value:3 = 2.29  ! Wall+Floor RSI
-*option:R13UnderSlab+edge:cost:total   = 370     ! BC-LEEP  
-
-*option:R17UnderSlab+edge:value:1 = BsmFlrR17
-*option:R17UnderSlab+edge:value:2 = 52		! SCB_25 Configuration number for SOG insulation below slab without skirt
-*option:R17UnderSlab+edge:value:3 = 2.99  ! Wall+Floor RSI
-*option:R17UnderSlab+edge:cost:total   = 735     ! BC-LEEP  
+*option:GenericFoundationSlab:value:1    = GenFdnSlb
+*option:GenericFoundationSlab:cost:total = 0
+*option:GenericFoundationSlab:alias = 1800
 
 *attribute:end
 
