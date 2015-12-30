@@ -1597,6 +1597,7 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DHWSystem/ )
                if ( tag =~ /Opt-H2K-Fuel/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary"
                   if ( h2kElements[locationText].attributes["pilotEnergy"] == nil )
                      if ( value != 1 ) # Not electricity
                         h2kElements[locationText].add_attribute("pilotEnergy", "0")
