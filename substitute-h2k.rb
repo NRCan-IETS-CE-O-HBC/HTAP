@@ -254,6 +254,10 @@ def processFile(filespec)
    $versionBuild_H2K = h2kElements[locationText].attributes["build"]
 
    windowFacingH2K = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+
+   # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change (further down)!
+   config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
+   (configType, configSubType, fndTypes) = config.split('_')
    
    $gChoiceOrder.each do |choiceEntry|
       if ( $gOptions[choiceEntry]["type"] == "internal" )
@@ -1333,10 +1337,7 @@ def processFile(filespec)
             #    based on insulaion configuration type
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-H2KFoundation/ )
-               # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change!
-               config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
-               (configType, configSubType, fndTypes) = config.split('_')
-               locHouseStr = [ "", "", "", "" ]
+               locHouseStr = [ "", "" ]
                
                if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
                   # Set the configuration type for the fnd types specified (A=All)
@@ -1355,13 +1356,26 @@ def processFile(filespec)
                         locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                         locHouseStr[1] = "HouseFile/House/Components/Walkout/Configuration"
                      elsif ( configType =~ /^S/ )
-                        locHouseStr[2] = "HouseFile/House/Components/Crawlspace/Configuration"
-                        locHouseStr[3] = "HouseFile/House/Components/Slab/Configuration"
+                        locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
+                        locHouseStr[1] = "HouseFile/House/Components/Slab/Configuration"
                      end
                   end
                   locHouseStr.each do |locStr|
                      if ( locStr != "" )
                         h2kElements.each(locStr) do |element| 
+                           # Use the existing configuration type to determine if a new XML section req'd
+                           existConfigType = element.attributes["type"]
+                           if ( existConfigType.match('N', 3) && !configType.match('N', 3) )
+                              # Add missing XML section to Floor for "AddedToSlab"
+                              addMissingAddedToSlab(h2kElements, locStr.sub(/Configuration/, ''))
+                           elsif ( existConfigType.match('E', 2) && !configType.match('E', 2) )
+                              # Add missing XML section to Wall for "InteriorAddedInsulation"
+                              addMissingInteriorAddedInsulation(h2kElements, locStr.sub(/Configuration/, ''))
+                           elsif ( existConfigType.match('I', 2) && !configType.match('I', 2) )
+                              # Add missing XML section to Wall for "ExteriorAddedInsulation"
+                              addMissingExteriorAddedInsulation(h2kElements, locStr.sub(/Configuration/, ''))
+                           end
+                           # Change existing configutaion values to match choice
                            element.attributes["type"] = configType
                            element.attributes["subtype"] = configSubType
                            element.text = configType + "_" + configSubType
@@ -1891,6 +1905,77 @@ def processFile(filespec)
    newXMLFile = File.open(filespec, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
+end
+
+# =========================================================================================
+#  Add missing "AddedToSlab" section to Floor Construction of appropriate fnd
+# =========================================================================================
+def addMissingAddedToSlab(elements, locationStr)
+   # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
+   # "Walkout", "Crawlspace" or "Slab"
+   locationText = locationStr + "Floor/Construction"
+   if ( elements[locationText] != nil )
+      # This should always be the case!
+      elements[locationText].add_element("AddedToSlab")
+      locationText += "/AddedToSlab"
+      elements[locationText].attributes["rValue"] = "0"
+      elements[locationText].attributes["nominalInsulation"] = "0"
+      elements[locationText].text = "User specified"
+   else
+      fatalerror( "Fatal Error! #{locationText} does not exist!" )
+   end
+end
+
+# =========================================================================================
+#  Add missing "InteriorAddedInsulation" section to Wall Construction of appropriate fnd
+# =========================================================================================
+def addMissingInteriorAddedInsulation(elements, locationStr)
+   # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
+   # "Walkout", "Crawlspace" or "Slab"
+   locationText = locationStr + "Wall/Construction"
+   if ( elements[locationText] != nil )
+      # This should always be the case!
+      elements[locationText].add_element("InteriorAddedInsulation")
+      locationText += "/InteriorAddedInsulation"
+      elements[locationText].attributes["nominalInsulation"] = "0"
+      elements[locationText].add_element("Description")
+      elements[locationText].add_element("Composite")
+      locationText += "/Composite"
+      elements[locationText].add_element("Section")
+      locationText += "/Section"
+      elements[locationText].attributes["rank"] = "1"
+      elements[locationText].attributes["percentage"] = "100"
+      elements[locationText].attributes["rsi"] = "0"
+      elements[locationText].attributes["nominalRsi"] = "0"
+   else
+      fatalerror( "Fatal Error! #{locationText} does not exist!" )
+   end
+end
+
+# =========================================================================================
+#  Add missing "ExteriorAddedInsulation" section to Wall Construction of appropriate fnd
+# =========================================================================================
+def addMissingExteriorAddedInsulation(elements, locationStr)
+   # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
+   # "Walkout", "Crawlspace" or "Slab"
+   locationText = locationStr + "Wall/Construction"
+   if ( elements[locationText] != nil )
+      # This should always be the case!
+      elements[locationText].add_element("ExteriorAddedInsulation")
+      locationText += "/ExteriorAddedInsulation"
+      elements[locationText].attributes["nominalInsulation"] = "0"
+      elements[locationText].add_element("Description")
+      elements[locationText].add_element("Composite")
+      locationText += "/Composite"
+      elements[locationText].add_element("Section")
+      locationText += "/Section"
+      elements[locationText].attributes["rank"] = "1"
+      elements[locationText].attributes["percentage"] = "100"
+      elements[locationText].attributes["rsi"] = "0"
+      elements[locationText].attributes["nominalRsi"] = "0"
+   else
+      fatalerror( "Fatal Error! #{locationText} does not exist!" )
+   end
 end
 
 # =========================================================================================

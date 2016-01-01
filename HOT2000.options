@@ -2719,168 +2719,144 @@ Whitehorse Wall Options (Code is R28)
 *option:GHG-bsm-1-RSI_0.66:value:3  = 0.6612
 *option:GHG-bsm-1-RSI_0.66:value:4  = 10
 *option:GHG-bsm-1-RSI_0.66:cost:total  =  0
-*option:GHG-bsm-1-RSI_0.66:alias  =222
 
 *option:GHG-bsm-2-RSI_0.68:value:1  = 0.0074
 *option:GHG-bsm-2-RSI_0.68:value:2  = 0.0006
 *option:GHG-bsm-2-RSI_0.68:value:3  = 0.6812
 *option:GHG-bsm-2-RSI_0.68:value:4  = 10
 *option:GHG-bsm-2-RSI_0.68:cost:total  =  0
-*option:GHG-bsm-2-RSI_0.68:alias  =222
 
 *option:GHG-bsm-3-RSI_0.58:value:1  = 0.0034
 *option:GHG-bsm-3-RSI_0.58:value:2  = 0.0002
 *option:GHG-bsm-3-RSI_0.58:value:3  = 0.5832
 *option:GHG-bsm-3-RSI_0.58:value:4  = 10
 *option:GHG-bsm-3-RSI_0.58:cost:total  =  0
-*option:GHG-bsm-3-RSI_0.58:alias  =222
 
 *option:GHG-bsm-4-RSI_0.83:value:1  = 0.0139
 *option:GHG-bsm-4-RSI_0.83:value:2  = 0.0001
 *option:GHG-bsm-4-RSI_0.83:value:3  = 0.8324
 *option:GHG-bsm-4-RSI_0.83:value:4  = 2
 *option:GHG-bsm-4-RSI_0.83:cost:total  =  0
-*option:GHG-bsm-4-RSI_0.83:alias  =222
 
 *option:GHG-bsm-5-RSI_0.86:value:1  = 0.0146
 *option:GHG-bsm-5-RSI_0.86:value:2  = 0.0013
 *option:GHG-bsm-5-RSI_0.86:value:3  = 0.8596
 *option:GHG-bsm-5-RSI_0.86:value:4  = 2
 *option:GHG-bsm-5-RSI_0.86:cost:total  =  0
-*option:GHG-bsm-5-RSI_0.86:alias  =222
 
 *option:GHG-bsm-6-RSI_0.77:value:1  = 0.0106
 *option:GHG-bsm-6-RSI_0.77:value:2  = 0.002
 *option:GHG-bsm-6-RSI_0.77:value:3  = 0.7652
 *option:GHG-bsm-6-RSI_0.77:value:4  = 2
 *option:GHG-bsm-6-RSI_0.77:cost:total  =  0
-*option:GHG-bsm-6-RSI_0.77:alias  =222
 
 *option:GHG-bsm-7-RSI_1.66:value:1  = 0.0448
 *option:GHG-bsm-7-RSI_1.66:value:2  = 0.0182
 *option:GHG-bsm-7-RSI_1.66:value:3  = 1.6552
 *option:GHG-bsm-7-RSI_1.66:value:4  = 2
 *option:GHG-bsm-7-RSI_1.66:cost:total  =  0
-*option:GHG-bsm-7-RSI_1.66:alias  =222
 
 *option:GHG-bsm-8-RSI_1.66:value:1  = 0.0448
 *option:GHG-bsm-8-RSI_1.66:value:2  = 0.02
 *option:GHG-bsm-8-RSI_1.66:value:3  = 1.6612
 *option:GHG-bsm-8-RSI_1.66:value:4  = 2
 *option:GHG-bsm-8-RSI_1.66:cost:total  =  0
-*option:GHG-bsm-8-RSI_1.66:alias  =222
 
 *option:GHG-bsm-9-RSI_1.53:value:1  = 0.0391
 *option:GHG-bsm-9-RSI_1.53:value:2  = 0.0214
 *option:GHG-bsm-9-RSI_1.53:value:3  = 1.5252
 *option:GHG-bsm-9-RSI_1.53:value:4  = 2
 *option:GHG-bsm-9-RSI_1.53:cost:total  =  0
-*option:GHG-bsm-9-RSI_1.53:alias  =222
 
 *option:GHG-bsm-10-RSI_1.72:value:1  = 0.047
 *option:GHG-bsm-10-RSI_1.72:value:2  = 0.0218
 *option:GHG-bsm-10-RSI_1.72:value:3  = 1.72
 *option:GHG-bsm-10-RSI_1.72:value:4  = 2
 *option:GHG-bsm-10-RSI_1.72:cost:total  =  0
-*option:GHG-bsm-10-RSI_1.72:alias  =222
 
 *option:GHG-bsm-11-RSI_1.67:value:1  = 0.0448
 *option:GHG-bsm-11-RSI_1.67:value:2  = 0.0236
 *option:GHG-bsm-11-RSI_1.67:value:3  = 1.6732
 *option:GHG-bsm-11-RSI_1.67:value:4  = 2
 *option:GHG-bsm-11-RSI_1.67:cost:total  =  0
-*option:GHG-bsm-11-RSI_1.67:alias  =222
 
 *option:GHG-bsm-12-RSI_1.69:value:1  = 0.0448
 *option:GHG-bsm-12-RSI_1.69:value:2  = 0.0294
 *option:GHG-bsm-12-RSI_1.69:value:3  = 1.6924
 *option:GHG-bsm-12-RSI_1.69:value:4  = 2
 *option:GHG-bsm-12-RSI_1.69:cost:total  =  0
-*option:GHG-bsm-12-RSI_1.69:alias  =222
 
 *option:GHG-bsm-13-RSI_1.75:value:1  = 0.047
 *option:GHG-bsm-13-RSI_1.75:value:2  = 0.0304
 *option:GHG-bsm-13-RSI_1.75:value:3  = 1.7488
 *option:GHG-bsm-13-RSI_1.75:value:4  = 72
 *option:GHG-bsm-13-RSI_1.75:cost:total  =  0
-*option:GHG-bsm-13-RSI_1.75:alias  =222
 
 *option:GHG-bsm-14-RSI_1.8:value:1  = 0.0488
 *option:GHG-bsm-14-RSI_1.8:value:2  = 0.033
 *option:GHG-bsm-14-RSI_1.8:value:3  = 1.8012
 *option:GHG-bsm-14-RSI_1.8:value:4  = 72
 *option:GHG-bsm-14-RSI_1.8:cost:total  =  0
-*option:GHG-bsm-14-RSI_1.8:alias  =222
 
 *option:GHG-bsm-15-RSI_1.98:value:1  = 0.0564
 *option:GHG-bsm-15-RSI_1.98:value:2  = 0.0326
 *option:GHG-bsm-15-RSI_1.98:value:3  = 1.9848
 *option:GHG-bsm-15-RSI_1.98:value:4  = 72
 *option:GHG-bsm-15-RSI_1.98:cost:total  =  0
-*option:GHG-bsm-15-RSI_1.98:alias  =222
 
 *option:GHG-bsm-16-RSI_2.95:value:1  = 0.0916
 *option:GHG-bsm-16-RSI_2.95:value:2  = 0.0621
 *option:GHG-bsm-16-RSI_2.95:value:3  = 2.9456
 *option:GHG-bsm-16-RSI_2.95:value:4  = 72
 *option:GHG-bsm-16-RSI_2.95:cost:total  =  0
-*option:GHG-bsm-16-RSI_2.95:alias  =222
 
 *option:GHG-bsm-17-RSI_2.95:value:1  = 0.0916
 *option:GHG-bsm-17-RSI_2.95:value:2  = 0.0621
 *option:GHG-bsm-17-RSI_2.95:value:3  = 2.9456
 *option:GHG-bsm-17-RSI_2.95:value:4  = 72
 *option:GHG-bsm-17-RSI_2.95:cost:total  =  0
-*option:GHG-bsm-17-RSI_2.95:alias  =222
 
 *option:GHG-bsm-18-RSI_2.95:value:1  = 0.0916
 *option:GHG-bsm-18-RSI_2.95:value:2  = 0.0621
 *option:GHG-bsm-18-RSI_2.95:value:3  = 2.9456
 *option:GHG-bsm-18-RSI_2.95:value:4  = 72
 *option:GHG-bsm-18-RSI_2.95:cost:total  =  0
-*option:GHG-bsm-18-RSI_2.95:alias  =222
 
 *option:GHG-bsm-19-RSI_3.73:value:1  = 0.1237
 *option:GHG-bsm-19-RSI_3.73:value:2  = 0.0621
 *option:GHG-bsm-19-RSI_3.73:value:3  = 3.7288
 *option:GHG-bsm-19-RSI_3.73:value:4  = 72
 *option:GHG-bsm-19-RSI_3.73:cost:total  =  0
-*option:GHG-bsm-19-RSI_3.73:alias  =222
 
 *option:GHG-bsm-20-RSI_3.73:value:1  = 0.1237
 *option:GHG-bsm-20-RSI_3.73:value:2  = 0.0621
 *option:GHG-bsm-20-RSI_3.73:value:3  = 3.7288
 *option:GHG-bsm-20-RSI_3.73:value:4  = 72
 *option:GHG-bsm-20-RSI_3.73:cost:total  =  0
-*option:GHG-bsm-20-RSI_3.73:alias  =222
 
 *option:GHG-bsm-21-RSI_3.73:value:1  = 0.1237
 *option:GHG-bsm-21-RSI_3.73:value:2  = 0.0621
 *option:GHG-bsm-21-RSI_3.73:value:3  = 3.7288
 *option:GHG-bsm-21-RSI_3.73:value:4  = 72
 *option:GHG-bsm-21-RSI_3.73:cost:total  =  0
-*option:GHG-bsm-21-RSI_3.73:alias  =222
 
 *option:GHG-bsm-22-RSI_5.46:value:1  = 0.1867
 *option:GHG-bsm-22-RSI_5.46:value:2  = 0.1183
 *option:GHG-bsm-22-RSI_5.46:value:3  = 5.456
 *option:GHG-bsm-22-RSI_5.46:value:4  = 72
 *option:GHG-bsm-22-RSI_5.46:cost:total  =  0
-*option:GHG-bsm-22-RSI_5.46:alias  =222
 
 *option:GHG-bsm-23-RSI_5.46:value:1  = 0.1867
 *option:GHG-bsm-23-RSI_5.46:value:2  = 0.1183
 *option:GHG-bsm-23-RSI_5.46:value:3  = 5.456
 *option:GHG-bsm-23-RSI_5.46:value:4  = 72
 *option:GHG-bsm-23-RSI_5.46:cost:total  =  0
-*option:GHG-bsm-23-RSI_5.46:alias  =222
 
 *option:GHG-bsm-24-RSI_5.46:value:1  = 0.1867
 *option:GHG-bsm-24-RSI_5.46:value:2  = 0.1183
 *option:GHG-bsm-24-RSI_5.46:value:3  = 5.456
 *option:GHG-bsm-24-RSI_5.46:value:4  = 72
 *option:GHG-bsm-24-RSI_5.46:cost:total  =  0
-*option:GHG-bsm-24-RSI_5.46:alias  =222
 
 *attribute:end
 
@@ -2895,7 +2871,6 @@ Whitehorse Wall Options (Code is R28)
 
 *option:GenericFoundationWall:value:1    = GenFdnWal
 *option:GenericFoundationWall:cost:total = 0
-*option:GenericFoundationWall:alias = 1800
 
 *attribute:end
 
@@ -2909,7 +2884,6 @@ Whitehorse Wall Options (Code is R28)
 
 *option:GenericFoundationSlab:value:1    = GenFdnSlb
 *option:GenericFoundationSlab:cost:total = 0
-*option:GenericFoundationSlab:alias = 1800
 
 *attribute:end
 

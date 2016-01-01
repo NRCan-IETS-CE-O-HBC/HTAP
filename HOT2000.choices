@@ -15,7 +15,7 @@ Opt-Location : Ottawa
 Opt-FuelCost : Ottawa08
 
 ! ACH substitutions
-Opt-ACH : ACH_1_5
+Opt-ACH : NA   !ACH_1_5
 
 Opt-Ceilings : CeilR40
 
@@ -26,7 +26,7 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : ExpFloorFoamed-R52
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  :  DoubleLowEHardCoatAirFill 
+Opt-CasementWindows  : DoubleLowEHardCoatAirFill 
 
 Opt-H2KFoundation : Rigid+BattR30-R10BSlab
 
@@ -47,7 +47,7 @@ Opt-RoofPitch : 6-12
 ! External (Opt-StandoffPV) and Internal model (Opt-H2K-PV) PV options.
 ! Substitute-h2k.rb will select external if both are specified!
 Opt-StandoffPV : NoPV      !SizedPV|8kW
-Opt-H2K-PV : MonoSi-50m2   !NA
+Opt-H2K-PV : MonoSi-50m2
 
 !---------------------------------------------------------------------------
 ! The following options don't do anything for HOT2000 but may be implemented
