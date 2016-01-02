@@ -482,6 +482,7 @@ def processFile(filespec)
                if ( tag =~ /Opt-ACH/ && value != "NA" )
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
                   h2kElements[locationText].attributes["airChangeRate"] = value
+                  h2kElements[locationText].attributes["isCalculated"] = "true"
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end

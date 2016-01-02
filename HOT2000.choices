@@ -15,7 +15,7 @@ Opt-Location : Ottawa
 Opt-FuelCost : Ottawa08
 
 ! ACH substitutions
-Opt-ACH : NA   !ACH_1_5
+Opt-ACH : ACH_1_5
 
 Opt-Ceilings : CeilR40
 
