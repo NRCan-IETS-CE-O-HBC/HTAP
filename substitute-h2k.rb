@@ -1341,7 +1341,7 @@ def processFile(filespec)
                locHouseStr = [ "", "" ]
                
                if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
-                  # Set the configuration type for the fnd types specified (A=All)
+                  # Set the configuration type for the fnd types specified in choice file
                   if ( fndTypes == "B" )
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                   elsif ( fndTypes == "W" )

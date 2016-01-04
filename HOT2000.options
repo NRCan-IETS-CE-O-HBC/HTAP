@@ -2652,9 +2652,12 @@ Whitehorse Wall Options (Code is R28)
 *attribute:end
 
 !--------------------------------------------------------------------------------------------
-! HOT2000 Foundations (does not use Opt-BasementWallInsulation or Opt-BasementSlabInsulation
+! HOT2000 Foundations (not using Opt-BasementWallInsulation, Opt-BasementSlabInsulation or
+!   the recently added Opt-BasementConfiguration. Some mapping between these may be required!
+!
 !   Use for all foundation types: Basement, Walkout, Crawlspace (SCx_x), Slab-On-Grade (SCx_x)
 !   Skips pony wall insulation for now (Dec 2015)
+!   There are combinations that could crash some H2K models. Be careful!
 !--------------------------------------------------------------------------------------------
 *attribute:start
 *attribute:name   = Opt-H2KFoundation
