@@ -5,6 +5,7 @@
 
 require 'rexml/document'
 require 'optparse'
+require 'timeout'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
@@ -2568,14 +2569,26 @@ def runsims( direction )
    optionSwitch = "-inp"
    fileToLoad = "..\\" + $h2kFileName
    
+   # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
+   # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
+   #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
+   #      re-trying a run)! 
+   maxRunTime = 30
    startRun = Time.now
-   if ( system(runThis, optionSwitch, fileToLoad) )      # Run HOT2000!
+   begin
+      Timeout.timeout(maxRunTime) do        # time out after maxRunTime seconds!
+         if ( system(runThis, optionSwitch, fileToLoad) )      # Run HOT2000!
+            endRun = Time.now
+            $runH2KTime = endRun - startRun
+            stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+         else
+            # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
+            fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
+         end
+      end
+   rescue
       endRun = Time.now
-      $runH2KTime = endRun - startRun
-      stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-   else
-      # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
-      fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
+      stream_out( "\n\n Timeout on H2K call after #{maxRunTime} seconds.\n" )
    end
    
    Dir.chdir( $gMasterPath )
@@ -2598,7 +2611,7 @@ def runsims( direction )
    # Copy simulation results to sim-output folder in master (for ERS number)
    # Note that most of the output is contained in the HOT2000 file in XML!
    if ( Dir.exist?("sim-output") )
-      if ( ! system("copy #{$run_path}\\Browse.rpt .\\sim-output\\") )
+      if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
          fatalerror(" Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
       else
          stream_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
@@ -3829,6 +3842,6 @@ fSUMMARY.close()
 
 endProcessTime = Time.now
 totalDiff = endProcessTime - startProcessTime
-stream_out( "\n Total processing time: #{totalDiff.round(2).to_s} seconds (H2K run: #{$runH2KTime.round(2).to_s} seconds)\n\n" )
+stream_out( "\n Total processing time: #{totalDiff.round(2)} seconds (H2K run: #{$runH2KTime.round(2)} seconds)\n\n" )
 
 $fLOG.close()
