@@ -3328,10 +3328,10 @@ Reflects southern Ontario costs
 *attribute:name    = Opt-HRVspec 
 *attribute:tag:1   = <Opt-HRVInputFile>
 *attribute:tag:2   = <Opt-CommentOutMVNT>
-*attribute:tag:3   = OPT-H2K-FlowReq
-*attribute:tag:4   = OPT-H2K-AirDistType  ! 1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable
-*attribute:tag:5   = OPT-H2K-OpSched      ! 1: Forced air heating ductwork, 2: Dedecated low volume ductwork, 3: 2 with transfer fans
-*attribute:tag:6   = OPT-H2K-HRVSupply
+*attribute:tag:3   = OPT-H2K-FlowReq      ! 1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable
+*attribute:tag:4   = OPT-H2K-AirDistType  ! 1: Forced air heating ductwork, 2: Dedecated low volume ductwork, 3: 2 with transfer fans
+*attribute:tag:5   = OPT-H2K-OpSched      ! User Specified minutes/day
+*attribute:tag:6   = OPT-H2K-HRVSupply    ! 
 *attribute:tag:7   = OPT-H2K-Rating1
 *attribute:tag:8   = OPT-H2K-Rating2
 *attribute:default = CEF_SPEC
@@ -3376,6 +3376,26 @@ Reflects southern Ontario costs
 *option:DisableMVNT:value:1    =  null
 *option:DisableMVNT:value:2    =  #
 *option:DisableMVNT:cost:total = 0
+
+*option:HRV_60:value:1 = HRV.vnt
+*option:HRV_60:value:2 = 
+*option:HRV_60:value:3 = 1     ! F326
+*option:HRV_60:value:4 = 1     ! Forced air heating ductwork
+*option:HRV_60:value:5 = 480   ! Min./Day
+*option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
+*option:HRV_60:value:7 = 60    ! Eff% @ Rating1
+*option:HRV_60:value:8 = 60    ! Eff% @ Rating2
+*option:HRV_60:cost:total = 1600
+
+*option:HRV_81:value:1 = HRV.vnt
+*option:HRV_81:value:2 = 
+*option:HRV_81:value:3 = 1     ! F326
+*option:HRV_81:value:4 = 1     ! Forced air heating ductwork
+*option:HRV_81:value:5 = 480   ! Min./Day
+*option:HRV_81:value:6 = 60    ! L/s (exhaust = supply)
+*option:HRV_81:value:7 = 81    ! Eff% @ Rating1
+*option:HRV_81:value:8 = 81    ! Eff% @ Rating2
+*option:HRV_81:cost:total = 3200
 
 *attribute:end 
 
