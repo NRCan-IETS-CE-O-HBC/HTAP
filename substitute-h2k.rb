@@ -1,7 +1,14 @@
 #!/usr/bin/env ruby
+# ************************************************************************************
 # substitute-h2k.rb
-
-# This is essentially a Ruby version of the substitute-h2k.rb script -- customized for HOT2000 runs.
+# Developed by Jeff Blake, CanmetENERGY-Ottawa, Natural Resources Canada
+# Created Nov 2015
+# Master maintained in Get Hub
+#
+# This is a Ruby version of the substitute-h2k.rb script customized for HOT2000 runs.
+# Can be used stand-alone or with GenOpt for parametric runs or optimizations of 
+# HOT2000 inputs.
+# ************************************************************************************
 
 require 'rexml/document'
 require 'optparse'
@@ -119,6 +126,7 @@ $gAvgEnergyHeatingFossil = 0
 $gAvgEnergyWaterHeatingElec = 0
 $gAvgEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
+$Locale = ""      # Weather location for current run
 
 # Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
@@ -243,7 +251,7 @@ def processFile(filespec)
       h2kCodeElements = get_elements_from_filename(h2kCodeFile)
    end
 
-   # Will contain XML elements for fuel cost file, if pt-Location is processed! 
+   # Will contain XML elements for fuel cost file, if Opt-Location is processed! 
    # Initialized here outside of Opt-Locations check to make scope broader
    h2kFuelElements = nil
 
@@ -279,6 +287,7 @@ def processFile(filespec)
             # Weather Location
             #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
+               $Locale = $gChoices["Opt-Location"] 
                if ( tag =~ /OPT-H2K-WTH-FILE/ && value != "NA" )
                   # Weather file to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather"
@@ -312,7 +321,7 @@ def processFile(filespec)
             # Fuel Costs
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FuelCost/ )
-               # HOT2000 Fuel costing data selections
+               # HOT2000 Fuel costing data selections (library file and fuel rates).
                if ( tag =~ /OPT-LibraryFile/ && value != "NA" )
                   # Fuel Cost file to use for HOT2000 run
                   locationText = "HouseFile/FuelCosts"
@@ -323,9 +332,12 @@ def processFile(filespec)
                   else
                      h2kElements[locationText].attributes["library"] = value
                      # Open weather file and read elements to use below. This assumes that this tag
-                     # always comes before the remainderof the weather location tags below!!
+                     # always comes before the remainder of the weather location tags below!!
                      h2kFuelElements = get_elements_from_filename(h2kWthFile)
                   end
+               # Need to set a flag to allow for following code to over-ride the normal matching of
+               # Weather location and Fuel costing. This could be used to evaluate different fuel rate
+               # structures in one weather region.
                elsif ( tag =~ /OPT-ElecName/ && value != "NA" )
                   locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
                   h2kElements[locationText].text = value
@@ -2628,11 +2640,6 @@ def postprocess( scaleData )
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
 
-   $Locale = $gChoices["Opt-Location"] 
-   if ( $Locale =~ /London/ || $Locale =~ /Windsor/ || $Locale =~ /ThunderBay/ )
-      $Locale = "Toronto"
-   end
-  
    if ( $gCustomCostAdjustment ) 
       $gRegionalCostAdj = $gCostAdjustmentFactor
    else

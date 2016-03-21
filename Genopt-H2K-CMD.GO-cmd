@@ -1,8 +1,9 @@
 /*
 
- GenOpt command file for general optimization run. Baseline.
+ Genopt-H2K-CMD.GO-cmd:  GenOpt command file for general optimization run. Baseline.
 
 */
+
 Vary{
 
    // ==========================================

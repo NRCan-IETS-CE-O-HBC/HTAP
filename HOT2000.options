@@ -1,4 +1,4 @@
-! Optimization substitutions 
+! HOT2000.options: Optimization substitutions file
 
 !-----------------------------------------------------------------------
 ! Placeholder for oreintation.  
@@ -81,6 +81,8 @@
 *option:Ottawa97:cost:total = 0
 
 ! Create new fuel cost entries that match the fuel cost data in substitute.pl
+
+
 
 *attribute:end
 
@@ -3385,7 +3387,7 @@ Reflects southern Ontario costs
 *option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
 *option:HRV_60:value:7 = 60    ! Eff% @ Rating1
 *option:HRV_60:value:8 = 60    ! Eff% @ Rating2
-*option:HRV_60:cost:total = 1600
+*option:HRV_60:cost:total = 0 ! Base for Buildability ($1600 over base with No HRV)
 
 *option:HRV_81:value:1 = HRV.vnt
 *option:HRV_81:value:2 = 
@@ -3395,7 +3397,7 @@ Reflects southern Ontario costs
 *option:HRV_81:value:6 = 60    ! L/s (exhaust = supply)
 *option:HRV_81:value:7 = 81    ! Eff% @ Rating1
 *option:HRV_81:value:8 = 81    ! Eff% @ Rating2
-*option:HRV_81:cost:total = 3200
+*option:HRV_81:cost:total = 1600 ! Incremental cost over Base with HRV_60
 
 *attribute:end 
 

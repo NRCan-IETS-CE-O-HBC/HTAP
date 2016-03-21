@@ -15,39 +15,39 @@ Opt-Location : Ottawa
 Opt-FuelCost : Ottawa08
 
 ! ACH substitutions
-Opt-ACH : ACH_1_5
+Opt-ACH : NA
 
-Opt-Ceilings : CeilR40
+Opt-Ceilings : NA
 
-Opt-MainWall : BaseR20                    ! This one, OR
+Opt-MainWall : NA                    ! This one, OR
 Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 
 ! Exposed floor
-Opt-ExposedFloor : ExpFloorFoamed-R52
+Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : DoubleLowEHardCoatAirFill 
+Opt-CasementWindows  : NA 
 
-Opt-H2KFoundation : Rigid+BattR30-R10BSlab
+Opt-H2KFoundation : NA  !Rigid+BattR30-R10BSlab
 
 ! Hot water reduction technologies (SDHW, DHWR) 
 Opt-DWHRandSDHW : NA    !none          
 
 ! Hot water system. Choices:
-Opt-DHWSystem : BaseDHW
+Opt-DHWSystem : NA   !BaseDHW
 
 ! HVAC system 
-Opt-HVACSystem  : basefurnace
+Opt-HVACSystem  : NA !basefurnace
 
 ! HRV spec 
-Opt-HRVspec : CEF_SPEC
+Opt-HRVspec : HRV_60
 
-Opt-RoofPitch : 6-12
+Opt-RoofPitch : NA   !6-12
 
 ! External (Opt-StandoffPV) and Internal model (Opt-H2K-PV) PV options.
 ! Substitute-h2k.rb will select external if both are specified!
 Opt-StandoffPV : NoPV      !SizedPV|8kW
-Opt-H2K-PV : MonoSi-50m2
+Opt-H2K-PV : NA   !MonoSi-50m2
 
 !---------------------------------------------------------------------------
 ! The following options don't do anything for HOT2000 but may be implemented
