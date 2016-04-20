@@ -2033,6 +2033,204 @@
 *option:retro_TripleLowESoftCoatArgFill:value:8 = TplLeScKry
 *option:retro_TripleLowESoftCoatArgFill:cost:total    = 32156
 
+
+!------------------------------------------------------------------------
+! Window specs that match HOT2000 window libraries
+!------------------------------------------------------------------------
+
+*option:HG-i89-Triple-B:value:1 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:2 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:3 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:4 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:5 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:6 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:7 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:8 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:WindowParams:name  = HG-i89-Triple-B
+*option:HG-i89-Triple-B:WindowParams:panes = 3 
+*option:HG-i89-Triple-B:WindowParams:SHGC  = 0.49
+*option:HG-i89-Triple-B:WindowParams:Uval  = 0.91
+*option:HG-i89-Triple-B:cost:total   = 0
+
+
+*option:HG-i89-Triple-A:value:1 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:2 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:3 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:4 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:5 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:6 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:7 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:8 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:WindowParams:name  = HG-i89-Triple-A
+*option:HG-i89-Triple-A:WindowParams:panes = 3 
+*option:HG-i89-Triple-A:WindowParams:SHGC  = 0.37
+*option:HG-i89-Triple-A:WindowParams:Uval  = 0.90
+*option:HG-i89-Triple-A:cost:total   = 0
+
+*option:LG-HP-Double:value:1 = LG-HP-Double
+*option:LG-HP-Double:value:2 = LG-HP-Double
+*option:LG-HP-Double:value:3 = LG-HP-Double
+*option:LG-HP-Double:value:4 = LG-HP-Double
+*option:LG-HP-Double:value:5 = LG-HP-Double
+*option:LG-HP-Double:value:6 = LG-HP-Double
+*option:LG-HP-Double:value:7 = LG-HP-Double
+*option:LG-HP-Double:value:8 = LG-HP-Double
+*option:LG-HP-Double:WindowParams:name  = LG-HP-Double
+*option:LG-HP-Double:WindowParams:panes = 2 
+*option:LG-HP-Double:WindowParams:SHGC  = 0.18
+*option:LG-HP-Double:WindowParams:Uval  = 1.27
+*option:LG-HP-Double:cost:total   = 0
+
+*option:MG-HP-Double:value:1 = MG-HP-Double
+*option:MG-HP-Double:value:2 = MG-HP-Double
+*option:MG-HP-Double:value:3 = MG-HP-Double
+*option:MG-HP-Double:value:4 = MG-HP-Double
+*option:MG-HP-Double:value:5 = MG-HP-Double
+*option:MG-HP-Double:value:6 = MG-HP-Double
+*option:MG-HP-Double:value:7 = MG-HP-Double
+*option:MG-HP-Double:value:8 = MG-HP-Double
+*option:MG-HP-Double:WindowParams:name  = MG-HP-Double
+*option:MG-HP-Double:WindowParams:panes = 2 
+*option:MG-HP-Double:WindowParams:SHGC  = 0.33
+*option:MG-HP-Double:WindowParams:Uval  = 1.28
+*option:MG-HP-Double:cost:total   = 0
+
+*option:MG-i89-Double:value:1 = MG-i89-Double
+*option:MG-i89-Double:value:2 = MG-i89-Double
+*option:MG-i89-Double:value:3 = MG-i89-Double
+*option:MG-i89-Double:value:4 = MG-i89-Double
+*option:MG-i89-Double:value:5 = MG-i89-Double
+*option:MG-i89-Double:value:6 = MG-i89-Double
+*option:MG-i89-Double:value:7 = MG-i89-Double
+*option:MG-i89-Double:value:8 = MG-i89-Double
+*option:MG-i89-Double:WindowParams:name  = MG-i89-Double
+*option:MG-i89-Double:WindowParams:panes = 2 
+*option:MG-i89-Double:WindowParams:SHGC  = 0.28
+*option:MG-i89-Double:WindowParams:Uval  = 1.25
+*option:MG-i89-Double:cost:total   = 0
+
+*option:HG-HP-Triple:value:1 = HG-HP-Triple
+*option:HG-HP-Triple:value:2 = HG-HP-Triple
+*option:HG-HP-Triple:value:3 = HG-HP-Triple
+*option:HG-HP-Triple:value:4 = HG-HP-Triple
+*option:HG-HP-Triple:value:5 = HG-HP-Triple
+*option:HG-HP-Triple:value:6 = HG-HP-Triple
+*option:HG-HP-Triple:value:7 = HG-HP-Triple
+*option:HG-HP-Triple:value:8 = HG-HP-Triple
+*option:HG-HP-Triple:WindowParams:name  = HG-HP-Triple
+*option:HG-HP-Triple:WindowParams:panes = 3
+*option:HG-HP-Triple:WindowParams:SHGC  = 0.44
+*option:HG-HP-Triple:WindowParams:Uval  = 0.97
+*option:HG-HP-Triple:cost:total   = 0
+
+*option:HG-VHG-Double:value:1 = HG-VHG-Double
+*option:HG-VHG-Double:value:2 = HG-VHG-Double
+*option:HG-VHG-Double:value:3 = HG-VHG-Double
+*option:HG-VHG-Double:value:4 = HG-VHG-Double
+*option:HG-VHG-Double:value:5 = HG-VHG-Double
+*option:HG-VHG-Double:value:6 = HG-VHG-Double
+*option:HG-VHG-Double:value:7 = HG-VHG-Double
+*option:HG-VHG-Double:value:8 = HG-VHG-Double
+*option:HG-VHG-Double:WindowParams:name  = HG-VHG-Double
+*option:HG-VHG-Double:WindowParams:panes = 2
+*option:HG-VHG-Double:WindowParams:SHGC  = 0.59
+*option:HG-VHG-Double:WindowParams:Uval  = 1.53
+*option:HG-VHG-Double:cost:total   = 0
+
+*option:HG-avg-Double:value:1 = HG-avg-Double
+*option:HG-avg-Double:value:2 = HG-avg-Double
+*option:HG-avg-Double:value:3 = HG-avg-Double
+*option:HG-avg-Double:value:4 = HG-avg-Double
+*option:HG-avg-Double:value:5 = HG-avg-Double
+*option:HG-avg-Double:value:6 = HG-avg-Double
+*option:HG-avg-Double:value:7 = HG-avg-Double
+*option:HG-avg-Double:value:8 = HG-avg-Double
+*option:HG-avg-Double:WindowParams:name  = HG-avg-Double
+*option:HG-avg-Double:WindowParams:panes = 2
+*option:HG-avg-Double:WindowParams:SHGC  = 0.51
+*option:HG-avg-Double:WindowParams:Uval  = 1.65
+*option:HG-avg-Double:cost:total   = 0
+
+
+*option:HG-avg-Triple:value:1 = HG-avg-Triple
+*option:HG-avg-Triple:value:2 = HG-avg-Triple
+*option:HG-avg-Triple:value:3 = HG-avg-Triple
+*option:HG-avg-Triple:value:4 = HG-avg-Triple
+*option:HG-avg-Triple:value:5 = HG-avg-Triple
+*option:HG-avg-Triple:value:6 = HG-avg-Triple
+*option:HG-avg-Triple:value:7 = HG-avg-Triple
+*option:HG-avg-Triple:value:8 = HG-avg-Triple
+*option:HG-avg-Triple:WindowParams:name  = HG-avg-Triple
+*option:HG-avg-Triple:WindowParams:panes = 3
+*option:HG-avg-Triple:WindowParams:SHGC  = 0.44
+*option:HG-avg-Triple:WindowParams:Uval  = 1.08
+*option:HG-avg-Triple:cost:total   = 0   
+
+
+*option:LG-avg-Triple:value:1 = LG-avg-Triple
+*option:LG-avg-Triple:value:2 = LG-avg-Triple
+*option:LG-avg-Triple:value:3 = LG-avg-Triple
+*option:LG-avg-Triple:value:4 = LG-avg-Triple
+*option:LG-avg-Triple:value:5 = LG-avg-Triple
+*option:LG-avg-Triple:value:6 = LG-avg-Triple
+*option:LG-avg-Triple:value:7 = LG-avg-Triple
+*option:LG-avg-Triple:value:8 = LG-avg-Triple
+*option:LG-avg-Triple:WindowParams:name  = LG-avg-Triple
+*option:LG-avg-Triple:WindowParams:panes = 3
+*option:LG-avg-Triple:WindowParams:SHGC  = 0.17
+*option:LG-avg-Triple:WindowParams:Uval  = 1.14
+*option:LG-avg-Triple:cost:total   = 0   
+
+
+*option:LG-i89-Triple-B:value:1 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:2 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:3 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:4 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:5 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:6 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:7 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:8 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:WindowParams:name  = LG-i89-Triple-B
+*option:LG-i89-Triple-B:WindowParams:panes = 3 
+*option:LG-i89-Triple-B:WindowParams:SHGC  = 0.18
+*option:LG-i89-Triple-B:WindowParams:Uval  = 0.85
+*option:LG-i89-Triple-B:cost:total   = 0
+
+*option:LG-i89-Triple-A:value:1 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:2 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:3 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:4 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:5 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:6 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:7 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:8 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:WindowParams:name  = LG-i89-Triple-A
+*option:LG-i89-Triple-A:WindowParams:panes = 3 
+*option:LG-i89-Triple-A:WindowParams:SHGC  = 0.14
+*option:LG-i89-Triple-A:WindowParams:Uval  = 0.92
+*option:LG-i89-Triple-A:cost:total   = 0
+
+
+*option:LG-HP-Triple:value:1 = LG-HP-Triple
+*option:LG-HP-Triple:value:2 = LG-HP-Triple
+*option:LG-HP-Triple:value:3 = LG-HP-Triple
+*option:LG-HP-Triple:value:4 = LG-HP-Triple
+*option:LG-HP-Triple:value:5 = LG-HP-Triple
+*option:LG-HP-Triple:value:6 = LG-HP-Triple
+*option:LG-HP-Triple:value:7 = LG-HP-Triple
+*option:LG-HP-Triple:value:8 = LG-HP-Triple
+*option:LG-HP-Triple:WindowParams:name  = LG-HP-Triple
+*option:LG-HP-Triple:WindowParams:panes = 3
+*option:LG-HP-Triple:WindowParams:SHGC  = 0.18
+*option:LG-HP-Triple:WindowParams:Uval  = 0.96
+*option:LG-HP-Triple:cost:total   = 0
+
+
+
+
+
+
+
 *attribute:end
 
 
@@ -3036,7 +3234,7 @@ Whitehorse Wall Options (Code is R28)
 *option:basefurnace:value:11 = 2       ! Calculated
 *option:basefurnace:value:12 = NA      ! Capacity value will be calculated
 *option:basefurnace:value:13 = true    ! SS
-*option:basefurnace:value:14 = 75      ! Efficiency
+*option:basefurnace:value:14 = 94      ! Efficiency
 *option:basefurnace:value:15 = 1       ! Auto fan control
 *option:basefurnace:value:16 = false   ! EE motor
 *option:basefurnace:cost:total = 0
@@ -3047,6 +3245,16 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-ecm:value:4 = 
 *option:gas-furnace-ecm:value:5 = 
 *option:gas-furnace-ecm:value:6 = shoulder-ideal.ctl
+*option:gas-furnace-ecm:value:7 = Furnace
+*option:gas-furnace-ecm:value:8 = AirConditioning
+*option:gas-furnace-ecm:value:9 = 2
+*option:gas-furnace-ecm:value:10 = 2       ! Spark ignition
+*option:gas-furnace-ecm:value:11 = 2       ! Calculated
+*option:gas-furnace-ecm:value:12 = NA      ! Capacity value will be calculated
+*option:gas-furnace-ecm:value:13 = true    ! SS
+*option:gas-furnace-ecm:value:14 = 94      ! Efficiency
+*option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
+*option:gas-furnace-ecm:value:16 = true    ! EE motor
 *option:gas-furnace-ecm:cost:total    = 500  ! based on quote from Patric
 
 *option:gas-furnace-psc:value:1 = basefurnace_AC-gas-psc-motor.hvac
@@ -3055,7 +3263,17 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-psc:value:4 = 
 *option:gas-furnace-psc:value:5 = 
 *option:gas-furnace-psc:value:6 = shoulder-ideal.ctl
-*option:gas-furnace-psc:cost:total    = 0 ! base for BC-LEEP
+*option:gas-furnace-psc:value:7 = Furnace
+*option:gas-furnace-psc:value:8 = AirConditioning
+*option:gas-furnace-psc:value:9 = 2
+*option:gas-furnace-psc:value:10 = 2       ! Spark ignition
+*option:gas-furnace-psc:value:11 = 2       ! Calculated
+*option:gas-furnace-psc:value:12 = NA      ! Capacity value will be calculated
+*option:gas-furnace-psc:value:13 = true    ! SS
+*option:gas-furnace-psc:value:14 = 94      ! Efficiency
+*option:gas-furnace-psc:value:15 = 1       ! Auto fan control
+*option:gas-furnace-psc:value:16 = false   ! EE motor
+*option:gas-furnace-psc:cost:total = 0     ! base for BC-LEEP
 
 *option:13kW-furnace-ecm:value:1 = smallfurnace_AC-gas-ecm-motor.hvac
 *option:13kW-furnace-ecm:value:2 = #-no-GSHP-file
