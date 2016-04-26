@@ -76,6 +76,9 @@ $gEnergyMixedWood = 0
 $gEnergySoftWood = 0
 $gEnergyTotalWood = 0
 
+$LapsedTime     = 0 
+$NumTries       = 0 
+
 $gTotalBaseCost = 0
 $gUtilityBaseCost = 0 
 $PVTarrifDollarsPerkWh = 0.10
@@ -2118,6 +2121,8 @@ end
 # =========================================================================================
 def createH2KSysType1( elements, sysType1Name )
    locationText = "HouseFile/House/HeatingCooling/Type1"
+ 
+   
    elements[locationText].add_element(sysType1Name)
    if ( sysType1Name == "Baseboards" )
       locationText = "HouseFile/House/HeatingCooling/Type1/Baseboards"
@@ -2333,11 +2338,16 @@ end   # createH2KSysType1
 # Procedure to create a new H2K system Type 2 in the XML house file. Check done external.
 # =========================================================================================
 def createH2KSysType2( elements, sysType2Name )
+ 
+
    locationText = "HouseFile/House/HeatingCooling/Type2"
    elements[locationText].add_element(sysType2Name)
    elements[locationText].attributes["shadingInF280Cooling"] = "AccountedFor"
-   
+
    if ( sysType2Name == "AirHeatPump" )
+   
+  
+   
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
       elements[locationText].add_element("EquipmentInformation")
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/EquipmentInformation"
@@ -2378,8 +2388,8 @@ def createH2KSysType2( elements, sysType2Name )
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
       elements[locationText].add_element("Temperature")
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
-      elements[locationText].add_element("CutOffType")
-      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/CutOffType"
+      elements[locationText].add_element("CutoffType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/CutoffType"
       elements[locationText].attributes["code"] = "1"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
@@ -2565,6 +2575,8 @@ end   # createH2KSysType2
 # =========================================================================================
 def runsims( direction )
 
+
+
    $RotationAngle = $angles[direction]
 
    # Save rotation angle for reporting
@@ -2587,21 +2599,57 @@ def runsims( direction )
    #      re-trying a run)! 
    maxRunTime = 30
    startRun = Time.now
-   begin
+   endRun = 0 
+   # AF: Extra counters to count how many times we've tried HOT2000.
+   keepTrying = true 
+   tries = 0
+   # This loop actually calls hot2000!
+   pid = 0 
+   begin      
       Timeout.timeout(maxRunTime) do        # time out after maxRunTime seconds!
-         if ( system(runThis, optionSwitch, fileToLoad) )      # Run HOT2000!
-            endRun = Time.now
-            $runH2KTime = endRun - startRun
-            stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-         else
-            # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
-            fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
-         end
+         
+         while keepTrying do                # within that loop, keep trying for up to 10 times
+   
+           # Run HOT2000! 
+           pid = Process.spawn( runThis,optionSwitch, fileToLoad) 
+           stream_out ("\n Invoking HOT2000 (PID #{pid})...")
+           Process.wait pid
+           status= $?.exitstatus      
+           stream_out("\n Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+          
+           
+           if status == 0 
+              endRun = Time.now
+              $runH2KTime = endRun - startRun  
+              stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+              keepTrying = false           # Successful run - don't try agian 
+           elsif  tries < 10 #0               # Unsuccessful run - try again for up to 10 times     
+              tries = tries + 1      
+           else
+              # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
+              fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
+              keepTrying = false   # Give up.
+           end
+           
+           # Forceably kill process if needed
+           begin 
+             Process.kill('KILL', pid)
+           rescue 
+           end 
+           sleep(1)
+           
+         end 
       end
    rescue
       endRun = Time.now
+      $runH2KTime = endRun - startRun  
       stream_out( "\n\n Timeout on H2K call after #{maxRunTime} seconds.\n" )
+      sleep(1)
    end
+
+   $NumTries = tries + 1 
+   
+   
    
    Dir.chdir( $gMasterPath )
    debug_out ("\n Moved to path: #{Dir.getwd()}\n") 
@@ -2708,13 +2756,16 @@ def postprocess( scaleData )
    fBrowseRpt.close()
 
    $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
-   
-   # Total energy: H2K value in GJ
+
+
    locationText = "HouseFile/AllResults/Results/Annual/Consumption"
+   
    $gAvgEnergy_Total += h2kPostElements[locationText].attributes["total"].to_f * scaleData
    
    locationText = "HouseFile/AllResults/Results/Annual/Consumption/SpaceHeating"
    $gAvgEnergyHeatingGJ += h2kPostElements[locationText].attributes["total"].to_f * scaleData
+   
+ 
    
    locationText = "HouseFile/AllResults/Results/Annual/Consumption/Electrical"
    $gAvgEnergyCoolingGJ += h2kPostElements[locationText].attributes["airConditioning"].to_f * scaleData
@@ -3844,6 +3895,10 @@ fSUMMARY.write( "PEAK-Cooling-W    =  #{$gPeakCoolingLoadW.round(1)}\n" )
 fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity.round(1)}\n" )
 
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
+fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
+fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+
+
 
 fSUMMARY.close() 
 
