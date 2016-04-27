@@ -2225,6 +2225,19 @@
 *option:LG-HP-Triple:WindowParams:Uval  = 0.96
 *option:LG-HP-Triple:cost:total   = 0
 
+*option:LG-avg-Double:value:1 = LG-avg-Double
+*option:LG-avg-Double:value:2 = LG-avg-Double
+*option:LG-avg-Double:value:3 = LG-avg-Double
+*option:LG-avg-Double:value:4 = LG-avg-Double
+*option:LG-avg-Double:value:5 = LG-avg-Double
+*option:LG-avg-Double:value:6 = LG-avg-Double
+*option:LG-avg-Double:value:7 = LG-avg-Double
+*option:LG-avg-Double:value:8 = LG-avg-Double
+*option:LG-avg-Double:WindowParams:name  = LG-avg-Double
+*option:LG-avg-Double:WindowParams:panes = 2
+*option:LG-avg-Double:WindowParams:SHGC  = 0.19
+*option:LG-avg-Double:WindowParams:Uval  = 1.60
+*option:LG-avg-Double:cost:total   = 0   
 
 
 
@@ -3183,26 +3196,39 @@ Whitehorse Wall Options (Code is R28)
 ! HVAC
 !-----------------------------------------------------------------------
 *attribute:start
-*attribute:name    = Opt-HVACSystem
-*attribute:tag:1   = <Opt-HVACSystem>
-*attribute:tag:2   = <Opt-HideGSHPfile>
-*attribute:tag:3   = <OPT-VENTisIMS>
-*attribute:tag:4   = <OPT-VENTisHRV>
-*attribute:tag:5   = <OPT-WHisIMS>
-*attribute:tag:6   = <Opt-HVACCtlFile>
-*attribute:tag:7   = Opt-H2K-SysType1     ! Baseboards, Furnace, Boiler, ComboHeatDhw, P9
-*attribute:tag:8   = Opt-H2K-SysType2     ! None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning
-*attribute:tag:9   = Opt-H2K-Type1Fuel    ! 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
-*attribute:tag:10  = Opt-H2K-Type1EqpType ! Heating system equipment type --> depends on fuel and SysType1
-*attribute:tag:11  = Opt-H2K-Type1CapOpt  ! 1:UserSpec, 2:Calculated
-*attribute:tag:12  = Opt-H2K-Type1CapVal
-*attribute:tag:13  = Opt-H2K-Type1EffType ! true=SS, false=AFUE
-*attribute:tag:14  = Opt-H2K-Type1EffVal
-*attribute:tag:15  = Opt-H2K-Type1FanCtl  ! 1:Auto, 2:Continuous
-*attribute:tag:16  = Opt-H2K-Type1EEMotor ! true/false
+*attribute:name    = Opt-HVACSystem          ! System Name. 
+*attribute:tag:1   = <Opt-HVACSystem>        ! ESP-r: Flag to activate/deactvate IMS file 
+*attribute:tag:2   = <Opt-HideGSHPfile>      ! ESP-r: Flag to activate/deactvate GSHP file 
+*attribute:tag:3   = <OPT-VENTisIMS>         ! ESP-r: Flag to activate/deactvate IMS file 
+*attribute:tag:4   = <OPT-VENTisHRV>         ! ESP-r: Flag to activate/deactvate HRV file 
+*attribute:tag:5   = <OPT-WHisIMS>           ! ESP-r: Flag to activate/deactvate WH HRV file 
+*attribute:tag:6   = <Opt-HVACCtlFile>       ! ESP-r: Control File 
+*attribute:tag:7   = Opt-H2K-SysType1        ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9
+*attribute:tag:8   = Opt-H2K-SysType2        ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning
+*attribute:tag:9   = Opt-H2K-Type1Fuel       ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*attribute:tag:10  = Opt-H2K-Type1EqpType    ! H2K: Heating system equipment type --> depends on fuel and SysType1
+*attribute:tag:11  = Opt-H2K-Type1CapOpt     ! H2K: 1:UserSpec, 2:Calculated
+*attribute:tag:12  = Opt-H2K-Type1CapVal     ! H2K: Type 1: Capacity value. 
+*attribute:tag:13  = Opt-H2K-Type1EffType    ! H2K: Type 1: true=SS, false=AFUE
+*attribute:tag:14  = Opt-H2K-Type1EffVal     ! H2K: Type 1: Efficiency value (0->100)
+*attribute:tag:15  = Opt-H2K-Type1FanCtl     ! H2K: 1:Auto, 2:Continuous
+*attribute:tag:16  = Opt-H2K-Type1EEMotor    ! H2K: true/false
+*attribute:tag:17  = Opt-H2K-Type2CCaseH     ! H2K: Type2: CrankCaseHeater Value ? 
+*attribute:tag:18  = Opt-H2K-Type2Func       ! H2K: Type2: Function - ASHP :( 1 = Heating, 2 = Heating/Cooling  )
+*attribute:tag:19  = Opt-H2K-Type2Type       ! H2K: Type2: Type - ASHP :( 1 = Central split, 2=Central single pkg, 3= MiniSplit Ductless )
+                                             !                    WSHP : Nil 
+                                             !                    GSHP : Nil                    
+*attribute:tag:20  = Opt-H2K-Type2CapOpt     ! H2K: Type2: Capacity Option (1:UserSpec, 2:Calculated)
+*attribute:tag:21  = Opt-H2K-Type2CapVal     ! H2K: Type2: Capacity value (if specified?)
+*attribute:tag:22  = Opt-H2K-Type2HeatCOP    ! COP Efficiency in heating (0->4ish...)
+*attribute:tag:23  = Opt-H2K-Type2CoolCOP    ! COP Efficiency in cooling (0->4ish...)
+*attribute:tag:24  = Opt-H2K-Type2CutoffType ! Cut off type 1: balance point, 2: Restricted , 3 unrestricted 
+*attribute:tag:25  = Opt-H2K-Type2CutoffTemp ! Cut off temperature (oC)
+*attribute:tag:26  = Opt-H2K-CoolOperWindow  ! Operable window fraction for cooling (%, 0->100)
 *attribute:default  = NA
 
-*option:NA:value:1 = NA    ! For H2K Only
+*option:NA:value:1 = NA    ! For H2K Only - setting NA causes 
+                           ! substitute-h2k.rb to leave the hvac systems untouched
 *option:NA:value:2 = NA
 *option:NA:value:3 = NA
 *option:NA:value:4 = NA
@@ -3371,13 +3397,34 @@ Whitehorse Wall Options (Code is R28)
 *option:elec-baseboard-noAC:cost:total       = -3870
 
 
-*option:CCASHP:value:1 = CCASHPv2.hvac
-*option:CCASHP:value:2 = #-no-GSHP-file
-*option:CCASHP:value:3 = #No-IMS: 
-*option:CCASHP:value:4 = 
-*option:CCASHP:value:5 = 
-*option:CCASHP:value:6 =  shoulder-ideal.ctl
-*option:CCASHP:cost:total   = 9595          ! Does this reflect AC system savings?
+*option:CCASHP:value:1  = CCASHPv2.hvac         ! ESP-r: Flag to activate/deactvate IMS file             
+*option:CCASHP:value:2  = #-no-GSHP-file        ! ESP-r: Flag to activate/deactvate GSHP file     
+*option:CCASHP:value:3  = #No-IMS:              ! ESP-r: Flag to activate/deactvate IMS file     
+*option:CCASHP:value:4  =                       ! ESP-r: Flag to activate/deactvate HRV file     
+*option:CCASHP:value:5  =                       ! ESP-r: Flag to activate/deactvate WH HRV file     
+*option:CCASHP:value:6  = shoulder-ideal.ctl    ! ESP-r: Control File     
+*option:CCASHP:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:CCASHP:value:8  = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:CCASHP:value:9  =                       ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:CCASHP:value:10 =                       ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:CCASHP:value:11 =  2                    ! H2K: 1:UserSpec, 2:Calculated    
+*option:CCASHP:value:12 =  6                    ! H2K: Capacity value.     
+*option:CCASHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
+*option:CCASHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
+*option:CCASHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
+*option:CCASHP:value:16 = false                 ! H2K: ee-motor true/false   
+*option:CCASHP:value:17 = 0                     ! H2K: Crankcase heater?
+*option:CCASHP:value:18 = 2                    ! Function heating/cooling 
+*option:CCASHP:value:19 = 1                     ! Type: central split 
+*option:CCASHP:value:20 = 2                     ! Capacity: Calculated 
+*option:CCASHP:value:21 =                       ! Capacity value (W)
+*option:CCASHP:value:22 = 3                     ! Heating COP 
+*option:CCASHP:value:23 = 4.3                   ! Cooling COP 
+*option:CCASHP:value:24 = 2                     ! Cut off type : Restricted 
+*option:CCASHP:value:25 = -20                   ! Cut off temp 
+*option:CCASHP:value:26 = 25                    ! Operable window area
+*option:CCASHP:cost:total   = 9595                 
+
 
 *option:CCASHP-ecm:value:1 = CCASHPv2-ecm-motor.hvac
 *option:CCASHP-ecm:value:2 = #-no-GSHP-file
