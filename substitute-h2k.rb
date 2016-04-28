@@ -1662,6 +1662,8 @@ def processFile(filespec)
                
             # Heating & Cooling Systems (Type 1 & 2)
             #--------------------------------------------------------------------------
+                      
+            
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
                sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
                sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
@@ -1739,7 +1741,7 @@ def processFile(filespec)
                      end
                   end
                   
-               elsif ( tag =~ /Opt-H2K-Type1CapVal/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-Type1CapVal/ &&  value != "NA" && "#{value}" != "" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
@@ -1842,6 +1844,127 @@ def processFile(filespec)
                   end 
 
 
+              elsif ( tag =~ /Opt-H2K-Type2CapOpt/ && value != "NA" )
+              
+                 sysType2.each do |sysType2Name| 
+                  
+                   if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                    
+                     locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                    
+                     if ( h2kElements[locationText] != nil )
+                    
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/OutputCapacity"
+                       h2kElements[locationText].attributes["code"] = value 
+                       h2kElements[locationText].attributes["value"] = "5.6"
+                       h2kElements[locationText].attributes["uiUnits"] = "kW"
+                      
+                     end 
+                  
+                   end 
+              
+                 end 
+                 
+              elsif ( tag =~ /Opt-H2K-Type2CapVal/ && value != "NA"  && "#{value}" != "" )
+                          
+                 sysType2.each do |sysType2Name| 
+                  
+                   if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                    
+                     locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                    
+                     if ( h2kElements[locationText] != nil )
+                    
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/OutputCapacity"
+                       h2kElements[locationText].attributes["value"] = value 
+                       h2kElements[locationText].attributes["uiUnits"] = "kW"
+                      
+                     end 
+                  
+                   end 
+              
+                 end                  
+                  
+              elsif ( tag =~ /Opt-H2K-Type2HeatCOP/ && value != "NA"  && "#{value}" != "" )
+                          
+                 sysType2.each do |sysType2Name| 
+                  
+                   if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                    
+                     locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                    
+                     if ( h2kElements[locationText] != nil )
+                    
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/HeatingEfficiency"
+                       h2kElements[locationText].attributes["isCOP"] = "true" 
+                       h2kElements[locationText].attributes["value"] = value
+                      
+                     end 
+                  
+                   end 
+              
+                 end                               
+                  
+              elsif ( tag =~ /Opt-H2K-Type2CoolCOP/ && value != "NA"  && "#{value}" != "" )
+                          
+                 sysType2.each do |sysType2Name| 
+                  
+                   if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                    
+                     locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                    
+                     if ( h2kElements[locationText] != nil )
+                    
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
+                       h2kElements[locationText].attributes["isCOP"] = "true" 
+                       h2kElements[locationText].attributes["value"] = value
+                      
+                     end 
+                  
+                   end 
+              
+                 end                     
+                  
+              elsif ( tag =~ /Opt-H2K-Type2CutoffType/ && value != "NA"  && "#{value}" != "" )
+                          
+                 sysType2.each do |sysType2Name| 
+                  
+                   if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                    
+                     locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                    
+                     if ( h2kElements[locationText] != nil )
+                    
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Temperature/CutoffType"
+                       h2kElements[locationText].attributes["code"] = value
+                      
+                     end 
+                  
+                   end 
+              
+                 end 
+
+                  
+              elsif ( tag =~ /Opt-H2K-Type2CutoffTemp/ && value != "NA"  && "#{value}" != "" )
+                          
+                 sysType2.each do |sysType2Name| 
+                  
+                   if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                    
+                     locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                    
+                     if ( h2kElements[locationText] != nil )
+                    
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Temperature/CutoffType"
+                       h2kElements[locationText].attributes["value"] = value
+                      
+                     end 
+                  
+                   end 
+              
+                 end    
+                 
+              
               
               end     
             # HRV System
@@ -2440,9 +2563,10 @@ def createH2KSysType2( elements, sysType2Name )
       elements[locationText].add_element("OutputCapacity")
       
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/OutputCapacity"
-      elements[locationText].attributes["code"] = "1"
-      elements[locationText].attributes["value"] = "7"
-      elements[locationText].attributes["uiUnits"] = "kW"
+      elements[locationText].attributes["code"] = "2"
+      # I think these can be commented out if we default to 'calculated'
+      #elements[locationText].attributes["value"] = ""
+      #elements[locationText].attributes["uiUnits"] = "kW"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
       
@@ -2467,7 +2591,8 @@ def createH2KSysType2( elements, sysType2Name )
       elements[locationText].add_element("CutoffType")
       
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/CutoffType"
-      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["code"] = "2"
+      elements[locationText].attributes["value"] = "0"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
       
@@ -2476,7 +2601,7 @@ def createH2KSysType2( elements, sysType2Name )
       
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/RatingType"
       elements[locationText].attributes["code"] = "1"
-      elements[locationText].attributes["value"] = "8.3"
+      elements[locationText].attributes["value"] = "-5.0"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
       

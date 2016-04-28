@@ -3407,7 +3407,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:8  = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
 *option:CCASHP:value:9  =                       ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP:value:10 =                       ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:CCASHP:value:11 =  2                    ! H2K: 1:UserSpec, 2:Calculated    
+*option:CCASHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
 *option:CCASHP:value:12 =  6                    ! H2K: Capacity value.     
 *option:CCASHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
