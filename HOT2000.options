@@ -3413,8 +3413,8 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
 *option:CCASHP:value:16 = false                 ! H2K: ee-motor true/false   
-*option:CCASHP:value:17 = 0                     ! H2K: Crankcase heater?
-*option:CCASHP:value:18 = 2                    ! Function heating/cooling 
+*option:CCASHP:value:17 = 60                    ! H2K: Crankcase heater?
+*option:CCASHP:value:18 = 2                     ! Function heating/cooling 
 *option:CCASHP:value:19 = 1                     ! Type: central split 
 *option:CCASHP:value:20 = 2                     ! Capacity: Calculated 
 *option:CCASHP:value:21 =                       ! Capacity value (W)

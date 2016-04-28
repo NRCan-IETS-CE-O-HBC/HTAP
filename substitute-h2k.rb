@@ -2409,56 +2409,102 @@ def createH2KSysType2( elements, sysType2Name )
    
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
       elements[locationText].add_element("EquipmentInformation")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/EquipmentInformation"
       elements[locationText].attributes["energystar"] = "false"
       
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
       elements[locationText].add_element("Equipment")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment"
       elements[locationText].attributes["crankcaseHeater"] = "60"
       elements[locationText].add_element("Type")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment/Type"
       elements[locationText].attributes["code"] = "1"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment"
       elements[locationText].add_element("Function")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment/Function"
-      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["code"] = "2"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
       
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
       elements[locationText].add_element("Specifications")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications"
       elements[locationText].add_element("OutputCapacity")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/OutputCapacity"
       elements[locationText].attributes["code"] = "1"
       elements[locationText].attributes["value"] = "7"
       elements[locationText].attributes["uiUnits"] = "kW"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications"
       elements[locationText].add_element("HeatingEfficiency")
+      elements[locationText].add_element("CoolingEfficiency")
+      
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/HeatingEfficiency"
       elements[locationText].attributes["isCop"] = "true"
       elements[locationText].attributes["value"] = "2"
 
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/CoolingEfficiency"
+      elements[locationText].attributes["isCop"] = "true"
+      elements[locationText].attributes["value"] = "2"      
+      
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
       elements[locationText].add_element("Temperature")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
       elements[locationText].add_element("CutoffType")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/CutoffType"
       elements[locationText].attributes["code"] = "1"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
       elements[locationText].add_element("RatingType")
+      
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/RatingType"
       elements[locationText].attributes["code"] = "1"
       elements[locationText].attributes["value"] = "8.3"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[locationText].add_element("CoolingParameters")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters"
+      elements[locationText].attributes["sensibleHeatRatio"] = "0.76"
+      elements[locationText].attributes["openableWindowArea"] = "20"
+      
+      elements[locationText].add_element("FansAndPump")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters/FansAndPump"
+      # Do we need to set this? what should we set it to? 
+      elements[locationText].attributes["flowRate"] = "700"
+      
+      elements[locationText].add_element("Mode")
+      elements[locationText].add_element("Power")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters/FansAndPump/Mode"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters/FansAndPump/Power"
+      elements[locationText].attributes["isCalculated"] = "true"
+      
+      
       
    elsif ( sysType2Name == "WaterHeatPump" )
       locationText = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
@@ -2682,7 +2728,7 @@ def runsims( direction )
               $runH2KTime = endRun - startRun  
               stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
               keepTrying = false           # Successful run - don't try agian 
-           elsif  tries < 10 #0               # Unsuccessful run - try again for up to 10 times     
+           elsif  tries < 0               # Unsuccessful run - try again for up to 10 times     
               tries = tries + 1      
            else
               # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
