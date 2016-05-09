@@ -872,472 +872,16 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-CasementWindows/ )
                if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
-                  # Change ALL existing S-facing windows to this library code name.
-                  # If this code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all entries facing S. Code names in library are unique.
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
-                  
-                  # Look for this code name in code library (Favorite and UserDefined)
-                  thisCodeInHouse = false
-                  useThisCodeID = "Code 199"
-                  foundFavLibCode = false
-                  foundUsrDefLibCode = false
-                  foundCodeLibElement = ""
-                  locationCodeFavText = "Codes/Window/Favorite/Code"
-                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                     if ( codeElement.get_text("Label") == value )
-                        foundFavLibCode = true
-                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                        break
-                     end
-                  end
-                  # Code library names are also unique across Favorite and User Defined codes
-                  if ( ! foundFavLibCode )
-                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( foundFavLibCode || foundUsrDefLibCode )
-                     # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Avoid duplicates!
-                     if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/Window/Favorite"
-                     else
-                        locationText = "HouseFile/Codes/Window/UserDefined"
-                     end
-                     h2kElements.each(locationText + "/Code") do |element| 
-                        if ( element.get_text("Label") == value )
-                           thisCodeInHouse = true
-                           useThisCodeID = element.attributes["id"]
-                           break
-                        end
-                     end
-                     if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
-                           # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element("Window")
-                        end
-                        if ( h2kElements[locationText] == nil )
-                           # No Favorite or UserDefined section in house file Codes section -- add it!
-                           if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
-                           else
-                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
-                           end
-                        end
-                        foundCodeLibElement.attributes["id"] = useThisCodeID
-                        h2kElements[locationText].add(foundCodeLibElement)
-                     end
-                     
-                     # Windows in walls elements
-                     locationText = "HouseFile/House/Components/Wall/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["S"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in basement wall elements
-                     locationText = "HouseFile/House/Components/Basement/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["S"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in walkout wall elements
-                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["S"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in crawlspace elements             [******** Skip for now ********]
-                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
-                     # Windows in door elements                   [******** Skip for now ********]
-                  else
-                     # Code name not found in the code library
-                     # Since no User Specified option for windows this must be an error!
-                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
-                  end
+                  ChangeWinCodeByOrient( "S", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
                elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
-                  # Change ALL existing E-facing windows to this library code name.
-                  # If this code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all entries facing E. Code names in library are unique.
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
-                  
-                  # Look for this code name in code library (Favorite and UserDefined)
-                  thisCodeInHouse = false
-                  useThisCodeID = "Code 189"
-                  foundFavLibCode = false
-                  foundUsrDefLibCode = false
-                  foundCodeLibElement = ""
-                  locationCodeFavText = "Codes/Window/Favorite/Code"
-                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                     if ( codeElement.get_text("Label") == value )
-                        foundFavLibCode = true
-                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                        break
-                     end
-                  end
-                  # Code library names are also unique across Favorite and User Defined codes
-                  if ( ! foundFavLibCode )
-                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( foundFavLibCode || foundUsrDefLibCode )
-                     # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Avoid duplicates!
-                     if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/Window/Favorite"
-                     else
-                        locationText = "HouseFile/Codes/Window/UserDefined"
-                     end
-                     h2kElements.each(locationText + "/Code") do |element| 
-                        if ( element.get_text("Label") == value )
-                           thisCodeInHouse = true
-                           useThisCodeID = element.attributes["id"]
-                           break
-                        end
-                     end
-                     if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
-                           # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element("Window")
-                        end
-                        if ( h2kElements[locationText] == nil )
-                           # No Favorite or UserDefined section in house file Codes section -- add it!
-                           if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
-                           else
-                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
-                           end
-                        end
-                        foundCodeLibElement.attributes["id"] = useThisCodeID
-                        h2kElements[locationText].add(foundCodeLibElement)
-                     end
-                     
-                     # Windows in walls elements
-                     locationText = "HouseFile/House/Components/Wall/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["E"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in basement wall elements
-                     locationText = "HouseFile/House/Components/Basement/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["E"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in walkout wall elements
-                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["E"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in crawlspace elements             [******** Skip for now ********]
-                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
-                     # Windows in door elements                   [******** Skip for now ********]
-                  else
-                     # Code name not found in the code library
-                     # Since no User Specified option for windows this must be an error!
-                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
-                  end
+                  ChangeWinCodeByOrient( "E", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
                elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )    # Do nothing
-                  # Change ALL existing N-facing windows to this library code name.
-                  # If this code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all entries facing N. Code names in library are unique.
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
-                  
-                  # Look for this code name in code library (Favorite and UserDefined)
-                  thisCodeInHouse = false
-                  useThisCodeID = "Code 179"
-                  foundFavLibCode = false
-                  foundUsrDefLibCode = false
-                  foundCodeLibElement = ""
-                  locationCodeFavText = "Codes/Window/Favorite/Code"
-                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                     if ( codeElement.get_text("Label") == value )
-                        foundFavLibCode = true
-                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                        break
-                     end
-                  end
-                  # Code library names are also unique across Favorite and User Defined codes
-                  if ( ! foundFavLibCode )
-                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( foundFavLibCode || foundUsrDefLibCode )
-                     # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Avoid duplicates!
-                     if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/Window/Favorite"
-                     else
-                        locationText = "HouseFile/Codes/Window/UserDefined"
-                     end
-                     h2kElements.each(locationText + "/Code") do |element| 
-                        if ( element.get_text("Label") == value )
-                           thisCodeInHouse = true
-                           useThisCodeID = element.attributes["id"]
-                           break
-                        end
-                     end
-                     if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
-                           # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element("Window")
-                        end
-                        if ( h2kElements[locationText] == nil )
-                           # No Favorite or UserDefined section in house file Codes section -- add it!
-                           if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
-                           else
-                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
-                           end
-                        end
-                        foundCodeLibElement.attributes["id"] = useThisCodeID
-                        h2kElements[locationText].add(foundCodeLibElement)
-                     end
-                     
-                     # Windows in walls elements
-                     locationText = "HouseFile/House/Components/Wall/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["N"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in basement wall elements
-                     locationText = "HouseFile/House/Components/Basement/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["N"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in walkout wall elements
-                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["N"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in crawlspace elements             [******** Skip for now ********]
-                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
-                     # Windows in door elements                   [******** Skip for now ********]
-                  else
-                     # Code name not found in the code library
-                     # Since no User Specified option for windows this must be an error!
-                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
-                  end
+                  ChangeWinCodeByOrient( "N", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
                elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )    # Do nothing
-                  # Change ALL existing W-facing windows to this library code name.
-                  # If this code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all entries facing W. Code names in library are unique.
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
-                  
-                  # Look for this code name in code library (Favorite and UserDefined)
-                  thisCodeInHouse = false
-                  useThisCodeID = "Code 169"
-                  foundFavLibCode = false
-                  foundUsrDefLibCode = false
-                  foundCodeLibElement = ""
-                  locationCodeFavText = "Codes/Window/Favorite/Code"
-                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                     if ( codeElement.get_text("Label") == value )
-                        foundFavLibCode = true
-                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                        break
-                     end
-                  end
-                  # Code library names are also unique across Favorite and User Defined codes
-                  if ( ! foundFavLibCode )
-                     locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( foundFavLibCode || foundUsrDefLibCode )
-                     # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Avoid duplicates!
-                     if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/Window/Favorite"
-                     else
-                        locationText = "HouseFile/Codes/Window/UserDefined"
-                     end
-                     h2kElements.each(locationText + "/Code") do |element| 
-                        if ( element.get_text("Label") == value )
-                           thisCodeInHouse = true
-                           useThisCodeID = element.attributes["id"]
-                           break
-                        end
-                     end
-                     if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/Window"] == nil )
-                           # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element("Window")
-                        end
-                        if ( h2kElements[locationText] == nil )
-                           # No Favorite or UserDefined section in house file Codes section -- add it!
-                           if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/Window"].add_element("Favorite")
-                           else
-                              h2kElements["HouseFile/Codes/Window"].add_element("UserDefined")
-                           end
-                        end
-                        foundCodeLibElement.attributes["id"] = useThisCodeID
-                        h2kElements[locationText].add(foundCodeLibElement)
-                     end
-                     
-                     # Windows in walls elements
-                     locationText = "HouseFile/House/Components/Wall/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["W"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in basement wall elements
-                     locationText = "HouseFile/House/Components/Basement/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["W"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in walkout wall elements
-                     locationText = "HouseFile/House/Components/Walkout/Components/Window"
-                     h2kElements.each(locationText) do |element| 
-                        # 9=FacingDirection
-                        if ( element[9].attributes["code"] == windowFacingH2K["W"].to_s )
-                           # Check if each house entry has an "idref" attribute and add if it doesn't.
-                           # Change each house entry to reference a new <Codes> section useThisCodeID
-                           if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-                              element[3][1].attributes["idref"] = useThisCodeID
-                           else
-                              element[3][1].add_attribute("idref", useThisCodeID)
-                           end
-                           element[3][1].text = value
-                        end
-                     end
-                     # Windows in crawlspace elements             [******** Skip for now ********]
-                     # Windows in ceiling elements (skylights)    [******** Skip for now ********]
-                     # Windows in door elements                   [******** Skip for now ********]
-                  else
-                     # Code name not found in the code library
-                     # Since no User Specified option for windows this must be an error!
-                     fatalerror(" INFO: Missing code name: #{value} in code library for H2K #{choiceEntry} tag:#{tag}\n")
-                  end
+                  ChangeWinCodeByOrient( "W", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
                elsif ( tag =~ /Opt-win-S-OPT/ )    # Do nothing
                elsif ( tag =~ /Opt-win-E-OPT/ )    # Do nothing
@@ -1963,10 +1507,9 @@ def processFile(filespec)
                    end 
               
                  end    
-                 
-              
               
               end     
+              
             # HRV System
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
@@ -2104,6 +1647,128 @@ def processFile(filespec)
    newXMLFile = File.open(filespec, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
+end
+
+# =========================================================================================
+#  Function to change window codes by orientation
+# =========================================================================================
+def ChangeWinCodeByOrient( winOrient, windowFacingH2KVal, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+   # Change ALL existing windows for this orientation (winOrient) to the library code name
+   # specified in newValue. If this code name exists in the code library, use the code 
+   # (either Fav or UsrDef) for all entries facing in this direction. Code names in library are unique.
+   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+
+   # Look for this code name in code library (Favorite and UserDefined)
+   thisCodeInHouse = false
+   useThisCodeID = "Code 199"
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundCodeLibElement = ""
+   locationCodeFavText = "Codes/Window/Favorite/Code"
+   h2kCodeLibElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == newValue )
+         foundFavLibCode = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+      h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == newValue )
+            foundUsrDefLibCode = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Avoid duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/Window/Favorite"
+      else
+         locationText = "HouseFile/Codes/Window/UserDefined"
+      end
+      h2kFileElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == newValue )
+            thisCodeInHouse = true
+            useThisCodeID = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
+            # No section ofthis type in house file Codes section -- add it!
+            h2kFileElements["HouseFile/Codes"].add_element("Window")
+         end
+         if ( h2kFileElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+            else
+               h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = useThisCodeID
+         h2kFileElements[locationText].add(foundCodeLibElement)
+      end
+      
+      # Windows in walls elements
+      locationText = "HouseFile/House/Components/Wall/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section useThisCodeID
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = useThisCodeID
+            else
+               element[3][1].add_attribute("idref", useThisCodeID)
+            end
+            element[3][1].text = newValue
+         end
+      end
+      # Windows in basement wall elements
+      locationText = "HouseFile/House/Components/Basement/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section useThisCodeID
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = useThisCodeID
+            else
+               element[3][1].add_attribute("idref", useThisCodeID)
+            end
+            element[3][1].text = newValue
+         end
+      end
+      # Windows in walkout wall elements
+      locationText = "HouseFile/House/Components/Walkout/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section useThisCodeID
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = useThisCodeID
+            else
+               element[3][1].add_attribute("idref", useThisCodeID)
+            end
+            element[3][1].text = newValue
+         end
+      end
+      # Windows in crawlspace elements             [******** Skip for now ********]
+      # Windows in ceiling elements (skylights)    [******** Skip for now ********]
+      # Windows in door elements                   [******** Skip for now ********]
+   else
+      # Code name not found in the code library
+      # Since no User Specified option for windows this must be an error!
+      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+   end
+
 end
 
 # =========================================================================================
