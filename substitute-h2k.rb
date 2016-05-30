@@ -265,8 +265,6 @@ def processFile(filespec)
    $versionMinor_H2K = h2kElements[locationText].attributes["minor"]
    $versionBuild_H2K = h2kElements[locationText].attributes["build"]
 
-   windowFacingH2K = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
-
    # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change (further down)!
    config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
    (configType, configSubType, fndTypes) = config.split('_')
@@ -872,17 +870,29 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-CasementWindows/ )
                if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
-                  ChangeWinCodeByOrient( "S", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
                elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
-                  ChangeWinCodeByOrient( "E", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
-               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )    # Do nothing
-                  ChangeWinCodeByOrient( "N", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+                  ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
-               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )    # Do nothing
-                  ChangeWinCodeByOrient( "W", windowFacingH2K, value, h2kCodeElements, h2kElements, choiceEntry, tag )
-               
+               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+                  ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+                  ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+                  ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+                  ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+                  ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
                elsif ( tag =~ /Opt-win-S-OPT/ )    # Do nothing
                elsif ( tag =~ /Opt-win-E-OPT/ )    # Do nothing
                elsif ( tag =~ /Opt-win-N-OPT/ )    # Do nothing
@@ -928,13 +938,15 @@ def processFile(filespec)
                            existConfigType = element.attributes["type"]
                            if ( existConfigType.match('N', 3) && !configType.match('N', 3) )
                               # Add missing XML section to Floor for "AddedToSlab"
-                              addMissingAddedToSlab(h2kElements, locStr.sub(/Configuration/, ''))
-                           elsif ( existConfigType.match('E', 2) && !configType.match('E', 2) )
+                              addMissingAddedToSlab(element)
+                           end
+                           if ( existConfigType.match('E', 2) && !configType.match('E', 2) )
                               # Add missing XML section to Wall for "InteriorAddedInsulation"
-                              addMissingInteriorAddedInsulation(h2kElements, locStr.sub(/Configuration/, ''))
-                           elsif ( existConfigType.match('I', 2) && !configType.match('I', 2) )
+                              addMissingInteriorAddedInsulation(element)
+                           end
+                           if ( existConfigType.match('I', 2) && !configType.match('I', 2) )
                               # Add missing XML section to Wall for "ExteriorAddedInsulation"
-                              addMissingExteriorAddedInsulation(h2kElements, locStr.sub(/Configuration/, ''))
+                              addMissingExteriorAddedInsulation(element)
                            end
                            # Change existing configutaion values to match choice
                            element.attributes["type"] = configType
@@ -1076,14 +1088,18 @@ def processFile(filespec)
                   locHouseStr.each do |locationString|
                      if ( locationString != "" )
                         h2kElements.each(locationString) do |element| 
-                           element[1].text = "User specified"     # Description tag
-                           element[3][1].attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
-                           element[3][1].attributes["rank"] = "1"
-                           element[3][1].attributes["percentage"] = "100"
                            if element.attributes["idref"] != nil then
                               # Must delete attribute for User Specified!
                               element.delete_attribute("idref")
                            end
+                        end
+                        h2kElements.each(locationString+"/Description") do |element| 
+                           element.text = "User specified"     # Description tag
+                        end
+                        h2kElements.each(locationString+"/Composite/Section") do |element| 
+                           element.attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
+                           element.attributes["rank"] = "1"
+                           element.attributes["percentage"] = "100"
                         end
                      end
                   end
@@ -1102,14 +1118,18 @@ def processFile(filespec)
                   locHouseStr.each do |locationString|
                      if ( locationString != "" )
                         h2kElements.each(locationString) do |element| 
-                           element[1].text = "User specified"     # Description tag
-                           element[3][1].attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
-                           element[3][1].attributes["rank"] = "1"
-                           element[3][1].attributes["percentage"] = "100"
-                           if element.attributes["code"] != nil then
+                           if element.attributes["idref"] != nil then
                               # Must delete attribute for User Specified!
-                              element.delete_attribute("code")
+                              element.delete_attribute("idref")
                            end
+                        end
+                        h2kElements.each(locationString+"/Description") do |element| 
+                           element.text = "User specified"     # Description tag
+                        end
+                        h2kElements.each(locationString+"/Composite/Section") do |element| 
+                           element.attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
+                           element.attributes["rank"] = "1"
+                           element.attributes["percentage"] = "100"
                         end
                      end
                   end
@@ -1652,13 +1672,15 @@ end
 # =========================================================================================
 #  Function to change window codes by orientation
 # =========================================================================================
-def ChangeWinCodeByOrient( winOrient, windowFacingH2KVal, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
    # Change ALL existing windows for this orientation (winOrient) to the library code name
    # specified in newValue. If this code name exists in the code library, use the code 
    # (either Fav or UsrDef) for all entries facing in this direction. Code names in library are unique.
    # Note: Not using "Standard", non-library codes (e.g., 2221292000)
 
    # Look for this code name in code library (Favorite and UserDefined)
+   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+
    thisCodeInHouse = false
    useThisCodeID = "Code 199"
    foundFavLibCode = false
@@ -1774,72 +1796,44 @@ end
 # =========================================================================================
 #  Add missing "AddedToSlab" section to Floor Construction of appropriate fnd
 # =========================================================================================
-def addMissingAddedToSlab(elements, locationStr)
+def addMissingAddedToSlab(theElement)
    # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
    # "Walkout", "Crawlspace" or "Slab"
-   locationText = locationStr + "Floor/Construction"
-   if ( elements[locationText] != nil )
-      # This should always be the case!
-      elements[locationText].add_element("AddedToSlab")
-      locationText += "/AddedToSlab"
-      elements[locationText].attributes["rValue"] = "0"
-      elements[locationText].attributes["nominalInsulation"] = "0"
-      elements[locationText].text = "User specified"
-   else
-      fatalerror( "Fatal Error! #{locationText} does not exist!" )
-   end
+   # The Floor element is always three elements from the basement Configuration element
+   theFloorElement = theElement.next_element.next_element.next_element
+   theFloorConstElement = theFloorElement[1] # First child element is always "Construction"
+   theSlabElement = theFloorConstElement.add_element("AddedToSlab", {"rValue"=>"0", "nominalInsulation"=>"0"})
+   theSlabElement.add_text("User specified")
 end
 
 # =========================================================================================
 #  Add missing "InteriorAddedInsulation" section to Wall Construction of appropriate fnd
 # =========================================================================================
-def addMissingInteriorAddedInsulation(elements, locationStr)
+def addMissingInteriorAddedInsulation(theElement)
    # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
    # "Walkout", "Crawlspace" or "Slab"
-   locationText = locationStr + "Wall/Construction"
-   if ( elements[locationText] != nil )
-      # This should always be the case!
-      elements[locationText].add_element("InteriorAddedInsulation")
-      locationText += "/InteriorAddedInsulation"
-      elements[locationText].attributes["nominalInsulation"] = "0"
-      elements[locationText].add_element("Description")
-      elements[locationText].add_element("Composite")
-      locationText += "/Composite"
-      elements[locationText].add_element("Section")
-      locationText += "/Section"
-      elements[locationText].attributes["rank"] = "1"
-      elements[locationText].attributes["percentage"] = "100"
-      elements[locationText].attributes["rsi"] = "0"
-      elements[locationText].attributes["nominalRsi"] = "0"
-   else
-      fatalerror( "Fatal Error! #{locationText} does not exist!" )
-   end
+   # The Wall element is always four elements from the basement Configuration element
+   theWallElement = theElement.next_element.next_element.next_element.next_element
+   theWallConstElement = theWallElement[1] # First child element is always "Construction"
+   theIntWallElement = theWallConstElement.add_element("InteriorAddedInsulation", {"nominalInsulation"=>"0"})
+   theIntWallElement.add_element("Description")
+   theIntWallCompElement = theIntWallElement.add_element("Composite")
+   theIntWallCompElement.add_element("Section", {"rank"=>"1", "percentage"=>"100", "rsi"=>"0", "nominalRsi"=>"0"} )
 end
 
 # =========================================================================================
 #  Add missing "ExteriorAddedInsulation" section to Wall Construction of appropriate fnd
 # =========================================================================================
-def addMissingExteriorAddedInsulation(elements, locationStr)
+def addMissingExteriorAddedInsulation(theElement)
    # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
    # "Walkout", "Crawlspace" or "Slab"
-   locationText = locationStr + "Wall/Construction"
-   if ( elements[locationText] != nil )
-      # This should always be the case!
-      elements[locationText].add_element("ExteriorAddedInsulation")
-      locationText += "/ExteriorAddedInsulation"
-      elements[locationText].attributes["nominalInsulation"] = "0"
-      elements[locationText].add_element("Description")
-      elements[locationText].add_element("Composite")
-      locationText += "/Composite"
-      elements[locationText].add_element("Section")
-      locationText += "/Section"
-      elements[locationText].attributes["rank"] = "1"
-      elements[locationText].attributes["percentage"] = "100"
-      elements[locationText].attributes["rsi"] = "0"
-      elements[locationText].attributes["nominalRsi"] = "0"
-   else
-      fatalerror( "Fatal Error! #{locationText} does not exist!" )
-   end
+   # The Wall element is always four elements from the basement Configuration element
+   theWallElement = theElement.next_element.next_element.next_element.next_element
+   theWallConstElement = theWallElement[1] # First child element is always "Construction"
+   theExtWallElement = theWallConstElement.add_element("ExteriorAddedInsulation", {"nominalInsulation"=>"0"})
+   theExtWallElement.add_element("Description")
+   theExtWallCompElement = theExtWallElement.add_element("Composite")
+   theExtWallCompElement.add_element("Section", {"rank"=>"1", "percentage"=>"100", "rsi"=>"0", "nominalRsi"=>"0"} )
 end
 
 # =========================================================================================

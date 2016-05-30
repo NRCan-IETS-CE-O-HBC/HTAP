@@ -7,12 +7,12 @@
 !-----------------------------------------------------------------------  
 
 ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
-Opt-DBFiles  : H2KCodeLibFile
+Opt-DBFiles  : H2KCodeLibFile-Julia
 
 ! Weather location
-Opt-Location : Ottawa
+Opt-Location : NA
 
-Opt-FuelCost : Ottawa08
+Opt-FuelCost : NA
 
 ! ACH substitutions
 Opt-ACH : NA
@@ -26,9 +26,9 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : NA 
+Opt-CasementWindows  : TripleLowEHardCoatKryFill 
 
-Opt-H2KFoundation : NA  !Rigid+BattR30-R10BSlab
+Opt-H2KFoundation : Rigid+BattR30-R10BSlab
 
 ! Hot water reduction technologies (SDHW, DHWR) 
 Opt-DWHRandSDHW : NA    !none          
@@ -40,7 +40,7 @@ Opt-DHWSystem : NA   !BaseDHW
 Opt-HVACSystem  : NA !basefurnace
 
 ! HRV spec 
-Opt-HRVspec : HRV_60
+Opt-HRVspec : NA
 
 Opt-RoofPitch : NA   !6-12
 

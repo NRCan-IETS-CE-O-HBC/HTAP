@@ -112,6 +112,10 @@
 *option:H2KCodeLibFile:value:2  = NotUsed
 *option:H2KCodeLibFile:cost:total = 0
 
+*option:H2KCodeLibFile-Julia:value:1  = codelib-Julia.cod
+*option:H2KCodeLibFile-Julia:value:2  = NotUsed
+*option:H2KCodeLibFile-Julia:cost:total = 0
+
 *attribute:end
 
 !-----------------------------------------------------------------------
@@ -1756,68 +1760,96 @@
 *attribute:tag:6 = <Opt-win-N-OPT>
 *attribute:tag:7 = <Opt-win-W-CON>     ! Also H2K W windows lib code name
 *attribute:tag:8 = <Opt-win-W-OPT>
+*attribute:tag:9 =  <Opt-win-SE-CON>     ! H2K SE windows lib code name
+*attribute:tag:10 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
+*attribute:tag:11 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
+*attribute:tag:12 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
 *attribute:default = DoubleLowEHardCoatArgFill
 
-*option:NA:value:1 = NA   ! H2K
+*option:NA:value:1 = NA   
 *option:NA:value:2 = NA
-*option:NA:value:3 = NA   ! H2K
+*option:NA:value:3 = NA   
 *option:NA:value:4 = NA
-*option:NA:value:5 = NA   ! H2K
+*option:NA:value:5 = NA   
 *option:NA:value:6 = NA
-*option:NA:value:7 = NA   ! H2K
+*option:NA:value:7 = NA   
 *option:NA:value:8 = NA
+*option:NA:value:9 = NA   
+*option:NA:value:10 = NA  
+*option:NA:value:11 = NA  
+*option:NA:value:12 = NA  
 *option:NA:cost:total = 0.0
 
 
 ! JP removed base case cost - no additional windows available for lighthouse work.
-*option:DoubleLowEHardCoatAirFill:value:1 = DblLeHcAir   ! Also H2K
+*option:DoubleLowEHardCoatAirFill:value:1 = DblLeHcAir   
 *option:DoubleLowEHardCoatAirFill:value:2 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:3 = DblLeHcAir   ! Also H2K
+*option:DoubleLowEHardCoatAirFill:value:3 = DblLeHcAir   
 *option:DoubleLowEHardCoatAirFill:value:4 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:5 = DblLeHcAir   ! Also H2K
+*option:DoubleLowEHardCoatAirFill:value:5 = DblLeHcAir   
 *option:DoubleLowEHardCoatAirFill:value:6 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:7 = DblLeHcAir   ! Also H2K
+*option:DoubleLowEHardCoatAirFill:value:7 = DblLeHcAir   
 *option:DoubleLowEHardCoatAirFill:value:8 = DblLeHcAir
+*option:DoubleLowEHardCoatAirFill:value:9 = DblLeHcAir
+*option:DoubleLowEHardCoatAirFill:value:10 = DblLeHcAir
+*option:DoubleLowEHardCoatAirFill:value:11 = DblLeHcAir
+*option:DoubleLowEHardCoatAirFill:value:12 = DblLeHcAir
 *option:DoubleLowEHardCoatAirFill:cost:total    = 0.0 ! Value changed for Van_2st_80_retro geometry. Originally 10584
 
-*option:DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg   ! Also H2K 
+*option:DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg   
 *option:DoubleLowEHardCoatArgFill:value:2 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:3 = DblLeHcArg   ! Also H2K 
+*option:DoubleLowEHardCoatArgFill:value:3 = DblLeHcArg   
 *option:DoubleLowEHardCoatArgFill:value:4 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:5 = DblLeHcArg   ! Also H2K 
+*option:DoubleLowEHardCoatArgFill:value:5 = DblLeHcArg   
 *option:DoubleLowEHardCoatArgFill:value:6 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg   ! Also H2K 
+*option:DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg   
 *option:DoubleLowEHardCoatArgFill:value:8 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:9 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:10 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:11 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:12 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:cost:total    = 0 ! Value changed for Van_2st_80_retro geometry. Originally 11727
 
-*option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry   
 *option:TripleLowEHardCoatKryFill:value:2 = TplLeHcKry 
-*option:TripleLowEHardCoatKryFill:value:3 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:3 = TplLeHcKry   
 *option:TripleLowEHardCoatKryFill:value:4 = TplLeHcKry 
-*option:TripleLowEHardCoatKryFill:value:5 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:5 = TplLeHcKry   
 *option:TripleLowEHardCoatKryFill:value:6 = TplLeHcKry 
-*option:TripleLowEHardCoatKryFill:value:7 = TplLeHcKry   ! Also H2K
+*option:TripleLowEHardCoatKryFill:value:7 = TplLeHcKry   
 *option:TripleLowEHardCoatKryFill:value:8 = TplLeHcKry
+*option:TripleLowEHardCoatKryFill:value:9 = TplLeHcKry
+*option:TripleLowEHardCoatKryFill:value:10 = TplLeHcKry
+*option:TripleLowEHardCoatKryFill:value:11 = TplLeHcKry
+*option:TripleLowEHardCoatKryFill:value:12 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:cost:total    = 1436 ! Value changed for Van_2st_80_retro geometry. Originally 20871
 
-*option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry   
 *option:TripleLowESoftCoatKryFill:value:2 = TplLeScKry 
-*option:TripleLowESoftCoatKryFill:value:3 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:3 = TplLeScKry   
 *option:TripleLowESoftCoatKryFill:value:4 = TplLeScKry 
-*option:TripleLowESoftCoatKryFill:value:5 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:5 = TplLeScKry   
 *option:TripleLowESoftCoatKryFill:value:6 = TplLeScKry 
-*option:TripleLowESoftCoatKryFill:value:7 = TplLeScKry   ! Also H2K
+*option:TripleLowESoftCoatKryFill:value:7 = TplLeScKry   
 *option:TripleLowESoftCoatKryFill:value:8 = TplLeScKry
+*option:TripleLowESoftCoatKryFill:value:9 = TplLeScKry
+*option:TripleLowESoftCoatKryFill:value:10 = TplLeScKry
+*option:TripleLowESoftCoatKryFill:value:11 = TplLeScKry
+*option:TripleLowESoftCoatKryFill:value:12 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:cost:total    = 1665 ! Value changed for Van_2st_80_retro geometry. Originally 19310
 
-*option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg   
 *option:DoubleLowESoftCoatArgFill:value:2 = DblLeScArg 
-*option:DoubleLowESoftCoatArgFill:value:3 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:3 = DblLeScArg   
 *option:DoubleLowESoftCoatArgFill:value:4 = DblLeScArg 
-*option:DoubleLowESoftCoatArgFill:value:5 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:5 = DblLeScArg   
 *option:DoubleLowESoftCoatArgFill:value:6 = DblLeScArg 
-*option:DoubleLowESoftCoatArgFill:value:7 = DblLeScArg   ! Also H2K
+*option:DoubleLowESoftCoatArgFill:value:7 = DblLeScArg   
 *option:DoubleLowESoftCoatArgFill:value:8 = DblLeScArg
+*option:DoubleLowESoftCoatArgFill:value:9 = DblLeScArg
+*option:DoubleLowESoftCoatArgFill:value:10 = DblLeScArg
+*option:DoubleLowESoftCoatArgFill:value:11 = DblLeScArg
+*option:DoubleLowESoftCoatArgFill:value:12 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:cost:total    = 229 	! Base for BC-LEEP (Vancouver)
 														! Was 2440 from last use
 														! Van_2st_80_retro geometry: Originally 10965
@@ -1833,6 +1865,10 @@
 *option:DoubleArgon_HighGainOnSouth:value:6 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:7 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:8 = DblLeScArg
+*option:DoubleArgon_HighGainOnSouth:value:9 = DblLeScArg
+*option:DoubleArgon_HighGainOnSouth:value:10 = DblLeScArg
+*option:DoubleArgon_HighGainOnSouth:value:11 = DblLeScArg
+*option:DoubleArgon_HighGainOnSouth:value:12 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:cost:total = 73	! Mattamy Ott incr. cost for S
 !*option:DoubleArgon_HighGainOnSouth:cost:total = 89	! Mattamy Ott incr. cost for W
 !*option:DoubleArgon_HighGainOnSouth:cost:total = 70	! Mattamy Ott incr. cost for N
@@ -1847,59 +1883,83 @@
 *option:TripleKrypton_HighGainOnSouth:value:6 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:value:7 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:value:8 = TplLeScKry
+*option:TripleKrypton_HighGainOnSouth:value:9 = TplLeScKry
+*option:TripleKrypton_HighGainOnSouth:value:10 = TplLeScKry
+*option:TripleKrypton_HighGainOnSouth:value:11 = TplLeScKry
+*option:TripleKrypton_HighGainOnSouth:value:12 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:cost:total  = 703	! Mattamy Ott incr. cost for S
 !*option:TripleKrypton_HighGainOnSouth:cost:total = 768	! Mattamy Ott incr. cost for W
 !*option:TripleKrypton_HighGainOnSouth:cost:total = 690	! Mattamy Ott incr. cost for N
 !*option:TripleKrypton_HighGainOnSouth:cost:total = 880	! Mattamy Ott incr. cost for E
 
-*option:Wind1_trp_CL :value:1 = Wind1_trp_CL   ! Also H2K   
-*option:Wind1_trp_CL :value:2 = Wind1_trp_CL    
-*option:Wind1_trp_CL :value:3 = Wind1_trp_CL   ! Also H2K   
+*option:Wind1_trp_CL :value:1 = Wind1_trp_CL     
+*option:Wind1_trp_CL :value:2 = Wind1_trp_CL   
+*option:Wind1_trp_CL :value:3 = Wind1_trp_CL     
 *option:Wind1_trp_CL :value:4 = Wind1_trp_CL 
-*option:Wind1_trp_CL :value:5 = Wind1_trp_CL   ! Also H2K   
+*option:Wind1_trp_CL :value:5 = Wind1_trp_CL     
 *option:Wind1_trp_CL :value:6 = Wind1_trp_CL 
-*option:Wind1_trp_CL :value:7 = Wind1_trp_CL   ! Also H2K   
+*option:Wind1_trp_CL :value:7 = Wind1_trp_CL     
 *option:Wind1_trp_CL :value:8 = Wind1_trp_CL
+*option:Wind1_trp_CL :value:9 = Wind1_trp_CL
+*option:Wind1_trp_CL :value:10 = Wind1_trp_CL
+*option:Wind1_trp_CL :value:11 = Wind1_trp_CL
+*option:Wind1_trp_CL :value:12 = Wind1_trp_CL
 *option:Wind1_trp_CL :cost:total    = 0   ! this is used as the base case for NWT, so no cost. origianlly $20551
 
-*option:Win2scLE1_tr:value:1 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:1 = Win2scLE1_tr   
 *option:Win2scLE1_tr:value:2 = Win2scLE1_tr  
-*option:Win2scLE1_tr:value:3 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:3 = Win2scLE1_tr   
 *option:Win2scLE1_tr:value:4 = Win2scLE1_tr  
-*option:Win2scLE1_tr:value:5 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:5 = Win2scLE1_tr   
 *option:Win2scLE1_tr:value:6 = Win2scLE1_tr  
-*option:Win2scLE1_tr:value:7 = Win2scLE1_tr   ! Also H2K
+*option:Win2scLE1_tr:value:7 = Win2scLE1_tr   
 *option:Win2scLE1_tr:value:8 = Win2scLE1_tr 
+*option:Win2scLE1_tr:value:9 = Win2scLE1_tr 
+*option:Win2scLE1_tr:value:10 = Win2scLE1_tr 
+*option:Win2scLE1_tr:value:11 = Win2scLE1_tr 
+*option:Win2scLE1_tr:value:12 = Win2scLE1_tr 
 *option:Win2scLE1_tr:cost:total   = 22883
 
-*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr   
 *option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr 
-*option:Win3hcLE1_tr:value:3 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:3 = Win3hcLE1_tr   
 *option:Win3hcLE1_tr:value:4 = Win3hcLE1_tr 
-*option:Win3hcLE1_tr:value:5 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:5 = Win3hcLE1_tr   
 *option:Win3hcLE1_tr:value:6 = Win3hcLE1_tr 
-*option:Win3hcLE1_tr:value:7 = Win3hcLE1_tr   ! Also H2K
+*option:Win3hcLE1_tr:value:7 = Win3hcLE1_tr   
 *option:Win3hcLE1_tr:value:8 = Win3hcLE1_tr
+*option:Win3hcLE1_tr:value:9 = Win3hcLE1_tr
+*option:Win3hcLE1_tr:value:10 = Win3hcLE1_tr
+*option:Win3hcLE1_tr:value:11 = Win3hcLE1_tr
+*option:Win3hcLE1_tr:value:12 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:cost:total   = 23550
 
-*option:Win4scLE2_tr:value:1 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:1 = Win4scLE2_tr    
 *option:Win4scLE2_tr:value:2 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:3 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:3 = Win4scLE2_tr    
 *option:Win4scLE2_tr:value:4 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:5 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:5 = Win4scLE2_tr    
 *option:Win4scLE2_tr:value:6 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:7 = Win4scLE2_tr   ! Also H2K 
+*option:Win4scLE2_tr:value:7 = Win4scLE2_tr    
 *option:Win4scLE2_tr:value:8 = Win4scLE2_tr
+*option:Win4scLE2_tr:value:9 = Win4scLE2_tr
+*option:Win4scLE2_tr:value:10 = Win4scLE2_tr
+*option:Win4scLE2_tr:value:11 = Win4scLE2_tr
+*option:Win4scLE2_tr:value:12 = Win4scLE2_tr
 *option:Win4scLE2_tr:cost:total   = 23824
 
-*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr   
 *option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr 
-*option:Win5hcLE2_tr:value:3 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:3 = Win5hcLE2_tr   
 *option:Win5hcLE2_tr:value:4 = Win5hcLE2_tr 
-*option:Win5hcLE2_tr:value:5 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:5 = Win5hcLE2_tr   
 *option:Win5hcLE2_tr:value:6 = Win5hcLE2_tr 
-*option:Win5hcLE2_tr:value:7 = Win5hcLE2_tr   ! Also H2K
+*option:Win5hcLE2_tr:value:7 = Win5hcLE2_tr   
 *option:Win5hcLE2_tr:value:8 = Win5hcLE2_tr
+*option:Win5hcLE2_tr:value:9 = Win5hcLE2_tr
+*option:Win5hcLE2_tr:value:10 = Win5hcLE2_tr
+*option:Win5hcLE2_tr:value:11 = Win5hcLE2_tr
+*option:Win5hcLE2_tr:value:12 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:cost:total   = 24491
 
 *option:Win6_qd_CL:value:1 = Win6_qd_CL
@@ -1910,6 +1970,10 @@
 *option:Win6_qd_CL:value:6 = Win6_qd_CL
 *option:Win6_qd_CL:value:7 = Win6_qd_CL
 *option:Win6_qd_CL:value:8 = Win6_qd_CL
+*option:Win6_qd_CL:value:9 = Win6_qd_CL
+*option:Win6_qd_CL:value:10 = Win6_qd_CL
+*option:Win6_qd_CL:value:11 = Win6_qd_CL
+*option:Win6_qd_CL:value:12 = Win6_qd_CL
 *option:Win6_qd_CL:cost:total   = 25226
 
 *option:Triple_win_shutter:value:1 = Wind3SHUTTER
@@ -1920,6 +1984,10 @@
 *option:Triple_win_shutter:value:6 = Wind3SHUTTER
 *option:Triple_win_shutter:value:7 = Wind3SHUTTER
 *option:Triple_win_shutter:value:8 = Wind3SHUTTER
+*option:Triple_win_shutter:value:9 = Wind3SHUTTER
+*option:Triple_win_shutter:value:10 = Wind3SHUTTER
+*option:Triple_win_shutter:value:11 = Wind3SHUTTER
+*option:Triple_win_shutter:value:12 = Wind3SHUTTER
 *option:Triple_win_shutter:cost:total   = 24491
 
 *option:Quad_win_shutter:value:1 = Wind4SHUTTER
@@ -1930,6 +1998,10 @@
 *option:Quad_win_shutter:value:6 = Wind4SHUTTER
 *option:Quad_win_shutter:value:7 = Wind4SHUTTER
 *option:Quad_win_shutter:value:8 = Wind4SHUTTER
+*option:Quad_win_shutter:value:9 = Wind4SHUTTER
+*option:Quad_win_shutter:value:10 = Wind4SHUTTER
+*option:Quad_win_shutter:value:11 = Wind4SHUTTER
+*option:Quad_win_shutter:value:12 = Wind4SHUTTER
 *option:Quad_win_shutter:cost:total   = 24491
 
 !---------------------------------------------------------------------
@@ -2909,7 +2981,7 @@ Whitehorse Wall Options (Code is R28)
 *option:Rigid+BattR30-R24BSlab:value:5 = 24
 *option:Rigid+BattR30-R24BSlab:cost:total = 8442   ! 4642+3800
 
-*option:Rigid+BattR30-R10BSlab:value:1 = BCCB_4_B  ! Ref# 69 - change Basements in model
+*option:Rigid+BattR30-R10BSlab:value:1 = BCCB_4_B  ! Change all Basements in model
 *option:Rigid+BattR30-R10BSlab:value:2 = NA        !BsmIntR20
 *option:Rigid+BattR30-R10BSlab:value:3 = 20        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:Rigid+BattR30-R10BSlab:value:4 = 10        ! Ext wall added R-value
