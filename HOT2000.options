@@ -2312,10 +2312,6 @@
 *option:LG-avg-Double:cost:total   = 0   
 
 
-
-
-
-
 *attribute:end
 
 
@@ -3316,6 +3312,16 @@ Whitehorse Wall Options (Code is R28)
 *option:NA:value:14 = NA
 *option:NA:value:15 = NA
 *option:NA:value:16 = NA
+*option:NA:value:17 = NA
+*option:NA:value:18 = NA
+*option:NA:value:19 = NA
+*option:NA:value:20 = NA
+*option:NA:value:21 = NA
+*option:NA:value:22 = NA
+*option:NA:value:23 = NA
+*option:NA:value:24 = NA
+*option:NA:value:25 = NA
+*option:NA:value:26 = NA
 *option:NA:cost:total    = 0
 
 !--- Consider using psc variety as base furnace from now on. 

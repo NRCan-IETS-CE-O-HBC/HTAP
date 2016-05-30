@@ -1348,43 +1348,27 @@ def processFile(filespec)
                elsif ( tag =~ /Opt-H2K-Type1EEMotor/ &&  value != "NA" )
                   locationText = "HouseFile/House/HeatingCooling/Type1/FansAndPump"
                   h2kElements[locationText].attributes["hasEnergyEfficientMotor"] = value
-                  
                
                elsif ( tag =~ /Opt-H2K-Type2CCaseH/ && value != "NA" )
                   sysType2.each do |sysType2Name| 
-                   
-                    if ( sysType2Name = "AirHeatPump" )
-                     
-                      locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
-                     
-                      if ( h2kElements[locationText] != nil )
-                     
-                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment"
-                       h2kElements[locationText].attributes["crankcaseHeater"] = value 
-                       
-                      end 
-               
-                    end 
-                    
+                     if ( sysType2Name = "AirHeatPump" )
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment"
+                           h2kElements[locationText].attributes["crankcaseHeater"] = value 
+                        end 
+                     end 
                   end 
                   
                elsif ( tag =~ /Opt-H2K-Type2Func/ && value != "NA" )
-
                   sysType2.each do |sysType2Name| 
-                   
-                    if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-                     
-                      locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
-                     
-                      if ( h2kElements[locationText] != nil )
-                     
-                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment/Function"
-                        h2kElements[locationText].attributes["code"] = value 
-                       
-                      end 
-                   
-                    end 
-               
+                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment/Function"
+                           h2kElements[locationText].attributes["code"] = value 
+                        end 
+                     end 
                   end 
               
 
