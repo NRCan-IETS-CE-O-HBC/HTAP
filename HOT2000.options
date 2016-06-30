@@ -3845,17 +3845,32 @@ Reflects southern Ontario costs
 
 *attribute:end 
 
-!-----------------------------------------------------------------------
-! DHW System
-!-----------------------------------------------------------------------
+!---------------------------------------------------------------------------------------------
+! DHW System (optionally includes DWHR)
+! Note:
+!   DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
+!   "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
+!   changes made here will be overwritten by the Base Loads user inputs for Water Usage.
+!
+!---------------------------------------------------------------------------------------------
 *attribute:start
 *attribute:name  = Opt-DHWSystem
 *attribute:tag:1 = <Opt-DHWInputFile>
-*attribute:tag:2 = Opt-H2K-Fuel
-*attribute:tag:3 = Opt-H2K-TankType
-*attribute:tag:4 = Opt-H2K-TankSize
-*attribute:tag:5 = Opt-H2K-EF
-*attribute:tag:6 = Opt-H2K-InputCapacity
+*attribute:tag:2 = Opt-H2K-Fuel                          ! DHW Fuel code (1-7)
+*attribute:tag:3 = Opt-H2K-TankType                      ! DHW tank type code (code depends on fuel!)
+*attribute:tag:4 = Opt-H2K-TankSize                      ! DHW tank size code (volume code)
+*attribute:tag:5 = Opt-H2K-EF                            ! DHW Energy Factor code
+*attribute:tag:6 = Opt-H2K-IntHeatPumpCOP                ! DHW Integrated HP COP
+*attribute:tag:7 = Opt-H2K-HasDWHR                       ! DWHR "true" or "false"
+*attribute:tag:8 = Opt-H2K-DHWR-showerLength             ! DWHR Shower length in minutes e.g. 6.5
+*attribute:tag:9 = Opt-H2K-DHWR-dailyShowers             ! DWHR Number of daily showers e.g. 2.45
+*attribute:tag:10 = Opt-H2K-DHWR-preheatShowerTank       ! DWHR Preheat shower only "true" or "false"
+*attribute:tag:11 = Opt-H2K-DHWR-Manufacturer            ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., Power-Pipe, Watercycles^Energy^Recovery^Inc., Generic
+*attribute:tag:12 = Opt-H2K-DHWR-Model                   ! DWHR Model: See H2K DWHR screen
+*attribute:tag:13 = Opt-H2K-DHWR-Efficiency_code         ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*attribute:tag:14 = Opt-H2K-DHWR-ShowerTemperature_code  ! DWHR Shower temperature code (1, 2 or 3)
+*attribute:tag:15 = Opt-H2K-DHWR-ShowerHead_code         ! DWHR Showhead flow rate code (0-4)
+
 *attribute:default = BaseDHW 
 
 *option:NA:value:1 = NA.dhw
@@ -3864,6 +3879,15 @@ Reflects southern Ontario costs
 *option:NA:value:4 = NA
 *option:NA:value:5 = NA
 *option:NA:value:6 = NA
+*option:NA:value:7 = NA
+*option:NA:value:8 = NA
+*option:NA:value:9 = NA
+*option:NA:value:10 = NA
+*option:NA:value:11 = NA
+*option:NA:value:12 = NA
+*option:NA:value:13 = NA
+*option:NA:value:14 = NA
+*option:NA:value:15 = NA
 *option:NA:cost:total = 0
 
 *option:BaseDHW:value:1 = BaseDHW.dhw
@@ -3871,7 +3895,16 @@ Reflects southern Ontario costs
 *option:BaseDHW:value:3 = 2         ! Conventional Tank
 *option:BaseDHW:value:4 = 151.4     ! Litres (40 USGal)
 *option:BaseDHW:value:5 = 0.5543    ! EF
-*option:BaseDHW:value:6 = NA        ! Watts
+*option:BaseDHW:value:6 = NA        
+*option:BaseDHW:value:7 = NA
+*option:BaseDHW:value:8 = NA
+*option:BaseDHW:value:9 = NA
+*option:BaseDHW:value:10 = NA
+*option:BaseDHW:value:11 = NA
+*option:BaseDHW:value:12 = NA
+*option:BaseDHW:value:13 = NA
+*option:BaseDHW:value:14 = NA
+*option:BaseDHW:value:15 = NA
 *option:BaseDHW:cost:total = 0
 
 *option:ElecInstantaneous:value:1 = ElecInstant.dhw
@@ -3879,7 +3912,16 @@ Reflects southern Ontario costs
 *option:ElecInstantaneous:value:3 = 4         ! Instantaneous
 *option:ElecInstantaneous:value:4 = 0         ! Litres
 *option:ElecInstantaneous:value:5 = 0.936     ! EF
-*option:ElecInstantaneous:value:6 = NA        ! Watts
+*option:ElecInstantaneous:value:6 = NA        
+*option:ElecInstantaneous:value:7 = NA
+*option:ElecInstantaneous:value:8 = NA
+*option:ElecInstantaneous:value:9 = NA
+*option:ElecInstantaneous:value:10 = NA
+*option:ElecInstantaneous:value:11 = NA
+*option:ElecInstantaneous:value:12 = NA
+*option:ElecInstantaneous:value:13 = NA
+*option:ElecInstantaneous:value:14 = NA
+*option:ElecInstantaneous:value:15 = NA
 *option:ElecInstantaneous:cost:total = -245.0
 
 *option:ElectricStorage:value:1 = ElecStorage.dhw
@@ -3887,7 +3929,16 @@ Reflects southern Ontario costs
 *option:ElectricStorage:value:3 = 2         ! Conventional Tank
 *option:ElectricStorage:value:4 = 189.3     ! Litres (50 USGal)
 *option:ElectricStorage:value:5 = 0.8217    ! EF
-*option:ElectricStorage:value:6 = NA        ! Watts
+*option:ElectricStorage:value:6 = NA        ! HP COP
+*option:ElectricStorage:value:7 = NA        
+*option:ElectricStorage:value:8 = NA
+*option:ElectricStorage:value:9 = NA
+*option:ElectricStorage:value:10 = NA
+*option:ElectricStorage:value:11 = NA
+*option:ElectricStorage:value:12 = NA
+*option:ElectricStorage:value:13 = NA
+*option:ElectricStorage:value:14 = NA
+*option:ElectricStorage:value:15 = NA
 *option:ElectricStorage:cost:total    = -605.0
 
 *option:GasInstantaneous:value:1 = GasInstantaneous.dhw
@@ -3895,16 +3946,67 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:3 = 5         ! Instantaneous
 *option:GasInstantaneous:value:4 = 0         ! Litres
 *option:GasInstantaneous:value:5 = 0.571     ! EF
-*option:GasInstantaneous:value:6 = NA        ! Watts
+*option:GasInstantaneous:value:6 = NA        
+*option:GasInstantaneous:value:7 = NA        
+*option:GasInstantaneous:value:8 = NA
+*option:GasInstantaneous:value:9 = NA
+*option:GasInstantaneous:value:10 = NA
+*option:GasInstantaneous:value:11 = NA
+*option:GasInstantaneous:value:12 = NA
+*option:GasInstantaneous:value:13 = NA
+*option:GasInstantaneous:value:14 = NA
+*option:GasInstantaneous:value:15 = NA
 *option:GasInstantaneous:cost:total    = 550    ! BC-LEEP
+
+*option:GasTankless+DWHR:value:1 = GasInstantaneous.dhw
+*option:GasTankless+DWHR:value:2 = 2         ! Gas
+*option:GasTankless+DWHR:value:3 = 5         ! Instantaneous (tankless)
+*option:GasTankless+DWHR:value:4 = 0         ! Litres
+*option:GasTankless+DWHR:value:5 = 0.571     ! EF
+*option:GasTankless+DWHR:value:6 = NA        ! Integrated HO COP
+*option:GasTankless+DWHR:value:7 = true      ! DWHR "true" or "false"
+*option:GasTankless+DWHR:value:8 = 5.5       ! DWHR Shower length in minutes e.g. 6.5
+*option:GasTankless+DWHR:value:9 = 2.0       ! DWHR Number of daily showers e.g. 2.45
+*option:GasTankless+DWHR:value:10 = false    ! DWHR Preheat shower only "true" or "false"
+*option:GasTankless+DWHR:value:11 = Generic          ! DWHR Manufacturer (NB: Use '^' instead of spaces!)
+*option:GasTankless+DWHR:value:12 = 1-Low^Efficiency ! DWHR Model (NB: Use '^' instead of spaces!)
+*option:GasTankless+DWHR:value:13 = 2        ! DWHR Efficiency code (1:Testing using hardcoded data, 2:User Supplied Data) ALWAYS USE 2!
+*option:GasTankless+DWHR:value:14 = 2        ! DWHR Shower temperature code (1, 2 or 3)
+*option:GasTankless+DWHR:value:15 = 2        ! DWHR Showhead flow rate code (0-4)
+*option:GasTankless+DWHR:cost:total = 0
 
 *option:ElectricHP:value:1 = ElecHP.dhw
 *option:ElectricHP:value:2 = 1         ! Elec
 *option:ElectricHP:value:3 = 6         ! Heat Pump
 *option:ElectricHP:value:4 = 0         ! Litres 
 *option:ElectricHP:value:5 = 1.91      ! COP
-*option:ElectricHP:value:6 = NA        ! Watts
+*option:ElectricHP:value:6 = NA        ! Integrated HP COP
+*option:ElectricHP:value:7 = NA
+*option:ElectricHP:value:8 = NA
+*option:ElectricHP:value:9 = NA
+*option:ElectricHP:value:10 = NA
+*option:ElectricHP:value:11 = NA
+*option:ElectricHP:value:12 = NA
+*option:ElectricHP:value:13 = NA
+*option:ElectricHP:value:14 = NA
 *option:ElectricHP:cost:total    = 825    ! BC-LEEP
+
+*option:HPHotWater:value:1 = HPHotWater.dhw
+*option:HPHotWater:value:2 = 1         ! Elec
+*option:HPHotWater:value:3 = 7         ! Integrated Heat Pump
+*option:HPHotWater:value:4 = 189.3     ! Litres (50 USGl)
+*option:HPHotWater:value:5 = 1.91      ! EF
+*option:HPHotWater:value:6 = 2.5        ! Integrated HP COP
+*option:HPHotWater:value:7 = NA
+*option:HPHotWater:value:8 = NA
+*option:HPHotWater:value:9 = NA
+*option:HPHotWater:value:10 = NA
+*option:HPHotWater:value:11 = NA
+*option:HPHotWater:value:12 = NA
+*option:HPHotWater:value:13 = NA
+*option:HPHotWater:value:14 = NA
+*option:HPHotWater:cost:total    = 0
+
 
 ! retrofit costs---------------------
 *option:retro_GasInst:value:1 = GasInstantaneous.dhw
