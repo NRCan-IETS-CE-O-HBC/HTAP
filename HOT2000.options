@@ -1698,25 +1698,28 @@
 *option:ACH_4:cost:total  =  0
 
 *option:ACH_3_5:value:1  = 3.5
-*option:ACH_3_5:cost:total  =  160
+*option:ACH_3_5:cost:total  =  0
 
 *option:ACH_3:value:1  = 3.0
 *option:ACH_3:cost:total  =  0
 
 *option:ACH_2_5:value:1  = 2.5
-*option:ACH_2_5:cost:total  =  318
+*option:ACH_2_5:cost:total  =  0
 
 *option:ACH_2:value:1  = 2.0
 *option:ACH_2:cost:total  =  0
 
 *option:ACH_1_5:value:1  = 1.5
-*option:ACH_1_5:cost:total  =  588
+*option:ACH_1_5:cost:total  =  0
 
 *option:ACH_1:value:1  = 1.0
-*option:ACH_1:cost:total  =  658
+*option:ACH_1:cost:total  =  0
 
-*option:ACH_0_1:value:1  = 0.11
-*option:ACH_0_1:cost:total  =  658
+*option:ACH_0_5:value:1  = 0.5
+*option:ACH_0_5:cost:total  =  0
+
+*option:ACH_0_1:value:1  = 0.1
+*option:ACH_0_1:cost:total  =  0
 
 *attribute:end
 
@@ -1808,7 +1811,7 @@
 *option:DoubleLowEHardCoatArgFill:value:10 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:value:11 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:value:12 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:cost:total    = 0 ! Value changed for Van_2st_80_retro geometry. Originally 11727
+*option:DoubleLowEHardCoatArgFill:cost:total    = 0 ! Originally 11727
 
 *option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry   
 *option:TripleLowEHardCoatKryFill:value:2 = TplLeHcKry 
@@ -1822,7 +1825,7 @@
 *option:TripleLowEHardCoatKryFill:value:10 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:value:11 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:value:12 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:cost:total    = 1436 ! Value changed for Van_2st_80_retro geometry. Originally 20871
+*option:TripleLowEHardCoatKryFill:cost:total    = 0 ! Originally 20871
 
 *option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry   
 *option:TripleLowESoftCoatKryFill:value:2 = TplLeScKry 
@@ -1836,7 +1839,7 @@
 *option:TripleLowESoftCoatKryFill:value:10 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:value:11 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:value:12 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:cost:total    = 1665 ! Value changed for Van_2st_80_retro geometry. Originally 19310
+*option:TripleLowESoftCoatKryFill:cost:total    = 0 ! Originally 19310
 
 *option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg   
 *option:DoubleLowESoftCoatArgFill:value:2 = DblLeScArg 
@@ -1850,9 +1853,7 @@
 *option:DoubleLowESoftCoatArgFill:value:10 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:value:11 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:value:12 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:cost:total    = 229 	! Base for BC-LEEP (Vancouver)
-														! Was 2440 from last use
-														! Van_2st_80_retro geometry: Originally 10965
+*option:DoubleLowESoftCoatArgFill:cost:total    = 0 	! Originally 10965
 
 !---------------------------------------------------------------------
 ! Doubles, high-gain-on south.
@@ -1869,11 +1870,7 @@
 *option:DoubleArgon_HighGainOnSouth:value:10 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:11 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:12 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:cost:total = 73	! Mattamy Ott incr. cost for S
-!*option:DoubleArgon_HighGainOnSouth:cost:total = 89	! Mattamy Ott incr. cost for W
-!*option:DoubleArgon_HighGainOnSouth:cost:total = 70	! Mattamy Ott incr. cost for N
-!*option:DoubleArgon_HighGainOnSouth:cost:total = 117	! Mattamy Ott incr. cost for E
-! Cost value changed for Van_2st_80_retro geometry. Originally 10965
+*option:DoubleArgon_HighGainOnSouth:cost:total = 0
 
 *option:TripleKrypton_HighGainOnSouth:value:1 = TplLeHcKry
 *option:TripleKrypton_HighGainOnSouth:value:2 = TplLeHcKry
@@ -1887,10 +1884,7 @@
 *option:TripleKrypton_HighGainOnSouth:value:10 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:value:11 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:value:12 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:cost:total  = 703	! Mattamy Ott incr. cost for S
-!*option:TripleKrypton_HighGainOnSouth:cost:total = 768	! Mattamy Ott incr. cost for W
-!*option:TripleKrypton_HighGainOnSouth:cost:total = 690	! Mattamy Ott incr. cost for N
-!*option:TripleKrypton_HighGainOnSouth:cost:total = 880	! Mattamy Ott incr. cost for E
+*option:TripleKrypton_HighGainOnSouth:cost:total  = 0	
 
 *option:Wind1_trp_CL :value:1 = Wind1_trp_CL     
 *option:Wind1_trp_CL :value:2 = Wind1_trp_CL   
@@ -1918,7 +1912,7 @@
 *option:Win2scLE1_tr:value:10 = Win2scLE1_tr 
 *option:Win2scLE1_tr:value:11 = Win2scLE1_tr 
 *option:Win2scLE1_tr:value:12 = Win2scLE1_tr 
-*option:Win2scLE1_tr:cost:total   = 22883
+*option:Win2scLE1_tr:cost:total   = 0
 
 *option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr   
 *option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr 
@@ -1932,7 +1926,7 @@
 *option:Win3hcLE1_tr:value:10 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:value:11 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:value:12 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:cost:total   = 23550
+*option:Win3hcLE1_tr:cost:total   = 0
 
 *option:Win4scLE2_tr:value:1 = Win4scLE2_tr    
 *option:Win4scLE2_tr:value:2 = Win4scLE2_tr 
@@ -1946,7 +1940,7 @@
 *option:Win4scLE2_tr:value:10 = Win4scLE2_tr
 *option:Win4scLE2_tr:value:11 = Win4scLE2_tr
 *option:Win4scLE2_tr:value:12 = Win4scLE2_tr
-*option:Win4scLE2_tr:cost:total   = 23824
+*option:Win4scLE2_tr:cost:total   = 0
 
 *option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr   
 *option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr 
@@ -1960,7 +1954,7 @@
 *option:Win5hcLE2_tr:value:10 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:value:11 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:value:12 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:cost:total   = 24491
+*option:Win5hcLE2_tr:cost:total   = 0
 
 *option:Win6_qd_CL:value:1 = Win6_qd_CL
 *option:Win6_qd_CL:value:2 = Win6_qd_CL
@@ -1974,7 +1968,7 @@
 *option:Win6_qd_CL:value:10 = Win6_qd_CL
 *option:Win6_qd_CL:value:11 = Win6_qd_CL
 *option:Win6_qd_CL:value:12 = Win6_qd_CL
-*option:Win6_qd_CL:cost:total   = 25226
+*option:Win6_qd_CL:cost:total   = 0
 
 *option:Triple_win_shutter:value:1 = Wind3SHUTTER
 *option:Triple_win_shutter:value:2 = Wind3SHUTTER
@@ -1988,7 +1982,7 @@
 *option:Triple_win_shutter:value:10 = Wind3SHUTTER
 *option:Triple_win_shutter:value:11 = Wind3SHUTTER
 *option:Triple_win_shutter:value:12 = Wind3SHUTTER
-*option:Triple_win_shutter:cost:total   = 24491
+*option:Triple_win_shutter:cost:total   = 0
 
 *option:Quad_win_shutter:value:1 = Wind4SHUTTER
 *option:Quad_win_shutter:value:2 = Wind4SHUTTER
@@ -2002,7 +1996,7 @@
 *option:Quad_win_shutter:value:10 = Wind4SHUTTER
 *option:Quad_win_shutter:value:11 = Wind4SHUTTER
 *option:Quad_win_shutter:value:12 = Wind4SHUTTER
-*option:Quad_win_shutter:cost:total   = 24491
+*option:Quad_win_shutter:cost:total   = 0
 
 !---------------------------------------------------------------------
 ! Whitehorse window models
@@ -2012,43 +2006,43 @@
 ! by optional window areas.
 !*option:Wind1_trp_CL :value:1 = Wind1_trp_CL   
 !*option:Wind1_trp_CL :value:2 = Wind1_trp_CL   
-!*option:Wind1_trp_CL :cost:total    = 20551
+!*option:Wind1_trp_CL :cost:total    = 0
 !
 !*option:Win2scLE1_tr:value:1 = Win2scLE1_tr
 !*option:Win2scLE1_tr:value:2 = Win2scLE1_tr 
-!*option:Win2scLE1_tr:cost:total   = 22883
+!*option:Win2scLE1_tr:cost:total   = 0
 !
 !*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr
 !*option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr
-!*option:Win3hcLE1_tr:cost:total   = 23550
+!*option:Win3hcLE1_tr:cost:total   = 0
 !
 !*option:Win4scLE2_tr:value:1 = Win4scLE2_tr 
 !*option:Win4scLE2_tr:value:2 = Win4scLE2_tr
-!*option:Win4scLE2_tr:cost:total   = 23824
+!*option:Win4scLE2_tr:cost:total   = 0
 !
 !*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr
 !*option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr
-!*option:Win5hcLE2_tr:cost:total   = 24491
+!*option:Win5hcLE2_tr:cost:total   = 0
 !
 !*option:Win6_qd_CL:value:1 = Win6_qd_CL
 !*option:Win6_qd_CL:value:2 = Win6_qd_CL
-!*option:Win6_qd_CL:cost:total   = 25226
+!*option:Win6_qd_CL:cost:total   = 0
 !
 !*option:Win7scle1_qd:value:1 = Win7scle1_qd
 !*option:Win7scle1_qd:value:2 = Win7scle1_qd
-!*option:Win7scle1_qd:cost:total   = 28209
+!*option:Win7scle1_qd:cost:total   = 0
 !
 !*option:Win8hcle1_qd:value:1 = Win8hcle1_qd
 !*option:Win8hcle1_qd:value:2 = Win8hcle1_qd
-!*option:Win8hcle1_qd:cost:total   = 28876
+!*option:Win8hcle1_qd:cost:total   = 0
 !
 !*option:Win9scle2_qd:value:1 = Win9scle2_qd
 !*option:Win9scle2_qd:value:2 = Win9scle2_qd
-!*option:Win9scle2_qd:cost:total   = 29120
+!*option:Win9scle2_qd:cost:total   = 0
 !
 !*option:Win10hcle2_q:value:1 = Win10hcle2_q
 !*option:Win10hcle2_q:value:2 = Win10hcle2_q
-!*option:Win10hcle2_q:cost:total   = 29787
+!*option:Win10hcle2_q:cost:total   = 0
 
 !---------------------------------------------------------------------
 ! Retrofit window models
@@ -2073,7 +2067,7 @@
 *option:retro_DoubleLowEHardCoatArgFill:value:6 = DblLeHcArg 
 *option:retro_DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg 
 *option:retro_DoubleLowEHardCoatArgFill:value:8 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:cost:total    = 28790  
+*option:retro_DoubleLowEHardCoatArgFill:cost:total    = 0  
 
 *option:retro_DoubleLowESoftCoatArgFill:value:1 = DblLeScArg
 *option:retro_DoubleLowESoftCoatArgFill:value:2 = DblLeScArg
@@ -2083,7 +2077,7 @@
 *option:retro_DoubleLowESoftCoatArgFill:value:6 = DblLeScArg
 *option:retro_DoubleLowESoftCoatArgFill:value:7 = DblLeScArg
 *option:retro_DoubleLowESoftCoatArgFill:value:8 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:cost:total    = 28790
+*option:retro_DoubleLowESoftCoatArgFill:cost:total    = 0
 
 *option:retro_TripleLowEHardCoatArgFill:value:1 = TplLeHcKry
 *option:retro_TripleLowEHardCoatArgFill:value:2 = TplLeHcKry
@@ -2093,7 +2087,7 @@
 *option:retro_TripleLowEHardCoatArgFill:value:6 = TplLeHcKry
 *option:retro_TripleLowEHardCoatArgFill:value:7 = TplLeHcKry
 *option:retro_TripleLowEHardCoatArgFill:value:8 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:cost:total    = 32156
+*option:retro_TripleLowEHardCoatArgFill:cost:total    = 0
 
 *option:retro_TripleLowESoftCoatArgFill:value:1 = TplLeScKry
 *option:retro_TripleLowESoftCoatArgFill:value:2 = TplLeScKry
@@ -2103,7 +2097,7 @@
 *option:retro_TripleLowESoftCoatArgFill:value:6 = TplLeScKry
 *option:retro_TripleLowESoftCoatArgFill:value:7 = TplLeScKry
 *option:retro_TripleLowESoftCoatArgFill:value:8 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:cost:total    = 32156
+*option:retro_TripleLowESoftCoatArgFill:cost:total    = 0
 
 
 !------------------------------------------------------------------------
@@ -2332,14 +2326,14 @@
 *option:Typical23:cost:total       =   0
 
 *option:R2000:value:1         =   R2000.aim
-*option:R2000:cost:total            =   2133
+*option:R2000:cost:total            =   0
 
 *option:Cdn1ACH:value:1       =   Cdn1ACH.aim
-*option:Cdn1ACH:cost:total          =   3049
+*option:Cdn1ACH:cost:total          =   0
                               
 ! Data is unreliable.                               
 *option:PassiveHouse:value:1  =   PassiveHouse.aim
-*option:PassiveHouse:cost:total     =   3787.0
+*option:PassiveHouse:cost:total     =   0
 
 *option:Generic:value:1       =   generic.aim
 *option:Generic:cost:total    =   0.0
@@ -2353,10 +2347,10 @@
 *option:Base_WH_1.5:cost:total      =   0
 
 *option:WH_1.0:value:1         =   WH_1.0.aim
-*option:WH_1.0:cost:total           =   1797
+*option:WH_1.0:cost:total           =   0
 
 *option:WH_0.5:value:1       =   WH_0.5.aim
-*option:WH_0.5:cost:total         =   2469
+*option:WH_0.5:cost:total         =   0
 
 *attribute:end
 
@@ -2387,35 +2381,35 @@
 
 *option:CeilR50:value:1 = CeilR50                
 *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
-*option:CeilR50:cost:total    =   255     ! BC-LEEP
+*option:CeilR50:cost:total    =   0     
 
 *option:CeilR60:value:1 =  CeilR60
 *option:CeilR60:value:2 =  NA
-*option:CeilR60:cost:total    =   440  ! BC-LEEP
+*option:CeilR60:cost:total    =   0  
 
 *option:CeilR70:value:1 =  CeilR70
 *option:CeilR70:value:2 =  NA
-*option:CeilR70:cost:total  =   725    ! BC-LEEP
+*option:CeilR70:cost:total  =   0
 
 *option:CeilR80:value:1 =   NA   !CeilR80
 *option:CeilR80:value:2 =   80
-*option:CeilR80:cost:total    =   970	! BC-LEEP
+*option:CeilR80:cost:total    =   0
 
 *option:CeilR90:value:1 =   NA   !CeilR90
 *option:CeilR90:value:2 =   90
-*option:CeilR90:cost:total    =   1220	! BC-LEEP
+*option:CeilR90:cost:total    =   0
 
 *option:CeilR100:value:1 =  NA   !CeilR100
 *option:CeilR100:value:2 =  100
-*option:CeilR100:cost:total    = 1465 	! BC-LEEP 
+*option:CeilR100:cost:total    = 0 
 
 *option:CeilR110:value:1 =  NA   !CeilR110
 *option:CeilR110:value:2 =  110
-*option:CeilR110:cost:total    =  2788  
+*option:CeilR110:cost:total    =  0  
 
 *option:CeilR120:value:1 =  NA   !CeilR120
 *option:CeilR120:value:2 =  120
-*option:CeilR120:cost:total    =  3257  
+*option:CeilR120:cost:total    =  0  
 
 !-----------------------------------------------------------------------
 !   Retrofit Ceilings options
@@ -2483,99 +2477,99 @@
 
 *option:Stud_2x4_2in_XPS_R-24:value:1 = 0.1366
 *option:Stud_2x4_2in_XPS_R-24:value:2 = 24
-*option:Stud_2x4_2in_XPS_R-24:cost = 2235     ! BC-LEEP
+*option:Stud_2x4_2in_XPS_R-24:cost = 0    
 
 *option:Stud_2x6_1in_XPS_R-23:value:1 = 0.1329
 *option:Stud_2x6_1in_XPS_R-23:value:2 = 23
-*option:Stud_2x6_1in_XPS_R-23:cost = 2075     ! BC-LEEP
+*option:Stud_2x6_1in_XPS_R-23:cost = 0
 
 *option:Stud_2x6_1.5in_XPS_R-25:value:1 = 0.1457
 *option:Stud_2x6_1.5in_XPS_R-25:value:2 = 25
-*option:Stud_2x6_1.5in_XPS_R-25:cost = 2775     ! BC-LEEP
+*option:Stud_2x6_1.5in_XPS_R-25:cost = 0
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
 *option:Stud_2x6_2in_XPS_R-29:value:2 = 29
-*option:Stud_2x6_2in_XPS_R-29:cost = 3475     ! BC-LEEP
+*option:Stud_2x6_2in_XPS_R-29:cost = 0
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
 *option:Stud_2x6_3in_XPS_R-34:value:2 = 34
-*option:Stud_2x6_3in_XPS_R-34:cost = 4880     ! BC-LEEP
+*option:Stud_2x6_3in_XPS_R-34:cost = 0
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
 *option:Stud_2x6_4in_XPS_R-39:value:2 = 39
-*option:Stud_2x6_4in_XPS_R-39:cost = 7805     ! BC-LEEP
+*option:Stud_2x6_4in_XPS_R-39:cost = 0
 
 *option:Stud_2x6_1.5in_MWB_R-25:value:1 = 0.14
 *option:Stud_2x6_1.5in_MWB_R-25:value:2 = 25
-*option:Stud_2x6_1.5in_MWB_R-25:cost = 5045     ! BC-LEEP
+*option:Stud_2x6_1.5in_MWB_R-25:cost = 0
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
 *option:Stud_2x6_2in_MWB_R-27:value:2 = 27
-*option:Stud_2x6_2in_MWB_R-27:cost = 5275     ! BC-LEEP
+*option:Stud_2x6_2in_MWB_R-27:cost = 0
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
 *option:Stud_2x6_3in_MWB_R-31:value:2 = 31
-*option:Stud_2x6_3in_MWB_R-31:cost = 6970     ! BC-LEEP
+*option:Stud_2x6_3in_MWB_R-31:cost = 0
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
 *option:Stud_2x6_4in_MWB_R-35:value:2 = 35
-*option:Stud_2x6_4in_MWB_R-35:cost = 8465     ! BC-LEEP
+*option:Stud_2x6_4in_MWB_R-35:cost = 0
 
 *option:Stud_2x4_2in_Polyiso_R-25:value:1 = 0.1422
 *option:Stud_2x4_2in_Polyiso_R-25:value:2 = 25
-*option:Stud_2x4_2in_Polyiso_R-25:cost = 2845     ! BC-LEEP
+*option:Stud_2x4_2in_Polyiso_R-25:cost = 0
 
 *option:Stud_2x6_1in_Polyiso_R-24:value:1 = 0.1358
 *option:Stud_2x6_1in_Polyiso_R-24:value:2 = 24
-*option:Stud_2x6_1in_Polyiso_R-24:cost = 2900     ! BC-LEEP
+*option:Stud_2x6_1in_Polyiso_R-24:cost = 0
 
 *option:Stud_2x6_2in_Polyiso_R-30:value:1 = 0.1726
 *option:Stud_2x6_2in_Polyiso_R-30:value:2 = 30
-*option:Stud_2x6_2in_Polyiso_R-30:cost = 3855     ! BC-LEEP
+*option:Stud_2x6_2in_Polyiso_R-30:cost = 0
 
 *option:Stud_2x6_3in_Polyiso_R-35:value:1 = 0.208
 *option:Stud_2x6_3in_Polyiso_R-35:value:2 = 35
-*option:Stud_2x6_3in_Polyiso_R-35:cost = 5145     ! BC-LEEP
+*option:Stud_2x6_3in_Polyiso_R-35:cost = 0     
 
 *option:Stud_2x6_4in_Polyiso_R-41:value:1 = 0.2432
 *option:Stud_2x6_4in_Polyiso_R-41:value:2 = 41
-*option:Stud_2x6_4in_Polyiso_R-41:cost = 6740     ! BC-LEEP
+*option:Stud_2x6_4in_Polyiso_R-41:cost = 0
 
 *option:Stud_2x4_2in_EPS_R-21:value:1 = 0.1203
 *option:Stud_2x4_2in_EPS_R-21:value:2 = 21
-*option:Stud_2x4_2in_EPS_R-21:cost = 2460     ! BC-LEEP
+*option:Stud_2x4_2in_EPS_R-21:cost = 0
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
 *option:Stud_2x6_1.5in_EPS_R-24:value:2 = 24
-*option:Stud_2x6_1.5in_EPS_R-24:cost = 2910     ! BC-LEEP
+*option:Stud_2x6_1.5in_EPS_R-24:cost = 0
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
 *option:Stud_2x6_2in_EPS_R-26:value:2 = 26
-*option:Stud_2x6_2in_EPS_R-26:cost = 3470     ! BC-LEEP
+*option:Stud_2x6_2in_EPS_R-26:cost = 0
 
 *option:Stud_2x6_3in_EPS_R-30:value:1 = 0.1754
 *option:Stud_2x6_3in_EPS_R-30:value:2 = 30
-*option:Stud_2x6_3in_EPS_R-30:cost = 4695     ! BC-LEEP
+*option:Stud_2x6_3in_EPS_R-30:cost = 0
 
 *option:Stud_2x6_4in_EPS_R-34:value:1 = 0.2003
 *option:Stud_2x6_4in_EPS_R-34:value:2 = 34
-*option:Stud_2x6_4in_EPS_R-34:cost = 5830     ! BC-LEEP
+*option:Stud_2x6_4in_EPS_R-34:cost = 0
 
 *option:SIPS_6.5in_EPS_R-24:value:1 = 0.1367
 *option:SIPS_6.5in_EPS_R-24:value:2 = 24
-*option:SIPS_6.5in_EPS_R-24:cost = 9140     ! BC-LEEP
+*option:SIPS_6.5in_EPS_R-24:cost = 0
 
 *option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256
 *option:SIPS_10.5in_EPS_R-38:value:2 = 38
-*option:SIPS_10.5in_EPS_R-38:cost = 11945     ! BC-LEEP
+*option:SIPS_10.5in_EPS_R-38:cost = 0
 
 *option:DblStud_12in_cell_R-41:value:1 = 0.2464
 *option:DblStud_12in_cell_R-41:value:2 = 41
-*option:DblStud_12in_cell_R-41:cost = 13030     ! BC-LEEP
+*option:DblStud_12in_cell_R-41:cost = 0
 
 *option:DblStud_10in_cell_R-34:value:1 = 0.1982
 *option:DblStud_10in_cell_R-34:value:2 = 34
-*option:DblStud_10in_cell_R-34:cost = 11130     ! BC-LEEP
+*option:DblStud_10in_cell_R-34:cost = 0
 
 *attribute:end
 
@@ -2658,98 +2652,98 @@
 !*option:ICFR22:value:3 =   IcfR22Dry 
 !*option:ICFR22:value:4 =   NA             ! Existing H2K code library wall name
 !*option:ICFR22:value:5 =   22             ! OR, User-specified R-value (Imperial), but not both!
-!*option:ICFR22:cost:total    =   18438.04 ! updated for Vancouver geometry. originally 25150
+!*option:ICFR22:cost:total    =   0
 
 *option:SIPS-R22-Wall:value:1 =   SipR22Bri
 *option:SIPS-R22-Wall:value:2 =   SipR22Vin
 *option:SIPS-R22-Wall:value:3 =   SipR22Dry 
 *option:SIPS-R22-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:SIPS-R22-Wall:value:5 =   22        ! OR, User-specified R-value (Imperial), but not both!
-*option:SIPS-R22-Wall:cost:total    =  -598 ! updated for Vancouver geometry. originally -816
+*option:SIPS-R22-Wall:cost:total    =  0
 
 *option:SIPS-R28-Wall:value:1 =   SipR28Bri
 *option:SIPS-R28-Wall:value:2 =   SipR28Vin
 *option:SIPS-R28-Wall:value:3 =   SipR28Dry 
 *option:SIPS-R28-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:SIPS-R28-Wall:value:5 =   28        ! OR, User-specified R-value (Imperial), but not both!
-*option:SIPS-R28-Wall:cost:total    =  439 !  updated for Vancouver geometry. originally 599
+*option:SIPS-R28-Wall:cost:total    =  0
 
 !*option:SIPS-R36-Wall:value:1 =   SipR36Bri
 !*option:SIPS-R36-Wall:value:2 =   SipR36Vin
 !*option:SIPS-R36-Wall:value:3 =   SipR36Dry 
 !*option:SIPS-R36-Wall:value:4 =   NA        ! Existing H2K code library wall name
 !*option:SIPS-R36-Wall:value:5 =   36        ! OR, User-specified R-value (Imperial), but not both!
-!*option:SIPS-R36-Wall:cost:total    =  1497 ! updated for Vancouver geometry. originally 2042
+!*option:SIPS-R36-Wall:cost:total    =  0
 
 *option:Stud-R35-Wall:value:1 =   StudR35Bri
 *option:Stud-R35-Wall:value:2 =   StudR35Vin
 *option:Stud-R35-Wall:value:3 =   StudR35Dry 
 *option:Stud-R35-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Stud-R35-Wall:value:5 =   35        ! OR, User-specified R-value (Imperial), but not both!
-*option:Stud-R35-Wall:cost:total    =  2867  ! updated for Vancouver geometry. originally 3911
+*option:Stud-R35-Wall:cost:total    =  0
 
 *option:Stud-R40-Wall:value:1 =   StudR40Bri
 *option:Stud-R40-Wall:value:2 =   StudR40Vin
 *option:Stud-R40-Wall:value:3 =   StudR40Dry 
 *option:Stud-R40-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Stud-R40-Wall:value:5 =   40        ! OR, User-specified R-value (Imperial), but not both!
-*option:Stud-R40-Wall:cost:total    =  6098 ! updated for Vancouver geometry. originally 8318
+*option:Stud-R40-Wall:cost:total    =  0
 
 *option:DblStud-R37-Wall:value:1 =   DblSR37Bri
 *option:DblStud-R37-Wall:value:2 =   DblSR37Vin
 *option:DblStud-R37-Wall:value:3 =   DblSR37Dry 
 *option:DblStud-R37-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:DblStud-R37-Wall:value:5 =   37        ! OR, User-specified R-value (Imperial), but not both!
-*option:DblStud-R37-Wall:cost:total    = 2320  ! updated for Vancouver geometry. originally 3165
+*option:DblStud-R37-Wall:cost:total    = 0
 
 *option:DblStud-R52-Wall:value:1 =   DblSR52Bri
 *option:DblStud-R52-Wall:value:2 =   DblSR52Vin
 *option:DblStud-R52-Wall:value:3 =   DblSR52Dry 
 *option:DblStud-R52-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:DblStud-R52-Wall:value:5 =   52        ! OR, User-specified R-value (Imperial), but not both!
-*option:DblStud-R52-Wall:cost:total    = 4387 ! updated for Vancouver geometry. originally 5985
+*option:DblStud-R52-Wall:cost:total    = 0
 
 *option:Truss-R40-Wall:value:1 =   TruR40Bri
 *option:Truss-R40-Wall:value:2 =   TruR40Vin
 *option:Truss-R40-Wall:value:3 =   TruR40Dry 
 *option:Truss-R40-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Truss-R40-Wall:value:5 =   40        ! OR, User-specified R-value (Imperial), but not both!
-*option:Truss-R40-Wall:cost:total    = 4241 ! updated for Vancouver geometry. originally 5785
+*option:Truss-R40-Wall:cost:total    = 0 
 
 *option:Truss-R52-Wall:value:1 =   TruR52Bri
 *option:Truss-R52-Wall:value:2 =   TruR52Vin
 *option:Truss-R52-Wall:value:3 =   TruR52Dry 
 *option:Truss-R52-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Truss-R52-Wall:value:5 =   52        ! OR, User-specified R-value (Imperial), but not both!
-*option:Truss-R52-Wall:cost:total    = 9350 ! updated for Vancouver geometry. originally 12755
+*option:Truss-R52-Wall:cost:total    = 0
 
 *option:Stud-R275-Wall:value:1 =   StudR275Bri  ! Use for MB 1.5" Ext XPS
 *option:Stud-R275-Wall:value:2 =   StudR275Vin
 *option:Stud-R275-Wall:value:3 =   StudR275Dry 
 *option:Stud-R275-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Stud-R275-Wall:value:5 =   27.5        ! OR, User-specified R-value (Imperial), but not both!
-*option:Stud-R275-Wall:cost:total    =  715 ! updated for Vancouver geometry. originally 965   JTB 13-Aug-2014 Ottawa LEEP
+*option:Stud-R275-Wall:cost:total    =  0
 
 *option:Stud-R305-Wall:value:1 =   StudR305Bri  ! Use for MB 2.0" Ext XPS
 *option:Stud-R305-Wall:value:2 =   StudR305Vin
 *option:Stud-R305-Wall:value:3 =   StudR305Dry 
 *option:Stud-R305-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Stud-R305-Wall:value:5 =   30.5        ! OR, User-specified R-value (Imperial), but not both!
-*option:Stud-R305-Wall:cost:total    =  3853 	! updated for Vancouver geometry. originally 5255 From PL 30-Jan-2014 - Updated by JTB 04-Feb-2014
+*option:Stud-R305-Wall:cost:total    =  0
 
 *option:Stud-R325-Wall:value:1 =   StudR325Bri  ! Use for MB 2.5" Ext XPS
 *option:Stud-R325-Wall:value:2 =   StudR325Vin
 *option:Stud-R325-Wall:value:3 =   StudR325Dry 
 *option:Stud-R325-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:Stud-R325-Wall:value:5 =   32.5        ! OR, User-specified R-value (Imperial), but not both!
-*option:Stud-R325-Wall:cost:total    =   0	    ! Unknown cost
+*option:Stud-R325-Wall:cost:total    =   0
 
 *option:AdvFrm-R20-Wall:value:1 =   AdvFrmR20  ! Use for MB Advanced Framing 
 *option:AdvFrm-R20-Wall:value:2 =   AdvFrmR20
 *option:AdvFrm-R20-Wall:value:3 =   AdvFrmR20
 *option:AdvFrm-R20-Wall:value:4 =   NA        ! Existing H2K code library wall name
 *option:AdvFrm-R20-Wall:value:5 =   20        ! OR, User-specified R-value (Imperial), but not both!
-*option:AdvFrm-R20-Wall:cost:total    = -194 ! updated for Vancouver geometry. originally -265	 From PL 30/Jan/2014
+*option:AdvFrm-R20-Wall:cost:total    = 0
 
 !-------------------------------------------------------------------------------
 Whitehorse Wall Options (Code is R28)
@@ -2767,98 +2761,98 @@ Whitehorse Wall Options (Code is R28)
 *option:W5_R36:value:3 =   W5_R36Dry 
 *option:W5_R36:value:4 =   NA        ! Existing H2K code library wall name
 *option:W5_R36:value:5 =   36        ! OR, User-specified R-value (Imperial), but not both!
-*option:W5_R36:cost:total   =   10549
+*option:W5_R36:cost:total   =   0
 
 *option:W6_R56:value:1 =   W6_R56Bri
 *option:W6_R56:value:2 =   W6_R56Vin
 *option:W6_R56:value:3 =   W6_R56Dry 
 *option:W6_R56:value:4 =   NA        ! Existing H2K code library wall name
 *option:W6_R56:value:5 =   56        ! OR, User-specified R-value (Imperial), but not both!
-*option:W6_R56:cost:total   =   18636
+*option:W6_R56:cost:total   =   0
 
 *option:W8_R42:value:1 =   W8_R42Bri
 *option:W8_R42:value:2 =   W8_R42Vin
 *option:W8_R42:value:3 =   W8_R42Dry 
 *option:W8_R42:value:4 =   NA        ! Existing H2K code library wall name
 *option:W8_R42:value:5 =   42        ! OR, User-specified R-value (Imperial), but not both!
-*option:W8_R42:cost:total   =   6802
+*option:W8_R42:cost:total   =   0
 
 *option:W9_R62:value:1 =   W9_R62Bri
 *option:W9_R62:value:2 =   W9_R62Vin
 *option:W9_R62:value:3 =   W9_R62Dry 
 *option:W9_R62:value:4 =   NA        ! Existing H2K code library wall name
 *option:W9_R62:value:5 =   62        ! OR, User-specified R-value (Imperial), but not both!
-*option:W9_R62:cost:total   =   15101
+*option:W9_R62:cost:total   =   0
 
 *option:W10_R82:value:1 =   W10_R82Bri
 *option:W10_R82:value:2 =   W10_R82Vin
 *option:W10_R82:value:3 =   W10_R82Dry 
 *option:W10_R82:value:4 =   NA        ! Existing H2K code library wall name
 *option:W10_R82:value:5 =   82        ! OR, User-specified R-value (Imperial), but not both!
-*option:W10_R82:cost:total   =   23399
+*option:W10_R82:cost:total   =   0
 
 *option:W12_R59:value:1 =   W12_R59Bri
 *option:W12_R59:value:2 =   W12_R59Vin
 *option:W12_R59:value:3 =   W12_R59Dry 
 *option:W12_R59:value:4 =   NA        ! Existing H2K code library wall name
 *option:W12_R59:value:5 =   59        ! OR, User-specified R-value (Imperial), but not both!
-*option:W12_R59:cost:total   =   15806
+*option:W12_R59:cost:total   =   0
 
 *option:W13_R78:value:1 =   W13_R78Bri
 *option:W13_R78:value:2 =   W13_R78Vin
 *option:W13_R78:value:3 =   W13_R78Dry 
 *option:W13_R78:value:4 =   NA        ! Existing H2K code library wall name
 *option:W13_R78:value:5 =   78        ! OR, User-specified R-value (Imperial), but not both!
-*option:W13_R78:cost:total   =   24030
+*option:W13_R78:cost:total   =   0
 
 *option:W16_R38:value:1 =   W16_R38Bri
 *option:W16_R38:value:2 =   W16_R38Vin
 *option:W16_R38:value:3 =   W16_R38Dry 
 *option:W16_R38:value:4 =   NA        ! Existing H2K code library wall name
 *option:W16_R38:value:5 =   38        ! OR, User-specified R-value (Imperial), but not both!
-*option:W16_R38:cost:total   =   1713
+*option:W16_R38:cost:total   =   0
 
 *option:W17_R58:value:1 =   W17_R58Bri
 *option:W17_R58:value:2 =   W17_R58Vin
 *option:W17_R58:value:3 =   W17_R58Dry 
 *option:W17_R58:value:4 =   NA        ! Existing H2K code library wall name
 *option:W17_R58:value:5 =   58        ! OR, User-specified R-value (Imperial), but not both!
-*option:W17_R58:cost:total   =   10011
+*option:W17_R58:cost:total   =   0
 
 *option:W18_R78:value:1 =   W18_R78Bri
 *option:W18_R78:value:2 =   W18_R78Vin
 *option:W18_R78:value:3 =   W18_R78Dry 
 *option:W18_R78:value:4 =   NA        ! Existing H2K code library wall name
 *option:W18_R78:value:5 =   78        ! OR, User-specified R-value (Imperial), but not both!
-*option:W18_R78:cost:total   =   18309
+*option:W18_R78:cost:total   =   0
 
 *option:W19_R27:value:1 =   W19_R27Bri
 *option:W19_R27:value:2 =   W19_R27Vin
 *option:W19_R27:value:3 =   W19_R27Dry 
 *option:W19_R27:value:4 =   NA        ! Existing H2K code library wall name
 *option:W19_R27:value:5 =   27        ! OR, User-specified R-value (Imperial), but not both!
-*option:W19_R27:cost:total   =   -2226
+*option:W19_R27:cost:total   =   0
 
 *option:W20_R39:value:1 =   W20_R39Bri
 *option:W20_R39:value:2 =   W20_R39Vin
 *option:W20_R39:value:3 =   W20_R39Dry 
 *option:W20_R39:value:4 =   NA        ! Existing H2K code library wall name
 *option:W20_R39:value:5 =   39        ! OR, User-specified R-value (Imperial), but not both!
-*option:W20_R39:cost:total   =   3036
+*option:W20_R39:cost:total   =   0
 
 *option:W21_R59:value:1 =   W21_R59Bri
 *option:W21_R59:value:2 =   W21_R59Vin
 *option:W21_R59:value:3 =   W21_R59Dry 
 *option:W21_R59:value:4 =   NA        ! Existing H2K code library wall name
 *option:W21_R59:value:5 =   59        ! OR, User-specified R-value (Imperial), but not both!
-*option:W21_R59:cost:total   =   12448
+*option:W21_R59:cost:total   =   0
 
 *option:W31b_R55:value:1 =   W31b_R55Bri
 *option:W31b_R55:value:2 =   W31b_R55Vin
 *option:W31b_R55:value:3 =   W31b_R55Dry 
 *option:W31b_R55:value:4 =   NA        ! Existing H2K code library wall name
 *option:W31b_R55:value:5 =   55        ! OR, User-specified R-value (Imperial), but not both!
-*option:W31b_R55:cost:total   =   25000
+*option:W31b_R55:cost:total   =   0
 
 !-----------------------------------------------------------------------
 !  Retrofit Wall Options
@@ -2890,21 +2884,21 @@ Whitehorse Wall Options (Code is R28)
 *option:Retro-ext_4EPS:value:3 =   Retroext4EPS 
 *option:Retro-ext_4EPS:value:4 =   NA        ! Existing H2K code library wall name
 *option:Retro-ext_4EPS:value:5 =   20.0       ! OR, User-specified R-value (Imperial), but not both!
-*option:Retro-ext_4EPS:cost:total    =   21957     ! costing calculated for Vancouver retrofit
+*option:Retro-ext_4EPS:cost:total    =   0
 
 *option:Retro-int_2XPS:value:1 =   Retroint2XPS   ! Added by JP for retrofit analysis
 *option:Retro-int_2XPS:value:2 =   Retroint2XPS
 *option:Retro-int_2XPS:value:3 =   Retroint2XPS 
 *option:Retro-int_2XPS:value:4 =   NA        ! Existing H2K code library wall name
 *option:Retro-int_2XPS:value:5 =   10.0       ! OR, User-specified R-value (Imperial), but not both!
-*option:Retro-int_2XPS:cost:total    =   22032    ! costing calculated for Vancouver retrofit
+*option:Retro-int_2XPS:cost:total    =   0
 
 *option:Retro-int_spray:value:1 =   Retrointspr   ! Added by JP for retrofit analysis
 *option:Retro-int_spray:value:2 =   Retrointspr
 *option:Retro-int_spray:value:3 =   Retrointspr 
 *option:Retro-int_spray:value:4 =   NA        ! Existing H2K code library wall name
 *option:Retro-int_spray:value:5 =   25.0      ! OR, User-specified R-value (Imperial), but not both!
-*option:Retro-int_spray:cost:total    =   24145    ! costing calculated for Vancouver retrofit
+*option:Retro-int_spray:cost:total    =   0
 
 !-------------------------------------------------------------------------------
 ! NWT Retrofit Main Wall Options
@@ -2929,6 +2923,32 @@ Whitehorse Wall Options (Code is R28)
 *option:NWTR20_1_5:value:4 =   NA        ! Existing H2K code library wall name
 *option:NWTR20_1_5:value:5 =   20      ! OR, User-specified R-value (Imperial), but not both!
 *option:NWTR20_1_5:cost:total    =   0
+
+
+!---------------------------------------------------------------------------------------
+! Yukon Retrofit Wall Options
+!---------------------------------------------------------------------------------------
+
+*option:YukonR11_30:value:1 =   BaseR21Bri
+*option:YukonR11_30:value:2 =   BaseR21Vin
+*option:YukonR11_30:value:3 =   BaseR21Dry 
+*option:YukonR11_30:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR11_30:value:5 =   11.30             ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR11_30:cost:total    =   0
+
+*option:YukonR18_76:value:1 =   BaseR21Bri
+*option:YukonR18_76:value:2 =   BaseR21Vin
+*option:YukonR18_76:value:3 =   BaseR21Dry 
+*option:YukonR18_76:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR18_76:value:5 =   18.76             ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR18_76:cost:total    =   0
+
+*option:YukonR24_22:value:1 =   BaseR21Bri
+*option:YukonR24_22:value:2 =   BaseR21Vin
+*option:YukonR24_22:value:3 =   BaseR21Dry 
+*option:YukonR24_22:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR24_22:value:5 =   24.20             ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR24_22:cost:total    =   0
 
 *attribute:end
 
@@ -2968,21 +2988,21 @@ Whitehorse Wall Options (Code is R28)
 *option:OBCminR12-Slab24R:value:3 = NA          ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:OBCminR12-Slab24R:value:4 = NA          ! External wall added R-value (Imp)
 *option:OBCminR12-Slab24R:value:5 = 24          ! Below slab R-value
-*option:OBCminR12-Slab24R:cost:total = 3800
+*option:OBCminR12-Slab24R:cost:total = 0
 
 *option:Rigid+BattR30-R24BSlab:value:1 = BCIB_4_B  ! Ref# 22 - change Basements in model
 *option:Rigid+BattR30-R24BSlab:value:2 = BsmIntR20
 *option:Rigid+BattR30-R24BSlab:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:Rigid+BattR30-R24BSlab:value:4 = NA        ! Ext wall added R-value
 *option:Rigid+BattR30-R24BSlab:value:5 = 24
-*option:Rigid+BattR30-R24BSlab:cost:total = 8442   ! 4642+3800
+*option:Rigid+BattR30-R24BSlab:cost:total = 0
 
 *option:Rigid+BattR30-R10BSlab:value:1 = BCCB_4_B  ! Change all Basements in model
 *option:Rigid+BattR30-R10BSlab:value:2 = NA        !BsmIntR20
 *option:Rigid+BattR30-R10BSlab:value:3 = 20        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:Rigid+BattR30-R10BSlab:value:4 = 10        ! Ext wall added R-value
 *option:Rigid+BattR30-R10BSlab:value:5 = 10        ! Under slab added R-value
-*option:Rigid+BattR30-R10BSlab:cost:total = 7362   ! 4642+2720
+*option:Rigid+BattR30-R10BSlab:cost:total = 0
 
 
 *attribute:end
@@ -3199,13 +3219,13 @@ Whitehorse Wall Options (Code is R28)
 *option:ExpFloorFlash&Batt-R36:value:2 = ExpFlR36r
 *option:ExpFloorFlash&Batt-R36:value:3 = NA     ! Use "NA" (or non-existent name) for user-Specified case
 *option:ExpFloorFlash&Batt-R36:value:4 = 36     ! User-Specified R-value (Imperial) / NA for code name
-*option:ExpFloorFlash&Batt-R36:cost:total    = 659.86
+*option:ExpFloorFlash&Batt-R36:cost:total    = 0
 
 *option:ExpFloorFoamed-R52:value:1 = ExpFlR52
 *option:ExpFloorFoamed-R52:value:2 = ExpFlR52r
 *option:ExpFloorFoamed-R52:value:3 = Foamed-R52    ! Use "NA" (or non-existent name) for user-Specified case
 *option:ExpFloorFoamed-R52:value:4 = NA            ! User-Specified R-value (Imperial) / NA for code name
-*option:ExpFloorFoamed-R52:cost:total    = 1720.82
+*option:ExpFloorFoamed-R52:cost:total    = 0
 
 !-----------------------------------------------------------------------
 ! NWT Crawl Space Floor is Exposed
@@ -3230,7 +3250,7 @@ Whitehorse Wall Options (Code is R28)
 *option:OneSheet:cost:total    =   0 
 
 *option:TwoSheets:value:1 =   0.0250
-*option:TwoSheets:cost:total    =   1000
+*option:TwoSheets:cost:total    =   0
 
 *attribute:end
 
@@ -3252,11 +3272,11 @@ Whitehorse Wall Options (Code is R28)
 
 *option:1-in-concrete:value:1 = floor1in 
 *option:1-in-concrete:value:2 = floorInv1in
-*option:1-in-concrete:cost:total    = 1800
+*option:1-in-concrete:cost:total    = 0
 
 *option:2-in-concrete:value:1 = floor2in 
 *option:2-in-concrete:value:2 = floorInv2in
-*option:2-in-concrete:cost:total    = 3600
+*option:2-in-concrete:cost:total    = 0
 
 *attribute:end 
 
@@ -3359,7 +3379,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-ecm:value:14 = 94      ! Efficiency
 *option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
 *option:gas-furnace-ecm:value:16 = true    ! EE motor
-*option:gas-furnace-ecm:cost:total    = 500  ! based on quote from Patric
+*option:gas-furnace-ecm:cost:total    = 0
 
 *option:gas-furnace-psc:value:1 = basefurnace_AC-gas-psc-motor.hvac
 *option:gas-furnace-psc:value:2 = #-no-GSHP-file
@@ -3377,7 +3397,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-psc:value:14 = 94      ! Efficiency
 *option:gas-furnace-psc:value:15 = 1       ! Auto fan control
 *option:gas-furnace-psc:value:16 = false   ! EE motor
-*option:gas-furnace-psc:cost:total = 0     ! base for BC-LEEP
+*option:gas-furnace-psc:cost:total = 0 
 
 *option:13kW-furnace-ecm:value:1 = smallfurnace_AC-gas-ecm-motor.hvac
 *option:13kW-furnace-ecm:value:2 = #-no-GSHP-file
@@ -3385,7 +3405,7 @@ Whitehorse Wall Options (Code is R28)
 *option:13kW-furnace-ecm:value:4 = 
 *option:13kW-furnace-ecm:value:5 = 
 *option:13kW-furnace-ecm:value:6 = shoulder-ideal.ctl
-*option:13kW-furnace-ecm:cost:total    = 1355    ! BC-LEEP
+*option:13kW-furnace-ecm:cost:total    = 0
 
 *option:zoned-furnace-ecm:value:1 = smallfurnace_AC-gas-ecm-motor.hvac
 *option:zoned-furnace-ecm:value:2 = #-no-GSHP-file
@@ -3393,7 +3413,7 @@ Whitehorse Wall Options (Code is R28)
 *option:zoned-furnace-ecm:value:4 = 
 *option:zoned-furnace-ecm:value:5 = 
 *option:zoned-furnace-ecm:value:6 = shoulder_zoned.ctl
-*option:zoned-furnace-ecm:cost:total    = 6480    ! BC-LEEP
+*option:zoned-furnace-ecm:cost:total    = 0
 
 
 *option:IMS-P10:value:1 = IMS-P10.hvac
@@ -3402,7 +3422,7 @@ Whitehorse Wall Options (Code is R28)
 *option:IMS-P10:value:4 = # NO - HRV: IMS provides HRV. 
 *option:IMS-P10:value:5 = # NO DHW: IMS provides WH.  
 *option:IMS-P10:value:6 = shoulder-ideal.ctl
-*option:IMS-P10:cost:total    = 9000
+*option:IMS-P10:cost:total    = 0
  
  
 ! Not-so-good P9 system. PSC motor?
@@ -3412,7 +3432,7 @@ Whitehorse Wall Options (Code is R28)
 *option:Combi-P9-a:value:4 = 
 *option:Combi-P9-a:value:5 = # NO DHW: IMS provides WH.  
 *option:Combi-P9-a:value:6 = shoulder-ideal.ctl
-*option:Combi-P9-a:cost:total    = 1145      !based on quote from Patric
+*option:Combi-P9-a:cost:total    = 0
 
 ! Best P9 system. ECM motor
 *option:Combi-P9-ecmV2:value:1 = Combi-P9-ecm-v2.hvac
@@ -3421,7 +3441,7 @@ Whitehorse Wall Options (Code is R28)
 *option:Combi-P9-ecmV2:value:4 = 
 *option:Combi-P9-ecmV2:value:5 = # NO DHW: IMS provides WH.  
 *option:Combi-P9-ecmV2:value:6 = shoulder-ideal.ctl
-*option:Combi-P9-ecmV2:cost:total    = 1915   ! BC-LEEP
+*option:Combi-P9-ecmV2:cost:total    = 0
 
 ! P9 *zoned* system. ECM motor
 *option:Combi-P9-zoned-ecm:value:1 = Combi-P9-ecm-v2.hvac
@@ -3430,7 +3450,7 @@ Whitehorse Wall Options (Code is R28)
 *option:Combi-P9-zoned-ecm:value:4 = 
 *option:Combi-P9-zoned-ecm:value:5 = # NO DHW: IMS provides WH.  
 *option:Combi-P9-zoned-ecm:value:6 = shoulder_zoned.ctl
-*option:Combi-P9-zoned-ecm:cost:total = 2970   				!BC-LEEP
+*option:Combi-P9-zoned-ecm:cost:total = 0
 
 *option:propanefurnaceAC:value:1 = propane_furnace_ACv2.hvac
 *option:propanefurnaceAC:value:2 = #-no-GSHP-file
@@ -3464,7 +3484,7 @@ Whitehorse Wall Options (Code is R28)
 *option:elec-baseboard:value:14 = NA
 *option:elec-baseboard:value:15 = NA
 *option:elec-baseboard:value:16 = NA
-*option:elec-baseboard:cost:total       = -3870
+*option:elec-baseboard:cost:total       = 0
 
 *option:elec-baseboard-noAC:value:1 = Baseboardv2-noAC.hvac
 *option:elec-baseboard-noAC:value:2 = #-no-GSHP-file
@@ -3472,7 +3492,7 @@ Whitehorse Wall Options (Code is R28)
 *option:elec-baseboard-noAC:value:4 = 
 *option:elec-baseboard-noAC:value:5 = 
 *option:elec-baseboard-noAC:value:6 = shoulder-ideal.ctl
-*option:elec-baseboard-noAC:cost:total       = -3870
+*option:elec-baseboard-noAC:cost:total       = 0
 
 
 *option:CCASHP:value:1  = CCASHPv2.hvac         ! ESP-r: Flag to activate/deactvate IMS file             
@@ -3501,7 +3521,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:24 = 2                     ! Cut off type : Restricted 
 *option:CCASHP:value:25 = -20                   ! Cut off temp 
 *option:CCASHP:value:26 = 25                    ! Operable window area
-*option:CCASHP:cost:total   = 9595                 
+*option:CCASHP:cost:total   = 0                 
 
 
 *option:CCASHP-ecm:value:1 = CCASHPv2-ecm-motor.hvac
@@ -3510,7 +3530,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:4 = 
 *option:CCASHP-ecm:value:5 = 
 *option:CCASHP-ecm:value:6 =  shoulder-ideal.ctl
-*option:CCASHP-ecm:cost:total   = 7840    ! BC-LEEP      
+*option:CCASHP-ecm:cost:total   = 0
 
 Reflects southern Ontario costs
 *option:GSHP:value:1 = GSHPv2.hvac
@@ -3519,7 +3539,7 @@ Reflects southern Ontario costs
 *option:GSHP:value:4 = 
 *option:GSHP:value:5 = 
 *option:GSHP:value:6 = shoulder-ideal.ctl 
-*option:GSHP:cost:total    = 18560          ! Does this reflect AC syste$
+*option:GSHP:cost:total    = 0
 
 ! Options for VP retrofit
 
@@ -3580,7 +3600,7 @@ Reflects southern Ontario costs
 *option:retro_upgrade_furnace:value:4 = 
 *option:retro_upgrade_furnace:value:5 = 
 *option:retro_upgrade_furnace:value:6 = shoulder-ideal.ctl
-*option:retro_upgrade_furnace:cost:total    = 5900
+*option:retro_upgrade_furnace:cost:total    = 0
 
 *option:retro_CCASHP:value:1 = CCASHPv2.hvac
 *option:retro_CCASHP:value:2 = #-no-GSHP-file
@@ -3588,7 +3608,7 @@ Reflects southern Ontario costs
 *option:retro_CCASHP:value:4 = 
 *option:retro_CCASHP:value:5 = 
 *option:retro_CCASHP:value:6 = shoulder-ideal.ctl 
-*option:retro_CCASHP:cost:total    = 11895.0
+*option:retro_CCASHP:cost:total    = 0
 
 Reflects southern Ontario costs
 *option:retro_GSHP:value:1 = GSHPv2.hvac
@@ -3597,7 +3617,7 @@ Reflects southern Ontario costs
 *option:retro_GSHP:value:4 = #No HRV
 *option:retro_GSHP:value:5 = 
 *option:retro_GSHP:value:6 = shoulder-ideal.ctl 
-*option:retro_GSHP:cost:total    = 32500          ! Does this reflect AC
+*option:retro_GSHP:cost:total    = 0          ! Does this reflect AC
 
 !---Options for Northern retrofit-------------------------------
 *option:Olsen:value:1 = oil-furnace-Olsen.hvac
@@ -3655,13 +3675,13 @@ Reflects southern Ontario costs
 *option:2TonDettsonModUnit:value:2 = 4.3		! Estimated based on 21 SEER
 *option:2TonDettsonModUnit:value:3 = 373.		! 
 *option:2TonDettsonModUnit:value:4 = 125.		! Estimate
-*option:2TonDettsonModUnit:cost:total = 1680	! Mattamy Ottawa
+*option:2TonDettsonModUnit:cost:total = 0
   
 *option:2TonGoodmanUnit:value:1 = 24000.
 *option:2TonGoodmanUnit:value:2 = 4.0		! Estimated based on 18 SEER
 *option:2TonGoodmanUnit:value:3 = 373.		! 
 *option:2TonGoodmanUnit:value:4 = 125.		! Estimate
-*option:2TonGoodmanUnit:cost:total = 2930	! Mattamy Ottawa
+*option:2TonGoodmanUnit:cost:total = 0
   
 *attribute:end
 
@@ -3711,7 +3731,7 @@ Reflects southern Ontario costs
 
 *option:UpgHRV_SRE78:value:1    = HRV-upg.vnt
 *option:UpgHRV_SRE78:value:2    = 
-*option:UpgHRV_SRE78:cost:total = 920
+*option:UpgHRV_SRE78:cost:total = 0
 
 ! This is a proxy for fans-only ventilation
 *option:BaseHRV_SREZero:value:1    = HRV0-base.vnt
@@ -3730,7 +3750,7 @@ Reflects southern Ontario costs
 *option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
 *option:HRV_60:value:7 = 60    ! Eff% @ Rating1
 *option:HRV_60:value:8 = 60    ! Eff% @ Rating2
-*option:HRV_60:cost:total = 0 ! Base for Buildability ($1600 over base with No HRV)
+*option:HRV_60:cost:total = 0 
 
 *option:HRV_81:value:1 = HRV.vnt
 *option:HRV_81:value:2 = 
@@ -3740,7 +3760,7 @@ Reflects southern Ontario costs
 *option:HRV_81:value:6 = 60    ! L/s (exhaust = supply)
 *option:HRV_81:value:7 = 81    ! Eff% @ Rating1
 *option:HRV_81:value:8 = 81    ! Eff% @ Rating2
-*option:HRV_81:cost:total = 1600 ! Incremental cost over Base with HRV_60
+*option:HRV_81:cost:total = 0 
 
 *attribute:end 
 
@@ -3922,7 +3942,7 @@ Reflects southern Ontario costs
 *option:ElecInstantaneous:value:13 = NA
 *option:ElecInstantaneous:value:14 = NA
 *option:ElecInstantaneous:value:15 = NA
-*option:ElecInstantaneous:cost:total = -245.0
+*option:ElecInstantaneous:cost:total = 0
 
 *option:ElectricStorage:value:1 = ElecStorage.dhw
 *option:ElectricStorage:value:2 = 1         ! Elec
@@ -3939,7 +3959,7 @@ Reflects southern Ontario costs
 *option:ElectricStorage:value:13 = NA
 *option:ElectricStorage:value:14 = NA
 *option:ElectricStorage:value:15 = NA
-*option:ElectricStorage:cost:total    = -605.0
+*option:ElectricStorage:cost:total    = 0
 
 *option:GasInstantaneous:value:1 = GasInstantaneous.dhw
 *option:GasInstantaneous:value:2 = 2         ! Gas
@@ -3956,7 +3976,7 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:13 = NA
 *option:GasInstantaneous:value:14 = NA
 *option:GasInstantaneous:value:15 = NA
-*option:GasInstantaneous:cost:total    = 550    ! BC-LEEP
+*option:GasInstantaneous:cost:total    = 0
 
 *option:GasTankless+DWHR:value:1 = GasInstantaneous.dhw
 *option:GasTankless+DWHR:value:2 = 2         ! Gas
@@ -3989,7 +4009,7 @@ Reflects southern Ontario costs
 *option:ElectricHP:value:12 = NA
 *option:ElectricHP:value:13 = NA
 *option:ElectricHP:value:14 = NA
-*option:ElectricHP:cost:total    = 825    ! BC-LEEP
+*option:ElectricHP:cost:total    = 0
 
 *option:HPHotWater:value:1 = HPHotWater.dhw
 *option:HPHotWater:value:2 = 1         ! Elec
@@ -4010,27 +4030,27 @@ Reflects southern Ontario costs
 
 ! retrofit costs---------------------
 *option:retro_GasInst:value:1 = GasInstantaneous.dhw
-*option:retro_GasInst:cost:total    = 3500
+*option:retro_GasInst:cost:total    = 0
 
 *option:retro_ElectricHP:value:1 = ElecHP.dhw
-*option:retro_ElectricHP:cost:total    = 3750
+*option:retro_ElectricHP:cost:total    = 0
 
 
 ! NWT DHW systems---------------------
-*option:elec_DHW:value:1     = elec_DHW.dhw
-*option:elec_DHW:cost:total        = 0
+*option:elec_DHW:value:1       = elec_DHW.dhw
+*option:elec_DHW:cost:total    = 0
 
-*option:wood_DHW:value:1 = wood_DHW.dhw
+*option:wood_DHW:value:1       = wood_DHW.dhw
 *option:wood_DHW:cost:total    = 0
 
-*option:NWT_upgrade_elec_DHW:value:1     = upgrade_elec_DHW.dhw
-*option:NWT_upgrade_elec_DHW:cost:total        = 0
+*option:NWT_upgrade_elec_DHW:value:1    = upgrade_elec_DHW.dhw
+*option:NWT_upgrade_elec_DHW:cost:total = 0
 
 *option:NWT_upgrade_oil_DHW:value:1     = upgrade_oil_DHW.dhw
-*option:NWT_upgrade_oil_DHW:cost:total        = 0
+*option:NWT_upgrade_oil_DHW:cost:total  = 0
 
-*option:GasInstantaneous95:value:1 = GasInstantaneous-95.dhw
-*option:GasInstantaneous95:cost:total    = 1150    ! BC-LEEP
+*option:GasInstantaneous95:value:1      = GasInstantaneous-95.dhw
+*option:GasInstantaneous95:cost:total   = 0
 
 *attribute:end
 
@@ -4056,21 +4076,21 @@ Reflects southern Ontario costs
 *option[ Opt-DHWLoadScale>Low-Flow     ]:none:value:1 =141
 *option:none:cost:total = 0
 
-*option:DWHR-4-36:cost:total = 890
+*option:DWHR-4-36:cost:total = 0
 
-*option:DWHR-4-60:cost:total = 1500 ! Check?
+*option:DWHR-4-60:cost:total = 0
 
-*option:1-plate:cost:total = 5225
+*option:1-plate:cost:total = 0
 
-*option:2-plate:cost:total = 6510
+*option:2-plate:cost:total = 0
 
-*option:1-plate-DWHR-4-36:cost:total = 6115
+*option:1-plate-DWHR-4-36:cost:total = 0
 
-*option:2-plate-DWHR-4-36:cost:total = 7400
+*option:2-plate-DWHR-4-36:cost:total = 0
 
-*option:1-plate-DWHR-4-60:cost:total = 7615
+*option:1-plate-DWHR-4-60:cost:total = 0
 
-*option:2-plate-DWHR-4-60:cost:total = 8900
+*option:2-plate-DWHR-4-60:cost:total = 0
 
 
 ! Data from DHWR-plus-SDHW-new-methods2.xls
@@ -4651,7 +4671,7 @@ Reflects southern Ontario costs
 *option:MonoSi-50m2:value:4 = 1
 *option:MonoSi-50m2:value:5 = 90
 *option:MonoSi-50m2:value:6 = 90
-*option:MonoSi-50m2:cost:total = 4696  ! PV cost/kW - Total cost will be calculated using this
+*option:MonoSi-50m2:cost:total = 0
 
 *attribute:end
 
@@ -4711,28 +4731,28 @@ Reflects southern Ontario costs
 *option[Opt-Location>Inuvik ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
 *option[Opt-Location>Inuvik ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
 *option[Opt-Location>Inuvik ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
-*option:SizedPV:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV:cost:PerKW = 0 ! $/kW installed
 
 *option:NoPV:production-elec-perKW  = 0	! GJ/kW Installed
 *option:NoPV:cost:PerKW = 0 
 
 *option:SizedPV|3kW:dummy
-*option:SizedPV|3kW:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV|3kW:cost:PerKW = 0 ! $/kW installed
 
 *option:SizedPV|4kW:dummy
-*option:SizedPV|4kW:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV|4kW:cost:PerKW = 0 ! $/kW installed
 
 *option:SizedPV|5kW:dummy
-*option:SizedPV|5kW:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV|5kW:cost:PerKW = 0 ! $/kW installed
 
 *option:SizedPV|6kW:dummy
-*option:SizedPV|6kW:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV|6kW:cost:PerKW = 0 ! $/kW installed
 
 *option:SizedPV|7kW:dummy
-*option:SizedPV|7kW:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV|7kW:cost:PerKW = 0 ! $/kW installed
 
 *option:SizedPV|8kW:dummy
-*option:SizedPV|8kW:cost:PerKW = 4696 ! $/kW installed
+*option:SizedPV|8kW:cost:PerKW = 0 ! $/kW installed
 
 *ext-attribute:end
 
