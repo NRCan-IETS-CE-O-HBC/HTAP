@@ -1241,6 +1241,17 @@ def processFile(filespec)
                
                elsif ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary"
+                  if ( value == "true" )
+                     if ( h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] == "false" )
+                        # Need to add DWHR XML section!
+                        addMissingDWHR( h2kElements )
+                     end
+                  else
+                     if ( h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] == "true" )
+                        # Need to remove DWHR section!
+                        h2kElements[locationText].delete_element("DrainWaterHeatRecovery")
+                     end
+                  end
                   h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value  # Flag for DWHR
                
                elsif ( tag =~ /Opt-H2K-DHWR-showerLength/ &&  value != "NA" )
@@ -1405,7 +1416,7 @@ def processFile(filespec)
                
                elsif ( tag =~ /Opt-H2K-Type2CCaseH/ && value != "NA" )
                   sysType2.each do |sysType2Name| 
-                     if ( sysType2Name = "AirHeatPump" )
+                     if ( sysType2Name == "AirHeatPump" )
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
                            locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment"
@@ -2437,6 +2448,32 @@ def createH2KSysType2( elements, sysType2Name )
       elements[locationText].attributes["isCalculated"] = "true"
    end
 end   # createH2KSysType2
+
+# =========================================================================================
+#  Add missing DWHR section to DHW 
+# =========================================================================================
+def addMissingDWHR(elements)
+   locationText = "HouseFile/House/Components/HotWater/Primary"
+   elements[locationText].add_element("DrainWaterHeatRecovery")
+   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
+   elements[locationText].attributes["showerLength"] = "5.0"
+   elements[locationText].attributes["dailyShowers"] = "2.0"
+   elements[locationText].attributes["preheatShowerTank"] = "false"
+   elements[locationText].attributes["effectivenessAt9.5"] = "50.0"
+   elements[locationText].add_element("Efficiency", {"code"=>"2"})
+   elements[locationText].add_element("EquipmentInformation")
+   elements[locationText].add_element("ShowerTemperature", {"code"=>"1"})
+   elements[locationText].add_element("ShowerHead", {"code"=>"0"})
+   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation"
+   elements[locationText].add_element("Manufacturer")
+   elements[locationText].add_element("Model")
+   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerTemperature"
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerHead"
+   elements[locationText].add_element("English")
+   elements[locationText].add_element("French")
+end
 
 # =========================================================================================
 # Procedure to run HOT2000
