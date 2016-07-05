@@ -39,10 +39,10 @@
 *attribute:tag:9    = <OPT-PropaneID>
 *attribute:tag:10    = <OPT-WoodName>
 *attribute:tag:11    = <OPT-WoodID>
-*attribute:default  = NA
+*attribute:default  = rates2016
 
 *option:NA:value:1  = NA
-*option:NA:value:2  = NA      ! Elec
+*option:NA:value:2  = NA    ! Elec
 *option:NA:value:3  = NA
 *option:NA:value:4  = NA      ! Gas
 *option:NA:value:5  = NA
@@ -53,6 +53,21 @@
 *option:NA:value:10  = NA      ! Wood
 *option:NA:value:11  = NA
 *option:NA:cost:total = 0
+
+*option:rates2016:value:1  = FuelLib16.flc
+*option:rates2016:value:2  = auto      ! Elec
+*option:rates2016:value:3  = NA
+*option:rates2016:value:4  = auto      ! Gas
+*option:rates2016:value:5  = NA
+*option:rates2016:value:6  = auto    ! Oil
+*option:rates2016:value:7  = NA
+*option:rates2016:value:8  = NA     ! Propane
+*option:rates2016:value:9  = NA
+*option:rates2016:value:10  = NA      ! Wood
+*option:rates2016:value:11  = NA
+*option:rates2016:cost:total = 0
+
+
 
 *option:Ottawa08:value:1  = fuelLib.flc
 *option:Ottawa08:value:2  = Ottawa08      ! Elec
