@@ -569,13 +569,13 @@
 *option:Halifax:value:6 = 58
 *option:Halifax:cost:total    = 0  
 
-*option:Fredricton:value:1 = can_fredericton.cwec
-*option:Fredricton:value:2 = 45.96
-*option:Fredricton:value:3 = -6.6
-*option:Fredricton:value:4 = Wth110.dir
-*option:Fredricton:value:5 = 7
-*option:Fredricton:value:6 = 54
-*option:Fredricton:cost:total    = 0  
+*option:Fredericton:value:1 = can_fredericton.cwec
+*option:Fredericton:value:2 = 45.96
+*option:Fredericton:value:3 = -6.6
+*option:Fredericton:value:4 = Wth110.dir
+*option:Fredericton:value:5 = 7
+*option:Fredericton:value:6 = 54
+*option:Fredericton:cost:total    = 0  
   
 *option:Winnipeg:value:1 = can_winnipeg.cwec
 *option:Winnipeg:value:2 = 49.8
