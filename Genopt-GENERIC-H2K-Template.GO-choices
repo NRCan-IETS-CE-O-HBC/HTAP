@@ -12,7 +12,7 @@ GOconfig_step :  %stepNumber%
 
 ! Select a geographic location
 Opt-Location  :  %GOtag:Opt-Location%
-
+Opt-FuelCost  :  rates2016
 Opt-ACH                   : %GOtag:Opt-ACH%
 
 ! Insulation levels 
