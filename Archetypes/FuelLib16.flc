@@ -143,7 +143,7 @@
             </RateBlocks>
         </Fuel>		
         <Fuel id="10" isDefault="false">
-            <Label>Fredricton</Label>
+            <Label>Fredericton</Label>
             <Comment>NBPower16</Comment>
             <Units code="1">
                 <English>kWhr</English>
@@ -355,7 +355,7 @@
             </RateBlocks>
         </Fuel>
 	     	<Fuel id="24" isDefault="false">
-            <Label>Fredricton</Label>
+            <Label>Fredericton</Label>
             <Comment>Enbridge</Comment>
             <Units code="4">
                 <English>m³</English>
@@ -522,7 +522,7 @@
             </RateBlocks>
         </Fuel>          
         <Fuel id="35" isDefault="false">
-            <Label>Fredricton</Label>
+            <Label>Fredericton</Label>
             <Comment>Oil Rate Block</Comment>
             <Units code="2">
                 <English>Litre</English>
