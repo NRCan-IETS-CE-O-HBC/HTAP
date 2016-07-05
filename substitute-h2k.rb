@@ -324,7 +324,11 @@ def processFile(filespec)
             # Fuel Costs
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FuelCost/ )
-               # HOT2000 Fuel costing data selections (library file and fuel rates).
+
+            # HOT2000 Fuel costing data selections (library file and fuel rates).
+            
+               print "- TAG: #{tag} / #{value} \n"
+            
                if ( tag =~ /OPT-LibraryFile/ && value != "NA" )
                   # Fuel Cost file to use for HOT2000 run
                   locationText = "HouseFile/FuelCosts"
@@ -334,7 +338,9 @@ def processFile(filespec)
                      fatalerror("Fuel cost file #{value} not found in #{$run_path + "\\StdLibs" + "\\"}!")
                   else
                      h2kElements[locationText].attributes["library"] = value
-                     # Open weather file and read elements to use below. This assumes that this tag
+                     print "> FILE: "+ value + "\n"
+
+                     # Open fuel file and read elements to use below. This assumes that this tag
                      # always comes before the remainder of the weather location tags below!!
                      h2kFuelElements = get_elements_from_filename(h2kWthFile)
                   end
@@ -342,34 +348,65 @@ def processFile(filespec)
                # Weather location and Fuel costing. This could be used to evaluate different fuel rate
                # structures in one weather region.
                elsif ( tag =~ /OPT-ElecName/ && value != "NA" )
-                  locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
-                  h2kElements[locationText].text = value
-               elsif ( tag =~ /OPT-ElecID/ && value != "NA" )
-                  locationText = "HouseFile/FuelCosts/Electricity/Fuel"
-                  h2kElements[locationText].attributes["id"] = value
-                  # Set using rate blocks for this id from library file!
-                  locationFuelText = "FuelCosts/Electricity/Fuel"
-                  h2kFuelElements.each(locationFuelText) do |element| 
-                     if h2kFuelElements[locationFuelText].attributes["id"] == value
+                  
+                  if ( value == "auto" )                  
+                    locationFuelText = "FuelCosts/Electricity/Fuel"
+                    h2kFuelElements.each(locationFuelText) do |element| 
+                                      
+                      print element.get_text("Label") 
+                      
+             
+                      if ( element.get_text("Label") == $Locale )
+
+                        print " = MATCHED!"
+              
+                        $FuelId = element.attributes["id"]
+                      
+                        locationText = "HouseFile/FuelCosts/Electricity/Fuel/Label"
+                        print "\n>"
+                        
+                        print h2kElements[locationText].text 
+                
+                        h2kElements[locationText].text = element.get_text("Label")
+                        print h2kElements[locationText].text 
+
+                        print "\n>"
+                        
+                        
                         locationText = "HouseFile/FuelCosts/Electricity/Fuel/Units"
-                        h2kElements[locationText].attributes["code"] = h2kFuelElements[locationFuelText][5].attributes["code"]
+                        h2kElements[locationText].attributes["code"] = element[5].attributes["code"]
+                        
                         locationText = "HouseFile/FuelCosts/Electricity/Fuel/Minimum"
-                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][7].attributes["units"]
-                        h2kElements[locationText].attributes["charge"] = h2kFuelElements[locationFuelText][7].attributes["charge"]
+                        h2kElements[locationText].attributes["units"] =  element[7].attributes["units"]
+                        h2kElements[locationText].attributes["charge"] = element[7].attributes["charge"]
                         locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block1"
-                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][1].attributes["units"]
-                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][1].attributes["costPerUnit"]
+                        h2kElements[locationText].attributes["units"] =  element[9][1].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = element[9][1].attributes["costPerUnit"]
                         locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block2"
-                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][3].attributes["units"]
-                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][3].attributes["costPerUnit"]
+                        h2kElements[locationText].attributes["units"] = element[9][3].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = element[9][3].attributes["costPerUnit"]
                         locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block3"
-                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][5].attributes["units"]
-                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][5].attributes["costPerUnit"]
+                        h2kElements[locationText].attributes["units"] = element[9][5].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = element[9][5].attributes["costPerUnit"]
                         locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block4"
-                        h2kElements[locationText].attributes["units"] = h2kFuelElements[locationFuelText][9][7].attributes["units"]
-                        h2kElements[locationText].attributes["costPerUnit"] = h2kFuelElements[locationFuelText][9][7].attributes["costPerUnit"]
-                     end
-                  end
+                        h2kElements[locationText].attributes["units"] = element[9][7].attributes["units"]
+                        h2kElements[locationText].attributes["costPerUnit"] = element[9][7].attributes["costPerUnit"]                      
+                      
+                      
+                      
+                      
+                      
+                      end 
+                      print "\n"
+                      
+                    end
+                      
+                  end 
+
+               
+
+                  
+                  
                elsif ( tag =~ /OPT-GasName/ && value != "NA" )
                   locationText = "HouseFile/FuelCosts/NaturalGas/Fuel/Label"
                   h2kElements[locationText].text = value
