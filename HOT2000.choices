@@ -10,9 +10,9 @@
 Opt-DBFiles  : H2KCodeLibFile-Julia
 
 ! Weather location
-Opt-Location : NA
+Opt-Location : Toronto
 
-Opt-FuelCost : NA
+Opt-FuelCost : rates2016
 
 ! ACH substitutions
 Opt-ACH : NA

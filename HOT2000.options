@@ -30,74 +30,43 @@
 *attribute:name     = Opt-FuelCost
 *attribute:tag:1    = <OPT-LibraryFile>
 *attribute:tag:2    = <OPT-ElecName>
-*attribute:tag:3    = <OPT-ElecID>
-*attribute:tag:4    = <OPT-GasName>
-*attribute:tag:5    = <OPT-GasID>
-*attribute:tag:6    = <OPT-OilName>
-*attribute:tag:7    = <OPT-OilID>
-*attribute:tag:8    = <OPT-PropaneName>
-*attribute:tag:9    = <OPT-PropaneID>
-*attribute:tag:10    = <OPT-WoodName>
-*attribute:tag:11    = <OPT-WoodID>
+*attribute:tag:3    = <OPT-GasName>
+*attribute:tag:4    = <OPT-OilName>
+*attribute:tag:5    = <OPT-PropaneName>
+*attribute:tag:6    = <OPT-WoodName>
 *attribute:default  = rates2016
 
 *option:NA:value:1  = NA
 *option:NA:value:2  = NA    ! Elec
-*option:NA:value:3  = NA
-*option:NA:value:4  = NA      ! Gas
-*option:NA:value:5  = NA
-*option:NA:value:6  = NA      ! Oil
-*option:NA:value:7  = NA
-*option:NA:value:8  = NA      ! Propane
-*option:NA:value:9  = NA
-*option:NA:value:10  = NA      ! Wood
-*option:NA:value:11  = NA
+*option:NA:value:3  = NA    ! Gas
+*option:NA:value:4  = NA    ! Oil
+*option:NA:value:5  = NA    ! Propane
+*option:NA:value:6  = NA    ! Wood
 *option:NA:cost:total = 0
 
 *option:rates2016:value:1  = FuelLib16.flc
-*option:rates2016:value:2  = auto      ! Elec
-*option:rates2016:value:3  = NA
-*option:rates2016:value:4  = auto      ! Gas
-*option:rates2016:value:5  = NA
-*option:rates2016:value:6  = auto    ! Oil
-*option:rates2016:value:7  = NA
-*option:rates2016:value:8  = NA     ! Propane
-*option:rates2016:value:9  = NA
-*option:rates2016:value:10  = NA      ! Wood
-*option:rates2016:value:11  = NA
+*option:rates2016:value:2  = auto   ! Elec
+*option:rates2016:value:3  = auto   ! Gas
+*option:rates2016:value:4  = auto   ! Oil
+*option:rates2016:value:5  = NA   ! Propane (Rates not set yet for auto)
+*option:rates2016:value:6  = NA   ! Wood (Rates not set yet for auto)
 *option:rates2016:cost:total = 0
-
-
 
 *option:Ottawa08:value:1  = fuelLib.flc
 *option:Ottawa08:value:2  = Ottawa08      ! Elec
-*option:Ottawa08:value:3  = 16
-*option:Ottawa08:value:4  = Ottawa08      ! Gas
-*option:Ottawa08:value:5  = 17
-*option:Ottawa08:value:6  = Ottawa08      ! Oil
-*option:Ottawa08:value:7  = 18
-*option:Ottawa08:value:8  = Ottawa08      ! Propane
-*option:Ottawa08:value:9  = 19
-*option:Ottawa08:value:10  = Sth_Ont      ! Wood
-*option:Ottawa08:value:11  = 7
+*option:Ottawa08:value:3  = Ottawa08      ! Gas
+*option:Ottawa08:value:4  = Ottawa08      ! Oil
+*option:Ottawa08:value:5  = Ottawa08      ! Propane
+*option:Ottawa08:value:6  = Sth_Ont      ! Wood
 *option:Ottawa08:cost:total = 0
 
 *option:Ottawa97:value:1  = fuelLib.flc
 *option:Ottawa97:value:2  = Ottawa97      ! Elec
-*option:Ottawa97:value:3  = 1
-*option:Ottawa97:value:4  = Ottawa97      ! Gas
-*option:Ottawa97:value:5  = 2
-*option:Ottawa97:value:6  = Ottawa97      ! Oil
-*option:Ottawa97:value:7  = 3
-*option:Ottawa97:value:8  = Ottawa97      ! Propane
-*option:Ottawa97:value:9  = 6
-*option:Ottawa97:value:10  = Sth_Ont      ! Wood
-*option:Ottawa97:value:11  = 7
+*option:Ottawa97:value:3  = Ottawa97      ! Gas
+*option:Ottawa97:value:4  = Ottawa97      ! Oil
+*option:Ottawa97:value:5  = Ottawa97      ! Propane
+*option:Ottawa97:value:6  = Sth_Ont      ! Wood
 *option:Ottawa97:cost:total = 0
-
-! Create new fuel cost entries that match the fuel cost data in substitute.pl
-
-
 
 *attribute:end
 
