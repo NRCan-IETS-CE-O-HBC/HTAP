@@ -7,7 +7,7 @@
 !-----------------------------------------------------------------------  
 
 ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
-Opt-DBFiles  : H2KCodeLibFile-Julia
+Opt-DBFiles  : H2KCodeLibFile
 
 ! Weather location
 Opt-Location : Toronto
