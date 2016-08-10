@@ -15,7 +15,7 @@ Vary{
       Name = GOtag:Opt-Location; 
       Ini  = 1;
       // Buildability locations (12):
-      Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredricton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
+      Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
       
       // Locations to match typical ESP-r runs (11):
       //Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax"; 
