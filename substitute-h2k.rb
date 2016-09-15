@@ -2870,6 +2870,10 @@ optparse = OptionParser.new do |opts|
       $gTest_params["verbosity"] = "verbose"
    end
 
+   opts.on("-", "", "") do 
+      fatalerror("Invalid command line option specified! Do not leave spaces between \"-\" and option letter.")
+   end
+
    opts.on("-d", "--debug", "Run in debug mode") do
       $cmdlineopts["verbose"] = true
       $gTest_params["verbosity"] = "debug"
