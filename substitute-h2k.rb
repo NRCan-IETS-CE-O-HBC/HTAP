@@ -304,10 +304,10 @@ def processFile(filespec)
                   # Weather region to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Region"
                   h2kElements[locationText].attributes["code"] = value
-                  # Match Client Street address province ID to avoid H2K dialog!
+                  # Match Client Information Region with this Region to avoid H2K PreCheck dialog!
                   locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-                  provArr = [ "BC", "AB", "SK", "MB", "ON", "QC", "NB", "NS", "PE", "NL", "YT", "NT", "NU" ]
-                  h2kElements[locationText].attributes["code"] = provArr[value.to_i - 1]
+                  provArr = [ "BRITISH COLUMBIA", "ALBERTA", "SASKATCHEWAN", "MANITOBA", "ONTARIO", "QUEBEC", "NEW BRUNSWICK", "NOVA SCOTIA", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "YUKON TERRITORY", "NORTHWEST TERRITORY", "NUNAVUT", "OTHER" ]
+                  h2kElements[locationText].text = provArr[value.to_i - 1]
                elsif ( tag =~ /OPT-H2K-Location/ && value != "NA" )
                   # Weather location to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Location"
