@@ -63,8 +63,7 @@ if ($local)
   FileUtils.rm Dir.glob('CloudResultsAllData.csv')
   
   FileUtils.cp( $RemoteFile, "TempResultsBatch1.txt ")
-  FileUtils.cp( $RemoteFile, "TempResultsBatch2.txt ")
-  FileUtils.cp( $RemoteFile, "TempResultsBatch3.txt ")
+
 
 end 
 FileList = Array.new
@@ -126,7 +125,7 @@ output.write(header)
 output.write(data)
 output.close
 
-puts header
+#puts header
 #my @AllFiles = split /\s/, `ls CloudResultsBatch*.txt TempResultsBatch*.txt`; 
 
 exit()
