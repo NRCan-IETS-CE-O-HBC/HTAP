@@ -370,10 +370,15 @@ def processFile(filespec)
             elsif ( choiceEntry =~ /Opt-ACH/ )
                if ( tag =~ /Opt-ACH/ && value != "NA" )
                   # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
-                  # TODO: Test what happens if "Air Leakage Test Data" is present in associated tab!!
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
                   h2kElements[locationText].attributes["code"] = "x"
-               
+                  # Must also remove "Air Leakage Test Data" section, if present since it will negate ACH option
+                  locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
+                  if ( h2kElements[locationText] != nil )
+                        # Need to remove this section!
+                        locationText = "HouseFile/House/NaturalAirInfiltration"
+                        h2kElements[locationText].delete_element("AirLeakageTestData")
+                  end
                   # Set the blower door test value in airChangeRate field
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
                   h2kElements[locationText].attributes["airChangeRate"] = value
