@@ -1115,6 +1115,13 @@ def processFile(filespec)
                   locationText = "HouseFile/House/Components/HotWater/Primary/EnergyFactor"
                   h2kElements[locationText].attributes["code"] = 2      # User Specified option
                   h2kElements[locationText].attributes["value"] = value # EF value (fraction)
+
+               elsif ( tag =~ /Opt-H2K-FlueDiameter/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary"
+			      h2kElements[locationText].attributes["flueDiameter"] = value 
+           
+
+
                   
                elsif ( tag =~ /Opt-H2K-IntHeatPumpCOP/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary"
@@ -1125,6 +1132,9 @@ def processFile(filespec)
                # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
                # changes made here will be overwritten by the Base Loads user inputs for Water Usage.
                
+			   
+			   
+			   
                elsif ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary"
                   if ( value == "true" )
