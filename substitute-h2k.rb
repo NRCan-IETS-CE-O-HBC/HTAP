@@ -1093,6 +1093,8 @@ def processFile(filespec)
                         h2kElements[locationText].delete_attribute("pilotEnergy")
                      end
                   end
+				  
+				  locationText = "HouseFile/House/Components/HotWater/Primary/EnergySource"
                   h2kElements[locationText].attributes["code"] = value
                   
                elsif ( tag =~ /Opt-H2K-TankType/ &&  value != "NA" )
