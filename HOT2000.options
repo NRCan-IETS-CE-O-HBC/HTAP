@@ -3874,6 +3874,7 @@ Reflects southern Ontario costs
 *attribute:tag:13 = Opt-H2K-DHWR-Efficiency_code         ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
 *attribute:tag:14 = Opt-H2K-DHWR-ShowerTemperature_code  ! DWHR Shower temperature code (1, 2 or 3)
 *attribute:tag:15 = Opt-H2K-DHWR-ShowerHead_code         ! DWHR Showhead flow rate code (0-4)
+*attribute:tag:16 = Opt-H2K-FlueDiameter                 !  DHW Flue diameter
 
 *attribute:default = BaseDHW 
 
@@ -3892,6 +3893,7 @@ Reflects southern Ontario costs
 *option:NA:value:13 = NA
 *option:NA:value:14 = NA
 *option:NA:value:15 = NA
+*option:NA:value:16 = NA
 *option:NA:cost:total = 0
 
 *option:BaseDHW:value:1 = BaseDHW.dhw
@@ -3909,6 +3911,7 @@ Reflects southern Ontario costs
 *option:BaseDHW:value:13 = NA
 *option:BaseDHW:value:14 = NA
 *option:BaseDHW:value:15 = NA
+*option:BaseDHW:value:16 = 76.2
 *option:BaseDHW:cost:total = 0
 
 *option:ElecInstantaneous:value:1 = ElecInstant.dhw
@@ -3926,6 +3929,7 @@ Reflects southern Ontario costs
 *option:ElecInstantaneous:value:13 = NA
 *option:ElecInstantaneous:value:14 = NA
 *option:ElecInstantaneous:value:15 = NA
+*option:ElecInstantaneous:value:16 = 0
 *option:ElecInstantaneous:cost:total = 0
 
 *option:ElectricStorage:value:1 = ElecStorage.dhw
@@ -3943,6 +3947,7 @@ Reflects southern Ontario costs
 *option:ElectricStorage:value:13 = NA
 *option:ElectricStorage:value:14 = NA
 *option:ElectricStorage:value:15 = NA
+*option:ElectricStorage:value:16 = 0
 *option:ElectricStorage:cost:total    = 0
 
 *option:GasInstantaneous:value:1 = GasInstantaneous.dhw
@@ -3960,6 +3965,7 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:13 = NA
 *option:GasInstantaneous:value:14 = NA
 *option:GasInstantaneous:value:15 = NA
+*option:GasInstantaneous:value:16 = 0
 *option:GasInstantaneous:cost:total    = 0
 
 *option:GasTankless+DWHR:value:1 = GasInstantaneous.dhw
@@ -3977,6 +3983,7 @@ Reflects southern Ontario costs
 *option:GasTankless+DWHR:value:13 = 2        ! DWHR Efficiency code (1:Testing using hardcoded data, 2:User Supplied Data) ALWAYS USE 2!
 *option:GasTankless+DWHR:value:14 = 2        ! DWHR Shower temperature code (1, 2 or 3)
 *option:GasTankless+DWHR:value:15 = 2        ! DWHR Showhead flow rate code (0-4)
+*option:GasTankless+DWHR:value:16 = 0
 *option:GasTankless+DWHR:cost:total = 0
 
 *option:ElectricHP:value:1 = ElecHP.dhw
@@ -3993,6 +4000,8 @@ Reflects southern Ontario costs
 *option:ElectricHP:value:12 = NA
 *option:ElectricHP:value:13 = NA
 *option:ElectricHP:value:14 = NA
+*option:ElectricHP:value:15 = NA
+*option:ElectricHP:value:16 = 0
 *option:ElectricHP:cost:total    = 0
 
 *option:HPHotWater:value:1 = HPHotWater.dhw
@@ -4009,6 +4018,8 @@ Reflects southern Ontario costs
 *option:HPHotWater:value:12 = NA
 *option:HPHotWater:value:13 = NA
 *option:HPHotWater:value:14 = NA
+*option:HPHotWater:value:15 = NA
+*option:HPHotWater:value:16 = NA
 *option:HPHotWater:cost:total    = 0
 
 
