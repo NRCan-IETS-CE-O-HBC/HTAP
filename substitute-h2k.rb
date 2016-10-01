@@ -1102,7 +1102,7 @@ def processFile(filespec)
                      end
                   end
 				  
-				  locationText = "HouseFile/House/Components/HotWater/Primary/EnergySource"
+                  locationText = "HouseFile/House/Components/HotWater/Primary/EnergySource"
                   h2kElements[locationText].attributes["code"] = value
                   
                elsif ( tag =~ /Opt-H2K-TankType/ &&  value != "NA" )
@@ -1126,10 +1126,7 @@ def processFile(filespec)
 
                elsif ( tag =~ /Opt-H2K-FlueDiameter/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary"
-			      h2kElements[locationText].attributes["flueDiameter"] = value 
-           
-
-
+                  h2kElements[locationText].attributes["flueDiameter"] = value 
                   
                elsif ( tag =~ /Opt-H2K-IntHeatPumpCOP/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary"
@@ -1139,9 +1136,6 @@ def processFile(filespec)
                # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
                # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
                # changes made here will be overwritten by the Base Loads user inputs for Water Usage.
-               
-			   
-			   
 			   
                elsif ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary"
@@ -2703,7 +2697,9 @@ def postprocess( scaleData )
 	 
    #====================================
    
-   if ( ! defined? $gResults[$outputHCode] ) 
+   # JTB 01-10-2016: changed from (! defined? $gResults[$outputHCode]) 
+   #                 since defined but empty when file in General mode!
+   if ( $gResults[$outputHCode].empty? )  
 		$outputHCode = "General"
    end 
       

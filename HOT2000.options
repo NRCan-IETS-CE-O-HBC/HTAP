@@ -3988,7 +3988,7 @@ Reflects southern Ontario costs
 
 *option:ElectricHP:value:1 = ElecHP.dhw
 *option:ElectricHP:value:2 = 1         ! Elec
-*option:ElectricHP:value:3 = 6         ! Heat Pump
+*option:ElectricHP:value:3 = 6         ! Heat Pump (this should only be used for importing an old H2K pre-v11 file)
 *option:ElectricHP:value:4 = 0         ! Litres 
 *option:ElectricHP:value:5 = 1.91      ! COP
 *option:ElectricHP:value:6 = NA        ! Integrated HP COP
@@ -4008,8 +4008,8 @@ Reflects southern Ontario costs
 *option:HPHotWater:value:2 = 1         ! Elec
 *option:HPHotWater:value:3 = 7         ! Integrated Heat Pump
 *option:HPHotWater:value:4 = 189.3     ! Litres (50 USGl)
-*option:HPHotWater:value:5 = 1.91      ! EF
-*option:HPHotWater:value:6 = 2.5        ! Integrated HP COP
+*option:HPHotWater:value:5 = 0.9       ! EF (must be 0.1 - 1.0) H2K help prescibes 0.9
+*option:HPHotWater:value:6 = 2.5       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
 *option:HPHotWater:value:7 = NA
 *option:HPHotWater:value:8 = NA
 *option:HPHotWater:value:9 = NA
