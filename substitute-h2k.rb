@@ -1376,7 +1376,7 @@ def processFile(filespec)
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
                            locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/HeatingEfficiency"
-                           h2kElements[locationText].attributes["isCOP"] = "true" 
+                           h2kElements[locationText].attributes["isCop"] = "true" 
                            h2kElements[locationText].attributes["value"] = value
                         end 
                      end 
@@ -1388,7 +1388,7 @@ def processFile(filespec)
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
                            locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
-                           h2kElements[locationText].attributes["isCOP"] = "true" 
+                           h2kElements[locationText].attributes["isCop"] = "true" 
                            h2kElements[locationText].attributes["value"] = value
                         end 
                      end 
@@ -2315,12 +2315,17 @@ def createH2KSysType2( elements, sysType2Name )
       locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/HeatingEfficiency"
       elements[locationText].attributes["isCop"] = "true"
       elements[locationText].attributes["value"] = "3"
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications"
+      elements[locationText].add_element("CoolingEfficiency")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/CoolingEfficiency"
+      elements[locationText].attributes["isCop"] = "true"
+      elements[locationText].attributes["value"] = "3"
 
       locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
       elements[locationText].add_element("Temperature")
       locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature"
-      elements[locationText].add_element("CutOffType")
-      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature/CutOffType"
+      elements[locationText].add_element("CutoffType")
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature/CutoffType"
       elements[locationText].attributes["code"] = "3"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
@@ -2341,6 +2346,30 @@ def createH2KSysType2( elements, sysType2Name )
       elements[locationText].attributes["code"] = "2"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[locationText].add_element("CoolingParameters")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters"
+      elements[locationText].attributes["sensibleHeatRatio"] = "0.76"
+      elements[locationText].attributes["openableWindowArea"] = "20"
+      
+      elements[locationText].add_element("FansAndPump")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters/FansAndPump"
+      # Do we need to set this? what should we set it to? 
+      elements[locationText].attributes["flowRate"] = "360"
+      
+      elements[locationText].add_element("Mode")
+      elements[locationText].add_element("Power")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters/FansAndPump/Mode"
+      elements[locationText].attributes["code"] = "1"
+      elements[locationText].add_element("English")
+      elements[locationText].add_element("French")
+      
+      locationText = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters/FansAndPump/Power"
+      elements[locationText].attributes["isCalculated"] = "true"
       
    elsif ( sysType2Name == "AirConditioning" )
       locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
@@ -3793,7 +3822,7 @@ if fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
 ## These need to be updated. 
-fSUMMARY.write( "Energy-Total-GJ   =  #{$gAvgEnergy_Total.round(1)} \n" )
+fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total.round(2)}   \n" )
 fSUMMARY.write( "Util-PV-revenue   =  #{$gAvgPVRevenue.round(2)}    \n" )
 fSUMMARY.write( "Util-Bill-Net     =  #{($gAvgCost_Total-$gAvgPVRevenue).round(2)} \n" )
@@ -3806,21 +3835,21 @@ fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )
 
 fSUMMARY.write( "Energy-PV-kWh     =  #{$gAvgPVOutput_kWh.round(1)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
-fSUMMARY.write( "Energy-HeatingGJ  =  #{$gAvgEnergyHeatingGJ.round(1)} \n" )
-fSUMMARY.write( "Energy-CoolingGJ  =  #{$gAvgEnergyCoolingGJ.round(1)} \n" )
-fSUMMARY.write( "Energy-VentGJ     =  #{$gAvgEnergyVentilationGJ.round(1)} \n" )
-fSUMMARY.write( "Energy-DHWGJ      =  #{$gAvgEnergyWaterHeatingGJ.round(1)} \n" )
-fSUMMARY.write( "Energy-PlugGJ     =  #{$gAvgEnergyEquipmentGJ.round(1)} \n" )
-fSUMMARY.write( "EnergyEleckWh     =  #{$gAvgElecCons_KWh.round(1)} \n" )
-fSUMMARY.write( "EnergyGasM3       =  #{$gAvgNGasCons_m3.round(1)}  \n" )
-fSUMMARY.write( "EnergyOil_l       =  #{$gAvgOilCons_l.round(1)}    \n" )
+fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
+fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
+fSUMMARY.write( "Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
+fSUMMARY.write( "Energy-DHWGJ      =  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} \n" )
+fSUMMARY.write( "Energy-PlugGJ     =  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} \n" )
+fSUMMARY.write( "EnergyEleckWh     =  #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(1)} \n" )
+fSUMMARY.write( "EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(1)}  \n" )
+fSUMMARY.write( "EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
 fSUMMARY.write( "EnergyPellet_t    =  #{$gAvgPelletCons_tonne.round(1)}   \n" )
 fSUMMARY.write( "Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
 fSUMMARY.write( "SimplePaybackYrs  =  #{$payback.round(1)} \n" )
 
 # These #s are not yet averaged for orientations!
-fSUMMARY.write( "PEAK-Heating-W    =  #{$gPeakHeatingLoadW.round(1)}\n" )
-fSUMMARY.write( "PEAK-Cooling-W    =  #{$gPeakCoolingLoadW.round(1)}\n" )
+fSUMMARY.write( "PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
+fSUMMARY.write( "PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
 
 fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity.round(1)}\n" )
 

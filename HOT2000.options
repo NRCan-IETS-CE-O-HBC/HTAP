@@ -3487,8 +3487,8 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:6  = shoulder-ideal.ctl    ! ESP-r: Control File     
 *option:CCASHP:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
 *option:CCASHP:value:8  = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
-*option:CCASHP:value:9  =                       ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
-*option:CCASHP:value:10 =                       ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:CCASHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:CCASHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:CCASHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
 *option:CCASHP:value:12 =  6                    ! H2K: Capacity value.     
 *option:CCASHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
@@ -3499,7 +3499,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:18 = 2                     ! Function heating/cooling 
 *option:CCASHP:value:19 = 1                     ! Type: central split 
 *option:CCASHP:value:20 = 2                     ! Capacity: Calculated 
-*option:CCASHP:value:21 =                       ! Capacity value (W)
+*option:CCASHP:value:21 = NA                    ! Capacity value (W)
 *option:CCASHP:value:22 = 3                     ! Heating COP 
 *option:CCASHP:value:23 = 4.3                   ! Cooling COP 
 *option:CCASHP:value:24 = 2                     ! Cut off type : Restricted 
@@ -3507,14 +3507,33 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:26 = 25                    ! Operable window area
 *option:CCASHP:cost:total   = 0                 
 
-
 *option:CCASHP-ecm:value:1 = CCASHPv2-ecm-motor.hvac
 *option:CCASHP-ecm:value:2 = #-no-GSHP-file
 *option:CCASHP-ecm:value:3 = #No-IMS: 
 *option:CCASHP-ecm:value:4 = 
 *option:CCASHP-ecm:value:5 = 
 *option:CCASHP-ecm:value:6 =  shoulder-ideal.ctl
-*option:CCASHP-ecm:cost:total   = 0
+*option:CCASHP-ecm:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:CCASHP-ecm:value:8  = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:CCASHP-ecm:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:CCASHP-ecm:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:CCASHP-ecm:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:CCASHP-ecm:value:12 =  6                    ! H2K: Capacity value.     
+*option:CCASHP-ecm:value:13 =  true                 ! H2K: true=SS, false=AFUE    
+*option:CCASHP-ecm:value:14 =  100                  ! H2K: Efficiency value (0->100)    
+*option:CCASHP-ecm:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
+*option:CCASHP-ecm:value:16 = true                  ! H2K: ee-motor true/false   
+*option:CCASHP-ecm:value:17 = 60                    ! H2K: Crankcase heater?
+*option:CCASHP-ecm:value:18 = 2                     ! Function heating/cooling 
+*option:CCASHP-ecm:value:19 = 1                     ! Type: central split 
+*option:CCASHP-ecm:value:20 = 2                     ! Capacity: Calculated 
+*option:CCASHP-ecm:value:21 = NA                    ! Capacity value (W)
+*option:CCASHP-ecm:value:22 = 3                     ! Heating COP 
+*option:CCASHP-ecm:value:23 = 4.3                   ! Cooling COP 
+*option:CCASHP-ecm:value:24 = 2                     ! Cut off type : Restricted 
+*option:CCASHP-ecm:value:25 = -20                   ! Cut off temp 
+*option:CCASHP-ecm:value:26 = 25                    ! Operable window area
+*option:CCASHP-ecm:cost:total = 0
 
 Reflects southern Ontario costs
 *option:GSHP:value:1 = GSHPv2.hvac
@@ -3523,7 +3542,27 @@ Reflects southern Ontario costs
 *option:GSHP:value:4 = 
 *option:GSHP:value:5 = 
 *option:GSHP:value:6 = shoulder-ideal.ctl 
-*option:GSHP:cost:total    = 0
+*option:GSHP:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:GSHP:value:8  = GroundHeatPump        ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:GSHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:GSHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:GSHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:GSHP:value:12 =  6                    ! H2K: Capacity value.     
+*option:GSHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
+*option:GSHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
+*option:GSHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
+*option:GSHP:value:16 = false                 ! H2K: ee-motor true/false   
+*option:GSHP:value:17 = 60                    ! H2K: Crankcase heater?
+*option:GSHP:value:18 = 2                     ! Function heating/cooling 
+*option:GSHP:value:19 = NA                    ! Type: central split 
+*option:GSHP:value:20 = 2                     ! Capacity: Calculated 
+*option:GSHP:value:21 = NA                    ! Capacity value (W)
+*option:GSHP:value:22 = 3                     ! Heating COP 
+*option:GSHP:value:23 = 3                     ! Cooling COP 
+*option:GSHP:value:24 = 2                     ! Cut off type : Restricted 
+*option:GSHP:value:25 = -20                   ! Cut off temp 
+*option:GSHP:value:26 = 25                    ! Operable window area
+*option:GSHP:cost:total = 0                 
 
 ! Options for VP retrofit
 
