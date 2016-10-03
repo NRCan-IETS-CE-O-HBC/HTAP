@@ -1499,7 +1499,10 @@ def processFile(filespec)
                
             # PV - internal. Uses H2K PV Generation model
             # Limited number of parameters available in options file.
-            #-----------------------------------------------------------------------------
+			#
+			# ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
+            #----------------------------------------------------------------------------
+						
             elsif ( choiceEntry =~ /Opt-H2K-PV/ )
                if ( tag =~ /Opt-H2K-Area/ &&  value != "NA" )
                   # Check if specified area is possible for this house file
@@ -1512,32 +1515,32 @@ def processFile(filespec)
                      debug_out("WARNING: Specified PV area (#{value} sq.m.) is greater than available roof area (#{totalCeilArea.round().to_s} sq.m.)")
                   end
                   checkCreatePV( h2kElements )
-                  locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
                   h2kElements[locationText].attributes["area"] = value
                   
                elsif ( tag =~ /Opt-H2K-Slope/ &&  value != "NA" )
                   checkCreatePV( h2kElements )
-                  locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
                   h2kElements[locationText].attributes["slope"] = value
                   
                elsif ( tag =~ /Opt-H2K-Azimuth/ &&  value != "NA" )
                   checkCreatePV( h2kElements )
-                  locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
                   h2kElements[locationText].attributes["azimuth"] = value
                   
                elsif ( tag =~ /Opt-H2K-PVModuleType/ &&  value != "NA" )
                   checkCreatePV( h2kElements )
-                  locationText = "HouseFile/House/Generation/Photovoltaic/Module/Type"
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Module/Type"
                   h2kElements[locationText].attributes["code"] = value
                   
                elsif ( tag =~ /Opt-H2K-GridAbsRate/ &&  value != "NA" )
                   checkCreatePV( h2kElements )
-                  locationText = "HouseFile/House/Generation/Photovoltaic/Efficiency"
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Efficiency"
                   h2kElements[locationText].attributes["gridAbsorptionRate"] = value
                   
                elsif ( tag =~ /Opt-H2K-InvEff/ &&  value != "NA" )
                   checkCreatePV( h2kElements )
-                  locationText = "HouseFile/House/Generation/Photovoltaic/Efficiency"
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Efficiency"
                   h2kElements[locationText].attributes["inverterEfficiency"] = value
                   
                end
@@ -1782,37 +1785,39 @@ end
 
 # =========================================================================================
 #  Check if there is a PV section and add, if not.
+#  ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
 # =========================================================================================
 def checkCreatePV( elements )
-   if ( elements["HouseFile/House/Generation/Photovoltaic"] == nil )
-      locationText = "HouseFile/House/Generation/Systems"
-      elements[locationText].attributes["photovoltaic"] = "true"
+   if ( elements["HouseFile/House/Generation/PhotovoltaicSystems"] == nil )
       locationText = "HouseFile/House/Generation"
-      elements[locationText].add_element("Photovoltaic")
-      locationText = "HouseFile/House/Generation/Photovoltaic"
-      elements[locationText].add_element("EquipmentInformation")
+      elements[locationText].add_element("PhotovoltaicSystems")
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
+      elements[locationText].add_element("System")
+	  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
+	  elements[locationText].attributes["rank"] = "1"
+	  elements[locationText].add_element("EquipmentInformation")
       elements[locationText].add_element("Array")
-      locationText = "HouseFile/House/Generation/Photovoltaic/Array"
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
       elements[locationText].attributes["area"] = "50"
       elements[locationText].attributes["slope"] = "42"
       elements[locationText].attributes["azimuth"] = "0"
       
-      locationText = "HouseFile/House/Generation/Photovoltaic"
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
       elements[locationText].add_element("Efficiency")
-      locationText = "HouseFile/House/Generation/Photovoltaic/Efficiency"
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Efficiency"
       elements[locationText].attributes["miscellaneousLosses"] = "3"
       elements[locationText].attributes["otherPowerLosses"] = "1"
       elements[locationText].attributes["inverterEfficiency"] = "90"
       elements[locationText].attributes["gridAbsorptionRate"] = "90"
       
-      locationText = "HouseFile/House/Generation/Photovoltaic"
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
       elements[locationText].add_element("Module")
-      locationText = "HouseFile/House/Generation/Photovoltaic/Module"
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Module"
       elements[locationText].attributes["efficiency"] = "13"
       elements[locationText].attributes["cellTemperature"] = "45"
       elements[locationText].attributes["coefficientOfEfficiency"] = "0.4"
       elements[locationText].add_element("Type")
-      locationText = "HouseFile/House/Generation/Photovoltaic/Module/Type"
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Module/Type"
       elements[locationText].attributes["code"] = "1"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
@@ -2632,7 +2637,7 @@ def postprocess( scaleData )
 
    # ==================== New parsing : Get results from all h2k calcs. 
    
-   parseDebug = false
+   parseDebug = true
    
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
    
@@ -2723,9 +2728,7 @@ def postprocess( scaleData )
 	end 
 
    # Maybe the desired mode wasn't found? if not, reset it to "General"	
-	 
-   #====================================
-   
+   #==================================== 
    # JTB 01-10-2016: changed from (! defined? $gResults[$outputHCode]) 
    #                 since defined but empty when file in General mode!
    if ( $gResults[$outputHCode].empty? )  
@@ -2877,7 +2880,10 @@ def postprocess( scaleData )
    stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Electricity, kWh)\n")         
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Natural Gas, m3)\n")                	
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Oil, l)\n")                           	   
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Oil, l)\n")
+
+   # ASF 03-Oct-2016: 
+   # Wood/Pellets    
    #stream_out("  - #{$gEnergyWood.round(1)} (Wood, cord)\n")                               
    #stream_out("  - #{$gAvgPelletCons_tonne.round(1)} (Pellet, tonnes)\n")                  
    
