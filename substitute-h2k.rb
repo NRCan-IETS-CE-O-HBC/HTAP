@@ -138,7 +138,7 @@ $gAvgEnergyWaterHeatingElec = 0
 $gAvgEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
 $Locale = ""      # Weather location for current run
-
+$gWarn = false 
 # Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
 $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
@@ -197,6 +197,18 @@ end
 # =========================================================================================
 def debug_out(debmsg)
    if $gDebug 
+      puts debmsg
+   end
+   if ($gTest_params["logfile"])
+      $fLOG.write(debmsg)
+   end
+end
+
+# =========================================================================================
+# Write warning output ------------------------------------------------
+# =========================================================================================
+def warn_out(debmsg)
+   if $gWarn 
       puts debmsg
    end
    if ($gTest_params["logfile"])
@@ -1512,7 +1524,7 @@ def processFile(filespec)
                      totalCeilArea += element.attributes["area"].to_f
                   end
                   if ( value.to_f > totalCeilArea )
-                     debug_out("WARNING: Specified PV area (#{value} sq.m.) is greater than available roof area (#{totalCeilArea.round().to_s} sq.m.)")
+                     warn_out("WARNING: Specified PV area (#{value} sq.m.) is greater than available roof area (#{totalCeilArea.round().to_s} sq.m.)")
                   end
                   checkCreatePV( h2kElements )
                   locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
@@ -2571,10 +2583,7 @@ def postprocess( scaleData )
   
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
-
-   
-    
-   
+  
    if ( $gCustomCostAdjustment ) 
       $gRegionalCostAdj = $gCostAdjustmentFactor
    else
@@ -3056,6 +3065,12 @@ optparse = OptionParser.new do |opts|
          fatalerror("Valid path to choice file must be specified with --choices (or -c) option!")
       end
    end
+   
+      opts.on("-w", "--warnings", "Report warning messages") do 
+      $gWarn = true
+
+
+   end
   
    opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
       $cmdlineopts["options"] = o
@@ -3421,7 +3436,7 @@ $gOptions.each do |option, ignore|
       $ThisError = "\n WARNING: Option #{option} found in options file (#{$gOptionFile}) \n"
       $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) \n"
       $ErrorBuffer += $ThisError
-      stream_out ( $ThisError )
+      warn_out ( $ThisError )
    
       if ( ! $gOptions[option]["default"]["defined"]  )
          $ThisError = "\n ERROR: No default value for option #{option} defined in \n"
@@ -3436,7 +3451,7 @@ $gOptions.each do |option, ignore|
          
          $ThisError = "\n          Using default value (#{$gChoices[option]}) \n"
          $ErrorBuffer += $ThisError
-         stream_out ( $ThisError )
+         warn_out ( $ThisError )
       end
     end
     $ThisError = ""
