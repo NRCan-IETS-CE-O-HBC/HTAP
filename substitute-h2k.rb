@@ -2577,9 +2577,8 @@ end   # runsims
 # Post-process results
 # =========================================================================================
 def postprocess( scaleData )
-  
-   stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
-  
+   
+   stream_out( "\n Parsing results...")
   
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
@@ -2650,7 +2649,7 @@ def postprocess( scaleData )
       end
    end
    fBrowseRpt.close()
-
+   
    # ==================== New parsing : Get results from all h2k calcs. 
    
    parseDebug = true
@@ -2664,8 +2663,8 @@ def postprocess( scaleData )
 	    houseCode = "General"
 	  
 	  end 
-   
-	
+      # ASF 04-Oct-2016: limiting rexults parsing to 2 sets - SOC and general -- because parsing takes a long time !
+	  if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
 	  # ENERGY CONSUMPTION (Annual)
       $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
 	  $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -2751,6 +2750,7 @@ def postprocess( scaleData )
 	   # This is used for debugging only. 
 	   diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
 	   $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
+	   end
 	  
    end 
    
@@ -2772,7 +2772,8 @@ def postprocess( scaleData )
    end 
       
 
-   
+
+  
    
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
@@ -2872,8 +2873,10 @@ def postprocess( scaleData )
       $gEnergyPV = $gPVProduction * -1.0 
    end
    
-	
-
+	stream_out( " done \n")
+  
+   stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
+  
 
    stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
    stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
@@ -3427,7 +3430,7 @@ end
 =begin rdoc
  Validate choices and options. 
 =end
-stream_out(" Validating choices and options...\n\n");  
+stream_out(" Validating choices and options...");  
 
 # Search through optons and determine if they are usedin Choices file (warn if not). 
 $gOptions.each do |option, ignore|
@@ -3728,7 +3731,7 @@ if ( !$allok )
    stream_out($ErrorBuffer)
    fatalerror(" Choices in #{$gChoiceFile} do not match options in #{$gOptionFile}!")
 else
-   stream_out (" \n... done.\n\n")
+   stream_out (" ... done.\n\n")
 end
 
 # Create a copy of HOT2000 below master
