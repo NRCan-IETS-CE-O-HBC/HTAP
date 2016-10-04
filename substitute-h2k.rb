@@ -2498,12 +2498,12 @@ def runsims( direction )
            stream_out ("\n Invoking HOT2000 (PID #{pid})...")
            Process.wait pid
            status= $?.exitstatus      
-           stream_out("\n Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+           stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
            
            if status == 0 
               endRun = Time.now
               $runH2KTime = endRun - startRun  
-              stream_out( "\n The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+              stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
               keepTrying = false           # Successful run - don't try agian 
            elsif  tries < 0               # Unsuccessful run - try again for up to 10 times     
               tries = tries + 1      
@@ -2551,10 +2551,11 @@ def runsims( direction )
    # Copy simulation results to sim-output folder in master (for ERS number)
    # Note that most of the output is contained in the HOT2000 file in XML!
    if ( Dir.exist?("sim-output") )
+      stream_out ("\n Copying results.")
       if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
-         fatalerror(" Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
+         fatalerror("\n Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
       else
-         stream_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
+         debug_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
       end
    end
 
@@ -2565,9 +2566,15 @@ end   # runsims
 # =========================================================================================
 def postprocess( scaleData )
   
+   stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
+  
+  
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
 
+   
+    
+   
    if ( $gCustomCostAdjustment ) 
       $gRegionalCostAdj = $gCostAdjustmentFactor
    else
@@ -2649,7 +2656,6 @@ def postprocess( scaleData )
 	  
 	  end 
    
-      #puts "Code:" << houseCode.to_s
 	
 	  # ENERGY CONSUMPTION (Annual)
       $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
@@ -2693,10 +2699,7 @@ def postprocess( scaleData )
 	   
        $gResults[houseCode]["avgFuelusePropaneL"]  = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
 	   
-       #$gResults[houseCode]["avgFueluseWoodGJ"]    = "nil" #$gResults[houseCode]["avgFueluseWoodGJ"]   
-	   
-	   
-	   
+	      
 	   $gResults[houseCode]["avgFuelCostsTotal$"] =  $gResults[houseCode]["avgFuelCostsElec$"]    +
 	                                                 $gResults[houseCode]["avgFuelCostsNatGas$"]   +
 	                                                 $gResults[houseCode]["avgFuelCostsOil$"]     +
@@ -2704,25 +2707,49 @@ def postprocess( scaleData )
 	                                                 $gResults[houseCode]["avgFuelCostsWood$"] 
 	   
 	   
-	  
-	  diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
-	  $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
-	  
-	  
-	  
-	  #  $gResults[houseCode]["<var>"] = element.elements[".//Annual/Consumption/<name>"].attributes["<TAG>"]
-	  
-	  
-	  #puts ">>> Tot " << $gOptions[houseCode]["avgEnergyTotal"].to_s << " GJ"
-	  #puts ">>> SH  " << $gOptions[houseCode]["avgEnergyHeatingGJ"].to_s << " GJ"
+	   
+	   
+	   
+	   
+	   # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
+	   if ( $PVInt != "NA" ) 
+	     pvAvailable = 0
+		 pvUtilized  = 0 
+	     monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+         monthArr.each do |mth|
+		   # ASF 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
+		   #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+           pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
+		   pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
+		   
+         end
+		 
+		 $gResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable 
+		 $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized  
+		 $gResults[houseCode]["avgElecPVGenkWh"] = $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 	 
+		 $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
+		 
+		 $gResults[houseCode]["avgPvRevenue"] =  $gResults[houseCode]["avgElecPVGenkWh"]  * $PVTarrifDollarsPerkWh
+		 
+		 
+		 
+		 
+       end  
+	   
+       $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
+
+	   
+	   # This is used for debugging only. 
+	   diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
+	   $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
 	  
    end 
    
-   if  ( parseDebug ) 
+   if  ( $gDebug ) 
      $gResults.each do |houseCode, data|
-       puts ">Results for " << houseCode.to_s
+       debug_out (">Results for " << houseCode.to_s)
 	   data.each do | var, value |
-         puts "  - " << var.to_s << " : " << value.to_s 
+         debug_out ("  - " << var.to_s << " : " << value.to_s )
        end
       end 
 	end 
@@ -2740,7 +2767,9 @@ def postprocess( scaleData )
    
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
-   
+   # ASF 03-Oct-2016 : Not sure this section is working; pv costs may need to be determined 
+   #                   based hard sizes in the options file, and not computed from h2k Calcs. 
+   #                   requires a little more though. 
    # PV Data...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
@@ -2802,6 +2831,7 @@ def postprocess( scaleData )
    # THIS ISN"T WORKING YET  
    # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
    if ( $PVInt != "NA" )
+     
       locationText = "HouseFile/AllResults/Results/Monthly/Load/PhotoVoltaicUtilized"
       monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
       monthArr.each do |mth|
@@ -2833,10 +2863,8 @@ def postprocess( scaleData )
       $gEnergyPV = $gPVProduction * -1.0 
    end
    
-   # PV energy shouldn't be cumulative for orientation runs (GJ * 277.778 -> kWh)!!
-   $gAvgPVOutput_kWh   = -1.0 * $gEnergyPV * KWH_PER_GJ * scaleData
-   
-   $gAvgPVRevenue = $gEnergyPV * KWH_PER_GJ * $PVTarrifDollarsPerkWh
+	
+
 
    stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
    stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
@@ -2872,7 +2900,7 @@ def postprocess( scaleData )
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}  (All utilities).\n")
    stream_out ( "\n")
-   stream_out ( "  - \$ #{$gAvgPVRevenue.round(2)} (PV revenue, #{($gAvgPVRevenue * 1e06 / 3600).round} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
+   stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPvRevenue'].round(2)} (PV revenue, #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gAvgPVRevenue.round(2)} (Net utility costs).\n")
    stream_out ( "\n\n")
@@ -3061,22 +3089,23 @@ end
 $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
 $run_path = $gMasterPath + "\\H2K"
 
-stream_out (" > substitute-h2k.rb path: #{$gMasterPath} \n")
-stream_out (" >               ChoiceFile: #{$gChoiceFile} \n")
-stream_out (" >               OptionFile: #{$gOptionFile} \n")
-stream_out (" >               Base model: #{$gBaseModelFile} \n")
-stream_out (" >               HOT2000 source folder: #{$h2k_src_path} \n")
-stream_out (" >               HOT2000 run folder: #{$run_path} \n")
+stream_out ("\n > substitute-h2k.rb  \n")
+stream_out ("         path: #{$gMasterPath} \n")
+stream_out ("         ChoiceFile: #{$gChoiceFile} \n")
+stream_out ("         OptionFile: #{$gOptionFile} \n")
+stream_out ("         Base model: #{$gBaseModelFile} \n")
+stream_out ("         HOT2000 source folder: #{$h2k_src_path} \n")
+stream_out ("         HOT2000 run folder: #{$run_path} \n")
 
 =begin rdoc
  Parse option file. This file defines the available choices and costs
  that substitute-h2k.rb can pick from 
 =end
 
-stream_out("\n\nReading #{$gOptionFile}...")
+stream_out("\n\n Reading available options (#{$gOptionFile})...")
 fOPTIONS = File.new($gOptionFile, "r") 
 if fOPTIONS == nil then
-   fatalerror("Could not read #{$gOptionFile}.\n")
+   fatalerror(" Could not read #{$gOptionFile}.\n")
 end
 
 $linecount = 0
@@ -3211,7 +3240,7 @@ while !fOPTIONS.eof? do
             
             # Window data processing for generic window definitions:
             if ( $DataType =~ /WindowParams/ )
-               stream_out ("\nProcessing window data for #{$currentAttributeName} / #{$OptionName}  \n")
+               debug_out ("\nProcessing window data for #{$currentAttributeName} / #{$OptionName}  \n")
                $Param = $breakToken[3]
                $GenericWindowParams[$OptionName][$Param] = $value
                $GenericWindowParamsDefined = 1
@@ -3279,14 +3308,14 @@ while !fOPTIONS.eof? do
 end   #read next line
 
 fOPTIONS.close
-stream_out ("...done.\n")
+stream_out ("  done.\n")
 
 
 =begin rdoc
  Parse configuration (choice) file. 
 =end
 
-stream_out("\n\nReading #{$gChoiceFile}...\n\n")
+stream_out("\n\n Reading user-defined choices (#{$gChoiceFile})...\n")
 fCHOICES = File.new($gChoiceFile, "r") 
 if fCHOICES == nil then
    fatalerror("Could not read #{$gChoiceFile}.\n")
@@ -3316,7 +3345,7 @@ while !fCHOICES.eof? do
          if ( attribute =~ /rotate/ )
             $gRotate = value
             $gChoices["GOconfig_rotate"] = value
-            stream_out ("::: #{attribute} -> #{value} \n")
+            stream_out ("   - #{attribute} -> #{value} \n")
             $gChoiceOrder.push("GOconfig_rotate")
          end 
          if ( attribute =~ /step/ )
@@ -3335,7 +3364,7 @@ while !fCHOICES.eof? do
          
          $gChoices[attribute] = value
          
-         stream_out ("::: #{attribute} -> #{value} \n")
+         stream_out ("   - #{attribute} -> #{value} \n")
          
          # Additional data that may be used to attribute the choices. 
          $gExtraDataSpecd[attribute] = extradata
@@ -3347,7 +3376,7 @@ while !fCHOICES.eof? do
 end
 
 fCHOICES.close
-stream_out ("...done.\n\n")
+stream_out (" ...done.\n\n")
 
 $gExtOptions = Hash.new(&$blk)
 # Report 
@@ -3387,16 +3416,16 @@ stream_out(" Validating choices and options...\n\n");
 
 # Search through optons and determine if they are usedin Choices file (warn if not). 
 $gOptions.each do |option, ignore|
-    stream_out ("> option : #{option} ?\n"); 
+    debug_out ("> option : #{option} ?\n"); 
     if ( !$gChoices.has_key?(option)  )
-      $ThisError = "\nWARNING: Option #{option} found in options file (#{$gOptionFile}) \n"
-      $ThisError += "         was not specified in Choices file (#{$gChoiceFile}) \n"
+      $ThisError = "\n WARNING: Option #{option} found in options file (#{$gOptionFile}) \n"
+      $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) \n"
       $ErrorBuffer += $ThisError
       stream_out ( $ThisError )
    
       if ( ! $gOptions[option]["default"]["defined"]  )
-         $ThisError = "\nERROR: No default value for option #{option} defined in \n"
-         $ThisError += "       Options file (#{$gOptionFile})\n"
+         $ThisError = "\n ERROR: No default value for option #{option} defined in \n"
+         $ThisError += "        Options file (#{$gOptionFile})\n"
          $ErrorBuffer += $ThisError
          fatalerror ( $ThisError )
       else
@@ -3405,7 +3434,7 @@ $gOptions.each do |option, ignore|
          # Apply them at the end. 
          $gChoiceOrder.push(option)
          
-         $ThisError = "\n         Using default value (#{$gChoices[option]}) \n"
+         $ThisError = "\n          Using default value (#{$gChoices[option]}) \n"
          $ErrorBuffer += $ThisError
          stream_out ( $ThisError )
       end
@@ -3420,8 +3449,8 @@ $gChoices.each do |attrib, choice|
     
    # Is attribute used in choices file defined in options ?
    if ( !$gOptions.has_key?(attrib) )
-      $ThisError  = "\nERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}), \n"
-      $ThisError +=  "       but can't be found in options file (#{$gOptionFile})\n"
+      $ThisError  = "\n ERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}), \n"
+      $ThisError +=  "        but can't be found in options file (#{$gOptionFile})\n"
       $ErrorBuffer += $ThisError
       stream_out( $ThisError )
       $allok = false
@@ -3434,9 +3463,9 @@ $gChoices.each do |attrib, choice|
       $allok = false
       
       if ( !$allok )
-         $ThisError  = "\nERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
-         $ThisError +=   "       in choice file #{$gChoiceFile}), is not defined \n"
-         $ThisError +=   "       in options file (#{$gOptionFile})\n"
+         $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
+         $ThisError +=   "        in choice file #{$gChoiceFile}), is not defined \n"
+         $ThisError +=   "        in options file (#{$gOptionFile})\n"
          $ErrorBuffer += $ThisError
          stream_out( $ThisError )
       else
@@ -3590,9 +3619,9 @@ $gChoices.each do |attrib1, choice|
          end
         
          if ( $ValidConditionFound == 0 )
-            $ThisError  = "\nERROR: No valid conditions were defined for #{attrib1} \n"
-            $ThisError +=   "       in options file (#{$gOptionFile}). Choices must match one \n"
-            $ThisError +=   "       of the following:\n"
+            $ThisError  = "\n ERROR: No valid conditions were defined for #{attrib1} \n"
+            $ThisError +=   "        in options file (#{$gOptionFile}). Choices must match one \n"
+            $ThisError +=   "        of the following:\n"
             for conditions in condHash.keys()
                $ThisError +=  "            -> #{conditions} \n"
             end
@@ -3684,14 +3713,14 @@ if ( !$allok )
    stream_out($ErrorBuffer)
    fatalerror(" Choices in #{$gChoiceFile} do not match options in #{$gOptionFile}!")
 else
-   stream_out (" done.\n\n")
+   stream_out (" \n... done.\n\n")
 end
 
 # Create a copy of HOT2000 below master
-stream_out (" Creating a copying of HOT2000 executable directory below master... \n")
+stream_out (" Creating a copying of HOT2000 executable directory below master... ")
 if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
    if ( ! system("mkdir #{$gMasterPath}\\H2K") )
-      fatalerror ("Fatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
+      fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
    end
 end
 if ( ! system ("xcopy #{$h2k_src_path} #{$gMasterPath}\\H2K /S /Y /Q") )
@@ -3700,7 +3729,7 @@ end
 fix_H2K_INI()  # Fixes the paths in HOT2000.ini file in H2K folder created above
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
-stream_out("\n\n Creating a copy of HOT2000 model file for optimization work...\n")
+stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
 $gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
 # Remove any existing file first!  
 if ( File.exist?($gWorkingModelFile) )
@@ -3711,7 +3740,7 @@ end
 if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
    fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
 end
-stream_out(" File #{$gWorkingModelFile} created.\n\n")
+stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
