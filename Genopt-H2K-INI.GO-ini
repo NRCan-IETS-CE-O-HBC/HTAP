@@ -116,6 +116,9 @@ Simulation{
       Name22 = ERS-Value;
       Delimiter22 = "ERS-Value         =  ";
       
+      Name23 = NumTries;
+      Delimiter23 = "NumTries          =  ";
+      
    } // end Simulation.ObjectiveFunctionLocation
    
 } // end Simulation

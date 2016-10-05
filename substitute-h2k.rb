@@ -3864,8 +3864,6 @@ fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
 
-
-
 fSUMMARY.close() 
 
 endProcessTime = Time.now
