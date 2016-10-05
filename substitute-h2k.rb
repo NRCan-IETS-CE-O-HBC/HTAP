@@ -2492,7 +2492,8 @@ def runsims( direction )
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
    #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
    #      re-trying a run)! 
-   maxRunTime = 30
+   maxRunTime = 120  # JTB 05-10-2016: Was 30 sec
+   maxTries = 1000   # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
    # AF: Extra counters to count how many times we've tried HOT2000.
@@ -2503,34 +2504,35 @@ def runsims( direction )
    begin      
       Timeout.timeout(maxRunTime) do        # time out after maxRunTime seconds!
          
-         while keepTrying do                # within that loop, keep trying for up to 10 times
+         while keepTrying do                # within that loop, keep trying
    
-           # Run HOT2000! 
-           pid = Process.spawn( runThis,optionSwitch, fileToLoad) 
-           stream_out ("\n Invoking HOT2000 (PID #{pid})...")
-           Process.wait pid
-           status= $?.exitstatus      
-           stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+            # Run HOT2000! 
+            pid = Process.spawn( runThis,optionSwitch, fileToLoad) 
+            stream_out ("\n Invoking HOT2000 (PID #{pid})...")
+            Process.wait pid
+            status= $?.exitstatus      
+            stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+
+            if status == 0 
+               endRun = Time.now
+               $runH2KTime = endRun - startRun  
+               stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+               keepTrying = false       # Successful run - don't try agian 
+            elsif tries < maxTries      # Unsuccessful run - try again for up to maxTries     
+               tries = tries + 1
+               keepTrying = true
+            else
+               # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
+               fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
+               keepTrying = false   # Give up.
+            end
            
-           if status == 0 
-              endRun = Time.now
-              $runH2KTime = endRun - startRun  
-              stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-              keepTrying = false           # Successful run - don't try agian 
-           elsif  tries < 0               # Unsuccessful run - try again for up to 10 times     
-              tries = tries + 1      
-           else
-              # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
-              fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
-              keepTrying = false   # Give up.
-           end
-           
-           # Forceably kill process if needed
-           begin 
-             Process.kill('KILL', pid)
-           rescue 
-           end 
-           sleep(1)
+            # Forceably kill process if needed
+            begin 
+               Process.kill('KILL', pid)
+            rescue 
+            end 
+            sleep(1)
            
          end 
       end
@@ -2754,7 +2756,7 @@ def postprocess( scaleData )
    if ( $gResults[$outputHCode].empty? )  
 		$outputHCode = "General"
    end 
-
+      
    
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
@@ -2817,7 +2819,6 @@ def postprocess( scaleData )
    $gChoices["Opt-StandoffPV"] = $PVsize
    $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
-   
    
    # THIS ISN"T WORKING YET  
    # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
