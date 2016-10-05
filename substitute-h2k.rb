@@ -2659,107 +2659,91 @@ def postprocess( scaleData )
       houseCode =  element.attributes["houseCode"]
    
       if (houseCode == nil) 
-	  
-	    houseCode = "General"
-	  
-	  end 
+         houseCode = "General"
+      end
+      
       # ASF 04-Oct-2016: limiting rexults parsing to 2 sets - SOC and general -- because parsing takes a long time !
-	  if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
-	  # ENERGY CONSUMPTION (Annual)
-      $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
-	  $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
-	  $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData
-	  $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
-	  $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
-	  $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
+      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
+         # ENERGY CONSUMPTION (Annual)
+         $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
 	  
-	  # Design loads, other data 
-	  $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
+         # Design loads, other data 
+         $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
 	  
-	      
-	  $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
-	     # ( what the heck is a 'cool loss rate' ?!? should be heat gain rate...)
+         $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
+         # ( what the heck is a 'cool loss rate' ?!? should be heat gain rate...)
 		
-      $gResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
-	  $gResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
-	  $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
-	  $gResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f * scaleData
-	  $gResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f * scaleData
-	  $gResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f * scaleData
-	  $gResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f * scaleData
-	  $gResults[houseCode]["avgFuelCostsOil$"]     = element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f * scaleData
-      $gResults[houseCode]["avgFuelCostsPropane$"] = element.elements[".//Annual/ActualFuelCosts"].attributes["propane"].to_f * scaleData
-      $gResults[houseCode]["avgFuelCostsWood$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["wood"].to_f * scaleData
+         $gResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
+         $gResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
+         $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f * scaleData
+         $gResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsOil$"]     = element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsPropane$"] = element.elements[".//Annual/ActualFuelCosts"].attributes["propane"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsWood$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["wood"].to_f * scaleData
 
-	  $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
-	  $gResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
-	  $gResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
-      $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
-      $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
+         $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
 	  
-	  
-	   $gResults[houseCode]["avgFueluseEleckWh"]   = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
-	  
-	   $gResults[houseCode]["avgFueluseNatGasM3"]  = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
-	   
-	   $gResults[houseCode]["avgFueluseOilL"]      = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
-	   
-	   
-       $gResults[houseCode]["avgFuelusePropaneL"]  = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
-	   
-	      
-	   $gResults[houseCode]["avgFuelCostsTotal$"] =  $gResults[houseCode]["avgFuelCostsElec$"]    +
-	                                                 $gResults[houseCode]["avgFuelCostsNatGas$"]   +
-	                                                 $gResults[houseCode]["avgFuelCostsOil$"]     +
-	                                                 $gResults[houseCode]["avgFuelCostsPropane$"]  +
-	                                                 $gResults[houseCode]["avgFuelCostsWood$"] 
-	   
-	   
-	   
-	   
-	   
-	   
-	   # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
-	   if ( $PVInt != "NA" ) 
-	     pvAvailable = 0
-		 pvUtilized  = 0 
-	     monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
-         monthArr.each do |mth|
-		   # ASF 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
-		   #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
-           pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
-		   pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
-		   
-         end
-		 
-		 $gResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable 
-		 $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized  
-		 $gResults[houseCode]["avgElecPVGenkWh"] = $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 	 
-		 $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
-		 
-		 $gResults[houseCode]["avgPvRevenue"] =  $gResults[houseCode]["avgElecPVGenkWh"]  * $PVTarrifDollarsPerkWh
-		 
-		 
-		 
-		 
-       end  
-	   
-       $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
+         $gResults[houseCode]["avgFueluseEleckWh"]   = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
 
+         $gResults[houseCode]["avgFueluseNatGasM3"]  = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
+
+         $gResults[houseCode]["avgFueluseOilL"]      = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
+
+         $gResults[houseCode]["avgFuelusePropaneL"]  = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
+
+         $gResults[houseCode]["avgFuelCostsTotal$"] =  $gResults[houseCode]["avgFuelCostsElec$"] +
+                                     $gResults[houseCode]["avgFuelCostsNatGas$"] +
+                                     $gResults[houseCode]["avgFuelCostsOil$"] +
+                                     $gResults[houseCode]["avgFuelCostsPropane$"] +
+                                     $gResults[houseCode]["avgFuelCostsWood$"] 
 	   
-	   # This is used for debugging only. 
-	   diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
-	   $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
+         # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
+         if ( $PVInt != "NA" ) 
+            pvAvailable = 0
+            pvUtilized  = 0 
+            monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+            monthArr.each do |mth|
+               # ASF 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
+               #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+               pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
+               pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
+            end
+		 
+            $gResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable 
+            $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized  
+            $gResults[houseCode]["avgElecPVGenkWh"] = $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 	 
+            $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
+		 
+            $gResults[houseCode]["avgPvRevenue"] =  $gResults[houseCode]["avgElecPVGenkWh"]  * $PVTarrifDollarsPerkWh
+         end  
+	   
+         $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
+
+         # This is used for debugging only. 
+         diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
+         $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
 	   end
 	  
-   end 
+   end # h2kPostElements |element| loop
    
-   if  ( $gDebug ) 
-     $gResults.each do |houseCode, data|
-       debug_out (">Results for " << houseCode.to_s)
-	   data.each do | var, value |
-         debug_out ("  - " << var.to_s << " : " << value.to_s )
-       end
+   if ( $gDebug ) 
+      $gResults.each do |houseCode, data|
+         debug_out (">Results for " << houseCode.to_s)
+         data.each do | var, value |
+            debug_out ("  - " << var.to_s << " : " << value.to_s )
+         end
       end 
 	end 
 
@@ -2770,10 +2754,7 @@ def postprocess( scaleData )
    if ( $gResults[$outputHCode].empty? )  
 		$outputHCode = "General"
    end 
-      
 
-
-  
    
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
@@ -2991,7 +2972,6 @@ end
 =========================================================================================
 =end
 
-
 $gChoiceOrder = Array.new
 
 $gTest_params["verbosity"] = "quiet"
@@ -3012,15 +2992,16 @@ $help_msg = "
  This script searches through a suite of model input files 
  and substitutes values from a specified input file. 
  
- use: ruby substitute-h2k.rb --options options.opt
-                             --choices choices.options
-                             --base_file Base model path & file name
+ use: ruby substitute-h2k.rb --options Filename.options
+                             --choices Filename.choices
+                             --base_file 'Base model path & file name'
                       
  example use for optimization work:
  
-  ruby substitute-h2k.rb -c optimization-choices.choices
-                         -o optimization-options.options
-                         -b \\HOT2000V11_1_CLI\\MyModel.h2k
+  ruby substitute-h2k.rb -c HOT2000.choices
+                         -o HOT2000.options
+                         -b C:\\H2K-CLI-Min\\MyModel.h2k
+                         -v
       
 "
 
@@ -3051,10 +3032,6 @@ optparse = OptionParser.new do |opts|
       $gTest_params["verbosity"] = "verbose"
    end
 
-   #opts.on("-", "", "") do 
-   #   fatalerror("Invalid command line option specified! Do not leave spaces between \"-\" and option letter.")
-   #end
-
    opts.on("-d", "--debug", "Run in debug mode") do
       $cmdlineopts["verbose"] = true
       $gTest_params["verbosity"] = "debug"
@@ -3069,10 +3046,8 @@ optparse = OptionParser.new do |opts|
       end
    end
    
-      opts.on("-w", "--warnings", "Report warning messages") do 
+   opts.on("-w", "--warnings", "Report warning messages") do 
       $gWarn = true
-
-
    end
   
    opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
@@ -3838,36 +3813,14 @@ $gAvgCost_Total = $gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAv
 
 $gAvgPVRevenue = $gAvgPVOutput_kWh * $PVTarrifDollarsPerkWh
 
-$payback = 0
+$optCOProxy = 0
 $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
 
 $gUpgCost = $gTotalCost - $gIncBaseCosts
 $gUpgSavings = $gUtilityBaseCost - $gAvgUtilCostNet
 
-
-if ( $gUpgSavings.abs < 1.00 )
-   # Savings are practically zero. Set payback to a very large number. 
-   $payback = 10000.0
-elsif ( $gTotalCost < $gIncBaseCosts )  # Case when upgrade is cheaper than base cost
-   if ( $gUpgSavings > 0.0 )            # Does it also save on bills? 
-      $payback = 0.0                    # No-brainer. Payback should be zero.
-   else
-      # It may be cheap, but it costs in the long run.
-      # Set payback to a very large #.
-      $payback = 100000.0
-   end
-else
-   # Compute payback. 
-   $payback = ($gTotalCost-$gIncBaseCosts)/($gUtilityBaseCost-($gAvgCost_Total-$gAvgPVRevenue))
-   
-   # Paybacks can be less than zero if design costs more in utility bills. Set negative paybacks to very large numbers.
-   if ( $payback < 0 ) 
-      $payback = 100000.0 
-   end
-end
-
-# Proxy for cost of ownership 
-$payback = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
+# Proxy for cost of ownership (JTB 05-10-2016: Vriable used to be "$payback")
+$optCOProxy = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
 
 sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
 fSUMMARY = File.new(sumFileSpec, "w")
@@ -3898,7 +3851,7 @@ fSUMMARY.write( "EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGa
 fSUMMARY.write( "EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
 fSUMMARY.write( "EnergyPellet_t    =  #{$gAvgPelletCons_tonne.round(1)}   \n" )
 fSUMMARY.write( "Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
-fSUMMARY.write( "SimplePaybackYrs  =  #{$payback.round(1)} \n" )
+fSUMMARY.write( "SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 
 # These #s are not yet averaged for orientations!
 fSUMMARY.write( "PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )

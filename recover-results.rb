@@ -10,18 +10,21 @@ require 'fileutils'
 
 $gMasterPath = Dir.getwd()
 
-
 $RemoteDir     = "HousingModels/OptFramework"; 
 $RemoteFile    = "OutputListingAll.txt"; 
 $OutputFile    = "CloudResultsAllData.csv"; 
 $Batch         = 0; 
 $TotalRows     = 0; 
 $help_msg = "
- recover-results.rb 
- usage: recover-results.rb <remote computer address> 
- (e.g. recover-results.rb ubuntu\@ec2-23-23-47-71.compute-1.amazonaws.com ) 
+ recover-results.rb - parses OutputListingAll.txt files and combines them.
  
- "
+ usage: recover-results.rb [options] 
+ 
+      -h, --help     Displays help
+      -l, --local    Search for OutputListingAll.txt in current (local) dirctory
+"
+# JTB: Remote use not yet implemented for HOT2000 use with Remote Desktop Connection:  
+#  (e.g. recover-results.rb 54.204.133.55 ) 
 
 
 if ARGV.empty? then 
@@ -33,11 +36,7 @@ $local = false
 
 optparse = OptionParser.new do |opts|
 
-  opts.banner = 
-  " recover-results.rb - parses OutputListingAll.txt files and combines them.
-    
-    usage: recover-results.rb [options]
-   "
+  opts.banner = $help_msg
 
   opts.on("-h", "--help", "Displays help") do 
     puts opts
@@ -56,25 +55,22 @@ end
 
 optparse.parse!
 
-
-
 if ($local)
   FileUtils.rm Dir.glob('TempResultsBatch*.txt')
   FileUtils.rm Dir.glob('CloudResultsAllData.csv')
   
   FileUtils.cp( $RemoteFile, "TempResultsBatch1.txt ")
-
-
 end 
+
 FileList = Array.new
 
 Dir.glob('TempResultsBatch*.txt').each do |f| 
   FileList.push(f)
 end
+
 Dir.glob('CloudResultsBatch*.txt').each do |f| 
   FileList.push(f)
 end
-
 
 puts "---"
 puts FileList
@@ -87,38 +83,31 @@ header =""
 data = ""
 
 FileList.each do |fileName|
-  batch += 1
-  lineCount = 0
-  puts "Recvering results from "  << fileName
-  contents = File.open(fileName, 'r') 
-  contents.each do |line|
-    lineCount += 1
-	#puts "F: " << fileName <<" | " << batch.to_s << " | " << lineCount.to_s
-	#	line  = line.gsub!(/\s+/,", ") 
-	line  = line.gsub(/([^ ]) ([^ ])/,"\\1\\2") 
-	
-	line  = line.gsub(/\s+/,", ") 
-   # $line  =~ s/\s+/,/g;
-
-
-	if lineCount < 20 
-	  #GenOpt preamble. DO nothing
-	elsif batch == 1 and lineCount == 20
-	  
-	  header = "ID, batch, " << line.to_s << ", status\n"
+   batch += 1
+   lineCount = 0
+   puts "Recvering results from "  << fileName
+   contents = File.open(fileName, 'r') 
+   contents.each do |line|
+      lineCount += 1
+      #puts "F: " << fileName <<" | " << batch.to_s << " | " << lineCount.to_s
+      #	line  = line.gsub!(/\s+/,", ") 
+      line  = line.gsub(/([^ ]) ([^ ])/,"\\1\\2") 
       
-	elsif lineCount > 20 
-	  index += 1
-	  data << index.to_s << ", " <<batch.to_s << ", " << line.to_s << "\n"
-	  
-	end
-	
-	
-  end
-  contents.close
-  puts lineCount.to_s << " lines."
-end
+      line  = line.gsub(/\s+/,", ") 
+      # $line  =~ s/\s+/,/g;
 
+      if lineCount < 20 
+         #GenOpt preamble. DO nothing
+      elsif batch == 1 and lineCount == 20
+         header = "ID, batch, " << line.to_s << ", status\n"
+      elsif lineCount > 20 
+         index += 1
+         data << index.to_s << ", " <<batch.to_s << ", " << line.to_s << "\n"
+      end
+   end
+   contents.close
+   puts lineCount.to_s << " lines."
+end
 
 output = File.open('CloudResultsAllData.csv', 'a') 
 output.write(header)
@@ -135,8 +124,6 @@ exit()
 
 
 #if ($ARGV[0] =~/local/) {
-
-
 
 #my @AllFiles = split /\s/, `ls CloudResultsBatch*.txt TempResultsBatch*.txt`; 
 #
