@@ -10,7 +10,7 @@
 Opt-DBFiles  : H2KCodeLibFile
 
 ! Weather location
-Opt-Location : Toronto
+Opt-Location : NA !
 
 Opt-FuelCost : rates2016
 
@@ -26,7 +26,7 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : DoubleArgon_HighGainOnSouth  !TripleLowEHardCoatKryFill 
+Opt-CasementWindows  : NA   !TripleLowEHardCoatKryFill 
 
 Opt-H2KFoundation : NA  !Rigid+BattR30-R10BSlab
 
@@ -38,10 +38,12 @@ Opt-DHWLoadScale : No-Reduction
 Opt-DWHRandSDHW : NA    !none          
 
 ! Hot water system. Choices:
-Opt-DHWSystem : NA   !BaseDHW, GasTankless+DWHR
+Opt-DHWSystem :  NA    !GasTankless+DWHR !  GasTankless+DWHR
+
+Opt-DWHRSystem :  DWHR-eff-30 ! DWHR-System-1   
 
 ! HVAC system 
-Opt-HVACSystem  : NA !basefurnace
+Opt-HVACSystem  : NA
 
 ! HRV spec 
 Opt-HRVspec : NA
@@ -51,7 +53,7 @@ Opt-RoofPitch : NA   !6-12
 ! External (Opt-StandoffPV) and Internal model (Opt-H2K-PV) PV options.
 ! Substitute-h2k.rb will select external if both are specified!
 Opt-StandoffPV : NoPV      !SizedPV|8kW
-Opt-H2K-PV : NA   !MonoSi-50m2
+Opt-H2K-PV : NA !  MonoSi-200m2   !MonoSi-50m2
 
 !---------------------------------------------------------------------------
 ! The following options don't do anything for HOT2000

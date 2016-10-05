@@ -15,7 +15,8 @@ Vary{
       Name = GOtag:Opt-Location; 
       Ini  = 1;
       // Buildability locations (12):
-      Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
+      Values = "PrinceGeorge,Kamloops,Vancouver";
+	  //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
       
       // Locations to match typical ESP-r runs (11):
       //Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax"; 
@@ -125,8 +126,18 @@ Vary{
    Parameter{ //
       Name    = GOtag:Opt-DHWSystem;
       Ini     = 1; 
-      Values  = "NA";   //"ElectricStorage"
+      Values  = "NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";   //"ElectricStorage"
    }
+  
+   // Conventional DHW:  BaseDHW, 
+   Parameter{ //
+      Name    = GOtag:DWHR-System;
+      Ini     = 1; 
+      Values  = "none, DWHR-eff-30,  DWHR-eff-42,  DWHR-eff-55";   //"ElectricStorage"
+   }
+    
+  
+  
   
    // Heating/cooling
    Parameter { // 
@@ -139,7 +150,7 @@ Vary{
    Parameter { 
       Name = GOtag:Opt-HRVSpec; 
       Ini  = 1; 
-      Values = "HRV_60, HRV_81"; 
+      Values = "NA"; 
    }
   
    // PV: Set to autosize to ensure each run actually achieves NZEH. 
