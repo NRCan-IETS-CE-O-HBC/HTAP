@@ -82,6 +82,8 @@ index =0
 header =""
 data = ""
 
+recoveredLines = 0
+
 FileList.each do |fileName|
    batch += 1
    lineCount = 0
@@ -101,13 +103,16 @@ FileList.each do |fileName|
       elsif batch == 1 and lineCount == 20
          header = "ID, batch, " << line.to_s << ", status\n"
       elsif lineCount > 20 
+	     recoveredLines += 1
          index += 1
          data << index.to_s << ", " <<batch.to_s << ", " << line.to_s << "\n"
       end
    end
    contents.close
-   puts lineCount.to_s << " lines."
+   
 end
+
+puts "Recovered "<< recoveredLines.to_s << " lines from " << batch.to_s << " files.\n"
 
 output = File.open('CloudResultsAllData.csv', 'a') 
 output.write(header)
@@ -122,65 +127,3 @@ exit()
 FileUtils.rm Dir.glob('TempResultsBatch*.txt')
 exit()
 
-
-#if ($ARGV[0] =~/local/) {
-
-#my @AllFiles = split /\s/, `ls CloudResultsBatch*.txt TempResultsBatch*.txt`; 
-#
-##push @AllFiles, $LocalFileName; 
-#
-#open (WRITEOUT, ">$OutputFile") or die ( " Could not open $OutputFile for writing !"); 
-#
-#
-#foreach ( @AllFiles ) {
-#	print "Recovering data from $_ ... \n"; 
-#	$Batch++; 
-#	my $LocalFileName = $_; 
-#	open (READIN,$LocalFileName) or die ( " Could not open $LocalFileName for reading !"); 
-#
-#	my $LineCount = 0; 
-#	my $headerLine = ""; 
-#	my $lines = ""; 
-#	my $row = 1;  
-#  
-#	while ( my $line =<READIN> ){
-#
-#		$LineCount++; 
-#    
-#		if ( $LineCount < 20 ) {
-#    
-#			# GenOpt preamble. Do nothing. 
-#    
-#		} elsif ( $LineCount == 20 ) {
-#    
-#			# Header Row, copied for first batch only. 
-#			if ( $Batch == 1) {
-#				$line  =~ s/ /_/g; 
-#				$line  =~ s/\s+/,/g; 
-#				#print " HEADER: $line "; 
-#				$lines .= "ID,batch,row,$line"."junk,generation\n" ; 
-#			}
-#		} else {
-#			$row++; 
-#			$TotalRows++; 
-#			# All other rows
-#			$line =~ s/\s+/,/g; 
-#			$line =~ s/,$//g; 
-#			$lines .= "$TotalRows,$Batch,$row,$line\n" ; 
-#		}
-#
-#		#print $lines; 
-#	}
-#
-#	close READIN; 
-#  
-#	print WRITEOUT $lines; 
-#}
-#  
-#close WRITEOUT; 
-#system ("cp $OutputFile /cygdrive/s/SBC/Housing_\\&_Buildings/HBCS_2012_2016_Initiatives/ecoEII_New_Housing/Optimization_results/");
-#print ("  All done! Recovered $TotalRows Rows in $Batch files. \n"); 
-#print ("  You may wish to rename local file 'RecoveredFromCloud.txt' to 'CloudResultsBatch*.txt' if that optimization run is complete. \n"); 
-#print ("  Have a good day\n"); 
-#
-#

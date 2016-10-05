@@ -1098,8 +1098,7 @@ def processFile(filespec)
                end
             
                
-            # DHW System (includies DWHR options for internal H2K model. Don't use
-            #              both external (explicit) method AND this one!)
+            # DHW System 
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DHWSystem/ )
                if ( tag =~ /Opt-H2K-Fuel/ &&  value != "NA" )
@@ -1144,13 +1143,21 @@ def processFile(filespec)
                   locationText = "HouseFile/House/Components/HotWater/Primary"
                   # This attribute only exists for an *Integrated* Heat Pump
                   h2kElements[locationText].attributes["heatPumpCoefficient"] = value  # COP of integrated HP
-               
-               # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
-               # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
-               # changes made here will be overwritten by the Base Loads user inputs for Water Usage.
+                end
+				
+            # DHW System (includies DWHR options for internal H2K model. Don't use
+            #              both external (explicit) method AND this one!)
+            # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
+            # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
+            # changes made here will be overwritten by the Base Loads user inputs for Water Usage.		
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
+	           
 			   
-               elsif ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
-                  locationText = "HouseFile/House/Components/HotWater/Primary"
+               if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
+               
+                  locationText = "HouseFile/House/Components/HotWater/Primary"               
+
                   if ( value == "true" )
                      if ( h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] == "false" )
                         # Need to add DWHR XML section!
@@ -1162,45 +1169,53 @@ def processFile(filespec)
                         h2kElements[locationText].delete_element("DrainWaterHeatRecovery")
                      end
                   end
+				  
                   h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value  # Flag for DWHR
                
-               elsif ( tag =~ /Opt-H2K-DHWR-showerLength/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-showerLength/ &&  value != "NA" )
+			   
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
                   h2kElements[locationText].attributes["showerLength"] = value # Shower length in minutes (float)
                
-               elsif ( tag =~ /Opt-H2K-DHWR-dailyShowers/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-dailyShowers/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
                   h2kElements[locationText].attributes["dailyShowers"] = value  # Number of daily showers (float)
                
-               elsif ( tag =~ /Opt-H2K-DHWR-preheatShowerTank/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-preheatShowerTank/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
                   h2kElements[locationText].attributes["preheatShowerTank"] = value  # true or false
                
                # Can't modify DWHR Effectiveness rating at 9.5 l/min directly. It is precalculated based on
                # manufacturer name and model (core overrides this value with a calculation)! See Effectiveness6.xls
-               elsif ( tag =~ /Opt-H2K-DHWR-Manufacturer/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-Manufacturer/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation/Manufacturer"
                   h2kElements[locationText].text = value  # DWHR Manufacturer
                
-               elsif ( tag =~ /Opt-H2K-DHWR-Model/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-Model/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation/Model"
                   h2kElements[locationText].text = value  # DWHR Model
                
                # THIS DOESN"T APPEAR TO DO ANYTHING! *********************************
-               elsif ( tag =~ /Opt-H2K-DHWR-Efficiency_code/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-Efficiency_code/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/Efficiency"
                   h2kElements[locationText].attributes["code"] = value  # DWHR Efficiency code (1, 2 or 3)
-               
-               elsif ( tag =~ /Opt-H2K-DHWR-ShowerTemperature_code/ &&  value != "NA" )
+ 
+               # ASF 05-10-2016- this tag controls effectiveness
+               elsif ( tag =~ /Opt-H2K-DWHR-Effectiveness9p5/ &&  value != "NA" )
+                  locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
+                  h2kElements[locationText].attributes["effectivenessAt9.5"] = value  # P.55 test result (0->100)
+				  
+               elsif ( tag =~ /Opt-H2K-DWHR-ShowerTemperature_code/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerTemperature"
                   h2kElements[locationText].attributes["code"] = value  # DWHR Shower temperature code (1:Cool, 2:Warm or 3:Hot)
                
-               elsif ( tag =~ /Opt-H2K-DHWR-ShowerHead_code/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-DWHR-ShowerHead_code/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerHead"
                   h2kElements[locationText].attributes["code"] = value  # DWHR Showerhead code (0, 1, 2, 3 or 4)
                  
                end
             
+
                
             # Heating & Cooling Systems (Type 1 & 2)
             #--------------------------------------------------------------------------
@@ -1569,7 +1584,7 @@ def processFile(filespec)
    newXMLFile = File.open(filespec, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
-   
+
 end
 
 # =========================================================================================
@@ -1841,6 +1856,7 @@ end
 # =========================================================================================
 def createHRV( elements )
    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+   elements[locationText].add_element("Hrv")
    elements[locationText].add_element("Hrv")
    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
    elements[locationText].attributes["supplyFlowrate"] = "60"
@@ -2449,7 +2465,7 @@ def addMissingDWHR(elements)
    elements[locationText].add_element("DrainWaterHeatRecovery")
    locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
    elements[locationText].attributes["showerLength"] = "5.0"
-   elements[locationText].attributes["dailyShowers"] = "2.0"
+   elements[locationText].attributes["dailyShowers"] = "2"
    elements[locationText].attributes["preheatShowerTank"] = "false"
    elements[locationText].attributes["effectivenessAt9.5"] = "50.0"
    elements[locationText].add_element("Efficiency", {"code"=>"2"})
@@ -2459,6 +2475,12 @@ def addMissingDWHR(elements)
    locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation"
    elements[locationText].add_element("Manufacturer")
    elements[locationText].add_element("Model")
+   
+   # ASF 05-10-2016: Added default values for manufacturer, model so hthat user can spec "NA" in choice file. 
+   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation/Manufacturer"
+   elements[locationText].text = "Generic"
+   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation/Model"
+   elements[locationText].text = "2-Medium Efficiency"
    locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerTemperature"
    elements[locationText].add_element("English")
    elements[locationText].add_element("French")
@@ -2665,7 +2687,10 @@ def postprocess( scaleData )
       end
       
       # ASF 04-Oct-2016: limiting rexults parsing to 2 sets - SOC and general -- because parsing takes a long time !
-      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
+      # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
+	  #                  spec only a single desired set via a commad line switch, or by defaulting to 
+	  #                  SOC and falling back to 'general' if it's not found.
+	  if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -2717,8 +2742,9 @@ def postprocess( scaleData )
             pvUtilized  = 0 
             monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             monthArr.each do |mth|
-               # ASF 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
+               # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
                #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+			   # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
                pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
                pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
             end

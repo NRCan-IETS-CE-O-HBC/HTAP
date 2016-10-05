@@ -3904,16 +3904,7 @@ Reflects southern Ontario costs
 *attribute:tag:4 = Opt-H2K-TankSize                      ! DHW tank size code (volume code)
 *attribute:tag:5 = Opt-H2K-EF                            ! DHW Energy Factor code
 *attribute:tag:6 = Opt-H2K-IntHeatPumpCOP                ! DHW Integrated HP COP
-*attribute:tag:7 = Opt-H2K-HasDWHR                       ! DWHR "true" or "false"
-*attribute:tag:8 = Opt-H2K-DHWR-showerLength             ! DWHR Shower length in minutes e.g. 6.5
-*attribute:tag:9 = Opt-H2K-DHWR-dailyShowers             ! DWHR Number of daily showers e.g. 2.45
-*attribute:tag:10 = Opt-H2K-DHWR-preheatShowerTank       ! DWHR Preheat shower only "true" or "false"
-*attribute:tag:11 = Opt-H2K-DHWR-Manufacturer            ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., Power-Pipe, Watercycles^Energy^Recovery^Inc., Generic
-*attribute:tag:12 = Opt-H2K-DHWR-Model                   ! DWHR Model: See H2K DWHR screen
-*attribute:tag:13 = Opt-H2K-DHWR-Efficiency_code         ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
-*attribute:tag:14 = Opt-H2K-DHWR-ShowerTemperature_code  ! DWHR Shower temperature code (1, 2 or 3)
-*attribute:tag:15 = Opt-H2K-DHWR-ShowerHead_code         ! DWHR Showhead flow rate code (0-4)
-*attribute:tag:16 = Opt-H2K-FlueDiameter                 !  DHW Flue diameter
+*attribute:tag:7 = Opt-H2K-FlueDiameter                 !  DHW Flue diameter
 
 *attribute:default = BaseDHW 
 
@@ -3924,15 +3915,6 @@ Reflects southern Ontario costs
 *option:NA:value:5 = NA
 *option:NA:value:6 = NA
 *option:NA:value:7 = NA
-*option:NA:value:8 = NA
-*option:NA:value:9 = NA
-*option:NA:value:10 = NA
-*option:NA:value:11 = NA
-*option:NA:value:12 = NA
-*option:NA:value:13 = NA
-*option:NA:value:14 = NA
-*option:NA:value:15 = NA
-*option:NA:value:16 = NA
 *option:NA:cost:total = 0
 
 *option:BaseDHW:value:1 = BaseDHW.dhw
@@ -3941,16 +3923,7 @@ Reflects southern Ontario costs
 *option:BaseDHW:value:4 = 151.4     ! Litres (40 USGal)
 *option:BaseDHW:value:5 = 0.5543    ! EF
 *option:BaseDHW:value:6 = NA        
-*option:BaseDHW:value:7 = NA
-*option:BaseDHW:value:8 = NA
-*option:BaseDHW:value:9 = NA
-*option:BaseDHW:value:10 = NA
-*option:BaseDHW:value:11 = NA
-*option:BaseDHW:value:12 = NA
-*option:BaseDHW:value:13 = NA
-*option:BaseDHW:value:14 = NA
-*option:BaseDHW:value:15 = NA
-*option:BaseDHW:value:16 = 76.2
+*option:BaseDHW:value:7 = 76.2
 *option:BaseDHW:cost:total = 0
 
 *option:ElecInstantaneous:value:1 = ElecInstant.dhw
@@ -3959,16 +3932,7 @@ Reflects southern Ontario costs
 *option:ElecInstantaneous:value:4 = 0         ! Litres
 *option:ElecInstantaneous:value:5 = 0.936     ! EF
 *option:ElecInstantaneous:value:6 = NA        
-*option:ElecInstantaneous:value:7 = NA
-*option:ElecInstantaneous:value:8 = NA
-*option:ElecInstantaneous:value:9 = NA
-*option:ElecInstantaneous:value:10 = NA
-*option:ElecInstantaneous:value:11 = NA
-*option:ElecInstantaneous:value:12 = NA
-*option:ElecInstantaneous:value:13 = NA
-*option:ElecInstantaneous:value:14 = NA
-*option:ElecInstantaneous:value:15 = NA
-*option:ElecInstantaneous:value:16 = 0
+*option:ElecInstantaneous:value:7 = 0
 *option:ElecInstantaneous:cost:total = 0
 
 *option:ElectricStorage:value:1 = ElecStorage.dhw
@@ -3977,16 +3941,7 @@ Reflects southern Ontario costs
 *option:ElectricStorage:value:4 = 189.3     ! Litres (50 USGal)
 *option:ElectricStorage:value:5 = 0.8217    ! EF
 *option:ElectricStorage:value:6 = NA        ! HP COP
-*option:ElectricStorage:value:7 = NA        
-*option:ElectricStorage:value:8 = NA
-*option:ElectricStorage:value:9 = NA
-*option:ElectricStorage:value:10 = NA
-*option:ElectricStorage:value:11 = NA
-*option:ElectricStorage:value:12 = NA
-*option:ElectricStorage:value:13 = NA
-*option:ElectricStorage:value:14 = NA
-*option:ElectricStorage:value:15 = NA
-*option:ElectricStorage:value:16 = 0
+*option:ElectricStorage:value:7 = 0
 *option:ElectricStorage:cost:total    = 0
 
 *option:GasInstantaneous:value:1 = GasInstantaneous.dhw
@@ -3995,35 +3950,10 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:4 = 0         ! Litres
 *option:GasInstantaneous:value:5 = 0.571     ! EF
 *option:GasInstantaneous:value:6 = NA        
-*option:GasInstantaneous:value:7 = NA        
-*option:GasInstantaneous:value:8 = NA
-*option:GasInstantaneous:value:9 = NA
-*option:GasInstantaneous:value:10 = NA
-*option:GasInstantaneous:value:11 = NA
-*option:GasInstantaneous:value:12 = NA
-*option:GasInstantaneous:value:13 = NA
-*option:GasInstantaneous:value:14 = NA
-*option:GasInstantaneous:value:15 = NA
-*option:GasInstantaneous:value:16 = 0
+*option:GasInstantaneous:value:7 = 0
 *option:GasInstantaneous:cost:total    = 0
 
-*option:GasTankless+DWHR:value:1 = GasInstantaneous.dhw
-*option:GasTankless+DWHR:value:2 = 2         ! Gas
-*option:GasTankless+DWHR:value:3 = 5         ! Instantaneous (tankless)
-*option:GasTankless+DWHR:value:4 = 0         ! Litres
-*option:GasTankless+DWHR:value:5 = 0.571     ! EF
-*option:GasTankless+DWHR:value:6 = NA        ! Integrated HO COP
-*option:GasTankless+DWHR:value:7 = true      ! DWHR "true" or "false"
-*option:GasTankless+DWHR:value:8 = 5.5       ! DWHR Shower length in minutes e.g. 6.5
-*option:GasTankless+DWHR:value:9 = 2.0       ! DWHR Number of daily showers e.g. 2.45
-*option:GasTankless+DWHR:value:10 = false    ! DWHR Preheat shower only "true" or "false"
-*option:GasTankless+DWHR:value:11 = Generic          ! DWHR Manufacturer (NB: Use '^' instead of spaces!)
-*option:GasTankless+DWHR:value:12 = 1-Low^Efficiency ! DWHR Model (NB: Use '^' instead of spaces!)
-*option:GasTankless+DWHR:value:13 = 2        ! DWHR Efficiency code (1:Testing using hardcoded data, 2:User Supplied Data) ALWAYS USE 2!
-*option:GasTankless+DWHR:value:14 = 2        ! DWHR Shower temperature code (1, 2 or 3)
-*option:GasTankless+DWHR:value:15 = 2        ! DWHR Showhead flow rate code (0-4)
-*option:GasTankless+DWHR:value:16 = 0
-*option:GasTankless+DWHR:cost:total = 0
+
 
 *option:ElectricHP:value:1 = ElecHP.dhw
 *option:ElectricHP:value:2 = 1         ! Elec
@@ -4031,16 +3961,7 @@ Reflects southern Ontario costs
 *option:ElectricHP:value:4 = 0         ! Litres 
 *option:ElectricHP:value:5 = 1.91      ! COP
 *option:ElectricHP:value:6 = NA        ! Integrated HP COP
-*option:ElectricHP:value:7 = NA
-*option:ElectricHP:value:8 = NA
-*option:ElectricHP:value:9 = NA
-*option:ElectricHP:value:10 = NA
-*option:ElectricHP:value:11 = NA
-*option:ElectricHP:value:12 = NA
-*option:ElectricHP:value:13 = NA
-*option:ElectricHP:value:14 = NA
-*option:ElectricHP:value:15 = NA
-*option:ElectricHP:value:16 = 0
+*option:ElectricHP:value:7 = 0
 *option:ElectricHP:cost:total    = 0
 
 *option:HPHotWater:value:1 = HPHotWater.dhw
@@ -4049,45 +3970,88 @@ Reflects southern Ontario costs
 *option:HPHotWater:value:4 = 189.3     ! Litres (50 USGl)
 *option:HPHotWater:value:5 = 0.9       ! EF (must be 0.1 - 1.0) H2K help prescibes 0.9
 *option:HPHotWater:value:6 = 2.5       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
-*option:HPHotWater:value:7 = NA
-*option:HPHotWater:value:8 = NA
-*option:HPHotWater:value:9 = NA
-*option:HPHotWater:value:10 = NA
-*option:HPHotWater:value:11 = NA
-*option:HPHotWater:value:12 = NA
-*option:HPHotWater:value:13 = NA
-*option:HPHotWater:value:14 = NA
-*option:HPHotWater:value:15 = NA
-*option:HPHotWater:value:16 = NA
+*option:HPHotWater:value:7  = NA
 *option:HPHotWater:cost:total    = 0
 
 
-! retrofit costs---------------------
-*option:retro_GasInst:value:1 = GasInstantaneous.dhw
-*option:retro_GasInst:cost:total    = 0
-
-*option:retro_ElectricHP:value:1 = ElecHP.dhw
-*option:retro_ElectricHP:cost:total    = 0
-
-
-! NWT DHW systems---------------------
-*option:elec_DHW:value:1       = elec_DHW.dhw
-*option:elec_DHW:cost:total    = 0
-
-*option:wood_DHW:value:1       = wood_DHW.dhw
-*option:wood_DHW:cost:total    = 0
-
-*option:NWT_upgrade_elec_DHW:value:1    = upgrade_elec_DHW.dhw
-*option:NWT_upgrade_elec_DHW:cost:total = 0
-
-*option:NWT_upgrade_oil_DHW:value:1     = upgrade_oil_DHW.dhw
-*option:NWT_upgrade_oil_DHW:cost:total  = 0
-
-*option:GasInstantaneous95:value:1      = GasInstantaneous-95.dhw
-*option:GasInstantaneous95:cost:total   = 0
 
 *attribute:end
 
+
+!---------------------------------------------------------------------------------------------
+! DWHR System 
+! Note:
+!   DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
+!   "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
+!   changes made here will be overwritten by the Base Loads user inputs for Water Usage.
+!
+!---------------------------------------------------------------------------------------------
+*attribute:start
+*attribute:name  = Opt-DWHRSystem
+*attribute:tag:1 = Opt-H2K-HasDWHR                       ! DWHR "true" or "false"
+*attribute:tag:2 = Opt-H2K-DWHR-preheatShowerTank       ! DWHR Preheat shower only "true" or "false"
+*attribute:tag:3 = Opt-H2K-DWHR-Manufacturer            ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., Power-Pipe, Watercycles^Energy^Recovery^Inc., Generic
+*attribute:tag:4 = Opt-H2K-DWHR-Model                   ! DWHR Model: See H2K DWHR screen
+*attribute:tag:5 = Opt-H2K-DWHR-Efficiency_code         ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*attribute:tag:6 = Opt-H2K-DWHR-Effectiveness9p5        ! DWHR effectiveness at 9.5
+*attribute:tag:7 = Opt-H2K-DWHR-ShowerTemperature_code  ! DWHR Shower temperature code (1, 2 or 3)
+*attribute:tag:8 = Opt-H2K-DWHR-ShowerHead_code         ! DWHR Showhead flow rate code (0-4)
+*attribute:tag:9 = Opt-H2K-DWHR-showerLength            ! DWHR Shower length in minutes e.g. 6.5
+*attribute:tag:10 = Opt-H2K-DWHR-dailyShowers             ! DWHR Number of daily showers e.g. 2.45
+
+*attribute:default = none
+
+*option:none:value:1   = false
+*option:none:value:2   = NA
+*option:none:value:3   = NA
+*option:none:value:4   = NA
+*option:none:value:5   = NA
+*option:none:value:6   = NA
+*option:none:value:7   = NA
+*option:none:value:8   = NA
+*option:none:value:9   = NA
+*option:none:value:10  = NA
+*option:none:cost:total = 0
+
+
+*option:DWHR-eff-30:value:1   = true          ! Has DHWR? true/false
+*option:DWHR-eff-30:value:2   = false         ! DWHR Preheat shower only "true" or "false"
+*option:DWHR-eff-30:value:3   = Power-Pipe    ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
+*option:DWHR-eff-30:value:4   = C3-39         ! DWHR Model: See H2K DWHR screen
+*option:DWHR-eff-30:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*option:DWHR-eff-30:value:6   = 31.0          ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:DWHR-eff-30:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
+*option:DWHR-eff-30:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
+*option:DWHR-eff-30:value:9   = 4.53          ! Shower lenght (minutes)
+*option:DWHR-eff-30:value:10  = 3             ! number of daily showers
+*option:DWHR-eff-30:cost:total = 0
+
+*option:DWHR-eff-42:value:1   = true          ! Has DHWR? true/false
+*option:DWHR-eff-42:value:2   = false         ! DWHR Preheat shower only "true" or "false"
+*option:DWHR-eff-42:value:3   = Power-Pipe    ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
+*option:DWHR-eff-42:value:4   = C4-57         ! DWHR Model: See H2K DWHR screen
+*option:DWHR-eff-42:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*option:DWHR-eff-42:value:6   = 41.5          ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:DWHR-eff-42:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
+*option:DWHR-eff-42:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
+*option:DWHR-eff-42:value:9   = 4.53          ! Shower lenght (minutes)
+*option:DWHR-eff-42:value:10  = 3             ! number of daily showers
+*option:DWHR-eff-42:cost:total = 0
+
+*option:DWHR-eff-55:value:1   = true          ! Has DHWR? true/false
+*option:DWHR-eff-55:value:2   = false         ! DWHR Preheat shower only "true" or "false"
+*option:DWHR-eff-55:value:3   = Power-Pipe    ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
+*option:DWHR-eff-55:value:4   = R2-82         ! DWHR Model: See H2K DWHR screen
+*option:DWHR-eff-55:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*option:DWHR-eff-55:value:6   = 55.3          ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:DWHR-eff-55:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
+*option:DWHR-eff-55:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
+*option:DWHR-eff-55:value:9   = 4.53          ! Shower lenght (minutes)
+*option:DWHR-eff-55:value:10  = 3             ! number of daily showers
+*option:DWHR-eff-55:cost:total = 0
+
+
+*attribute:end
 
 !-----------------------------------------------------------------------
 ! DHWR + SDHW : Resulting water volume . 
@@ -4706,6 +4670,17 @@ Reflects southern Ontario costs
 *option:MonoSi-50m2:value:5 = 90
 *option:MonoSi-50m2:value:6 = 90
 *option:MonoSi-50m2:cost:total = 0
+
+
+*option:MonoSi-200m2:value:1 = 200
+*option:MonoSi-200m2:value:2 = 43
+*option:MonoSi-200m2:value:3 = 0
+*option:MonoSi-200m2:value:4 = 1
+*option:MonoSi-200m2:value:5 = 90
+*option:MonoSi-200m2:value:6 = 90
+*option:MonoSi-200m2:cost:total = 0
+
+
 
 *attribute:end
 
