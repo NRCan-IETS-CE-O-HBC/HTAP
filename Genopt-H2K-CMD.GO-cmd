@@ -129,14 +129,12 @@ Vary{
       Values  = "NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";   //"ElectricStorage"
    }
   
-   // Conventional DHW:  BaseDHW, 
+   // DWHR-System
    Parameter{ //
-      Name    = GOtag:DWHR-System;
+      Name    = GOtag:Opt-DWHRSystem;
       Ini     = 1; 
       Values  = "none, DWHR-eff-30,  DWHR-eff-42,  DWHR-eff-55";   //"ElectricStorage"
    }
-    
-  
   
   
    // Heating/cooling

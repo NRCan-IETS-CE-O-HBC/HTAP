@@ -159,6 +159,9 @@ $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
                            "Inuvik"       =>  1.38 , 
                            "Alert"        =>  1.38   }
 
+$PVInt = "NA"
+
+						   
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
@@ -1143,7 +1146,7 @@ def processFile(filespec)
                   locationText = "HouseFile/House/Components/HotWater/Primary"
                   # This attribute only exists for an *Integrated* Heat Pump
                   h2kElements[locationText].attributes["heatPumpCoefficient"] = value  # COP of integrated HP
-                end
+               end
 				
             # DWHR System (includies DWHR options for internal H2K model. Don't use
             #              both external (explicit) method AND this one!)
@@ -2511,8 +2514,8 @@ def runsims( direction )
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
    #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
    #      re-trying a run)! 
-   maxRunTime = 120  # JTB 05-10-2016: Was 30 sec
-   maxTries = 1000   # JTB 05-10-2016: Also setting maximum retries within timeout period
+   maxRunTime = 1200  # JTB 05-10-2016: Was 30 sec
+   maxTries = 10000   # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
    # AF: Extra counters to count how many times we've tried HOT2000.
@@ -2685,9 +2688,9 @@ def postprocess( scaleData )
       
       # ASF 04-Oct-2016: limiting rexults parsing to 2 sets - SOC and general -- because parsing takes a long time !
       # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
-	  #                  spec only a single desired set via a commad line switch, or by defaulting to 
-	  #                  SOC and falling back to 'general' if it's not found.
-	  if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
+      #                  spec only a single desired set via a commad line switch, or by defaulting to 
+      #                  SOC and falling back to 'general' if it's not found.
+      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -2759,7 +2762,7 @@ def postprocess( scaleData )
          # This is used for debugging only. 
          diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
          $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
-	   end
+      end
 	  
    end # h2kPostElements |element| loop
    
@@ -2770,7 +2773,7 @@ def postprocess( scaleData )
             debug_out ("  - " << var.to_s << " : " << value.to_s )
          end
       end 
-	end 
+   end 
 
    # Maybe the desired mode wasn't found? if not, reset it to "General"	
    #==================================== 
