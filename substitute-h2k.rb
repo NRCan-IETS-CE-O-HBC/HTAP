@@ -2532,7 +2532,7 @@ def runsims( direction )
             pid = Process.spawn( runThis,optionSwitch, fileToLoad) 
             stream_out ("\n Invoking HOT2000 (PID #{pid})...")
             Process.wait pid
-            status= $?.exitstatus      
+            status = $?.exitstatus      
             stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
 
             if status == 0 
@@ -2540,6 +2540,10 @@ def runsims( direction )
                $runH2KTime = endRun - startRun  
                stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                keepTrying = false       # Successful run - don't try agian 
+            elsif status == nil  
+               # Get nil status when can't load an h2k file.
+               fatalerror( " Fatal Error! HOT2000 message box or couldn't load file!\n" )
+               keepTrying = false   # Give up.
             elsif tries < maxTries      # Unsuccessful run - try again for up to maxTries     
                tries = tries + 1
                keepTrying = true
