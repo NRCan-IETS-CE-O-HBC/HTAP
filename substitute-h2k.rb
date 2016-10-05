@@ -2678,6 +2678,11 @@ def postprocess( scaleData )
    
    parseDebug = true
    
+   # JTB: 05-10-2016 Moved this up from line 2806 below
+   $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
+   $PVInt = $gChoices["Opt-H2K-PV"]   # Input examples: "MonoSi-50m2", "NA"
+
+   
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
    
       houseCode =  element.attributes["houseCode"]
@@ -2755,6 +2760,14 @@ def postprocess( scaleData )
             $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
 		 
             $gResults[houseCode]["avgPvRevenue"] =  $gResults[houseCode]["avgElecPVGenkWh"]  * $PVTarrifDollarsPerkWh
+         else
+            # JTB 05-10-2016: Added this block to initialize values when "NA" set for $PVInt
+            $gResults[houseCode]["avgEnergyPVAvailableGJ"] = 0.0
+            $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = 0.0  
+            $gResults[houseCode]["avgElecPVGenkWh"] = 0.0
+            $gResults[houseCode]["avgElecPVUsedkWh"] = 0.0
+		 
+            $gResults[houseCode]["avgPvRevenue"] =  0.0
          end  
 	   
          $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
@@ -2792,8 +2805,6 @@ def postprocess( scaleData )
    # PV Data...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
-   $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
-   $PVInt = $gChoices["Opt-H2K-PV"]   # Input examples: "MonoSi-50m2", "NA"
    $PVcapacity = $PVsize
    $PVcapacity.gsub(/[a-zA-Z:\s'\|]/, '')
    if ( $PVcapacity == "" || $PVcapacity == "NoPV" && $PVInt == "NA" ) 
