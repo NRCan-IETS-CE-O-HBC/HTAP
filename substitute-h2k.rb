@@ -1857,7 +1857,6 @@ end
 def createHRV( elements )
    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
    elements[locationText].add_element("Hrv")
-   elements[locationText].add_element("Hrv")
    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
    elements[locationText].attributes["supplyFlowrate"] = "60"
    elements[locationText].attributes["exhaustFlowrate"] = "60"
