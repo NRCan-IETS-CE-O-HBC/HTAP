@@ -3889,12 +3889,7 @@ Reflects southern Ontario costs
 *attribute:end 
 
 !---------------------------------------------------------------------------------------------
-! DHW System (optionally includes DWHR)
-! Note:
-!   DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
-!   "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
-!   changes made here will be overwritten by the Base Loads user inputs for Water Usage.
-!
+! DHW System
 !---------------------------------------------------------------------------------------------
 *attribute:start
 *attribute:name  = Opt-DHWSystem

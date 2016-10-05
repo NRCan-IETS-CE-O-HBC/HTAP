@@ -1145,14 +1145,13 @@ def processFile(filespec)
                   h2kElements[locationText].attributes["heatPumpCoefficient"] = value  # COP of integrated HP
                 end
 				
-            # DHW System (includies DWHR options for internal H2K model. Don't use
+            # DWHR System (includies DWHR options for internal H2K model. Don't use
             #              both external (explicit) method AND this one!)
             # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
             # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
             # changes made here will be overwritten by the Base Loads user inputs for Water Usage.		
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
-	           
 			   
                if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
                
@@ -1173,7 +1172,6 @@ def processFile(filespec)
                   h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value  # Flag for DWHR
                
                elsif ( tag =~ /Opt-H2K-DWHR-showerLength/ &&  value != "NA" )
-			   
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
                   h2kElements[locationText].attributes["showerLength"] = value # Shower length in minutes (float)
                
@@ -1214,7 +1212,6 @@ def processFile(filespec)
                   h2kElements[locationText].attributes["code"] = value  # DWHR Showerhead code (0, 1, 2, 3 or 4)
                  
                end
-            
 
                
             # Heating & Cooling Systems (Type 1 & 2)
