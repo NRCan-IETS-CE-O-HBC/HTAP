@@ -3269,22 +3269,27 @@ Whitehorse Wall Options (Code is R28)
 !-----------------------------------------------------------------------
 *attribute:start
 *attribute:name    = Opt-HVACSystem          ! System Name. 
+! 1-6 are old ESPr tags, not needed for h2k use 
 *attribute:tag:1   = <Opt-HVACSystem>        ! ESP-r: Flag to activate/deactvate IMS file 
 *attribute:tag:2   = <Opt-HideGSHPfile>      ! ESP-r: Flag to activate/deactvate GSHP file 
 *attribute:tag:3   = <OPT-VENTisIMS>         ! ESP-r: Flag to activate/deactvate IMS file 
 *attribute:tag:4   = <OPT-VENTisHRV>         ! ESP-r: Flag to activate/deactvate HRV file 
 *attribute:tag:5   = <OPT-WHisIMS>           ! ESP-r: Flag to activate/deactvate WH HRV file 
 *attribute:tag:6   = <Opt-HVACCtlFile>       ! ESP-r: Control File 
+! 7-11: General tags, usually needed for all definitions 
 *attribute:tag:7   = Opt-H2K-SysType1        ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9
 *attribute:tag:8   = Opt-H2K-SysType2        ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning
 *attribute:tag:9   = Opt-H2K-Type1Fuel       ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
 *attribute:tag:10  = Opt-H2K-Type1EqpType    ! H2K: Heating system equipment type --> depends on fuel and SysType1
 *attribute:tag:11  = Opt-H2K-Type1CapOpt     ! H2K: 1:UserSpec, 2:Calculated
+! 12-14: Type 1 tags - Type 1 equipment only 
 *attribute:tag:12  = Opt-H2K-Type1CapVal     ! H2K: Type 1: Capacity value. 
 *attribute:tag:13  = Opt-H2K-Type1EffType    ! H2K: Type 1: true=SS, false=AFUE
 *attribute:tag:14  = Opt-H2K-Type1EffVal     ! H2K: Type 1: Efficiency value (0->100)
+! 15-16: Fan tags, needed for all definitions 
 *attribute:tag:15  = Opt-H2K-Type1FanCtl     ! H2K: 1:Auto, 2:Continuous
 *attribute:tag:16  = Opt-H2K-Type1EEMotor    ! H2K: true/false
+! 17-24: Type 2 /HP definitions 
 *attribute:tag:17  = Opt-H2K-Type2CCaseH     ! H2K: Type2: CrankCaseHeater Value ? 
 *attribute:tag:18  = Opt-H2K-Type2Func       ! H2K: Type2: Function - ASHP :( 1 = Heating, 2 = Heating/Cooling  )
 *attribute:tag:19  = Opt-H2K-Type2Type       ! H2K: Type2: Type - ASHP :( 1 = Central split, 2=Central single pkg, 3= MiniSplit Ductless )
@@ -3297,18 +3302,43 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:24  = Opt-H2K-Type2CutoffType ! Cut off type 1: balance point, 2: Restricted , 3 unrestricted 
 *attribute:tag:25  = Opt-H2K-Type2CutoffTemp ! Cut off temperature (oC)
 *attribute:tag:26  = Opt-H2K-CoolOperWindow  ! Operable window fraction for cooling (%, 0->100)
-*attribute:default  = NA
+! 27-onwards: P9 data. Used for type1 P9 systems only 
+*attribute:tag:27  = Opt-H2K-P9-manufacturer  ! P9 manufacturer 
+*attribute:tag:28  = Opt-H2K-P9-model         ! P9 model 
+*attribute:tag:29  = Opt-H2K-P9-TPF           ! P9 TPF
+*attribute:tag:30  = Opt-H2K-P9-AnnualElec    ! P9 Annual energy use 
+*attribute:tag:31  = Opt-H2K-P9-WHPF          ! P9 WHPF2*option
+*attribute:tag:32  = Opt-H2K-P9-burnerInput   ! P9 Burner input 
+*attribute:tag:33  = Opt-H2K-P9-recEff        ! P9 Recovery efficiency
+*attribute:tag:34  = Opt-H2K-P9-ctlsPower     ! P9 Ctl power (W)
+*attribute:tag:35  = Opt-H2K-P9-circPower     ! P9 Circ power (W)
+*attribute:tag:36  = Opt-H2K-P9-dailyUse      ! P9 Daily use ???
+*attribute:tag:37  = Opt-H2K-P9-stbyLossWFan  ! P9 Standby loss (fan)
+*attribute:tag:38  = Opt-H2K-P9-stbyLossNoFan ! P9 Standby loss (no fan)
+*attribute:tag:39  = Opt-H2K-P9-oneHrHotWater ! P9 one hour rating (HW)
+*attribute:tag:40  = Opt-H2K-P9-oneHourConc   ! P9 one hour rating concurrent
+*attribute:tag:41  = Opt-H2K-P9-netEff15      ! P9 net efficiency - 15
+*attribute:tag:42  = Opt-H2K-P9-netEff40      ! P9 net efficiency - 40
+*attribute:tag:43  = Opt-H2K-P9-netEff100     ! P9 net efficiency - 100 
+*attribute:tag:44  = Opt-H2K-P9-elecUse15     ! P9 Elec use - 15
+*attribute:tag:45  = Opt-H2K-P9-elecUse40     ! P9 Elec use - 40
+*attribute:tag:46  = Opt-H2K-P9-elecUse100    ! P9 Elec use - 100 
+*attribute:tag:47  = Opt-H2K-P9-blowPower15   ! P9 BlowerPower - 15
+*attribute:tag:48  = Opt-H2K-P9-blowPower40   ! P9 BlowerPower - 40      
+*attribute:tag:49  = Opt-H2K-P9-blowPower100  ! P9 BlowerPower - 100 
+                                            
+*attribute:default  = NA 
 
-*option:NA:value:1 = NA    ! For H2K Only - setting NA causes 
+*option:NA:value:1  = NA   ! For H2K Only - setting NA causes 
                            ! substitute-h2k.rb to leave the hvac systems untouched
-*option:NA:value:2 = NA
-*option:NA:value:3 = NA
-*option:NA:value:4 = NA
-*option:NA:value:5 = NA
-*option:NA:value:6 = NA
-*option:NA:value:7 = NA
-*option:NA:value:8 = NA
-*option:NA:value:9 = NA
+*option:NA:value:2  = NA
+*option:NA:value:3  = NA
+*option:NA:value:4  = NA
+*option:NA:value:5  = NA
+*option:NA:value:6  = NA
+*option:NA:value:7  = NA
+*option:NA:value:8  = NA
+*option:NA:value:9  = NA
 *option:NA:value:10 = NA
 *option:NA:value:11 = NA
 *option:NA:value:12 = NA
@@ -3326,6 +3356,30 @@ Whitehorse Wall Options (Code is R28)
 *option:NA:value:24 = NA
 *option:NA:value:25 = NA
 *option:NA:value:26 = NA
+*option:NA:value:27 = NA
+*option:NA:value:28 = NA
+*option:NA:value:29 = NA
+*option:NA:value:30 = NA
+*option:NA:value:31 = NA
+*option:NA:value:32 = NA
+*option:NA:value:33 = NA
+*option:NA:value:34 = NA
+*option:NA:value:35 = NA
+*option:NA:value:36 = NA
+*option:NA:value:37 = NA
+*option:NA:value:38 = NA
+*option:NA:value:39 = NA
+*option:NA:value:40 = NA
+*option:NA:value:41 = NA
+*option:NA:value:42 = NA
+*option:NA:value:43 = NA
+*option:NA:value:44 = NA
+*option:NA:value:45 = NA
+*option:NA:value:46 = NA
+*option:NA:value:47 = NA
+*option:NA:value:48 = NA
+*option:NA:value:49 = NA
+
 *option:NA:cost:total    = 0
 
 !--- Consider using psc variety as base furnace from now on. 
@@ -3382,75 +3436,6 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-psc:value:15 = 1       ! Auto fan control
 *option:gas-furnace-psc:value:16 = false   ! EE motor
 *option:gas-furnace-psc:cost:total = 0 
-
-*option:13kW-furnace-ecm:value:1 = smallfurnace_AC-gas-ecm-motor.hvac
-*option:13kW-furnace-ecm:value:2 = #-no-GSHP-file
-*option:13kW-furnace-ecm:value:3 = #No-IMS: 
-*option:13kW-furnace-ecm:value:4 = 
-*option:13kW-furnace-ecm:value:5 = 
-*option:13kW-furnace-ecm:value:6 = shoulder-ideal.ctl
-*option:13kW-furnace-ecm:cost:total    = 0
-
-*option:zoned-furnace-ecm:value:1 = smallfurnace_AC-gas-ecm-motor.hvac
-*option:zoned-furnace-ecm:value:2 = #-no-GSHP-file
-*option:zoned-furnace-ecm:value:3 = #No-IMS: 
-*option:zoned-furnace-ecm:value:4 = 
-*option:zoned-furnace-ecm:value:5 = 
-*option:zoned-furnace-ecm:value:6 = shoulder_zoned.ctl
-*option:zoned-furnace-ecm:cost:total    = 0
-
-
-*option:IMS-P10:value:1 = IMS-P10.hvac
-*option:IMS-P10:value:2 = #-no-GSHP-file
-*option:IMS-P10:value:3 =  
-*option:IMS-P10:value:4 = # NO - HRV: IMS provides HRV. 
-*option:IMS-P10:value:5 = # NO DHW: IMS provides WH.  
-*option:IMS-P10:value:6 = shoulder-ideal.ctl
-*option:IMS-P10:cost:total    = 0
- 
- 
-! Not-so-good P9 system. PSC motor?
-*option:Combi-P9-a:value:1 = Combi-P9.hvac
-*option:Combi-P9-a:value:2 = #-no-GSHP-file
-*option:Combi-P9-a:value:3 = #No-IMS: 
-*option:Combi-P9-a:value:4 = 
-*option:Combi-P9-a:value:5 = # NO DHW: IMS provides WH.  
-*option:Combi-P9-a:value:6 = shoulder-ideal.ctl
-*option:Combi-P9-a:cost:total    = 0
-
-! Best P9 system. ECM motor
-*option:Combi-P9-ecmV2:value:1 = Combi-P9-ecm-v2.hvac
-*option:Combi-P9-ecmV2:value:2 = #-no-GSHP-file
-*option:Combi-P9-ecmV2:value:3 = #No-IMS: 
-*option:Combi-P9-ecmV2:value:4 = 
-*option:Combi-P9-ecmV2:value:5 = # NO DHW: IMS provides WH.  
-*option:Combi-P9-ecmV2:value:6 = shoulder-ideal.ctl
-*option:Combi-P9-ecmV2:cost:total    = 0
-
-! P9 *zoned* system. ECM motor
-*option:Combi-P9-zoned-ecm:value:1 = Combi-P9-ecm-v2.hvac
-*option:Combi-P9-zoned-ecm:value:2 = #-no-GSHP-file
-*option:Combi-P9-zoned-ecm:value:3 = #No-IMS: 
-*option:Combi-P9-zoned-ecm:value:4 = 
-*option:Combi-P9-zoned-ecm:value:5 = # NO DHW: IMS provides WH.  
-*option:Combi-P9-zoned-ecm:value:6 = shoulder_zoned.ctl
-*option:Combi-P9-zoned-ecm:cost:total = 0
-
-*option:propanefurnaceAC:value:1 = propane_furnace_ACv2.hvac
-*option:propanefurnaceAC:value:2 = #-no-GSHP-file
-*option:propanefurnaceAC:value:3 = #No-IMS: 
-*option:propanefurnaceAC:value:4 = 
-*option:propanefurnaceAC:value:5 = 
-*option:propanefurnaceAC:value:6 = shoulder-ideal.ctl
-*option:propanefurnaceAC:cost:total    = 0
-
-*option:oilfurnace:value:1 = basefurnace_ACv2_oil.hvac
-*option:oilfurnace:value:2 = #-no-GSHP-file
-*option:oilfurnace:value:3 = #No-IMS: 
-*option:oilfurnace:value:4 = 
-*option:oilfurnace:value:5 = 
-*option:oilfurnace:value:6 = shoulder-ideal.ctl
-*option:oilfurnace:cost:total    = 0
 
 *option:elec-baseboard:value:1 = Baseboardv2.hvac
 *option:elec-baseboard:value:2 = #-no-GSHP-file
@@ -3566,106 +3551,55 @@ Reflects southern Ontario costs
 
 ! Options for VP retrofit
 
-*option:gas-furnace-low:value:1 = gas-furnace-low-eff.hvac
-*option:gas-furnace-low:value:2 = #-no-GSHP-file
-*option:gas-furnace-low:value:3 = #No-IMS: 
-*option:gas-furnace-low:value:4 = 
-*option:gas-furnace-low:value:5 = 
-*option:gas-furnace-low:value:6 = shoulder-ideal.ctl 
-*option:gas-furnace-low:cost:total    = 0
 
-*option:gas-furnace-mid:value:1 = gas-furnace-mid-eff.hvac
-*option:gas-furnace-mid:value:2 = #-no-GSHP-file
-*option:gas-furnace-mid:value:3 = #No-IMS: 
-*option:gas-furnace-mid:value:4 = 
-*option:gas-furnace-mid:value:5 = 
-*option:gas-furnace-mid:value:6 = shoulder-ideal.ctl 
-*option:gas-furnace-mid:cost:total    = 0
+! Combo
+*option:ComboHeatA:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:ComboHeatA:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:ComboHeatA:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:ComboHeatA:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:ComboHeatA:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:ComboHeatA:value:12 = 23900              ! H2K: Type 1: Capacity value. 
+*option:ComboHeatA:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:ComboHeatA:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
+*option:ComboHeatA:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:ComboHeatA:value:16 = true               ! H2K: EE motor (true/false) 
+*option:ComboHeatA:value:27  = Navien^America    ! P9 manufacturer 
+*option:ComboHeatA:value:28  = 13-06-M0424-2     ! P9 model 
+*option:ComboHeatA:value:29  = 0.95              ! P9 TPF
+*option:ComboHeatA:value:30  = 1463              ! P9 Annual energy use 
+*option:ComboHeatA:value:31  = 0.95              ! P9 WHPF2*option
+*option:ComboHeatA:value:32  = 58300             ! P9 Burner input 
+*option:ComboHeatA:value:33  = 95                ! P9 Recovery efficiency
+*option:ComboHeatA:value:34  = 7                 ! P9 Ctl power (W)
+*option:ComboHeatA:value:35  = 74                ! P9 Circ power (W)
+*option:ComboHeatA:value:36  = 0.19              ! P9 Daily use ???
+*option:ComboHeatA:value:37  = 0                 ! P9 Standby loss (fan)
+*option:ComboHeatA:value:38  = 0                 ! P9 Standby loss (no fan)
+*option:ComboHeatA:value:39  = 1444              ! P9 one hour rating (HW)
+*option:ComboHeatA:value:40  = 1459              ! P9 one hour rating concurrent
+*option:ComboHeatA:value:41  = 94                ! P9 net efficiency - 15
+*option:ComboHeatA:value:42  = 96                ! P9 net efficiency - 40
+*option:ComboHeatA:value:43  = 91                ! P9 net efficiency - 100 
+*option:ComboHeatA:value:44  = 145               ! P9 Elec use - 15
+*option:ComboHeatA:value:45  = 231               ! P9 Elec use - 40
+*option:ComboHeatA:value:46  = 548               ! P9 Elec use - 100 
+*option:ComboHeatA:value:47  = 107               ! P9 BlowerPower - 15
+*option:ComboHeatA:value:48  = 117               ! P9 BlowerPower - 40
+*option:ComboHeatA:value:49  = 418               ! P9 BlowerPower - 100 
 
-*option:baseboard-heating:value:1 = baseboard-heating.hvac
-*option:baseboard-heating:value:2 = #-no-GSHP-file
-*option:baseboard-heating:value:3 = #No-IMS: 
-*option:baseboard-heating:value:4 = 
-*option:baseboard-heating:value:5 = 
-*option:baseboard-heating:value:6 = shoulder-ideal.ctl 
-*option:baseboard-heating:cost:total    = 0
-
-*option:oil-furnace-mid:value:1 = oil-furnace-mid-eff.hvac
-*option:oil-furnace-mid:value:2 = #-no-GSHP-file
-*option:oil-furnace-mid:value:3 = #No-IMS: 
-*option:oil-furnace-mid:value:4 = 
-*option:oil-furnace-mid:value:5 = 
-*option:oil-furnace-mid:value:6 = shoulder-ideal.ctl 
-*option:oil-furnace-mid:cost:total    = 0
-
-*option:oil-furnace-low:value:1 = oil-furnace-low-eff.hvac
-*option:oil-furnace-low:value:2 = #-no-GSHP-file
-*option:oil-furnace-low:value:3 = #No-IMS: 
-*option:oil-furnace-low:value:4 = 
-*option:oil-furnace-low:value:5 = 
-*option:oil-furnace-low:value:6 = shoulder-ideal.ctl 
-*option:oil-furnace-low:cost:total    = 0
+*option:ComboHeatA:cost:total = 0
 
 
-!---Options for retrofit-------------------------------
-!BC 1980
-*option:gas-furnace-84_3:value:1 = gas-furnace-84_3.hvac
-*option:gas-furnace-84_3:value:2 = #-no-GSHP-file
-*option:gas-furnace-84_3:value:3 = #No-IMS: 
-*option:gas-furnace-84_3:value:4 = #No HRV
-*option:gas-furnace-84_3:value:5 = 
-*option:gas-furnace-84_3:value:6 = shoulder-ideal.ctl 
-*option:gas-furnace-84_3:cost:total    = 0
 
-*option:retro_upgrade_furnace:value:1 = retro_96furnace.hvac
-*option:retro_upgrade_furnace:value:2 = #-no-GSHP-file
-*option:retro_upgrade_furnace:value:3 = #No-IMS: 
-*option:retro_upgrade_furnace:value:4 = 
-*option:retro_upgrade_furnace:value:5 = 
-*option:retro_upgrade_furnace:value:6 = shoulder-ideal.ctl
-*option:retro_upgrade_furnace:cost:total    = 0
 
-*option:retro_CCASHP:value:1 = CCASHPv2.hvac
-*option:retro_CCASHP:value:2 = #-no-GSHP-file
-*option:retro_CCASHP:value:3 = #No-IMS: 
-*option:retro_CCASHP:value:4 = 
-*option:retro_CCASHP:value:5 = 
-*option:retro_CCASHP:value:6 = shoulder-ideal.ctl 
-*option:retro_CCASHP:cost:total    = 0
 
-Reflects southern Ontario costs
-*option:retro_GSHP:value:1 = GSHPv2.hvac
-*option:retro_GSHP:value:2 = *gshp~../hvac/heatx_v1.gshp
-*option:retro_GSHP:value:3 = #No-IMS: 
-*option:retro_GSHP:value:4 = #No HRV
-*option:retro_GSHP:value:5 = 
-*option:retro_GSHP:value:6 = shoulder-ideal.ctl 
-*option:retro_GSHP:cost:total    = 0          ! Does this reflect AC
 
-!---Options for Northern retrofit-------------------------------
-*option:Olsen:value:1 = oil-furnace-Olsen.hvac
-*option:Olsen:value:2 = #-no-GSHP-file
-*option:Olsen:value:3 = #No-IMS: 
-*option:Olsen:value:4 = #
-*option:Olsen:value:5 = 
-*option:Olsen:value:6 = shoulder-ideal.ctl 
-*option:Olsen:cost:total    = 0
 
-*option:upgrade_Olsen:value:1 = upg_oil-furnace-Olsen.hvac
-*option:upgrade_Olsen:value:2 = #-no-GSHP-file
-*option:upgrade_Olsen:value:3 = #No-IMS: 
-*option:upgrade_Olsen:value:4 = #
-*option:upgrade_Olsen:value:5 = 
-*option:upgrade_Olsen:value:6 = shoulder-ideal.ctl 
-*option:upgrade_Olsen:cost:total    = 0
 
-*option:wood_furnace:value:1 = wood-furnace.hvac
-*option:wood_furnace:value:2 = #-no-GSHP-file
-*option:wood_furnace:value:3 = #No-IMS: 
-*option:wood_furnace:value:4 = #
-*option:wood_furnace:value:5 = 
-*option:wood_furnace:value:6 = shoulder-ideal.ctl 
-*option:wood_furnace:cost:total    = 0
+
+
+
+
 
 
 *attribute:end
@@ -3912,6 +3846,9 @@ Reflects southern Ontario costs
 *option:NA:value:7 = NA
 *option:NA:cost:total = 0
 
+
+
+
 *option:BaseDHW:value:1 = BaseDHW.dhw
 *option:BaseDHW:value:2 = 2         ! Gas
 *option:BaseDHW:value:3 = 2         ! Conventional Tank
@@ -3943,7 +3880,7 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:2 = 2         ! Gas
 *option:GasInstantaneous:value:3 = 5         ! Instantaneous
 *option:GasInstantaneous:value:4 = 0         ! Litres
-*option:GasInstantaneous:value:5 = 0.571     ! EF
+*option:GasInstantaneous:value:5 = 0.90    ! EF
 *option:GasInstantaneous:value:6 = NA        
 *option:GasInstantaneous:value:7 = 0
 *option:GasInstantaneous:cost:total    = 0
