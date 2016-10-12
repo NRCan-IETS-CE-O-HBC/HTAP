@@ -43,7 +43,7 @@ Opt-DHWSystem :  NA    !GasTankless+DWHR !  GasTankless+DWHR
 Opt-DWHRSystem :  none  !DWHR-eff-30 DWHR-System-1   
 
 ! HVAC system 
-Opt-HVACSystem  : NA
+Opt-HVACSystem  : ComboHeatA
 
 ! HRV spec 
 Opt-HRVspec : NA

@@ -1220,6 +1220,8 @@ def processFile(filespec)
             # Heating & Cooling Systems (Type 1 & 2)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
+			
+			
                sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
                sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
                
@@ -1288,6 +1290,7 @@ def processFile(filespec)
                      if ( sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                      else
+					    # ASF 07-Oct-2016 - not needed for P9?
                         locationText = ""
                      end
                      if ( h2kElements[locationText] != nil )
@@ -1299,12 +1302,13 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
+						h2kElements[locationText].attributes["value"] = value if ( h2kElements[locationText] != nil ) 
                      else
-                        locationText = ""
+					    # ASF 07-Oct-2016 - P9 capacity mapped to syustem capacity descriptor.
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+						h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
                      end
-                     if ( h2kElements[locationText] != nil )
-                        h2kElements[locationText].attributes["value"] = value
-                     end
+
                   end
                   
                elsif ( tag =~ /Opt-H2K-Type1EffType/ &&  value != "NA" )
@@ -1312,6 +1316,7 @@ def processFile(filespec)
                      if ( sysType1Name != "P9" && sysType1Name != "Baseboards" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
                      else
+					    # ASF 07-Oct-2016  Not needed for P9 ?
                         locationText = ""
                      end
                      if ( h2kElements[locationText] != nil )
@@ -1323,11 +1328,11 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name != "P9" && sysType1Name != "Baseboards" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
-                     else
-                        locationText = ""
-                     end
-                     if ( h2kElements[locationText] != nil )
-                        h2kElements[locationText].attributes["efficiency"] = value
+						h2kElements[locationText].attributes["efficiency"] = value if ( h2kElements[locationText] != nil )
+                     elsif (sysType1Name == "P9")
+					    # ASF 07-Oct-2016  Mapped to P9 spaceHeatingEfficiency attribute
+					    locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+					    h2kElements[locationText].attributes["spaceHeatingEfficiency"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
 
@@ -1442,9 +1447,208 @@ def processFile(filespec)
                         end 
                      end 
                   end    
-               end     
+    
+			   
+			# ASF 06-Oct-2016 - Tags for P.9 performance start here. ()   
             
-              
+			
+               elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
+                    sysType1.each do |sysType1Name|
+                       if ( sysType1Name == "P9" )
+			  		      locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Manufacturer"
+			  			  h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
+                       end
+                    end			
+
+               elsif ( tag =~ /Opt-H2K-P9-model/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Model"
+						h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
+                     end
+                  end							  
+
+               elsif ( tag =~ /Opt-H2K-P9-TPF/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+						h2kElements[locationText].attributes["thermalPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+
+               elsif ( tag =~ /Opt-H2K-P9-AnnualElec/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+						h2kElements[locationText].attributes["annualElectricity"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end	
+
+
+               elsif ( tag =~ /Opt-H2K-P9-WHPF/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+						h2kElements[locationText].attributes["waterHeatingPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+
+               elsif ( tag =~ /Opt-H2K-P9-burnerInput/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+						h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end					  
+				  
+               elsif ( tag =~ /Opt-H2K-P9-recEff/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+						h2kElements[locationText].attributes["recoveryEfficiency"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+				  
+               elsif ( tag =~ /Opt-H2K-P9-ctlsPower/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["controlsPower"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+
+               elsif ( tag =~ /Opt-H2K-P9-circPower/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["circulationPower"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end					  
+				  
+               elsif ( tag =~ /Opt-H2K-P9-dailyUse/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["dailyUse"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+
+               elsif ( tag =~ /Opt-H2K-P9-stbyLossNoFan/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["standbyLossWithoutFan"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end	
+
+               elsif ( tag =~ /Opt-H2K-P9-stbyLossWFan/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["standbyLossWithFan"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end					  
+				  
+
+               elsif ( tag =~ /Opt-H2K-P9-oneHrHotWater/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["oneHourRatingHotWater"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+
+               elsif ( tag =~ /Opt-H2K-P9-oneHourConc/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+						h2kElements[locationText].attributes["oneHourConc"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end	
+				  
+               elsif ( tag =~ /Opt-H2K-P9-netEff15/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
+						h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end	
+
+               elsif ( tag =~ /Opt-H2K-P9-netEff40/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
+						h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end
+				  
+               elsif ( tag =~ /Opt-H2K-P9-netEff100/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
+						h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end				  
+			
+               elsif ( tag =~ /Opt-H2K-P9-elecUse15/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
+						h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end	
+
+               elsif ( tag =~ /Opt-H2K-P9-elecUse40/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
+						h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end
+				  
+               elsif ( tag =~ /Opt-H2K-P9-elecUse100/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
+						h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end		
+
+               elsif ( tag =~ /Opt-H2K-P9-blowPower15/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
+						h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end	
+
+               elsif ( tag =~ /Opt-H2K-P9-blowPower40/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
+						h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end
+				  
+               elsif ( tag =~ /Opt-H2K-P9-blowPower100/ &&  value != "NA" )
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
+						h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
+                     end
+                  end				  
+				  
+				  
+				  
+				  
+			
+				  
+				  
+               end # END of elsif ( tag = ...
+
+
+
+			  
             # HRV System
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
@@ -2104,49 +2308,56 @@ def createH2KSysType1( elements, sysType1Name )
       locationText = "HouseFile/House/HeatingCooling/Type1/P9"
       elements[locationText].attributes["id"] = "0"
       elements[locationText].attributes["numberOfSystems"] = "1"
-      elements[locationText].attributes["thermalPerformanceFactor"] = "0"
-      elements[locationText].attributes["annualElectricity"] = "0"
-      elements[locationText].attributes["spaceHeatingCapacity"] = "0"
-      elements[locationText].attributes["spaceHeatingEfficiency"] = "0"
-      elements[locationText].attributes["waterHeatingPerformanceFactor"] = "0"
+      elements[locationText].attributes["thermalPerformanceFactor"] = "0.9"
+      elements[locationText].attributes["annualElectricity"] = "1800"
+      elements[locationText].attributes["spaceHeatingCapacity"] = "23900"
+      elements[locationText].attributes["spaceHeatingEfficiency"] = "90"
+      elements[locationText].attributes["waterHeatingPerformanceFactor"] = "0.9"
       elements[locationText].attributes["burnerInput"] = "0"
       elements[locationText].attributes["recoveryEfficiency"] = "0"
       elements[locationText].attributes["isUserSpecified"] = "false"
       elements[locationText].add_element("EquipmentInformation")
+	  locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation"
+	  elements[locationText].add_element("Manufacturer")
+	  elements[locationText].add_element("Model")
+	  locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Manufacturer"
+	  elements[locationText].text = "Generic"
+	  locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Model"
+	  elements[locationText].text = "Generic"
 
       locationText = "HouseFile/House/HeatingCooling/Type1/P9"
       elements[locationText].add_element("TestData")
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
-      elements[locationText].attributes["controlsPower"] = "0"
-      elements[locationText].attributes["circulationPower"] = "0"
-      elements[locationText].attributes["dailyUse"] = "0"
+      elements[locationText].attributes["controlsPower"] = "10"
+      elements[locationText].attributes["circulationPower"] = "130"
+      elements[locationText].attributes["dailyUse"] = "0.2"
       elements[locationText].attributes["standbyLossWithFan"] = "0"
       elements[locationText].attributes["standbyLossWithoutFan"] = "0"
-      elements[locationText].attributes["oneHourRatingHotWater"] = "0"
-      elements[locationText].attributes["oneHourRatingConcurrent"] = "0"
+      elements[locationText].attributes["oneHourRatingHotWater"] = "1000"
+      elements[locationText].attributes["oneHourRatingConcurrent"] = "1000"
       elements[locationText].add_element("EnergySource")
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/EnergySource"
-      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["code"] = "2"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
       elements[locationText].add_element("NetEfficiency")
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/NetEfficiency"
-      elements[locationText].attributes["loadPerformance15"] = "0"
-      elements[locationText].attributes["loadPerformance40"] = "0"
-      elements[locationText].attributes["loadPerformance100"] = "0"
+      elements[locationText].attributes["loadPerformance15"] = "80"
+      elements[locationText].attributes["loadPerformance40"] = "80"
+      elements[locationText].attributes["loadPerformance100"] = "80"
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
       elements[locationText].add_element("ElectricalUse")
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/ElectricalUse"
-      elements[locationText].attributes["loadPerformance15"] = "0"
-      elements[locationText].attributes["loadPerformance40"] = "0"
-      elements[locationText].attributes["loadPerformance100"] = "0"
+      elements[locationText].attributes["loadPerformance15"] = "100"
+      elements[locationText].attributes["loadPerformance40"] = "200"
+      elements[locationText].attributes["loadPerformance100"] = "300"
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
       elements[locationText].add_element("BlowerPower")
       locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/BlowerPower"
-      elements[locationText].attributes["loadPerformance15"] = "0"
-      elements[locationText].attributes["loadPerformance40"] = "0"
-      elements[locationText].attributes["loadPerformance100"] = "0"
+      elements[locationText].attributes["loadPerformance15"] = "300"
+      elements[locationText].attributes["loadPerformance40"] = "500"
+      elements[locationText].attributes["loadPerformance100"] = "800"
    end
 end   # createH2KSysType1
 
