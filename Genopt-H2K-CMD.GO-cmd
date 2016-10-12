@@ -14,9 +14,10 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
+      Values = "PrinceGeorge";      
+      
       // Buildability locations (12):
-      Values = "PrinceGeorge,Kamloops,Vancouver";
-	  //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
+      //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
       
       // Locations to match typical ESP-r runs (11):
       //Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax"; 
@@ -53,8 +54,8 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
       Ini     =  1;
-      Values = "NA";
-      //Values  =  "Stud_2x6_R20, Stud_2x4_2in_XPS_R-24, Stud_2x6_1in_XPS_R-23, Stud_2x6_2in_XPS_R-29, Stud_2x6_4in_XPS_R-39, DblStud_12in_cell_R-41"; 
+      //Values = "NA";
+      Values  =  "Stud_2x6_R20, Stud_2x4_2in_XPS_R-24, Stud_2x6_1in_XPS_R-23, Stud_2x6_2in_XPS_R-29, Stud_2x6_4in_XPS_R-39, DblStud_12in_cell_R-41"; 
    }
 
    // H2K Foundations : OBC-min-R12
@@ -126,14 +127,14 @@ Vary{
    Parameter{ //
       Name    = GOtag:Opt-DHWSystem;
       Ini     = 1; 
-      Values  = "NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";   //"ElectricStorage"
+      Values  = "ElectricStorage";  //"NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";
    }
   
    // DWHR-System
    Parameter{ //
       Name    = GOtag:Opt-DWHRSystem;
       Ini     = 1; 
-      Values  = "none, DWHR-eff-30,  DWHR-eff-42,  DWHR-eff-55";   //"ElectricStorage"
+      Values  = "none";    //"DWHR-eff-30,  DWHR-eff-42,  DWHR-eff-55";
    }
   
   

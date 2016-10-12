@@ -2513,8 +2513,8 @@ def runsims( direction )
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
    #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
    #      re-trying a run)! 
-   maxRunTime = 1200  # JTB 05-10-2016: Was 30 sec
-   maxTries = 10000   # JTB 05-10-2016: Also setting maximum retries within timeout period
+   maxRunTime = 300  # seconds
+   maxTries = 10     # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
    # AF: Extra counters to count how many times we've tried HOT2000.
@@ -2524,20 +2524,22 @@ def runsims( direction )
    pid = 0 
    begin      
       Timeout.timeout(maxRunTime) do        # time out after maxRunTime seconds!
-         
          while keepTrying do                # within that loop, keep trying
-   
             # Run HOT2000! 
-            pid = Process.spawn( runThis,optionSwitch, fileToLoad) 
+            pid = Process.spawn( runThis, optionSwitch, fileToLoad ) 
             stream_out ("\n Invoking HOT2000 (PID #{pid})...")
-            Process.wait pid
+            Process.wait pid, 0
             status = $?.exitstatus      
             stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
-
             if status == 0 
                endRun = Time.now
                $runH2KTime = endRun - startRun  
                stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+               keepTrying = false       # Successful run - don't try agian 
+            elsif status == 3    # Precheck message(s)
+               endRun = Time.now
+               $runH2KTime = endRun - startRun  
+               stream_out( " The run completed but had precheck messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                keepTrying = false       # Successful run - don't try agian 
             elsif status == nil  
                # Get nil status when can't load an h2k file.
@@ -2558,7 +2560,6 @@ def runsims( direction )
             rescue 
             end 
             sleep(1)
-           
          end 
       end
    rescue
