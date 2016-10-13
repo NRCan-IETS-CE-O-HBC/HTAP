@@ -38,12 +38,12 @@ Opt-DHWLoadScale : No-Reduction
 Opt-DWHRandSDHW : NA    !none          
 
 ! Hot water system. Choices:
-Opt-DHWSystem :  NA    !GasTankless+DWHR !  GasTankless+DWHR
+Opt-DHWSystem :  HPHotWater !ElectricStorage ! !NA    !GasTankless+DWHR !  GasTankless+DWHR
 
 Opt-DWHRSystem :  none  !DWHR-eff-30 DWHR-System-1   
 
 ! HVAC system 
-Opt-HVACSystem  : ComboHeatA
+Opt-HVACSystem  : elec-baseboard !ComboHeatA
 
 ! HRV spec 
 Opt-HRVspec : NA
