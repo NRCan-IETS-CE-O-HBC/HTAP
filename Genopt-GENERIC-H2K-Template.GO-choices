@@ -14,7 +14,7 @@ GOconfig_step :  %stepNumber%
 Opt-Location  : %GOtag:Opt-Location%
 
 ! Preset Code library and cost files
-Opt-DDBFiles  : H2KCodeLibFile
+Opt-DBFiles   : H2KCodeLibFile
 Opt-FuelCost  : rates2016
 
 Opt-ACH       : %GOtag:Opt-ACH%
