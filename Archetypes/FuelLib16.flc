@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <FuelCosts readOnly="false">
-    <Version major="1" minor="0">
+    <Version major="1" minor="2">
         <Labels>
-            <English>v1.0</English>
-            <French>v1.0</French>
+            <English>v1.2</English>
+            <French>v1.2</French>
         </Labels>
     </Version>
     <Electricity>
@@ -31,7 +31,7 @@
             </Units>
             <Minimum units="0" charge="10.83" />
             <RateBlocks>
-                <Block1 units="99999" costPerUnit="0.1480" />
+                <Block1 units="99999" costPerUnit="0.148" />
                 <Block2 units="0" costPerUnit="0" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
@@ -62,7 +62,7 @@
             <Minimum units="0" charge="13.01" />
             <RateBlocks>
                 <Block1 units="99999" costPerUnit="0.0957" />
-                <Block2 units="0" costPerUnit="0." />
+                <Block2 units="0" costPerUnit="0" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
@@ -106,12 +106,12 @@
             </Units>
             <Minimum units="0" charge="5.58" />
             <RateBlocks>
-                <Block1 units="1350" costPerUnit="0.0870" />
-                <Block2 units="99999" costPerUnit="0.1350" />
+                <Block1 units="1350" costPerUnit="0.087" />
+                <Block2 units="99999" costPerUnit="0.135" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>		
+        </Fuel>
         <Fuel id="8" isDefault="false">
             <Label>Regina</Label>
             <Comment>SaskPwr</Comment>
@@ -126,7 +126,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>				
+        </Fuel>
         <Fuel id="9" isDefault="false">
             <Label>Winnipeg</Label>
             <Comment>ManHydro16</Comment>
@@ -141,7 +141,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>		
+        </Fuel>
         <Fuel id="10" isDefault="false">
             <Label>Fredericton</Label>
             <Comment>NBPower16</Comment>
@@ -156,7 +156,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>		
+        </Fuel>
         <Fuel id="11" isDefault="false">
             <Label>Whitehorse</Label>
             <Comment>YkPwr16</Comment>
@@ -171,7 +171,7 @@
                 <Block3 units="99999" costPerUnit="0.1399" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>	
+        </Fuel>
         <Fuel id="12" isDefault="false">
             <Label>Yellowknife</Label>
             <Comment>Northlnd</Comment>
@@ -179,7 +179,7 @@
                 <English>kWhr</English>
                 <French>kWh</French>
             </Units>
-            <Minimum units="0" charge="18.00" />
+            <Minimum units="0" charge="18" />
             <RateBlocks>
                 <Block1 units="99999" costPerUnit="0.2372" />
                 <Block2 units="0" costPerUnit="0" />
@@ -201,7 +201,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>        
+        </Fuel>
     </Electricity>
     <NaturalGas>
         <Fuel id="14" isDefault="true">
@@ -211,12 +211,12 @@
                 <English>m³</English>
                 <French>m³</French>
             </Units>
-            <Minimum units="0" charge="20.00" />
+            <Minimum units="0" charge="20" />
             <RateBlocks>
                 <Block1 units="30" costPerUnit="0.2442" />
                 <Block2 units="85" costPerUnit="0.2388" />
                 <Block3 units="170" costPerUnit="0.2349" />
-                <Block4 units="99999" costPerUnit="0.2320" />
+                <Block4 units="99999" costPerUnit="0.232" />
             </RateBlocks>
         </Fuel>
         <Fuel id="15" isDefault="false">
@@ -226,12 +226,12 @@
                 <English>m³</English>
                 <French>m³</French>
             </Units>
-            <Minimum units="0" charge="20.00" />
+            <Minimum units="0" charge="20" />
             <RateBlocks>
                 <Block1 units="30" costPerUnit="0.2442" />
                 <Block2 units="85" costPerUnit="0.2388" />
                 <Block3 units="170" costPerUnit="0.2349" />
-                <Block4 units="99999" costPerUnit="0.2320" />
+                <Block4 units="99999" costPerUnit="0.232" />
             </RateBlocks>
         </Fuel>
         <Fuel id="16" isDefault="false">
@@ -279,7 +279,7 @@
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
         </Fuel>
-		    <Fuel id="19" isDefault="false">
+        <Fuel id="19" isDefault="false">
             <Label>Montreal</Label>
             <Comment>GazMetro</Comment>
             <Units code="4">
@@ -293,8 +293,8 @@
                 <Block3 units="300" costPerUnit="0.4646" />
                 <Block4 units="99999" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>        
-    		<Fuel id="20" isDefault="false">
+        </Fuel>
+        <Fuel id="20" isDefault="false">
             <Label>Quebec</Label>
             <Comment>GazMetro</Comment>
             <Units code="4">
@@ -323,30 +323,30 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>			
-		    <Fuel id="22" isDefault="false">
+        </Fuel>
+        <Fuel id="22" isDefault="false">
             <Label>Regina</Label>
             <Comment>SaskEnergy</Comment>
             <Units code="4">
                 <English>m³</English>
                 <French>m³</French>
             </Units>
-            <Minimum units="0" charge="20.60" />
+            <Minimum units="0" charge="20.6" />
             <RateBlocks>
                 <Block1 units="99999" costPerUnit="0.2407" />
                 <Block2 units="0" costPerUnit="0" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-         </Fuel>
-		    <Fuel id="23" isDefault="false">
+        </Fuel>
+        <Fuel id="23" isDefault="false">
             <Label>Winnipeg</Label>
             <Comment>ManHydro</Comment>
             <Units code="4">
                 <English>m³</English>
                 <French>m³</French>
             </Units>
-            <Minimum units="0" charge="14.00" />
+            <Minimum units="0" charge="14" />
             <RateBlocks>
                 <Block1 units="99999" costPerUnit="0.2574" />
                 <Block2 units="0" costPerUnit="0" />
@@ -354,24 +354,24 @@
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
         </Fuel>
-	     	<Fuel id="24" isDefault="false">
+        <Fuel id="24" isDefault="false">
             <Label>Fredericton</Label>
             <Comment>Enbridge</Comment>
             <Units code="4">
                 <English>m³</English>
                 <French>m³</French>
             </Units>
-            <Minimum units="0" charge="18.00" />
+            <Minimum units="0" charge="18" />
             <RateBlocks>
                 <Block1 units="99999" costPerUnit="0.7087" />
                 <Block2 units="0" costPerUnit="0" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>	
+        </Fuel>
     </NaturalGas>
     <Oil>
-        <Fuel id="25" isDefault="false">
+        <Fuel id="25" isDefault="true">
             <Label>Ottawa</Label>
             <Comment>Oil Rate Block</Comment>
             <Units code="2">
@@ -395,12 +395,12 @@
             </Units>
             <Minimum units="0" charge="10" />
             <RateBlocks>
-                <Block1 units="99999" costPerUnit="0.90" />
+                <Block1 units="99999" costPerUnit="0.9" />
                 <Block2 units="0" costPerUnit="0" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>        
+        </Fuel>
         <Fuel id="27" isDefault="false">
             <Label>Halifax</Label>
             <Comment>Oil Rate Block</Comment>
@@ -415,7 +415,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel> 
+        </Fuel>
         <Fuel id="28" isDefault="false">
             <Label>Calgary</Label>
             <Comment>Oil Rate Block</Comment>
@@ -430,7 +430,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>  
+        </Fuel>
         <Fuel id="29" isDefault="false">
             <Label>Toronto</Label>
             <Comment>Oil Rate Block</Comment>
@@ -445,7 +445,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>  
+        </Fuel>
         <Fuel id="30" isDefault="false">
             <Label>Montreal</Label>
             <Comment>Oil Rate Block</Comment>
@@ -460,7 +460,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>  
+        </Fuel>
         <Fuel id="31" isDefault="false">
             <Label>Quebec</Label>
             <Comment>Oil Rate Block</Comment>
@@ -475,7 +475,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>  
+        </Fuel>
         <Fuel id="32" isDefault="false">
             <Label>Vancouver</Label>
             <Comment>Oil Rate Block</Comment>
@@ -485,12 +485,12 @@
             </Units>
             <Minimum units="0" charge="10" />
             <RateBlocks>
-                <Block1 units="99999" costPerUnit="1.20" />
+                <Block1 units="99999" costPerUnit="1.2" />
                 <Block2 units="0" costPerUnit="0" />
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>  
+        </Fuel>
         <Fuel id="33" isDefault="false">
             <Label>Regina</Label>
             <Comment>Oil Rate Block</Comment>
@@ -505,7 +505,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>  
+        </Fuel>
         <Fuel id="34" isDefault="false">
             <Label>Winnipeg</Label>
             <Comment>Oil Rate Block</Comment>
@@ -520,7 +520,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>          
+        </Fuel>
         <Fuel id="35" isDefault="false">
             <Label>Fredericton</Label>
             <Comment>Oil Rate Block</Comment>
@@ -535,7 +535,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>          
+        </Fuel>
         <Fuel id="36" isDefault="false">
             <Label>Whitehorse</Label>
             <Comment>Oil Rate Block</Comment>
@@ -550,7 +550,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>         
+        </Fuel>
         <Fuel id="37" isDefault="false">
             <Label>Yellowknife</Label>
             <Comment>Oil Rate Block</Comment>
@@ -565,7 +565,7 @@
                 <Block3 units="0" costPerUnit="0" />
                 <Block4 units="0" costPerUnit="0" />
             </RateBlocks>
-        </Fuel>         
+        </Fuel>
     </Oil>
     <Propane>
         <Fuel id="26" isDefault="false">
