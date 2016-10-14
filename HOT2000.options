@@ -1747,7 +1747,7 @@
 *attribute:tag:6 = <Opt-win-N-OPT>
 *attribute:tag:7 = <Opt-win-W-CON>     ! Also H2K W windows lib code name
 *attribute:tag:8 = <Opt-win-W-OPT>
-*attribute:tag:9 =  <Opt-win-SE-CON>     ! H2K SE windows lib code name
+*attribute:tag:9 = <Opt-win-SE-CON>     ! H2K SE windows lib code name
 *attribute:tag:10 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
 *attribute:tag:11 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
 *attribute:tag:12 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
@@ -2096,6 +2096,10 @@
 *option:HG-i89-Triple-B:value:6 = HG-i89-Triple-B
 *option:HG-i89-Triple-B:value:7 = HG-i89-Triple-B
 *option:HG-i89-Triple-B:value:8 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:9 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:10 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:11 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:12 = HG-i89-Triple-B
 *option:HG-i89-Triple-B:WindowParams:name  = HG-i89-Triple-B
 *option:HG-i89-Triple-B:WindowParams:panes = 3 
 *option:HG-i89-Triple-B:WindowParams:SHGC  = 0.49
@@ -2111,6 +2115,10 @@
 *option:HG-i89-Triple-A:value:6 = HG-i89-Triple-A
 *option:HG-i89-Triple-A:value:7 = HG-i89-Triple-A
 *option:HG-i89-Triple-A:value:8 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:9 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:10 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:11 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:12 = HG-i89-Triple-A
 *option:HG-i89-Triple-A:WindowParams:name  = HG-i89-Triple-A
 *option:HG-i89-Triple-A:WindowParams:panes = 3 
 *option:HG-i89-Triple-A:WindowParams:SHGC  = 0.37
@@ -2125,6 +2133,10 @@
 *option:LG-HP-Double:value:6 = LG-HP-Double
 *option:LG-HP-Double:value:7 = LG-HP-Double
 *option:LG-HP-Double:value:8 = LG-HP-Double
+*option:LG-HP-Double:value:9 = LG-HP-Double
+*option:LG-HP-Double:value:10 = LG-HP-Double
+*option:LG-HP-Double:value:11 = LG-HP-Double
+*option:LG-HP-Double:value:12 = LG-HP-Double
 *option:LG-HP-Double:WindowParams:name  = LG-HP-Double
 *option:LG-HP-Double:WindowParams:panes = 2 
 *option:LG-HP-Double:WindowParams:SHGC  = 0.18
@@ -2139,6 +2151,10 @@
 *option:MG-HP-Double:value:6 = MG-HP-Double
 *option:MG-HP-Double:value:7 = MG-HP-Double
 *option:MG-HP-Double:value:8 = MG-HP-Double
+*option:MG-HP-Double:value:9 = MG-HP-Double
+*option:MG-HP-Double:value:10 = MG-HP-Double
+*option:MG-HP-Double:value:11 = MG-HP-Double
+*option:MG-HP-Double:value:12 = MG-HP-Double
 *option:MG-HP-Double:WindowParams:name  = MG-HP-Double
 *option:MG-HP-Double:WindowParams:panes = 2 
 *option:MG-HP-Double:WindowParams:SHGC  = 0.33
@@ -2153,6 +2169,10 @@
 *option:MG-i89-Double:value:6 = MG-i89-Double
 *option:MG-i89-Double:value:7 = MG-i89-Double
 *option:MG-i89-Double:value:8 = MG-i89-Double
+*option:MG-i89-Double:value:9 = MG-i89-Double
+*option:MG-i89-Double:value:10 = MG-i89-Double
+*option:MG-i89-Double:value:11 = MG-i89-Double
+*option:MG-i89-Double:value:12 = MG-i89-Double
 *option:MG-i89-Double:WindowParams:name  = MG-i89-Double
 *option:MG-i89-Double:WindowParams:panes = 2 
 *option:MG-i89-Double:WindowParams:SHGC  = 0.28
@@ -2167,6 +2187,10 @@
 *option:HG-HP-Triple:value:6 = HG-HP-Triple
 *option:HG-HP-Triple:value:7 = HG-HP-Triple
 *option:HG-HP-Triple:value:8 = HG-HP-Triple
+*option:HG-HP-Triple:value:9 = HG-HP-Triple
+*option:HG-HP-Triple:value:10 = HG-HP-Triple
+*option:HG-HP-Triple:value:11 = HG-HP-Triple
+*option:HG-HP-Triple:value:12 = HG-HP-Triple
 *option:HG-HP-Triple:WindowParams:name  = HG-HP-Triple
 *option:HG-HP-Triple:WindowParams:panes = 3
 *option:HG-HP-Triple:WindowParams:SHGC  = 0.44
@@ -2181,6 +2205,10 @@
 *option:HG-VHG-Double:value:6 = HG-VHG-Double
 *option:HG-VHG-Double:value:7 = HG-VHG-Double
 *option:HG-VHG-Double:value:8 = HG-VHG-Double
+*option:HG-VHG-Double:value:9 = HG-VHG-Double
+*option:HG-VHG-Double:value:10 = HG-VHG-Double
+*option:HG-VHG-Double:value:11 = HG-VHG-Double
+*option:HG-VHG-Double:value:12 = HG-VHG-Double
 *option:HG-VHG-Double:WindowParams:name  = HG-VHG-Double
 *option:HG-VHG-Double:WindowParams:panes = 2
 *option:HG-VHG-Double:WindowParams:SHGC  = 0.59
@@ -2195,6 +2223,10 @@
 *option:HG-avg-Double:value:6 = HG-avg-Double
 *option:HG-avg-Double:value:7 = HG-avg-Double
 *option:HG-avg-Double:value:8 = HG-avg-Double
+*option:HG-avg-Double:value:9 = HG-avg-Double
+*option:HG-avg-Double:value:10 = HG-avg-Double
+*option:HG-avg-Double:value:11 = HG-avg-Double
+*option:HG-avg-Double:value:12 = HG-avg-Double
 *option:HG-avg-Double:WindowParams:name  = HG-avg-Double
 *option:HG-avg-Double:WindowParams:panes = 2
 *option:HG-avg-Double:WindowParams:SHGC  = 0.51
@@ -2210,6 +2242,10 @@
 *option:HG-avg-Triple:value:6 = HG-avg-Triple
 *option:HG-avg-Triple:value:7 = HG-avg-Triple
 *option:HG-avg-Triple:value:8 = HG-avg-Triple
+*option:HG-avg-Triple:value:9 = HG-avg-Triple
+*option:HG-avg-Triple:value:10 = HG-avg-Triple
+*option:HG-avg-Triple:value:11 = HG-avg-Triple
+*option:HG-avg-Triple:value:12 = HG-avg-Triple
 *option:HG-avg-Triple:WindowParams:name  = HG-avg-Triple
 *option:HG-avg-Triple:WindowParams:panes = 3
 *option:HG-avg-Triple:WindowParams:SHGC  = 0.44
@@ -2225,6 +2261,10 @@
 *option:LG-avg-Triple:value:6 = LG-avg-Triple
 *option:LG-avg-Triple:value:7 = LG-avg-Triple
 *option:LG-avg-Triple:value:8 = LG-avg-Triple
+*option:LG-avg-Triple:value:9 = LG-avg-Triple
+*option:LG-avg-Triple:value:10 = LG-avg-Triple
+*option:LG-avg-Triple:value:11 = LG-avg-Triple
+*option:LG-avg-Triple:value:12 = LG-avg-Triple
 *option:LG-avg-Triple:WindowParams:name  = LG-avg-Triple
 *option:LG-avg-Triple:WindowParams:panes = 3
 *option:LG-avg-Triple:WindowParams:SHGC  = 0.17
@@ -2240,6 +2280,10 @@
 *option:LG-i89-Triple-B:value:6 = LG-i89-Triple-B
 *option:LG-i89-Triple-B:value:7 = LG-i89-Triple-B
 *option:LG-i89-Triple-B:value:8 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:9 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:10 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:11 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:12 = LG-i89-Triple-B
 *option:LG-i89-Triple-B:WindowParams:name  = LG-i89-Triple-B
 *option:LG-i89-Triple-B:WindowParams:panes = 3 
 *option:LG-i89-Triple-B:WindowParams:SHGC  = 0.18
@@ -2254,6 +2298,10 @@
 *option:LG-i89-Triple-A:value:6 = LG-i89-Triple-A
 *option:LG-i89-Triple-A:value:7 = LG-i89-Triple-A
 *option:LG-i89-Triple-A:value:8 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:9 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:10 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:11 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:12 = LG-i89-Triple-A
 *option:LG-i89-Triple-A:WindowParams:name  = LG-i89-Triple-A
 *option:LG-i89-Triple-A:WindowParams:panes = 3 
 *option:LG-i89-Triple-A:WindowParams:SHGC  = 0.14
@@ -2269,6 +2317,10 @@
 *option:LG-HP-Triple:value:6 = LG-HP-Triple
 *option:LG-HP-Triple:value:7 = LG-HP-Triple
 *option:LG-HP-Triple:value:8 = LG-HP-Triple
+*option:LG-HP-Triple:value:9 = LG-HP-Triple
+*option:LG-HP-Triple:value:10 = LG-HP-Triple
+*option:LG-HP-Triple:value:11 = LG-HP-Triple
+*option:LG-HP-Triple:value:12 = LG-HP-Triple
 *option:LG-HP-Triple:WindowParams:name  = LG-HP-Triple
 *option:LG-HP-Triple:WindowParams:panes = 3
 *option:LG-HP-Triple:WindowParams:SHGC  = 0.18
@@ -2283,6 +2335,10 @@
 *option:LG-avg-Double:value:6 = LG-avg-Double
 *option:LG-avg-Double:value:7 = LG-avg-Double
 *option:LG-avg-Double:value:8 = LG-avg-Double
+*option:LG-avg-Double:value:9 = LG-avg-Double
+*option:LG-avg-Double:value:10 = LG-avg-Double
+*option:LG-avg-Double:value:11 = LG-avg-Double
+*option:LG-avg-Double:value:12 = LG-avg-Double
 *option:LG-avg-Double:WindowParams:name  = LG-avg-Double
 *option:LG-avg-Double:WindowParams:panes = 2
 *option:LG-avg-Double:WindowParams:SHGC  = 0.19
@@ -2566,6 +2622,26 @@
 *option:DblStud_10in_cell_R-34:value:1 = 0.1982
 *option:DblStud_10in_cell_R-34:value:2 = 34
 *option:DblStud_10in_cell_R-34:cost = 0
+
+
+!-----------------------------------------------------------------------
+! YHC generic wall definitions
+!-----------------------------------------------------------------------
+*option:YHC_R-11_30:value:1 = 0.1982
+*option:YHC_R-11_30:value:2 = 11.30
+*option:YHC_R-11_30:cost = 0
+
+*option:YHC_R-18_76:value:1 = 0.1982
+*option:YHC_R-18_76:value:2 = 18.76
+*option:YHC_R-18_76:cost = 0
+
+*option:YHC_R-24_22:value:1 = 0.1982
+*option:YHC_R-24_22:value:2 = 24.22
+*option:YHC_R-24_22:cost = 0
+
+*option:YHC_R-21_30:value:1 = 0.1982
+*option:YHC_R-21_30:value:2 = 21.30
+*option:YHC_R-21_30:cost = 0
 
 *attribute:end
 
