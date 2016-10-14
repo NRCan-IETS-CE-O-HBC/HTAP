@@ -2454,7 +2454,7 @@
 
 ! Thicknesses are defined in meters. Format * must * be #.#### (4 decimals)
 *option:Stud_2x6_R20:value:1 = 0.08748 
-*option:Stud_2x6_R20:value:2 = 20
+*option:Stud_2x6_R20:value:2 = 18.1          !18.1 is the Value from the HPO Illustrated Guide to 9.36, 2x6 wall with R-24 batt
 *option:Stud_2x6_R20:cost    = 0
 
 ! BC LEEP Wall systems
@@ -2472,11 +2472,11 @@
 *option:Stud_2x6_1.5in_XPS_R-25:cost = 0
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
-*option:Stud_2x6_2in_XPS_R-29:value:2 = 29
+*option:Stud_2x6_2in_XPS_R-29:value:2 = 26.2          !R26.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
 *option:Stud_2x6_2in_XPS_R-29:cost = 0
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
-*option:Stud_2x6_3in_XPS_R-34:value:2 = 34
+*option:Stud_2x6_3in_XPS_R-34:value:2 = 31.2          !R31.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
 *option:Stud_2x6_3in_XPS_R-34:cost = 0
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
@@ -2488,12 +2488,16 @@
 *option:Stud_2x6_1.5in_MWB_R-25:cost = 0
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
-*option:Stud_2x6_2in_MWB_R-27:value:2 = 27
+*option:Stud_2x6_2in_MWB_R-27:value:2 = 24.2          !R24.3 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
 *option:Stud_2x6_2in_MWB_R-27:cost = 0
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
 *option:Stud_2x6_3in_MWB_R-31:value:2 = 31
 *option:Stud_2x6_3in_MWB_R-31:cost = 0
+
+*option:Stud_2x6_3.5in_MWB_R-31:value:1 = 0.1945
+*option:Stud_2x6_3.5in_MWB_R-31:value:2 = 30.2          !R30.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
+*option:Stud_2x6_3.5in_MWB_R-31:cost = 0
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
 *option:Stud_2x6_4in_MWB_R-35:value:2 = 35
@@ -2524,12 +2528,16 @@
 *option:Stud_2x4_2in_EPS_R-21:cost = 0
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
-*option:Stud_2x6_1.5in_EPS_R-24:value:2 = 24
+*option:Stud_2x6_1.5in_EPS_R-24:value:2 = 23                  !R23  linear interpolation of R-4.5/in between R4/in and R5/in from R22+ guide
 *option:Stud_2x6_1.5in_EPS_R-24:cost = 0
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
 *option:Stud_2x6_2in_EPS_R-26:value:2 = 26
 *option:Stud_2x6_2in_EPS_R-26:cost = 0
+
+*option:Stud_2x6_2.5in_EPS_R-30:value:1 = 0.1634
+*option:Stud_2x6_2.5in_EPS_R-30:value:2 = 29.9               !Changed to a R24 batt, with 2.5 EPS, R29.9 came from HALO calculation for CoV LEEP
+*option:Stud_2x6_2.5in_EPS_R-30:cost = 0
 
 *option:Stud_2x6_3in_EPS_R-30:value:1 = 0.1754
 *option:Stud_2x6_3in_EPS_R-30:value:2 = 30
@@ -2540,8 +2548,12 @@
 *option:Stud_2x6_4in_EPS_R-34:cost = 0
 
 *option:SIPS_6.5in_EPS_R-24:value:1 = 0.1367
-*option:SIPS_6.5in_EPS_R-24:value:2 = 24
-*option:SIPS_6.5in_EPS_R-24:cost = 0
+*option:SIPS_6.5in_EPS_R-24:value:2 = 23.3           !R21 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
+*option:SIPS_6.5in_EPS_R-24:cost = 0               !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
+
+*option:SIPS_8.25in_EPS_R-38:value:1 = 0.1812
+*option:SIPS_8.25in_EPS_R-38:value:2 = 30.3         !R28 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
+*option:SIPS_8.25in_EPS_R-38:cost = 0              !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
 
 *option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256
 *option:SIPS_10.5in_EPS_R-38:value:2 = 38
