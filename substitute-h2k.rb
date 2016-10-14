@@ -2912,8 +2912,12 @@ def postprocess( scaleData )
       #                  SOC and falling back to 'general' if it's not found.
       if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
-         $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         
+		 # ASF 14-10-2016: No longer using the totaL consumption from the set, because this number doesn't align with the sum of all end uses.
+		 # 0 this number is computed again below. 
+		 # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
+         
+		 $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -2955,6 +2959,13 @@ def postprocess( scaleData )
                                      $gResults[houseCode]["avgFuelCostsOil$"] +
                                      $gResults[houseCode]["avgFuelCostsPropane$"] +
                                      $gResults[houseCode]["avgFuelCostsWood$"] 
+
+          $gResults[houseCode]["avgEnergyTotalGJ"]  =  $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
+                                                       $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
+                                                       $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
+                                                       $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
+                                                       $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
+									 
 	   
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
          if ( $PVInt != "NA" ) 
