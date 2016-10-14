@@ -2769,6 +2769,7 @@ def runsims( direction )
             begin 
                Process.kill('KILL', pid)
             rescue 
+               stream_out( " Cannot kill process #{pid}!\n" )
             end 
             sleep(1)
          end 
