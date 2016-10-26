@@ -2765,13 +2765,8 @@ def runsims( direction )
                keepTrying = false   # Give up.
             end
            
-            # Forceably kill process if needed
-            begin 
-               Process.kill('KILL', pid)
-            rescue 
-               stream_out( " Cannot kill process #{pid}!\n" )
-            end 
-            sleep(1)
+            # Forceably kill process, if needed
+            Process.kill('KILL', pid)
          end 
       end
    rescue
