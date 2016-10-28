@@ -3638,7 +3638,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:18 = 2                     ! Function heating/cooling 
 *option:CCASHP-ecm:value:19 = 1                     ! Type: central split 
 *option:CCASHP-ecm:value:20 = 2                     ! Capacity: Calculated 
-*option:CCASHP-ecm:value:21 = 11700                    ! Capacity value (W)
+*option:CCASHP-ecm:value:21 = NA                    ! Capacity value (W)
 *option:CCASHP-ecm:value:22 = 3                     ! Heating COP 
 *option:CCASHP-ecm:value:23 = 4.3                   ! Cooling COP 
 *option:CCASHP-ecm:value:24 = 2                     ! Cut off type : Restricted 
