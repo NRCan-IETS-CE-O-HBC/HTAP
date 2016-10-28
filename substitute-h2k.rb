@@ -2766,7 +2766,12 @@ def runsims( direction )
             end
            
             # Forceably kill process, if needed
-            Process.kill('KILL', pid)
+            begin
+               Process.kill('KILL', pid)
+            rescue
+               # Do nothing, the normal case - PID already ended.
+            end
+            sleep(1)
          end 
       end
    rescue
