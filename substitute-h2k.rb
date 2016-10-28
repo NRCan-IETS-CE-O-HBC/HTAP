@@ -1221,7 +1221,6 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
 			
-			
                sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
                sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
                
@@ -1449,8 +1448,7 @@ def processFile(filespec)
                   end    
     
 			   
-			# ASF 06-Oct-2016 - Tags for P.9 performance start here. ()   
-            
+               # ASF 06-Oct-2016 - Tags for P.9 performance start here. ()   
 			
                elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
                     sysType1.each do |sysType1Name|
@@ -1638,15 +1636,7 @@ def processFile(filespec)
                      end
                   end				  
 				  
-				  
-				  
-				  
-			
-				  
-				  
-               end # END of elsif ( tag = ...
-
-
+               end # END of elsif under HVACSystem section
 
 			  
             # HRV System
@@ -1730,8 +1720,8 @@ def processFile(filespec)
                
             # PV - internal. Uses H2K PV Generation model
             # Limited number of parameters available in options file.
-			#
-			# ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
+            #
+            # ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
             #----------------------------------------------------------------------------
 						
             elsif ( choiceEntry =~ /Opt-H2K-PV/ )
@@ -2914,11 +2904,11 @@ def postprocess( scaleData )
       if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
          
-		 # ASF 14-10-2016: No longer using the totaL consumption from the set, because this number doesn't align with the sum of all end uses.
-		 # 0 this number is computed again below. 
-		 # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
+         # ASF 14-10-2016: No longer using the totaL consumption from the set, because this number doesn't align with the sum of all end uses.
+         # 0 this number is computed again below. 
+         # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          
-		 $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -2975,8 +2965,8 @@ def postprocess( scaleData )
             monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             monthArr.each do |mth|
                # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
-               #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
-			   # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
+               #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+               # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
                pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
                pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
             end
@@ -3026,7 +3016,7 @@ def postprocess( scaleData )
    
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
-   # ASF 03-Oct-2016 : Not sure this section is working; pv costs may need to be determined 
+   # ASF 03-Oct-2016 : Not sure this section is working; PV costs may need to be determined 
    #                   based hard sizes in the options file, and not computed from h2k Calcs. 
    #                   requires a little more though. 
    # PV Data...
@@ -3129,9 +3119,9 @@ def postprocess( scaleData )
 
    $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
             $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
-		    $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
-	 	    $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
-		    $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
+            $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
+            $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
+            $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
    
    stream_out("\n Energy Consumption: \n\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
@@ -3146,8 +3136,6 @@ def postprocess( scaleData )
 		stream_out ("       ( check: should = #{$check.round(1)} ?  ) \n ") 
     end 
 	
-   
-   
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
@@ -4095,7 +4083,7 @@ end
 ## These need to be updated. 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total.round(2)}   \n" )
-fSUMMARY.write( "Util-PV-revenue   =  #{$gAvgPVRevenue.round(2)}    \n" )
+fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPvRevenue'].round(2)}    \n" )
 fSUMMARY.write( "Util-Bill-Net     =  #{($gAvgCost_Total-$gAvgPVRevenue).round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Elec    =  #{$gAvgCost_Electr.round(2)}  \n" )
 fSUMMARY.write( "Util-Bill-Gas     =  #{$gAvgCost_NatGas.round(2)}  \n" )
@@ -4104,7 +4092,7 @@ fSUMMARY.write( "Util-Bill-Oil     =  #{$gAvgCost_Oil.round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Wood    =  #{$gAvgCost_Wood.round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )
 
-fSUMMARY.write( "Energy-PV-kWh     =  #{$gAvgPVOutput_kWh.round(1)} \n" )
+fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
