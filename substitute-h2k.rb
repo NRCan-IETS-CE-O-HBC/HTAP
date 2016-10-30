@@ -4064,7 +4064,7 @@ end
 
 $gAvgCost_Total = $gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood + $gAvgCost_Pellet
 
-$gAvgPVRevenue = $gAvgPVOutput_kWh * $PVTarrifDollarsPerkWh
+$gAvgPVRevenue = $gResults[$outputHCode]['avgElecPVGenkWh'] * $PVTarrifDollarsPerkWh
 
 $optCOProxy = 0
 $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
