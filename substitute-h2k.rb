@@ -2825,11 +2825,13 @@ def postprocess( scaleData )
       fatalerror("Could not read Browse.Rpt.\n")
    end
 
-   bReadFuelCosts = false
-   if ( $versionMajor_H2K.to_i >= 11 && $versionMinor_H2K.to_i >= 1 && $versionBuild_H2K.to_i >= 82 )
-      bReadFuelCosts = true
+   # H2K XML file for V11.1 b82 and greater contains "ActualFuelCosts" (previous versions did not)!
+   bReadFuelCostsFromBrowseRpt = false
+   if ( $versionMajor_H2K.to_i == 11 && $versionMinor_H2K.to_i == 1 && $versionBuild_H2K.to_i < 82)
+      # H2K XML file does NOT contains "ActualFuelCosts" - read from Browse.Rpt file
+      bReadFuelCostsFromBrowseRpt = true
    else
-      # H2K V11.1 b82 contains "ActualFuelCosts" (previous version did not)!
+      # H2K XML file contains "ActualFuelCosts"
       locationText = "HouseFile/AllResults/Results/Annual/ActualFuelCosts"
       $gAvgCost_Electr += h2kPostElements[locationText].attributes["electrical"].to_f * scaleData
       $gAvgCost_NatGas += h2kPostElements[locationText].attributes["naturalGas"].to_f * scaleData
@@ -2856,7 +2858,7 @@ def postprocess( scaleData )
             lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
             lineIn.strip!
             $gERSNum = lineIn.to_f     # Use * scaleData?
-         elsif ( bReadFuelCosts && lineIn =~ /^\$/ )
+         elsif ( bReadFuelCostsFromBrowseRpt && lineIn =~ /^\$/ )
             valuesArr = lineIn.split()   # Uses spaces by default to split-up line
             $gAvgCost_Electr += valuesArr[1].to_f * scaleData
             $gAvgCost_NatGas += valuesArr[2].to_f * scaleData
@@ -2888,7 +2890,6 @@ def postprocess( scaleData )
    $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
    $PVInt = $gChoices["Opt-H2K-PV"]   # Input examples: "MonoSi-50m2", "NA"
 
-   
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
    
       houseCode =  element.attributes["houseCode"]
@@ -2904,8 +2905,7 @@ def postprocess( scaleData )
       if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
          
-         # ASF 14-10-2016: No longer using the totaL consumption from the set, because this number doesn't align with the sum of all end uses.
-         # 0 this number is computed again below. 
+         # ASF 14-10-2016: No longer using the total consumption from the set, because this number doesn't align with the sum of all end uses.
          # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -2937,25 +2937,25 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
 	  
-         $gResults[houseCode]["avgFueluseEleckWh"]   = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
+         $gResults[houseCode]["avgFueluseEleckWh"]  = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
 
-         $gResults[houseCode]["avgFueluseNatGasM3"]  = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
+         $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
 
-         $gResults[houseCode]["avgFueluseOilL"]      = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
+         $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
 
-         $gResults[houseCode]["avgFuelusePropaneL"]  = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
+         $gResults[houseCode]["avgFuelusePropaneL"] = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
 
-         $gResults[houseCode]["avgFuelCostsTotal$"] =  $gResults[houseCode]["avgFuelCostsElec$"] +
-                                     $gResults[houseCode]["avgFuelCostsNatGas$"] +
-                                     $gResults[houseCode]["avgFuelCostsOil$"] +
-                                     $gResults[houseCode]["avgFuelCostsPropane$"] +
-                                     $gResults[houseCode]["avgFuelCostsWood$"] 
+         $gResults[houseCode]["avgFuelCostsTotal$"] = $gResults[houseCode]["avgFuelCostsElec$"] +
+                                                      $gResults[houseCode]["avgFuelCostsNatGas$"] +
+                                                      $gResults[houseCode]["avgFuelCostsOil$"] +
+                                                      $gResults[houseCode]["avgFuelCostsPropane$"] +
+                                                      $gResults[houseCode]["avgFuelCostsWood$"] 
 
-          $gResults[houseCode]["avgEnergyTotalGJ"]  =  $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
+          $gResults[houseCode]["avgEnergyTotalGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
 									 
 	   
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
@@ -3017,8 +3017,8 @@ def postprocess( scaleData )
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
    # ASF 03-Oct-2016 : Not sure this section is working; PV costs may need to be determined 
-   #                   based hard sizes in the options file, and not computed from h2k Calcs. 
-   #                   requires a little more though. 
+   #                   based on hard sizes in the options file, and not computed from h2k Calcs. 
+   #                   Requires a little more thought. 
    # PV Data...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
@@ -3074,7 +3074,6 @@ def postprocess( scaleData )
    $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
    
-   # THIS ISN"T WORKING YET  
    # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
    if ( $PVInt != "NA" )
      
@@ -3148,7 +3147,7 @@ def postprocess( scaleData )
    stream_out ( "\n")
    stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPvRevenue'].round(2)} (PV revenue, #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gAvgPVRevenue.round(2)} (Net utility costs).\n")
+   stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPvRevenue'].round(2)} (Net utility costs).\n")
    stream_out ( "\n\n")
    
    stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
@@ -4064,7 +4063,7 @@ end
 
 $gAvgCost_Total = $gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood + $gAvgCost_Pellet
 
-$gAvgPVRevenue = $gAvgPVOutput_kWh * $PVTarrifDollarsPerkWh
+$gAvgPVRevenue = $gResults[$outputHCode]['avgElecPVGenkWh'] * $PVTarrifDollarsPerkWh
 
 $optCOProxy = 0
 $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
@@ -4084,7 +4083,7 @@ end
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total.round(2)}   \n" )
 fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPvRevenue'].round(2)}    \n" )
-fSUMMARY.write( "Util-Bill-Net     =  #{($gAvgCost_Total-$gAvgPVRevenue).round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPvRevenue'].round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Elec    =  #{$gAvgCost_Electr.round(2)}  \n" )
 fSUMMARY.write( "Util-Bill-Gas     =  #{$gAvgCost_NatGas.round(2)}  \n" )
 fSUMMARY.write( "Util-Bill-Prop    =  #{$gAvgCost_Propane.round(2)} \n" )

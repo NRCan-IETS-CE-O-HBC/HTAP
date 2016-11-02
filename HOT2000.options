@@ -2529,11 +2529,11 @@
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
 *option:Stud_2x6_2in_XPS_R-29:value:2 = 26.2          !R26.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
-*option:Stud_2x6_2in_XPS_R-29:cost = 440              !$440 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_2in_XPS_R-29:cost = 2060              !$2060 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
 *option:Stud_2x6_3in_XPS_R-34:value:2 = 31.2          !R31.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
-*option:Stud_2x6_3in_XPS_R-34:cost = 1475             !$1475 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_3in_XPS_R-34:cost = 3095             !$3095 is assumed cost for Prince George LEEP optimisation
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
 *option:Stud_2x6_4in_XPS_R-39:value:2 = 39
@@ -2545,7 +2545,7 @@
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
 *option:Stud_2x6_2in_MWB_R-27:value:2 = 24.3          !R24.3 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
-*option:Stud_2x6_2in_MWB_R-27:cost = 1020                !$1020 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_2in_MWB_R-27:cost = 1545                !$1545 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
 *option:Stud_2x6_3in_MWB_R-31:value:2 = 31
@@ -2553,7 +2553,7 @@
 
 *option:Stud_2x6_3.5in_MWB_R-31:value:1 = 0.1945
 *option:Stud_2x6_3.5in_MWB_R-31:value:2 = 30.2          !R30.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
-*option:Stud_2x6_3.5in_MWB_R-31:cost = 2595             !$2595 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_3.5in_MWB_R-31:cost = 3020             !$3020 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
 *option:Stud_2x6_4in_MWB_R-35:value:2 = 35
@@ -2585,7 +2585,7 @@
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
 *option:Stud_2x6_1.5in_EPS_R-24:value:2 = 23.8                  !R23.8 from HALO calculation provided at Vancouver LEEP
-*option:Stud_2x6_1.5in_EPS_R-24:cost = -625                   !-$625 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_1.5in_EPS_R-24:cost = -100                   !-$100 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
 *option:Stud_2x6_2in_EPS_R-26:value:2 = 26
@@ -2605,11 +2605,11 @@
                                                     
 *option:SIPS_8.25in_EPS_R-30:value:1 = 0.1812
 *option:SIPS_8.25in_EPS_R-30:value:2 = 30.3         !R28 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
-*option:SIPS_8.25in_EPS_R-30:cost = 5045              !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
+*option:SIPS_8.25in_EPS_R-30:cost = 7880              !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
                                                     !$5045 is assumed cost for Prince George LEEP optimisation
-*option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256       !R35 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
-*option:SIPS_10.5in_EPS_R-38:value:2 = 37.3           !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
-*option:SIPS_10.5in_EPS_R-38:cost = 5859               !$5859 is assumed cost for Prince George LEEP optimisation
+*option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256       
+*option:SIPS_10.5in_EPS_R-38:value:2 = 41.5           !R41.5 is value from manufacturer. Not sure if it includes siding and airfilms.
+*option:SIPS_10.5in_EPS_R-38:cost = 10680               !$10680 is assumed cost for Prince George LEEP optimisation
  
 *option:DblStud_12in_cell_R-41:value:1 = 0.2464
 *option:DblStud_12in_cell_R-41:value:2 = 41.2        !R41.2 from HPO R22+ Illustrated Guide, assuming 2x4 and 5" gap, R4/in for dense pack 
@@ -3105,14 +3105,14 @@ Whitehorse Wall Options (Code is R28)
 *option:4in_Ext_Rigid_XPS:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:4in_Ext_Rigid_XPS:value:4 = 20        ! Ext wall added R-value
 *option:4in_Ext_Rigid_XPS:value:5 = NA        ! Under slab added R-value
-*option:4in_Ext_Rigid_XPS:cost:total = 2100   !$2100 assumed cost for XPS added to basement in LEEP Prince George
+*option:4in_Ext_Rigid_XPS:cost:total = 1525   !$1525 assumed cost for XPS added to basement in LEEP Prince George
 
 *option:4in_Ext_Rigid_XPS_R10_under:value:1 = BCEB_4_ALL  ! Change all Basements in model
 *option:4in_Ext_Rigid_XPS_R10_under:value:2 = NA        !BsmIntR20
 *option:4in_Ext_Rigid_XPS_R10_under:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:4in_Ext_Rigid_XPS_R10_under:value:4 = 20        ! Ext wall added R-value
 *option:4in_Ext_Rigid_XPS_R10_under:value:5 = 10        ! Under slab added R-value
-*option:4in_Ext_Rigid_XPS_R10_under:cost:total = 5515   !2100 for exterior and 3315 for underslab XPS
+*option:4in_Ext_Rigid_XPS_R10_under:cost:total = 4840  !1525 for exterior and 3315 for underslab XPS
 
 
 *attribute:end
@@ -3543,7 +3543,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-ecm:value:14 = 96      ! Efficiency
 *option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
 *option:gas-furnace-ecm:value:16 = true    ! EE motor
-*option:gas-furnace-ecm:cost:total    = 1355   !Low capacity furnace cost 1355
+*option:gas-furnace-ecm:cost:total    = -20   !Low capacity furnace cost -20
 
 *option:gas-furnace-psc:value:1 = basefurnace_AC-gas-psc-motor.hvac
 *option:gas-furnace-psc:value:2 = #-no-GSHP-file
@@ -3644,7 +3644,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:24 = 2                     ! Cut off type : Restricted 
 *option:CCASHP-ecm:value:25 = -20                   ! Cut off temp 
 *option:CCASHP-ecm:value:26 = 25                    ! Operable window area
-*option:CCASHP-ecm:cost:total = 7840                !$7840 Upgrade cost assumed for Prince George LEEP
+*option:CCASHP-ecm:cost:total = 6465                !$6465 Upgrade cost assumed for Prince George LEEP
 
 Reflects southern Ontario costs
 *option:GSHP:value:1 = GSHPv2.hvac
