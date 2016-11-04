@@ -1681,8 +1681,8 @@
 *option:ACH_4:value:1  = 4.0
 *option:ACH_4:cost:total  =  0
 
-*option:ACH_3_5:value:1  = 3.5
-*option:ACH_3_5:cost:total  =  0
+*option:ACH_3_75:value:1  = 3.75
+*option:ACH_3_75:cost:total  =  0
 
 *option:ACH_3:value:1  = 3.0
 *option:ACH_3:cost:total  =  0
@@ -1690,17 +1690,17 @@
 *option:ACH_2_5:value:1  = 2.5
 *option:ACH_2_5:cost:total  =  0
 
-*option:ACH_2:value:1  = 2.0
-*option:ACH_2:cost:total  =  0
+*option:ACH_1_75:value:1  = 1.75
+*option:ACH_1_75:cost:total  = 1305     !$1305 is assumed cost for Prince George LEEP house
 
 *option:ACH_1_5:value:1  = 1.5
 *option:ACH_1_5:cost:total  =  0
 
-*option:ACH_1:value:1  = 1.0
-*option:ACH_1:cost:total  =  0
+*option:ACH_1_25:value:1  = 1.25
+*option:ACH_1_25:cost:total  =  1799     !$1799 is assumed cost for Prince George LEEP house
 
-*option:ACH_0_5:value:1  = 0.5
-*option:ACH_0_5:cost:total  =  0
+*option:ACH_0_6:value:1  = 0.6
+*option:ACH_0_6:cost:total  =  2770      !$2770 is assumed cost for Prince George LEEP house
 
 *option:ACH_0_1:value:1  = 0.1
 *option:ACH_0_1:cost:total  =  0
@@ -2250,7 +2250,7 @@
 *option:HG-avg-Triple:WindowParams:panes = 3
 *option:HG-avg-Triple:WindowParams:SHGC  = 0.44
 *option:HG-avg-Triple:WindowParams:Uval  = 1.08
-*option:HG-avg-Triple:cost:total   = 0   
+*option:HG-avg-Triple:cost:total   = 555                      !$555 is assumed cost for LEEP Prince George optimization
 
 
 *option:LG-avg-Triple:value:1 = LG-avg-Triple
@@ -2269,7 +2269,7 @@
 *option:LG-avg-Triple:WindowParams:panes = 3
 *option:LG-avg-Triple:WindowParams:SHGC  = 0.17
 *option:LG-avg-Triple:WindowParams:Uval  = 1.14
-*option:LG-avg-Triple:cost:total   = 0   
+*option:LG-avg-Triple:cost:total   = 555                        !$555 is assumed cost for LEEP Prince George optimization   
 
 
 *option:LG-i89-Triple-B:value:1 = LG-i89-Triple-B
@@ -2421,11 +2421,11 @@
 
 *option:CeilR50:value:1 = CeilR50                
 *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
-*option:CeilR50:cost:total    =   0     
+*option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Prince George optimization
 
 *option:CeilR60:value:1 =  CeilR60
 *option:CeilR60:value:2 =  NA
-*option:CeilR60:cost:total    =   0  
+*option:CeilR60:cost:total    =  446       !$446 is assumed cost for LEEP Prince George optimization
 
 *option:CeilR70:value:1 =  CeilR70
 *option:CeilR70:value:2 =  NA
@@ -2433,7 +2433,7 @@
 
 *option:CeilR80:value:1 =   NA   !CeilR80
 *option:CeilR80:value:2 =   80
-*option:CeilR80:cost:total    =   0
+*option:CeilR80:cost:total    =   1767      !$1767 is assumed cost for LEEP Prince George optimization
 
 *option:CeilR90:value:1 =   NA   !CeilR90
 *option:CeilR90:value:2 =   90
@@ -2441,7 +2441,7 @@
 
 *option:CeilR100:value:1 =  NA   !CeilR100
 *option:CeilR100:value:2 =  100
-*option:CeilR100:cost:total    = 0 
+*option:CeilR100:cost:total    = 2993        !$2993 is assumed cost for LEEP Prince George optimization 
 
 *option:CeilR110:value:1 =  NA   !CeilR110
 *option:CeilR110:value:2 =  110
@@ -2529,11 +2529,11 @@
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
 *option:Stud_2x6_2in_XPS_R-29:value:2 = 26.2          !R26.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
-*option:Stud_2x6_2in_XPS_R-29:cost = 0
+*option:Stud_2x6_2in_XPS_R-29:cost = 2060              !$2060 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
 *option:Stud_2x6_3in_XPS_R-34:value:2 = 31.2          !R31.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
-*option:Stud_2x6_3in_XPS_R-34:cost = 0
+*option:Stud_2x6_3in_XPS_R-34:cost = 3095             !$3095 is assumed cost for Prince George LEEP optimisation
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
 *option:Stud_2x6_4in_XPS_R-39:value:2 = 39
@@ -2544,8 +2544,8 @@
 *option:Stud_2x6_1.5in_MWB_R-25:cost = 0
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
-*option:Stud_2x6_2in_MWB_R-27:value:2 = 24.2          !R24.3 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
-*option:Stud_2x6_2in_MWB_R-27:cost = 0
+*option:Stud_2x6_2in_MWB_R-27:value:2 = 24.3          !R24.3 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
+*option:Stud_2x6_2in_MWB_R-27:cost = 1545                !$1545 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
 *option:Stud_2x6_3in_MWB_R-31:value:2 = 31
@@ -2553,7 +2553,7 @@
 
 *option:Stud_2x6_3.5in_MWB_R-31:value:1 = 0.1945
 *option:Stud_2x6_3.5in_MWB_R-31:value:2 = 30.2          !R30.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
-*option:Stud_2x6_3.5in_MWB_R-31:cost = 0
+*option:Stud_2x6_3.5in_MWB_R-31:cost = 3020             !$3020 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
 *option:Stud_2x6_4in_MWB_R-35:value:2 = 35
@@ -2584,8 +2584,8 @@
 *option:Stud_2x4_2in_EPS_R-21:cost = 0
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
-*option:Stud_2x6_1.5in_EPS_R-24:value:2 = 23                  !R23  linear interpolation of R-4.5/in between R4/in and R5/in from R22+ guide
-*option:Stud_2x6_1.5in_EPS_R-24:cost = 0
+*option:Stud_2x6_1.5in_EPS_R-24:value:2 = 23.8                  !R23.8 from HALO calculation provided at Vancouver LEEP
+*option:Stud_2x6_1.5in_EPS_R-24:cost = -100                   !-$100 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
 *option:Stud_2x6_2in_EPS_R-26:value:2 = 26
@@ -2593,11 +2593,7 @@
 
 *option:Stud_2x6_2.5in_EPS_R-30:value:1 = 0.1634
 *option:Stud_2x6_2.5in_EPS_R-30:value:2 = 29.9               !Changed to a R24 batt, with 2.5 EPS, R29.9 came from HALO calculation for CoV LEEP
-*option:Stud_2x6_2.5in_EPS_R-30:cost = 0
-
-*option:Stud_2x6_3in_EPS_R-30:value:1 = 0.1754
-*option:Stud_2x6_3in_EPS_R-30:value:2 = 30
-*option:Stud_2x6_3in_EPS_R-30:cost = 0
+*option:Stud_2x6_2.5in_EPS_R-30:cost = 4830                  !$4830 is assumed cost for Prince George LEEP optimisation
 
 *option:Stud_2x6_4in_EPS_R-34:value:1 = 0.2003
 *option:Stud_2x6_4in_EPS_R-34:value:2 = 34
@@ -2606,22 +2602,22 @@
 *option:SIPS_6.5in_EPS_R-24:value:1 = 0.1367
 *option:SIPS_6.5in_EPS_R-24:value:2 = 23.3           !R21 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
 *option:SIPS_6.5in_EPS_R-24:cost = 0               !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
-
-*option:SIPS_8.25in_EPS_R-38:value:1 = 0.1812
-*option:SIPS_8.25in_EPS_R-38:value:2 = 30.3         !R28 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
-*option:SIPS_8.25in_EPS_R-38:cost = 0              !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
-
-*option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256
-*option:SIPS_10.5in_EPS_R-38:value:2 = 38
-*option:SIPS_10.5in_EPS_R-38:cost = 0
-
+                                                    
+*option:SIPS_8.25in_EPS_R-30:value:1 = 0.1812
+*option:SIPS_8.25in_EPS_R-30:value:2 = 30.3         !R28 based on SIP Association http://www.sips.org/technical-information/sip-r-values-calculated-r-values
+*option:SIPS_8.25in_EPS_R-30:cost = 7880              !Added R-2.3 for cladding, air cavity and air films based on Illustrated guide to 9.36
+                                                    !$5045 is assumed cost for Prince George LEEP optimisation
+*option:SIPS_10.5in_EPS_R-38:value:1 = 0.2256       
+*option:SIPS_10.5in_EPS_R-38:value:2 = 41.5           !R41.5 is value from manufacturer. Not sure if it includes siding and airfilms.
+*option:SIPS_10.5in_EPS_R-38:cost = 10680               !$10680 is assumed cost for Prince George LEEP optimisation
+ 
 *option:DblStud_12in_cell_R-41:value:1 = 0.2464
-*option:DblStud_12in_cell_R-41:value:2 = 41
-*option:DblStud_12in_cell_R-41:cost = 0
+*option:DblStud_12in_cell_R-41:value:2 = 41.2        !R41.2 from HPO R22+ Illustrated Guide, assuming 2x4 and 5" gap, R4/in for dense pack 
+*option:DblStud_12in_cell_R-41:cost = 3805           !$3805 is assumed cost for Prince George LEEP optimisation
 
 *option:DblStud_10in_cell_R-34:value:1 = 0.1982
-*option:DblStud_10in_cell_R-34:value:2 = 34
-*option:DblStud_10in_cell_R-34:cost = 0
+*option:DblStud_10in_cell_R-34:value:2 = 33.2        !R33.2 from HPO R22+ Illustrated Guide, assuming 2x4 and 3" gap, R4/in for dense pack
+*option:DblStud_10in_cell_R-34:cost = 3055           !$3055 is assumed cost for Prince George LEEP optimisation
 
 
 !-----------------------------------------------------------------------
@@ -3076,6 +3072,48 @@ Whitehorse Wall Options (Code is R28)
 *option:Rigid+BattR30-R10BSlab:value:5 = 10        ! Under slab added R-value
 *option:Rigid+BattR30-R10BSlab:cost:total = 0
 
+*option:LEEP_Base_Case_FDN: value:1 = BCIN_1_ALL  ! Change all Basements in model
+*option:LEEP_Base_Case_FDN:value:2 = NA        !BsmIntR20
+*option:LEEP_Base_Case_FDN:value:3 = 14.1        ! 2x6 wall with air film
+*option:LEEP_Base_Case_FDN:value:4 = NA        ! Ext wall added R-value
+*option:LEEP_Base_Case_FDN:value:5 = NA        ! Under slab added R-value
+*option:LEEP_Base_Case_FDN:cost:total = 0
+
+*option:LEEP_BaseFDN_R10_under:value:1 = BCIB_1_ALL  ! Change all Basements in model
+*option:LEEP_BaseFDN_R10_under:value:2 = NA        !BsmIntR20
+*option:LEEP_BaseFDN_R10_under:value:3 = 14.1        ! 2x6 wall with air film
+*option:LEEP_BaseFDN_R10_under:value:4 = NA        ! Ext wall added R-value
+*option:LEEP_BaseFDN_R10_under:value:5 = 10        ! Under slab added R-value
+*option:LEEP_BaseFDN_R10_under:cost:total = 3315    !Assumed cost of $3315 for LEEP Prince George underslab insulation
+
+*option:LEEP_BaseFDN_2inMWBext:value:1 = BCCN_3_ALL  ! Change all Basements in model
+*option:LEEP_BaseFDN_2inMWBext:value:2 = NA        !BsmIntR20
+*option:LEEP_BaseFDN_2inMWBext:value:3 = 14.1        ! 2x6 wall with air film
+*option:LEEP_BaseFDN_2inMWBext:value:4 = 8        ! Ext wall added R-value, 2" of mineral wall board, assume R4/in
+*option:LEEP_BaseFDN_2inMWBext:value:5 = NA        ! Under slab added R-value
+*option:LEEP_BaseFDN_2inMWBext:cost:total = 3005    !$3005 assumed cost for MWB added to basement in LEEP Prince George
+
+*option:LEEP_BaseFDN_2inMWBext_R10_under:value:1 = BCCB_4_ALL  ! Change all Basements in model
+*option:LEEP_BaseFDN_2inMWBext_R10_under:value:2 = NA        !BsmIntR20
+*option:LEEP_BaseFDN_2inMWBext_R10_under:value:3 = 14.1        ! 2x6 wall with air film
+*option:LEEP_BaseFDN_2inMWBext_R10_under:value:4 = 8        ! Ext wall added R-value, 2" of mineral wall board, assume R4/in
+*option:LEEP_BaseFDN_2inMWBext_R10_under:value:5 = 10        ! Under slab added R-value
+*option:LEEP_BaseFDN_2inMWBext_R10_under:cost:total = 6320   !$3315 underslab + 3005 for MWB  
+
+*option:4in_Ext_Rigid_XPS:value:1 = BCEN_2_ALL  ! Change all Basements in model
+*option:4in_Ext_Rigid_XPS:value:2 = NA        !BsmIntR20
+*option:4in_Ext_Rigid_XPS:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:4in_Ext_Rigid_XPS:value:4 = 20        ! Ext wall added R-value
+*option:4in_Ext_Rigid_XPS:value:5 = NA        ! Under slab added R-value
+*option:4in_Ext_Rigid_XPS:cost:total = 1525   !$1525 assumed cost for XPS added to basement in LEEP Prince George
+
+*option:4in_Ext_Rigid_XPS_R10_under:value:1 = BCEB_4_ALL  ! Change all Basements in model
+*option:4in_Ext_Rigid_XPS_R10_under:value:2 = NA        !BsmIntR20
+*option:4in_Ext_Rigid_XPS_R10_under:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:4in_Ext_Rigid_XPS_R10_under:value:4 = 20        ! Ext wall added R-value
+*option:4in_Ext_Rigid_XPS_R10_under:value:5 = 10        ! Under slab added R-value
+*option:4in_Ext_Rigid_XPS_R10_under:cost:total = 4840  !1525 for exterior and 3315 for underslab XPS
+
 
 *attribute:end
 
@@ -3496,16 +3534,16 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-ecm:value:5 = 
 *option:gas-furnace-ecm:value:6 = shoulder-ideal.ctl
 *option:gas-furnace-ecm:value:7 = Furnace
-*option:gas-furnace-ecm:value:8 = AirConditioning
+*option:gas-furnace-ecm:value:8 = None
 *option:gas-furnace-ecm:value:9 = 2
 *option:gas-furnace-ecm:value:10 = 2       ! Spark ignition
-*option:gas-furnace-ecm:value:11 = 2       ! Calculated
-*option:gas-furnace-ecm:value:12 = NA      ! Capacity value will be calculated
+*option:gas-furnace-ecm:value:11 = 2       ! User specified capacity
+*option:gas-furnace-ecm:value:12 = NA      ! Low capacity furnace 
 *option:gas-furnace-ecm:value:13 = true    ! SS
-*option:gas-furnace-ecm:value:14 = 94      ! Efficiency
+*option:gas-furnace-ecm:value:14 = 96      ! Efficiency
 *option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
 *option:gas-furnace-ecm:value:16 = true    ! EE motor
-*option:gas-furnace-ecm:cost:total    = 0
+*option:gas-furnace-ecm:cost:total    = -20   !Low capacity furnace cost -20
 
 *option:gas-furnace-psc:value:1 = basefurnace_AC-gas-psc-motor.hvac
 *option:gas-furnace-psc:value:2 = #-no-GSHP-file
@@ -3514,11 +3552,11 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-psc:value:5 = 
 *option:gas-furnace-psc:value:6 = shoulder-ideal.ctl
 *option:gas-furnace-psc:value:7 = Furnace
-*option:gas-furnace-psc:value:8 = AirConditioning
+*option:gas-furnace-psc:value:8 = None
 *option:gas-furnace-psc:value:9 = 2
 *option:gas-furnace-psc:value:10 = 2       ! Spark ignition
-*option:gas-furnace-psc:value:11 = 2       ! Calculated
-*option:gas-furnace-psc:value:12 = NA      ! Capacity value will be calculated
+*option:gas-furnace-psc:value:11 = 2       ! User specified
+*option:gas-furnace-psc:value:12 = NA      ! Capacity value
 *option:gas-furnace-psc:value:13 = true    ! SS
 *option:gas-furnace-psc:value:14 = 94      ! Efficiency
 *option:gas-furnace-psc:value:15 = 1       ! Auto fan control
@@ -3591,7 +3629,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP-ecm:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:CCASHP-ecm:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP-ecm:value:12 =  6                    ! H2K: Capacity value.     
+*option:CCASHP-ecm:value:12 =  NA                    ! H2K: Capacity value.     
 *option:CCASHP-ecm:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP-ecm:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP-ecm:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -3606,7 +3644,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:24 = 2                     ! Cut off type : Restricted 
 *option:CCASHP-ecm:value:25 = -20                   ! Cut off temp 
 *option:CCASHP-ecm:value:26 = 25                    ! Operable window area
-*option:CCASHP-ecm:cost:total = 0
+*option:CCASHP-ecm:cost:total = 6465                !$6465 Upgrade cost assumed for Prince George LEEP
 
 Reflects southern Ontario costs
 *option:GSHP:value:1 = GSHPv2.hvac
@@ -3646,14 +3684,14 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
 *option:ComboHeatA:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:ComboHeatA:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:ComboHeatA:value:12 = 23900              ! H2K: Type 1: Capacity value. 
+*option:ComboHeatA:value:12 = NA              ! H2K: Type 1: Capacity value. 
 *option:ComboHeatA:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
 *option:ComboHeatA:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
 *option:ComboHeatA:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
 *option:ComboHeatA:value:16 = true               ! H2K: EE motor (true/false) 
 *option:ComboHeatA:value:27  = Navien^America    ! P9 manufacturer 
 *option:ComboHeatA:value:28  = 13-06-M0424-2     ! P9 model 
-*option:ComboHeatA:value:29  = 0.95              ! P9 TPF
+*option:ComboHeatA:value:29  = 0.98              ! P9 TPF
 *option:ComboHeatA:value:30  = 1463              ! P9 Annual energy use 
 *option:ComboHeatA:value:31  = 0.95              ! P9 WHPF2*option
 *option:ComboHeatA:value:32  = 58300             ! P9 Burner input 
@@ -3675,7 +3713,7 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:48  = 117               ! P9 BlowerPower - 40
 *option:ComboHeatA:value:49  = 418               ! P9 BlowerPower - 100 
 
-*option:ComboHeatA:cost:total = 0
+*option:ComboHeatA:cost:total = 2175             !$2175 cost for LEEP Prince George
 
 
 
@@ -3791,21 +3829,21 @@ Reflects southern Ontario costs
 *option:HRV_60:value:2 = 
 *option:HRV_60:value:3 = 1     ! F326
 *option:HRV_60:value:4 = 1     ! Forced air heating ductwork
-*option:HRV_60:value:5 = 480   ! Min./Day
+*option:HRV_60:value:5 = 1440   ! Min./Day
 *option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
-*option:HRV_60:value:7 = 60    ! Eff% @ Rating1
-*option:HRV_60:value:8 = 60    ! Eff% @ Rating2
-*option:HRV_60:cost:total = 0 
+*option:HRV_60:value:7 = 70    ! Eff% @ Rating1
+*option:HRV_60:value:8 = 61    ! Eff% @ Rating2
+*option:HRV_60:cost:total = 1386       !$1386 cost assumed for LEEP Prince George optimization
 
 *option:HRV_81:value:1 = HRV.vnt
 *option:HRV_81:value:2 = 
 *option:HRV_81:value:3 = 1     ! F326
 *option:HRV_81:value:4 = 1     ! Forced air heating ductwork
-*option:HRV_81:value:5 = 480   ! Min./Day
+*option:HRV_81:value:5 = 1440   ! Min./Day
 *option:HRV_81:value:6 = 60    ! L/s (exhaust = supply)
-*option:HRV_81:value:7 = 81    ! Eff% @ Rating1
-*option:HRV_81:value:8 = 81    ! Eff% @ Rating2
-*option:HRV_81:cost:total = 0 
+*option:HRV_81:value:7 = 78    ! Eff% @ Rating1
+*option:HRV_81:value:8 = 72    ! Eff% @ Rating2
+*option:HRV_81:cost:total = 2314   !$2314 cost assumed for LEEP Prince George optimization
 
 *attribute:end 
 
@@ -3940,8 +3978,8 @@ Reflects southern Ontario costs
 *option:BaseDHW:value:1 = BaseDHW.dhw
 *option:BaseDHW:value:2 = 2         ! Gas
 *option:BaseDHW:value:3 = 2         ! Conventional Tank
-*option:BaseDHW:value:4 = 151.4     ! Litres (40 USGal)
-*option:BaseDHW:value:5 = 0.5543    ! EF
+*option:BaseDHW:value:4 = 190     ! Litres (50 USGal)
+*option:BaseDHW:value:5 = 0.67    ! EF
 *option:BaseDHW:value:6 = NA        
 *option:BaseDHW:value:7 = 76.2
 *option:BaseDHW:cost:total = 0
@@ -3968,10 +4006,10 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:2 = 2         ! Gas
 *option:GasInstantaneous:value:3 = 5         ! Instantaneous
 *option:GasInstantaneous:value:4 = 0         ! Litres
-*option:GasInstantaneous:value:5 = 0.90    ! EF
+*option:GasInstantaneous:value:5 = 0.95    ! EF
 *option:GasInstantaneous:value:6 = NA        
 *option:GasInstantaneous:value:7 = 0
-*option:GasInstantaneous:cost:total    = 0
+*option:GasInstantaneous:cost:total = 925     !$925 assumed cost for instantaneous hot water heater 
 
 
 
@@ -3989,9 +4027,9 @@ Reflects southern Ontario costs
 *option:HPHotWater:value:3 = 7         ! Integrated Heat Pump
 *option:HPHotWater:value:4 = 189.3     ! Litres (50 USGl)
 *option:HPHotWater:value:5 = 0.9       ! EF (must be 0.1 - 1.0) H2K help prescibes 0.9
-*option:HPHotWater:value:6 = 2.5       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
+*option:HPHotWater:value:6 = 2.61       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
 *option:HPHotWater:value:7  = NA
-*option:HPHotWater:cost:total    = 0
+*option:HPHotWater:cost:total    = 1185   !$1185 assumed cost for heat pump water heater 
 
 
 
@@ -4044,7 +4082,7 @@ Reflects southern Ontario costs
 *option:DWHR-eff-30:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
 *option:DWHR-eff-30:value:9   = 4.53          ! Shower lenght (minutes)
 *option:DWHR-eff-30:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-30:cost:total = 0
+*option:DWHR-eff-30:cost:total = 615           !$615 assumed cost for LEEP Prince George 
 
 *option:DWHR-eff-42:value:1   = true          ! Has DHWR? true/false
 *option:DWHR-eff-42:value:2   = false         ! DWHR Preheat shower only "true" or "false"
@@ -4068,7 +4106,7 @@ Reflects southern Ontario costs
 *option:DWHR-eff-55:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
 *option:DWHR-eff-55:value:9   = 4.53          ! Shower lenght (minutes)
 *option:DWHR-eff-55:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-55:cost:total = 0
+*option:DWHR-eff-55:cost:total = 820            !$820 assumed cost for LEEP Prince George 
 
 
 *attribute:end
@@ -4683,14 +4721,21 @@ Reflects southern Ontario costs
 *option:NA:value:6 = NA
 *option:NA:cost:total  = 0
 
-*option:MonoSi-50m2:value:1 = 50 
-*option:MonoSi-50m2:value:2 = 43
-*option:MonoSi-50m2:value:3 = 0
-*option:MonoSi-50m2:value:4 = 1
-*option:MonoSi-50m2:value:5 = 90
-*option:MonoSi-50m2:value:6 = 90
-*option:MonoSi-50m2:cost:total = 0
+*option:MonoSi-5kW:value:1 = 53           !53m2 is required area for 5 kW for Mono-Si
+*option:MonoSi-5kW:value:2 = 22.6           !22.6 for 5-12 roof
+*option:MonoSi-5kW:value:3 = 0
+*option:MonoSi-5kW:value:4 = 1
+*option:MonoSi-5kW:value:5 = 90
+*option:MonoSi-5kW:value:6 = 90
+*option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system for Prince George LEEP
 
+*option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
+*option:MonoSi-10kW:value:2 = 22.6       !22.6 for 5-12 roof
+*option:MonoSi-10kW:value:3 = 0
+*option:MonoSi-10kW:value:4 = 1
+*option:MonoSi-10kW:value:5 = 90
+*option:MonoSi-10kW:value:6 = 90
+*option:MonoSi-10kW:cost:total = 33395       !$33395 assumed cost for 10 kW PV system for Prince George LEEP
 
 *option:MonoSi-200m2:value:1 = 200
 *option:MonoSi-200m2:value:2 = 43

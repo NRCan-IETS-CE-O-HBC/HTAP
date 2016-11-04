@@ -1221,7 +1221,6 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
 			
-			
                sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
                sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
                
@@ -1449,8 +1448,7 @@ def processFile(filespec)
                   end    
     
 			   
-			# ASF 06-Oct-2016 - Tags for P.9 performance start here. ()   
-            
+               # ASF 06-Oct-2016 - Tags for P.9 performance start here. ()   
 			
                elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
                     sysType1.each do |sysType1Name|
@@ -1638,15 +1636,7 @@ def processFile(filespec)
                      end
                   end				  
 				  
-				  
-				  
-				  
-			
-				  
-				  
-               end # END of elsif ( tag = ...
-
-
+               end # END of elsif under HVACSystem section
 
 			  
             # HRV System
@@ -1730,8 +1720,8 @@ def processFile(filespec)
                
             # PV - internal. Uses H2K PV Generation model
             # Limited number of parameters available in options file.
-			#
-			# ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
+            #
+            # ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
             #----------------------------------------------------------------------------
 						
             elsif ( choiceEntry =~ /Opt-H2K-PV/ )
@@ -2765,11 +2755,12 @@ def runsims( direction )
                keepTrying = false   # Give up.
             end
            
-            # Forceably kill process if needed
-            begin 
+            # Forceably kill process, if needed
+            begin
                Process.kill('KILL', pid)
-            rescue 
-            end 
+            rescue
+               # Do nothing, the normal case - PID already ended.
+            end
             sleep(1)
          end 
       end
@@ -2834,11 +2825,13 @@ def postprocess( scaleData )
       fatalerror("Could not read Browse.Rpt.\n")
    end
 
-   bReadFuelCosts = false
-   if ( $versionMajor_H2K.to_i >= 11 && $versionMinor_H2K.to_i >= 1 && $versionBuild_H2K.to_i >= 82 )
-      bReadFuelCosts = true
+   # H2K XML file for V11.1 b82 and greater contains "ActualFuelCosts" (previous versions did not)!
+   bReadFuelCostsFromBrowseRpt = false
+   if ( $versionMajor_H2K.to_i == 11 && $versionMinor_H2K.to_i == 1 && $versionBuild_H2K.to_i < 82)
+      # H2K XML file does NOT contains "ActualFuelCosts" - read from Browse.Rpt file
+      bReadFuelCostsFromBrowseRpt = true
    else
-      # H2K V11.1 b82 contains "ActualFuelCosts" (previous version did not)!
+      # H2K XML file contains "ActualFuelCosts"
       locationText = "HouseFile/AllResults/Results/Annual/ActualFuelCosts"
       $gAvgCost_Electr += h2kPostElements[locationText].attributes["electrical"].to_f * scaleData
       $gAvgCost_NatGas += h2kPostElements[locationText].attributes["naturalGas"].to_f * scaleData
@@ -2865,7 +2858,7 @@ def postprocess( scaleData )
             lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
             lineIn.strip!
             $gERSNum = lineIn.to_f     # Use * scaleData?
-         elsif ( bReadFuelCosts && lineIn =~ /^\$/ )
+         elsif ( bReadFuelCostsFromBrowseRpt && lineIn =~ /^\$/ )
             valuesArr = lineIn.split()   # Uses spaces by default to split-up line
             $gAvgCost_Electr += valuesArr[1].to_f * scaleData
             $gAvgCost_NatGas += valuesArr[2].to_f * scaleData
@@ -2897,7 +2890,6 @@ def postprocess( scaleData )
    $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
    $PVInt = $gChoices["Opt-H2K-PV"]   # Input examples: "MonoSi-50m2", "NA"
 
-   
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
    
       houseCode =  element.attributes["houseCode"]
@@ -2913,11 +2905,10 @@ def postprocess( scaleData )
       if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
          
-		 # ASF 14-10-2016: No longer using the totaL consumption from the set, because this number doesn't align with the sum of all end uses.
-		 # 0 this number is computed again below. 
-		 # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
+         # ASF 14-10-2016: No longer using the total consumption from the set, because this number doesn't align with the sum of all end uses.
+         # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          
-		 $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -2946,25 +2937,25 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
 	  
-         $gResults[houseCode]["avgFueluseEleckWh"]   = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
+         $gResults[houseCode]["avgFueluseEleckWh"]  = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
 
-         $gResults[houseCode]["avgFueluseNatGasM3"]  = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
+         $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
 
-         $gResults[houseCode]["avgFueluseOilL"]      = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
+         $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
 
-         $gResults[houseCode]["avgFuelusePropaneL"]  = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
+         $gResults[houseCode]["avgFuelusePropaneL"] = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
 
-         $gResults[houseCode]["avgFuelCostsTotal$"] =  $gResults[houseCode]["avgFuelCostsElec$"] +
-                                     $gResults[houseCode]["avgFuelCostsNatGas$"] +
-                                     $gResults[houseCode]["avgFuelCostsOil$"] +
-                                     $gResults[houseCode]["avgFuelCostsPropane$"] +
-                                     $gResults[houseCode]["avgFuelCostsWood$"] 
+         $gResults[houseCode]["avgFuelCostsTotal$"] = $gResults[houseCode]["avgFuelCostsElec$"] +
+                                                      $gResults[houseCode]["avgFuelCostsNatGas$"] +
+                                                      $gResults[houseCode]["avgFuelCostsOil$"] +
+                                                      $gResults[houseCode]["avgFuelCostsPropane$"] +
+                                                      $gResults[houseCode]["avgFuelCostsWood$"] 
 
-          $gResults[houseCode]["avgEnergyTotalGJ"]  =  $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
+          $gResults[houseCode]["avgEnergyTotalGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
 									 
 	   
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
@@ -2974,8 +2965,8 @@ def postprocess( scaleData )
             monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             monthArr.each do |mth|
                # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
-               #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
-			   # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
+               #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+               # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
                pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
                pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
             end
@@ -3025,9 +3016,9 @@ def postprocess( scaleData )
    
    #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
-   # ASF 03-Oct-2016 : Not sure this section is working; pv costs may need to be determined 
-   #                   based hard sizes in the options file, and not computed from h2k Calcs. 
-   #                   requires a little more though. 
+   # ASF 03-Oct-2016 : Not sure this section is working; PV costs may need to be determined 
+   #                   based on hard sizes in the options file, and not computed from h2k Calcs. 
+   #                   Requires a little more thought. 
    # PV Data...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
@@ -3083,7 +3074,6 @@ def postprocess( scaleData )
    $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
    
-   # THIS ISN"T WORKING YET  
    # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
    if ( $PVInt != "NA" )
      
@@ -3128,9 +3118,9 @@ def postprocess( scaleData )
 
    $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
             $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
-		    $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
-	 	    $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
-		    $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
+            $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
+            $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
+            $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
    
    stream_out("\n Energy Consumption: \n\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
@@ -3145,8 +3135,6 @@ def postprocess( scaleData )
 		stream_out ("       ( check: should = #{$check.round(1)} ?  ) \n ") 
     end 
 	
-   
-   
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
@@ -3159,7 +3147,7 @@ def postprocess( scaleData )
    stream_out ( "\n")
    stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPvRevenue'].round(2)} (PV revenue, #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gAvgPVRevenue.round(2)} (Net utility costs).\n")
+   stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPvRevenue'].round(2)} (Net utility costs).\n")
    stream_out ( "\n\n")
    
    stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
@@ -4075,7 +4063,7 @@ end
 
 $gAvgCost_Total = $gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood + $gAvgCost_Pellet
 
-$gAvgPVRevenue = $gAvgPVOutput_kWh * $PVTarrifDollarsPerkWh
+$gAvgPVRevenue = $gResults[$outputHCode]['avgElecPVGenkWh'] * $PVTarrifDollarsPerkWh
 
 $optCOProxy = 0
 $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
@@ -4094,8 +4082,8 @@ end
 ## These need to be updated. 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total.round(2)}   \n" )
-fSUMMARY.write( "Util-PV-revenue   =  #{$gAvgPVRevenue.round(2)}    \n" )
-fSUMMARY.write( "Util-Bill-Net     =  #{($gAvgCost_Total-$gAvgPVRevenue).round(2)} \n" )
+fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPvRevenue'].round(2)}    \n" )
+fSUMMARY.write( "Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPvRevenue'].round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Elec    =  #{$gAvgCost_Electr.round(2)}  \n" )
 fSUMMARY.write( "Util-Bill-Gas     =  #{$gAvgCost_NatGas.round(2)}  \n" )
 fSUMMARY.write( "Util-Bill-Prop    =  #{$gAvgCost_Propane.round(2)} \n" )
@@ -4103,7 +4091,7 @@ fSUMMARY.write( "Util-Bill-Oil     =  #{$gAvgCost_Oil.round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Wood    =  #{$gAvgCost_Wood.round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )
 
-fSUMMARY.write( "Energy-PV-kWh     =  #{$gAvgPVOutput_kWh.round(1)} \n" )
+fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
