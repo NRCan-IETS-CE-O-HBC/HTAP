@@ -1,0 +1,256 @@
+/*
+
+ Genopt-H2K-YHC-CMD.GO-cmd:  GenOpt command file for YHC optimization runs
+
+*/
+
+Vary{
+
+   // ==========================================
+   // Parameters that configure the simulation 
+   // ==========================================
+  
+   // Location  
+   Parameter{ 
+      Name = GOtag:Opt-Location; 
+      Ini  = 1;
+      Values = "Whitehorse";      
+      
+      // Buildability locations (12):
+      //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
+      
+      // Locations to match typical ESP-r runs (11):
+      //Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax"; 
+
+      // Available H2K locations (116 - locations already entered for ESP-r in lower case):
+      //Values = "ABBOTSFORD, CASTLEGAR, FORTNELSON, FORTSTJOHN, Kamloops, PORTHARDY, PrinceGeorge, PRINCERUPERT, SMITHERS, SUMMERLAND, Vancouver, VICTORIA, WILLIAMSLAKE, COMOX, CRANBROOK, QUESNEL, SANDSPIT, TERRACE, TOFINO, WHISTLER, Calgary, Edmonton, FORTMCMURRAY, LETHBRIDGE, ROCKYMOUNTAINHOUSE, SUFFIELD, COLDLAKE, CORONATION, GRANDEPRAIRIE, MEDICINEHAT, PEACERIVER, REDDEER, ESTEVAN, PRINCEALBERT, Regina, SASKATOON, SWIFTCURRENT, URANIUMCITY, BROADVIEW, MOOSEJAW, NORTHBATTLEFORD, YORKTON, BRANDON, CHURCHILL, THEPAS, THOMPSON, Winnipeg, DAUPHIN, PORTAGELAPRAIRIE, BIGTROUTLAKE, KINGSTON, LONDON, MUSKOKA, NORTHBAY, Ottawa, SAULTSTEMARIE, SIMCOE, SUDBURY, THUNDERBAY, TIMMINS, Toronto, WINDSOR, GOREBAY, KAPUSKASING, KENORA, SIOUXLOOKOUT, TORONTOMETRESSTN, TRENTON, WIARTON, BAGOTVILLE, KUUJJUAQ, Montreal, KUUJJUARAPIK, Quebec, SCHEFFERVILLE, SEPTILES, SHERBROOKE, VALDOR, BAIECOMEAU, LAGRANDERIVIERE, MONTJOLI, MONTREALMIRABEL, STHUBERT, STEAGATHEDESMONTS, CHATHAM, Fredricton, MONCTON, SAINTJOHN, CHARLO, GREENWOOD, Halifax, SYDNEY, TRURO, YARMOUTH, CHARLOTTETOWN, SUMMERSIDE, BONAVISTA, GANDER, GOOSEBAY, SAINTJOHNS, STEPHENVILLE, CARTWRIGHT, DANIELSHARBOUR, DEERLAKE, WABUSHLAKE, Whitehorse, DAWSONCITY, FORTSMITH, Inuvik, NORMANWELLS, Yellowknife, BAKERLAKE, IQALUIT, RESOLUTE, CORALHARBOUR, HALLBEACH";
+   }
+  
+   // =============================================
+   // Parameters that change the building design
+   // =============================================
+  
+   // Air tightness: 
+   Parameter{
+     Name    =  GOtag:Opt-AirTightness;
+     Ini     =  1;
+     Values  =  "Generic";
+   }    
+   
+   // Setting the ACH in the AIM-2 input file
+   Parameter{ 
+      Name = GOtag:Opt-ACH; 
+      Ini  = 1;
+      Values = "ACH_7, ACH_5, ACH_3, ACH_1_5";//, ACH_1, ACH_0_5"; //NA";
+   }
+
+   // Mainwalls
+   Parameter{   // 
+      Name    =  GOtag:Opt-MainWall;
+      Ini     =  1;
+      Values  =  "NA"; 
+   }
+
+   Parameter{   // 
+      Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
+      Ini     =  1;
+      //Values = "NA";
+      Values  =  "YHC_R-11_30,YHC_R-18_76,YHC_R-24_22,YHC_R-21_30";
+   }
+
+   // H2K Foundations : OBC-min-R12
+   Parameter{   // 
+      Name    =  GOtag:Opt-H2KFoundation;
+      Ini     =  1;
+      Values  = "NA";     //"OBCminR12-Slab0R, OBCminR12-Slab24R";
+   } 
+   
+   // Foundation walls
+   Parameter{   // 
+      Name    =  GOtag:Opt-BasementWallInsulation;
+      Ini     =  1;
+      Values  =  "GenericFoundationWall";
+   } 
+
+   // Basement Slab:
+   Parameter{   // 
+      Name    =  GOtag:Opt-BasementSlabInsulation;
+      Ini     =  1;
+      Values  =  "GenericFoundationSlab";
+   } 
+
+   // Exposed floor
+   Parameter{   // 
+      Name    =  GOtag:Opt-ExposedFloor;
+      Ini     =  1;
+      Values  =  "NA";
+   }    
+   
+   // Ceilings
+   Parameter{   // 
+      Name    =  GOtag:Opt-Ceilings;
+      Ini     =  1;
+      Values  = "CeilR50,CeilR60";   //"CeilR50"
+   }    
+  
+  // Windows
+  Parameter{   // 
+      Name    =  GOtag:Opt-CasementWindows;
+      Ini     =  1;
+      Values  =  "HG-i89-Triple-B,HG-i89-Triple-A";//,LG-HP-Double,MG-HP-Double,MG-i89-Double,HG-HP-Triple,HG-avg-Triple,LG-avg-Triple,LG-i89-Triple-B,LG-i89-Triple-A,LG-HP-Triple";
+   }    
+   
+  // Extra drywall:  OneSheet
+  //                 TwoSheets
+  Parameter{   // 
+      Name    =  GOtag:Ext-DryWall;
+      Ini     =  1;
+      Values  =  "OneSheet";    
+   }    
+   
+   
+  // Floor surface:  wood 
+  Parameter{   // 
+      Name    =  GOtag:Opt-FloorSurface;
+      Ini     =  1;
+      Values  =  "wood";    
+   }       
+ 
+   // SolarDHW: none,
+   Parameter{   // 
+      Name    = GOtag:Opt-DWHRandSDHW; 
+      Ini     = 1; 
+      Values  = "NA";     //"none"; 
+   } 
+  
+   // Conventional DHW:  BaseDHW, 
+   Parameter{ //
+      Name    = GOtag:Opt-DHWSystem;
+      Ini     = 1; 
+      Values  = "ElectricStorage";//,HPHotWater";  //"NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";
+   }
+  
+   // DWHR-System
+   Parameter{ //
+      Name    = GOtag:Opt-DWHRSystem;
+      Ini     = 1; 
+      Values  = "none,DWHR-eff-30";// ,DWHR-eff-42,DWHR-eff-55"; //none";    //"DWHR-eff-30,  DWHR-eff-42,  DWHR-eff-55";
+   }
+  
+  
+   // Heating/cooling
+   Parameter { // 
+      Name   = GOtag:Opt-HVACSystem; 
+      Ini    = 1; 
+      Values = "elec-baseboard, CCASHP, NA";    //basefurnace
+   }
+  
+   // HRV specification
+   Parameter { 
+      Name = GOtag:Opt-HRVSpec; 
+      Ini  = 1; 
+      Values = "NA"; 
+   }
+  
+   // PV: Set to autosize to ensure each run actually achieves NZEH. 
+   // NoPV
+   // SizedPV 
+   Parameter{   // 
+     Name    =  GOtag:Opt-StandoffPV;
+     Ini     =  1;
+     Values  = "NoPV";
+   } 
+
+   // H2K PV (internal)
+   // NA for none
+   // MonoSi-50m2
+   Parameter{   // 
+      Name    =  GOtag:Opt-H2K-PV;
+      Ini     =  1;
+      Values  = "NA";
+   } 
+  
+   //===================================================================
+   // PASSIVE SOLAR: Include or exclude extra windows    
+   //===================================================================
+   Parameter{   // overhang width 
+      Name    =  GOtag:Opt-OverhangWidth;
+      Ini     =  1;
+      Values  =  "BaseOverhang";
+   }            
+  
+   // ===================================================================
+   // Roof pitch 
+   // ===================================================================
+   Parameter {  
+      Name = GOtag:RoofPitch;
+      Ini  = 1; 
+      Values = "NA";    //6-12
+   }
+  
+   // ===================================================================
+   // The following sections define assumptions about how a NZEH home 
+   // is operated/configured, and are not intended to be optimized. 
+   //  A single value should be provided in each case. 
+   // ===================================================================
+
+   // Defining the building attachment
+   Parameter{ 
+      Name = GOtag:Opt-Attachment;  
+      Ini  = 1;
+      Values = "single"; 
+   }
+  
+   Parameter { // 
+      Name   = GOtag:ElecLoadScale; 
+      Ini    = 1;
+      Values = "NoReduction";
+   }
+   
+   Parameter { // 
+      Name   = GOtag:DHWLoadScale; 
+      Ini    = 1;
+      // Value may be one of  OldERS,No-Reduction,EStar,Low-Flow      
+      Values = "OldERS";
+   }
+    
+   // Orientation: for parametric study. Set to one of 
+   // "S, N, E, W, or AVG", "AVG" causes substitute.pl 
+   // to run four simulations (in four different orientations) 
+   // for each set of parameters and average the results. 
+   
+   Parameter{   // 
+      Name    =  GOtag:GOconfig_rotate;
+      Ini     =  1;
+      Values  =  "S";
+   }      
+
+}
+
+OptimizationSettings{
+  MaxIte = 100000;
+  MaxEqualResults = 1000;
+  WriteStepNumber = true;
+}
+
+
+//Algorithm{
+//Main                       = PSOIW;
+//  NeighborhoodTopology      = vonNeumann;
+//  NeighborhoodSize          = 24; // Disregarded for vonNeumann topology
+//  NumberOfParticle          = 23;
+//  NumberOfGeneration        = 2000;
+//  Seed                      = 628;
+//  CognitiveAcceleration     = 2; // 0 < CognitiveAcceleration
+//  SocialAcceleration        = 3; // 0 < SocialAcceleration
+//  MaxVelocityGainContinuous = 1.0;
+//  MaxVelocityDiscrete       = 1.0; // 0 < MaxVelocityDiscrete
+//  InitialInertiaWeight      = 1.2;    // 0 < InitialInertiaWeight
+//  FinalInertiaWeight        = 0;      // 0 < FinalInertiaWeight
+//}
+
+
+Algorithm{
+  Main = Mesh;
+  StopAtError = true; 
+}
