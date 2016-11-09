@@ -1691,16 +1691,16 @@
 *option:ACH_2_5:cost:total  =  0
 
 *option:ACH_1_75:value:1  = 1.75
-*option:ACH_1_75:cost:total  = 1305     !$1305 is assumed cost for Prince George LEEP house
+*option:ACH_1_75:cost:total  = 1804     !$1804 is assumed cost for Kelowna LEEP house
 
 *option:ACH_1_5:value:1  = 1.5
 *option:ACH_1_5:cost:total  =  0
 
 *option:ACH_1_25:value:1  = 1.25
-*option:ACH_1_25:cost:total  =  1799     !$1799 is assumed cost for Prince George LEEP house
+*option:ACH_1_25:cost:total  =  2486     !$2486 is assumed cost for Kelowna LEEP house
 
 *option:ACH_0_6:value:1  = 0.6
-*option:ACH_0_6:cost:total  =  2770      !$2770 is assumed cost for Prince George LEEP house
+*option:ACH_0_6:cost:total  =  3850      !$3850 is assumed cost for Kelowna LEEP house
 
 *option:ACH_0_1:value:1  = 0.1
 *option:ACH_0_1:cost:total  =  0
@@ -2250,7 +2250,7 @@
 *option:HG-avg-Triple:WindowParams:panes = 3
 *option:HG-avg-Triple:WindowParams:SHGC  = 0.44
 *option:HG-avg-Triple:WindowParams:Uval  = 1.08
-*option:HG-avg-Triple:cost:total   = 555                      !$555 is assumed cost for LEEP Prince George optimization
+*option:HG-avg-Triple:cost:total   = 1705                      !$1705 is assumed cost for LEEP Kelowna optimization
 
 
 *option:LG-avg-Triple:value:1 = LG-avg-Triple
@@ -2269,7 +2269,7 @@
 *option:LG-avg-Triple:WindowParams:panes = 3
 *option:LG-avg-Triple:WindowParams:SHGC  = 0.17
 *option:LG-avg-Triple:WindowParams:Uval  = 1.14
-*option:LG-avg-Triple:cost:total   = 555                        !$555 is assumed cost for LEEP Prince George optimization   
+*option:LG-avg-Triple:cost:total   = 1705                        !$1705 is assumed cost for LEEP Kelowna optimization   
 
 
 *option:LG-i89-Triple-B:value:1 = LG-i89-Triple-B
@@ -2421,11 +2421,11 @@
 
 *option:CeilR50:value:1 = CeilR50                
 *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
-*option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Prince George optimization
+*option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Kelowna optimization
 
 *option:CeilR60:value:1 =  CeilR60
 *option:CeilR60:value:2 =  NA
-*option:CeilR60:cost:total    =  446       !$446 is assumed cost for LEEP Prince George optimization
+*option:CeilR60:cost:total    =  498       !$498 is assumed cost for LEEP Kelowna optimization
 
 *option:CeilR70:value:1 =  CeilR70
 *option:CeilR70:value:2 =  NA
@@ -2433,7 +2433,7 @@
 
 *option:CeilR80:value:1 =   NA   !CeilR80
 *option:CeilR80:value:2 =   80
-*option:CeilR80:cost:total    =   1767      !$1767 is assumed cost for LEEP Prince George optimization
+*option:CeilR80:cost:total    =   1972      !$1972 is assumed cost for LEEP Kelowna optimization
 
 *option:CeilR90:value:1 =   NA   !CeilR90
 *option:CeilR90:value:2 =   90
@@ -2441,7 +2441,7 @@
 
 *option:CeilR100:value:1 =  NA   !CeilR100
 *option:CeilR100:value:2 =  100
-*option:CeilR100:cost:total    = 2993        !$2993 is assumed cost for LEEP Prince George optimization 
+*option:CeilR100:cost:total    = 3341        !$3341 is assumed cost for LEEP Kelowna optimization 
 
 *option:CeilR110:value:1 =  NA   !CeilR110
 *option:CeilR110:value:2 =  110
@@ -2529,11 +2529,11 @@
 
 *option:Stud_2x6_2in_XPS_R-29:value:1 = 0.1668
 *option:Stud_2x6_2in_XPS_R-29:value:2 = 26.2          !R26.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
-*option:Stud_2x6_2in_XPS_R-29:cost = 2060              !$2060 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_2in_XPS_R-29:cost = 1835              !$1835 is assumed cost for Kelowna LEEP optimisation
 
 *option:Stud_2x6_3in_XPS_R-34:value:1 = 0.1998
 *option:Stud_2x6_3in_XPS_R-34:value:2 = 31.2          !R31.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R5/in exterior insulation
-*option:Stud_2x6_3in_XPS_R-34:cost = 3095             !$3095 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_3in_XPS_R-34:cost = 3885             !$3885 is assumed cost for Kelowna LEEP optimisation
  
 *option:Stud_2x6_4in_XPS_R-39:value:1 = 0.2324
 *option:Stud_2x6_4in_XPS_R-39:value:2 = 39
@@ -2545,7 +2545,7 @@
 
 *option:Stud_2x6_2in_MWB_R-27:value:1 = 0.1541
 *option:Stud_2x6_2in_MWB_R-27:value:2 = 24.3          !R24.3 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
-*option:Stud_2x6_2in_MWB_R-27:cost = 1545                !$1545 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_2in_MWB_R-27:cost = 2110                !$2110 is assumed cost for Kelowna LEEP optimisation
 
 *option:Stud_2x6_3in_MWB_R-31:value:1 = 0.1812
 *option:Stud_2x6_3in_MWB_R-31:value:2 = 31
@@ -2553,7 +2553,7 @@
 
 *option:Stud_2x6_3.5in_MWB_R-31:value:1 = 0.1945
 *option:Stud_2x6_3.5in_MWB_R-31:value:2 = 30.2          !R30.2 is the Value from the HPO R22+ illustrated guide, R-19batts +R4/in exterior insulation
-*option:Stud_2x6_3.5in_MWB_R-31:cost = 3020             !$3020 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_3.5in_MWB_R-31:cost = 5980             !$5980 is assumed cost for Kelowna LEEP optimisation
 
 *option:Stud_2x6_4in_MWB_R-35:value:1 = 0.2078
 *option:Stud_2x6_4in_MWB_R-35:value:2 = 35
@@ -2585,7 +2585,7 @@
 
 *option:Stud_2x6_1.5in_EPS_R-24:value:1 = 0.1374
 *option:Stud_2x6_1.5in_EPS_R-24:value:2 = 23.8                  !R23.8 from HALO calculation provided at Vancouver LEEP
-*option:Stud_2x6_1.5in_EPS_R-24:cost = -100                   !-$100 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_1.5in_EPS_R-24:cost = -275                   !-$275 is assumed cost for Kelowna LEEP optimisation
 
 *option:Stud_2x6_2in_EPS_R-26:value:1 = 0.1504
 *option:Stud_2x6_2in_EPS_R-26:value:2 = 26
@@ -2593,7 +2593,7 @@
 
 *option:Stud_2x6_2.5in_EPS_R-30:value:1 = 0.1634
 *option:Stud_2x6_2.5in_EPS_R-30:value:2 = 29.9               !Changed to a R24 batt, with 2.5 EPS, R29.9 came from HALO calculation for CoV LEEP
-*option:Stud_2x6_2.5in_EPS_R-30:cost = 4830                  !$4830 is assumed cost for Prince George LEEP optimisation
+*option:Stud_2x6_2.5in_EPS_R-30:cost = 7680                  !$7680 is assumed cost for Kelowna LEEP optimisation
 
 *option:Stud_2x6_4in_EPS_R-34:value:1 = 0.2003
 *option:Stud_2x6_4in_EPS_R-34:value:2 = 34
@@ -2613,11 +2613,11 @@
  
 *option:DblStud_12in_cell_R-41:value:1 = 0.2464
 *option:DblStud_12in_cell_R-41:value:2 = 41.2        !R41.2 from HPO R22+ Illustrated Guide, assuming 2x4 and 5" gap, R4/in for dense pack 
-*option:DblStud_12in_cell_R-41:cost = 3805           !$3805 is assumed cost for Prince George LEEP optimisation
+*option:DblStud_12in_cell_R-41:cost = 7015           !$7015 is assumed cost for Kelowna LEEP optimisation
 
 *option:DblStud_10in_cell_R-34:value:1 = 0.1982
 *option:DblStud_10in_cell_R-34:value:2 = 33.2        !R33.2 from HPO R22+ Illustrated Guide, assuming 2x4 and 3" gap, R4/in for dense pack
-*option:DblStud_10in_cell_R-34:cost = 3055           !$3055 is assumed cost for Prince George LEEP optimisation
+*option:DblStud_10in_cell_R-34:cost = 5530           !$5530 is assumed cost for Kelowna LEEP optimisation
 
 
 !-----------------------------------------------------------------------
@@ -3084,35 +3084,35 @@ Whitehorse Wall Options (Code is R28)
 *option:LEEP_BaseFDN_R10_under:value:3 = 14.1        ! 2x6 wall with air film
 *option:LEEP_BaseFDN_R10_under:value:4 = NA        ! Ext wall added R-value
 *option:LEEP_BaseFDN_R10_under:value:5 = 10        ! Under slab added R-value
-*option:LEEP_BaseFDN_R10_under:cost:total = 3315    !Assumed cost of $3315 for LEEP Prince George underslab insulation
+*option:LEEP_BaseFDN_R10_under:cost:total = 3080    !Assumed cost of $3080 for LEEP Kelowna underslab insulation
 
 *option:LEEP_BaseFDN_2inMWBext:value:1 = BCCN_3_ALL  ! Change all Basements in model
 *option:LEEP_BaseFDN_2inMWBext:value:2 = NA        !BsmIntR20
 *option:LEEP_BaseFDN_2inMWBext:value:3 = 14.1        ! 2x6 wall with air film
 *option:LEEP_BaseFDN_2inMWBext:value:4 = 8        ! Ext wall added R-value, 2" of mineral wall board, assume R4/in
 *option:LEEP_BaseFDN_2inMWBext:value:5 = NA        ! Under slab added R-value
-*option:LEEP_BaseFDN_2inMWBext:cost:total = 3005    !$3005 assumed cost for MWB added to basement in LEEP Prince George
+*option:LEEP_BaseFDN_2inMWBext:cost:total = 3425    !$3425 assumed cost for MWB added to basement in LEEP Kelowna
 
 *option:LEEP_BaseFDN_2inMWBext_R10_under:value:1 = BCCB_4_ALL  ! Change all Basements in model
 *option:LEEP_BaseFDN_2inMWBext_R10_under:value:2 = NA        !BsmIntR20
 *option:LEEP_BaseFDN_2inMWBext_R10_under:value:3 = 14.1        ! 2x6 wall with air film
 *option:LEEP_BaseFDN_2inMWBext_R10_under:value:4 = 8        ! Ext wall added R-value, 2" of mineral wall board, assume R4/in
 *option:LEEP_BaseFDN_2inMWBext_R10_under:value:5 = 10        ! Under slab added R-value
-*option:LEEP_BaseFDN_2inMWBext_R10_under:cost:total = 6320   !$3315 underslab + 3005 for MWB  
+*option:LEEP_BaseFDN_2inMWBext_R10_under:cost:total = 6505   !$3080 underslab + 3425 for MWB  for Kelowna
 
 *option:4in_Ext_Rigid_XPS:value:1 = BCEN_2_ALL  ! Change all Basements in model
 *option:4in_Ext_Rigid_XPS:value:2 = NA        !BsmIntR20
 *option:4in_Ext_Rigid_XPS:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:4in_Ext_Rigid_XPS:value:4 = 20        ! Ext wall added R-value
 *option:4in_Ext_Rigid_XPS:value:5 = NA        ! Under slab added R-value
-*option:4in_Ext_Rigid_XPS:cost:total = 1525   !$1525 assumed cost for XPS added to basement in LEEP Prince George
+*option:4in_Ext_Rigid_XPS:cost:total = 1740   !$1740 assumed cost for XPS added to basement in LEEP Kelowna
 
 *option:4in_Ext_Rigid_XPS_R10_under:value:1 = BCEB_4_ALL  ! Change all Basements in model
 *option:4in_Ext_Rigid_XPS_R10_under:value:2 = NA        !BsmIntR20
 *option:4in_Ext_Rigid_XPS_R10_under:value:3 = NA        ! R for userSpec option (set to NA if use int wall code in tag 2)
 *option:4in_Ext_Rigid_XPS_R10_under:value:4 = 20        ! Ext wall added R-value
 *option:4in_Ext_Rigid_XPS_R10_under:value:5 = 10        ! Under slab added R-value
-*option:4in_Ext_Rigid_XPS_R10_under:cost:total = 4840  !1525 for exterior and 3315 for underslab XPS
+*option:4in_Ext_Rigid_XPS_R10_under:cost:total = 3820  !1740 for exterior and 3080 for underslab XPS for LEEP Kelowna
 
 
 *attribute:end
@@ -3644,7 +3644,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:24 = 2                     ! Cut off type : Restricted 
 *option:CCASHP-ecm:value:25 = -20                   ! Cut off temp 
 *option:CCASHP-ecm:value:26 = 25                    ! Operable window area
-*option:CCASHP-ecm:cost:total = 6465                !$6465 Upgrade cost assumed for Prince George LEEP
+*option:CCASHP-ecm:cost:total = 6465                !$6465 Upgrade cost assumed for Prince George & Kelowna LEEP
 
 Reflects southern Ontario costs
 *option:GSHP:value:1 = GSHPv2.hvac
@@ -3713,7 +3713,7 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:48  = 117               ! P9 BlowerPower - 40
 *option:ComboHeatA:value:49  = 418               ! P9 BlowerPower - 100 
 
-*option:ComboHeatA:cost:total = 2175             !$2175 cost for LEEP Prince George
+*option:ComboHeatA:cost:total = 800             !$2175 cost for LEEP Prince George $800 for Kelowna
 
 
 
@@ -3831,9 +3831,9 @@ Reflects southern Ontario costs
 *option:HRV_60:value:4 = 1     ! Forced air heating ductwork
 *option:HRV_60:value:5 = 1440   ! Min./Day
 *option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
-*option:HRV_60:value:7 = 70    ! Eff% @ Rating1
-*option:HRV_60:value:8 = 61    ! Eff% @ Rating2
-*option:HRV_60:cost:total = 1386       !$1386 cost assumed for LEEP Prince George optimization
+*option:HRV_60:value:7 = 60    ! Eff% @ Rating1     Prince George used 70% at 0, 61% at -25C at $1386
+*option:HRV_60:value:8 = 55    ! Eff% @ Rating2
+*option:HRV_60:cost:total = 1496       !$1496 cost assumed for LEEP Kelowna optimization
 
 *option:HRV_81:value:1 = HRV.vnt
 *option:HRV_81:value:2 = 
@@ -3843,7 +3843,7 @@ Reflects southern Ontario costs
 *option:HRV_81:value:6 = 60    ! L/s (exhaust = supply)
 *option:HRV_81:value:7 = 78    ! Eff% @ Rating1
 *option:HRV_81:value:8 = 72    ! Eff% @ Rating2
-*option:HRV_81:cost:total = 2314   !$2314 cost assumed for LEEP Prince George optimization
+*option:HRV_81:cost:total = 2314   !$2314 cost assumed for LEEP Prince George & Kelowna optimization
 
 *attribute:end 
 
@@ -4009,7 +4009,7 @@ Reflects southern Ontario costs
 *option:GasInstantaneous:value:5 = 0.95    ! EF
 *option:GasInstantaneous:value:6 = NA        
 *option:GasInstantaneous:value:7 = 0
-*option:GasInstantaneous:cost:total = 925     !$925 assumed cost for instantaneous hot water heater 
+*option:GasInstantaneous:cost:total = 925     !$925 assumed cost for instantaneous hot water heater for LEEP Prince George and Kelowna
 
 
 
@@ -4029,7 +4029,7 @@ Reflects southern Ontario costs
 *option:HPHotWater:value:5 = 0.9       ! EF (must be 0.1 - 1.0) H2K help prescibes 0.9
 *option:HPHotWater:value:6 = 2.61       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
 *option:HPHotWater:value:7  = NA
-*option:HPHotWater:cost:total    = 1185   !$1185 assumed cost for heat pump water heater 
+*option:HPHotWater:cost:total    = 1185   !$1185 assumed cost for heat pump water heater for LEEP Prince George and Kelowna
 
 
 
@@ -4082,7 +4082,7 @@ Reflects southern Ontario costs
 *option:DWHR-eff-30:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
 *option:DWHR-eff-30:value:9   = 4.53          ! Shower lenght (minutes)
 *option:DWHR-eff-30:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-30:cost:total = 615           !$615 assumed cost for LEEP Prince George 
+*option:DWHR-eff-30:cost:total = 615           !$615 assumed cost for LEEP Prince George & Kelowna
 
 *option:DWHR-eff-42:value:1   = true          ! Has DHWR? true/false
 *option:DWHR-eff-42:value:2   = false         ! DWHR Preheat shower only "true" or "false"
@@ -4106,7 +4106,7 @@ Reflects southern Ontario costs
 *option:DWHR-eff-55:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
 *option:DWHR-eff-55:value:9   = 4.53          ! Shower lenght (minutes)
 *option:DWHR-eff-55:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-55:cost:total = 820            !$820 assumed cost for LEEP Prince George 
+*option:DWHR-eff-55:cost:total = 820            !$820 assumed cost for LEEP Prince George & Kelowna
 
 
 *attribute:end
@@ -4722,20 +4722,20 @@ Reflects southern Ontario costs
 *option:NA:cost:total  = 0
 
 *option:MonoSi-5kW:value:1 = 53           !53m2 is required area for 5 kW for Mono-Si
-*option:MonoSi-5kW:value:2 = 22.6           !22.6 for 5-12 roof
+*option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
 *option:MonoSi-5kW:value:3 = 0
 *option:MonoSi-5kW:value:4 = 1
 *option:MonoSi-5kW:value:5 = 90
 *option:MonoSi-5kW:value:6 = 90
-*option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system for Prince George LEEP
+*option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system for Prince George & Kelowna LEEP
 
 *option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
-*option:MonoSi-10kW:value:2 = 22.6       !22.6 for 5-12 roof
+*option:MonoSi-10kW:value:2 = 18.4       !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
 *option:MonoSi-10kW:value:3 = 0
 *option:MonoSi-10kW:value:4 = 1
 *option:MonoSi-10kW:value:5 = 90
 *option:MonoSi-10kW:value:6 = 90
-*option:MonoSi-10kW:cost:total = 33395       !$33395 assumed cost for 10 kW PV system for Prince George LEEP
+*option:MonoSi-10kW:cost:total = 33395       !$33395 assumed cost for 10 kW PV system for Prince George & Kelowna LEEP
 
 *option:MonoSi-200m2:value:1 = 200
 *option:MonoSi-200m2:value:2 = 43
@@ -4839,7 +4839,7 @@ Reflects southern Ontario costs
 
 *param:BaseUpgradeCost = 0 !!14216.602
 *param:BaseUtilitiesCost = 0 !1447
-*param:PVTarrifDollarsPerkWh = 0.08
+*param:PVTarrifDollarsPerkWh = 0.0999
 
 ext-parameters:end 
 
