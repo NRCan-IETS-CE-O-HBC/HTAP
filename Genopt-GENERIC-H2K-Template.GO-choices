@@ -23,10 +23,10 @@ Opt-ACH       : %GOtag:Opt-ACH%
 Opt-MainWall                : %GOtag:Opt-MainWall%
 Opt-GenericWall_1Layer_definitions   : %GOtag:Opt-GenericWall_1Layer_definitions%
 Opt-Ceilings                : %GOtag:Opt-Ceilings%
-Opt-BasementSlabInsulation  : %GOtag:Opt-BasementSlabInsulation%
-Opt-BasementWallInsulation  : %GOtag:Opt-BasementWallInsulation%
+!Opt-BasementSlabInsulation  : %GOtag:Opt-BasementSlabInsulation%
+!Opt-BasementWallInsulation  : %GOtag:Opt-BasementWallInsulation%
 Opt-H2KFoundation           : %GOtag:Opt-H2KFoundation%
-Opt-ExposedFloor            : %GOtag:Opt-ExposedFloor%
+!Opt-ExposedFloor            : %GOtag:Opt-ExposedFloor%
 
 ! Window specification
 Opt-CasementWindows  : %GOtag:Opt-CasementWindows%
@@ -62,8 +62,8 @@ Opt-OverhangWidth         : %GOtag:Opt-OverhangWidth%
 ! Parameters required to avoid errors but have no part in H2K optimization
 !-----------------------------------------------------------------------------
 Opt-InfilMethod   : UseAIM2
-Opt-ExtraDrywall  : %GOtag:Ext-DryWall%
-Opt-FloorSurface  : %GOtag:Opt-FloorSurface%
+!Opt-ExtraDrywall  : %GOtag:Ext-DryWall%
+!Opt-FloorSurface  : %GOtag:Opt-FloorSurface%
 OPT-OPR-SCHED     : scheduled
 
 !-----------------------------------------------------------------------------
