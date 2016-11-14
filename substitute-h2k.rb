@@ -1157,11 +1157,8 @@ def processFile(filespec)
             # changes made here will be overwritten by the Base Loads user inputs for Water Usage.		
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
-			   
                if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
-               
                   locationText = "HouseFile/House/Components/HotWater/Primary"               
-
                   if ( value == "true" )
                      if ( h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] == "false" )
                         # Need to add DWHR XML section!
@@ -1173,7 +1170,6 @@ def processFile(filespec)
                         h2kElements[locationText].delete_element("DrainWaterHeatRecovery")
                      end
                   end
-				  
                   h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value  # Flag for DWHR
                
                elsif ( tag =~ /Opt-H2K-DWHR-showerLength/ &&  value != "NA" )

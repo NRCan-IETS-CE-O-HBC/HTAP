@@ -43,7 +43,7 @@ Opt-DWHRandSDHW : NA    !none
 Opt-DHWSystem :  NA! BOP_Tank_cond_TE90!,BOP_Tank_cond_TE94, BOP_GasInst_condens!BOP_GasInst_condens_95! BOP_Tank_condens,NA     !GasTankless+DWHR !  GasTankless+DWHR BOP_GasInst !,
 
 
-Opt-DWHRSystem :  none !BOP_DHWR_high! BOP_DHWR_low ! ! none  !DWHR-eff-30 DWHR-System-1   
+Opt-DWHRSystem : BOP_DWHR_low  !BOP_DWHR_high !BOP_DWHR_low !none  !DWHR-eff-30 DWHR-System-1   
 
 ! HVAC system 
 Opt-HVACSystem  : NA! BOPCombo90a !,BOPCombo90b,BOPCombo90c,BOPCombo90d,BOPCombo90e,BOPCombo90f,BOPCombo91a,BOPCombo91b,BOPCombo91c,BOPCombo91d,BOPCombo91e,BOPCombo92a,BOPCombo92b,BOPCombo92c,BOPCombo92d,BOPCombo93a,BOPCombo93b,BOPCombo93c,BOPCombo94a,BOPCombo94b,BOPCombo94c,BOPCombo95a,BOPCombo95b,NA! 
