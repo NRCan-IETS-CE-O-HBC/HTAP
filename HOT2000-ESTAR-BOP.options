@@ -4568,17 +4568,17 @@ Whitehorse Wall Options (Code is R28)
 *option:BOP_DWHR_low:value:10  = 3             ! number of daily showers
 *option:BOP_DWHR_low:cost:total = 0 
 
-*option:BOP_DWHR_low:value:1   = true          ! Has DHWR? true/false
-*option:BOP_DWHR_low:value:2   = false         ! DWHR Preheat shower only "true" or "false"
-*option:BOP_DWHR_low:value:3   = Generic       ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
-*option:BOP_DWHR_low:value:4   = 2-Medium^Efficiency    ! DWHR Model: See H2K DWHR screen
-*option:BOP_DWHR_low:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
-*option:BOP_DWHR_low:value:6   = 54.2          ! DWHR effectiveness @ 9.5 l/m  (%)
-*option:BOP_DWHR_low:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
-*option:BOP_DWHR_low:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
-*option:BOP_DWHR_low:value:9   = 4.53          ! Shower lenght (minutes)
-*option:BOP_DWHR_low:value:10  = 3             ! number of daily showers
-*option:BOP_DWHR_low:cost:total = 0
+*option:BOP_DWHR_high:value:1   = true          ! Has DHWR? true/false
+*option:BOP_DWHR_high:value:2   = false         ! DWHR Preheat shower only "true" or "false"
+*option:BOP_DWHR_high:value:3   = Generic       ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
+*option:BOP_DWHR_high:value:4   = 2-Medium^Efficiency    ! DWHR Model: See H2K DWHR screen
+*option:BOP_DWHR_high:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*option:BOP_DWHR_high:value:6   = 54.2          ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:BOP_DWHR_high:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
+*option:BOP_DWHR_high:value:8   = 2             ! DWHR Shower fhigh  code / head dcode (1-4) 
+*option:BOP_DWHR_high:value:9   = 4.53          ! Shower lenght (minutes)
+*option:BOP_DWHR_high:value:10  = 3             ! number of daily showers
+*option:BOP_DWHR_high:cost:total = 0
 
 *attribute:end
 
