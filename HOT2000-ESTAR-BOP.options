@@ -3409,12 +3409,6 @@ Whitehorse Wall Options (Code is R28)
 *option:BOPCombo89c:value:49  =	425	! P9 BlowerPower - 100
 *option:BOPCombo89c:cost:total = 0
 
-
-
-
-
-
-
 *option:BOPCombo90a:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
 *option:BOPCombo90a:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
 *option:BOPCombo90a:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
@@ -4562,23 +4556,22 @@ Whitehorse Wall Options (Code is R28)
 *option:none:value:10  = NA
 *option:none:cost:total = 0
 
-
 *option:BOP_DWHR_low:value:1   = true          ! Has DHWR? true/false
 *option:BOP_DHWR_low:value:2   = false         ! DWHR Preheat shower only "true" or "false"
 *option:BOP_DHWR_low:value:3   = Generic       ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
-*option:BOP_DHWR_low:value:4   = 1             ! DWHR Model: See H2K DWHR screen
+*option:BOP_DHWR_low:value:4   = 1-Low^Efficiency   ! DWHR Model: See H2K DWHR screen
 *option:BOP_DHWR_low:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
-*option:BOP_DHWR_low:value:6   = 41.5            ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:BOP_DHWR_low:value:6   = 41.5          ! DWHR effectiveness @ 9.5 l/m  (%)
 *option:BOP_DHWR_low:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
 *option:BOP_DHWR_low:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
-*option:BOP_DHWR_low:value:9   = 4.53          ! Shower lenght (minutes)
+*option:BOP_DHWR_low:value:9   = 4.53          ! Shower length (minutes)
 *option:BOP_DHWR_low:value:10  = 3             ! number of daily showers
-*option:BOP_DHWR_low:cost:total = 0            !$615 assumed cost for LEEP Prince George 
+*option:BOP_DHWR_low:cost:total = 0 
 
 *option:BOP_DHWR_high:value:1   = true          ! Has DHWR? true/false
 *option:BOP_DHWR_high:value:2   = false         ! DWHR Preheat shower only "true" or "false"
 *option:BOP_DHWR_high:value:3   = Generic       ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
-*option:BOP_DHWR_high:value:4   = 2             ! DWHR Model: See H2K DWHR screen
+*option:BOP_DHWR_high:value:4   = 2-Medium^Efficiency    ! DWHR Model: See H2K DWHR screen
 *option:BOP_DHWR_high:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
 *option:BOP_DHWR_high:value:6   = 54.2          ! DWHR effectiveness @ 9.5 l/m  (%)
 *option:BOP_DHWR_high:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
