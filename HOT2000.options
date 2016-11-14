@@ -3429,8 +3429,8 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:25  = Opt-H2K-Type2CutoffTemp ! Cut off temperature (oC)
 *attribute:tag:26  = Opt-H2K-CoolOperWindow  ! Operable window fraction for cooling (%, 0->100)
 ! 27-onwards: P9 data. Used for type1 P9 systems only 
-*attribute:tag:27  = Opt-H2K-P9-manufacturer  ! P9 manufacturer 
-*attribute:tag:28  = Opt-H2K-P9-model         ! P9 model 
+*attribute:tag:27  = Opt-H2K-P9-manufacturer  ! P9 manufacturer (does nothing outside of GUI!)
+*attribute:tag:28  = Opt-H2K-P9-model         ! P9 model (does nothing outside of GUI!)
 *attribute:tag:29  = Opt-H2K-P9-TPF           ! P9 TPF
 *attribute:tag:30  = Opt-H2K-P9-AnnualElec    ! P9 Annual energy use 
 *attribute:tag:31  = Opt-H2K-P9-WHPF          ! P9 WHPF2*option
@@ -3689,8 +3689,8 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
 *option:ComboHeatA:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
 *option:ComboHeatA:value:16 = true               ! H2K: EE motor (true/false) 
-*option:ComboHeatA:value:27  = Navien^America    ! P9 manufacturer 
-*option:ComboHeatA:value:28  = 13-06-M0424-2     ! P9 model 
+*option:ComboHeatA:value:27  = Navien^America    ! P9 manufacturer (just an identifier - does nothing)
+*option:ComboHeatA:value:28  = 13-06-M0424-2     ! P9 model (just an identifier - does nothing)
 *option:ComboHeatA:value:29  = 0.98              ! P9 TPF
 *option:ComboHeatA:value:30  = 1463              ! P9 Annual energy use 
 *option:ComboHeatA:value:31  = 0.95              ! P9 WHPF2*option
@@ -4046,7 +4046,7 @@ Reflects southern Ontario costs
 !---------------------------------------------------------------------------------------------
 *attribute:start
 *attribute:name  = Opt-DWHRSystem
-*attribute:tag:1 = Opt-H2K-HasDWHR                       ! DWHR "true" or "false"
+*attribute:tag:1 = Opt-H2K-HasDWHR                      ! DWHR "true" or "false"
 *attribute:tag:2 = Opt-H2K-DWHR-preheatShowerTank       ! DWHR Preheat shower only "true" or "false"
 *attribute:tag:3 = Opt-H2K-DWHR-Manufacturer            ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., Power-Pipe, Watercycles^Energy^Recovery^Inc., Generic
 *attribute:tag:4 = Opt-H2K-DWHR-Model                   ! DWHR Model: See H2K DWHR screen
@@ -4059,7 +4059,7 @@ Reflects southern Ontario costs
 
 *attribute:default = none
 
-*option:none:value:1   = false
+*option:none:value:1   = NA
 *option:none:value:2   = NA
 *option:none:value:3   = NA
 *option:none:value:4   = NA
@@ -4828,6 +4828,9 @@ Reflects southern Ontario costs
 *option:SizedPV|8kW:dummy
 *option:SizedPV|8kW:cost:PerKW = 0 ! $/kW installed
 
+*option:SizedPV|12kW:dummy
+*option:SizedPV|12kW:cost:PerKW = 0 ! $/kW installed
+
 *ext-attribute:end
 
 
@@ -4837,7 +4840,7 @@ Reflects southern Ontario costs
 
 *ext-parameters:start
 
-*param:BaseUpgradeCost = 0 !!14216.602
+*param:BaseUpgradeCost = 0 !14216.602
 *param:BaseUtilitiesCost = 0 !1447
 *param:PVTarrifDollarsPerkWh = 0.0999
 
