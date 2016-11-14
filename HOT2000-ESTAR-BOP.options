@@ -1660,50 +1660,15 @@
 *option:NA:value:1  = NA    ! Means "no change" to H2K
 *option:NA:cost:total  =  0
 
-*option:ACH_7:value:1  = 7.0
-*option:ACH_7:cost:total  =  0
-
-*option:ACH_6_5:value:1  = 6.5
-*option:ACH_6_5:cost:total  =  0
-
-*option:ACH_6:value:1  = 6.0
-*option:ACH_6:cost:total  =  0
-
-*option:ACH_5_5:value:1  = 5.5
-*option:ACH_5_5:cost:total  =  0
-
-*option:ACH_5:value:1  = 5.0
-*option:ACH_5:cost:total  =  0
-
-*option:ACH_4_5:value:1  = 4.5
-*option:ACH_4_5:cost:total  =  0
-
-*option:ACH_4:value:1  = 4.0
-*option:ACH_4:cost:total  =  0
-
-*option:ACH_3_75:value:1  = 3.75
-*option:ACH_3_75:cost:total  =  0
-
-*option:ACH_3:value:1  = 3.0
-*option:ACH_3:cost:total  =  0
-
-*option:ACH_2_5:value:1  = 2.5
-*option:ACH_2_5:cost:total  =  0
-
-*option:ACH_1_75:value:1  = 1.75
-*option:ACH_1_75:cost:total  = 1305     !$1305 is assumed cost for Prince George LEEP house
+*option:ACH_2:value:1  = 2.0
+*option:ACH_2:cost:total  = 0
 
 *option:ACH_1_5:value:1  = 1.5
 *option:ACH_1_5:cost:total  =  0
 
-*option:ACH_1_25:value:1  = 1.25
-*option:ACH_1_25:cost:total  =  1799     !$1799 is assumed cost for Prince George LEEP house
+*option:ACH_1:value:1  = 1.0
+*option:ACH_1:cost:total  =  0
 
-*option:ACH_0_6:value:1  = 0.6
-*option:ACH_0_6:cost:total  =  2770      !$2770 is assumed cost for Prince George LEEP house
-
-*option:ACH_0_1:value:1  = 0.1
-*option:ACH_0_1:cost:total  =  0
 
 *attribute:end
 
@@ -1751,7 +1716,7 @@
 *attribute:tag:10 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
 *attribute:tag:11 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
 *attribute:tag:12 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
-*attribute:default = DoubleLowEHardCoatArgFill
+*attribute:default = NA
 
 *option:NA:value:1 = NA   
 *option:NA:value:2 = NA
@@ -1766,323 +1731,6 @@
 *option:NA:value:11 = NA  
 *option:NA:value:12 = NA  
 *option:NA:cost:total = 0.0
-
-
-! JP removed base case cost - no additional windows available for lighthouse work.
-*option:DoubleLowEHardCoatAirFill:value:1 = DblLeHcAir   
-*option:DoubleLowEHardCoatAirFill:value:2 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:3 = DblLeHcAir   
-*option:DoubleLowEHardCoatAirFill:value:4 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:5 = DblLeHcAir   
-*option:DoubleLowEHardCoatAirFill:value:6 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:7 = DblLeHcAir   
-*option:DoubleLowEHardCoatAirFill:value:8 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:9 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:10 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:11 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:12 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:cost:total    = 0.0 ! Value changed for Van_2st_80_retro geometry. Originally 10584
-
-*option:DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg   
-*option:DoubleLowEHardCoatArgFill:value:2 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:3 = DblLeHcArg   
-*option:DoubleLowEHardCoatArgFill:value:4 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:5 = DblLeHcArg   
-*option:DoubleLowEHardCoatArgFill:value:6 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg   
-*option:DoubleLowEHardCoatArgFill:value:8 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:9 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:10 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:11 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:12 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:cost:total    = 0 ! Originally 11727
-
-*option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry   
-*option:TripleLowEHardCoatKryFill:value:2 = TplLeHcKry 
-*option:TripleLowEHardCoatKryFill:value:3 = TplLeHcKry   
-*option:TripleLowEHardCoatKryFill:value:4 = TplLeHcKry 
-*option:TripleLowEHardCoatKryFill:value:5 = TplLeHcKry   
-*option:TripleLowEHardCoatKryFill:value:6 = TplLeHcKry 
-*option:TripleLowEHardCoatKryFill:value:7 = TplLeHcKry   
-*option:TripleLowEHardCoatKryFill:value:8 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:9 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:10 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:11 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:12 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:cost:total    = 0 ! Originally 20871
-
-*option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry   
-*option:TripleLowESoftCoatKryFill:value:2 = TplLeScKry 
-*option:TripleLowESoftCoatKryFill:value:3 = TplLeScKry   
-*option:TripleLowESoftCoatKryFill:value:4 = TplLeScKry 
-*option:TripleLowESoftCoatKryFill:value:5 = TplLeScKry   
-*option:TripleLowESoftCoatKryFill:value:6 = TplLeScKry 
-*option:TripleLowESoftCoatKryFill:value:7 = TplLeScKry   
-*option:TripleLowESoftCoatKryFill:value:8 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:9 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:10 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:11 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:12 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:cost:total    = 0 ! Originally 19310
-
-*option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg   
-*option:DoubleLowESoftCoatArgFill:value:2 = DblLeScArg 
-*option:DoubleLowESoftCoatArgFill:value:3 = DblLeScArg   
-*option:DoubleLowESoftCoatArgFill:value:4 = DblLeScArg 
-*option:DoubleLowESoftCoatArgFill:value:5 = DblLeScArg   
-*option:DoubleLowESoftCoatArgFill:value:6 = DblLeScArg 
-*option:DoubleLowESoftCoatArgFill:value:7 = DblLeScArg   
-*option:DoubleLowESoftCoatArgFill:value:8 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:9 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:10 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:11 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:12 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:cost:total    = 0 	! Originally 10965
-
-!---------------------------------------------------------------------
-! Doubles, high-gain-on south.
-!---------------------------------------------------------------------
-*option:DoubleArgon_HighGainOnSouth:value:1 = DblLeHcArg
-*option:DoubleArgon_HighGainOnSouth:value:2 = DblLeHcArg
-*option:DoubleArgon_HighGainOnSouth:value:3 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:4 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:5 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:6 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:7 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:8 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:9 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:10 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:11 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:12 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:cost:total = 0
-
-*option:TripleKrypton_HighGainOnSouth:value:1 = TplLeHcKry
-*option:TripleKrypton_HighGainOnSouth:value:2 = TplLeHcKry
-*option:TripleKrypton_HighGainOnSouth:value:3 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:4 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:5 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:6 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:7 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:8 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:9 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:10 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:11 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:12 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:cost:total  = 0	
-
-*option:Wind1_trp_CL :value:1 = Wind1_trp_CL     
-*option:Wind1_trp_CL :value:2 = Wind1_trp_CL   
-*option:Wind1_trp_CL :value:3 = Wind1_trp_CL     
-*option:Wind1_trp_CL :value:4 = Wind1_trp_CL 
-*option:Wind1_trp_CL :value:5 = Wind1_trp_CL     
-*option:Wind1_trp_CL :value:6 = Wind1_trp_CL 
-*option:Wind1_trp_CL :value:7 = Wind1_trp_CL     
-*option:Wind1_trp_CL :value:8 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:9 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:10 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:11 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:12 = Wind1_trp_CL
-*option:Wind1_trp_CL :cost:total    = 0   ! this is used as the base case for NWT, so no cost. origianlly $20551
-
-*option:Win2scLE1_tr:value:1 = Win2scLE1_tr   
-*option:Win2scLE1_tr:value:2 = Win2scLE1_tr  
-*option:Win2scLE1_tr:value:3 = Win2scLE1_tr   
-*option:Win2scLE1_tr:value:4 = Win2scLE1_tr  
-*option:Win2scLE1_tr:value:5 = Win2scLE1_tr   
-*option:Win2scLE1_tr:value:6 = Win2scLE1_tr  
-*option:Win2scLE1_tr:value:7 = Win2scLE1_tr   
-*option:Win2scLE1_tr:value:8 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:9 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:10 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:11 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:12 = Win2scLE1_tr 
-*option:Win2scLE1_tr:cost:total   = 0
-
-*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr   
-*option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr 
-*option:Win3hcLE1_tr:value:3 = Win3hcLE1_tr   
-*option:Win3hcLE1_tr:value:4 = Win3hcLE1_tr 
-*option:Win3hcLE1_tr:value:5 = Win3hcLE1_tr   
-*option:Win3hcLE1_tr:value:6 = Win3hcLE1_tr 
-*option:Win3hcLE1_tr:value:7 = Win3hcLE1_tr   
-*option:Win3hcLE1_tr:value:8 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:9 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:10 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:11 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:12 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:cost:total   = 0
-
-*option:Win4scLE2_tr:value:1 = Win4scLE2_tr    
-*option:Win4scLE2_tr:value:2 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:3 = Win4scLE2_tr    
-*option:Win4scLE2_tr:value:4 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:5 = Win4scLE2_tr    
-*option:Win4scLE2_tr:value:6 = Win4scLE2_tr 
-*option:Win4scLE2_tr:value:7 = Win4scLE2_tr    
-*option:Win4scLE2_tr:value:8 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:9 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:10 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:11 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:12 = Win4scLE2_tr
-*option:Win4scLE2_tr:cost:total   = 0
-
-*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr   
-*option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr 
-*option:Win5hcLE2_tr:value:3 = Win5hcLE2_tr   
-*option:Win5hcLE2_tr:value:4 = Win5hcLE2_tr 
-*option:Win5hcLE2_tr:value:5 = Win5hcLE2_tr   
-*option:Win5hcLE2_tr:value:6 = Win5hcLE2_tr 
-*option:Win5hcLE2_tr:value:7 = Win5hcLE2_tr   
-*option:Win5hcLE2_tr:value:8 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:9 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:10 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:11 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:12 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:cost:total   = 0
-
-*option:Win6_qd_CL:value:1 = Win6_qd_CL
-*option:Win6_qd_CL:value:2 = Win6_qd_CL
-*option:Win6_qd_CL:value:3 = Win6_qd_CL
-*option:Win6_qd_CL:value:4 = Win6_qd_CL
-*option:Win6_qd_CL:value:5 = Win6_qd_CL
-*option:Win6_qd_CL:value:6 = Win6_qd_CL
-*option:Win6_qd_CL:value:7 = Win6_qd_CL
-*option:Win6_qd_CL:value:8 = Win6_qd_CL
-*option:Win6_qd_CL:value:9 = Win6_qd_CL
-*option:Win6_qd_CL:value:10 = Win6_qd_CL
-*option:Win6_qd_CL:value:11 = Win6_qd_CL
-*option:Win6_qd_CL:value:12 = Win6_qd_CL
-*option:Win6_qd_CL:cost:total   = 0
-
-*option:Triple_win_shutter:value:1 = Wind3SHUTTER
-*option:Triple_win_shutter:value:2 = Wind3SHUTTER
-*option:Triple_win_shutter:value:3 = Wind3SHUTTER
-*option:Triple_win_shutter:value:4 = Wind3SHUTTER
-*option:Triple_win_shutter:value:5 = Wind3SHUTTER
-*option:Triple_win_shutter:value:6 = Wind3SHUTTER
-*option:Triple_win_shutter:value:7 = Wind3SHUTTER
-*option:Triple_win_shutter:value:8 = Wind3SHUTTER
-*option:Triple_win_shutter:value:9 = Wind3SHUTTER
-*option:Triple_win_shutter:value:10 = Wind3SHUTTER
-*option:Triple_win_shutter:value:11 = Wind3SHUTTER
-*option:Triple_win_shutter:value:12 = Wind3SHUTTER
-*option:Triple_win_shutter:cost:total   = 0
-
-*option:Quad_win_shutter:value:1 = Wind4SHUTTER
-*option:Quad_win_shutter:value:2 = Wind4SHUTTER
-*option:Quad_win_shutter:value:3 = Wind4SHUTTER
-*option:Quad_win_shutter:value:4 = Wind4SHUTTER
-*option:Quad_win_shutter:value:5 = Wind4SHUTTER
-*option:Quad_win_shutter:value:6 = Wind4SHUTTER
-*option:Quad_win_shutter:value:7 = Wind4SHUTTER
-*option:Quad_win_shutter:value:8 = Wind4SHUTTER
-*option:Quad_win_shutter:value:9 = Wind4SHUTTER
-*option:Quad_win_shutter:value:10 = Wind4SHUTTER
-*option:Quad_win_shutter:value:11 = Wind4SHUTTER
-*option:Quad_win_shutter:value:12 = Wind4SHUTTER
-*option:Quad_win_shutter:cost:total   = 0
-
-!---------------------------------------------------------------------
-! Whitehorse window models
-!---------------------------------------------------------------------
-
-! Base option for windows has cost b/c we multiply this amount 
-! by optional window areas.
-!*option:Wind1_trp_CL :value:1 = Wind1_trp_CL   
-!*option:Wind1_trp_CL :value:2 = Wind1_trp_CL   
-!*option:Wind1_trp_CL :cost:total    = 0
-!
-!*option:Win2scLE1_tr:value:1 = Win2scLE1_tr
-!*option:Win2scLE1_tr:value:2 = Win2scLE1_tr 
-!*option:Win2scLE1_tr:cost:total   = 0
-!
-!*option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr
-!*option:Win3hcLE1_tr:value:2 = Win3hcLE1_tr
-!*option:Win3hcLE1_tr:cost:total   = 0
-!
-!*option:Win4scLE2_tr:value:1 = Win4scLE2_tr 
-!*option:Win4scLE2_tr:value:2 = Win4scLE2_tr
-!*option:Win4scLE2_tr:cost:total   = 0
-!
-!*option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr
-!*option:Win5hcLE2_tr:value:2 = Win5hcLE2_tr
-!*option:Win5hcLE2_tr:cost:total   = 0
-!
-!*option:Win6_qd_CL:value:1 = Win6_qd_CL
-!*option:Win6_qd_CL:value:2 = Win6_qd_CL
-!*option:Win6_qd_CL:cost:total   = 0
-!
-!*option:Win7scle1_qd:value:1 = Win7scle1_qd
-!*option:Win7scle1_qd:value:2 = Win7scle1_qd
-!*option:Win7scle1_qd:cost:total   = 0
-!
-!*option:Win8hcle1_qd:value:1 = Win8hcle1_qd
-!*option:Win8hcle1_qd:value:2 = Win8hcle1_qd
-!*option:Win8hcle1_qd:cost:total   = 0
-!
-!*option:Win9scle2_qd:value:1 = Win9scle2_qd
-!*option:Win9scle2_qd:value:2 = Win9scle2_qd
-!*option:Win9scle2_qd:cost:total   = 0
-!
-!*option:Win10hcle2_q:value:1 = Win10hcle2_q
-!*option:Win10hcle2_q:value:2 = Win10hcle2_q
-!*option:Win10hcle2_q:cost:total   = 0
-
-!---------------------------------------------------------------------
-! Retrofit window models
-!  These values are dependent on geometry.  The values below have been calculated for Van_2st_80_retro.
-!  AF: We could probably store these values as
-!---------------------------------------------------------------------
-*option:DoubleClear:value:1 = DblClr
-*option:DoubleClear:value:2 = DblClr
-*option:DoubleClear:value:3 = DblClr
-*option:DoubleClear:value:4 = DblClr
-*option:DoubleClear:value:5 = DblClr
-*option:DoubleClear:value:6 = DblClr
-*option:DoubleClear:value:7 = DblClr
-*option:DoubleClear:value:8 = DblClr
-*option:DoubleClear:cost:total   = 0
-
-*option:retro_DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:2 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:3 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:4 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:5 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:6 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:7 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:value:8 = DblLeHcArg 
-*option:retro_DoubleLowEHardCoatArgFill:cost:total    = 0  
-
-*option:retro_DoubleLowESoftCoatArgFill:value:1 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:2 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:3 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:4 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:5 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:6 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:7 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:value:8 = DblLeScArg
-*option:retro_DoubleLowESoftCoatArgFill:cost:total    = 0
-
-*option:retro_TripleLowEHardCoatArgFill:value:1 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:2 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:3 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:4 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:5 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:6 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:7 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:value:8 = TplLeHcKry
-*option:retro_TripleLowEHardCoatArgFill:cost:total    = 0
-
-*option:retro_TripleLowESoftCoatArgFill:value:1 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:2 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:3 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:4 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:5 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:6 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:7 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:value:8 = TplLeScKry
-*option:retro_TripleLowESoftCoatArgFill:cost:total    = 0
-
 
 !------------------------------------------------------------------------
 ! Window specs that match HOT2000 window libraries
@@ -2344,6 +1992,46 @@
 *option:LG-avg-Double:WindowParams:SHGC  = 0.19
 *option:LG-avg-Double:WindowParams:Uval  = 1.60
 *option:LG-avg-Double:cost:total   = 0   
+
+
+!-------------------------
+! EStar BOP window options
+!-------------------------
+*option:EnergyStarZONE2:value:1 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:2 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:3 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:4 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:5 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:6 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:7 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:8 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:9 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:10 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:11 = EnergyStarZONE2
+*option:EnergyStarZONE2:value:12 = EnergyStarZONE2
+*option:EnergyStarZONE2:WindowParams:name  = EnergyStarZONE2
+*option:EnergyStarZONE2:WindowParams:panes = 2
+*option:EnergyStarZONE2:WindowParams:SHGC  = 0.2357
+*option:EnergyStarZONE2:WindowParams:Uval  = 1.40
+*option:EnergyStarZONE2:cost:total   = 0   
+
+*option:EnergyStarZONE3:value:1 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:2 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:3 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:4 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:5 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:6 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:7 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:8 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:9 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:10 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:11 = EnergyStarZONE3
+*option:EnergyStarZONE3:value:12 = EnergyStarZONE3
+*option:EnergyStarZONE3:WindowParams:name  = EnergyStarZONE3
+*option:EnergyStarZONE3:WindowParams:panes = 2
+*option:EnergyStarZONE3:WindowParams:SHGC  = 0.2357
+*option:EnergyStarZONE3:WindowParams:Uval  = 1.40
+*option:EnergyStarZONE3:cost:total   = 0   
 
 
 *attribute:end
@@ -2638,6 +2326,40 @@
 *option:YHC_R-21_30:value:1 = 0.1982
 *option:YHC_R-21_30:value:2 = 21.30
 *option:YHC_R-21_30:cost = 0
+
+
+
+!-----------------------------------------------------------------------
+! EStar BOP generic wall definitions
+!-----------------------------------------------------------------------
+*option:ESTAR-BOP-R19_4:value:1 = 0.1329
+*option:ESTAR-BOP-R19_4:value:2 = 19.40
+*option:ESTAR-BOP-R19_4:cost = 0
+
+*option:ESTAR-BOP-R20_4:value:1 = 0.1329
+*option:ESTAR-BOP-R20_4:value:2 = 20.40
+*option:ESTAR-BOP-R20_4:cost = 0
+
+*option:ESTAR-BOP-R21_5:value:1 = 0.1329
+*option:ESTAR-BOP-R21_5:value:2 = 21.50
+*option:ESTAR-BOP-R21_5:cost = 0
+
+*option:ESTAR-BOP-R22_1:value:1 = 0.1329
+*option:ESTAR-BOP-R22_1:value:2 = 22.10
+*option:ESTAR-BOP-R22_1:cost = 0
+
+*option:ESTAR-BOP-R22_9:value:1 = 0.1329
+*option:ESTAR-BOP-R22_9:value:2 = 22.90
+*option:ESTAR-BOP-R22_9:cost = 0
+
+*option:ESTAR-BOP-R25_4:value:1 = 0.1329
+*option:ESTAR-BOP-R25_4:value:2 = 25.40
+*option:ESTAR-BOP-R25_4:cost = 0
+
+*option:ESTAR-BOP-R27_2:value:1 = 0.1329
+*option:ESTAR-BOP-R27_2:value:2 = 27.20
+*option:ESTAR-BOP-R27_2:cost = 0
+
 
 *attribute:end
 
@@ -3114,12 +2836,77 @@ Whitehorse Wall Options (Code is R28)
 *option:4in_Ext_Rigid_XPS_R10_under:value:5 = 10        ! Under slab added R-value
 *option:4in_Ext_Rigid_XPS_R10_under:cost:total = 4840  !1525 for exterior and 3315 for underslab XPS
 
+!------------------------
+!EStar BOP configurations
+!------------------------
+*option:ESTAR-BOP-R20_8-NA:value:1 = BCCB_4_ALL    ! R20.8 added to exterior walls, no added insulation below slab
+*option:ESTAR-BOP-R20_8-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R20_8-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R20_8-NA:value:4 = 20.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R20_8-NA:value:5 = NA            ! Under slab added R-value
+*option:ESTAR-BOP-R20_8-NA:cost:total = 0 
+
+*option:ESTAR-BOP-R20_8-5:value:1 = BCCB_4_ALL    ! R20.8 added to exterior walls, R5 added insulation below slab
+*option:ESTAR-BOP-R20_8-5:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R20_8-5:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R20_8-5:value:4 = 20.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R20_8-5:value:5 = 5.0           ! Under slab added R-value
+*option:ESTAR-BOP-R20_8-5:cost:total = 0 
+
+*option:ESTAR-BOP-R20_8-10:value:1 = BCCB_4_ALL    ! R20.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R20_8-10:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R20_8-10:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R20_8-10:value:4 = 20.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R20_8-10:value:5 = 10.0           ! Under slab added R-value
+*option:ESTAR-BOP-R20_8-10:cost:total = 0 
+
+*option:ESTAR-BOP-R22_4-NA:value:1 = BCCB_4_ALL    ! R22.4 added to exterior walls, no added insulation below slab
+*option:ESTAR-BOP-R22_4-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R22_4-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R22_4-NA:value:4 = 22.4          ! Ext wall added R-value
+*option:ESTAR-BOP-R22_4-NA:value:5 = NA            ! Under slab added R-value
+*option:ESTAR-BOP-R22_4-NA:cost:total = 0 
+
+*option:ESTAR-BOP-R22_4-5:value:1 = BCCB_4_ALL    ! R22.4 added to exterior walls, R5 added insulation below slab
+*option:ESTAR-BOP-R22_4-5:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R22_4-5:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R22_4-5:value:4 = 22.4          ! Ext wall added R-value
+*option:ESTAR-BOP-R22_4-5:value:5 = 5.0           ! Under slab added R-value
+*option:ESTAR-BOP-R22_4-5:cost:total = 0 
+
+*option:ESTAR-BOP-R22_4-10:value:1 = BCCB_4_ALL    ! R22.4 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R22_4-10:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R22_4-10:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R22_4-10:value:4 = 22.4          ! Ext wall added R-value
+*option:ESTAR-BOP-R22_4-10:value:5 = 10.0           ! Under slab added R-value
+*option:ESTAR-BOP-R22_4-10:cost:total = 0 
+
+*option:ESTAR-BOP-R23_8-NA:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, no added insulation below slab
+*option:ESTAR-BOP-R23_8-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R23_8-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R23_8-NA:value:4 = 23.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R23_8-NA:value:5 = NA            ! Under slab added R-value
+*option:ESTAR-BOP-R23_8-NA:cost:total = 0 
+
+*option:ESTAR-BOP-R23_8-5:value:1 = BCCB_4_ALL     ! R23.8 added to exterior walls, R5 added insulation below slab
+*option:ESTAR-BOP-R23_8-5:value:2 = NA             ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R23_8-5:value:3 = NA             ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R23_8-5:value:4 = 23.8           ! Ext wall added R-value
+*option:ESTAR-BOP-R23_8-5:value:5 = 5.0            ! Under slab added R-value
+*option:ESTAR-BOP-R23_8-5:cost:total = 0 
+
+*option:ESTAR-BOP-R23_8-10:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R23_8-10:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R23_8-10:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R23_8-10:value:4 = 23.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R23_8-10:value:5 = 10.0           ! Under slab added R-value
+*option:ESTAR-BOP-R23_8-10:cost:total = 0 
 
 *attribute:end
 
-!-----------------------------------------------------------------------
-! Basement definitions 
-!-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+ Basement definitions 
+-----------------------------------------------------------------------
 *attribute:start 
 *attribute:name    = Opt-BasementConfiguration
 *attribute:tag:1   = <Opt-GenFdnInsulLayer>
@@ -3127,6 +2914,12 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:3   = <OPT-BsmRSIValue>
 *attribute:tag:4   = <OPT-BsmCnnIndex>
 *attribute:default = GHG-bsm-1-RSI_0.66
+
+*option:NA:value:1  = NA
+*option:NA:value:2  = NA
+*option:NA:value:3  = NA
+*option:NA:value:4  = NA
+*option:NA:cost:total  =  0
 
 *option:GHG-bsm-1-RSI_0.66:value:1  = 0.0067
 *option:GHG-bsm-1-RSI_0.66:value:2  = 0.0001
@@ -3505,215 +3298,116 @@ Whitehorse Wall Options (Code is R28)
 *option:NA:value:47 = NA
 *option:NA:value:48 = NA
 *option:NA:value:49 = NA
-
 *option:NA:cost:total    = 0
 
-!--- Consider using psc variety as base furnace from now on. 
-*option:basefurnace:value:1 = basefurnace_ACv2.hvac
-*option:basefurnace:value:2 = #-no-GSHP-file
-*option:basefurnace:value:3 = #No-IMS: 
-*option:basefurnace:value:4 = 
-*option:basefurnace:value:5 = 
-*option:basefurnace:value:6 = shoulder-ideal.ctl
-*option:basefurnace:value:7 = Furnace
-*option:basefurnace:value:8 = AirConditioning
-*option:basefurnace:value:9 = 2
-*option:basefurnace:value:10 = 2       ! Spark ignition
-*option:basefurnace:value:11 = 2       ! Calculated
-*option:basefurnace:value:12 = NA      ! Capacity value will be calculated
-*option:basefurnace:value:13 = true    ! SS
-*option:basefurnace:value:14 = 94      ! Efficiency
-*option:basefurnace:value:15 = 1       ! Auto fan control
-*option:basefurnace:value:16 = false   ! EE motor
-*option:basefurnace:cost:total = 0
 
-*option:gas-furnace-ecm:value:1 = basefurnace_AC-gas-ecm-motor.hvac
-*option:gas-furnace-ecm:value:2 = #-no-GSHP-file
-*option:gas-furnace-ecm:value:3 = #No-IMS: 
-*option:gas-furnace-ecm:value:4 = 
-*option:gas-furnace-ecm:value:5 = 
-*option:gas-furnace-ecm:value:6 = shoulder-ideal.ctl
-*option:gas-furnace-ecm:value:7 = Furnace
-*option:gas-furnace-ecm:value:8 = None
-*option:gas-furnace-ecm:value:9 = 2
-*option:gas-furnace-ecm:value:10 = 2       ! Spark ignition
-*option:gas-furnace-ecm:value:11 = 2       ! User specified capacity
-*option:gas-furnace-ecm:value:12 = NA      ! Low capacity furnace 
-*option:gas-furnace-ecm:value:13 = true    ! SS
-*option:gas-furnace-ecm:value:14 = 96      ! Efficiency
-*option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
-*option:gas-furnace-ecm:value:16 = true    ! EE motor
-*option:gas-furnace-ecm:cost:total    = -20   !Low capacity furnace cost -20
-
-*option:gas-furnace-psc:value:1 = basefurnace_AC-gas-psc-motor.hvac
-*option:gas-furnace-psc:value:2 = #-no-GSHP-file
-*option:gas-furnace-psc:value:3 = #No-IMS: 
-*option:gas-furnace-psc:value:4 = 
-*option:gas-furnace-psc:value:5 = 
-*option:gas-furnace-psc:value:6 = shoulder-ideal.ctl
-*option:gas-furnace-psc:value:7 = Furnace
-*option:gas-furnace-psc:value:8 = None
-*option:gas-furnace-psc:value:9 = 2
-*option:gas-furnace-psc:value:10 = 2       ! Spark ignition
-*option:gas-furnace-psc:value:11 = 2       ! User specified
-*option:gas-furnace-psc:value:12 = NA      ! Capacity value
-*option:gas-furnace-psc:value:13 = true    ! SS
-*option:gas-furnace-psc:value:14 = 94      ! Efficiency
-*option:gas-furnace-psc:value:15 = 1       ! Auto fan control
-*option:gas-furnace-psc:value:16 = false   ! EE motor
-*option:gas-furnace-psc:cost:total = 0 
-
-*option:elec-baseboard:value:1 = Baseboardv2.hvac
-*option:elec-baseboard:value:2 = #-no-GSHP-file
-*option:elec-baseboard:value:3 = #No-IMS: 
-*option:elec-baseboard:value:4 = 
-*option:elec-baseboard:value:5 = 
-*option:elec-baseboard:value:6 = shoulder-ideal.ctl
-*option:elec-baseboard:value:7 = Baseboards
-*option:elec-baseboard:value:8 = NA
-*option:elec-baseboard:value:9 = NA
-*option:elec-baseboard:value:10 = NA
-*option:elec-baseboard:value:11 = NA
-*option:elec-baseboard:value:12 = NA
-*option:elec-baseboard:value:13 = NA
-*option:elec-baseboard:value:14 = NA
-*option:elec-baseboard:value:15 = NA
-*option:elec-baseboard:value:16 = NA
-*option:elec-baseboard:cost:total       = 0
-
-*option:elec-baseboard-noAC:value:1 = Baseboardv2-noAC.hvac
-*option:elec-baseboard-noAC:value:2 = #-no-GSHP-file
-*option:elec-baseboard-noAC:value:3 = #No-IMS: 
-*option:elec-baseboard-noAC:value:4 = 
-*option:elec-baseboard-noAC:value:5 = 
-*option:elec-baseboard-noAC:value:6 = shoulder-ideal.ctl
-*option:elec-baseboard-noAC:cost:total       = 0
+! P-9.11 Combo systems for EnergyStar BOP
+*option:BOPCombo89a:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo89a:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo89a:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo89a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo89a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo89a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo89a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo89a:value:14 = 88                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo89a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo89a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo89a:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo89a:value:28  = NA    ! P9 model 
+*option:BOPCombo89a:value:29  =	0.89	! P9 TPF
+*option:BOPCombo89a:value:30  =	1355	! P9 Annual energy use
+*option:BOPCombo89a:value:31  =	0.94	! P9 WHPF2*option
+*option:BOPCombo89a:value:32  =	58500	! P9 Burner input
+*option:BOPCombo89a:value:33  =	96	! P9 Recovery efficiency
+*option:BOPCombo89a:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo89a:value:35  =	111	! P9 Circ power (W)
+*option:BOPCombo89a:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo89a:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo89a:value:38  =	1437	! P9 Standby loss (no fan)
+*option:BOPCombo89a:value:39  =	1433	! P9 one hour rating (HW)
+*option:BOPCombo89a:value:40  =	0.32	! P9 one hour rating concurrent
+*option:BOPCombo89a:value:41  =	79	! P9 net efficiency - 15
+*option:BOPCombo89a:value:42  =	91	! P9 net efficiency - 40
+*option:BOPCombo89a:value:43  =	94	! P9 net efficiency - 100
+*option:BOPCombo89a:value:44  =	105	! P9 Elec use - 15
+*option:BOPCombo89a:value:45  =	229	! P9 Elec use - 40
+*option:BOPCombo89a:value:46  =	562	! P9 Elec use - 100
+*option:BOPCombo89a:value:47  =	164	! P9 BlowerPower - 15
+*option:BOPCombo89a:value:48  =	164	! P9 BlowerPower - 40
+*option:BOPCombo89a:value:49  =	418	! P9 BlowerPower - 100
+*option:BOPCombo89a:cost:total = 0
 
 
-*option:CCASHP:value:1  = CCASHPv2.hvac         ! ESP-r: Flag to activate/deactvate IMS file             
-*option:CCASHP:value:2  = #-no-GSHP-file        ! ESP-r: Flag to activate/deactvate GSHP file     
-*option:CCASHP:value:3  = #No-IMS:              ! ESP-r: Flag to activate/deactvate IMS file     
-*option:CCASHP:value:4  =                       ! ESP-r: Flag to activate/deactvate HRV file     
-*option:CCASHP:value:5  =                       ! ESP-r: Flag to activate/deactvate WH HRV file     
-*option:CCASHP:value:6  = shoulder-ideal.ctl    ! ESP-r: Control File     
-*option:CCASHP:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
-*option:CCASHP:value:8  = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
-*option:CCASHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
-*option:CCASHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:CCASHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP:value:12 =  6                    ! H2K: Capacity value.     
-*option:CCASHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
-*option:CCASHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
-*option:CCASHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
-*option:CCASHP:value:16 = false                 ! H2K: ee-motor true/false   
-*option:CCASHP:value:17 = 60                    ! H2K: Crankcase heater?
-*option:CCASHP:value:18 = 2                     ! Function heating/cooling 
-*option:CCASHP:value:19 = 1                     ! Type: central split 
-*option:CCASHP:value:20 = 2                     ! Capacity: Calculated 
-*option:CCASHP:value:21 = NA                    ! Capacity value (W)
-*option:CCASHP:value:22 = 3                     ! Heating COP 
-*option:CCASHP:value:23 = 4.3                   ! Cooling COP 
-*option:CCASHP:value:24 = 2                     ! Cut off type : Restricted 
-*option:CCASHP:value:25 = -20                   ! Cut off temp 
-*option:CCASHP:value:26 = 25                    ! Operable window area
-*option:CCASHP:cost:total   = 0                 
+*option:BOPCombo89b:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo89b:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo89b:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo89b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo89b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo89b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo89b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo89b:value:14 = 88                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo89b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo89b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo89b:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo89b:value:28  = NA    ! P9 model 
+*option:BOPCombo89b:value:29  =	0.89	! P9 TPF
+*option:BOPCombo89b:value:29  =	0.89	! P9 TPF
+*option:BOPCombo89b:value:30  =	1596	! P9 Annual energy use
+*option:BOPCombo89b:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo89b:value:32  =	43900	! P9 Burner input
+*option:BOPCombo89b:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo89b:value:34  =	7	! P9 Ctl power (W)
+*option:BOPCombo89b:value:35  =	45	! P9 Circ power (W)
+*option:BOPCombo89b:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo89b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo89b:value:38  =	1108	! P9 Standby loss (no fan)
+*option:BOPCombo89b:value:39  =	1109	! P9 one hour rating (HW)
+*option:BOPCombo89b:value:40  =	0.29	! P9 one hour rating concurrent
+*option:BOPCombo89b:value:41  =	80	! P9 net efficiency - 15
+*option:BOPCombo89b:value:42  =	93	! P9 net efficiency - 40
+*option:BOPCombo89b:value:43  =	86	! P9 net efficiency - 100
+*option:BOPCombo89b:value:44  =	130	! P9 Elec use - 15
+*option:BOPCombo89b:value:45  =	295	! P9 Elec use - 40
+*option:BOPCombo89b:value:46  =	370	! P9 Elec use - 100
+*option:BOPCombo89b:value:47  =	199	! P9 BlowerPower - 15
+*option:BOPCombo89b:value:48  =	196	! P9 BlowerPower - 40
+*option:BOPCombo89b:value:49  =	267	! P9 BlowerPower - 100
+*option:BOPCombo89b:cost:total = 0
 
-*option:CCASHP-ecm:value:1 = CCASHPv2-ecm-motor.hvac
-*option:CCASHP-ecm:value:2 = #-no-GSHP-file
-*option:CCASHP-ecm:value:3 = #No-IMS: 
-*option:CCASHP-ecm:value:4 = 
-*option:CCASHP-ecm:value:5 = 
-*option:CCASHP-ecm:value:6 =  shoulder-ideal.ctl
-*option:CCASHP-ecm:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
-*option:CCASHP-ecm:value:8  = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
-*option:CCASHP-ecm:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
-*option:CCASHP-ecm:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:CCASHP-ecm:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP-ecm:value:12 =  NA                    ! H2K: Capacity value.     
-*option:CCASHP-ecm:value:13 =  true                 ! H2K: true=SS, false=AFUE    
-*option:CCASHP-ecm:value:14 =  100                  ! H2K: Efficiency value (0->100)    
-*option:CCASHP-ecm:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
-*option:CCASHP-ecm:value:16 = true                  ! H2K: ee-motor true/false   
-*option:CCASHP-ecm:value:17 = 60                    ! H2K: Crankcase heater?
-*option:CCASHP-ecm:value:18 = 2                     ! Function heating/cooling 
-*option:CCASHP-ecm:value:19 = 1                     ! Type: central split 
-*option:CCASHP-ecm:value:20 = 2                     ! Capacity: Calculated 
-*option:CCASHP-ecm:value:21 = NA                    ! Capacity value (W)
-*option:CCASHP-ecm:value:22 = 3                     ! Heating COP 
-*option:CCASHP-ecm:value:23 = 4.3                   ! Cooling COP 
-*option:CCASHP-ecm:value:24 = 2                     ! Cut off type : Restricted 
-*option:CCASHP-ecm:value:25 = -20                   ! Cut off temp 
-*option:CCASHP-ecm:value:26 = 25                    ! Operable window area
-*option:CCASHP-ecm:cost:total = 6465                !$6465 Upgrade cost assumed for Prince George LEEP
-
-Reflects southern Ontario costs
-*option:GSHP:value:1 = GSHPv2.hvac
-*option:GSHP:value:2 = *gshp~../hvac/heatx_v1.gshp
-*option:GSHP:value:3 = #No-IMS: 
-*option:GSHP:value:4 = 
-*option:GSHP:value:5 = 
-*option:GSHP:value:6 = shoulder-ideal.ctl 
-*option:GSHP:value:7  = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
-*option:GSHP:value:8  = GroundHeatPump        ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
-*option:GSHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
-*option:GSHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:GSHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:GSHP:value:12 =  6                    ! H2K: Capacity value.     
-*option:GSHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
-*option:GSHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
-*option:GSHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
-*option:GSHP:value:16 = false                 ! H2K: ee-motor true/false   
-*option:GSHP:value:17 = 60                    ! H2K: Crankcase heater?
-*option:GSHP:value:18 = 2                     ! Function heating/cooling 
-*option:GSHP:value:19 = NA                    ! Type: central split 
-*option:GSHP:value:20 = 2                     ! Capacity: Calculated 
-*option:GSHP:value:21 = NA                    ! Capacity value (W)
-*option:GSHP:value:22 = 3                     ! Heating COP 
-*option:GSHP:value:23 = 3                     ! Cooling COP 
-*option:GSHP:value:24 = 2                     ! Cut off type : Restricted 
-*option:GSHP:value:25 = -20                   ! Cut off temp 
-*option:GSHP:value:26 = 25                    ! Operable window area
-*option:GSHP:cost:total = 0                 
-
-! Options for VP retrofit
-
-
-! Combo
-*option:ComboHeatA:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
-*option:ComboHeatA:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
-*option:ComboHeatA:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
-*option:ComboHeatA:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:ComboHeatA:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:ComboHeatA:value:12 = NA              ! H2K: Type 1: Capacity value. 
-*option:ComboHeatA:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
-*option:ComboHeatA:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
-*option:ComboHeatA:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
-*option:ComboHeatA:value:16 = true               ! H2K: EE motor (true/false) 
-*option:ComboHeatA:value:27  = Navien^America    ! P9 manufacturer 
-*option:ComboHeatA:value:28  = 13-06-M0424-2     ! P9 model 
-*option:ComboHeatA:value:29  = 0.98              ! P9 TPF
-*option:ComboHeatA:value:30  = 1463              ! P9 Annual energy use 
-*option:ComboHeatA:value:31  = 0.95              ! P9 WHPF2*option
-*option:ComboHeatA:value:32  = 58300             ! P9 Burner input 
-*option:ComboHeatA:value:33  = 95                ! P9 Recovery efficiency
-*option:ComboHeatA:value:34  = 7                 ! P9 Ctl power (W)
-*option:ComboHeatA:value:35  = 74                ! P9 Circ power (W)
-*option:ComboHeatA:value:36  = 0.19              ! P9 Daily use ???
-*option:ComboHeatA:value:37  = 0                 ! P9 Standby loss (fan)
-*option:ComboHeatA:value:38  = 0                 ! P9 Standby loss (no fan)
-*option:ComboHeatA:value:39  = 1444              ! P9 one hour rating (HW)
-*option:ComboHeatA:value:40  = 1459              ! P9 one hour rating concurrent
-*option:ComboHeatA:value:41  = 94                ! P9 net efficiency - 15
-*option:ComboHeatA:value:42  = 96                ! P9 net efficiency - 40
-*option:ComboHeatA:value:43  = 91                ! P9 net efficiency - 100 
-*option:ComboHeatA:value:44  = 145               ! P9 Elec use - 15
-*option:ComboHeatA:value:45  = 231               ! P9 Elec use - 40
-*option:ComboHeatA:value:46  = 548               ! P9 Elec use - 100 
-*option:ComboHeatA:value:47  = 107               ! P9 BlowerPower - 15
-*option:ComboHeatA:value:48  = 117               ! P9 BlowerPower - 40
-*option:ComboHeatA:value:49  = 418               ! P9 BlowerPower - 100 
-
-*option:ComboHeatA:cost:total = 2175             !$2175 cost for LEEP Prince George
+*option:BOPCombo89c:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo89c:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo89c:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo89c:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo89c:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo89c:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo89c:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo89c:value:14 = 89.4               ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo89c:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo89c:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo89c:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo89c:value:28  = NA    ! P9 model 
+*option:BOPCombo89c:value:29  =	0.89	! P9 TPF
+*option:BOPCombo89c:value:30  =	1704	! P9 Annual energy use
+*option:BOPCombo89c:value:31  =	0.83	! P9 WHPF2*option
+*option:BOPCombo89c:value:32  =	34000	! P9 Burner input
+*option:BOPCombo89c:value:33  =	84	! P9 Recovery efficiency
+*option:BOPCombo89c:value:34  =	9	! P9 Ctl power (W)
+*option:BOPCombo89c:value:35  =	71	! P9 Circ power (W)
+*option:BOPCombo89c:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo89c:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo89c:value:38  =	749	! P9 Standby loss (no fan)
+*option:BOPCombo89c:value:39  =	757	! P9 one hour rating (HW)
+*option:BOPCombo89c:value:40  =	0.32	! P9 one hour rating concurrent
+*option:BOPCombo89c:value:41  =	91	! P9 net efficiency - 15
+*option:BOPCombo89c:value:42  =	90	! P9 net efficiency - 40
+*option:BOPCombo89c:value:43  =	84	! P9 net efficiency - 100
+*option:BOPCombo89c:value:44  =	191	! P9 Elec use - 15
+*option:BOPCombo89c:value:45  =	234	! P9 Elec use - 40
+*option:BOPCombo89c:value:46  =	545	! P9 Elec use - 100
+*option:BOPCombo89c:value:47  =	110	! P9 BlowerPower - 15
+*option:BOPCombo89c:value:48  =	136	! P9 BlowerPower - 40
+*option:BOPCombo89c:value:49  =	425	! P9 BlowerPower - 100
+*option:BOPCombo89c:cost:total = 0
 
 
 
@@ -3721,9 +3415,823 @@ Reflects southern Ontario costs
 
 
 
+*option:BOPCombo90a:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo90a:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo90a:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo90a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo90a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo90a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo90a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo90a:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo90a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo90a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo90a:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo90a:value:28  = NA    ! P9 model 
+*option:BOPCombo90a:value:29  = 0.90              ! P9 TPF
+*option:BOPCombo90a:value:30  = 2888              ! P9 Annual energy use 
+*option:BOPCombo90a:value:31  = 0.94              ! P9 WHPF2*option
+*option:BOPCombo90a:value:32  = 58500             ! P9 Burner input 
+*option:BOPCombo90a:value:33  = 96                ! P9 Recovery efficiency
+*option:BOPCombo90a:value:34  = 13                ! P9 Ctl power (W)
+*option:BOPCombo90a:value:35  = 111               ! P9 Circ power (W)
+*option:BOPCombo90a:value:36  = 0.32              ! P9 Daily use ???
+*option:BOPCombo90a:value:37  = 0                 ! P9 Standby loss (fan)
+*option:BOPCombo90a:value:38  = 0                 ! P9 Standby loss (no fan)
+*option:BOPCombo90a:value:39  = 1437              ! P9 one hour rating (HW)
+*option:BOPCombo90a:value:40  = 1433              ! P9 one hour rating concurrent
+*option:BOPCombo90a:value:41  = 91                ! P9 net efficiency - 15
+*option:BOPCombo90a:value:42  = 89                ! P9 net efficiency - 40
+*option:BOPCombo90a:value:43  = 93                ! P9 net efficiency - 100 
+*option:BOPCombo90a:value:44  = 243               ! P9 Elec use - 15
+*option:BOPCombo90a:value:45  = 556               ! P9 Elec use - 40
+*option:BOPCombo90a:value:46  = 558               ! P9 Elec use - 100 
+*option:BOPCombo90a:value:47  = 417               ! P9 BlowerPower - 15
+*option:BOPCombo90a:value:48  = 416               ! P9 BlowerPower - 40
+*option:BOPCombo90a:value:49  = 421               ! P9 BlowerPower - 100 
+*option:BOPCombo90a:cost:total = 0
+
+
+*option:BOPCombo90b:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo90b:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo90b:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo90b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo90b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo90b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo90b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo90b:value:14 = 89                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo90b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo90b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo90b:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo90b:value:28  = NA    ! P9 model 
+*option:BOPCombo90b:value:29  = 0.9	! P9 TPF
+*option:BOPCombo90b:value:30  = 1740	! P9 Annual energy use
+*option:BOPCombo90b:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo90b:value:32  =	43900	! P9 Burner input
+*option:BOPCombo90b:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo90b:value:34  =	8	! P9 Ctl power (W)
+*option:BOPCombo90b:value:35  =	44	! P9 Circ power (W)
+*option:BOPCombo90b:value:36  =	0.29	! P9 Daily use ???
+*option:BOPCombo90b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo90b:value:38  =	0	! P9 Standby loss (no fan)
+*option:BOPCombo90b:value:39  =	1108	! P9 one hour rating (HW)
+*option:BOPCombo90b:value:40  =	1109	! P9 one hour rating concurrent
+*option:BOPCombo90b:value:41  =	79	! P9 net efficiency - 15
+*option:BOPCombo90b:value:42  =	94	! P9 net efficiency - 40
+*option:BOPCombo90b:value:43  =	89	! P9 net efficiency - 100
+*option:BOPCombo90b:value:44  =	145	! P9 Elec use - 15
+*option:BOPCombo90b:value:45  =	318	! P9 Elec use - 40
+*option:BOPCombo90b:value:46  =	434	! P9 Elec use - 100
+*option:BOPCombo90b:value:47  =	220	! P9 BlowerPower - 15
+*option:BOPCombo90b:value:48  =	219	! P9 BlowerPower - 40
+*option:BOPCombo90b:value:49  =	327	! P9 BlowerPower - 100
+*option:BOPCombo90b:cost:total = 0			
+
+
+*option:BOPCombo90c:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo90c:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo90c:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo90c:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo90c:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo90c:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo90c:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo90c:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo90c:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo90c:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo90c:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo90c:value:28  = NA    ! P9 model 
+*option:BOPCombo90c:value:29  =	0.9	! P9 TPF
+*option:BOPCombo90c:value:30  =	2226	! P9 Annual energy use
+*option:BOPCombo90c:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo90c:value:32  =	43900	! P9 Burner input
+*option:BOPCombo90c:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo90c:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo90c:value:35  =	66	! P9 Circ power (W)
+*option:BOPCombo90c:value:36  =	0.29	! P9 Daily use ???
+*option:BOPCombo90c:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo90c:value:38  =	0	! P9 Standby loss (no fan)
+*option:BOPCombo90c:value:39  =	1108	! P9 one hour rating (HW)
+*option:BOPCombo90c:value:40  =	1109	! P9 one hour rating concurrent
+*option:BOPCombo90c:value:41  =	79	! P9 net efficiency - 15
+*option:BOPCombo90c:value:42  =	94	! P9 net efficiency - 40
+*option:BOPCombo90c:value:43  =	89	! P9 net efficiency - 100
+*option:BOPCombo90c:value:44  =	179	! P9 Elec use - 15
+*option:BOPCombo90c:value:45  =	430	! P9 Elec use - 40
+*option:BOPCombo90c:value:46  =	467	! P9 Elec use - 100
+*option:BOPCombo90c:value:47  =	141	! P9 BlowerPower - 15
+*option:BOPCombo90c:value:48  =	141	! P9 BlowerPower - 40
+*option:BOPCombo90c:value:49  =	179	! P9 BlowerPower - 100
+*option:BOPCombo90c:cost:total = 0
+
+
+*option:BOPCombo90d:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo90d:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo90d:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo90d:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo90d:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo90d:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo90d:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo90d:value:14 = 89                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo90d:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo90d:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo90d:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo90d:value:28  = NA    ! P9 model 
+*option:BOPCombo90d:value:29  =	0.9	! P9 TPF
+*option:BOPCombo90d:value:30  =	2270	! P9 Annual energy use
+*option:BOPCombo90d:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo90d:value:32  =	43900	! P9 Burner input
+*option:BOPCombo90d:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo90d:value:34  =	7	! P9 Ctl power (W)
+*option:BOPCombo90d:value:35  =	45	! P9 Circ power (W)
+*option:BOPCombo90d:value:36  =	0.29	! P9 Daily use ???
+*option:BOPCombo90d:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo90d:value:38  =	0	! P9 Standby loss (no fan)
+*option:BOPCombo90d:value:39  =	1108	! P9 one hour rating (HW)
+*option:BOPCombo90d:value:40  =	1109	! P9 one hour rating concurrent
+*option:BOPCombo90d:value:41  =	85	! P9 net efficiency - 15
+*option:BOPCombo90d:value:42  =	92	! P9 net efficiency - 40
+*option:BOPCombo90d:value:43  =	86	! P9 net efficiency - 100
+*option:BOPCombo90d:value:44  =	210	! P9 Elec use - 15
+*option:BOPCombo90d:value:45  =	396	! P9 Elec use - 40
+*option:BOPCombo90d:value:46  =	629	! P9 Elec use - 100
+*option:BOPCombo90d:value:47  =	294	! P9 BlowerPower - 15
+*option:BOPCombo90d:value:48  =	291	! P9 BlowerPower - 40
+*option:BOPCombo90d:value:49  =	519	! P9 BlowerPower - 100
+*option:BOPCombo90d:cost:total = 0		
+
+*option:BOPCombo90e:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo90e:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo90e:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo90e:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo90e:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo90e:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo90e:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo90e:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo90e:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo90e:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo90e:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo90e:value:28  = NA    ! P9 model 
+*option:BOPCombo90e:value:29  =	0.9	! P9 TPF
+*option:BOPCombo90e:value:30  =	3382	! P9 Annual energy use
+*option:BOPCombo90e:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo90e:value:32  =	43900	! P9 Burner input
+*option:BOPCombo90e:value:33  =	97	! P9 Recovery efficiency
+*option:BOPCombo90e:value:34  =	16	! P9 Ctl power (W)
+*option:BOPCombo90e:value:35  =	318	! P9 Circ power (W)
+*option:BOPCombo90e:value:36  =	0.18	! P9 Daily use ???
+*option:BOPCombo90e:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo90e:value:38  =	0	! P9 Standby loss (no fan)
+*option:BOPCombo90e:value:39  =	1116	! P9 one hour rating (HW)
+*option:BOPCombo90e:value:40  =	1094	! P9 one hour rating concurrent
+*option:BOPCombo90e:value:41  =	87	! P9 net efficiency - 15
+*option:BOPCombo90e:value:42  =	92	! P9 net efficiency - 40
+*option:BOPCombo90e:value:43  =	84	! P9 net efficiency - 100
+*option:BOPCombo90e:value:44  =	296	! P9 Elec use - 15
+*option:BOPCombo90e:value:45  =	657	! P9 Elec use - 40
+*option:BOPCombo90e:value:46  =	681	! P9 Elec use - 100
+*option:BOPCombo90e:value:47  =	300	! P9 BlowerPower - 15
+*option:BOPCombo90e:value:48  =	534	! P9 BlowerPower - 40
+*option:BOPCombo90e:value:49  =	542	! P9 BlowerPower - 100
+*option:BOPCombo90e:cost:total	=0
+
+*option:BOPCombo90f:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo90f:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo90f:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo90f:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo90f:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo90f:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo90f:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo90f:value:14 = 92                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo90f:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo90f:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo90f:value:27  = NA  ! P9 manufacturer 
+*option:BOPCombo90f:value:28  = NA    ! P9 model 
+*option:BOPCombo90f:value:29  =	0.9	! P9 TPF
+*option:BOPCombo90f:value:30  =	2927	! P9 Annual energy use
+*option:BOPCombo90f:value:31  =	0.8	! P9 WHPF2*option
+*option:BOPCombo90f:value:32  =	34000	! P9 Burner input
+*option:BOPCombo90f:value:33  =	83	! P9 Recovery efficiency
+*option:BOPCombo90f:value:34  =	9	! P9 Ctl power (W)
+*option:BOPCombo90f:value:35  =	89	! P9 Circ power (W)
+*option:BOPCombo90f:value:36  =	0.34	! P9 Daily use ???
+*option:BOPCombo90f:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo90f:value:38  =	0	! P9 Standby loss (no fan)
+*option:BOPCombo90f:value:39  =	710	! P9 one hour rating (HW)
+*option:BOPCombo90f:value:40  =	709	! P9 one hour rating concurrent
+*option:BOPCombo90f:value:41  =	89	! P9 net efficiency - 15
+*option:BOPCombo90f:value:42  =	95	! P9 net efficiency - 40
+*option:BOPCombo90f:value:43  =	85	! P9 net efficiency - 100
+*option:BOPCombo90f:value:44  =	238	! P9 Elec use - 15
+*option:BOPCombo90f:value:45  =	574	! P9 Elec use - 40
+*option:BOPCombo90f:value:46  =	582	! P9 Elec use - 100
+*option:BOPCombo90f:value:47  =	188	! P9 BlowerPower - 15
+*option:BOPCombo90f:value:48  =	469	! P9 BlowerPower - 40
+*option:BOPCombo90f:value:49  =	471	! P9 BlowerPower - 100
+*option:BOPCombo90f:cost:total = 0
+
+
+*option:BOPCombo91a:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo91a:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo91a:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo91a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo91a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo91a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo91a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo91a:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo91a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo91a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo91a:value:27 = Airmax^Technologies    ! P9 manufacturer 
+*option:BOPCombo91a:value:28 = 14-06-M0387-2A    ! P9 model 
+*option:BOPCombo91a:value:29 = 0.91              ! P9 TPF
+*option:BOPCombo91a:value:30 = 1487              ! P9 Annual energy use 
+*option:BOPCombo91a:value:31 = 0.94              ! P9 WHPF2*option
+*option:BOPCombo91a:value:32 = 44000             ! P9 Burner input 
+*option:BOPCombo91a:value:33 = 97                ! P9 Recovery efficiency
+*option:BOPCombo91a:value:34 = 13                ! P9 Ctl power (W)
+*option:BOPCombo91a:value:35 = 111                ! P9 Circ power (W)
+*option:BOPCombo91a:value:36 = 0.32              ! P9 Daily use ???
+*option:BOPCombo91a:value:37 = 0                 ! P9 Standby loss (fan)
+*option:BOPCombo91a:value:38 = 0                 ! P9 Standby loss (no fan)
+*option:BOPCombo91a:value:39 = 1140              ! P9 one hour rating (HW)
+*option:BOPCombo91a:value:40 = 1131              ! P9 one hour rating concurrent
+*option:BOPCombo91a:value:41 = 82                ! P9 net efficiency - 15
+*option:BOPCombo91a:value:42 = 93                ! P9 net efficiency - 40
+*option:BOPCombo91a:value:43 = 96                ! P9 net efficiency - 100 
+*option:BOPCombo91a:value:44 = 116               ! P9 Elec use - 15
+*option:BOPCombo91a:value:45 = 258               ! P9 Elec use - 40
+*option:BOPCombo91a:value:46 = 561               ! P9 Elec use - 100 
+*option:BOPCombo91a:value:47 = 165               ! P9 BlowerPower - 15
+*option:BOPCombo91a:value:48 = 164               ! P9 BlowerPower - 40
+*option:BOPCombo91a:value:49 = 417               ! P9 BlowerPower - 100 
+*option:BOPCombo91a:cost:total = 0
+
+*option:BOPCombo91b:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo91b:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo91b:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo91b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo91b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo91b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo91b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo91b:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo91b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo91b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo91b:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo91b:value:28 = NA    ! P9 model 
+*option:BOPCombo91b:value:29  =	0.91	! P9 TPF
+*option:BOPCombo91b:value:30  =	2247	! P9 Annual energy use
+*option:BOPCombo91b:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo91b:value:32  =	43900	! P9 Burner input
+*option:BOPCombo91b:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo91b:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo91b:value:35  =	72	! P9 Circ power (W)
+*option:BOPCombo91b:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo91b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo91b:value:38  =	1108	! P9 Standby loss (no fan)
+*option:BOPCombo91b:value:39  =	1109	! P9 one hour rating (HW)
+*option:BOPCombo91b:value:40  =	0.29	! P9 one hour rating concurrent
+*option:BOPCombo91b:value:41  =	84	! P9 net efficiency - 15
+*option:BOPCombo91b:value:42  =	94	! P9 net efficiency - 40
+*option:BOPCombo91b:value:43  =	87	! P9 net efficiency - 100
+*option:BOPCombo91b:value:44  =	177	! P9 Elec use - 15
+*option:BOPCombo91b:value:45  =	436	! P9 Elec use - 40
+*option:BOPCombo91b:value:46  =	522	! P9 Elec use - 100
+*option:BOPCombo91b:value:47  =	325	! P9 BlowerPower - 15
+*option:BOPCombo91b:value:48  =	326	! P9 BlowerPower - 40
+*option:BOPCombo91b:value:49  =	412	! P9 BlowerPower - 100
+*option:BOPCombo91b:cost:total =0		
+
+*option:BOPCombo91c:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo91c:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo91c:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo91c:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo91c:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo91c:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo91c:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo91c:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo91c:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo91c:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo91c:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo91c:value:28 = NA    ! P9 model 
+*option:BOPCombo91c:value:29  =	0.91	! P9 TPF
+*option:BOPCombo91c:value:30  =	1690	! P9 Annual energy use
+*option:BOPCombo91c:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo91c:value:32  =	43900	! P9 Burner input
+*option:BOPCombo91c:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo91c:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo91c:value:35  =	69	! P9 Circ power (W)
+*option:BOPCombo91c:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo91c:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo91c:value:38  =	1108	! P9 Standby loss (no fan)
+*option:BOPCombo91c:value:39  =	1109	! P9 one hour rating (HW)
+*option:BOPCombo91c:value:40  =	0.29	! P9 one hour rating concurrent
+*option:BOPCombo91c:value:41  =	84	! P9 net efficiency - 15
+*option:BOPCombo91c:value:42  =	94	! P9 net efficiency - 40
+*option:BOPCombo91c:value:43  =	86	! P9 net efficiency - 100
+*option:BOPCombo91c:value:44  =	132	! P9 Elec use - 15
+*option:BOPCombo91c:value:45  =	322	! P9 Elec use - 40
+*option:BOPCombo91c:value:46  =	350	! P9 Elec use - 100
+*option:BOPCombo91c:value:47  =	212	! P9 BlowerPower - 15
+*option:BOPCombo91c:value:48  =	213	! P9 BlowerPower - 40
+*option:BOPCombo91c:value:49  =	238	! P9 BlowerPower - 100
+*option:BOPCombo91c:cost:total = 0
+
+
+*option:BOPCombo91d:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo91d:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo91d:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo91d:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo91d:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo91d:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo91d:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo91d:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo91d:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo91d:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo91d:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo91d:value:28 = NA    ! P9 model 
+*option:BOPCombo91d:value:29  =	0.91	! P9 TPF
+*option:BOPCombo91d:value:30  =	833	! P9 Annual energy use
+*option:BOPCombo91d:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo91d:value:32  =	43900	! P9 Burner input
+*option:BOPCombo91d:value:33  =	97	! P9 Recovery efficiency
+*option:BOPCombo91d:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo91d:value:35  =	102	! P9 Circ power (W)
+*option:BOPCombo91d:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo91d:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo91d:value:38  =	1116	! P9 Standby loss (no fan)
+*option:BOPCombo91d:value:39  =	1094	! P9 one hour rating (HW)
+*option:BOPCombo91d:value:40  =	0.18	! P9 one hour rating concurrent
+*option:BOPCombo91d:value:41  =	82	! P9 net efficiency - 15
+*option:BOPCombo91d:value:42  =	92	! P9 net efficiency - 40
+*option:BOPCombo91d:value:43  =	98	! P9 net efficiency - 100
+*option:BOPCombo91d:value:44  =	62	! P9 Elec use - 15
+*option:BOPCombo91d:value:45  =	137	! P9 Elec use - 40
+*option:BOPCombo91d:value:46  =	436	! P9 Elec use - 100
+*option:BOPCombo91d:value:47  =	130	! P9 BlowerPower - 15
+*option:BOPCombo91d:value:48  =	133	! P9 BlowerPower - 40
+*option:BOPCombo91d:value:49  =	316	! P9 BlowerPower - 100
+*option:BOPCombo91d:cost:total = 0
+
+*option:BOPCombo91e:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo91e:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo91e:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo91e:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo91e:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo91e:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo91e:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo91e:value:14 = 90                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo91e:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo91e:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo91e:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo91e:value:28 = NA    ! P9 model 
+*option:BOPCombo91e:value:29  =	0.91	! P9 TPF
+*option:BOPCombo91e:value:30  =	833	! P9 Annual energy use
+*option:BOPCombo91e:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo91e:value:32  =	43900	! P9 Burner input
+*option:BOPCombo91e:value:33  =	97	! P9 Recovery efficiency
+*option:BOPCombo91e:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo91e:value:35  =	102	! P9 Circ power (W)
+*option:BOPCombo91e:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo91e:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo91e:value:38  =	1116	! P9 Standby loss (no fan)
+*option:BOPCombo91e:value:39  =	1094	! P9 one hour rating (HW)
+*option:BOPCombo91e:value:40  =	0.18	! P9 one hour rating concurrent
+*option:BOPCombo91e:value:41  =	82	! P9 net efficiency - 15
+*option:BOPCombo91e:value:42  =	92	! P9 net efficiency - 40
+*option:BOPCombo91e:value:43  =	98	! P9 net efficiency - 100
+*option:BOPCombo91e:value:44  =	62	! P9 Elec use - 15
+*option:BOPCombo91e:value:45  =	137	! P9 Elec use - 40
+*option:BOPCombo91e:value:46  =	436	! P9 Elec use - 100
+*option:BOPCombo91e:value:47  =	130	! P9 BlowerPower - 15
+*option:BOPCombo91e:value:48  =	133	! P9 BlowerPower - 40
+*option:BOPCombo91e:value:49  =	316	! P9 BlowerPower - 100
+*option:BOPCombo91e:cost:total = 0
+
+
+*option:BOPCombo92a:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo92a:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo92a:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo92a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo92a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo92a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo92a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo92a:value:14 = 92                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo92a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo92a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo92a:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo92a:value:28 = NA    ! P9 model 
+*option:BOPCombo92a:value:29 = 0.92              ! P9 TPF
+*option:BOPCombo92a:value:30 = 1625              ! P9 Annual energy use 
+*option:BOPCombo92a:value:31 = 0.92              ! P9 WHPF2*option
+*option:BOPCombo92a:value:32 = 58500             ! P9 Burner input 
+*option:BOPCombo92a:value:33 = 96                ! P9 Recovery efficiency
+*option:BOPCombo92a:value:34 = 13                ! P9 Ctl power (W)
+*option:BOPCombo92a:value:35 = 111               ! P9 Circ power (W)
+*option:BOPCombo92a:value:36 = 0.32              ! P9 Daily use ???
+*option:BOPCombo92a:value:37 = 0                 ! P9 Standby loss (fan)
+*option:BOPCombo92a:value:38 = 0                 ! P9 Standby loss (no fan)
+*option:BOPCombo92a:value:39 = 1437              ! P9 one hour rating (HW)
+*option:BOPCombo92a:value:40 = 1433              ! P9 one hour rating concurrent
+*option:BOPCombo92a:value:41 = 84                ! P9 net efficiency - 15
+*option:BOPCombo92a:value:42 = 95                ! P9 net efficiency - 40
+*option:BOPCombo92a:value:43 = 93                ! P9 net efficiency - 100 
+*option:BOPCombo92a:value:44 = 127               ! P9 Elec use - 15
+*option:BOPCombo92a:value:45 = 290               ! P9 Elec use - 40
+*option:BOPCombo92a:value:46 = 558               ! P9 Elec use - 100 
+*option:BOPCombo92a:value:47 = 166               ! P9 BlowerPower - 15
+*option:BOPCombo92a:value:48 = 166               ! P9 BlowerPower - 40
+*option:BOPCombo92a:value:49 = 421               ! P9 BlowerPower - 100 
+*option:BOPCombo92a:cost:total = 0
+
+*option:BOPCombo92b:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo92b:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo92b:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo92b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo92b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo92b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo92b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo92b:value:14 = 92                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo92b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo92b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo92b:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo92b:value:28 = NA    ! P9 model 
+*option:BOPCombo92b:value:29  =	0.92	! P9 TPF
+*option:BOPCombo92b:value:30  =	2957	! P9 Annual energy use
+*option:BOPCombo92b:value:31  =	0.95	! P9 WHPF2*option
+*option:BOPCombo92b:value:32  =	58500	! P9 Burner input
+*option:BOPCombo92b:value:33  =	96	! P9 Recovery efficiency
+*option:BOPCombo92b:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo92b:value:35  =	66	! P9 Circ power (W)
+*option:BOPCombo92b:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo92b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo92b:value:38  =	1444	! P9 Standby loss (no fan)
+*option:BOPCombo92b:value:39  =	1459	! P9 one hour rating (HW)
+*option:BOPCombo92b:value:40  =	0.19	! P9 one hour rating concurrent
+*option:BOPCombo92b:value:41  =	90	! P9 net efficiency - 15
+*option:BOPCombo92b:value:42  =	94	! P9 net efficiency - 40
+*option:BOPCombo92b:value:43  =	86	! P9 net efficiency - 100
+*option:BOPCombo92b:value:44  =	228	! P9 Elec use - 15
+*option:BOPCombo92b:value:45  =	611	! P9 Elec use - 40
+*option:BOPCombo92b:value:46  =	621	! P9 Elec use - 100
+*option:BOPCombo92b:value:47  =	350	! P9 BlowerPower - 15
+*option:BOPCombo92b:value:48  =	484	! P9 BlowerPower - 40
+*option:BOPCombo92b:value:49  =	480	! P9 BlowerPower - 100
+*option:BOPCombo92b:cost:total = 0
+
+*option:BOPCombo92c:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo92c:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo92c:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo92c:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo92c:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo92c:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo92c:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo92c:value:14 = 91                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo92c:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo92c:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo92c:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo92c:value:28 = NA    ! P9 model 
+*option:BOPCombo92c:value:29  =	0.92	! P9 TPF
+*option:BOPCombo92c:value:30  =	2439	! P9 Annual energy use
+*option:BOPCombo92c:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo92c:value:32  =	43900	! P9 Burner input
+*option:BOPCombo92c:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo92c:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo92c:value:35  =	72	! P9 Circ power (W)
+*option:BOPCombo92c:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo92c:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo92c:value:38  =	1108	! P9 Standby loss (no fan)
+*option:BOPCombo92c:value:39  =	1109	! P9 one hour rating (HW)
+*option:BOPCombo92c:value:40  =	0.29	! P9 one hour rating concurrent
+*option:BOPCombo92c:value:41  =	84	! P9 net efficiency - 15
+*option:BOPCombo92c:value:42  =	95	! P9 net efficiency - 40
+*option:BOPCombo92c:value:43  =	87	! P9 net efficiency - 100
+*option:BOPCombo92c:value:44  =	195	! P9 Elec use - 15
+*option:BOPCombo92c:value:45  =	476	! P9 Elec use - 40
+*option:BOPCombo92c:value:46  =	532	! P9 Elec use - 100
+*option:BOPCombo92c:value:47  =	184	! P9 BlowerPower - 15
+*option:BOPCombo92c:value:48  =	184	! P9 BlowerPower - 40
+*option:BOPCombo92c:value:49  =	242	! P9 BlowerPower - 100
+*option:BOPCombo92c:cost:total = 0
+
+*option:BOPCombo92d:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo92d:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo92d:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo92d:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo92d:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo92d:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo92d:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo92d:value:14 = 91                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo92d:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo92d:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo92d:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo92d:value:28 = NA    ! P9 model 
+*option:BOPCombo92d:value:29  =	0.92	! P9 TPF
+*option:BOPCombo92d:value:30  =	1616	! P9 Annual energy use
+*option:BOPCombo92d:value:31  =	0.95	! P9 WHPF2*option
+*option:BOPCombo92d:value:32  =	58500	! P9 Burner input
+*option:BOPCombo92d:value:33  =	96	! P9 Recovery efficiency
+*option:BOPCombo92d:value:34  =	9	! P9 Ctl power (W)
+*option:BOPCombo92d:value:35  =	77	! P9 Circ power (W)
+*option:BOPCombo92d:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo92d:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo92d:value:38  =	1444	! P9 Standby loss (no fan)
+*option:BOPCombo92d:value:39  =	1459	! P9 one hour rating (HW)
+*option:BOPCombo92d:value:40  =	0.19	! P9 one hour rating concurrent
+*option:BOPCombo92d:value:41  =	89	! P9 net efficiency - 15
+*option:BOPCombo92d:value:42  =	93	! P9 net efficiency - 40
+*option:BOPCombo92d:value:43  =	89	! P9 net efficiency - 100
+*option:BOPCombo92d:value:44  =	145	! P9 Elec use - 15
+*option:BOPCombo92d:value:45  =	279	! P9 Elec use - 40
+*option:BOPCombo92d:value:46  =	582	! P9 Elec use - 100
+*option:BOPCombo92d:value:47  =	161	! P9 BlowerPower - 15
+*option:BOPCombo92d:value:48  =	165	! P9 BlowerPower - 40
+*option:BOPCombo92d:value:49  =	440	! P9 BlowerPower - 100
+*option:BOPCombo92d:cost:total = 0
+
+
+*option:BOPCombo93a:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo93a:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo93a:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo93a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo93a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo93a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo93a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo93a:value:14 = 93                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo93a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo93a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo93a:value:27 = NA     ! P9 manufacturer 
+*option:BOPCombo93a:value:28 = NA          ! P9 model 
+*option:BOPCombo93a:value:29 = 0.93              ! P9 TPF
+*option:BOPCombo93a:value:30 = 1358              ! P9 Annual energy use 
+*option:BOPCombo93a:value:31 = 0.94              ! P9 WHPF2*option
+*option:BOPCombo93a:value:32 = 44000             ! P9 Burner input 
+*option:BOPCombo93a:value:33 = 97                ! P9 Recovery efficiency
+*option:BOPCombo93a:value:34 = 14                ! P9 Ctl power (W)
+*option:BOPCombo93a:value:35 = 91                ! P9 Circ power (W)
+*option:BOPCombo93a:value:36 = 0.32              ! P9 Daily use ???
+*option:BOPCombo93a:value:37 = 0                 ! P9 Standby loss (fan)
+*option:BOPCombo93a:value:38 = 0                 ! P9 Standby loss (no fan)
+*option:BOPCombo93a:value:39 = 1140              ! P9 one hour rating (HW)
+*option:BOPCombo93a:value:40 = 1131              ! P9 one hour rating concurrent
+*option:BOPCombo93a:value:41 = 86                ! P9 net efficiency - 15
+*option:BOPCombo93a:value:42 = 96                ! P9 net efficiency - 40
+*option:BOPCombo93a:value:43 = 96                ! P9 net efficiency - 100 
+*option:BOPCombo93a:value:44 = 117               ! P9 Elec use - 15
+*option:BOPCombo93a:value:45 = 199               ! P9 Elec use - 40
+*option:BOPCombo93a:value:46 = 780               ! P9 Elec use - 100 
+*option:BOPCombo93a:value:47 = 82                ! P9 BlowerPower - 15
+*option:BOPCombo93a:value:48 = 82                ! P9 BlowerPower - 40
+*option:BOPCombo93a:value:49 = 633               ! P9 BlowerPower - 100 
+*option:BOPCombo93a:cost:total = 0
 
 
 
+*option:BOPCombo93b:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo93b:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo93b:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo93b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo93b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo93b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo93b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo93b:value:14 = 93                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo93b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo93b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo93b:value:27 = NA     ! P9 manufacturer 
+*option:BOPCombo93b:value:28 = NA          ! P9 model 
+*option:BOPCombo93b:value:29  =	0.93	! P9 TPF
+*option:BOPCombo93b:value:30  =	2773	! P9 Annual energy use
+*option:BOPCombo93b:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo93b:value:32  =	58500	! P9 Burner input
+*option:BOPCombo93b:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo93b:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo93b:value:35  =	69	! P9 Circ power (W)
+*option:BOPCombo93b:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo93b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo93b:value:38  =	1396	! P9 Standby loss (no fan)
+*option:BOPCombo93b:value:39  =	1447	! P9 one hour rating (HW)
+*option:BOPCombo93b:value:40  =	0.32	! P9 one hour rating concurrent
+*option:BOPCombo93b:value:41  =	85	! P9 net efficiency - 15
+*option:BOPCombo93b:value:42  =	97	! P9 net efficiency - 40
+*option:BOPCombo93b:value:43  =	91	! P9 net efficiency - 100
+*option:BOPCombo93b:value:44  =	222	! P9 Elec use - 15
+*option:BOPCombo93b:value:45  =	517	! P9 Elec use - 40
+*option:BOPCombo93b:value:46  =	544	! P9 Elec use - 100
+*option:BOPCombo93b:value:47  =	212	! P9 BlowerPower - 15
+*option:BOPCombo93b:value:48  =	217	! P9 BlowerPower - 40
+*option:BOPCombo93b:value:49  =	254	! P9 BlowerPower - 100
+*option:BOPCombo93b:cost:total = 0
+
+*option:BOPCombo93c:value:7 = P9                  ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo93c:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo93c:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo93c:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo93c:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo93c:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo93c:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo93c:value:14 = 93                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo93c:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo93c:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo93c:value:27 = NA     ! P9 manufacturer 
+*option:BOPCombo93c:value:28 = NA          ! P9 model 
+*option:BOPCombo93c:value:29  =	0.93	! P9 TPF
+*option:BOPCombo93c:value:30  =	1631	! P9 Annual energy use
+*option:BOPCombo93c:value:31  =	0.94	! P9 WHPF2*option
+*option:BOPCombo93c:value:32  =	43900	! P9 Burner input
+*option:BOPCombo93c:value:33  =	97	! P9 Recovery efficiency
+*option:BOPCombo93c:value:34  =	13	! P9 Ctl power (W)
+*option:BOPCombo93c:value:35  =	111	! P9 Circ power (W)
+*option:BOPCombo93c:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo93c:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo93c:value:38  =	1140	! P9 Standby loss (no fan)
+*option:BOPCombo93c:value:39  =	1131	! P9 one hour rating (HW)
+*option:BOPCombo93c:value:40  =	0.32	! P9 one hour rating concurrent
+*option:BOPCombo93c:value:41  =	84	! P9 net efficiency - 15
+*option:BOPCombo93c:value:42  =	96	! P9 net efficiency - 40
+*option:BOPCombo93c:value:43  =	95	! P9 net efficiency - 100
+*option:BOPCombo93c:value:44  =	131	! P9 Elec use - 15
+*option:BOPCombo93c:value:45  =	286	! P9 Elec use - 40
+*option:BOPCombo93c:value:46  =	567	! P9 Elec use - 100
+*option:BOPCombo93c:value:47  =	167	! P9 BlowerPower - 15
+*option:BOPCombo93c:value:48  =	166	! P9 BlowerPower - 40
+*option:BOPCombo93c:value:49  =	417	! P9 BlowerPower - 100
+*option:BOPCombo93c:cost:total = 0		
+
+
+*option:BOPCombo94a:value:7  = P9                 ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo94a:value:8  = None               ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo94a:value:9  = 2                  ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo94a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo94a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo94a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo94a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo94a:value:14 = 88                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo94a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo94a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo94a:value:27 = Navien^America    ! P9 manufacturer 
+*option:BOPCombo94a:value:28 = 13-06-M0424-1     ! P9 model 
+*option:BOPCombo94a:value:29 = 0.94              ! P9 TPF
+*option:BOPCombo94a:value:30 = 1505              ! P9 Annual energy use 
+*option:BOPCombo94a:value:31 = 0.94              ! P9 WHPF2*option
+*option:BOPCombo94a:value:32 = 44000             ! P9 Burner input 
+*option:BOPCombo94a:value:33 = 97                ! P9 Recovery efficiency
+*option:BOPCombo94a:value:34 = 7                 ! P9 Ctl power (W)
+*option:BOPCombo94a:value:35 = 52                ! P9 Circ power (W)
+*option:BOPCombo94a:value:36 = 0.18              ! P9 Daily use ???
+*option:BOPCombo94a:value:37 = 0                 ! P9 Standby loss (fan)
+*option:BOPCombo94a:value:38 = 0                 ! P9 Standby loss (no fan)
+*option:BOPCombo94a:value:39 = 1116              ! P9 one hour rating (HW)
+*option:BOPCombo94a:value:40 = 1094              ! P9 one hour rating concurrent
+*option:BOPCombo94a:value:41 = 93                ! P9 net efficiency - 15
+*option:BOPCombo94a:value:42 = 95                ! P9 net efficiency - 40
+*option:BOPCombo94a:value:43 = 88                ! P9 net efficiency - 100 
+*option:BOPCombo94a:value:44 = 149               ! P9 Elec use - 15
+*option:BOPCombo94a:value:45 = 246               ! P9 Elec use - 40
+*option:BOPCombo94a:value:46 = 471               ! P9 Elec use - 100 
+*option:BOPCombo94a:value:47 = 110               ! P9 BlowerPower - 15
+*option:BOPCombo94a:value:48 = 132               ! P9 BlowerPower - 40
+*option:BOPCombo94a:value:49 = 341               ! P9 BlowerPower - 100 
+*option:BOPCombo94a:cost:total = 0
+
+*option:BOPCombo94b:value:7  = P9                 ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo94b:value:8  = None               ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo94b:value:9  = 2                  ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo94b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo94b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo94b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo94b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo94b:value:14 = 93                ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo94b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo94b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo94b:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo94b:value:28 = NA     ! P9 model 
+*option:BOPCombo94b:value:29  =	0.94	! P9 TPF
+*option:BOPCombo94b:value:30  =	3353	! P9 Annual energy use
+*option:BOPCombo94b:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo94b:value:32  =	58500	! P9 Burner input
+*option:BOPCombo94b:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo94b:value:34  =	14	! P9 Ctl power (W)
+*option:BOPCombo94b:value:35  =	70	! P9 Circ power (W)
+*option:BOPCombo94b:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo94b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo94b:value:38  =	1396	! P9 Standby loss (no fan)
+*option:BOPCombo94b:value:39  =	1447	! P9 one hour rating (HW)
+*option:BOPCombo94b:value:40  =	0.32	! P9 one hour rating concurrent
+*option:BOPCombo94b:value:41  =	90	! P9 net efficiency - 15
+*option:BOPCombo94b:value:42  =	96	! P9 net efficiency - 40
+*option:BOPCombo94b:value:43  =	87	! P9 net efficiency - 100
+*option:BOPCombo94b:value:44  =	269	! P9 Elec use - 15
+*option:BOPCombo94b:value:45  =	636	! P9 Elec use - 40
+*option:BOPCombo94b:value:46  =	709	! P9 Elec use - 100
+*option:BOPCombo94b:value:47  =	323	! P9 BlowerPower - 15
+*option:BOPCombo94b:value:48  =	326	! P9 BlowerPower - 40
+*option:BOPCombo94b:value:49  =	409	! P9 BlowerPower - 100
+*option:BOPCombo94b:cost:total = 0
+
+*option:BOPCombo94c:value:7  = P9                 ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo94c:value:8  = None               ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo94c:value:9  = 2                  ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo94c:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo94c:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo94c:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo94c:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo94c:value:14 = 94                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo94c:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo94c:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo94c:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo94c:value:28 = NA     ! P9 model 
+*option:BOPCombo94c:value:29  =	0.94	! P9 TPF
+*option:BOPCombo94c:value:30  =	3353	! P9 Annual energy use
+*option:BOPCombo94c:value:31  =	0.96	! P9 WHPF2*option
+*option:BOPCombo94c:value:32  =	58500	! P9 Burner input
+*option:BOPCombo94c:value:33  =	98	! P9 Recovery efficiency
+*option:BOPCombo94c:value:34  =	14	! P9 Ctl power (W)
+*option:BOPCombo94c:value:35  =	70	! P9 Circ power (W)
+*option:BOPCombo94c:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo94c:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo94c:value:38  =	1396	! P9 Standby loss (no fan)
+*option:BOPCombo94c:value:39  =	1447	! P9 one hour rating (HW)
+*option:BOPCombo94c:value:40  =	0.32	! P9 one hour rating concurrent
+*option:BOPCombo94c:value:41  =	90	! P9 net efficiency - 15
+*option:BOPCombo94c:value:42  =	96	! P9 net efficiency - 40
+*option:BOPCombo94c:value:43  =	87	! P9 net efficiency - 100
+*option:BOPCombo94c:value:44  =	269	! P9 Elec use - 15
+*option:BOPCombo94c:value:45  =	636	! P9 Elec use - 40
+*option:BOPCombo94c:value:46  =	709	! P9 Elec use - 100
+*option:BOPCombo94c:value:47  =	323	! P9 BlowerPower - 15
+*option:BOPCombo94c:value:48  =	326	! P9 BlowerPower - 40
+*option:BOPCombo94c:value:49  =	409	! P9 BlowerPower - 100
+*option:BOPCombo94c:cost:total = 0
+
+
+*option:BOPCombo95a:value:7  = P9                 ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo95a:value:8  = None               ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo95a:value:9  = 2                  ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo95a:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo95a:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo95a:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo95a:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo95a:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo95a:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo95a:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo95a:value:27 = NA   ! P9 manufacturer 
+*option:BOPCombo95a:value:28 = NA    ! P9 model 
+*option:BOPCombo95a:value:29 = 0.95              ! P9 TPF
+*option:BOPCombo95a:value:30 = 1463              ! P9 Annual energy use 
+*option:BOPCombo95a:value:31 = 0.95              ! P9 WHPF2*option
+*option:BOPCombo95a:value:32 = 58300             ! P9 Burner input 
+*option:BOPCombo95a:value:33 = 96                ! P9 Recovery efficiency
+*option:BOPCombo95a:value:34 = 7                 ! P9 Ctl power (W)
+*option:BOPCombo95a:value:35 = 74                ! P9 Circ power (W)
+*option:BOPCombo95a:value:36 = 0.19              ! P9 Daily use ???
+*option:BOPCombo95a:value:37 = 0                 ! P9 Standby loss (fan)
+*option:BOPCombo95a:value:38 = 0                 ! P9 Standby loss (no fan)
+*option:BOPCombo95a:value:39 = 1444              ! P9 one hour rating (HW)
+*option:BOPCombo95a:value:40 = 1459              ! P9 one hour rating concurrent
+*option:BOPCombo95a:value:41 = 94                ! P9 net efficiency - 15
+*option:BOPCombo95a:value:42 = 96                ! P9 net efficiency - 40
+*option:BOPCombo95a:value:43 = 91                ! P9 net efficiency - 100 
+*option:BOPCombo95a:value:44 = 145               ! P9 Elec use - 15
+*option:BOPCombo95a:value:45 = 231               ! P9 Elec use - 40
+*option:BOPCombo95a:value:46 = 548               ! P9 Elec use - 100 
+*option:BOPCombo95a:value:47 = 107               ! P9 BlowerPower - 15
+*option:BOPCombo95a:value:48 = 117               ! P9 BlowerPower - 40
+*option:BOPCombo95a:value:49 = 418               ! P9 BlowerPower - 100 
+*option:BOPCombo95a:cost:total = 0
+
+
+
+*option:BOPCombo95:value:7  = P9                 ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:BOPCombo95b:value:8  = None               ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:BOPCombo95b:value:9  = 2                  ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
+*option:BOPCombo95b:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:BOPCombo95b:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:BOPCombo95b:value:12 = NA                 ! H2K: Type 1: Capacity value. 
+*option:BOPCombo95b:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
+*option:BOPCombo95b:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
+*option:BOPCombo95b:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
+*option:BOPCombo95b:value:16 = true               ! H2K: EE motor (true/false) 
+*option:BOPCombo95b:value:27 = NA    ! P9 manufacturer 
+*option:BOPCombo95b:value:28 = NA     ! P9 model 
+*option:BOPCombo95b:value:29  =	0.95	! P9 TPF
+*option:BOPCombo95b:value:30  =	1618	! P9 Annual energy use
+*option:BOPCombo95b:value:31  =	0.95	! P9 WHPF2*option
+*option:BOPCombo95b:value:32  =	58500	! P9 Burner input
+*option:BOPCombo95b:value:33  =	96	! P9 Recovery efficiency
+*option:BOPCombo95b:value:34  =	12	! P9 Ctl power (W)
+*option:BOPCombo95b:value:35  =	20	! P9 Circ power (W)
+*option:BOPCombo95b:value:36  =	0	! P9 Daily use ???
+*option:BOPCombo95b:value:37  =	0	! P9 Standby loss (fan)
+*option:BOPCombo95b:value:38  =	1444	! P9 Standby loss (no fan)
+*option:BOPCombo95b:value:39  =	1459	! P9 one hour rating (HW)
+*option:BOPCombo95b:value:40  =	0.19	! P9 one hour rating concurrent
+*option:BOPCombo95b:value:41  =	93	! P9 net efficiency - 15
+*option:BOPCombo95b:value:42  =	97	! P9 net efficiency - 40
+*option:BOPCombo95b:value:43  =	91	! P9 net efficiency - 100
+*option:BOPCombo95b:value:44  =	176	! P9 Elec use - 15
+*option:BOPCombo95b:value:45  =	251	! P9 Elec use - 40
+*option:BOPCombo95b:value:46  =	371	! P9 Elec use - 100
+*option:BOPCombo95b:value:47  =	139	! P9 BlowerPower - 15
+*option:BOPCombo95b:value:48  =	142	! P9 BlowerPower - 40
+*option:BOPCombo95b:value:49  =	254	! P9 BlowerPower - 100
+*option:BOPCombo95b:cost:total		
 
 
 
@@ -3794,56 +4302,36 @@ Reflects southern Ontario costs
 *option:NA:value:8 = NA    ! Eff% @ Rating2
 *option:NA:cost:total = 0
 
-*option:CEF_SPEC:value:1 = HRV.vnt
-*option:CEF_SPEC:value:2 = 
-*option:CEF_SPEC:value:3 = 1     ! F326
-*option:CEF_SPEC:value:4 = 1     ! Forced air heating ductwork
-*option:CEF_SPEC:value:5 = 480   ! Min./Day
-*option:CEF_SPEC:value:6 = 60    ! L/s (exhaust = supply)
-*option:CEF_SPEC:value:7 = 64    ! Eff% @ Rating1
-*option:CEF_SPEC:value:8 = 64    ! Eff% @ Rating2
-*option:CEF_SPEC:cost:total = 0
+*option:HRV_70:value:1 = HRV.vnt
+*option:HRV_70:value:2 = 
+*option:HRV_70:value:3 = 1     ! F326
+*option:HRV_70:value:4 = 1     ! Forced air heating ductwork
+*option:HRV_70:value:5 = 1440   ! Min./Day
+*option:HRV_70:value:6 = 60    ! L/s (exhaust = supply)
+*option:HRV_70:value:7 = 70    ! Eff% @ Rating1
+*option:HRV_70:value:8 = 63    ! Eff% @ Rating2
+*option:HRV_70:cost:total = 0
 
-*option:BaseHRV_SRE70:value:1    = HRV-base.vnt
-*option:BaseHRV_SRE70:value:2    = 
-*option:BaseHRV_SRE70:cost:total = 0
+*option:HRV_80:value:1 = HRV.vnt
+*option:HRV_80:value:2 = 
+*option:HRV_80:value:3 = 1     ! F326
+*option:HRV_80:value:4 = 1     ! Forced air heating ductwork
+*option:HRV_80:value:5 = 1440   ! Min./Day
+*option:HRV_80:value:6 = 60    ! L/s (exhaust = supply)
+*option:HRV_80:value:7 = 80    ! Eff% @ Rating1
+*option:HRV_80:value:8 = 73    ! Eff% @ Rating2
+*option:HRV_80:cost:total = 0
 
-*option:BaseHRV_SRE55:value:1    = HRV-base1.vnt	! Use for BC-LEEP base (matches HOT2000 inputs)
-*option:BaseHRV_SRE55:value:2    = 	
-*option:BaseHRV_SRE55:cost:total = 0
+*option:HRV_84:value:1 = HRV.vnt
+*option:HRV_84:value:2 = 
+*option:HRV_84:value:3 = 1     ! F326
+*option:HRV_84:value:4 = 1     ! Forced air heating ductwork
+*option:HRV_84:value:5 = 1440   ! Min./Day
+*option:HRV_84:value:6 = 60    ! L/s (exhaust = supply)
+*option:HRV_84:value:7 = 84    ! Eff% @ Rating1
+*option:HRV_84:value:8 = 65    ! Eff% @ Rating2
+*option:HRV_84:cost:total = 0
 
-*option:UpgHRV_SRE78:value:1    = HRV-upg.vnt
-*option:UpgHRV_SRE78:value:2    = 
-*option:UpgHRV_SRE78:cost:total = 0
-
-! This is a proxy for fans-only ventilation
-*option:BaseHRV_SREZero:value:1    = HRV0-base.vnt
-*option:BaseHRV_SREZero:value:2    =  
-*option:BaseHRV_SREZero:cost:total = 0
-
-*option:DisableMVNT:value:1    =  null
-*option:DisableMVNT:value:2    =  #
-*option:DisableMVNT:cost:total = 0
-
-*option:HRV_60:value:1 = HRV.vnt
-*option:HRV_60:value:2 = 
-*option:HRV_60:value:3 = 1     ! F326
-*option:HRV_60:value:4 = 1     ! Forced air heating ductwork
-*option:HRV_60:value:5 = 1440   ! Min./Day
-*option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
-*option:HRV_60:value:7 = 70    ! Eff% @ Rating1
-*option:HRV_60:value:8 = 61    ! Eff% @ Rating2
-*option:HRV_60:cost:total = 1386       !$1386 cost assumed for LEEP Prince George optimization
-
-*option:HRV_81:value:1 = HRV.vnt
-*option:HRV_81:value:2 = 
-*option:HRV_81:value:3 = 1     ! F326
-*option:HRV_81:value:4 = 1     ! Forced air heating ductwork
-*option:HRV_81:value:5 = 1440   ! Min./Day
-*option:HRV_81:value:6 = 60    ! L/s (exhaust = supply)
-*option:HRV_81:value:7 = 78    ! Eff% @ Rating1
-*option:HRV_81:value:8 = 72    ! Eff% @ Rating2
-*option:HRV_81:cost:total = 2314   !$2314 cost assumed for LEEP Prince George optimization
 
 *attribute:end 
 
@@ -3959,9 +4447,9 @@ Reflects southern Ontario costs
 *attribute:tag:4 = Opt-H2K-TankSize                      ! DHW tank size code (volume code)
 *attribute:tag:5 = Opt-H2K-EF                            ! DHW Energy Factor code
 *attribute:tag:6 = Opt-H2K-IntHeatPumpCOP                ! DHW Integrated HP COP
-*attribute:tag:7 = Opt-H2K-FlueDiameter                 !  DHW Flue diameter
+*attribute:tag:7 = Opt-H2K-FlueDiameter                  ! DHW Flue diameter
 
-*attribute:default = BaseDHW 
+*attribute:default = NA 
 
 *option:NA:value:1 = NA.dhw
 *option:NA:value:2 = NA
@@ -3972,18 +4460,6 @@ Reflects southern Ontario costs
 *option:NA:value:7 = NA
 *option:NA:cost:total = 0
 
-
-
-
-*option:BaseDHW:value:1 = BaseDHW.dhw
-*option:BaseDHW:value:2 = 2         ! Gas
-*option:BaseDHW:value:3 = 2         ! Conventional Tank
-*option:BaseDHW:value:4 = 190     ! Litres (50 USGal)
-*option:BaseDHW:value:5 = 0.67    ! EF
-*option:BaseDHW:value:6 = NA        
-*option:BaseDHW:value:7 = 76.2
-*option:BaseDHW:cost:total = 0
-
 *option:ElecInstantaneous:value:1 = ElecInstant.dhw
 *option:ElecInstantaneous:value:2 = 1         ! Elec
 *option:ElecInstantaneous:value:3 = 4         ! Instantaneous
@@ -3993,44 +4469,59 @@ Reflects southern Ontario costs
 *option:ElecInstantaneous:value:7 = 0
 *option:ElecInstantaneous:cost:total = 0
 
-*option:ElectricStorage:value:1 = ElecStorage.dhw
-*option:ElectricStorage:value:2 = 1         ! Elec
-*option:ElectricStorage:value:3 = 2         ! Conventional Tank
-*option:ElectricStorage:value:4 = 189.3     ! Litres (50 USGal)
-*option:ElectricStorage:value:5 = 0.8217    ! EF
-*option:ElectricStorage:value:6 = NA        ! HP COP
-*option:ElectricStorage:value:7 = 0
-*option:ElectricStorage:cost:total    = 0
+*option:BOP_GasInst:value:1 = GasInstantaneous.dhw
+*option:BOP_GasInst:value:2 = 2         ! Gas
+*option:BOP_GasInst:value:3 = 5         ! Instantaneous
+*option:BOP_GasInst:value:4 = 0         ! Litres
+*option:BOP_GasInst:value:5 = 0.82      ! EF
+*option:BOP_GasInst:value:6 = NA        
+*option:BOP_GasInst:value:7 = 76.2
+*option:BOP_GasInst:cost:total = 0
 
-*option:GasInstantaneous:value:1 = GasInstantaneous.dhw
-*option:GasInstantaneous:value:2 = 2         ! Gas
-*option:GasInstantaneous:value:3 = 5         ! Instantaneous
-*option:GasInstantaneous:value:4 = 0         ! Litres
-*option:GasInstantaneous:value:5 = 0.95    ! EF
-*option:GasInstantaneous:value:6 = NA        
-*option:GasInstantaneous:value:7 = 0
-*option:GasInstantaneous:cost:total = 925     !$925 assumed cost for instantaneous hot water heater 
+*option:BOP_GasInst_condens:value:1 = GasInstantaneous.dhw
+*option:BOP_GasInst_condens:value:2 = 2         ! Gas
+*option:BOP_GasInst_condens:value:3 = 6         ! Instantaneous condensing
+*option:BOP_GasInst_condens:value:4 = 0         ! Litres
+*option:BOP_GasInst_condens:value:5 = 0.90      ! EF
+*option:BOP_GasInst_condens:value:6 = NA        
+*option:BOP_GasInst_condens:value:7 = 76.2
+*option:BOP_GasInst_condens:cost:total = 0
 
+*option:BOP_GasInst_condens_95:value:1 = GasInstantaneous.dhw
+*option:BOP_GasInst_condens_95:value:2 = 2         ! Gas
+*option:BOP_GasInst_condens_95:value:3 = 6         ! Instantaneous condensing
+*option:BOP_GasInst_condens_95:value:4 = 0         ! Litres
+*option:BOP_GasInst_condens_95:value:5 = 0.95      ! EF
+*option:BOP_GasInst_condens_95:value:6 = NA        
+*option:BOP_GasInst_condens_95:value:7 = 76.2
+*option:BOP_GasInst_condens_95:cost:total = 0
 
+*option:BOP_Tank_condens:value:1 = BOP_Tank_condens.dhw
+*option:BOP_Tank_condens:value:2 = 2         ! Gas
+*option:BOP_Tank_condens:value:3 = 2         ! Condensing Tank
+*option:BOP_Tank_condens:value:4 = 151.4     ! Litres (40 USGal)
+*option:BOP_Tank_condens:value:5 = 0.80      ! EF
+*option:BOP_Tank_condens:value:6 = NA        
+*option:BOP_Tank_condens:value:7 = 76.2
+*option:BOP_Tank_condens:cost:total = 0
 
-*option:ElectricHP:value:1 = ElecHP.dhw
-*option:ElectricHP:value:2 = 1         ! Elec
-*option:ElectricHP:value:3 = 6         ! Heat Pump (this should only be used for importing an old H2K pre-v11 file)
-*option:ElectricHP:value:4 = 0         ! Litres 
-*option:ElectricHP:value:5 = 1.91      ! COP
-*option:ElectricHP:value:6 = NA        ! Integrated HP COP
-*option:ElectricHP:value:7 = 0
-*option:ElectricHP:cost:total    = 0
+*option:BOP_Tank_cond_TE90:value:1 = BOP_Tank_condens.dhw
+*option:BOP_Tank_cond_TE90:value:2 = 2         ! Gas
+*option:BOP_Tank_cond_TE90:value:3 = 2         ! Condensing Tank
+*option:BOP_Tank_cond_TE90:value:4 = 151.4     ! Litres (40 USGal)
+*option:BOP_Tank_cond_TE90:value:5 = 0.794     ! EF
+*option:BOP_Tank_cond_TE90:value:6 = NA        
+*option:BOP_Tank_cond_TE90:value:7 = 76.2
+*option:BOP_Tank_cond_TE90:cost:total = 0
 
-*option:HPHotWater:value:1 = HPHotWater.dhw
-*option:HPHotWater:value:2 = 1         ! Elec
-*option:HPHotWater:value:3 = 7         ! Integrated Heat Pump
-*option:HPHotWater:value:4 = 189.3     ! Litres (50 USGl)
-*option:HPHotWater:value:5 = 0.9       ! EF (must be 0.1 - 1.0) H2K help prescibes 0.9
-*option:HPHotWater:value:6 = 2.61       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
-*option:HPHotWater:value:7  = NA
-*option:HPHotWater:cost:total    = 1185   !$1185 assumed cost for heat pump water heater 
-
+*option:BOP_Tank_cond_TE94:value:1 = BOP_Tank_condens.dhw
+*option:BOP_Tank_cond_TE94:value:2 = 2         ! Gas
+*option:BOP_Tank_cond_TE94:value:3 = 2         ! Condensing Tank
+*option:BOP_Tank_cond_TE94:value:4 = 151.4     ! Litres (40 USGal)
+*option:BOP_Tank_cond_TE94:value:5 = 0.829     ! EF
+*option:BOP_Tank_cond_TE94:value:6 = NA        
+*option:BOP_Tank_cond_TE94:value:7 = 76.2
+*option:BOP_Tank_cond_TE94:cost:total = 0
 
 
 *attribute:end
@@ -4072,42 +4563,29 @@ Reflects southern Ontario costs
 *option:none:cost:total = 0
 
 
-*option:DWHR-eff-30:value:1   = true          ! Has DHWR? true/false
-*option:DWHR-eff-30:value:2   = false         ! DWHR Preheat shower only "true" or "false"
-*option:DWHR-eff-30:value:3   = Power-Pipe    ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
-*option:DWHR-eff-30:value:4   = C3-39         ! DWHR Model: See H2K DWHR screen
-*option:DWHR-eff-30:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
-*option:DWHR-eff-30:value:6   = 31.0          ! DWHR effectiveness @ 9.5 l/m  (%)
-*option:DWHR-eff-30:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
-*option:DWHR-eff-30:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
-*option:DWHR-eff-30:value:9   = 4.53          ! Shower lenght (minutes)
-*option:DWHR-eff-30:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-30:cost:total = 615           !$615 assumed cost for LEEP Prince George 
+*option:BOP_DWHR_low:value:1   = true          ! Has DHWR? true/false
+*option:BOP_DHWR_low:value:2   = false         ! DWHR Preheat shower only "true" or "false"
+*option:BOP_DHWR_low:value:3   = Generic       ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
+*option:BOP_DHWR_low:value:4   = 1             ! DWHR Model: See H2K DWHR screen
+*option:BOP_DHWR_low:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*option:BOP_DHWR_low:value:6   = 41.5            ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:BOP_DHWR_low:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
+*option:BOP_DHWR_low:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
+*option:BOP_DHWR_low:value:9   = 4.53          ! Shower lenght (minutes)
+*option:BOP_DHWR_low:value:10  = 3             ! number of daily showers
+*option:BOP_DHWR_low:cost:total = 0            !$615 assumed cost for LEEP Prince George 
 
-*option:DWHR-eff-42:value:1   = true          ! Has DHWR? true/false
-*option:DWHR-eff-42:value:2   = false         ! DWHR Preheat shower only "true" or "false"
-*option:DWHR-eff-42:value:3   = Power-Pipe    ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
-*option:DWHR-eff-42:value:4   = C4-57         ! DWHR Model: See H2K DWHR screen
-*option:DWHR-eff-42:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
-*option:DWHR-eff-42:value:6   = 41.5          ! DWHR effectiveness @ 9.5 l/m  (%)
-*option:DWHR-eff-42:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
-*option:DWHR-eff-42:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
-*option:DWHR-eff-42:value:9   = 4.53          ! Shower lenght (minutes)
-*option:DWHR-eff-42:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-42:cost:total = 0
-
-*option:DWHR-eff-55:value:1   = true          ! Has DHWR? true/false
-*option:DWHR-eff-55:value:2   = false         ! DWHR Preheat shower only "true" or "false"
-*option:DWHR-eff-55:value:3   = Power-Pipe    ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
-*option:DWHR-eff-55:value:4   = R2-82         ! DWHR Model: See H2K DWHR screen
-*option:DWHR-eff-55:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
-*option:DWHR-eff-55:value:6   = 55.3          ! DWHR effectiveness @ 9.5 l/m  (%)
-*option:DWHR-eff-55:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
-*option:DWHR-eff-55:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
-*option:DWHR-eff-55:value:9   = 4.53          ! Shower lenght (minutes)
-*option:DWHR-eff-55:value:10  = 3             ! number of daily showers
-*option:DWHR-eff-55:cost:total = 820            !$820 assumed cost for LEEP Prince George 
-
+*option:BOP_DHWR_high:value:1   = true          ! Has DHWR? true/false
+*option:BOP_DHWR_high:value:2   = false         ! DWHR Preheat shower only "true" or "false"
+*option:BOP_DHWR_high:value:3   = Generic       ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., 
+*option:BOP_DHWR_high:value:4   = 2             ! DWHR Model: See H2K DWHR screen
+*option:BOP_DHWR_high:value:5   = 2             ! DWHR Efficiency code (1, 2 or 3) -- Always seems to be 2!!
+*option:BOP_DHWR_high:value:6   = 54.2          ! DWHR effectiveness @ 9.5 l/m  (%)
+*option:BOP_DHWR_high:value:7   = 2             ! DWHR Shower temperature code (1, 2 or 3)
+*option:BOP_DHWR_high:value:8   = 2             ! DWHR Shower flow  code / head dcode (1-4) 
+*option:BOP_DHWR_high:value:9   = 4.53          ! Shower lenght (minutes)
+*option:BOP_DHWR_high:value:10  = 3             ! number of daily showers
+*option:BOP_DHWR_high:cost:total = 0
 
 *attribute:end
 

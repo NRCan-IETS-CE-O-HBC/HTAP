@@ -15,20 +15,22 @@ Opt-Location : NA !
 Opt-FuelCost : rates2016
 
 ! ACH substitutions
-Opt-ACH : NA
+Opt-ACH : NA! ACH_1 !ACH_1_5 !ACH_2! ,, NA
 
-Opt-Ceilings : NA
+Opt-Ceilings : NA! CeilR50 !NA
 
 Opt-MainWall : NA                    ! This one, OR
-Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
+Opt-GenericWall_1Layer_definitions : NA! ESTAR-BOP-R19_4 !NA !ESTAR-BOP-R20_4 !ESTAR-BOP-R19_4 ! ,ESTAR-BOP-R21_5,ESTAR-BOP-R22_1,ESTAR-BOP-R22_9,ESTAR-BOP-R25_4,ESTAR-BOP-R27_2 !NA   ! this one, but NOT BOTH
+
 
 ! Exposed floor
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : NA   !TripleLowEHardCoatKryFill 
+Opt-CasementWindows  : NA! EnergyStarZONE2 !NA  
 
-Opt-H2KFoundation : NA  !Rigid+BattR30-R10BSlab
+Opt-H2KFoundation : NA! ESTAR-BOP-R20_8-NA !, ESTAR-BOP-R20_8-5, ESTAR-BOP-R20_8-10, ESTAR-BOP-R22_4-NA, ESTAR-BOP-R22_4-5, ESTAR-BOP-R22_4-10,ESTAR-BOP-R23_8-NA,ESTAR-BOP-R23_8-5,ESTAR-BOP-R23_8-10
+Opt-BasementConfiguration : GHG-bsm-1-RSI_0.66
 
 ! Hot water numbers (used only in Opt-DWHRandSDHW below)
 Opt-DHWLoadScale : No-Reduction
@@ -38,15 +40,16 @@ Opt-DHWLoadScale : No-Reduction
 Opt-DWHRandSDHW : NA    !none          
 
 ! Hot water system. Choices:
-Opt-DHWSystem :  HPHotWater !ElectricStorage ! !NA    !GasTankless+DWHR !  GasTankless+DWHR
+Opt-DHWSystem :  NA! BOP_Tank_cond_TE90!,BOP_Tank_cond_TE94, BOP_GasInst_condens!BOP_GasInst_condens_95! BOP_Tank_condens,NA     !GasTankless+DWHR !  GasTankless+DWHR BOP_GasInst !,
 
-Opt-DWHRSystem :  none  !DWHR-eff-30 DWHR-System-1   
+
+Opt-DWHRSystem :  none! BOP_DHWR_high !BOP_DHWR_low none  !DWHR-eff-30 DWHR-System-1   
 
 ! HVAC system 
-Opt-HVACSystem  : elec-baseboard !ComboHeatA
+Opt-HVACSystem  : BOPCombo90a !,BOPCombo90b,BOPCombo90c,BOPCombo90d,BOPCombo90e,BOPCombo90f,BOPCombo91a,BOPCombo91b,BOPCombo91c,BOPCombo91d,BOPCombo91e,BOPCombo92a,BOPCombo92b,BOPCombo92c,BOPCombo92d,BOPCombo93a,BOPCombo93b,BOPCombo93c,BOPCombo94a,BOPCombo94b,BOPCombo94c,BOPCombo95a,BOPCombo95b,NA! 
 
 ! HRV spec 
-Opt-HRVspec : NA
+Opt-HRVspec : NA! HRV_84! HRV_70!, HRV_80, HRV_84, NA
 
 Opt-RoofPitch : NA   !6-12
 

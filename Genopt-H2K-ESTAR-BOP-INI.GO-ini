@@ -40,7 +40,7 @@ Simulation{
 
       Prefix = "Ruby ";
       
-      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000.options -b C:\\H2K-CLI-Min\\User\\YHC-archetype.h2k";
+      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000-ESTAR-BOP.options -b C:\\H2K-CLI-Min\\User\\A01_ON_Z1_TorontoMR2017_e.h2k";
    }
 
    ObjectiveFunctionLocation {
