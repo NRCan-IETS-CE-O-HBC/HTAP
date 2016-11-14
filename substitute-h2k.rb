@@ -288,10 +288,6 @@ def processFile(filespec)
    locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
    if ( h2kElements[locationText] != nil )
       $PVIntModel = true
-      # An internal PV model exists in the base house file! Over-ride the external PV model option, if it was set
-      if ( $PVsize !~ /NoPV/ )
-         $gChoices["Opt-StandoffPV"] = "NoPV"
-      end
    end
    
    # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change (further down)!
@@ -1715,11 +1711,11 @@ def processFile(filespec)
                if ( tag =~ /Opt-StandoffPV/ &&  value != "NA" && value != "NoPV" )
                   # All processing done after the run in post-process()
                   # Turn off H2K internal model, if it is on!
-                  locationText = "HouseFile/House/Generation/Systems"
-                  if ( h2kElements[locationText].attributes["photovoltaic"] == "true" )
-                     h2kElements[locationText].attributes["photovoltaic"] = false
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
+                  if ( h2kElements[locationText] != nil )
                      locationText = "HouseFile/House/Generation"
-                     h2kElements[locationText].delete_element("Photovoltaic")
+                     h2kElements[locationText].delete_element("PhotovoltaicSystems")
+                     $PVIntModel = false
                   end
                end
             
@@ -2023,9 +2019,9 @@ def checkCreatePV( elements )
       elements[locationText].add_element("PhotovoltaicSystems")
       locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
       elements[locationText].add_element("System")
-	  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
-	  elements[locationText].attributes["rank"] = "1"
-	  elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
+      elements[locationText].attributes["rank"] = "1"
+      elements[locationText].add_element("EquipmentInformation")
       elements[locationText].add_element("Array")
       locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
       elements[locationText].attributes["area"] = "50"
@@ -2832,7 +2828,7 @@ def postprocess( scaleData )
    $PVInt = $gChoices["Opt-H2K-PV"]       # Input examples: "MonoSi-50m2", "NA"
    if ( $PVInt != "NA" )
       $PVIntModel = true
-      if ( $PVsize != "NoPV" )
+      if ( $PVsize != "NoPV" )   # Internal PV model supercedes external!
          $PVsize = "NoPV"
       end
    end
