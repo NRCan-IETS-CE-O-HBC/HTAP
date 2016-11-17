@@ -1,6 +1,8 @@
 
 # R-Start: draft housing stock analysis script. 
 
+DebugConn <- file("debug-msgs.txt")
+
 # Standard output
 stream_out <- function(msg1="",msg2="",msg3="",msg4="",msg5=""){
 
@@ -16,13 +18,12 @@ stream_out <- function(msg1="",msg2="",msg3="",msg4="",msg5=""){
 # Debugging output
 debug_out <- function(msg1="",msg2="",msg3="",msg4="",msg5=""){
     if ( debug ){
-      if (msg1 != "") {cat("Debug:",msg1)}
-      if (msg2 != "") {cat(msg2)}
-      if (msg3 != "") {cat(msg3)}
-      if (msg4 != "") {cat(msg4)}
-      if (msg5 != "") {cat(msg5)}
-    }
-  
+      if (msg1 != "") {writeLines(c("Debug: ",msg1),DebugConn)}
+      if (msg2 != "") {writeLines(c(" ",msg2),DebugConn)}
+      if (msg3 != "") {writeLines(c(" ",msg3),DebugConn)}
+      if (msg4 != "") {writeLines(c(" ",msg4),DebugConn)}
+      if (msg5 != "") {writeLines(c(" ",msg5),DebugConn)}
+}
 }
 
 # Header 
@@ -32,22 +33,22 @@ sayHello <- function(){
 }
 
 
-#============= Configurration ========================
+#============= Configuration ========================
 
 # should be a cmd-line arguement
 debug = 1
 
 # Location of the CEUD data source. Also could be a cmd line arguement
-gPathToCEUD = "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\EIP-Technology-Forecasting\\CEUD-Data\\CEUD-translator-txt.csv"
-gPathToERS  = "C:\\cygwin64\\home\\aferguso\\ERS_Database\\D_E_combined_2016-10-18-forR.csv"
-
+gPathToCEUD = "C:\\Users\\jpurdy\\Google Drive\\NRCan-Optimization-Results\\EIP-Technology-Forecasting\\CEUD-Data\\CEUD-translator-txt.csv"
+#gPathToERS  = "C:\\cygwin64\\home\\aferguso\\ERS_Database\\D_E_combined_2016-10-18-forR.csv"
+gPathToERS  = "C:\\Ruby4HTAP\\ERS_archetype_analysis\\ERS_combined_forR.csv"
 
 
 
 # General parameters
 
 # Number of archetypes to be defined: 
-gTotalArchetypes = 30000
+gTotalArchetypes = 300
 
 # year for model
 gStockYear = 2013
@@ -106,6 +107,9 @@ CEUDProvFormVintageYr <- subset( CEUD, Year == gStockYear & Metric == "Province|
 CEUDProvFormEquipYr   <- subset( CEUD, Year == gStockYear & Metric == "Province|Form|Equipment|Year") 
 CEUDProvFormYr        <- subset( CEUD, Year == gStockYear & Metric == "Province|Form|Year") 
 
+
+
+
 ### ==============  Consider if the following is really necessary. 
 ### Perform substitutions on 'Equipment' toplogies - map to simpler definitions for now.  
 ##if (debug){
@@ -151,24 +155,38 @@ stream_out ( "  CEUD Data for", gStockYear, ":\n")
 stream_out ( "    - Total homes      :",CEUDTotalHomes,"\n")
 stream_out ( "    - Homes/archetype  :", gNumHomesEachArchRepresents,"\n\n")
 
+
+
 #=
 # Pre-processing on CEUD data to pull 'Archetype descriptors' 
 
-#=ERS 
+#=============ERS 
 stream_out (" - About to parse ERS database at", gPathToERS,"...")
-
-
 
 #=ERS data gets parsed here. 
 
+#Testing for radomization of ERS database. 
+stream_out('This is the original ERS database. (",gPathToERS, ")...\n')
 
-myERSdata <- read.csv (file=gPathToERS, nrows=50000, header=TRUE, sep = ",")
+myERSdata <- read.csv (file=gPathToERS, nrows=1000, header=TRUE, sep = ",")
 #myERSdata <- read.csv (file=gPathToERS, header=TRUE, sep = ",")
-stream_out (" - ... done.")
 
 
 # show the columns that we pulled - 
 sort(colnames(myERSdata))
+
+# randomize the ERS data 
+myRandomERSdata <- myERSdata[sample(nrow(myERSdata)), ]
+
+stream_out ("The ERS database is now randomized")
+# set myERSdata to randomized data frame
+myERSdata <- myRandomERSdata
+
+stream_out (" - ... done.")
+
+# show the columns that we pulled - 
+sort(colnames(myERSdata))
+
 
 # ============= Flag bad data 
 # 
@@ -191,7 +209,6 @@ if (debug){
   debug_out (" Vintages used in CEUD:\n")
   cat("   > ",unique(as.character(CEUD$Vintage))," <\n",sep=" | ")
 
-  #debug_out (" / Vintages used in CEUD:\n")
 }
 
 myERSdata$CEUDVintage <- "error"
@@ -219,8 +236,7 @@ if (debug){
   
   debug_out ("(",nrow(myERSdata[myERSdata$CEUDVintage == "error",])," rows in total)\n")
   
-  
-  
+
 }
 
 
@@ -255,10 +271,6 @@ if (debug){
   myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "YK" ] <- "TR"
   myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NU" ] <- "TR" 
  
-  
-  
-
-
 if (debug){
   debug_out (" Province codes set in ERS:\n")
   cat("   > ",unique(as.character(myERSdata$CEUDProvince[myERSdata$CEUDProvince != "error"]))," <\n",sep=" | ")
@@ -270,7 +282,102 @@ if (debug){
   #debug_out ("(",nrow(myERSdata[myERSdata$CEUDProvince == "error",])," rows in total)\n")
 }
 
-# Type of house 
+
+
+write.csv(myERSdata, file = "myERSdata_out.txt")	  
+
+myERSdata$ArchInclude <- FALSE 
+
+gCount <- 0
+NumOfArch <- NULL
+ArchProvince <- NULL
+
+#--for each Province in the CEUD Database, calculate the size of each archetype bucket; NumOfArch
+for (ArchProvince in CEUDProvFormYr$Province){
+  NumOfArch[ArchProvince] <- ((sum(CEUDProvFormYr$NumHomes[CEUDProvFormYr$Province == ArchProvince]))  / CEUDTotalHomes * gTotalArchetypes)
+  NumOfArch[ArchProvince] <- trunc(NumOfArch[ArchProvince])
+}  
+
+
+#dataframe:   province | number of homes in the set| counter
+ArchetypeDataFrame  <- data.frame(ArchProvince,NumOfArch,gCount)
+#set ArchProvince from row names
+ArchetypeDataFrame$ArchProvince <- row.names(ArchetypeDataFrame)
+
+
+#--for each HouseID in my ERS data, fill the archetype bucket until full 
+ERSProvince <- NULL
+ID <- NULL
+numberofarchetypesforERSProvinceID <- NULL  
+countofarchetypesforERSProvinceID <- NULL
+
+#--for each HOUSEID in my ERS data , add a TRUE or FALSE if that ID will be added to the Archetype
+for (ID in unique( myERSdata$HOUSE_ID.D )){
+
+  ERSProvince[ID] <- myERSdata$CEUDProvince[myERSdata$HOUSE_ID.D == ID ]
+  print("ERSProvince[ID]")
+  print(ERSProvince[ID])
+  print(ArchetypeDataFrame$ArchProvince)
+# look at the number of archetypes required for the ERSProvince[ID]
+  numberofarchetypesforERSProvinceID[ID] <- ArchetypeDataFrame$NumOfArch[ArchetypeDataFrame$ArchProvince == ERSProvince[ID]]
+  print("numberofarchetypesforERSProvinceID")
+  print(numberofarchetypesforERSProvinceID[ID]) 
+  print("ArchetypeDataFrame$gCount[ArchProvince == ERSProvince[ID]]")
+  print(ArchetypeDataFrame$gCount[ArchetypeDataFrame$ArchProvince == ERSProvince[ID]])
+
+  countofarchetypesforERSProvinceID[ID] <- ArchetypeDataFrame$gCount[ArchetypeDataFrame$ArchProvince == ERSProvince[ID]]
+
+  
+  
+  if (countofarchetypesforERSProvinceID[ID] < numberofarchetypesforERSProvinceID[ID]) {
+        myERSdata$ArchInclude[ myERSdata$HOUSE_ID.D == ID ] <- TRUE
+		countofarchetypesforERSProvinceID[ID] <- (countofarchetypesforERSProvinceID[ID] + 1)
+        print("countofarchetypesforERSProvinceID[ID]")
+        print(countofarchetypesforERSProvinceID[ID])
+  }		
+		
+  print("myERSdata$ArchInclude")
+  print(myERSdata$ArchInclude)
+
+
+
+
+# if ( ERSProvince[ID] == ArchetypeDataFrame$ArchProvince )
+  
+#if ArchetypeDataFrame$gCount < ArchetypeDataFrame$NumOfArch {
+#      myERSdata$ArchInclude[ myERSdata$HOUSE_ID.D == ID ] <- TRUE
+#      ArchetypeDataFrame$gCount[CEUDProvFormYr$Province = ArchProvince] <- (ArchetypeDataFrame$gCount[CEUDProvFormYr$Province = ArchProvince] + 1)
+#}
+
+  
+#  if ( ERSProvince[ID] == ArchetypeDataFrame$ArchProvince ){
+  #&& gCount[ArchetypeDataFrame$ArchProvince] <  ){
+
+#      myERSdata$ArchInclude[ myERSdata$HOUSE_ID.D == ID] <- TRUE
+#      gCount[ArchetypeDataFrame$ArchProvince] <- gCount[ArchetypeDataFrame$ArchProvince] + 1
+#     write.csv(gCount[ArchetypeDataFrame$ArchProvince], file="gcount_archprovince.txt",append=TRUE)
+
+#      write.csv(ERSProvince[ID], file = "ERSProvince.txt")	  
+
+#   }
+}
+
+
+
+# this is(?) how to define the subset of all TRUE ids
+#myERSdata[ myERSdata$ArchInclude ]
+
+#write.csv(myERSdata[myERSdata$ArchInclude], file="myERSdata_ArchInclude.txt")
+
+#ArchProvince <- (myERSdata$CEUDProvince[myERSdata$HOUSE_ID.D == HOUSE_ID.D]) 
+
+#}
+
+#write.table(gCount[ArchProvince], file = "CEUDCounter.txt")
+
+
+
+#========Type of house 
 
 stream_out("\n\n - Mapping house type to CEUD definitions \n")
 
@@ -299,7 +406,7 @@ if (debug){
                       myERSdata$TYPEOFHOUSE.D == "Triplex^(non-MURB)"  | 
                       myERSdata$TYPEOFHOUSE.D == "Row^house_^middle^unit"  ] <- "SA"
   myERSdata$CEUDForm[ myERSdata$TYPEOFHOUSE.D == "Apartment" |  
-                      myERSdata$TYPEOFHOUSE.D == "Apartment^Row" ] <- "Ap"
+                      myERSdata$TYPEOFHOUSE.D == "Apartment^Row" ] <- "AP"
  
 if (debug){
   debug_out (" House form set in ERS:\n")
@@ -729,4 +836,5 @@ HouseIDsFOrModel = c()
 #CEUD_for_count <- CEUD[CEUD$year] 
 
 
+close(DebugConn)
 stream_out ("\n\n")

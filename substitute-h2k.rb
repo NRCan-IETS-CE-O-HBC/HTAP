@@ -32,7 +32,7 @@ $outputHCode = "SOC"
 # throughout this file). 
 # Note loose convention to start global variables with a 'g'. 
 # Ruby *requires* globals to start with '$'.
-startProcessTime = Time.now
+$startProcessTime = Time.now
 $gDebug = false
 $gSkipSims = false
 $gTest_params = Hash.new        # test parameters
@@ -53,6 +53,7 @@ $blk = lambda { |h,k| h[k] = Hash.new(&$blk) }
 $gOptions = Hash.new(&$blk)
 $gChoices = Hash.new(&$blk)
 $gResults = Hash.new(&$blk)
+$gElecRate = Hash.new(&$blk)
 
 $gExtraDataSpecd  = Hash.new
 
@@ -89,7 +90,7 @@ $NumTries       = 0
 
 $gTotalBaseCost = 0
 $gUtilityBaseCost = 0 
-$PVTarrifDollarsPerkWh = 0.10
+$PVTarrifDollarsPerkWh = 0.10 # Default value if not set in Options file
 
 $gPeakCoolingLoadW    = 0 
 $gPeakHeatingLoadW    = 0 
@@ -101,13 +102,7 @@ $gMasterPath = Dir.getwd()
 $gMasterPath.gsub!(/\//, '\\')
 
 #Variables that store the average utility costs, energy amounts.  
-$gAvgCost_NatGas    = 0 
-$gAvgCost_Electr    = 0 
 $gAvgEnergy_Total   = 0  
-$gAvgCost_Propane   = 0 
-$gAvgCost_Oil       = 0 
-$gAvgCost_Wood      = 0 
-$gAvgCost_Pellet    = 0 
 $gAvgPVRevenue      = 0 
 $gAvgElecCons_KWh    = 0 
 $gAvgPVOutput_kWh    = 0 
@@ -160,7 +155,8 @@ $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
                            "Alert"        =>  1.38   }
 
 $PVInt = "NA"
-
+$PVIntModel = false
+$annPVPowerFromBrowseRpt = 0.0
 						   
 =begin rdoc
 =========================================================================================
@@ -224,9 +220,10 @@ end
 # =========================================================================================
 def get_elements_from_filename(fileSpec)
    # Split fileSpec into path and filename
-   (tempPath, tempFileName) = File.split( fileSpec )
+   var = Array.new()
+   (var[1], var[2]) = File.split( fileSpec )
    # Determine file extension
-   tempExt = File.extname(tempFileName)
+   tempExt = File.extname(var[2])
    
    # Open file...
    fFileHANDLE = File.new(fileSpec, "r") 
@@ -288,6 +285,11 @@ def processFile(filespec)
    $versionMinor_H2K = h2kElements[locationText].attributes["minor"]
    $versionBuild_H2K = h2kElements[locationText].attributes["build"]
 
+   locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
+   if ( h2kElements[locationText] != nil )
+      $PVIntModel = true
+   end
+   
    # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change (further down)!
    config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
    (configType, configSubType, fndTypes) = config.split('_')
@@ -1155,11 +1157,8 @@ def processFile(filespec)
             # changes made here will be overwritten by the Base Loads user inputs for Water Usage.		
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
-			   
                if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
-               
                   locationText = "HouseFile/House/Components/HotWater/Primary"               
-
                   if ( value == "true" )
                      if ( h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] == "false" )
                         # Need to add DWHR XML section!
@@ -1171,7 +1170,6 @@ def processFile(filespec)
                         h2kElements[locationText].delete_element("DrainWaterHeatRecovery")
                      end
                   end
-				  
                   h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value  # Flag for DWHR
                
                elsif ( tag =~ /Opt-H2K-DWHR-showerLength/ &&  value != "NA" )
@@ -1220,7 +1218,6 @@ def processFile(filespec)
             # Heating & Cooling Systems (Type 1 & 2)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
-			
 			
                sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
                sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
@@ -1290,7 +1287,7 @@ def processFile(filespec)
                      if ( sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                      else
-					    # ASF 07-Oct-2016 - not needed for P9?
+                        # ASF 07-Oct-2016 - not needed for P9?
                         locationText = ""
                      end
                      if ( h2kElements[locationText] != nil )
@@ -1302,11 +1299,11 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
-						h2kElements[locationText].attributes["value"] = value if ( h2kElements[locationText] != nil ) 
+                        h2kElements[locationText].attributes["value"] = value if ( h2kElements[locationText] != nil ) 
                      else
-					    # ASF 07-Oct-2016 - P9 capacity mapped to syustem capacity descriptor.
+                        # ASF 07-Oct-2016 - P9 capacity mapped to system capacity descriptor.
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-						h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
                      end
 
                   end
@@ -1316,7 +1313,7 @@ def processFile(filespec)
                      if ( sysType1Name != "P9" && sysType1Name != "Baseboards" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
                      else
-					    # ASF 07-Oct-2016  Not needed for P9 ?
+                        # ASF 07-Oct-2016  Not needed for P9 ?
                         locationText = ""
                      end
                      if ( h2kElements[locationText] != nil )
@@ -1328,11 +1325,11 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name != "P9" && sysType1Name != "Baseboards" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
-						h2kElements[locationText].attributes["efficiency"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["efficiency"] = value if ( h2kElements[locationText] != nil )
                      elsif (sysType1Name == "P9")
-					    # ASF 07-Oct-2016  Mapped to P9 spaceHeatingEfficiency attribute
-					    locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-					    h2kElements[locationText].attributes["spaceHeatingEfficiency"] = value if ( h2kElements[locationText] != nil )
+                        # ASF 07-Oct-2016  Mapped to P9 spaceHeatingEfficiency attribute
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
+                        h2kElements[locationText].attributes["spaceHeatingEfficiency"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
 
@@ -1449,22 +1446,21 @@ def processFile(filespec)
                   end    
     
 			   
-			# ASF 06-Oct-2016 - Tags for P.9 performance start here. ()   
-            
+               # ASF 06-Oct-2016 - Tags for P.9 performance start here. 
 			
                elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
-                    sysType1.each do |sysType1Name|
-                       if ( sysType1Name == "P9" )
-			  		      locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Manufacturer"
-			  			  h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
-                       end
-                    end			
+                  sysType1.each do |sysType1Name|
+                     if ( sysType1Name == "P9" )
+                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Manufacturer"
+                        h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
+                     end
+                  end			
 
                elsif ( tag =~ /Opt-H2K-P9-model/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Model"
-						h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
                      end
                   end							  
 
@@ -1472,7 +1468,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-						h2kElements[locationText].attributes["thermalPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["thermalPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 
@@ -1480,7 +1476,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-						h2kElements[locationText].attributes["annualElectricity"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["annualElectricity"] = value if ( h2kElements[locationText] != nil )
                      end
                   end	
 
@@ -1489,7 +1485,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-						h2kElements[locationText].attributes["waterHeatingPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["waterHeatingPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 
@@ -1497,7 +1493,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-						h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
                      end
                   end					  
 				  
@@ -1505,7 +1501,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-						h2kElements[locationText].attributes["recoveryEfficiency"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["recoveryEfficiency"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 				  
@@ -1513,7 +1509,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["controlsPower"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["controlsPower"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 
@@ -1521,7 +1517,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["circulationPower"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["circulationPower"] = value if ( h2kElements[locationText] != nil )
                      end
                   end					  
 				  
@@ -1529,7 +1525,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["dailyUse"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["dailyUse"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 
@@ -1537,7 +1533,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["standbyLossWithoutFan"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["standbyLossWithoutFan"] = value if ( h2kElements[locationText] != nil )
                      end
                   end	
 
@@ -1545,7 +1541,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["standbyLossWithFan"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["standbyLossWithFan"] = value if ( h2kElements[locationText] != nil )
                      end
                   end					  
 				  
@@ -1554,7 +1550,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["oneHourRatingHotWater"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["oneHourRatingHotWater"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 
@@ -1562,7 +1558,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-						h2kElements[locationText].attributes["oneHourConc"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["oneHourConc"] = value if ( h2kElements[locationText] != nil )
                      end
                   end	
 				  
@@ -1570,7 +1566,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
-						h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
                      end
                   end	
 
@@ -1578,7 +1574,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
-						h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
 				  
@@ -1586,7 +1582,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
-						h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
                      end
                   end				  
 			
@@ -1594,7 +1590,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
-						h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
                      end
                   end	
 
@@ -1602,7 +1598,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
-						h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
 				  
@@ -1610,7 +1606,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
-						h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
                      end
                   end		
 
@@ -1618,7 +1614,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
-						h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
                      end
                   end	
 
@@ -1626,7 +1622,7 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
-						h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
 				  
@@ -1634,19 +1630,11 @@ def processFile(filespec)
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
-						h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
+                        h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
                      end
                   end				  
 				  
-				  
-				  
-				  
-			
-				  
-				  
-               end # END of elsif ( tag = ...
-
-
+               end # END of elsif under HVACSystem section
 
 			  
             # HRV System
@@ -1719,19 +1707,22 @@ def processFile(filespec)
                if ( tag =~ /Opt-StandoffPV/ &&  value != "NA" && value != "NoPV" )
                   # All processing done after the run in post-process()
                   # Turn off H2K internal model, if it is on!
-                  locationText = "HouseFile/House/Generation/Systems"
-                  if ( h2kElements[locationText].attributes["photovoltaic"] == "true" )
-                     h2kElements[locationText].attributes["photovoltaic"] = false
+                  locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
+                  if ( h2kElements[locationText] != nil )
                      locationText = "HouseFile/House/Generation"
-                     h2kElements[locationText].delete_element("Photovoltaic")
+                     h2kElements[locationText].delete_element("PhotovoltaicSystems")
+                     $PVIntModel = false
                   end
                end
             
                
             # PV - internal. Uses H2K PV Generation model
             # Limited number of parameters available in options file.
-			#
-			# ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
+            #
+            # ASF 03-Oct-2016: Updated to reflect new file structure in v11.3.90b
+            # JTB 03-Nov-2016: Note that available PV annual energy is allocated to reduce
+            #                  annual electrical energy to zero (regardless of monthly values).
+            #                  The excess energy is ignored in H2K (i.e., no util credit calc'd)
             #----------------------------------------------------------------------------
 						
             elsif ( choiceEntry =~ /Opt-H2K-PV/ )
@@ -2024,9 +2015,9 @@ def checkCreatePV( elements )
       elements[locationText].add_element("PhotovoltaicSystems")
       locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
       elements[locationText].add_element("System")
-	  locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
-	  elements[locationText].attributes["rank"] = "1"
-	  elements[locationText].add_element("EquipmentInformation")
+      locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System"
+      elements[locationText].attributes["rank"] = "1"
+      elements[locationText].add_element("EquipmentInformation")
       elements[locationText].add_element("Array")
       locationText = "HouseFile/House/Generation/PhotovoltaicSystems/System/Array"
       elements[locationText].attributes["area"] = "50"
@@ -2315,15 +2306,15 @@ def createH2KSysType1( elements, sysType1Name )
       elements[locationText].attributes["waterHeatingPerformanceFactor"] = "0.9"
       elements[locationText].attributes["burnerInput"] = "0"
       elements[locationText].attributes["recoveryEfficiency"] = "0"
-      elements[locationText].attributes["isUserSpecified"] = "false"
+      elements[locationText].attributes["isUserSpecified"] = "true"
       elements[locationText].add_element("EquipmentInformation")
-	  locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation"
-	  elements[locationText].add_element("Manufacturer")
-	  elements[locationText].add_element("Model")
-	  locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Manufacturer"
-	  elements[locationText].text = "Generic"
-	  locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Model"
-	  elements[locationText].text = "Generic"
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation"
+      elements[locationText].add_element("Manufacturer")
+      elements[locationText].add_element("Model")
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Manufacturer"
+      elements[locationText].text = "Generic"
+      locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Model"
+      elements[locationText].text = "Generic"
 
       locationText = "HouseFile/House/HeatingCooling/Type1/P9"
       elements[locationText].add_element("TestData")
@@ -2765,11 +2756,12 @@ def runsims( direction )
                keepTrying = false   # Give up.
             end
            
-            # Forceably kill process if needed
-            begin 
+            # Forceably kill process, if needed
+            begin
                Process.kill('KILL', pid)
-            rescue 
-            end 
+            rescue
+               # Do nothing, the normal case - PID already ended.
+            end
             sleep(1)
          end 
       end
@@ -2828,75 +2820,78 @@ def postprocess( scaleData )
       $gRegionalCostAdj = $RegionalCostFactors[$Locale]
    end
    
-   # Some data needs to be extracted from Browse.rpt ASCII file because it's not in H2K XML file!
-   fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
-   if fBrowseRpt == nil then
-      fatalerror("Could not read Browse.Rpt.\n")
-   end
-
-   bReadFuelCosts = false
-   if ( $versionMajor_H2K.to_i >= 11 && $versionMinor_H2K.to_i >= 1 && $versionBuild_H2K.to_i >= 82 )
-      bReadFuelCosts = true
-   else
-      # H2K V11.1 b82 contains "ActualFuelCosts" (previous version did not)!
-      locationText = "HouseFile/AllResults/Results/Annual/ActualFuelCosts"
-      $gAvgCost_Electr += h2kPostElements[locationText].attributes["electrical"].to_f * scaleData
-      $gAvgCost_NatGas += h2kPostElements[locationText].attributes["naturalGas"].to_f * scaleData
-      $gAvgCost_Propane += h2kPostElements[locationText].attributes["propane"].to_f * scaleData
-      $gAvgCost_Oil += h2kPostElements[locationText].attributes["oil"].to_f * scaleData
-      $gAvgCost_Wood += h2kPostElements[locationText].attributes["wood"].to_f * scaleData
-      $gAvgCost_Total += ($gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood) * scaleData
+   $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
+   $PVInt = $gChoices["Opt-H2K-PV"]       # Input examples: "MonoSi-50m2", "NA"
+   if ( $PVInt != "NA" )
+      $PVIntModel = true
+      if ( $PVsize != "NoPV" )   # Internal PV model supercedes external!
+         $PVsize = "NoPV"
+      end
    end
    
-   if ( $gChoices["Opt-H2K-PV"] != "NA" )
-      bReadPV = true
-      bUseNextPVLine = false
-      bMonthlyPVData = false
-      mthlyPVPower = [ 0,0,0,0,0,0,0,0,0,0,0,0 ]
-      mthlyPVEnergy = [ 0,0,0,0,0,0,0,0,0,0,0,0 ]
-      iMonth = 0
+   # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
+   bReadOldERSValue = false
+   bUseNextPVLine = false
+   if File.exist?("#{$run_path}\\Set_EGH.h2k") then
+      bReadOldERSValue = true
    end
    
-   while !fBrowseRpt.eof? do
-      lineIn = fBrowseRpt.readline
-      lineIn.strip!                 # Remove leading and trailing whitespace
-      if ( lineIn !~ /^\s*$/ )   # Not an empty line!
-         if ( lineIn =~ /^Energuide Rating \(not rounded\) =/ )
-            lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
-            lineIn.strip!
-            $gERSNum = lineIn.to_f     # Use * scaleData?
-         elsif ( bReadFuelCosts && lineIn =~ /^\$/ )
-            valuesArr = lineIn.split()   # Uses spaces by default to split-up line
-            $gAvgCost_Electr += valuesArr[1].to_f * scaleData
-            $gAvgCost_NatGas += valuesArr[2].to_f * scaleData
-            $gAvgCost_Oil += valuesArr[3].to_f * scaleData
-            $gAvgCost_Propane += valuesArr[4].to_f * scaleData
-            $gAvgCost_Wood += valuesArr[5].to_f * scaleData    # Includes pellets until separated out
-            $gAvgCost_Total += valuesArr[6].to_f * scaleData
-         elsif ( ( bReadPV && lineIn =~ /PHOTOVOLTAIC SYSTEM MONTHLY PERFORMANCE/ ) || ( bReadPV && bUseNextPVLine ) )
-            bUseNextPVLine = true
-            if ( bMonthlyPVData || lineIn =~ /^Jan/ )
-               valuesArr = lineIn.split()   # Uses spaces by default to split-up line
-               mthlyPVPower[iMonth] = valuesArr[4].to_f   # Watts
-               mthlyPVEnergy[iMonth] = valuesArr[5].to_f  # kWh
-               iMonth += 1
-               lineIn =~ /^Dec/ ? break : bMonthlyPVData = true
-            else
-               bMonthlyPVData = false
+   # Open Browse.rpt ASCII file *if* some data needs to be extracted (not in XML)!
+   if ( bReadOldERSValue || $PVIntModel)
+      begin
+         fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
+         while !fBrowseRpt.eof? do
+            lineIn = fBrowseRpt.readline
+            lineIn.strip!              # Remove leading and trailing whitespace
+            if ( lineIn !~ /^\s*$/ )   # Not an empty line!
+               if ( lineIn =~ /^Energuide Rating \(not rounded\) =/ )
+                  lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
+                  lineIn.strip!
+                  $gERSNum = lineIn.to_f    # Use * scaleData?
+                  break if !$PVIntModel     # Stop parsing Browse.rpt when ERS number found!
+               elsif ( ( $PVIntModel && lineIn =~ /PHOTOVOLTAIC SYSTEM MONTHLY PERFORMANCE/ ) || ( $PVIntModel && bUseNextPVLine ) )
+                  bUseNextPVLine = true
+                  if ( lineIn =~ /^Annual/ )
+                     valuesArr = lineIn.split()   # Uses spaces by default to split-up line
+                     $annPVPowerFromBrowseRpt = valuesArr[4].to_f * 12.0 / 1000.0  # kW (approx PV power)
+                     break # PV power near bottom (after EGH #, so nor more need to read)
+                  end
+               end
+            end
+         end
+         fBrowseRpt.close()
+      rescue
+         fatalerror("Could not read Browse.Rpt.\n")
+      end
+   end
+   
+   # ==================== Get electricity rate structure for external PV model use
+   if ($PVsize !~ /NoPV/ )
+      locationText = "HouseFile/FuelCosts/Electricity/Fuel/Minimum"
+      $gElecRate["ElecMthMinCharge$"] = h2kPostElements[locationText].attributes["charge"].to_f
+      locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block1"
+      $gElecRate["ElecBlck1Units"] = h2kPostElements[locationText].attributes["units"].to_f
+      $gElecRate["ElecBlck1CostPerUnit"] = h2kPostElements[locationText].attributes["costPerUnit"].to_f
+      if ( h2kPostElements[locationText].attributes["units"] != "99999" )
+         locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block2"
+         $gElecRate["ElecBlck2Units"] = h2kPostElements[locationText].attributes["units"].to_f
+         $gElecRate["ElecBlck2CostPerUnit"] = h2kPostElements[locationText].attributes["costPerUnit"].to_f
+         if ( h2kPostElements[locationText].attributes["units"] != "99999" )
+            locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block3"
+            $gElecRate["ElecBlck3Units"] = h2kPostElements[locationText].attributes["units"].to_f
+            $gElecRate["ElecBlck3CostPerUnit"] = h2kPostElements[locationText].attributes["costPerUnit"].to_f
+            if ( h2kPostElements[locationText].attributes["units"] != "99999" )
+               locationText = "HouseFile/FuelCosts/Electricity/Fuel/RateBlocks/Block4"
+               $gElecRate["ElecBlck4Units"] = h2kPostElements[locationText].attributes["units"].to_f
+               $gElecRate["ElecBlck4CostPerUnit"] = h2kPostElements[locationText].attributes["costPerUnit"].to_f
             end
          end
       end
    end
-   fBrowseRpt.close()
    
-   # ==================== New parsing : Get results from all h2k calcs. 
+   # ==================== Get results for all h2k calcs from XML file (exceptiing above case)
    
    parseDebug = true
-   
-   # JTB: 05-10-2016 Moved this up from line 2806 below
-   $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
-   $PVInt = $gChoices["Opt-H2K-PV"]   # Input examples: "MonoSi-50m2", "NA"
-
    
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
    
@@ -2906,19 +2901,17 @@ def postprocess( scaleData )
          houseCode = "General"
       end
       
-      # ASF 04-Oct-2016: limiting rexults parsing to 2 sets - SOC and general -- because parsing takes a long time !
+      # ASF 04-Oct-2016: limiting results parsing to 2 sets - SOC and general -- because parsing takes a long time !
       # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
       #                  spec only a single desired set via a commad line switch, or by defaulting to 
       #                  SOC and falling back to 'general' if it's not found.
       if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
          # ENERGY CONSUMPTION (Annual)
          
-		 # ASF 14-10-2016: No longer using the totaL consumption from the set, because this number doesn't align with the sum of all end uses.
-		 # 0 this number is computed again below. 
-		 # $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          
-		 $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
          $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
@@ -2946,60 +2939,68 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
 	  
-         $gResults[houseCode]["avgFueluseEleckWh"]   = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
+         $gResults[houseCode]["avgFueluseEleckWh"]  = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
+         $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
+         $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
+         $gResults[houseCode]["avgFuelusePropaneL"] = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
 
-         $gResults[houseCode]["avgFueluseNatGasM3"]  = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
+         $gResults[houseCode]["avgFuelCostsTotal$"] = $gResults[houseCode]["avgFuelCostsElec$"] +
+                                                      $gResults[houseCode]["avgFuelCostsNatGas$"] +
+                                                      $gResults[houseCode]["avgFuelCostsOil$"] +
+                                                      $gResults[houseCode]["avgFuelCostsPropane$"] +
+                                                      $gResults[houseCode]["avgFuelCostsWood$"] 
 
-         $gResults[houseCode]["avgFueluseOilL"]      = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
-
-         $gResults[houseCode]["avgFuelusePropaneL"]  = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
-
-         $gResults[houseCode]["avgFuelCostsTotal$"] =  $gResults[houseCode]["avgFuelCostsElec$"] +
-                                     $gResults[houseCode]["avgFuelCostsNatGas$"] +
-                                     $gResults[houseCode]["avgFuelCostsOil$"] +
-                                     $gResults[houseCode]["avgFuelCostsPropane$"] +
-                                     $gResults[houseCode]["avgFuelCostsWood$"] 
-
-          $gResults[houseCode]["avgEnergyTotalGJ"]  =  $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
-                                                       $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
+         # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
+         # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
+         # avgEnergyTotalGJ does when there is an internal H2K PV model.
+          $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
+                                                      $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
 									 
 	   
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
-         if ( $PVInt != "NA" ) 
+         if ( $PVIntModel ) 
             pvAvailable = 0
             pvUtilized  = 0 
             monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             monthArr.each do |mth|
                # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
-               #                  elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
-			   # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
+               #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+               # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
                pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
                pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f   # GJ
             end
-		 
-            $gResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable 
-            $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized  
-            $gResults[houseCode]["avgElecPVGenkWh"] = $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 	 
-            $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
-		 
-            $gResults[houseCode]["avgPvRevenue"] =  $gResults[houseCode]["avgElecPVGenkWh"]  * $PVTarrifDollarsPerkWh
+            # 10-Nov-2016 JTB: Use annual PV values only! HOT2000 redistributes the monthly excesses, if available!
+            $gResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable # GJ
+            $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized  # GJ
+            $gResults[houseCode]["avgElecPVGenkWh"] = $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 # kWh
+            $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778 # kWh
+            
+            # ***** Calculation of NET PV Revenue using HOT2000 model *****
+            # 10-Nov-2016 JTB: Assumes that all annual PV energy available is used to reduce house electricity
+            # to zero first, the balance is sold to utility at the rate PVTarrifDollarsPerkWh, 
+            # which is specified in the options file (defaulted at top if not in Options file!).
+            netAnnualPV = $gResults[houseCode]["avgElecPVGenkWh"] - $gResults[houseCode]["avgElecPVUsedkWh"]
+            if ( netAnnualPV > 0 )
+               $gResults[houseCode]["avgPVRevenue"] = netAnnualPV  * $PVTarrifDollarsPerkWh
+            else
+               $gResults[houseCode]["avgPVRevenue"] = 0
+            end
          else
-            # JTB 05-10-2016: Added this block to initialize values when "NA" set for $PVInt
+            # Calculate and reset these values below if external PV model used
             $gResults[houseCode]["avgEnergyPVAvailableGJ"] = 0.0
             $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = 0.0  
             $gResults[houseCode]["avgElecPVGenkWh"] = 0.0
             $gResults[houseCode]["avgElecPVUsedkWh"] = 0.0
-		 
-            $gResults[houseCode]["avgPvRevenue"] =  0.0
+            $gResults[houseCode]["avgPVRevenue"] =  0.0
          end  
 	   
-         $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
-
          # This is used for debugging only. 
-         diff =  $gResults[houseCode]["avgFueluseElecGJ"].to_f + $gResults[houseCode]["avgFueluseNatGasGJ"].to_f  -  $gResults[houseCode]["avgEnergyTotalGJ"].to_f
+         diff =  ( $gResults[houseCode]["avgFueluseElecGJ"].to_f + 
+                   $gResults[houseCode]["avgFueluseNatGasGJ"].to_f -
+                   $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
          $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
       end
 	  
@@ -3016,46 +3017,54 @@ def postprocess( scaleData )
 
    # Maybe the desired mode wasn't found? if not, reset it to "General"	
    #==================================== 
-   # JTB 01-10-2016: changed from (! defined? $gResults[$outputHCode]) 
-   #                 since defined but empty when file in General mode!
    if ( $gResults[$outputHCode].empty? )  
 		$outputHCode = "General"
    end 
-      
    
-   #$gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
+   $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
-   # ASF 03-Oct-2016 : Not sure this section is working; pv costs may need to be determined 
-   #                   based hard sizes in the options file, and not computed from h2k Calcs. 
-   #                   requires a little more though. 
-   # PV Data...
+   # Tpital of all fuels in GJ
+   $gAvgEnergy_Total = $gResults[$outputHCode]["avgFueluseElecGJ"] + $gResults[$outputHCode]["avgFueluseNatGasGJ"] +
+                       $gResults[$outputHCode]["avgFueluseOilGJ"] + $gResults[$outputHCode]["avgFuelusePropaneGJ"] +
+                       $gResults[$outputHCode]["avgFueluseWoodGJ"]   
+   
+   # JTB 12-Nov-2016 : Updated and still valid. Sets cost of PV based on model type 
+   #                   and estimates PV kW size.
+   # PV Data cost...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
    $PVcapacity = $PVsize
    $PVcapacity.gsub(/[a-zA-Z:\s'\|]/, '')
-   if ( $PVcapacity == "" || $PVcapacity == "NoPV" && $PVInt == "NA" ) 
+   if ( !$PVIntModel && ( $PVcapacity == "" || $PVcapacity == "NoPV" ) ) 
       $PVcapacity = 0.0
    end
-   if ( $PVInt != "NA" )
-      $PVUnitCost = $gOptions["Opt-H2K-PV"]["options"][ $gChoices["Opt-H2K-PV"] ]["cost"].to_f
-      $PVUnitOutput = 0.0  # Calculated in H2K
+   if ( $PVIntModel )
+      if ( $PVInt != "NA" )
+         # JTB 03-Nov-2016: The Cost field for Opt-H2K-PV is total cost NOT unit cost!!
+         $PVUnitCost = $gOptions["Opt-H2K-PV"]["options"][ $gChoices["Opt-H2K-PV"] ]["cost"].to_f
+         $PVUnitOutput = 0.0  # GJ/kW not used or estimated for internal H2K PV model
+      else
+         # No PV option specified in choice file (PV internal model part of base file)
+         $PVUnitCost = 0.0
+         $PVUnitOutput = 0.0
+      end
    elsif ( $PVsize != "NoPV" )
       $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["cost"].to_f
-      $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f
+      $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f  # GJ/kW
    end
    
-   if ( $PVsize !~ /SizedPV/ )
+   if ( $PVsize =~ /NoPV/ )
       # NoPV
       $gPVProduction = 0.0
       $PVArrayCost = 0.0
-   else
+   elsif ( $PVsize =~ /SizedPV/ )
       # Size PV according to user specification, to max, or to size required to reach Net-Zero. 
       # User-specified PV size (format is 'SizedPV|XkW', PV will be sized to X kW'.
       if ( $gExtraDataSpecd["Opt-StandoffPV"] =~ /kW/ )
          $PVArraySized = $gExtraDataSpecd["Opt-StandoffPV"].to_f  # ignores "kW" in string
          $PVArrayCost = $PVUnitCost * $PVArraySized 
          $gPVProduction = -1.0 * $PVUnitOutput * $PVArraySized
-         $PVsize = "spec'd SizedPV | $PVArraySized kW"
+         $PVsize = "spec'd SizedPV | #{$PVArraySized} kW"
       else
          # USER Hasn't specified PV size, Size PV to attempt to get to net-zero. 
          # First, get the home's total energy requirement. 
@@ -3083,39 +3092,45 @@ def postprocess( scaleData )
    $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
    
-   # THIS ISN"T WORKING YET  
    # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
-   if ( $PVInt != "NA" )
-     
-      locationText = "HouseFile/AllResults/Results/Monthly/Load/PhotoVoltaicUtilized"
-      monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
-      monthArr.each do |mth|
-         $gEnergyPV += h2kPostElements[locationText].attributes[mth].to_f  # GJ
-      end
-      totalGJperkW = 0.0
-      mthlyPVPower.each_index do |iMth|
-         if ( mthlyPVPower[iMth] > 0 )
-            totalGJperkW += mthlyPVEnergy[iMth] * W_PER_KW / ( mthlyPVPower[iMth] * KWH_PER_GJ )
-         else
-            wthCity = h2kPostElements["HouseFile/ProgramInformation/Weather/Location/English"].text
-            debug_out("\n H2K PV power for #{monthArr[iMth].capitalize} is 0!(Weather for #{wthCity})\n")
-         end
-      end
-      $PVUnitOutput = totalGJperkW / 12
-      $PVArraySized = $gEnergyPV / $PVUnitOutput   # kW 
-      $PVcapacity = $PVArraySized                  # kW used only in substitutePL-output.txt!
-      $PVsize = " H2K: " + "#{$PVArraySized.round(1)} kW"
-      $PVmultiplier = 1.0 
-      if ( $PVArraySized > 14.0 ) 
-         $PVmultiplier = 2.0
-      end
-      $PVArrayCost  = $PVArraySized * $PVUnitCost * $PVmultiplier
+   if ( $PVIntModel )
+      $PVcapacity = $annPVPowerFromBrowseRpt     # kW 
+      $PVsize = " H2K: " + "#{$PVcapacity.round(1)} kW"
+      $gEnergyPV = $gResults[$outputHCode]["avgEnergyPVUtilizedGJ"]
       
       debug_out ("\n PV array is #{$PVsize}  ...\n")
-   else
+   elsif ( $PVsize !~ /NoPV/ )
       # PV energy comes from an estimate using Opt-StandoffPV specification. Uses options file
       # number for GJ/kW PV energy production for location and roof pitch.
-      $gEnergyPV = $gPVProduction * -1.0 
+      $PVcapacity = $PVArraySized         # kW
+      $gEnergyPV = $gPVProduction * -1.0  # GJ
+
+      # Set values for external PV model (initialized to zero above)...
+      $gResults[$outputHCode]["avgEnergyPVAvailableGJ"] = $gEnergyPV
+      if ( $gResults[$outputHCode]["avgFueluseElecGJ"] > $gEnergyPV )
+         # Decrease house electricty use by PV energy productions
+         $gResults[$outputHCode]["avgEnergyPVUtilizedGJ"] = $gEnergyPV
+         $gResults[$outputHCode]["avgFueluseElecGJ"] -= $gEnergyPV
+         $gResults[$outputHCode]["avgFueluseEleckWh"] = $gResults[$outputHCode]["avgFueluseElecGJ"] * 277.77777778
+         # Calculate new electricity cost and also update total fuel costs!
+         calcElectCost( "annual" )
+      else
+         # PV production at least enough to cover house electrical needs!
+         $gResults[$outputHCode]["avgEnergyPVUtilizedGJ"]  = $gResults[$outputHCode]["avgFueluseElecGJ"]
+         $gResults[$outputHCode]["avgFueluseElecGJ"] = 0.0
+         $gResults[$outputHCode]["avgFueluseEleckWh"] = 0.0
+         # New electricity cost is just the monthly minimum (also update total fuel cost)!
+         calcElectCost( "annualMin" )
+      end
+      $gResults[$outputHCode]["avgElecPVGenkWh"] = $gResults[$outputHCode]["avgEnergyPVAvailableGJ"] * 277.777778 # kWh
+      $gResults[$outputHCode]["avgElecPVUsedkWh"] = $gResults[$outputHCode]["avgEnergyPVUtilizedGJ"] * 277.777778 # kWh
+
+      netAnnualPV = $gResults[$outputHCode]["avgElecPVGenkWh"] - $gResults[$outputHCode]["avgElecPVUsedkWh"]
+      if ( netAnnualPV > 0 )
+         $gResults[$outputHCode]["avgPVRevenue"] = netAnnualPV  * $PVTarrifDollarsPerkWh
+      else
+         $gResults[$outputHCode]["avgPVRevenue"] = 0
+      end
    end
    
 	stream_out( " done \n")
@@ -3128,9 +3143,9 @@ def postprocess( scaleData )
 
    $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
             $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
-		    $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
-	 	    $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
-		    $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
+            $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
+            $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
+            $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
    
    stream_out("\n Energy Consumption: \n\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
@@ -3139,14 +3154,12 @@ def postprocess( scaleData )
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} ( Space Cooling, GJ ) \n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} ( Appliances + Lights + Plugs + outdoor, GJ ) \n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ( H2K Total energy use GJ ) \n")
+   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyGrossGJ'].round(1)} ( H2K Gross energy use GJ ) \n")
    
     if ( parseDebug )
 		stream_out ("       ( check: should = #{$check.round(1)} ?  ) \n ") 
     end 
 	
-   
-   
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
@@ -3157,9 +3170,15 @@ def postprocess( scaleData )
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}  (All utilities).\n")
    stream_out ( "\n")
-   stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPvRevenue'].round(2)} (PV revenue, #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
+   
+   netAnnualPV = $gResults[$outputHCode]['avgElecPVGenkWh'] - $gResults[$outputHCode]['avgElecPVUsedkWh']
+   
+   stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPVRevenue'].round(2)} (**Net PV revenue for #{$PVcapacity.round(0)} kW unit: #{netAnnualPV.round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
    stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gAvgPVRevenue.round(2)} (Net utility costs).\n")
+   
+   netUtilityCost = $gResults[$outputHCode]['avgFuelCostsTotal$'] - $gResults[$outputHCode]['avgPVRevenue']
+   
+   stream_out ( "    \$ #{netUtilityCost.round(2)} (Net utility costs).\n")
    stream_out ( "\n\n")
    
    stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
@@ -3176,8 +3195,13 @@ def postprocess( scaleData )
    
    # Estimate total cost of upgrades
    $gTotalCost = 0
-   
-   stream_out ("\n\n Estimated costs in #{$Locale} (x #{$gRegionalCostAdj} Ottawa costs) : \n\n")
+  
+   if ( $Locale == "NA" ) 
+      thisLocale = "Basehouse location"
+   else
+      thisLocale = $Locale
+   end
+   stream_out ("\n\n Estimated costs in #{thisLocale} (x #{$gRegionalCostAdj} Ottawa costs) : \n\n")
 
    $gChoices.sort.to_h
    for attribute in $gChoices.keys()
@@ -3198,6 +3222,41 @@ def postprocess( scaleData )
    end
 
 end  # End of postprocess
+
+# =========================================================================================
+# Calculate electricity cost using global results array and electricity cost rate structure
+# This routine is only called when the PV external model is used!
+# =========================================================================================
+def calcElectCost( calcType )
+   balancekWh = 0
+   # Subtract old electricity cost from total before recalculating electricity cost
+   $gResults[$outputHCode]["avgFuelCostsTotal$"] -= $gResults[$outputHCode]["avgFuelCostsElec$"]
+   if ( calcType == "annualMin" )
+      $gElecRate["avgFuelCostsElec$"] = $gElecRate["ElecMthMinCharge$"] * 12
+   else
+      if ( $gResults[$outputHCode]["avgFueluseEleckWh"] > $gElecRate["ElecBlck1Units"] )
+         $gResults[$outputHCode]["avgFuelCostsElec$"] = $gElecRate["ElecBlck1Units"] * $gElecRate["ElecBlck1CostPerUnit"]
+         balancekWh = $gResults[$outputHCode]["avgFueluseEleckWh"] - $gElecRate["ElecBlck1Units"]
+         if ( balancekWh > $gElecRate["ElecBlck2Units"] )
+            $gResults[$outputHCode]["avgFuelCostsElec$"] += $gElecRate["ElecBlck2Units"] * $gElecRate["ElecBlck2CostPerUnit"]
+            balancekWh -= $gElecRate["ElecBlck2Units"]
+            if ( balancekWh > $gElecRate["ElecBlck3Units"] )
+               $gResults[$outputHCode]["avgFuelCostsElec$"] += $gElecRate["ElecBlck3Units"] * $gElecRate["ElecBlck3CostPerUnit"]
+               balancekWh -= $gElecRate["ElecBlck3Units"]
+               $gResults[$outputHCode]["avgFuelCostsElec$"] += balancekWh * $gElecRate["ElecBlck4CostPerUnit"]
+            else
+               $gResults[$outputHCode]["avgFuelCostsElec$"] += balancekWh * $gElecRate["ElecBlck3CostPerUnit"]
+            end
+         else
+            $gResults[$outputHCode]["avgFuelCostsElec$"] += balancekWh * $gElecRate["ElecBlck2CostPerUnit"]
+         end
+      else
+         $gResults[$outputHCode]["avgFuelCostsElec$"] = $gResults[$outputHCode]["avgFueluseEleckWh"] * $gElecRate["ElecBlck1CostPerUnit"]
+      end
+   end
+   # Update total fuel cost variable
+   $gResults[$outputHCode]["avgFuelCostsTotal$"] += $gResults[$outputHCode]["avgFuelCostsElec$"]   
+end
 
 # =========================================================================================
 # Fix the paths specified in the HOT2000.ini file
@@ -3612,7 +3671,8 @@ while !fCHOICES.eof? do
       else
          extradata = value
          if ( value =~ /\|/ )
-            value.gsub!(/\|.*$/, '') 
+            #value.gsub!(/\|.*$/, '') 
+            value = value.gsub(/\|.*$/, '') 
             extradata.gsub!(/^.*\|/, '') 
             extradata.gsub!(/^.*\|/, '') 
          else
@@ -3773,7 +3833,8 @@ $gChoices.each do |attrib1, choice|
                      testValueArray = testValueList.split('|')
                      thesevalsmatch = 0
                      testValueArray.each do |testValue|
-                        if ( $gChoices[testAttribute] =~ /testValue/ )
+ #                      if ( $gChoices[testAttribute] =~ /testValue/ ) # JTB 12-Nov-2016: This doesn't work!!
+                        if ( testValue.match($gChoices[testAttribute]) )
                            thesevalsmatch = 1
                         end
                         debug_out ("       \##{$gChoices[testAttribute]} = #{$gChoices[testAttribute]} / #{testValue} / -> #{thesevalsmatch} \n"); 
@@ -3849,7 +3910,8 @@ $gChoices.each do |attrib1, choice|
                   testValueArray = testValueList.split('|')
                   thesevalsmatch = 0
                   testValueArray.each do |testValue|
-                     if ( $gChoices[testAttribute] =~ /testValue/ )
+#                    if ( $gChoices[testAttribute] =~ /testValue/ )  # JTB 12-Nov-2016: This doesn't work!!
+                     if ( testValue.match($gChoices[testAttribute]) )
                         thesevalsmatch = 1
                         debug_out ("       \##{$gChoices[testAttribute]} = #{$gChoices[testAttribute]} / #{testValue} / -> #{thesevalsmatch} \n")
                      end
@@ -3868,7 +3930,7 @@ $gChoices.each do |attrib1, choice|
          
          # Check if else condition exists. 
          if ( $ValidConditionFound == 0 )
-            if ( condHash.has_key("else") )
+            if ( condHash.has_key?("else") )
                $gOptions[attrib1]["options"][choice]["ext-result"][externalParam] = condHash["else"]
                $ValidConditionFound = 1
                debug_out ("   - EXTPARAM: #{externalParam} : found valid condition: \"else\" ! (#{condHash["else"]})\n")
@@ -4023,13 +4085,7 @@ $ScaleResults = 1.0 / orientations.size()    # size returns 1 or 4
 # Defined at top and zeroed here because if we are running multiple orientations, 
 # we must average them as we go. Averaging is done via the $ScaleResults factor (set
 # at 0.25) only when the AVG option is used.
-$gAvgCost_NatGas = 0
-$gAvgCost_Electr = 0
 $gAvgEnergy_Total = 0
-$gAvgCost_Propane = 0
-$gAvgCost_Oil = 0
-$gAvgCost_Wood = 0
-$gAvgCost_Pellet = 0
 $gAvgPVRevenue = 0
 $gAvgElecCons_KWh = 0
 $gAvgPVOutput_kWh = 0
@@ -4073,15 +4129,18 @@ orientations.each do |direction|
    
 end
 
-$gAvgCost_Total = $gAvgCost_Electr + $gAvgCost_NatGas + $gAvgCost_Propane + $gAvgCost_Oil + $gAvgCost_Wood + $gAvgCost_Pellet
+$gAvgCost_Total = $gResults[$outputHCode]['avgFuelCostsTotal$']
 
-$gAvgPVRevenue = $gAvgPVOutput_kWh * $PVTarrifDollarsPerkWh
+if ( $PVIntModel )
+   $gAvgPVRevenue = ( $gResults[$outputHCode]['avgElecPVGenkWh'] - $gResults[$outputHCode]['avgElecPVUsedkWh'] ) * $PVTarrifDollarsPerkWh
+else
+   $gAvgPVRevenue = ( $gResults[$outputHCode]['avgElecPVGenkWh'] - $gResults[$outputHCode]['avgFueluseEleckWh'] ) * $PVTarrifDollarsPerkWh
+end
+
+$gAvgPVRevenue = 0.0 if $gAvgPVRevenue < 0.0
 
 $optCOProxy = 0
 $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
-
-$gUpgCost = $gTotalCost - $gIncBaseCosts
-$gUpgSavings = $gUtilityBaseCost - $gAvgUtilCostNet
 
 # Proxy for cost of ownership (JTB 05-10-2016: Vriable used to be "$payback")
 $optCOProxy = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
@@ -4093,17 +4152,17 @@ if fSUMMARY == nil then
 end
 ## These need to be updated. 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
-fSUMMARY.write( "Util-Bill-gross   =  #{$gAvgCost_Total.round(2)}   \n" )
-fSUMMARY.write( "Util-PV-revenue   =  #{$gAvgPVRevenue.round(2)}    \n" )
-fSUMMARY.write( "Util-Bill-Net     =  #{($gAvgCost_Total-$gAvgPVRevenue).round(2)} \n" )
-fSUMMARY.write( "Util-Bill-Elec    =  #{$gAvgCost_Electr.round(2)}  \n" )
-fSUMMARY.write( "Util-Bill-Gas     =  #{$gAvgCost_NatGas.round(2)}  \n" )
-fSUMMARY.write( "Util-Bill-Prop    =  #{$gAvgCost_Propane.round(2)} \n" )
-fSUMMARY.write( "Util-Bill-Oil     =  #{$gAvgCost_Oil.round(2)} \n" )
-fSUMMARY.write( "Util-Bill-Wood    =  #{$gAvgCost_Wood.round(2)} \n" )
-fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )
+fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
+fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
+fSUMMARY.write( "Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Elec    =  #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  \n" )
+fSUMMARY.write( "Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)}  \n" )
+fSUMMARY.write( "Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
+fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
-fSUMMARY.write( "Energy-PV-kWh     =  #{$gAvgPVOutput_kWh.round(1)} \n" )
+fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
@@ -4130,7 +4189,7 @@ fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
 fSUMMARY.close() 
 
 endProcessTime = Time.now
-totalDiff = endProcessTime - startProcessTime
+totalDiff = endProcessTime - $startProcessTime
 stream_out( "\n Total processing time: #{totalDiff.round(2)} seconds (H2K run: #{$runH2KTime.round(2)} seconds)\n\n" )
 
 $fLOG.close()
