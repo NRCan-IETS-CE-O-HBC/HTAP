@@ -1997,41 +1997,41 @@
 !-------------------------
 ! EStar BOP window options
 !-------------------------
-*option:EnergyStarZONE2:value:1 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:2 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:3 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:4 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:5 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:6 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:7 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:8 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:9 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:10 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:11 = EnergyStarZONE2
-*option:EnergyStarZONE2:value:12 = EnergyStarZONE2
-*option:EnergyStarZONE2:WindowParams:name  = EnergyStarZONE2
-*option:EnergyStarZONE2:WindowParams:panes = 2
-*option:EnergyStarZONE2:WindowParams:SHGC  = 0.2357
-*option:EnergyStarZONE2:WindowParams:Uval  = 1.40
-*option:EnergyStarZONE2:cost:total   = 0   
+*option:U1.4_SHGC0.40:value:1 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:2 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:3 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:4 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:5 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:6 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:7 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:8 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:9 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:10 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:11 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:value:12 = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:WindowParams:name  = U1.4_SHGC0.40
+*option:U1.4_SHGC0.40:WindowParams:panes = 2
+*option:U1.4_SHGC0.40:WindowParams:SHGC  = 0.4
+*option:U1.4_SHGC0.40:WindowParams:Uval  = 1.40
+*option:U1.4_SHGC0.40:cost:total   = 0   
 
-*option:EnergyStarZONE3:value:1 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:2 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:3 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:4 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:5 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:6 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:7 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:8 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:9 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:10 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:11 = EnergyStarZONE3
-*option:EnergyStarZONE3:value:12 = EnergyStarZONE3
-*option:EnergyStarZONE3:WindowParams:name  = EnergyStarZONE3
-*option:EnergyStarZONE3:WindowParams:panes = 2
-*option:EnergyStarZONE3:WindowParams:SHGC  = 0.2357
-*option:EnergyStarZONE3:WindowParams:Uval  = 1.40
-*option:EnergyStarZONE3:cost:total   = 0   
+*option:U1.2_SHGC0.40:value:1 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:2 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:3 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:4 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:5 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:6 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:7 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:8 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:9 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:10 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:11 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:value:12 = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:WindowParams:name  = U1.2_SHGC0.40
+*option:U1.2_SHGC0.40:WindowParams:panes = 2
+*option:U1.2_SHGC0.40:WindowParams:SHGC  = 0.4
+*option:U1.2_SHGC0.40:WindowParams:Uval  = 1.20
+*option:U1.2_SHGC0.40:cost:total   = 0   
 
 
 *attribute:end
