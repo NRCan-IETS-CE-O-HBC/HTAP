@@ -56,10 +56,15 @@ end
 optparse.parse!
 
 if ($local)
-  FileUtils.rm Dir.glob('TempResultsBatch*.txt')
+
+  FileUtils.rm Dir.glob('TempResultsBatch*.txt') 
   FileUtils.rm Dir.glob('CloudResultsAllData.csv')
   
-  FileUtils.cp( $RemoteFile, "TempResultsBatch1.txt ")
+  begin
+    FileUtils.cp( $RemoteFile, "TempResultsBatch1.txt ")
+  rescue 
+    puts "Can't find $RemoteFile ! \n"
+  end 
 end 
 
 FileList = Array.new
