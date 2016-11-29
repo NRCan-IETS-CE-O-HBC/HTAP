@@ -107,7 +107,6 @@ $gAvgPVRevenue      = 0
 $gAvgElecCons_KWh    = 0 
 $gAvgPVOutput_kWh    = 0 
 $gAvgCost_Total      = 0 
-$gAvgEnergyHeatingGJ = 0 
 $gAvgEnergyCoolingGJ = 0 
 $gAvgEnergyVentilationGJ  = 0 
 $gAvgEnergyWaterHeatingGJ = 0  
@@ -121,6 +120,7 @@ $gDirection = ""
 $GenericWindowParams = Hash.new(&$blk)
 $GenericWindowParamsDefined = 0 
 
+$gAuxEnergyHeatingGJ = 0   # 29-Nov-2016 JTB: Added for use by RC
 $gEnergyHeatingElec = 0
 $gEnergyVentElec = 0
 $gEnergyHeatingFossil = 0
@@ -2829,32 +2829,43 @@ def postprocess( scaleData )
       end
    end
    
-   # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
+   # Set flags for reading from Browse.rpt file
+   bReadAuxEnergyHeating = true  # Always get Auxiliary Heating Energy (only available mthly in XML)
    bReadOldERSValue = false
    bUseNextPVLine = false
+   # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
    end
    
    # Open Browse.rpt ASCII file *if* some data needs to be extracted (not in XML)!
-   if ( bReadOldERSValue || $PVIntModel)
+   if ( bReadAuxEnergyHeating || bReadOldERSValue || $PVIntModel)
       begin
          fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
          while !fBrowseRpt.eof? do
-            lineIn = fBrowseRpt.readline
-            lineIn.strip!              # Remove leading and trailing whitespace
-            if ( lineIn !~ /^\s*$/ )   # Not an empty line!
-               if ( lineIn =~ /^Energuide Rating \(not rounded\) =/ )
+            lineIn = fBrowseRpt.readline  # Sequentially read file lines
+            lineIn.strip!                 # Remove leading and trailing whitespace
+            if ( lineIn !~ /^\s*$/ )      # Not an empty line!
+               if ( bReadAuxEnergyHeating && lineIn =~ /^Auxiliary Energy Required/ )
+                  lineIn.sub!(/Auxiliary Energy Required                              =/, '')
+                  lineIn.sub!(/MJ/, '')
+                  lineIn.strip!
+                  $gAuxEnergyHeatingGJ = lineIn.to_f    # Use * scaleData?
+                  $gAuxEnergyHeatingGJ /= 1000
+                  bReadAuxEnergyHeating = false
+                  break if (!bReadOldERSValue && !$PVIntModel)     # Stop parsing Browse.rpt when ERS number found!
+               elsif ( bReadOldERSValue && lineIn =~ /^Energuide Rating \(not rounded\) =/ )
                   lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
                   lineIn.strip!
                   $gERSNum = lineIn.to_f    # Use * scaleData?
+                  bReadOldERSValue = false
                   break if !$PVIntModel     # Stop parsing Browse.rpt when ERS number found!
                elsif ( ( $PVIntModel && lineIn =~ /PHOTOVOLTAIC SYSTEM MONTHLY PERFORMANCE/ ) || ( $PVIntModel && bUseNextPVLine ) )
                   bUseNextPVLine = true
                   if ( lineIn =~ /^Annual/ )
                      valuesArr = lineIn.split()   # Uses spaces by default to split-up line
                      $annPVPowerFromBrowseRpt = valuesArr[4].to_f * 12.0 / 1000.0  # kW (approx PV power)
-                     break # PV power near bottom (after EGH #, so nor more need to read)
+                     break # PV power near bottom of file so no more need to read!
                   end
                end
             end
@@ -2909,7 +2920,6 @@ def postprocess( scaleData )
          # ENERGY CONSUMPTION (Annual)
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
-         
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
@@ -2966,7 +2976,7 @@ def postprocess( scaleData )
             pvUtilized  = 0 
             monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             monthArr.each do |mth|
-               # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsietent with convention used 
+               # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsistent with convention used 
                #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
                # ASF: 05-Oct-2016: I suspect this loop is really expensive. 
                pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f  # GJ
@@ -4090,7 +4100,6 @@ $gAvgPVRevenue = 0
 $gAvgElecCons_KWh = 0
 $gAvgPVOutput_kWh = 0
 $gAvgCost_Total = 0
-$gAvgEnergyHeatingGJ = 0
 $gAvgEnergyCoolingGJ = 0
 $gAvgEnergyVentilationGJ = 0
 $gAvgEnergyWaterHeatingGJ = 0
@@ -4150,7 +4159,7 @@ fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
-## These need to be updated. 
+ 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
 fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
@@ -4165,6 +4174,9 @@ fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not
 fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
+
+fSUMMARY.write( "AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
+
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-DHWGJ      =  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} \n" )
