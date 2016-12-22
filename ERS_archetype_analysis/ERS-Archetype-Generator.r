@@ -1,35 +1,42 @@
 
 # R-Start: draft housing stock analysis script. 
 
-DebugConn <- file("debug-msgs.txt")
+DebugConn <- file("debug-msgs.txt","wt")
 
 # Standard output
-stream_out <- function(msg1="",msg2="",msg3="",msg4="",msg5=""){
-
-
-  if (msg1 != "") {cat(msg1)}
-  if (msg2 != "") {cat(msg2)}
-  if (msg3 != "") {cat(msg3)}
-  if (msg4 != "") {cat(msg4)}
-  if (msg5 != "") {cat(msg5)}
-
+stream_out <- function(msgs=c()){
+  for (i in 1:length(msgs) ){
+    cat(msgs[i])
+  }
 }
 
 # Debugging output
-debug_out <- function(msg1="",msg2="",msg3="",msg4="",msg5=""){
+debug_out <- function(msgs=c()){
+    if ( debug ){   
+	  writeLines(msgs, sep=" " ,DebugConn)
+    }
+}
+
+debug_vector <- function(myVector=c()){
     if ( debug ){
-      if (msg1 != "") {writeLines(c("Debug: ",msg1),DebugConn)}
-      if (msg2 != "") {writeLines(c(" ",msg2),DebugConn)}
-      if (msg3 != "") {writeLines(c(" ",msg3),DebugConn)}
-      if (msg4 != "") {writeLines(c(" ",msg4),DebugConn)}
-      if (msg5 != "") {writeLines(c(" ",msg5),DebugConn)}
+
+	  i=0
+	  OutVector = c("")
+	  for (i in 1:length(myVector) ){
+	    OutVector[i+1] = paste("   - ",myVector[i], sep="")
+      }
+	  OutVector[i+2] = "\n"
+	  
+      writeLines(OutVector, DebugConn )
+	 
+	}
 }
-}
+
 
 # Header 
 sayHello <- function(){ 
-  debug_out('(R is cool) \n\n\n\n\n\n\n\n')
-  stream_out('This is the draft housing stock analysis script. \n')
+  debug_out(c('(ERS-archetype-Generator.R debugging output) \n\n'))
+  stream_out(c('This is the draft housing stock analysis script. \n \n\n'))
 }
 
 
@@ -39,16 +46,19 @@ sayHello <- function(){
 debug = 1
 
 # Location of the CEUD data source. Also could be a cmd line arguement
-gPathToCEUD = "C:\\Users\\jpurdy\\Google Drive\\NRCan-Optimization-Results\\EIP-Technology-Forecasting\\CEUD-Data\\CEUD-translator-txt.csv"
+#gPathToCEUD = "C:\\Users\\jpurdy\\Google Drive\\NRCan-Optimization-Results\\EIP-Technology-Forecasting\\CEUD-Data\\CEUD-translator-txt.csv"
+
+gPathToCEUD = "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\EIP-Technology-Forecasting\\CEUD-Data\\CEUD-translator-txt.csv"
+
 #gPathToERS  = "C:\\cygwin64\\home\\aferguso\\ERS_Database\\D_E_combined_2016-10-18-forR.csv"
-gPathToERS  = "C:\\Ruby4HTAP\\ERS_archetype_analysis\\ERS_combined_forR.csv"
+#gPathToERS  = "C:\\Ruby4HTAP\\ERS_archetype_analysis\\ERS_combined_forR.csv"
 
-
+gPathToERS   = "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\EIP-Technology-Forecasting\\CEUD-Data\\D_E_combined_2016-10-18-forR.csv"
 
 # General parameters
 
 # Number of archetypes to be defined: 
-gTotalArchetypes = 300
+gTotalArchetypes = 3000 
 
 # year for model
 gStockYear = 2013
@@ -61,18 +71,19 @@ sayHello()
 #==============
 # CEUD: Parse and pre-process data. 
 # Parse CEUD data from csv file. 
-stream_out(" - About to parse CEUD data (",gPathToCEUD, ")...")
+stream_out(c(" - About to parse CEUD data (",gPathToCEUD, ")..."))
 
 mydata <- read.csv (file=gPathToCEUD, header=TRUE, sep = ",")
-stream_out ("  done.\n")
+stream_out (c("  done (",nrow(mydata), " rows) \n\n"))
 
 
 if (debug){
-  debug_out ("raw data contains ",nrow(mydata), " rows.\n")
-  debug_out ("I found the following columns in mydata : \n")
-  colnames (mydata)
-  #debug_out ("\n")
+  debug_out (c("raw data contains ",nrow(mydata), " rows.\n"))
+  debug_out (c("I found the following columns in mydata : \n"))
+  debug_vector( colnames(mydata) )
+  debug_out(c("\n"))
 }
+
 
 
 # Currently,  CEUD-translator-txt.csv contains a couple of duplicate 1990 rows - these are
@@ -83,22 +94,25 @@ mydata <- c()
 # compute number of homes (Number_static is in '1000s')
 CEUD$NumHomes = CEUD$Number_static * 1000
 
+
 if(debug){
 
-  debug_out ("After duplicate 1990 rows were removed, I found ", nrow(CEUD), " rows.\n")
+  debug_out (c("After duplicate 1990 rows were removed, I found ", nrow(CEUD), " rows.\n"))
 }
+
+
 
 # List of all 'topologies's, which define the aggregations in CEUD tables
 CEUDTopologies =  unique( as.vector(CEUD$Metric))
 
 
 if (debug) {
-  debug_out("Topology list - \n ")
-
-  cat(CEUDTopologies,sep="\n ")
+  debug_out(c("\n","Topology list in CEUD data. - \n"))
+  debug_vector( CEUDTopologies )
   
-  debug_out("/Topology list - \n")
 }
+
+
 
 # ==============
 # Create separate topologies 
@@ -137,23 +151,15 @@ CEUDProvFormYr        <- subset( CEUD, Year == gStockYear & Metric == "Province|
 
 
 
-if(debug){
- 
-  debug_out("CEUDProvFormYr - stats\n")
-  debug_out("    - Rows: ",nrow(CEUDProvFormYr),"\n")
-  debug_out("    - Cols: ",ncol(CEUDProvFormYr),"\n")  
-  debug_out ("\n \n")
-}
-
 CEUDTotalHomes=sum(CEUDProvFormYr$NumHomes) 
 
 
 # How many homes will each archetype represent? 
 gNumHomesEachArchRepresents = CEUDTotalHomes / gTotalArchetypes
 
-stream_out ( "  CEUD Data for", gStockYear, ":\n")
-stream_out ( "    - Total homes      :",CEUDTotalHomes,"\n")
-stream_out ( "    - Homes/archetype  :", gNumHomesEachArchRepresents,"\n\n")
+debug_out (c( "CEUD Data for", gStockYear, ":\n"))
+debug_out (c( "  - Total homes      :",CEUDTotalHomes,"\n"))
+debug_out (c( "  - If I generate", gTotalArchetypes, "archetypes, each archetype will represent ", gNumHomesEachArchRepresents," homes\n\n"))
 
 
 
@@ -161,31 +167,34 @@ stream_out ( "    - Homes/archetype  :", gNumHomesEachArchRepresents,"\n\n")
 # Pre-processing on CEUD data to pull 'Archetype descriptors' 
 
 #=============ERS 
-stream_out (" - About to parse ERS database at", gPathToERS,"...")
+stream_out (c("\n - About to parse the ERS data at", gPathToERS,"..."))
 
 #=ERS data gets parsed here. 
 
-#Testing for radomization of ERS database. 
-stream_out('This is the original ERS database. (",gPathToERS, ")...\n')
 
-myERSdata <- read.csv (file=gPathToERS, nrows=1000, header=TRUE, sep = ",")
+
+myERSdata <- read.csv (file=gPathToERS, nrows=50000, header=TRUE, sep = ",")
+
 #myERSdata <- read.csv (file=gPathToERS, header=TRUE, sep = ",")
 
 
 # show the columns that we pulled - 
-sort(colnames(myERSdata))
+debug_out("List of columns in ERS database:\n")
+debug_vector(sort(colnames(myERSdata)))
 
 # randomize the ERS data 
 myRandomERSdata <- myERSdata[sample(nrow(myERSdata)), ]
 
-stream_out ("The ERS database is now randomized")
+#stream_out (c("The ERS database is now randomized"))
 # set myERSdata to randomized data frame
 myERSdata <- myRandomERSdata
 
-stream_out (" - ... done.")
+stream_out (c(" - ... done.(",nrow(myERSdata)," rows)\n\n"))
 
-# show the columns that we pulled - 
-sort(colnames(myERSdata))
+debug_out (c( "ERS Data:\n"))
+debug_out (c( "  - Total rows      :",nrow(myERSdata),"\n"))
+debug_out (c( "  - Total cols      :",ncol(myERSdata),"\n"))
+debug_out (c( "\n\n"))
 
 
 # ============= Flag bad data 
@@ -203,14 +212,15 @@ sort(colnames(myERSdata))
 
 # Vintage
 
-stream_out("\n\n - Mapping vintage to CEUD definitions \n")
+stream_out("\n\n - Mapping vintage to CEUD definitions... ")
+debug_out(c("\n\n =============== Vintage analysis ====================\n\n"))
 
-if (debug){
-  debug_out (" Vintages used in CEUD:\n")
-  cat("   > ",unique(as.character(CEUD$Vintage))," <\n",sep=" | ")
+debug_out (c(" Vintages used in CEUD:\n"))
+debug_vector(c(unique(as.character(CEUD$Vintage))))
+debug_out (c("\n\n"))
 
-}
-
+# Set all vintage tags in ERS as error; as we identify ones that are valid, flip them 
+# to our common keywords. 
 myERSdata$CEUDVintage <- "error"
 myERSdata$CEUDVintage[ myERSdata$YEARBUILT.E < 1946 ] <- "Before 1946"
 myERSdata$CEUDVintage[ myERSdata$YEARBUILT.E > 1945 & myERSdata$YEARBUILT.E < 1961 ] <- "1946-1960"
@@ -225,173 +235,75 @@ myERSdata$CEUDVintage[ myERSdata$YEARBUILT.E > 2014 & myERSdata$YEARBUILT.E < 19
 
 myERSdata$CEUDVintage <- as.factor(myERSdata$CEUDVintage)
 
-if (debug){
-  debug_out (" Vintages set in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$CEUDVintage))," <\n",sep=" | ")
-  #debug_out (" / Vintages used in ERS:\n")
-  
-    
-  debug_out ("Codes that weren't set properly:\n")
-  cat("   > ",unique(as.character(myERSdata$PYEARBUILT.E[myERSdata$CEUDVintage == "error"]))," <\n",sep=" | ")
-  
-  debug_out ("(",nrow(myERSdata[myERSdata$CEUDVintage == "error",])," rows in total)\n")
-  
+debug_out (c("Vintages set in ERS for valid rows:\n"))
+debug_vector(c(unique(as.character(myERSdata$CEUDVintage))))
+debug_out (c("\n\n"))
 
-}
+debug_out ("Vintage Codes that weren't set properly:\n")
+debug_vector(c(unique(as.character(myERSdata$YEARBUILT.E[myERSdata$CEUDVintage == "error"]))))
+debug_out (c("(",nrow(myERSdata[myERSdata$CEUDVintage == "error",])," rows in total)\n"))
+
+stream_out(c("done.\n"))
 
 
 # Province 
 
-stream_out("\n\n - Mapping province to CEUD definitions \n")
+stream_out(c(" - Mapping province to CEUD definitions..."))
 
-if (debug){
-  debug_out (" Provinces used in CEUD:\n")
-  cat("   > ",unique(as.character(CEUD$Province))," <\n",sep=" | ")
-  #debug_out (" / Provinces used in CEUD:\n")
-}
 
-if (debug){
-  debug_out (" Provinces used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$PROVINCE.D))," <\n",sep=" | ")
-  #debug_out (" / Provinces used in ERS:\n")
-}
+debug_out(c("\n\n =============== Province analysis ====================\n\n"))
 
-  myERSdata$CEUDProvince <- "error"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "QC" ] <- "QC"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "BC" ] <- "BC"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "ON" ] <- "ON"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "SK" ] <- "SK"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "MB" ] <- "MB"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NF" ] <- "NF"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "AB" ] <- "AB"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NS" ] <- "NS"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NB" ] <- "NB"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "PE" ] <- "PEI"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NT" ] <- "TR"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "YK" ] <- "TR"
-  myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NU" ] <- "TR" 
+debug_out (c(" Provinces used in CEUD:\n"))
+debug_vector(c(unique(as.character(CEUD$Province))))
+debug_out (c("\n\n"))
+
+debug_out (c(" Provinces used in ERS:\n"))
+debug_vector(c(unique(as.character(myERSdata$PROVINCE.D))))
+debug_out (c("\n\n"))
+
+
+myERSdata$CEUDProvince <- "error"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "QC" ] <- "QC"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "BC" ] <- "BC"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "ON" ] <- "ON"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "SK" ] <- "SK"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "MB" ] <- "MB"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NF" ] <- "NF"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "AB" ] <- "AB"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NS" ] <- "NS"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NB" ] <- "NB"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "PE" ] <- "PEI"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NT" ] <- "TR"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "YK" ] <- "TR"
+myERSdata$CEUDProvince[ myERSdata$PROVINCE.D == "NU" ] <- "TR" 
  
-if (debug){
-  debug_out (" Province codes set in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$CEUDProvince[myERSdata$CEUDProvince != "error"]))," <\n",sep=" | ")
-  #debug_out (" / Province codes set ERS:\n")
-  
-  debug_out ("Codes that weren't set properly:\n")
-  cat("   > ",unique(as.character(myERSdata$PROVINCE.D[myERSdata$CEUDProvince == "error"]))," <\n",sep=" | ")
-  
-  #debug_out ("(",nrow(myERSdata[myERSdata$CEUDProvince == "error",])," rows in total)\n")
-}
 
+debug_out (c("Provinces set in ERS for valid rows:\n"))
+debug_vector(c(unique(as.character(myERSdata$CEUDProvince[myERSdata$CEUDProvince != "error"]))))
+debug_out (c("\n\n"))
 
+debug_out ("Province Codes that weren't set properly:\n")
+debug_vector(c(unique(as.character(myERSdata$PROVINCE.D[myERSdata$CEUDProvince == "error"]))))
+debug_out (c("(",nrow(myERSdata[myERSdata$CEUDProvince == "error",])," rows in total)\n"))
 
-write.csv(myERSdata, file = "myERSdata_out.txt")	  
-
-myERSdata$ArchInclude <- FALSE 
-
-gCount <- 0
-NumOfArch <- NULL
-ArchProvince <- NULL
-
-#--for each Province in the CEUD Database, calculate the size of each archetype bucket; NumOfArch
-for (ArchProvince in CEUDProvFormYr$Province){
-  NumOfArch[ArchProvince] <- ((sum(CEUDProvFormYr$NumHomes[CEUDProvFormYr$Province == ArchProvince]))  / CEUDTotalHomes * gTotalArchetypes)
-  NumOfArch[ArchProvince] <- trunc(NumOfArch[ArchProvince])
-}  
-
-
-#dataframe:   province | number of homes in the set| counter
-ArchetypeDataFrame  <- data.frame(ArchProvince,NumOfArch,gCount)
-#set ArchProvince from row names
-ArchetypeDataFrame$ArchProvince <- row.names(ArchetypeDataFrame)
-
-
-#--for each HouseID in my ERS data, fill the archetype bucket until full 
-ERSProvince <- NULL
-ID <- NULL
-numberofarchetypesforERSProvinceID <- NULL  
-countofarchetypesforERSProvinceID <- NULL
-
-#--for each HOUSEID in my ERS data , add a TRUE or FALSE if that ID will be added to the Archetype
-for (ID in unique( myERSdata$HOUSE_ID.D )){
-
-  ERSProvince[ID] <- myERSdata$CEUDProvince[myERSdata$HOUSE_ID.D == ID ]
-  print("ERSProvince[ID]")
-  print(ERSProvince[ID])
-  print(ArchetypeDataFrame$ArchProvince)
-# look at the number of archetypes required for the ERSProvince[ID]
-  numberofarchetypesforERSProvinceID[ID] <- ArchetypeDataFrame$NumOfArch[ArchetypeDataFrame$ArchProvince == ERSProvince[ID]]
-  print("numberofarchetypesforERSProvinceID")
-  print(numberofarchetypesforERSProvinceID[ID]) 
-  print("ArchetypeDataFrame$gCount[ArchProvince == ERSProvince[ID]]")
-  print(ArchetypeDataFrame$gCount[ArchetypeDataFrame$ArchProvince == ERSProvince[ID]])
-
-  countofarchetypesforERSProvinceID[ID] <- ArchetypeDataFrame$gCount[ArchetypeDataFrame$ArchProvince == ERSProvince[ID]]
-
-  
-  
-  if (countofarchetypesforERSProvinceID[ID] < numberofarchetypesforERSProvinceID[ID]) {
-        myERSdata$ArchInclude[ myERSdata$HOUSE_ID.D == ID ] <- TRUE
-		countofarchetypesforERSProvinceID[ID] <- (countofarchetypesforERSProvinceID[ID] + 1)
-        print("countofarchetypesforERSProvinceID[ID]")
-        print(countofarchetypesforERSProvinceID[ID])
-  }		
-		
-  print("myERSdata$ArchInclude")
-  print(myERSdata$ArchInclude)
-
-
-
-
-# if ( ERSProvince[ID] == ArchetypeDataFrame$ArchProvince )
-  
-#if ArchetypeDataFrame$gCount < ArchetypeDataFrame$NumOfArch {
-#      myERSdata$ArchInclude[ myERSdata$HOUSE_ID.D == ID ] <- TRUE
-#      ArchetypeDataFrame$gCount[CEUDProvFormYr$Province = ArchProvince] <- (ArchetypeDataFrame$gCount[CEUDProvFormYr$Province = ArchProvince] + 1)
-#}
-
-  
-#  if ( ERSProvince[ID] == ArchetypeDataFrame$ArchProvince ){
-  #&& gCount[ArchetypeDataFrame$ArchProvince] <  ){
-
-#      myERSdata$ArchInclude[ myERSdata$HOUSE_ID.D == ID] <- TRUE
-#      gCount[ArchetypeDataFrame$ArchProvince] <- gCount[ArchetypeDataFrame$ArchProvince] + 1
-#     write.csv(gCount[ArchetypeDataFrame$ArchProvince], file="gcount_archprovince.txt",append=TRUE)
-
-#      write.csv(ERSProvince[ID], file = "ERSProvince.txt")	  
-
-#   }
-}
-
-
-
-# this is(?) how to define the subset of all TRUE ids
-#myERSdata[ myERSdata$ArchInclude ]
-
-#write.csv(myERSdata[myERSdata$ArchInclude], file="myERSdata_ArchInclude.txt")
-
-#ArchProvince <- (myERSdata$CEUDProvince[myERSdata$HOUSE_ID.D == HOUSE_ID.D]) 
-
-#}
-
-#write.table(gCount[ArchProvince], file = "CEUDCounter.txt")
+stream_out(c("done.\n"))
 
 
 
 #========Type of house 
 
-stream_out("\n\n - Mapping house type to CEUD definitions \n")
+stream_out(" - Mapping house type to CEUD definitions...")
 
-if (debug){
-  debug_out (" House types used in CEUD:\n")
-  cat("   > ",unique(as.character(CEUD$Form))," <\n",sep=" | ")
-  #debug_out (" / House types used in CEUD:\n")
-}
+debug_out(c("\n\n =============== House type analysis ====================\n\n"))
 
-if (debug){
-  debug_out (" Housing types used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$TYPEOFHOUSE.D))," <\n",sep=" | ")
-  #debug_out (" / Housing types used in ERS:\n")
-}
+debug_out (c("Housing Forms used in CEUD:\n"))
+debug_vector(c(unique(as.character(CEUD$Form))))
+debug_out (c("\n\n"))
+
+debug_out (c("Housing types used in ERS:\n"))
+debug_vector(c(unique(as.character(myERSdata$TYPEOFHOUSE.D))))
+debug_out (c("\n\n"))
+
 
   myERSdata$CEUDForm <- "error"
   myERSdata$CEUDForm[ myERSdata$TYPEOFHOUSE.D == "Single^detached" ] <- "SD"
@@ -408,50 +320,47 @@ if (debug){
   myERSdata$CEUDForm[ myERSdata$TYPEOFHOUSE.D == "Apartment" |  
                       myERSdata$TYPEOFHOUSE.D == "Apartment^Row" ] <- "AP"
  
-if (debug){
-  debug_out (" House form set in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$CEUDForm[myERSdata$CEUDForm != "error"]))," <\n",sep=" | ")
-  #debug_out (" / House form set ERS:\n")
   
-  debug_out ("Codes that weren't set properly:\n")
+debug_out (c("House types set in ERS for valid rows:\n"))
+debug_vector(c(unique(as.character(myERSdata$CEUDForm[myERSdata$CEUDForm != "error"]))))
+debug_out (c("\n\n"))
+
+debug_out ("House Type Codes that weren't set properly:\n")
+debug_vector(c(unique(as.character(myERSdata$TYPEOFHOUSE.D[myERSdata$CEUDForm == "error"]))))
+debug_out (c("(",nrow(myERSdata[myERSdata$CEUDForm == "error",])," rows in total)\n"))
+
+stream_out(c("done.\n"))
   
   
-  cat("   > ",unique(as.character(myERSdata$TYPEOFHOUSE.D[myERSdata$CEUDForm == "error"]))," <\n",sep=" | ")
-  
-  debug_out ("(",nrow(myERSdata[myERSdata$CEUDForm== "error",])," rows in total)\n")
-}  
   
   
 
 # Heating fuel  
 
-stream_out("\n\n - Mapping heating fuel  to CEUD definitions \n")
-
-if (debug){
-  debug_out (" Equipment types used in CEUD:\n")
-  cat("   > ",unique(as.character(CEUD$Equipment))," <\n",sep=" | ")
-  #debug_out (" / Equipment types used in CEUD:\n")
-}
+stream_out(" - Mapping heating fuel  to CEUD definitions...")
 
 
+debug_out(c("\n\n =============== Heating fuel/equipment analysis ====================\n\n"))
+debug_out (" Equipment types used in CEUD:\n")
+debug_vector(c(unique(as.character(CEUD$Equipment))))
 
-
-if (debug){
   debug_out (" Furnace fuel used in ERS:\n")
   
 
   
-  cat("   > ",unique(as.character(myERSdata$FURNACEFUEL.D))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$FURNACEFUEL.D))))
  
   
   debug_out ("\n")
   debug_out (" Furnace efficiencies used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$FURSSEFF.D))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$FURSSEFF.D))))
   debug_out (" Heat pump types used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$HPSOURCE.D[ as.numeric(myERSdata$COP.D) > 1.1 ] ))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$HPSOURCE.D[ as.numeric(myERSdata$COP.D) > 1.1 ] ))))
   debug_out (" Heat pump COPS types used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$COP.D))," <\n",sep=" | ")
-}
+  debug_vector(c(unique(as.character(myERSdata$COP.D))))
+  
+
+  
 
   # 1: Classify dual fuel systems
  # Recode
@@ -578,52 +487,56 @@ if (debug){
 #  
   
   
-  if (debug){ 
-      ers_combinations = sort( paste( as.character(myERSdata$CEUDSHCode), " <- ",
-                                as.character(myERSdata$SHFuel1),  " + ", 
-                                as.character(myERSdata$SHFuel2) , " + ", 
-                                as.character(myERSdata$SHFuel3) ) )
-      
-      as.data.frame(table( ers_combinations))
-      
-      
-      ers_combinations0 = paste( as.character(myERSdata$CEUDSHCode) , " + "  )
-      
-      
-      ers_combinations1 = paste( as.character(myERSdata$SHFuel1) , " + "  )
-
-      
-      ers_combinations2 = paste( as.character(myERSdata$SHFuel2) , " + "  )
-
-      
-      ers_combinations3 = paste( as.character(myERSdata$SHFuel3) , " + "  )
-
-      
-      as.data.frame(table( pre_combinations0))
-      
-      as.data.frame(table( ers_combinations0))
-      
-      
-      as.data.frame(table( pre_combinations1))    
-        as.data.frame(table( ers_combinations1))  
-      
-      as.data.frame(table( pre_combinations2))
-        as.data.frame(table( ers_combinations2))
-      
-      
-      as.data.frame(table( pre_combinations3))  
-        as.data.frame(table( ers_combinations3))
-    }
+ #if (debug){ 
+ #
+ #    ers_combinations = sort( paste( as.character(myERSdata$CEUDSHCode), " <- ",
+ #                              as.character(myERSdata$SHFuel1),  " + ", 
+ #                              as.character(myERSdata$SHFuel2) , " + ", 
+ #                              as.character(myERSdata$SHFuel3) ) )
+ #    
+ #    as.data.frame(table( ers_combinations))
+ #    
+ #    
+ #    ers_combinations0 = paste( as.character(myERSdata$CEUDSHCode) , " + "  )
+ #    
+ #    
+ #    ers_combinations1 = paste( as.character(myERSdata$SHFuel1) , " + "  )
+ #
+ #    
+ #    ers_combinations2 = paste( as.character(myERSdata$SHFuel2) , " + "  )
+ #
+ #    
+ #    ers_combinations3 = paste( as.character(myERSdata$SHFuel3) , " + "  )
+ #
+ #    
+ #    as.data.frame(table( pre_combinations0))
+ #    
+ #    as.data.frame(table( ers_combinations0))
+ #    
+ #    
+ #    as.data.frame(table( pre_combinations1))    
+ #      as.data.frame(table( ers_combinations1))  
+ #    
+ #    as.data.frame(table( pre_combinations2))
+ #      as.data.frame(table( ers_combinations2))
+ #    
+ #    
+ #    as.data.frame(table( pre_combinations3))  
+ #      as.data.frame(table( ers_combinations3))
+ #  }
     
     
-    
+
+	
+	
   myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code1" ] <- "Code0"
 
   
 
   # Set all gas furnaces to 'medium', and then recode ones for which valid efficiency data exists. 
   myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code0" & 
-                        myERSdata$FURNACEFUEL.D == "Natural^Gas" ] <- "Gas-Medium"
+                        myERSdata$FURNACEFUEL.D == "Natural^Gas" & 
+						is.numeric(myERSdata$FURSSEFF.D) ] <- "Gas-Medium"
   myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code0" & 
                         myERSdata$FURNACEFUEL.D == "Natural^Gas" & 
                         as.numeric(myERSdata$FURSSEFF.D) > 89 ] <- "Gas-High"
@@ -635,7 +548,8 @@ if (debug){
   
   # Set all oil furnaces to 'medium', and then recode ones for which valid efficiency data exists. 
   myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code0" & 
-                        myERSdata$FURNACEFUEL.D == "Oil" ] <- "Oil-Medium"
+                        myERSdata$FURNACEFUEL.D == "Oil" & 
+						is.numeric(myERSdata$FURSSEFF.D) ] <- "Oil-Medium"
   myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code0" & 
                         myERSdata$FURNACEFUEL.D == "Oil" & 
                         as.numeric(myERSdata$FURSSEFF.D) > 85 ] <- "Oil-High"
@@ -655,7 +569,8 @@ if (debug){
                         myERSdata$FURNACEFUEL.D == "Electricity" & 
                                ( myERSdata$HPSOURCE.D == "Water" | 
                                  myERSdata$HPSOURCE.D == "Air" | 
-                                 myERSdata$HPSOURCE.D == "Ground" )     ] <- "Heat-pump"
+                                 myERSdata$HPSOURCE.D == "Ground" ) & 
+                        is.numeric(myERSdata$COP.D)	 ] <- "Heat-pump"
                                 
    myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code0" & 
                          myERSdata$FURNACEFUEL.D == "Propane" ] <- "Other"
@@ -668,6 +583,12 @@ if (debug){
                                  myERSdata$FURNACEFUEL.D == "Wood^Pellets"   ] <- "Wood"
     
     myERSdata$CEUDSHCode[ myERSdata$CEUDSHCode == "Code0" ] <- "error"
+	
+
+	
+	
+	
+	
     #  # The following code is useful for inspecting classifications     
     #  ers_combinations = sort( paste( as.character(myERSdata$CEUDSHCode), " <- ",
     #                                  as.character(myERSdata$SHFuel1),  " + ", 
@@ -701,31 +622,33 @@ if (debug){
     #  as.data.frame(table( pre_combinations3))  
     #  as.data.frame(table( ers_combinations3))
     
-if (debug){
-  debug_out (" \n"); 
+  
   debug_out (" Heating Equipment set in ERS according to CEUD definitions :\n")
-  cat("   > ",unique(as.character(myERSdata$CEUDSHCode[myERSdata$CEUDSHCode != "error"]))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$CEUDSHCode[myERSdata$CEUDSHCode != "error"]))))
   
   if (nrow(myERSdata[myERSdata$CEUDSHCode== "error",]) > 0 ) {
-    debug_out ("I found that ",nrow(myERSdata[myERSdata$CEUDSHCode == "error",])," rows with the following equip codes rows couldn't be coded:\n")
-    cat("   > ",unique(as.character(myERSdata$FURNACEFUEL.D[myERSdata$CEUDSHCode == "error"]))," <\n",sep=" | ")
+    debug_out (c("I found that ",nrow(myERSdata[myERSdata$CEUDSHCode == "error",])," rows with the following equip codes rows couldn't be coded:\n"))
+    debug_vector(c(unique(as.character(myERSdata$FURNACEFUEL.D[myERSdata$CEUDSHCode == "error"]))))
   }
-}  
   
-    
-    
+      
+  stream_out("done.\n")
     
 # Cooling 
 
-stream_out("\n\n - Mapping AC to CEUD definitions \n")
+
+
+debug_out(c("\n\n =============== AC analysis ====================\n\n"))
+
+stream_out(" - Mapping AC to CEUD definitions...")
 
 
 
-if (debug){
+
   debug_out (" AC definitions used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$AIRCONDTYPE.D))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$AIRCONDTYPE.D))))
   debug_out ("\n")
-}
+
 
 
  # Recode
@@ -744,32 +667,30 @@ if (debug){
                          myERSdata$AIRCONDTYPE.D == "Window^A/C^w/vent^cooling"    ] <- "AC-Room"    
                          
                          
-if (debug){
+
   debug_out (" \n"); 
   debug_out (" AC Equipment set in ERS according to CEUD definitions :\n")
-  cat("   > ",unique(as.character(myERSdata$CEUDAirCon[myERSdata$CEUDAirCon != "error"]))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$CEUDAirCon[myERSdata$CEUDAirCon != "error"]))))
   
   if (nrow(myERSdata[myERSdata$CEUDAirCon== "error",]) > 0 ) {
-    debug_out ("I found that ",nrow(myERSdata[myERSdata$CEUDAirCon == "error",])," rows with the following AC codes rows couldn't be coded:\n")
-    cat("   > ",unique(as.character(myERSdata$AIRCONDTYPE.D[myERSdata$CEUDAirCon == "error"]))," <\n",sep=" | ")
+    debug_out (c("I found that ",nrow(as.character(myERSdata[myERSdata$CEUDAirCon == "error",]))," rows with the following AC codes rows couldn't be coded:\n"))
+    debug_vector(c(unique(as.character(myERSdata$AIRCONDTYPE.D[myERSdata$CEUDAirCon == "error"]))))
   }
-}  
   
-
-  
-
+  stream_out("done.\n")
+ 
     
 # Water Heating  
 
-stream_out("\n\n - Mapping DHW to CEUD definitions \n")
 
+debug_out(c("\n\n =============== Water Heating analysis ====================\n\n"))
 
+stream_out(" - Mapping DHW to CEUD definitions...")
 
-if (debug){
   debug_out (" WH definitions used in ERS:\n")
-  cat("   > ",unique(as.character(myERSdata$PDHWFUEL.D))," <\n",sep=" | ")
+  debug_vector(c(unique(as.character(myERSdata$PDHWFUEL.D))))
   debug_out ("\n")
-}
+
 
 
  # Recode
@@ -785,9 +706,9 @@ if (debug){
                      myERSdata$PDHWFUEL.D == "Wood^Pellets"    ] <- "WH-Wood"     
                          
   myERSdata$CEUDdhw[ myERSdata$PDHWFUEL.D == "Propane"     ] <- "Other"  
-
   
-
+  
+  
   myERSdata$CEUDdhw[ myERSdata$PDHWFUEL.D == "Solar" & myERSdata$SDHWFUEL.D == "Natural^Gas"     ] <- "WH-Gas"
   myERSdata$CEUDdhw[ myERSdata$PDHWFUEL.D == "Solar" &myERSdata$SDHWFUEL.D == "Electricity"     ] <- "WH-Elec"                    
   myERSdata$CEUDdhw[ myERSdata$PDHWFUEL.D == "Solar" &myERSdata$SDHWFUEL.D == "Oil"     ] <- "WH-Oil"  
@@ -802,33 +723,139 @@ if (debug){
 
 
 
-  
-                      
-if (debug){
+
   debug_out (" \n"); 
-  debug_out (" AC Equipment set in ERS according to CEUD definitions :\n")
-  cat("   > ",unique(as.character(myERSdata$CEUDdhw[myERSdata$CEUDdhw != "error"]))," <\n",sep=" | ")
+  debug_out (" DHW Equipment set in ERS according to CEUD definitions :\n")
+  debug_vector(c(unique(as.character(myERSdata$CEUDdhw[myERSdata$CEUDdhw != "error"]))))
   
   if (nrow(myERSdata[myERSdata$CEUDdhw== "error",]) > 0 ) {
-    debug_out ("I found that ",nrow(myERSdata[myERSdata$CEUDdhw == "error",])," rows with the following AC codes rows couldn't be coded:\n")
-    cat("   > ",unique(as.character(myERSdata$PDHWFUEL.D[myERSdata$CEUDdhw == "error"]))," <\n",sep=" | ")
+    debug_out (c("I found that ",nrow(myERSdata[myERSdata$CEUDdhw == "error",])," rows with the following DHW codes rows couldn't be coded:\n"))
+    debug_vector(c(unique(as.character(myERSdata$PDHWFUEL.D[myERSdata$CEUDdhw == "error"]))))
   }
-}  
+ 
   
-
+  stream_out("done.\n")
     
   
 # Set master flag that indicates if mapping was successful or not 
 myERSdata$CEUDerror <- FALSE
 myERSdata$CEUDerror[ myERSdata$CEUDdhw == "error"  |
-                    myERSdata$CEUDProvince == "error"  |
-                    myERSdata$CEUDVintage == "error"  |
-                    myERSdata$CEUDForm == "error"  |
-                    myERSdata$CEUDSHCode == "error"  |
-                    myERSdata$CEUDAirCon == "error"   ] <- TRUE
+                     myERSdata$CEUDProvince == "error"  |
+                     myERSdata$CEUDVintage == "error"  |
+                     myERSdata$CEUDForm == "error"  |
+                     myERSdata$CEUDSHCode == "error"  |
+                     myERSdata$CEUDAirCon == "error"   ] <- TRUE
                    
-stream_out ("\n - I processed ",nrow(myERSdata)," rows. ", nrow(myERSdata[myERSdata$CEUDerror,]), " contained errors \n")
-                   
+				   
+				   
+				   
+stream_out (c("\n - I processed ",nrow(myERSdata)," rows. ", nrow(myERSdata[myERSdata$CEUDerror,]), " contained errors \n\n"))
+    
+
+	
+#=============================== PICK the archetypes we need 
+# Archetypes now mapped to CEUD tags. Next steps: 
+
+stream_out(c(" - Selecting ",gTotalArchetypes," to represent Canadian Housing Stock\n"))
+
+
+debug_out(c("\n\n =============== Try picking archetypes. ====================\n\n"))
+
+
+
+myERSdata$ArchInclude <- FALSE 
+
+gCount <- 0
+NumOfArch <- NULL
+ArchProvince <- NULL
+
+
+
+debug_out(c("# of archetypes needed for each province. \n"))
+
+arch_run_total <- 0
+
+#--for each Province in the CEUD Database, calculate the size of each archetype bucket; NumOfArch
+for (ArchProvince in unique(CEUDProvFormYr$Province)){
+  NumOfArch[ArchProvince] <- ((sum(CEUDProvFormYr$NumHomes[CEUDProvFormYr$Province == ArchProvince]))  / CEUDTotalHomes * gTotalArchetypes)
+  NumOfArch[ArchProvince] <- round(NumOfArch[ArchProvince])
+  
+  debug_out(c(" Prov:", ArchProvince, " #: ", NumOfArch[ArchProvince],"\n"))
+  
+  arch_run_total = arch_run_total + NumOfArch[ArchProvince] 
+    
+}  
+
+debug_out(c("Total archetypes:", arch_run_total,"\n"))
+
+
+#dataframe:   province | number of homes in the set| counter
+ArchetypeDataFrame  <- data.frame(ArchProvince,NumOfArch,gCount)
+#set ArchProvince from row names
+ArchetypeDataFrame$ArchProvince <- row.names(ArchetypeDataFrame)
+
+
+#--for each HouseID in my ERS data, fill the archetype bucket until full 
+ERSProvince <- NULL
+ID <- NULL
+numberofarchetypesforERSProvinceID <- NULL  
+CountOfArchPerProv <- NULL
+
+
+# Set counters for province to zero. 
+for (Prov in unique(CEUDProvFormYr$Province) ){
+
+  CountOfArchPerProv[Prov] <- 0
+
+}
+
+
+
+
+
+#--for each HOUSEID in my ERS data , add a TRUE or FALSE if that ID will be added to the Archetype
+for (ID in unique( myERSdata$HOUSE_ID.D[ ! myERSdata$CEUDerror  ] )){
+  
+  Prov <- myERSdata$CEUDProvince[myERSdata$HOUSE_ID.D == ID ]
+
+  debug_out(c("> ", ID, "PROV:", Prov,"\n"))
+  
+  if ( CountOfArchPerProv[Prov] < NumOfArch[Prov] ){
+     
+	 CountOfArchPerProv[Prov] <- CountOfArchPerProv[Prov] + 1
+	 myERSdata$ArchInclude[myERSdata$HOUSE_ID.D == ID] <- TRUE 
+	 	 
+   }
+  
+}
+
+
+
+nrow(myERSdata[myERSdata$ArchInclude,])
+
+
+stream_out (" - writing out ERS dbs (myERSdata_out.txt)...")
+write.csv(myERSdata, file = "myERSdata_out.txt")	  
+stream_out (" done.\n")
+
+
+
+
+
+q()
+
+
+
+
+#write.csv(myERSdata[myERSdata$ArchInclude], file="myERSdata_ArchInclude.txt")
+
+#ArchProvince <- (myERSdata$CEUDProvince[myERSdata$HOUSE_ID.D == HOUSE_ID.D]) 
+
+#}
+
+#write.table(gCount[ArchProvince], file = "CEUDCounter.txt")
+
+               
                    
 HouseIDsFOrModel = c()
 
