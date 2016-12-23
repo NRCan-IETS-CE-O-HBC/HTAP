@@ -14,7 +14,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
-      Values = "Vancouver, Calgary, WINDSOR, Ottawa";      
+      Values = "Vancouver, Calgary, WINDSOR, Ottawa, Edmonton, Halifax, Montreal, Whitehorse, Toronto";      
       
       // Buildability locations (12):
       //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
@@ -97,7 +97,7 @@ Vary{
   Parameter{   // 
       Name    =  GOtag:Opt-CasementWindows;
       Ini     =  1;
-      Values  =  "LG-i89-Triple-A, MG-i89-Double"; 
+      Values  =  "LG-i89-Triple-A, MG-i89-Double, HG-i89-Triple-A, HG-i89-Triple-B, HG-VHG-Double, HG-avg-Double"; 
    }    
    
   // Extra drywall:  OneSheet
