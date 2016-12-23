@@ -4173,7 +4173,7 @@ fSUMMARY.write( "Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWoo
 fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
 fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
-fSUMMARY.write( "Gross-HeatLoss-GJ  =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
+fSUMMARY.write( "Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 

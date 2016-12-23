@@ -14,7 +14,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
-      Values = "Kamloops";      
+      Values = "SUMMERLAND";      
       
       // Buildability locations (12):
       //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
@@ -62,7 +62,7 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-H2KFoundation;
       Ini     =  1;
-      Values  = "LEEP_Base_Case_FDN";  //4in_Ext_Rigid_XPS_R10_under, LEEP_BaseFDN_R10_under, LEEP_BaseFDN_2inMWBext, LEEP_BaseFDN_2inMWBext_R10_under, 4in_Ext_Rigid_XPS"; 
+      Values  = "LEEP_Base_Case_FDN, 4in_Ext_Rigid_XPS_R10_under, LEEP_BaseFDN_R10_under, LEEP_BaseFDN_2inMWBext, LEEP_BaseFDN_2inMWBext_R10_under, 4in_Ext_Rigid_XPS"; 
    } 
    
    // Foundation walls

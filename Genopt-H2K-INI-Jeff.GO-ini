@@ -84,7 +84,7 @@ Simulation{
       Delimiter11 = "AuxEnergyReq-HeatingGJ = ";
       
       Name12 = Gross-HeatLoss-GJ;
-      Delimiter12 = "Gross-HeatLoss-GJ = ";
+      Delimiter12 = "Gross-HeatLoss-GJ =  ";
       
       Name13 = EnergyHeatingGJ; 
       Delimiter13 = "Energy-HeatingGJ  =  ";
