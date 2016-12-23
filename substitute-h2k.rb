@@ -2921,6 +2921,7 @@ def postprocess( scaleData )
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgGrossHeatLossGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -4172,6 +4173,7 @@ fSUMMARY.write( "Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWoo
 fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
 fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
+fSUMMARY.write( "Gross-HeatLoss-GJ  =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
