@@ -1275,10 +1275,18 @@ def processFile(filespec)
                      if ( sysType1Name != "Baseboards" && sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EquipmentType"
                      else
-                        locationText = ""
+                        locationText = "SkipThis"
                      end
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
+                        # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is 
+                        # NOT a conventional fireplace,add the "EPA/CSA" attribute field in the 
+                        # EquipmentInformation section to avoid a crash!
+                        locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EnergySource"
+                        if ( h2kElements[locationText2].attributes["code"].to_i > 4 && value != "8" )
+                           locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation"
+                           h2kElements[locationText2].attributes["epaCsa"] = "false"
+                        end
                      end
                   end
                   
@@ -1288,7 +1296,7 @@ def processFile(filespec)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                      else
                         # ASF 07-Oct-2016 - not needed for P9?
-                        locationText = ""
+                        locationText = "SkipThis"
                      end
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
