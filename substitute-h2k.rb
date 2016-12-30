@@ -397,12 +397,15 @@ def processFile(filespec)
                   # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
                   h2kElements[locationText].attributes["code"] = "x"
-                  # Must also remove "Air Leakage Test Data" section, if present since it will negate ACH option
+                  # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
                   locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
                   if ( h2kElements[locationText] != nil )
                         # Need to remove this section!
                         locationText = "HouseFile/House/NaturalAirInfiltration"
                         h2kElements[locationText].delete_element("AirLeakageTestData")
+                        # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
+                        locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+                        h2kElements[locationText].attributes["isCgsbTest"] = "true"
                   end
                   # Set the blower door test value in airChangeRate field
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
