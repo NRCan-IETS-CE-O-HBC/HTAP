@@ -103,21 +103,24 @@ Simulation{
       
       Name18 = FuelOilL; 
       Delimiter18 = "EnergyOil_l       =  ";
-            
-      Name19 = UpgradeCostDoll ;
-      Delimiter19 = "Upgrade-cost      =  ";
+          
+      Name19 = FuelPropaneL; 
+      Delimiter19 = "EnergyProp_L      =  ";
+	  
+      Name20 = UpgradeCostDoll ;
+      Delimiter20 = "Upgrade-cost      =  ";
 
-      Name20 = PVSizekW;
-      Delimiter20 = "PV-size-kW      =  ";      
+      Name21 = PVSizekW;
+      Delimiter21 = "PV-size-kW      =  ";      
 
-      Name21 = PEAKHeatingW;
-      Delimiter21 = "PEAK-Heating-W    =  ";
+      Name22 = PEAKHeatingW;
+      Delimiter22 = "PEAK-Heating-W    =  ";
       
-      Name22 = ERS-Value;
-      Delimiter22 = "ERS-Value         =  ";
+      Name23 = ERS-Value;
+      Delimiter23 = "ERS-Value         =  ";
       
-      Name23 = NumTries;
-      Delimiter23 = "NumTries          =  ";
+      Name24 = NumTries;
+      Delimiter24 = "NumTries          =  ";
       
    } // end Simulation.ObjectiveFunctionLocation
    
