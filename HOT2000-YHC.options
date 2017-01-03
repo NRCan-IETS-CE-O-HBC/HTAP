@@ -52,21 +52,14 @@
 *option:rates2016:value:6  = NA   ! Wood (Rates not set yet for auto)
 *option:rates2016:cost:total = 0
 
-*option:Ottawa08:value:1  = fuelLib.flc
-*option:Ottawa08:value:2  = Ottawa08      ! Elec
-*option:Ottawa08:value:3  = Ottawa08      ! Gas
-*option:Ottawa08:value:4  = Ottawa08      ! Oil
-*option:Ottawa08:value:5  = Ottawa08      ! Propane
-*option:Ottawa08:value:6  = Sth_Ont      ! Wood
-*option:Ottawa08:cost:total = 0
+*option:YHCrates:value:1  = FuelLib16.flc
+*option:YHCrates:value:2  = Whitehrs      ! Elec
+*option:YHCrates:value:3  = auto            ! Gas
+*option:YHCrates:value:4  = Whitehrs      ! Oil
+*option:YHCrates:value:5  = Whitehrs      ! Propane
+*option:YHCrates:value:6  = Whitehrs      ! Wood
+*option:YHCrates:cost:total = 0
 
-*option:Ottawa97:value:1  = fuelLib.flc
-*option:Ottawa97:value:2  = Ottawa97      ! Elec
-*option:Ottawa97:value:3  = Ottawa97      ! Gas
-*option:Ottawa97:value:4  = Ottawa97      ! Oil
-*option:Ottawa97:value:5  = Ottawa97      ! Propane
-*option:Ottawa97:value:6  = Sth_Ont      ! Wood
-*option:Ottawa97:cost:total = 0
 
 *attribute:end
 
@@ -2957,7 +2950,7 @@ Whitehorse Wall Options (Code is R28)
 *option:pellet-stove:value:11 = 2       ! H2K: 1:UserSpec, 2:Calculated
 *option:pellet-stove:value:12 = NA      ! H2K: Type 1: Capacity value. 
 *option:pellet-stove:value:13 = true    ! H2K: Type 1: true=SS, false=AFUE
-*option:pellet-stove:value:14 = 100     ! H2K: Type 1: Efficiency value (0->100)
+*option:pellet-stove:value:14 = 75      ! H2K: Type 1: Efficiency value (0->100)
 *option:pellet-stove:value:15 = 1       ! H2K: 1:Auto, 2:Continuous
 *option:pellet-stove:value:16 = true    ! H2K: EE motor true/false
 *option:pellet-stove:value:17 = NA
@@ -2986,7 +2979,7 @@ Whitehorse Wall Options (Code is R28)
 *option:wood-stove:value:11 = 2       ! H2K: 1:UserSpec, 2:Calculated
 *option:wood-stove:value:12 = NA      ! H2K: Type 1: Capacity value. 
 *option:wood-stove:value:13 = true    ! H2K: Type 1: true=SS, false=AFUE
-*option:wood-stove:value:14 = 100     ! H2K: Type 1: Efficiency value (0->100)
+*option:wood-stove:value:14 = 75      ! H2K: Type 1: Efficiency value (0->100)
 *option:wood-stove:value:15 = 1       ! H2K: 1:Auto, 2:Continuous
 *option:wood-stove:value:16 = true    ! H2K: EE motor true/false
 *option:wood-stove:value:17 = NA
