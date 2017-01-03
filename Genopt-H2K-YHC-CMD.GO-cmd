@@ -15,8 +15,11 @@ Vary{
       Name = GOtag:Opt-Location; 
       Ini  = 1;
       Values = "Whitehorse";  
+
    }
-  
+
+   
+   
    // =============================================
    // Parameters that change the building design
    // =============================================
@@ -32,7 +35,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-ACH; 
       Ini  = 1;
-      Values = "NA,ACH_7,ACH_5,ACH_3";//,ACH_1_5";//, ACH_1, ACH_0_5"; //NA";
+      Values = "NA";//,ACH_3,ACH_1_5";//,ACH_7,ACH_5,ACH_3";//,ACH_1_5";//, ACH_1, ACH_0_5"; //NA";
    }
 
    // Mainwalls
@@ -53,7 +56,7 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-H2KFoundation;
       Ini     =  1;
-      Values  = "NA,BBIA_PWFR28_R10";//,BBIA_PWFR28_R20,BBIA_PWFR36_R10,BBIA_PWFR36_R20,BBIA_PWFR56_R10,BBIA_PWFR56_R20";     
+      Values  = "NA";//,BBIA_PWFR28_R10";//,BBIA_PWFR28_R20,BBIA_PWFR36_R10,BBIA_PWFR36_R20,BBIA_PWFR56_R10,BBIA_PWFR56_R20";     
    } 
    
    // Foundation walls
@@ -133,14 +136,14 @@ Vary{
    Parameter { // 
       Name   = GOtag:Opt-HVACSystem; 
       Ini    = 1; 
-      Values = "NA";//,oilfurnace,propane_furnace,electric_furnace,elec-baseboard,pellet-stove,wood-stove,CCASHP" ;//
+      Values = "propane_furnace,pellet-stove,wood-stove";//NA,oilfurnace,,electric_furnace,elec-baseboard,,CCASHP" ;//
 	  }
   
    // HRV specification
    Parameter { 
       Name = GOtag:Opt-HRVSpec; 
       Ini  = 1; 
-      Values = "NA,HRV_64,HRV_72"; 
+      Values = "NA";//,HRV_64,HRV_72"; 
    }
   
    // PV: Set to autosize to ensure each run actually achieves NZEH. 

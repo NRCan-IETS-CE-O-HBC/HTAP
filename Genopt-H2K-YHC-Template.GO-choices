@@ -1,0 +1,73 @@
+! Optimization substitutions: 
+
+
+! StepNumber: This is an indicator of how many simulations have been done so far
+
+GOconfig_step :  %stepNumber%
+
+!-----------------------------------------------------------------------------
+! Parameters that affect the simulation and may be used in H2K optimization
+! Note that all attributes defined in H2K Options file have default values!
+!-----------------------------------------------------------------------------
+
+! Select a geographic location
+Opt-Location  : %GOtag:Opt-Location%
+
+! Preset Code library and cost files
+Opt-DBFiles   : H2KCodeLibFile
+Opt-FuelCost  : YHCrates
+
+Opt-ACH       : %GOtag:Opt-ACH%
+
+! Insulation levels 
+Opt-MainWall                : %GOtag:Opt-MainWall%
+Opt-GenericWall_1Layer_definitions   : %GOtag:Opt-GenericWall_1Layer_definitions%
+Opt-Ceilings                : %GOtag:Opt-Ceilings%
+!Opt-BasementSlabInsulation  : %GOtag:Opt-BasementSlabInsulation%
+!Opt-BasementWallInsulation  : %GOtag:Opt-BasementWallInsulation%
+Opt-H2KFoundation           : %GOtag:Opt-H2KFoundation%
+!Opt-ExposedFloor            : %GOtag:Opt-ExposedFloor%
+
+! Window specification
+Opt-CasementWindows  : %GOtag:Opt-CasementWindows%
+
+! Renewable energy 
+Opt-StandoffPV       : %GOtag:Opt-StandoffPV%
+Opt-H2K-PV           : %GOtag:Opt-H2K-PV%
+Opt-DWHRandSDHW      : %GOtag:Opt-DWHRandSDHW%
+
+! Roof pitch affects PV output. 
+Opt-RoofPitch        : %GOtag:RoofPitch%   
+
+! HVAC 
+Opt-DHWSystem        : %GOtag:Opt-DHWSystem%
+Opt-DWHRSystem       : %GOtag:Opt-DWHRSystem%
+Opt-HVACSystem       : %GOtag:Opt-HVACSystem%
+Opt-HRVspec          : %GOtag:Opt-HRVSpec%
+
+!-----------------------------------------------------------------------------
+! Parameters aren't yet implemented in H2K optimization but may be in future
+!-----------------------------------------------------------------------------
+Opt-ElecLoadScale    : %GOtag:ElecLoadScale%
+Opt-DHWLoadScale     : %GOtag:DHWLoadScale%
+
+! Set the orientation for the model (N,S,E,W, or AVG to run all four directions
+! and compute an average result)
+GOconfig_rotate      : %GOtag:GOconfig_rotate%
+
+! Width of overhang       
+Opt-OverhangWidth         : %GOtag:Opt-OverhangWidth%
+
+!-----------------------------------------------------------------------------
+! Parameters required to avoid errors but have no part in H2K optimization
+!-----------------------------------------------------------------------------
+Opt-InfilMethod   : UseAIM2
+!Opt-ExtraDrywall  : %GOtag:Ext-DryWall%
+!Opt-FloorSurface  : %GOtag:Opt-FloorSurface%
+OPT-OPR-SCHED     : scheduled
+
+!-----------------------------------------------------------------------------
+! Parameters to delete
+!-----------------------------------------------------------------------------
+!Opt-Attachment    : %GOtag:Opt-Attachment%
+!Opt-AirTightness          : %GOtag:Opt-AirTightness%

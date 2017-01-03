@@ -78,6 +78,7 @@ $gRotationAngle = 0
 $gEnergyElec = 0
 $gEnergyGas = 0
 $gEnergyOil = 0 
+$gEnergyProp = 0
 $gEnergyWood = 0 
 $gEnergyPellet = 0 
 $gEnergyHardWood = 0
@@ -114,7 +115,7 @@ $gAvgEnergyEquipmentGJ    = 0
 $gAvgNGasCons_m3     = 0 
 $gAvgOilCons_l       = 0 
 $gAvgPropCons_l      = 0 
-$gAvgPelletCons_tonne = 0 
+$gAvgPelletCons_t    = 0 
 $gDirection = ""
 
 $GenericWindowParams = Hash.new(&$blk)
@@ -2965,6 +2966,7 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
          $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
          $gResults[houseCode]["avgFuelusePropaneL"] = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
+         $gResults[houseCode]["avgFueluseWoodcord"] = $gResults[houseCode]["avgFueluseWoodGJ"] / 18.30  # estimated GJ/cord for wood/pellet burning from YHC Fuel Cost Comparison.xls
 
          $gResults[houseCode]["avgFuelCostsTotal$"] = $gResults[houseCode]["avgFuelCostsElec$"] +
                                                       $gResults[houseCode]["avgFuelCostsNatGas$"] +
@@ -3045,7 +3047,7 @@ def postprocess( scaleData )
    
    $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
-   # Tpital of all fuels in GJ
+   # Total of all fuels in GJ
    $gAvgEnergy_Total = $gResults[$outputHCode]["avgFueluseElecGJ"] + $gResults[$outputHCode]["avgFueluseNatGasGJ"] +
                        $gResults[$outputHCode]["avgFueluseOilGJ"] + $gResults[$outputHCode]["avgFuelusePropaneGJ"] +
                        $gResults[$outputHCode]["avgFueluseWoodGJ"]   
@@ -3187,8 +3189,8 @@ def postprocess( scaleData )
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)}  (Oil)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)}  (Propane)\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)}  (Wood)\n")
-   #stream_out("  + \$ #{$gResults[$outputHCode][''].round(2)}  #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
+   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)}  (Wood) \n")
+#   stream_out("  + \$ #{$gResults[$outputHCode][''].round(2)}  #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}  (All utilities).\n")
    stream_out ( "\n")
@@ -3207,11 +3209,12 @@ def postprocess( scaleData )
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Electricity, kWh)\n")         
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Natural Gas, m3)\n")                	
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Oil, l)\n")
+   stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Propane, l)\n")
 
    # ASF 03-Oct-2016: 
    # Wood/Pellets    
-   #stream_out("  - #{$gEnergyWood.round(1)} (Wood, cord)\n")                               
-   #stream_out("  - #{$gAvgPelletCons_tonne.round(1)} (Pellet, tonnes)\n")                  
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Wood, cord)\n")                       
+#   stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
    
    # stream_out ("> SCALE #{scaleData} \n"); 
    
@@ -4119,7 +4122,7 @@ $gAvgEnergyEquipmentGJ = 0
 $gAvgNGasCons_m3 = 0
 $gAvgOilCons_l = 0
 $gAvgPropCons_l = 0
-$gAvgPelletCons_tonne = 0
+$gAvgPelletCons_t = 0
 $gAvgEnergyHeatingElec = 0
 $gAvgEnergyVentElec = 0
 $gAvgEnergyHeatingFossil = 0
@@ -4181,7 +4184,7 @@ fSUMMARY.write( "Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNat
 fSUMMARY.write( "Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
-fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
+#fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
 fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
 fSUMMARY.write( "Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
@@ -4197,7 +4200,9 @@ fSUMMARY.write( "Energy-PlugGJ     =  #{$gResults[$outputHCode]['avgEnergyEquipm
 fSUMMARY.write( "EnergyEleckWh     =  #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(1)} \n" )
 fSUMMARY.write( "EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(1)}  \n" )
 fSUMMARY.write( "EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
-fSUMMARY.write( "EnergyPellet_t    =  #{$gAvgPelletCons_tonne.round(1)}   \n" )
+fSUMMARY.write( "EnergyProp_L      =  #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(1)}    \n" )
+fSUMMARY.write( "EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )   # includes pellets
+
 fSUMMARY.write( "Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
 fSUMMARY.write( "SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 
@@ -4205,7 +4210,7 @@ fSUMMARY.write( "SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 fSUMMARY.write( "PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
 fSUMMARY.write( "PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
 
-fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity.round(1)}\n" )
+fSUMMARY.write( "PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
 
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
