@@ -40,7 +40,7 @@ Simulation{
 
       Prefix = "Ruby ";
       
-      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000-ESTAR-BOP.options -b C:\\H2K-CLI-Min\\User\\A01_ON_Z1_TorontoMR2017_e.h2k";
+      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000-ESTAR-BOP.options -b C:\\H2K-CLI-Min\\User\\A01_ON_Z1_code_e.h2k";//A01_ON_Z1_coreBOP_e.h2k";// 
    }
 
    ObjectiveFunctionLocation {
@@ -77,47 +77,56 @@ Simulation{
       Name9 = UtilCostOilDoll;    
       Delimiter9 = "Util-Bill-Oil     =  ";
       
-      Name10 = EnergyPVkWh; 
-      Delimiter10 = "Energy-PV-kWh     =  ";
-      
-      Name11 = EnergyHeatingGJ; 
-      Delimiter11 = "Energy-HeatingGJ  =  ";
-      
-      Name12 = EnergyCoolingGJ; 
-      Delimiter12 = "Energy-CoolingGJ  =  ";
-      
-      Name13 = EnergyVentGJ; 
-      Delimiter13 = "Energy-VentGJ     =  ";
-      
-      Name14 = EnergyDHWGJ; 
-      Delimiter14 = "Energy-DHWGJ      =  ";
-      
-      Name15 = EnergyPlugGJ; 
-      Delimiter15 = "Energy-PlugGJ     =  ";
-      
-      Name16 = FuelEleckWh; 
-      Delimiter16 = "EnergyEleckWh     =  ";
-      
-      Name17 = FuelNaturalGasM3; 
-      Delimiter17 = "EnergyGasM3       =  ";
-      
-      Name18 = FuelOilL; 
-      Delimiter18 = "EnergyOil_l       =  ";
-            
-      Name19 = UpgradeCostDoll ;
-      Delimiter19 = "Upgrade-cost      =  ";
+      Name10 = UtilCostWoodDoll;    
+      Delimiter10 = "Util-Bill-Wood    =  ";
 
-      Name20 = PVSizekW;
-      Delimiter20 = "PV-size-kW      =  ";      
+      Name11 = EnergyPVkWh; 
+      Delimiter11 = "Energy-PV-kWh     =  ";
+      
+      Name12 = EnergyHeatingGJ; 
+      Delimiter12 = "Energy-HeatingGJ  =  ";
+      
+      Name13 = EnergyCoolingGJ; 
+      Delimiter13 = "Energy-CoolingGJ  =  ";
+      
+      Name14 = EnergyVentGJ; 
+      Delimiter14 = "Energy-VentGJ     =  ";
+      
+      Name15 = EnergyDHWGJ; 
+      Delimiter15 = "Energy-DHWGJ      =  ";
+      
+      Name16 = EnergyPlugGJ; 
+      Delimiter16 = "Energy-PlugGJ     =  ";
+      
+      Name17 = FuelEleckWh; 
+      Delimiter17 = "EnergyEleckWh     =  ";
+      
+      Name18 = FuelNaturalGasM3; 
+      Delimiter18 = "EnergyGasM3       =  ";
+      
+      Name19 = FuelOilL; 
+      Delimiter19 = "EnergyOil_l       =  ";
+          
+      Name20 = FuelPropaneL; 
+      Delimiter20 = "EnergyProp_L      =  ";
 
-      Name21 = PEAKHeatingW;
-      Delimiter21 = "PEAK-Heating-W    =  ";
+      Name21 = FuelWoodCord; 
+      Delimiter21 = "EnergyWood_cord   =  ";
+	  
+      Name22 = UpgradeCostDoll ;
+      Delimiter22 = "Upgrade-cost      =  ";
+
+      Name23 = PVSizekW;
+      Delimiter23 = "PV-size-kW        =  ";      
+
+      Name24 = PEAKHeatingW;
+      Delimiter24 = "PEAK-Heating-W    =  ";
       
-      Name22 = ERS-Value;
-      Delimiter22 = "ERS-Value         =  ";
+      Name25 = ERS-Value;
+      Delimiter25 = "ERS-Value         =  ";
       
-      Name23 = NumTries;
-      Delimiter23 = "NumTries          =  ";
+      Name26 = NumTries;
+      Delimiter26 = "NumTries          =  ";
       
    } // end Simulation.ObjectiveFunctionLocation
    

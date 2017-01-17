@@ -11,14 +11,21 @@ Vary{
    // ==========================================
   
    // Location  
-   Parameter{ 
+    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
       Values = "Toronto";      
       
+      // Buildability locations (12):
+      //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
+      
+      // Locations to match typical ESP-r runs (11):
+      //Values = "Toronto, Ottawa, Vancouver, Calgary, Edmonton, Regina, Winnipeg, Montreal, Quebec, Fredricton, Halifax"; 
+
       // Available H2K locations (116 - locations already entered for ESP-r in lower case):
       //Values = "ABBOTSFORD, CASTLEGAR, FORTNELSON, FORTSTJOHN, Kamloops, PORTHARDY, PrinceGeorge, PRINCERUPERT, SMITHERS, SUMMERLAND, Vancouver, VICTORIA, WILLIAMSLAKE, COMOX, CRANBROOK, QUESNEL, SANDSPIT, TERRACE, TOFINO, WHISTLER, Calgary, Edmonton, FORTMCMURRAY, LETHBRIDGE, ROCKYMOUNTAINHOUSE, SUFFIELD, COLDLAKE, CORONATION, GRANDEPRAIRIE, MEDICINEHAT, PEACERIVER, REDDEER, ESTEVAN, PRINCEALBERT, Regina, SASKATOON, SWIFTCURRENT, URANIUMCITY, BROADVIEW, MOOSEJAW, NORTHBATTLEFORD, YORKTON, BRANDON, CHURCHILL, THEPAS, THOMPSON, Winnipeg, DAUPHIN, PORTAGELAPRAIRIE, BIGTROUTLAKE, KINGSTON, LONDON, MUSKOKA, NORTHBAY, Ottawa, SAULTSTEMARIE, SIMCOE, SUDBURY, THUNDERBAY, TIMMINS, Toronto, WINDSOR, GOREBAY, KAPUSKASING, KENORA, SIOUXLOOKOUT, TORONTOMETRESSTN, TRENTON, WIARTON, BAGOTVILLE, KUUJJUAQ, Montreal, KUUJJUARAPIK, Quebec, SCHEFFERVILLE, SEPTILES, SHERBROOKE, VALDOR, BAIECOMEAU, LAGRANDERIVIERE, MONTJOLI, MONTREALMIRABEL, STHUBERT, STEAGATHEDESMONTS, CHATHAM, Fredricton, MONCTON, SAINTJOHN, CHARLO, GREENWOOD, Halifax, SYDNEY, TRURO, YARMOUTH, CHARLOTTETOWN, SUMMERSIDE, BONAVISTA, GANDER, GOOSEBAY, SAINTJOHNS, STEPHENVILLE, CARTWRIGHT, DANIELSHARBOUR, DEERLAKE, WABUSHLAKE, Whitehorse, DAWSONCITY, FORTSMITH, Inuvik, NORMANWELLS, Yellowknife, BAKERLAKE, IQALUIT, RESOLUTE, CORALHARBOUR, HALLBEACH";
    }
+   
   
    // =============================================
    // Parameters that change the building design
@@ -35,7 +42,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-ACH; 
       Ini  = 1;
-      Values = "NA";//,ACH_1,ACH_1_5,ACH_2"; 
+      Values = "NA,ACH_1,ACH_1_5,ACH_2";
    }
 
    // Mainwalls
@@ -49,14 +56,14 @@ Vary{
       Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
       Ini     =  1;
       //Values = "NA";
-      Values  =  "NA";//,ESTAR-BOP-R19_4,ESTAR-BOP-R20_4,ESTAR-BOP-R21_5,ESTAR-BOP-R22_1,ESTAR-BOP-R22_9,ESTAR-BOP-R25_4,ESTAR-BOP-R27_2";   
+      Values  =  "NA,ESTAR-BOP-R19_4,ESTAR-BOP-R20_4,ESTAR-BOP-R21_5,ESTAR-BOP-R22_1,ESTAR-BOP-R22_9,ESTAR-BOP-R25_4,ESTAR-BOP-R27_2,ESTAR-BOP-R28_9";   
    }
 
    // H2K Foundations : OBC-min-R12
    Parameter{   // 
       Name    =  GOtag:Opt-H2KFoundation;
       Ini     =  1;
-      Values  = "NA";//,ESTAR-BOP-R20_8-NA,ESTAR-BOP-R20_8-5,ESTAR-BOP-R20_8-10, ESTAR-BOP-R22_4-NA, ESTAR-BOP-R22_4-5, ESTAR-BOP-R22_4-10,ESTAR-BOP-R23_8-NA,ESTAR-BOP-R23_8-5,ESTAR-BOP-R23_8-10";
+      Values  = "NA,ESTAR-BOP-R20_8-NA,ESTAR-BOP-R20_8-5,ESTAR-BOP-R20_8-10,ESTAR-BOP-R20_8-15,ESTAR-BOP-R22_4-NA,ESTAR-BOP-R22_4-5,ESTAR-BOP-R22_4-10,ESTAR-BOP-R22_4-15,ESTAR-BOP-R23_8-NA,ESTAR-BOP-R23_8-5,ESTAR-BOP-R23_8-10,ESTAR-BOP-R23_8-15,ESTAR-BOP-R25-NA,ESTAR-BOP-R25-5,ESTAR-BOP-R25-10,ESTAR-BOP-R25-15,ESTAR-BOP-R29_1-NA,ESTAR-BOP-R29_1-5,ESTAR-BOP-R29_1-10,ESTAR-BOP-R29_1-15";//
    } 
    
 
@@ -71,14 +78,14 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-Ceilings;
       Ini     =  1;
-      Values  = "NA"; //CeilR50,CeilR60";   //"CeilR50"
+      Values  = "NA,CeilR40,CeilR50,CeilR60,CeilR70"; 
    }    
   
   // Windows
   Parameter{   // 
       Name    =  GOtag:Opt-CasementWindows;
       Ini     =  1;
-      Values  =  "NA"; //
+      Values  =  "NA,U1.4_SHGC0.40,U1.2_SHGC0.40";
    }    
    
     
@@ -93,14 +100,14 @@ Vary{
    Parameter{ //
       Name    = GOtag:Opt-DHWSystem;
       Ini     = 1; 
-      Values  = "NA";//,BOP_Tank_cond_TE90,BOP_Tank_cond_TE94,BOP_GasInst,BOP_GasInst_condens,BOP_GasInst_condens_95,BOP_Tank_condens";  //GasTankless+DWHR,GasTankless+DWHR,ElectricHP, HPHotWater";
+      Values  = "NA,BOP_Tank_cond_TE90,BOP_Tank_cond_TE94,BOP_GasInst,BOP_GasInst_condens,BOP_GasInst_condens_95,BOP_Tank_condens";  //GasTankless+DWHR,GasTankless+DWHR,ElectricHP, HPHotWater";
    }
   
    // DWHR-System
    Parameter{ //
       Name    = GOtag:Opt-DWHRSystem;
       Ini     = 1; 
-      Values  = "none";//,DWHR-eff-30";// ,DWHR-eff-42,DWHR-eff-55"; //none";    //"DWHR-eff-30,  DWHR-eff-42,  DWHR-eff-55";
+      Values  = "none,BOP_DWHR_low,BOP_DWHR_high";
    }
   
   
@@ -108,14 +115,14 @@ Vary{
    Parameter { // 
       Name   = GOtag:Opt-HVACSystem; 
       Ini    = 1; 
-      Values = "NA,BOPCombo89a,BOPCombo89b,BOPCombo89c,BOPCombo90a,BOPCombo90b,BOPCombo90c,BOPCombo90d,BOPCombo90e,BOPCombo90f,BOPCombo91a,BOPCombo91b,BOPCombo91c,BOPCombo91d,BOPCombo91e,BOPCombo92a,BOPCombo92b,BOPCombo92c,BOPCombo92d,BOPCombo93a,BOPCombo93b,BOPCombo93c,BOPCombo94a,BOPCombo94b,BOPCombo94c,BOPCombo95a,BOPCombo95b";
+      Values = "NA,BOPCombo90c,BOPCombo91a,BOPCombo92a,BOPCombo93a,BOPCombo94a,BOPCombo95a";
    }
   
    // HRV specification
    Parameter { 
       Name = GOtag:Opt-HRVSpec; 
       Ini  = 1; 
-      Values = "NA";//,HRV_84,HRV_70,HRV_80"; 
+      Values = "NA,HRV_84,HRV_70,HRV_80"; 
    }
   
    // PV: Set to autosize to ensure each run actually achieves NZEH. 
@@ -164,7 +171,7 @@ Vary{
    Parameter { // 
       Name   = GOtag:ElecLoadScale; 
       Ini    = 1;
-      Values = "NoReduction";
+      Values = "NoReduction,NGERSNoReduction19,NGERSReducedA16,NGERSBestInClass14p8";
    }
    
    Parameter { // 
@@ -209,8 +216,12 @@ OptimizationSettings{
 //  FinalInertiaWeight        = 0;      // 0 < FinalInertiaWeight
 //}
 
-
 Algorithm{
-  Main = Mesh;
-  StopAtError = true; 
+  Main = Parametric;
+  StopAtError = false;   
 }
+
+//Algorithm{
+//  Main = Mesh;
+//  StopAtError = true; 
+//}
