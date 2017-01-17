@@ -2927,8 +2927,8 @@ def postprocess( scaleData )
       # ASF 04-Oct-2016: limiting results parsing to 2 sets - SOC and general -- because parsing takes a long time !
       # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
       #                  spec only a single desired set via a commad line switch, or by defaulting to 
-      #                  SOC and falling back to 'general' if it's not found.
-      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
+      #                  SOC and falling back to 'General' if it's not found.
+      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ || houseCode =~ /Reference/)
          # ENERGY CONSUMPTION (Annual)
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
@@ -4174,8 +4174,14 @@ fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
+if ( $gResults['Reference'].empty? ) then
+   RefEnergy = 0.0
+else
+   RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
+end
  
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
+fSUMMARY.write( "Ref-En-Total-GJ   =  #{RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
 fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
 fSUMMARY.write( "Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
