@@ -78,6 +78,7 @@ $gRotationAngle = 0
 $gEnergyElec = 0
 $gEnergyGas = 0
 $gEnergyOil = 0 
+$gEnergyProp = 0
 $gEnergyWood = 0 
 $gEnergyPellet = 0 
 $gEnergyHardWood = 0
@@ -114,7 +115,7 @@ $gAvgEnergyEquipmentGJ    = 0
 $gAvgNGasCons_m3     = 0 
 $gAvgOilCons_l       = 0 
 $gAvgPropCons_l      = 0 
-$gAvgPelletCons_tonne = 0 
+$gAvgPelletCons_t    = 0 
 $gDirection = ""
 
 $GenericWindowParams = Hash.new(&$blk)
@@ -397,12 +398,15 @@ def processFile(filespec)
                   # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
                   h2kElements[locationText].attributes["code"] = "x"
-                  # Must also remove "Air Leakage Test Data" section, if present since it will negate ACH option
+                  # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
                   locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
                   if ( h2kElements[locationText] != nil )
                         # Need to remove this section!
                         locationText = "HouseFile/House/NaturalAirInfiltration"
                         h2kElements[locationText].delete_element("AirLeakageTestData")
+                        # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
+                        locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+                        h2kElements[locationText].attributes["isCgsbTest"] = "true"
                   end
                   # Set the blower door test value in airChangeRate field
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
@@ -1275,10 +1279,18 @@ def processFile(filespec)
                      if ( sysType1Name != "Baseboards" && sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EquipmentType"
                      else
-                        locationText = ""
+                        locationText = "SkipThis"
                      end
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
+                        # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is 
+                        # NOT a conventional fireplace,add the "EPA/CSA" attribute field in the 
+                        # EquipmentInformation section to avoid a crash!
+                        locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EnergySource"
+                        if ( h2kElements[locationText2].attributes["code"].to_i > 4 && value != "8" )
+                           locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation"
+                           h2kElements[locationText2].attributes["epaCsa"] = "false"
+                        end
                      end
                   end
                   
@@ -1288,7 +1300,7 @@ def processFile(filespec)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                      else
                         # ASF 07-Oct-2016 - not needed for P9?
-                        locationText = ""
+                        locationText = "SkipThis"
                      end
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
@@ -2915,12 +2927,13 @@ def postprocess( scaleData )
       # ASF 04-Oct-2016: limiting results parsing to 2 sets - SOC and general -- because parsing takes a long time !
       # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
       #                  spec only a single desired set via a commad line switch, or by defaulting to 
-      #                  SOC and falling back to 'general' if it's not found.
-      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ )
+      #                  SOC and falling back to 'General' if it's not found.
+      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ || houseCode =~ /Reference/)
          # ENERGY CONSUMPTION (Annual)
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgGrossHeatLossGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -2953,6 +2966,7 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
          $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 1000
          $gResults[houseCode]["avgFuelusePropaneL"] = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
+         $gResults[houseCode]["avgFueluseWoodcord"] = $gResults[houseCode]["avgFueluseWoodGJ"] / 18.30  # estimated GJ/cord for wood/pellet burning from YHC Fuel Cost Comparison.xls
 
          $gResults[houseCode]["avgFuelCostsTotal$"] = $gResults[houseCode]["avgFuelCostsElec$"] +
                                                       $gResults[houseCode]["avgFuelCostsNatGas$"] +
@@ -3033,7 +3047,7 @@ def postprocess( scaleData )
    
    $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
-   # Tpital of all fuels in GJ
+   # Total of all fuels in GJ
    $gAvgEnergy_Total = $gResults[$outputHCode]["avgFueluseElecGJ"] + $gResults[$outputHCode]["avgFueluseNatGasGJ"] +
                        $gResults[$outputHCode]["avgFueluseOilGJ"] + $gResults[$outputHCode]["avgFuelusePropaneGJ"] +
                        $gResults[$outputHCode]["avgFueluseWoodGJ"]   
@@ -3175,8 +3189,8 @@ def postprocess( scaleData )
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)}  (Oil)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)}  (Propane)\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)}  (Wood)\n")
-   #stream_out("  + \$ #{$gResults[$outputHCode][''].round(2)}  #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
+   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)}  (Wood) \n")
+#   stream_out("  + \$ #{$gResults[$outputHCode][''].round(2)}  #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}  (All utilities).\n")
    stream_out ( "\n")
@@ -3195,11 +3209,12 @@ def postprocess( scaleData )
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Electricity, kWh)\n")         
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Natural Gas, m3)\n")                	
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Oil, l)\n")
+   stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Propane, l)\n")
 
    # ASF 03-Oct-2016: 
    # Wood/Pellets    
-   #stream_out("  - #{$gEnergyWood.round(1)} (Wood, cord)\n")                               
-   #stream_out("  - #{$gAvgPelletCons_tonne.round(1)} (Pellet, tonnes)\n")                  
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Wood, cord)\n")                       
+#   stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
    
    # stream_out ("> SCALE #{scaleData} \n"); 
    
@@ -4107,7 +4122,7 @@ $gAvgEnergyEquipmentGJ = 0
 $gAvgNGasCons_m3 = 0
 $gAvgOilCons_l = 0
 $gAvgPropCons_l = 0
-$gAvgPelletCons_tonne = 0
+$gAvgPelletCons_t = 0
 $gAvgEnergyHeatingElec = 0
 $gAvgEnergyVentElec = 0
 $gAvgEnergyHeatingFossil = 0
@@ -4159,8 +4174,14 @@ fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
+if ( $gResults['Reference'].empty? ) then
+   RefEnergy = 0.0
+else
+   RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
+end
  
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
+fSUMMARY.write( "Ref-En-Total-GJ   =  #{RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
 fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
 fSUMMARY.write( "Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
@@ -4169,9 +4190,10 @@ fSUMMARY.write( "Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNat
 fSUMMARY.write( "Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
 fSUMMARY.write( "Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
-fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
+#fSUMMARY.write( "Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
 fSUMMARY.write( "Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
+fSUMMARY.write( "Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
 #fSUMMARY.write( "Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
@@ -4184,7 +4206,9 @@ fSUMMARY.write( "Energy-PlugGJ     =  #{$gResults[$outputHCode]['avgEnergyEquipm
 fSUMMARY.write( "EnergyEleckWh     =  #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(1)} \n" )
 fSUMMARY.write( "EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(1)}  \n" )
 fSUMMARY.write( "EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
-fSUMMARY.write( "EnergyPellet_t    =  #{$gAvgPelletCons_tonne.round(1)}   \n" )
+fSUMMARY.write( "EnergyProp_L      =  #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(1)}    \n" )
+fSUMMARY.write( "EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )   # includes pellets
+
 fSUMMARY.write( "Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
 fSUMMARY.write( "SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 
@@ -4192,7 +4216,7 @@ fSUMMARY.write( "SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 fSUMMARY.write( "PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
 fSUMMARY.write( "PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
 
-fSUMMARY.write( "PV-size-kW      =  #{$PVcapacity.round(1)}\n" )
+fSUMMARY.write( "PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
 
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )

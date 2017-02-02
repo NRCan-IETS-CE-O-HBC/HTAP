@@ -14,7 +14,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
-      Values = "PrinceGeorge";      
+      Values = "SUMMERLAND";      
       
       // Buildability locations (12):
       //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
