@@ -84,7 +84,7 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-Ceilings;
       Ini     =  1;
-      Values  = "NA";//,CeilR40,CeilR60,CeilR80,CeilR100";   //"CeilR50"
+      Values  = "CeilR40,CeilR60,CeilR80,CeilR100";   //"CeilR50"NA,
    }    
   
   // Windows
@@ -136,7 +136,7 @@ Vary{
    Parameter { // 
       Name   = GOtag:Opt-HVACSystem; 
       Ini    = 1; 
-      Values = "propane_furnace,pellet-stove,wood-stove";//NA,oilfurnace,,electric_furnace,elec-baseboard,,CCASHP" ;//
+      Values = "NA";//propane_furnace,pellet-stove,wood-stove";//NA,oilfurnace,,electric_furnace,elec-baseboard,,CCASHP" ;//
 	  }
   
    // HRV specification

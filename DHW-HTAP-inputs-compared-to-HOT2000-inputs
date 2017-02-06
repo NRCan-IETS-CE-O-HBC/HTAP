@@ -1,0 +1,36 @@
+
+<OPT-DHW-fuel-type>
+Electricity = 1
+Natural Gas = 2
+Oil         = 
+
+
+
+<OPT-DHW-tank-type>
+Electricity
+  Conventional tank    = 2
+  Conserver tank       = 3
+  Instantaneous        = 4
+  Tankless Heat Pump   = 5   TankVolume = 7
+  Heat Pump            = 6   TankVolume = 7
+  Integrated Heat Pump = 7   
+
+Natural Gas
+  Conventional tank         = 2
+  Conventional tank (pilot) = 3
+  Tankless coil             = 4  TankVolume = 7
+  Instantaneous             = 5  TankVolume = 7
+  Instantaneous (condensing)= 12 TankVolume = 7
+  Instantaneous (pilot)     = 6  TankVolume = 7
+  Induced draft fan         = 7
+  Induced draft fan (pilot) = 8
+  Direct vent (sealed)      = 9
+  Direct vent (sealed,pilot)= 10
+  Condensing                = 11
+
+Oil
+  Conventional tank    = 2
+  Tankless coil        = 3  TankVolume = 7  
+
+  
+  

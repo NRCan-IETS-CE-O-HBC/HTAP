@@ -2360,6 +2360,10 @@
 *option:ESTAR-BOP-R27_2:value:2 = 27.20
 *option:ESTAR-BOP-R27_2:cost = 0
 
+*option:ESTAR-BOP-R28_9:value:1 = 0.15
+*option:ESTAR-BOP-R28_9:value:2 = 28.9
+*option:ESTAR-BOP-R28_9:cost = 0
+
 
 *attribute:end
 
@@ -2860,6 +2864,13 @@ Whitehorse Wall Options (Code is R28)
 *option:ESTAR-BOP-R20_8-10:value:5 = 10.0           ! Under slab added R-value
 *option:ESTAR-BOP-R20_8-10:cost:total = 0 
 
+*option:ESTAR-BOP-R20_8-15:value:1 = BCCB_4_ALL    ! R20.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R20_8-15:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R20_8-15:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R20_8-15:value:4 = 20.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R20_8-15:value:5 = 15.0           ! Under slab added R-value
+*option:ESTAR-BOP-R20_8-15:cost:total = 0 
+
 *option:ESTAR-BOP-R22_4-NA:value:1 = BCCB_4_ALL    ! R22.4 added to exterior walls, no added insulation below slab
 *option:ESTAR-BOP-R22_4-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
 *option:ESTAR-BOP-R22_4-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
@@ -2881,6 +2892,13 @@ Whitehorse Wall Options (Code is R28)
 *option:ESTAR-BOP-R22_4-10:value:5 = 10.0           ! Under slab added R-value
 *option:ESTAR-BOP-R22_4-10:cost:total = 0 
 
+*option:ESTAR-BOP-R22_4-15:value:1 = BCCB_4_ALL    ! R22.4 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R22_4-15:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R22_4-15:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R22_4-15:value:4 = 22.4          ! Ext wall added R-value
+*option:ESTAR-BOP-R22_4-15:value:5 = 15.0           ! Under slab added R-value
+*option:ESTAR-BOP-R22_4-15:cost:total = 0 
+
 *option:ESTAR-BOP-R23_8-NA:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, no added insulation below slab
 *option:ESTAR-BOP-R23_8-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
 *option:ESTAR-BOP-R23_8-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
@@ -2901,6 +2919,70 @@ Whitehorse Wall Options (Code is R28)
 *option:ESTAR-BOP-R23_8-10:value:4 = 23.8          ! Ext wall added R-value
 *option:ESTAR-BOP-R23_8-10:value:5 = 10.0           ! Under slab added R-value
 *option:ESTAR-BOP-R23_8-10:cost:total = 0 
+
+*option:ESTAR-BOP-R23_8-15:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R23_8-15:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R23_8-15:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R23_8-15:value:4 = 23.8          ! Ext wall added R-value
+*option:ESTAR-BOP-R23_8-15:value:5 = 15.0           ! Under slab added R-value
+*option:ESTAR-BOP-R23_8-15:cost:total = 0 
+
+*option:ESTAR-BOP-R25-NA:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, no added insulation below slab
+*option:ESTAR-BOP-R25-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R25-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R25-NA:value:4 = 25.0          ! Ext wall added R-value
+*option:ESTAR-BOP-R25-NA:value:5 = NA            ! Under slab added R-value
+*option:ESTAR-BOP-R25-NA:cost:total = 0 
+
+*option:ESTAR-BOP-R25-5:value:1 = BCCB_4_ALL     ! R23.8 added to exterior walls, R5 added insulation below slab
+*option:ESTAR-BOP-R25-5:value:2 = NA             ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R25-5:value:3 = NA             ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R25-5:value:4 = 25.0           ! Ext wall added R-value
+*option:ESTAR-BOP-R25-5:value:5 = 5.0            ! Under slab added R-value
+*option:ESTAR-BOP-R25-5:cost:total = 0 
+
+*option:ESTAR-BOP-R25-10:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R25-10:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R25-10:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R25-10:value:4 = 25.0          ! Ext wall added R-value
+*option:ESTAR-BOP-R25-10:value:5 = 10.0           ! Under slab added R-value
+*option:ESTAR-BOP-R25-10:cost:total = 0 
+
+*option:ESTAR-BOP-R25-15:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R25-15:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R25-15:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R25-15:value:4 = 25.0          ! Ext wall added R-value
+*option:ESTAR-BOP-R25-15:value:5 = 15.0           ! Under slab added R-value
+*option:ESTAR-BOP-R25-15:cost:total = 0 
+
+*option:ESTAR-BOP-R29_1-NA:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, no added insulation below slab
+*option:ESTAR-BOP-R29_1-NA:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R29_1-NA:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R29_1-NA:value:4 = 29.1          ! Ext wall added R-value
+*option:ESTAR-BOP-R29_1-NA:value:5 = NA            ! Under slab added R-value
+*option:ESTAR-BOP-R29_1-NA:cost:total = 0 
+
+*option:ESTAR-BOP-R29_1-5:value:1 = BCCB_4_ALL     ! R23.8 added to exterior walls, R5 added insulation below slab
+*option:ESTAR-BOP-R29_1-5:value:2 = NA             ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R29_1-5:value:3 = NA             ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R29_1-5:value:4 = 29.1           ! Ext wall added R-value
+*option:ESTAR-BOP-R29_1-5:value:5 = 5.0            ! Under slab added R-value
+*option:ESTAR-BOP-R29_1-5:cost:total = 0 
+
+*option:ESTAR-BOP-R29_1-10:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R29_1-10:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R29_1-10:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R29_1-10:value:4 = 29.1          ! Ext wall added R-value
+*option:ESTAR-BOP-R29_1-10:value:5 = 10.0           ! Under slab added R-value
+*option:ESTAR-BOP-R29_1-10:cost:total = 0 
+
+*option:ESTAR-BOP-R29_1-15:value:1 = BCCB_4_ALL    ! R23.8 added to exterior walls, R10 added insulation below slab
+*option:ESTAR-BOP-R29_1-15:value:2 = NA            ! r12b+r8b 2x4 16" interior insulation
+*option:ESTAR-BOP-R29_1-15:value:3 = NA            ! R for userSpec option (set to NA if use int wall code in tag 2)
+*option:ESTAR-BOP-R29_1-15:value:4 = 29.1          ! Ext wall added R-value
+*option:ESTAR-BOP-R29_1-15:value:5 = 15.0           ! Under slab added R-value
+*option:ESTAR-BOP-R29_1-15:cost:total = 0 
+
 
 *attribute:end
 
