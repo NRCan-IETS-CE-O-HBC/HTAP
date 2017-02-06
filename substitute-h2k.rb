@@ -1225,6 +1225,11 @@ def processFile(filespec)
 			
                sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
                sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
+
+               # 06-Feb-2017 JTB: Save the base house system heating capacity before this XML section is deleted. 
+               # For use when setting the P9 heating capacity and burner input when "Calculated" option specified 
+               # in options file even though it's not available in H2K GUI!
+               baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
                
                if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
                   locationText = "HouseFile/House/HeatingCooling/Type1"
@@ -1299,7 +1304,9 @@ def processFile(filespec)
                      if ( sysType1Name != "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                      else
-                        # ASF 07-Oct-2016 - not needed for P9?
+                        # JTB 05-Feb-2017 - There is no capacity sizing option for P9 systems in GUI. 
+                        # but we've provided this option in the HTAP options file for this parameter!
+                        # Handle this in Opt-H2K-Type1CapVal (next code block).
                         locationText = "SkipThis"
                      end
                      if ( h2kElements[locationText] != nil )
@@ -1307,15 +1314,21 @@ def processFile(filespec)
                      end
                   end
                   
-               elsif ( tag =~ /Opt-H2K-Type1CapVal/ &&  value != "NA" && "#{value}" != "" )
+               elsif ( tag =~ /Opt-H2K-Type1CapVal/ && "#{value}" != "" )  # Allowing "NA" value here for P9 autosize option!
                   sysType1.each do |sysType1Name|
-                     if ( sysType1Name != "P9" )
+                     if ( sysType1Name != "P9" && value != "NA" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                         h2kElements[locationText].attributes["value"] = value if ( h2kElements[locationText] != nil ) 
                      else
-                        # ASF 07-Oct-2016 - P9 capacity mapped to system capacity descriptor.
-                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-                        h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
+                        # JTB 06-Feb-2017 - P9 capacity: Allowing option 2 (Calculated) even though not available in H2K GUI!
+                        # When this case is specified in the options file, use base system heating capacity. Also set burner
+                        # input parameter further down in this code.
+                        locationText = "HouseFile/House/HeatingCooling/Type1/P9"
+                        if ( value == "NA" ) # Happens when options file user specifies "Calculated" for sizing option!
+                           h2kElements[locationText].attributes["spaceHeatingCapacity"] = baseHeatSysCap if ( h2kElements[locationText] != nil )
+                        else
+                           h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
+                        end
                      end
 
                   end
@@ -1501,11 +1514,19 @@ def processFile(filespec)
                      end
                   end		
 
-               elsif ( tag =~ /Opt-H2K-P9-burnerInput/ &&  value != "NA" )
+               elsif ( tag =~ /Opt-H2K-P9-burnerInput/ )    # 06-Feb-2017 JTB: Removed "NA" check to allow for "Calculated" option
                   sysType1.each do |sysType1Name|
+                     locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
                      if ( sysType1Name == "P9" )
-                        locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
-                        h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
+                        if ( value == "NA" )
+                           # 06-Feb-2017 JTB: Rough estimation of burner input as 2.5 x baseHeatSysCap. Note that the actual burner input depends on
+                           # both the space heating capacity and the size of the DHW tank and can vary from a factor of about 2.x to 5.x!
+                           # This is part of the option of allowing P9 system capacities to be set to "Calculated" in the options file
+                           # even though the H2K GUI does not have this option!
+                           h2kElements[locationText].attributes["burnerInput"] = (2.5 * baseHeatSysCap.to_f).to_s if ( h2kElements[locationText] != nil )
+                        else
+                           h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
+                        end
                      end
                   end					  
 				  
@@ -2137,6 +2158,23 @@ def createHRV( elements )
    elements[locationText].attributes["code"] = "2" # Sealed
    elements[locationText].add_element("English")
    elements[locationText].add_element("French")
+end
+
+def getBaseSystemCapacity( elements, sysType1Arr )
+   capValue = 0
+   locationText = "HouseFile/House/HeatingCooling/Type1"
+
+   sysType1Arr.each do |sysType1Name|
+      if ( elements[locationText + "/#{sysType1Name}"] != nil )
+         if ( sysType1Name != "P9" )
+            capValue = elements[locationText + "/#{sysType1Name}" + "/Specifications/OutputCapacity"].attributes["value"]
+         else
+            capValue = elements[locationText + "/#{sysType1Name}"].attributes["spaceHeatingCapacity"]
+         end
+      end
+   end
+   
+   return capValue
 end
 
 # Procedure to create a new H2K system Type 1 in the XML house file

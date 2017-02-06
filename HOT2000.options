@@ -3684,7 +3684,7 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
 *option:ComboHeatA:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:ComboHeatA:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:ComboHeatA:value:12 = NA              ! H2K: Type 1: Capacity value. 
+*option:ComboHeatA:value:12 = NA                 ! H2K: Type 1: Capacity value 
 *option:ComboHeatA:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
 *option:ComboHeatA:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
 *option:ComboHeatA:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
@@ -3694,7 +3694,7 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:29  = 0.98              ! P9 TPF
 *option:ComboHeatA:value:30  = 1463              ! P9 Annual energy use 
 *option:ComboHeatA:value:31  = 0.95              ! P9 WHPF2*option
-*option:ComboHeatA:value:32  = 58300             ! P9 Burner input 
+*option:ComboHeatA:value:32  = NA             	 ! P9 Burner input (NA when tag 11 set to 2 for Calculated)
 *option:ComboHeatA:value:33  = 95                ! P9 Recovery efficiency
 *option:ComboHeatA:value:34  = 7                 ! P9 Ctl power (W)
 *option:ComboHeatA:value:35  = 74                ! P9 Circ power (W)
