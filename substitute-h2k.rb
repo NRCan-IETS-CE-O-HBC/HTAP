@@ -300,7 +300,7 @@ def processFile(filespec)
    sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
    sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
 
-   # 06-Feb-2017 JTB: Save the base house system heating capacity before this XML section is deleted. 
+   # 06-Feb-2017 JTB: Save the base house system heating capacity (Watts) before this XML section is deleted. 
    # For use when setting the P9 heating capacity and burner input when "Calculated" option specified 
    # in options file even though it's not available in H2K GUI!
    baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
@@ -1325,7 +1325,7 @@ def processFile(filespec)
                         # input parameter further down in this code.
                         locationText = "HouseFile/House/HeatingCooling/Type1/P9"
                         if ( value == "NA" ) # Happens when options file user specifies "Calculated" for sizing option!
-                           h2kElements[locationText].attributes["spaceHeatingCapacity"] = baseHeatSysCap if ( h2kElements[locationText] != nil )
+                           h2kElements[locationText].attributes["spaceHeatingCapacity"] = baseHeatSysCap.to_s if ( h2kElements[locationText] != nil )
                         else
                            h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
                         end
@@ -1523,7 +1523,7 @@ def processFile(filespec)
                            # both the space heating capacity and the size of the DHW tank and can vary from a factor of about 2.x to 5.x!
                            # This is part of the option of allowing P9 system capacities to be set to "Calculated" in the options file
                            # even though the H2K GUI does not have this option!
-                           h2kElements[locationText].attributes["burnerInput"] = (2.5 * baseHeatSysCap.to_f).to_s if ( h2kElements[locationText] != nil )
+                           h2kElements[locationText].attributes["burnerInput"] = (2.5 * baseHeatSysCap).to_s if ( h2kElements[locationText] != nil )
                         else
                            h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
                         end
@@ -2174,7 +2174,7 @@ def getBaseSystemCapacity( elements, sysType1Arr )
       end
    end
    
-   return capValue
+   return capValue.to_f * 1000   # Always returns Watts!
 end
 
 # Procedure to create a new H2K system Type 1 in the XML house file
