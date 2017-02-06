@@ -297,6 +297,14 @@ def processFile(filespec)
    
    optDHWTankSize = "1"  # DHW variable defined here so scope includes all DHW tags
    
+   sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
+   sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
+
+   # 06-Feb-2017 JTB: Save the base house system heating capacity before this XML section is deleted. 
+   # For use when setting the P9 heating capacity and burner input when "Calculated" option specified 
+   # in options file even though it's not available in H2K GUI!
+   baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
+   
    $gChoiceOrder.each do |choiceEntry|
       if ( $gOptions[choiceEntry]["type"] == "internal" )
          choiceVal =  $gChoices[choiceEntry]
@@ -1223,14 +1231,6 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
 			
-               sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
-               sysType2 = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
-
-               # 06-Feb-2017 JTB: Save the base house system heating capacity before this XML section is deleted. 
-               # For use when setting the P9 heating capacity and burner input when "Calculated" option specified 
-               # in options file even though it's not available in H2K GUI!
-               baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
-               
                if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
                   locationText = "HouseFile/House/HeatingCooling/Type1"
                   if ( h2kElements[locationText + "/#{value}"] == nil )
