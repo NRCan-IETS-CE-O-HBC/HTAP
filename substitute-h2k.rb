@@ -782,8 +782,8 @@ def processFile(filespec)
                         element.delete_attribute("idref")
                      end
                   end
-               elsif ( tag =~ /Opt-ExposedFloor/ )   # Do nothing
-               elsif ( tag =~ /Opt-ExposedFloor-r/ )   # Do nothing
+               elsif ( tag =~ /Opt-ExposedFloor/ )   # Do nothing for this tag (non-H2K)
+               elsif ( tag =~ /Opt-ExposedFloor-r/ )   # Do nothing for this tag (non-H2K)
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
