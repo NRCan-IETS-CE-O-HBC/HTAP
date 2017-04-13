@@ -40,7 +40,7 @@ Simulation{
 
       Prefix = "Ruby ";
       
-      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000.options -b C:\\H2K-CLI-Min\\User\\KelownaHouse.h2k";
+      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000-Jeff.options -b C:\\H2K-CLI-Min\\User\\MURB1_STEP.h2k";
    }
 
    ObjectiveFunctionLocation {
@@ -110,11 +110,11 @@ Simulation{
       Name20 = FuelOilL; 
       Delimiter20 = "EnergyOil_l       =  ";
             
-      Name21 = UpgradeCostDoll ;
+      Name21 = UpgradeCostDoll;
       Delimiter21 = "Upgrade-cost      =  ";
 
       Name22 = PVSizekW;
-      Delimiter22 = "PV-size-kW      =  ";      
+      Delimiter22 = "PV-size-kW        =  ";      
 
       Name23 = PEAKHeatingW;
       Delimiter23 = "PEAK-Heating-W    =  ";
