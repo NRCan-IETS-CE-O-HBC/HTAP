@@ -14,7 +14,8 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
-      Values = "Vancouver, Calgary, WINDSOR, Ottawa, Edmonton, Halifax, Montreal, Whitehorse, Toronto";      
+      Values = "NA";
+	  //Values = "Vancouver, Calgary, WINDSOR, Ottawa, Edmonton, Halifax, Montreal, Whitehorse, Toronto";      
       
       // Buildability locations (12):
       //Values = "Vancouver, REDDEER, Regina, Winnipeg, Toronto, Ottawa, SUDBURY, Fredericton, Halifax, SAINTJOHNS, IQALUIT, SEPTILES";
@@ -41,7 +42,8 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-ACH; 
       Ini  = 1;
-      Values = "ACH_0_6, ACH_1_25, ACH_1_5, ACH_2_5";
+      Values = "NA";
+	  //Values = "NA, ACH_0_6, ACH_1_25";
    }
 
    // Mainwalls
@@ -54,15 +56,15 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
       Ini     =  1;
-      //Values = "NA";
-      Values  =  "Stud_2x6_1.5in_EPS_R-24, Stud_2x6_2.5in_EPS_R-30, DblStud_10in_cell_R-34, DblStud_12in_cell_R-41"; 
+      Values = "NA";
+      //Values  =  "NA, Stud_2x6_1.5in_EPS_R-24"; 
       }
 
    // H2K Foundations : OBC-min-R12
    Parameter{   // 
       Name    =  GOtag:Opt-H2KFoundation;
       Ini     =  1;
-      Values  = "4in_Ext_Rigid_XPS_R10_under"; 
+      Values  = "NA"; 
    } 
    
    // Foundation walls
@@ -83,21 +85,23 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-ExposedFloor;
       Ini     =  1;
-      Values  =  "NA";
+      //Values  =  "NA";
+	  Values  =  "NA, BaseExpFloor-R31, ExpFloorFlash&Batt-R36, ExpFloorFoamed-R52";
    }    
    
    // Ceilings
    Parameter{   // 
       Name    =  GOtag:Opt-Ceilings;
       Ini     =  1;
-      Values  = "CeilR60, CeilR80";
+      Values  = "NA";
+	  //Values  = "NA, CeilR60";
    }    
   
   // Windows
   Parameter{   // 
       Name    =  GOtag:Opt-CasementWindows;
       Ini     =  1;
-      Values  =  "LG-i89-Triple-A, MG-i89-Double, HG-i89-Triple-A, HG-i89-Triple-B, HG-VHG-Double, HG-avg-Double"; 
+      Values  =  "NA";	//"LG-i89-Triple-A, MG-i89-Double, HG-i89-Triple-A, HG-i89-Triple-B, HG-VHG-Double, HG-avg-Double"; 
    }    
    
   // Extra drywall:  OneSheet
@@ -127,7 +131,7 @@ Vary{
    Parameter{ //
       Name    = GOtag:Opt-DHWSystem;
       Ini     = 1; 
-      Values  = "ElectricStorage"; 
+      Values  = "NA"; 
    }
   
    // DWHR-System
@@ -142,7 +146,7 @@ Vary{
    Parameter { // 
       Name   = GOtag:Opt-HVACSystem; 
       Ini    = 1; 
-      Values = "elec-baseboard"; 
+      Values = "NA"; 
    }
   
    // HRV specification

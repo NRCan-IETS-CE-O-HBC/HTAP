@@ -108,8 +108,8 @@ Simulation{
       Delimiter19 = "Upgrade-cost      =  ";
 
       Name20 = PVSizekW;
-      Delimiter20 = "PV-size-kW      =  ";      
-
+      Delimiter20 = "PV-size-kW        =  ";    
+      
       Name21 = PEAKHeatingW;
       Delimiter21 = "PEAK-Heating-W    =  ";
       
