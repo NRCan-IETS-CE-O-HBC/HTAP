@@ -1551,6 +1551,9 @@
 *option:ACH_2_5:value:1  = 2.5
 *option:ACH_2_5:cost:total  =  0
 
+*option:ACH_2:value:1  = 2.0
+*option:ACH_2:cost:total  =  0
+
 *option:ACH_1_75:value:1  = 1.75
 *option:ACH_1_75:cost:total  = 0
 
@@ -1560,8 +1563,14 @@
 *option:ACH_1_25:value:1  = 1.25
 *option:ACH_1_25:cost:total  =  0
 
+*option:ACH_1:value:1  = 1.0
+*option:ACH_1:cost:total  =  0
+
 *option:ACH_0_6:value:1  = 0.6
 *option:ACH_0_6:cost:total  =  0
+
+*option:ACH_0_5:value:1  = 0.5
+*option:ACH_0_5:cost:total  =  0
 
 *option:ACH_0_1:value:1  = 0.1
 *option:ACH_0_1:cost:total  =  0
@@ -2804,6 +2813,31 @@ Whitehorse Wall Options (Code is R28)
 !------------------------------------------------------------
 ! YHC Foundation options - PWF with added interior insulation
 !------------------------------------------------------------
+! without slab insulation
+
+*option:BBIN_PWFR28:value:1  = BBIN_1_ALL
+*option:BBIN_PWFR28:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*option:BBIN_PWFR28:value:3  = 28        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*option:BBIN_PWFR28:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*option:BBIN_PWFR28:value:5  = 0         ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*option:BBIN_PWFR28:cost:total = 0
+
+*option:BBIN_PWFR36:value:1  = BBIN_1_ALL
+*option:BBIN_PWFR36:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*option:BBIN_PWFR36:value:3  = 36        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*option:BBIN_PWFR36:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*option:BBIN_PWFR36:value:5  = 0         ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*option:BBIN_PWFR36:cost:total = 0
+
+*option:BBIN_PWFR56:value:1  = BBIN_1_ALL
+*option:BBIN_PWFR56:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*option:BBIN_PWFR56:value:3  = 56        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*option:BBIN_PWFR56:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*option:BBIN_PWFR56:value:5  = 0         ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*option:BBIN_PWFR56:cost:total = 0
+
+
+! with slab insulation
 *option:BBIA_PWFR28_R10:value:1  = BBIA_2_ALL
 *option:BBIA_PWFR28_R10:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
 *option:BBIA_PWFR28_R10:value:3  = 28        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
@@ -2845,6 +2879,7 @@ Whitehorse Wall Options (Code is R28)
 *option:BBIA_PWFR56_R20:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
 *option:BBIA_PWFR56_R20:value:5  = 20        ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
 *option:BBIA_PWFR56_R20:cost:total = 0
+
 
 *attribute:end
 
