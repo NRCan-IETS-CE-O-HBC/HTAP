@@ -4453,7 +4453,7 @@ Reflects southern Ontario costs
 !
 !---------------------------------------------------------------------------------------------
 *attribute:start
-*attribute:name  = Opt-DWHRSystem
+*attribute:name  = Opt-DWHRSystem 
 *attribute:tag:1 = Opt-H2K-HasDWHR                      ! DWHR "true" or "false"
 *attribute:tag:2 = Opt-H2K-DWHR-preheatShowerTank       ! DWHR Preheat shower only "true" or "false"
 *attribute:tag:3 = Opt-H2K-DWHR-Manufacturer            ! DWHR Manufacturer: Generic, EccoInnovation^Technologies^Inc., Power-Pipe, Watercycles^Energy^Recovery^Inc., Generic
