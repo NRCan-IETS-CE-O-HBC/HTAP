@@ -121,6 +121,8 @@ $gDirection = ""
 $GenericWindowParams = Hash.new(&$blk)
 $GenericWindowParamsDefined = 0 
 
+$gLookForArchetype = 1
+
 $gAuxEnergyHeatingGJ = 0   # 29-Nov-2016 JTB: Added for use by RC
 $gEnergyHeatingElec = 0
 $gEnergyVentElec = 0
@@ -3454,6 +3456,7 @@ optparse = OptionParser.new do |opts|
       if (! File.exist?($gBaseModelFile) ) 
          fatalerror("Base file does not exist - create file first!")
       end
+      $gLookForArchetype = 0; 
    end
  
 end
@@ -3464,10 +3467,20 @@ if $gDebug
   debug_out( $cmdlineopts )
 end
 
-($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
-$h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
-$run_path = $gMasterPath + "\\H2K"
 
+if ( !$gBaseModelFile ) then
+
+  puts "Base file not specified. What next? "
+  $gBaseModelFile = "<To-Be-Found-In-Choice-File?>"
+  $gLookForArchetype = 1
+  
+else 
+    ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
+    $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
+    $run_path = $gMasterPath + "\\H2K"
+    
+end
+ 
 stream_out ("\n > substitute-h2k.rb  \n")
 stream_out ("         path: #{$gMasterPath} \n")
 stream_out ("         ChoiceFile: #{$gChoiceFile} \n")
@@ -4087,6 +4100,35 @@ $gChoices.each do |attrib1, choice|
    end
 end   #end of do each gChoices loop
 
+puts " LOOK FOR ARCHETYPE : #{$gLookForArchetype}\n"
+
+if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then 
+  #puts  "\n user-spec archetype \n"
+  #puts " BASEFILE    >#{$gBaseModelFile}<\n"
+  $Archetype_value = $gChoices["Opt-Archetype"]
+  #puts " ARCH choice >#{$Archetype_value}<\n"
+   
+  #if ( $gOptions['Opt-Archetype']['options']['BC-Step-MediumSFD']['values']['1'].empty?  ) then 
+  #  puts "\n !!!!! nothing !!!! \n\n"
+  #end
+    
+   
+  $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
+  ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
+  $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
+  $run_path = $gMasterPath + "\\H2K"
+  
+  stream_out ("\n   UPDATED: Base model: #{$gBaseModelFile} \n")
+  stream_out ("            HOT2000 source folder: #{$h2k_src_path} \n")
+  stream_out ("            HOT2000 run folder: #{$run_path} \n")
+
+  #puts " Points to -> #{$gBaseModelFile} \n"; 
+
+  
+end
+  #
+  
+
 # Seems like we've found everything!
 
 if ( !$allok )
@@ -4259,6 +4301,7 @@ fSUMMARY.write( "PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+
 
 fSUMMARY.close() 
 
