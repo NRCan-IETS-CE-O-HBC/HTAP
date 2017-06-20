@@ -332,6 +332,28 @@
 
 *attribute:end
 
+!-----------------HOT2000 Archetype file ---------------------------------
+!  
+!-------------------------------------------------------------------------
+*ext-attribute:start 
+*attribute:name = Opt-Archetype
+*attribute:tag:1 = <NotARealTag>
+*attribute:default = BC-Step-MediumSFD
+
+*option:BC-Step-SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-SmallSFD.h2k
+*option:BC-Step-SmallSFD:cost:total = 0
+
+*option:BC-Step-MediumSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-MediumSFD.h2k
+*option:BC-Step-MediumSFD:cost:total = 0
+
+*option:BC-Step-LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-LargeSFD.h2k
+*option:BC-Step-LargeSFD:cost:total = 0
+
+*attribute:end
+
+
+
+
 
 !-----------------DOESN't WORK-------------------------------------------
 ! This option can be used to turn the model's minimum
