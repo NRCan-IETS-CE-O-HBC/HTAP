@@ -55,11 +55,28 @@ my %upgrade_packages = (
 
 while ( my $line = <OPTLISTFILE> ){
 
+  # Gobble or process items that may be incorrectly formatted / named 
+  $line =~ s/Small SFD/BC-Step-SmallSFD/g; 
+  $line =~ s/Medium SFD/BC-Step-MediumSFD/g; 
+  $line =~ s/Large SFD/BC-Step-LargeSFD/g; 
+
+  $line =~ s/Archetype/Opt-Archetype/g; 
+  $line =~ s/GOtag://g; 
+
+  
+  
   $line =~ s/\!.*$//g; 
   $line =~ s/\s*//g;
+  
+  $line =~ s/(R.+)_under,/$1_under_slab,/; 
+  
   $linecount++;
 
-    
+  
+
+  
+  
+  
   # First record is header with choice file attribute names
   if($linecount == 1) {
     @choiceAttKeys = split /,/, $line;
@@ -68,6 +85,7 @@ while ( my $line = <OPTLISTFILE> ){
   } else {
     @choiceAttValues = split /,/, $line;
   
+    
     
     # Hash created for current record, write the corresponding choice file
        
@@ -1893,8 +1911,12 @@ sub WriteChoiceFile($){
   
    # Start H2k definitions. 
   
-  
+   # if locations are to be spec'd by GenOpt
    print OPTIONSOUT "Opt-Location         : <LOCATION>\n";  
+   
+   # if locations are to be drawn from csv file:
+   print OPTIONSOUT "Opt-Location         : ".$choiceHash{"Opt-Location"}."\n"; 
+   
    print OPTIONSOUT "Opt-DBFiles          : H2KCodeLibFile\n"; 
    print OPTIONSOUT "Opt-FuelCost         : rates2016\n"; 
    
@@ -1912,7 +1934,8 @@ sub WriteChoiceFile($){
    print OPTIONSOUT "Opt-CasementWindows  :  ".$choiceHash{"Opt-CasementWindows"}."\n";
 
    # Added for H2K 
-   print OPTIONSOUT "Opt-H2K-PV           : ".$choiceHash{"Opt-H2K-PV"}."\n";
+   #print OPTIONSOUT "Opt-H2K-PV           : ".$choiceHash{"Opt-H2K-PV"}."\n"; 
+   print OPTIONSOUT "Opt-H2K-PV           : NA \n"; 
    
    print OPTIONSOUT "Opt-DWHRandSDHW      : NA \n";
    
@@ -1936,7 +1959,8 @@ sub WriteChoiceFile($){
    print OPTIONSOUT "!Opt-InfilMethod      : NA\n"; 
    print OPTIONSOUT "!Opt-ExtraDrywall    : NA\n"; 
    print OPTIONSOUT "!Opt-FloorSurface    : NA\n"; 
-   print OPTIONSOUT "!OPT-OPR-SCHED        : NA\n"; 
+   print OPTIONSOUT "!OPT-OPR-SCHED        : NA\n";
+   print OPTIONSOUT "Opt-Archetype        : ".$choiceHash{"Opt-Archetype"}."\n";    
    
    
    
