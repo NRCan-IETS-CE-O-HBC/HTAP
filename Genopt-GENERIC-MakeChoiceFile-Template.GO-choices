@@ -19,4 +19,4 @@ Opt-DHWLoadScale     : %GOtag:Opt-DHWLoadScale%
 
 Opt-OptionsFile      : %GOtag:Opt-OptionsFile%
 
-Opt-Archetype        : %GOtag:Opt-Archetype%
+!Opt-Archetype        : %GOtag:Opt-Archetype%
