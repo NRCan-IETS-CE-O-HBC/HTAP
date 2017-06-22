@@ -335,19 +335,29 @@
 !-----------------HOT2000 Archetype file ---------------------------------
 !  
 !-------------------------------------------------------------------------
-*ext-attribute:start 
+*attribute:start 
 *attribute:name = Opt-Archetype
 *attribute:tag:1 = <NotARealTag>
 *attribute:default = BC-Step-MediumSFD
 
-*option:BC-Step-SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-SmallSFD.h2k
-*option:BC-Step-SmallSFD:cost:total = 0
+*option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
+*option:SmallSFD:cost:total = 0
 
-*option:BC-Step-MediumSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-MediumSFD.h2k
-*option:BC-Step-MediumSFD:cost:total = 0
+*option:MediumSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-MediumSFD.h2k
+*option:MediumSFD:cost:total = 0
 
-*option:BC-Step-LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-LargeSFD.h2k
-*option:BC-Step-LargeSFD:cost:total = 0
+*option:LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-LargeSFD.h2k
+*option:LargeSFD:cost:total = 0
+
+*option:Rowhouse:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Row.h2k
+*option:Rowhouse:cost:total = 0
+
+*option:Quadplex:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Quad.h2k
+*option:Quadplex:cost:total = 0
+
+*option:MURB:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Murb1.h2k
+*option:MURB:cost:total = 0
+
 
 *attribute:end
 
@@ -765,7 +775,7 @@
 *option:FORTMCMURRAY:value:3 = 
 *option:FORTMCMURRAY:value:4 = Wth110.dir
 *option:FORTMCMURRAY:value:5 = 2           ! H2K Region
-*option:FORTMCMURRAY:value:6 = 16           ! H2K Location
+*option:FORTMCMURRAY:value:6 = 16           ! H2K Location 
 *option:FORTMCMURRAY:cost:total    = 0
 
 *option:LETHBRIDGE:value:1 = 
@@ -2410,6 +2420,7 @@
 
 *option:WH_1.0:value:1         =   WH_1.0.aim
 *option:WH_1.0:cost:total           =   0
+*option:WH_1.0:cost:total           =   0
 
 *option:WH_0.5:value:1       =   WH_0.5.aim
 *option:WH_0.5:cost:total         =   0
@@ -3179,12 +3190,12 @@ Whitehorse Wall Options (Code is R28)
 *option:STEP_BaseFDN_R11_above:value:5 = 11        ! Under slab added R-value
 *option:STEP_BaseFDN_R11_above:cost:total = 700    !$700 for MURB STEP
 
-*option:STEP_BaseFDN_R11_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_BaseFDN_R11_under_slab:value:2 = NA          !BsmIntR20
-*option:STEP_BaseFDN_R11_under_slab:value:3 = 11.3        ! STEP Minimum
-*option:STEP_BaseFDN_R11_under_slab:value:4 = NA          ! Ext wall added R-value
-*option:STEP_BaseFDN_R11_under_slab:value:5 = 11.3        ! Under slab added R-value
-*option:STEP_BaseFDN_R11_under_slab:cost:total = 700      !Base case STEP
+*option:STEP_BaseFDN_R11_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_BaseFDN_R11_under:value:2 = NA          !BsmIntR20
+*option:STEP_BaseFDN_R11_under:value:3 = 11.3        ! STEP Minimum
+*option:STEP_BaseFDN_R11_under:value:4 = NA          ! Ext wall added R-value
+*option:STEP_BaseFDN_R11_under:value:5 = 11.3        ! Under slab added R-value
+*option:STEP_BaseFDN_R11_under:cost:total = 700      !Base case STEP
 
 *option:STEP_BaseFDN_R15_under:value:1 = BCIB_1_ALL  ! Change all Basements in model
 *option:STEP_BaseFDN_R15_under:value:2 = NA        !BsmIntR20
@@ -3200,12 +3211,12 @@ Whitehorse Wall Options (Code is R28)
 *option:STEP_BaseFDN_R15_under:value:5 = 15        ! Under slab added R-value
 *option:STEP_BaseFDN_R15_under:cost:total = 1090    !MURB STEP
 
-*option:STEP_BaseFDN_R20_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_BaseFDN_R20_under_slab:value:2 = NA          !BsmIntR20
-*option:STEP_BaseFDN_R20_under_slab:value:3 = 11.3        ! STEP Minimum
-*option:STEP_BaseFDN_R20_under_slab:value:4 = NA          ! Ext wall added R-value
-*option:STEP_BaseFDN_R20_under_slab:value:5 = 20          ! Under slab added R-value
-*option:STEP_BaseFDN_R20_under_slab:cost:total = 1700     !$700 for MURB STEP
+*option:STEP_BaseFDN_R20_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_BaseFDN_R20_under:value:2 = NA          !BsmIntR20
+*option:STEP_BaseFDN_R20_under:value:3 = 11.3        ! STEP Minimum
+*option:STEP_BaseFDN_R20_under:value:4 = NA          ! Ext wall added R-value
+*option:STEP_BaseFDN_R20_under:value:5 = 20          ! Under slab added R-value
+*option:STEP_BaseFDN_R20_under:cost:total = 1700     !$700 for MURB STEP
 
 *option:STEP_BaseFDN_R20_above:value:1 = BCIA_1_ALL  ! Change all Basements in model
 *option:STEP_BaseFDN_R20_above:value:2 = NA        !BsmIntR20
@@ -3347,70 +3358,70 @@ Whitehorse Wall Options (Code is R28)
 *option:STEP_SLAB_R20_under:value:5 = 20        ! Under slab added R-value
 *option:STEP_SLAB_R20_under:cost:total = 9010    !MURB $9010 STEP
 
-*option:STEP_R16FDN_R11_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R16FDN_R11_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R16FDN_R11_under_slab:value:3 = 16.9        ! BC STEP
-*option:STEP_R16FDN_R11_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R16FDN_R11_under_slab:value:5 = 11.3        ! Under slab added R-value
-*option:STEP_R16FDN_R11_under_slab:cost:total = 1785    !Assumed cost of $1085 STEP MURB
+*option:STEP_R16FDN_R11_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R16FDN_R11_under:value:2 = NA        !BsmIntR20
+*option:STEP_R16FDN_R11_under:value:3 = 16.9        ! BC STEP
+*option:STEP_R16FDN_R11_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R16FDN_R11_under:value:5 = 11.3        ! Under slab added R-value
+*option:STEP_R16FDN_R11_under:cost:total = 1785    !Assumed cost of $1085 STEP MURB
 
-*option:STEP_R20FDN_R11_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R20FDN_R11_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R20FDN_R11_under_slab:value:3 = 19.6        ! STEP 
-*option:STEP_R20FDN_R11_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R20FDN_R11_under_slab:value:5 = 11.3        ! Under slab added R-value
-*option:STEP_R20FDN_R11_under_slab:cost:total = 2375    !Assumed cost of $1675 for STEP MURB
+*option:STEP_R20FDN_R11_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R20FDN_R11_under:value:2 = NA        !BsmIntR20
+*option:STEP_R20FDN_R11_under:value:3 = 19.6        ! STEP 
+*option:STEP_R20FDN_R11_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R20FDN_R11_under:value:5 = 11.3        ! Under slab added R-value
+*option:STEP_R20FDN_R11_under:cost:total = 2375    !Assumed cost of $1675 for STEP MURB
 
-*option:STEP_R25FDN_R11_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R25FDN_R11_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R25FDN_R11_under_slab:value:3 = 25        ! STEP 
-*option:STEP_R25FDN_R11_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R25FDN_R11_under_slab:value:5 = 11.3        ! Under slab added R-value
-*option:STEP_R25FDN_R11_under_slab:cost:total = 3460    !Assumed cost of $2760 for MURB STEP
-
-
-*option:STEP_R16FDN_R20_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R16FDN_R20_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R16FDN_R20_under_slab:value:3 = 16.9        ! BC STEP
-*option:STEP_R16FDN_R20_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R16FDN_R20_under_slab:value:5 = 20        ! Under slab added R-value
-*option:STEP_R16FDN_R20_under_slab:cost:total = 2785    !Assumed cost of $1785 STEP MURB
-
-*option:STEP_R20FDN_R20_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R20FDN_R20_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R20FDN_R20_under_slab:value:3 = 19.6        ! STEP 
-*option:STEP_R20FDN_R20_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R20FDN_R20_under_slab:value:5 = 20       ! Under slab added R-value
-*option:STEP_R20FDN_R20_under_slab:cost:total = 3375    !Assumed cost of $2375 for STEP MURB
-
-*option:STEP_R25FDN_R20_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R25FDN_R20_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R25FDN_R20_under_slab:value:3 = 25        ! STEP 
-*option:STEP_R25FDN_R20_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R25FDN_R20_under_slab:value:5 = 20        ! Under slab added R-value
-*option:STEP_R25FDN_R20_under_slab:cost:total = 4460    !Assumed cost of $3460 for MURB STEP
+*option:STEP_R25FDN_R11_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R25FDN_R11_under:value:2 = NA        !BsmIntR20
+*option:STEP_R25FDN_R11_under:value:3 = 25        ! STEP 
+*option:STEP_R25FDN_R11_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R25FDN_R11_under:value:5 = 11.3        ! Under slab added R-value
+*option:STEP_R25FDN_R11_under:cost:total = 3460    !Assumed cost of $2760 for MURB STEP
 
 
-*option:STEP_R16FDN_R30_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R16FDN_R30_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R16FDN_R30_under_slab:value:3 = 16.9        ! BC STEP
-*option:STEP_R16FDN_R30_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R16FDN_R30_under_slab:value:5 = 15        ! Under slab added R-value
-*option:STEP_R16FDN_R30_under_slab:cost:total = 4175    !Assumed cost of $2175 STEP MURB
+*option:STEP_R16FDN_R20_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R16FDN_R20_under:value:2 = NA        !BsmIntR20
+*option:STEP_R16FDN_R20_under:value:3 = 16.9        ! BC STEP
+*option:STEP_R16FDN_R20_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R16FDN_R20_under:value:5 = 20        ! Under slab added R-value
+*option:STEP_R16FDN_R20_under:cost:total = 2785    !Assumed cost of $1785 STEP MURB
 
-*option:STEP_R20FDN_R30_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R20FDN_R30_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R20FDN_R30_under_slab:value:3 = 19.6        ! STEP 
-*option:STEP_R20FDN_R30_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R20FDN_R30_under_slab:value:5 = 15        ! Under slab added R-value
-*option:STEP_R20FDN_R30_under_slab:cost:total = 4765    !Assumed cost of $2765 for STEP MURB
+*option:STEP_R20FDN_R20_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R20FDN_R20_under:value:2 = NA        !BsmIntR20
+*option:STEP_R20FDN_R20_under:value:3 = 19.6        ! STEP 
+*option:STEP_R20FDN_R20_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R20FDN_R20_under:value:5 = 20       ! Under slab added R-value
+*option:STEP_R20FDN_R20_under:cost:total = 3375    !Assumed cost of $2375 for STEP MURB
 
-*option:STEP_R25FDN_R30_under_slab:value:1 = SCB_29_ALL  ! Change all Basements in model
-*option:STEP_R25FDN_R30_under_slab:value:2 = NA        !BsmIntR20
-*option:STEP_R25FDN_R30_under_slab:value:3 = 25        ! STEP 
-*option:STEP_R25FDN_R30_under_slab:value:4 = NA        ! Ext wall added R-value
-*option:STEP_R25FDN_R30_under_slab:value:5 = 15        ! Under slab added R-value
-*option:STEP_R25FDN_R30_under_slab:cost:total = 5850    !Assumed cost of $3850 for MURB STEP
+*option:STEP_R25FDN_R20_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R25FDN_R20_under:value:2 = NA        !BsmIntR20
+*option:STEP_R25FDN_R20_under:value:3 = 25        ! STEP 
+*option:STEP_R25FDN_R20_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R25FDN_R20_under:value:5 = 20        ! Under slab added R-value
+*option:STEP_R25FDN_R20_under:cost:total = 4460    !Assumed cost of $3460 for MURB STEP
+
+
+*option:STEP_R16FDN_R30_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R16FDN_R30_under:value:2 = NA        !BsmIntR20
+*option:STEP_R16FDN_R30_under:value:3 = 16.9        ! BC STEP
+*option:STEP_R16FDN_R30_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R16FDN_R30_under:value:5 = 15        ! Under slab added R-value
+*option:STEP_R16FDN_R30_under:cost:total = 4175    !Assumed cost of $2175 STEP MURB
+
+*option:STEP_R20FDN_R30_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R20FDN_R30_under:value:2 = NA        !BsmIntR20
+*option:STEP_R20FDN_R30_under:value:3 = 19.6        ! STEP 
+*option:STEP_R20FDN_R30_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R20FDN_R30_under:value:5 = 15        ! Under slab added R-value
+*option:STEP_R20FDN_R30_under:cost:total = 4765    !Assumed cost of $2765 for STEP MURB
+
+*option:STEP_R25FDN_R30_under:value:1 = SCB_29_ALL  ! Change all Basements in model
+*option:STEP_R25FDN_R30_under:value:2 = NA        !BsmIntR20
+*option:STEP_R25FDN_R30_under:value:3 = 25        ! STEP 
+*option:STEP_R25FDN_R30_under:value:4 = NA        ! Ext wall added R-value
+*option:STEP_R25FDN_R30_under:value:5 = 15        ! Under slab added R-value
+*option:STEP_R25FDN_R30_under:cost:total = 5850    !Assumed cost of $3850 for MURB STEP
 
 
 ! below slab insulation configurations -------------------------------------
@@ -4090,8 +4101,8 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
 *option:ComboHeatA:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
 *option:ComboHeatA:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:ComboHeatA:value:11 = 1                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated (NOTE: P9 DOES NOT HAVE A "CALCULATED" MODE!)
-*option:ComboHeatA:value:12 = 15000              ! H2K: Type 1: Capacity value. 
+*option:ComboHeatA:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated (NOTE: P9 DOES NOT HAVE A "CALCULATED" MODE!)
+*option:ComboHeatA:value:12 =  NA ! 15000              ! H2K: Type 1: Capacity value. 
 						  ! = 43750              ! QUAD
                           ! = 70000              ! 11 unit ROW
                           ! = 115000             ! MURB
@@ -4104,7 +4115,7 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:29  = 0.98              ! P9 TPF
 *option:ComboHeatA:value:30  = 1463              ! P9 Annual energy use 
 *option:ComboHeatA:value:31  = 0.95              ! P9 WHPF2*option
-*option:ComboHeatA:value:32  = 7500             ! P9 Burner input
+*option:ComboHeatA:value:32  = NA ! 7500             ! P9 Burner input
                           !  = 21875            ! QUAD						  
                           !  = 35000            ! Row
                           !  = 58300            ! MURB
