@@ -59,16 +59,21 @@ while ( my $line = <OPTLISTFILE> ){
   $line =~ s/Small SFD/BC-Step-SmallSFD/g; 
   $line =~ s/Medium SFD/BC-Step-MediumSFD/g; 
   $line =~ s/Large SFD/BC-Step-LargeSFD/g; 
-
+  $line =~ s/Summerland/SUMMERLAND/g; 
+  $line =~ s/Cranbrook/CRANBROOK/g; 
+  $line =~ s/Cranbrook/CRANBROOK/g; 
   $line =~ s/Archetype/Opt-Archetype/g; 
   $line =~ s/GOtag://g; 
 
   
   
+  
   $line =~ s/\!.*$//g; 
   $line =~ s/\s*//g;
   
-  $line =~ s/(R.+)_under,/$1_under_slab,/; 
+  
+ 
+  $line =~ s/under_slab,/under,/; 
   
   $linecount++;
 
