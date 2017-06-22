@@ -267,6 +267,8 @@ def processFile(filespec)
    # Load all XML elements from HOT2000 file
    h2kElements = get_elements_from_filename(filespec)
    
+   stream_out(" READING to edit: #{filespec} \n")
+   
    # Load all XML elements from HOT2000 code library file. This file is specified
    # in option Opt-DBFiles 
    codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
@@ -308,6 +310,9 @@ def processFile(filespec)
    baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
    
    $gChoiceOrder.each do |choiceEntry|
+   
+      #stream_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} \n")
+      
       if ( $gOptions[choiceEntry]["type"] == "internal" )
          choiceVal =  $gChoices[choiceEntry]
          tagHash = $gOptions[choiceEntry]["tags"]
@@ -327,6 +332,7 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
                $Locale = $gChoices["Opt-Location"] 
+               
                if ( tag =~ /OPT-H2K-WTH-FILE/ && value != "NA" )
                   # Weather file to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather"
@@ -348,6 +354,9 @@ def processFile(filespec)
                   # Weather location to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Location"
                   h2kElements[locationText].attributes["code"] = value
+                  
+                  
+                  
                elsif ( tag =~ /OPT-WEATHER-FILE/ ) # Do nothing
                elsif ( tag =~ /OPT-Latitude/ ) # Do nothing
                elsif ( tag =~ /OPT-Longitude/ ) # Do nothing
@@ -1811,9 +1820,13 @@ def processFile(filespec)
    end
    
    # Save changes to the XML doc in existing working H2K file (overwrite original)
+   
+   stream_out (" Overwriting: #{filespec} \n")
+   
    newXMLFile = File.open(filespec, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
+  
 
 end
 
@@ -4100,7 +4113,6 @@ $gChoices.each do |attrib1, choice|
    end
 end   #end of do each gChoices loop
 
-puts " LOOK FOR ARCHETYPE : #{$gLookForArchetype}\n"
 
 if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then 
   #puts  "\n user-spec archetype \n"
@@ -4119,6 +4131,7 @@ if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then
   $run_path = $gMasterPath + "\\H2K"
   
   stream_out ("\n   UPDATED: Base model: #{$gBaseModelFile} \n")
+  stream_out ("            HOT2000 source folder: #{$h2kFileName} \n")
   stream_out ("            HOT2000 source folder: #{$h2k_src_path} \n")
   stream_out ("            HOT2000 run folder: #{$run_path} \n")
 
@@ -4169,6 +4182,7 @@ stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
 processFile($gWorkingModelFile)
+
 
 # Orientation changes. For now, we assume the arrays must always point south.
 $angles = Hash.new()
