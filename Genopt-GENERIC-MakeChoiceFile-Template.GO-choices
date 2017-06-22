@@ -1,0 +1,22 @@
+! Optimization substitutions: 
+
+! StepNumber: This is an indicator of how many simulations have been done so far
+GOconfig_step        :  %stepNumber%
+
+! Name of the pre-generated choice file for the next GenOpt run
+
+Opt-ChoiceFileName   : %GOtag:Opt-Choice_Files%
+
+Opt-Location         : %GOtag:Opt-Location%
+
+OPT-HRV_ctl          : %GOtag:OPT-HRV_ctl%
+
+Opt-HeatCool-Control : %GOtag:Opt-HeatCool-Control%
+
+Opt-ElecLoadScale    : %GOtag:Opt-ElecLoadScale%
+
+Opt-DHWLoadScale     : %GOtag:Opt-DHWLoadScale% 
+
+Opt-OptionsFile      : %GOtag:Opt-OptionsFile%
+
+!Opt-Archetype        : %GOtag:Opt-Archetype%

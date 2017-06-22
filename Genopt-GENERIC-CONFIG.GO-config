@@ -20,7 +20,7 @@ IO
 SimulationStart
 {
     
-	Command = "%Simulation.CallParameter.Prefix% substitute-h2k.rb %Simulation.CallParameter.Suffix% " ;
+	Command = "%Simulation.CallParameter.Prefix% %Simulation.CallParameter.Suffix% " ;
     WriteInputFileExtension = false;
 }
 

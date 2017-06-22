@@ -1551,6 +1551,9 @@
 *option:ACH_2_5:value:1  = 2.5
 *option:ACH_2_5:cost:total  =  0
 
+*option:ACH_2:value:1  = 2.0
+*option:ACH_2:cost:total  =  0
+
 *option:ACH_1_75:value:1  = 1.75
 *option:ACH_1_75:cost:total  = 0
 
@@ -1560,8 +1563,14 @@
 *option:ACH_1_25:value:1  = 1.25
 *option:ACH_1_25:cost:total  =  0
 
+*option:ACH_1:value:1  = 1.0
+*option:ACH_1:cost:total  =  0
+
 *option:ACH_0_6:value:1  = 0.6
 *option:ACH_0_6:cost:total  =  0
+
+*option:ACH_0_5:value:1  = 0.5
+*option:ACH_0_5:cost:total  =  0
 
 *option:ACH_0_1:value:1  = 0.1
 *option:ACH_0_1:cost:total  =  0
@@ -1886,6 +1895,170 @@
 *option:LG-avg-Double:cost:total   = 0   
 
 
+!---------RDH window options---------------
+*option:YHC-W1:value:1 = YHC-W1
+*option:YHC-W1:value:2 = YHC-W1
+*option:YHC-W1:value:3 = YHC-W1
+*option:YHC-W1:value:4 = YHC-W1
+*option:YHC-W1:value:5 = YHC-W1
+*option:YHC-W1:value:6 = YHC-W1
+*option:YHC-W1:value:7 = YHC-W1
+*option:YHC-W1:value:8 = YHC-W1
+*option:YHC-W1:value:9 = YHC-W1
+*option:YHC-W1:value:10 = YHC-W1
+*option:YHC-W1:value:11 = YHC-W1
+*option:YHC-W1:value:12 = YHC-W1
+*option:YHC-W1:WindowParams:name  = YHC-W1
+*option:YHC-W1:WindowParams:panes = 3
+*option:YHC-W1:WindowParams:SHGC  = 0.17
+*option:YHC-W1:WindowParams:Uval  = 1.2
+*option:YHC-W1:cost:total   = 0   
+
+*option:YHC-W2:value:1 = YHC-W2
+*option:YHC-W2:value:2 = YHC-W2
+*option:YHC-W2:value:3 = YHC-W2
+*option:YHC-W2:value:4 = YHC-W2
+*option:YHC-W2:value:5 = YHC-W2
+*option:YHC-W2:value:6 = YHC-W2
+*option:YHC-W2:value:7 = YHC-W2
+*option:YHC-W2:value:8 = YHC-W2
+*option:YHC-W2:value:9 = YHC-W2
+*option:YHC-W2:value:10 = YHC-W2
+*option:YHC-W2:value:11 = YHC-W2
+*option:YHC-W2:value:12 = YHC-W2
+*option:YHC-W2:WindowParams:name  = YHC-W2
+*option:YHC-W2:WindowParams:panes = 3
+*option:YHC-W2:WindowParams:SHGC  = 0.37
+*option:YHC-W2:WindowParams:Uval  = 1.2
+*option:YHC-W2:cost:total   = 0   
+
+*option:YHC-W3:value:1 = YHC-W3
+*option:YHC-W3:value:2 = YHC-W3
+*option:YHC-W3:value:3 = YHC-W3
+*option:YHC-W3:value:4 = YHC-W3
+*option:YHC-W3:value:5 = YHC-W3
+*option:YHC-W3:value:6 = YHC-W3
+*option:YHC-W3:value:7 = YHC-W3
+*option:YHC-W3:value:8 = YHC-W3
+*option:YHC-W3:value:9 = YHC-W3
+*option:YHC-W3:value:10 = YHC-W3
+*option:YHC-W3:value:11 = YHC-W3
+*option:YHC-W3:value:12 = YHC-W3
+*option:YHC-W3:WindowParams:name  = YHC-W3
+*option:YHC-W3:WindowParams:panes = 3
+*option:YHC-W3:WindowParams:SHGC  = 0.45
+*option:YHC-W3:WindowParams:Uval  = 1.2
+*option:YHC-W3:cost:total   = 0   
+
+*option:YHC-W4:value:1 = YHC-W4
+*option:YHC-W4:value:2 = YHC-W4
+*option:YHC-W4:value:3 = YHC-W4
+*option:YHC-W4:value:4 = YHC-W4
+*option:YHC-W4:value:5 = YHC-W4
+*option:YHC-W4:value:6 = YHC-W4
+*option:YHC-W4:value:7 = YHC-W4
+*option:YHC-W4:value:8 = YHC-W4
+*option:YHC-W4:value:9 = YHC-W4
+*option:YHC-W4:value:10 = YHC-W4
+*option:YHC-W4:value:11 = YHC-W4
+*option:YHC-W4:value:12 = YHC-W4
+*option:YHC-W4:WindowParams:name  = YHC-W4
+*option:YHC-W4:WindowParams:panes = 3
+*option:YHC-W4:WindowParams:SHGC  = 0.17
+*option:YHC-W4:WindowParams:Uval  = 0.9
+*option:YHC-W4:cost:total   = 0   
+
+*option:YHC-W5:value:1 = YHC-W5
+*option:YHC-W5:value:2 = YHC-W5
+*option:YHC-W5:value:3 = YHC-W5
+*option:YHC-W5:value:4 = YHC-W5
+*option:YHC-W5:value:5 = YHC-W5
+*option:YHC-W5:value:6 = YHC-W5
+*option:YHC-W5:value:7 = YHC-W5
+*option:YHC-W5:value:8 = YHC-W5
+*option:YHC-W5:value:9 = YHC-W5
+*option:YHC-W5:value:10 = YHC-W5
+*option:YHC-W5:value:11 = YHC-W5
+*option:YHC-W5:value:12 = YHC-W5
+*option:YHC-W5:WindowParams:name  = YHC-W5
+*option:YHC-W5:WindowParams:panes = 3
+*option:YHC-W5:WindowParams:SHGC  = 0.37
+*option:YHC-W5:WindowParams:Uval  = 0.9
+*option:YHC-W5:cost:total   = 0   
+
+*option:YHC-W6:value:1 = YHC-W6
+*option:YHC-W6:value:2 = YHC-W6
+*option:YHC-W6:value:3 = YHC-W6
+*option:YHC-W6:value:4 = YHC-W6
+*option:YHC-W6:value:5 = YHC-W6
+*option:YHC-W6:value:6 = YHC-W6
+*option:YHC-W6:value:7 = YHC-W6
+*option:YHC-W6:value:8 = YHC-W6
+*option:YHC-W6:value:9 = YHC-W6
+*option:YHC-W6:value:10 = YHC-W6
+*option:YHC-W6:value:11 = YHC-W6
+*option:YHC-W6:value:12 = YHC-W6
+*option:YHC-W6:WindowParams:name  = YHC-W6
+*option:YHC-W6:WindowParams:panes = 3
+*option:YHC-W6:WindowParams:SHGC  = 0.45
+*option:YHC-W6:WindowParams:Uval  = 0.9
+*option:YHC-W6:cost:total   = 0   
+
+*option:YHC-W7:value:1 = YHC-W7
+*option:YHC-W7:value:2 = YHC-W7
+*option:YHC-W7:value:3 = YHC-W7
+*option:YHC-W7:value:4 = YHC-W7
+*option:YHC-W7:value:5 = YHC-W7
+*option:YHC-W7:value:6 = YHC-W7
+*option:YHC-W7:value:7 = YHC-W7
+*option:YHC-W7:value:8 = YHC-W7
+*option:YHC-W7:value:9 = YHC-W7
+*option:YHC-W7:value:10 = YHC-W7
+*option:YHC-W7:value:11 = YHC-W7
+*option:YHC-W7:value:12 = YHC-W7
+*option:YHC-W7:WindowParams:name  = YHC-W7
+*option:YHC-W7:WindowParams:panes = 4
+*option:YHC-W7:WindowParams:SHGC  = 0.17
+*option:YHC-W7:WindowParams:Uval  = 0.68
+*option:YHC-W7:cost:total   = 0   
+
+*option:YHC-W8:value:1 = YHC-W8
+*option:YHC-W8:value:2 = YHC-W8
+*option:YHC-W8:value:3 = YHC-W8
+*option:YHC-W8:value:4 = YHC-W8
+*option:YHC-W8:value:5 = YHC-W8
+*option:YHC-W8:value:6 = YHC-W8
+*option:YHC-W8:value:7 = YHC-W8
+*option:YHC-W8:value:8 = YHC-W8
+*option:YHC-W8:value:9 = YHC-W8
+*option:YHC-W8:value:10 = YHC-W8
+*option:YHC-W8:value:11 = YHC-W8
+*option:YHC-W8:value:12 = YHC-W8
+*option:YHC-W8:WindowParams:name  = YHC-W8
+*option:YHC-W8:WindowParams:panes = 4
+*option:YHC-W8:WindowParams:SHGC  = 0.37
+*option:YHC-W8:WindowParams:Uval  = 0.68
+*option:YHC-W8:cost:total   = 0   
+
+*option:YHC-W9:value:1 = YHC-W9
+*option:YHC-W9:value:2 = YHC-W9
+*option:YHC-W9:value:3 = YHC-W9
+*option:YHC-W9:value:4 = YHC-W9
+*option:YHC-W9:value:5 = YHC-W9
+*option:YHC-W9:value:6 = YHC-W9
+*option:YHC-W9:value:7 = YHC-W9
+*option:YHC-W9:value:8 = YHC-W9
+*option:YHC-W9:value:9 = YHC-W9
+*option:YHC-W9:value:10 = YHC-W9
+*option:YHC-W9:value:11 = YHC-W9
+*option:YHC-W9:value:12 = YHC-W9
+*option:YHC-W9:WindowParams:name  = YHC-W9
+*option:YHC-W9:WindowParams:panes = 4
+*option:YHC-W9:WindowParams:SHGC  = 0.45
+*option:YHC-W9:WindowParams:Uval  = 0.68
+*option:YHC-W9:cost:total   = 0   
+
+
 *attribute:end
 
 
@@ -1965,7 +2138,7 @@
 
 *option:CeilR60:value:1 =  CeilR60
 *option:CeilR60:value:2 =  NA
-*option:CeilR60:cost:total    =  498       !$498 is assumed cost for LEEP Kelowna optimization
+*option:CeilR60:cost:total    =  0      !$498 is assumed cost for LEEP Kelowna optimization
 
 *option:CeilR70:value:1 =  CeilR70
 *option:CeilR70:value:2 =  NA
@@ -1973,7 +2146,7 @@
 
 *option:CeilR80:value:1 =   NA   !CeilR80
 *option:CeilR80:value:2 =   80
-*option:CeilR80:cost:total    =   1972      !$1972 is assumed cost for LEEP Kelowna optimization
+*option:CeilR80:cost:total    =   0     !$1972 is assumed cost for LEEP Kelowna optimization
 
 *option:CeilR90:value:1 =   NA   !CeilR90
 *option:CeilR90:value:2 =   90
@@ -1981,7 +2154,7 @@
 
 *option:CeilR100:value:1 =  NA   !CeilR100
 *option:CeilR100:value:2 =  100
-*option:CeilR100:cost:total    = 3341        !$3341 is assumed cost for LEEP Kelowna optimization 
+*option:CeilR100:cost:total    = 0        !$3341 is assumed cost for LEEP Kelowna optimization 
 
 *option:CeilR110:value:1 =  NA   !CeilR110
 *option:CeilR110:value:2 =  110
@@ -2153,6 +2326,31 @@
 *option:YHC_R-61_30:value:1 = 0.1982
 *option:YHC_R-61_30:value:2 = 61.30
 *option:YHC_R-61_30:cost = 0
+
+!---------new wall options from RDH
+*option:YHC_R12_38:value:1 = 0.1982
+*option:YHC_R12_38:value:2 = 12.38
+*option:YHC_R12_38:cost = 0
+
+*option:YHC_R20_03:value:1 = 0.1982
+*option:YHC_R20_03:value:2 = 20.03
+*option:YHC_R20_03:cost = 0
+
+*option:YHC_R27_54:value:1 = 0.1982
+*option:YHC_R27_54:value:2 = 27.54
+*option:YHC_R27_54:cost = 0
+
+*option:YHC_R34_86:value:1 = 0.1982
+*option:YHC_R34_86:value:2 = 34.86
+*option:YHC_R34_86:cost = 0
+
+*option:YHC_R41_94:value:1 = 0.1982
+*option:YHC_R41_94:value:2 = 41.94
+*option:YHC_R41_94:cost = 0
+
+*option:YHC_R49_02:value:1 = 0.1982
+*option:YHC_R49_02:value:2 = 49.02
+*option:YHC_R49_02:cost = 0
 
 *attribute:end
 
@@ -2528,6 +2726,50 @@ Whitehorse Wall Options (Code is R28)
 *option:YukonR24_22:value:5 =   24.20             ! OR, User-specified R-value (Imperial), but not both!
 *option:YukonR24_22:cost:total    =   0
 
+
+*option:YukonR12_38:value:1 =   BaseR21Bri
+*option:YukonR12_38:value:2 =   BaseR21Vin
+*option:YukonR12_38:value:3 =   BaseR21Dry 
+*option:YukonR12_38:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR12_38:value:5 =   12.38          ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR12_38:cost:total    =   0
+
+*option:YukonR20.03:value:1 =   BaseR21Bri
+*option:YukonR20_03:value:2 =   BaseR21Vin
+*option:YukonR20_03:value:3 =   BaseR21Dry 
+*option:YukonR20_03:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR20_03:value:5 =   20.03          ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR20_03:cost:total    =   0
+
+*option:YukonR27_54:value:1 =   BaseR21Bri
+*option:YukonR27_54:value:2 =   BaseR21Vin
+*option:YukonR27_54:value:3 =   BaseR21Dry 
+*option:YukonR27_54:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR27_54:value:5 =   27.54          ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR27_54:cost:total    =   0
+
+*option:YukonR34_86:value:1 =   BaseR21Bri
+*option:YukonR34_86:value:2 =   BaseR21Vin
+*option:YukonR34_86:value:3 =   BaseR21Dry 
+*option:YukonR34_86:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR34_86:value:5 =   34.86          ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR34_86:cost:total    =   0
+
+*option:YukonR41_94:value:1 =   BaseR21Bri
+*option:YukonR41_94:value:2 =   BaseR21Vin
+*option:YukonR41_94:value:3 =   BaseR21Dry 
+*option:YukonR41_94:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR41_94:value:5 =   41.94          ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR41_94:cost:total    =   0
+
+*option:YukonR49_02:value:1 =   BaseR21Bri
+*option:YukonR49_02:value:2 =   BaseR21Vin
+*option:YukonR49_02:value:3 =   BaseR21Dry 
+*option:YukonR49_02:value:4 =   NA             ! Existing H2K code library wall name
+*option:YukonR49_02:value:5 =   49.02          ! OR, User-specified R-value (Imperial), but not both!
+*option:YukonR49_02:cost:total    =   0
+
+
 *attribute:end
 
 !--------------------------------------------------------------------------------------------
@@ -2571,6 +2813,31 @@ Whitehorse Wall Options (Code is R28)
 !------------------------------------------------------------
 ! YHC Foundation options - PWF with added interior insulation
 !------------------------------------------------------------
+! without slab insulation
+
+*option:BBIN_PWFR28:value:1  = BBIN_1_ALL
+*option:BBIN_PWFR28:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*option:BBIN_PWFR28:value:3  = 28        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*option:BBIN_PWFR28:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*option:BBIN_PWFR28:value:5  = 0         ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*option:BBIN_PWFR28:cost:total = 0
+
+*option:BBIN_PWFR36:value:1  = BBIN_1_ALL
+*option:BBIN_PWFR36:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*option:BBIN_PWFR36:value:3  = 36        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*option:BBIN_PWFR36:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*option:BBIN_PWFR36:value:5  = 0         ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*option:BBIN_PWFR36:cost:total = 0
+
+*option:BBIN_PWFR56:value:1  = BBIN_1_ALL
+*option:BBIN_PWFR56:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
+*option:BBIN_PWFR56:value:3  = 56        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
+*option:BBIN_PWFR56:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
+*option:BBIN_PWFR56:value:5  = 0         ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*option:BBIN_PWFR56:cost:total = 0
+
+
+! with slab insulation
 *option:BBIA_PWFR28_R10:value:1  = BBIA_2_ALL
 *option:BBIA_PWFR28_R10:value:2  = NA        ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
 *option:BBIA_PWFR28_R10:value:3  = 28        ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
@@ -2612,6 +2879,7 @@ Whitehorse Wall Options (Code is R28)
 *option:BBIA_PWFR56_R20:value:4  = 0         ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
 *option:BBIA_PWFR56_R20:value:5  = 20        ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
 *option:BBIA_PWFR56_R20:cost:total = 0
+
 
 *attribute:end
 

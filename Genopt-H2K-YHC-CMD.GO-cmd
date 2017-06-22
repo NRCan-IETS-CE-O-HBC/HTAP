@@ -35,7 +35,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-ACH; 
       Ini  = 1;
-      Values = "NA";//,ACH_3,ACH_1_5";//,ACH_7,ACH_5,ACH_3";//,ACH_1_5";//, ACH_1, ACH_0_5"; //NA";
+      Values = "NA";//,ACH_3,ACH_1_5";//,ACH_7,ACH_5,ACH_1";//,ACH_1_5";//, ACH_1, ACH_0_5"; //NA";
    }
 
    // Mainwalls
@@ -49,14 +49,14 @@ Vary{
       Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
       Ini     =  1;
       //Values = "NA";
-      Values  =  "NA";//,YHC_R-11_30,YHC_R-18_76,YHC_R-24_22,YHC_R-21_30,YHC_R-31_30,YHC_R-41_30,YHC_R-51_30,YHC_R-61_30";
+      Values  =  "NA,YHC_R12_38,YHC_R20_03,YHC_R27_54,YHC_R34_86,YHC_R41_94,YHC_R49_02";//"NA,YHC_R-11_30,YHC_R-18_76,YHC_R-24_22,YHC_R-21_30,YHC_R-31_30,YHC_R-41_30,YHC_R-51_30,YHC_R-61_30";
    }
 
    // H2K Foundations : OBC-min-R12
    Parameter{   // 
       Name    =  GOtag:Opt-H2KFoundation;
       Ini     =  1;
-      Values  = "NA";//,BBIA_PWFR28_R10";//,BBIA_PWFR28_R20,BBIA_PWFR36_R10,BBIA_PWFR36_R20,BBIA_PWFR56_R10,BBIA_PWFR56_R20";     
+      Values  = "NA";//,BBIA_PWFR28_R10,BBIA_PWFR28_R20,BBIA_PWFR36_R10,BBIA_PWFR36_R20,BBIA_PWFR56_R10,BBIA_PWFR56_R20";     
    } 
    
    // Foundation walls
@@ -84,14 +84,14 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-Ceilings;
       Ini     =  1;
-      Values  = "CeilR40,CeilR60,CeilR80,CeilR100";   //"CeilR50"NA,
+      Values  = "NA";//CeilR40,CeilR60,CeilR80,CeilR100";   //"CeilR50"NA,
    }    
   
   // Windows
   Parameter{   // 
       Name    =  GOtag:Opt-CasementWindows;
       Ini     =  1;
-      Values  =  "NA";//,HG-i89-Triple-B,HG-i89-Triple-A";//,LG-HP-Double,MG-HP-Double,MG-i89-Double,HG-HP-Triple,HG-avg-Triple,LG-avg-Triple,LG-i89-Triple-B,LG-i89-Triple-A,LG-HP-Triple";
+      Values  =  "NA,YHC-W1,YHC-W2,YHC-W3,YHC-W4,YHC-W5,YHC-W6";//,YHC-W7,YHC-W8,YHC-W9";//,HG-i89-Triple-B,HG-i89-Triple-A";//,LG-HP-Double,MG-HP-Double,MG-i89-Double,HG-HP-Triple,HG-avg-Triple,LG-avg-Triple,LG-i89-Triple-B,LG-i89-Triple-A,LG-HP-Triple";
    }    
    
   // Extra drywall:  OneSheet
@@ -121,7 +121,7 @@ Vary{
    Parameter{ //
       Name    = GOtag:Opt-DHWSystem;
       Ini     = 1; 
-      Values  = "NA";//,ElectricHP,ElectricStorage";//,HPHotWater";  //"NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";
+      Values  = "NA,ElectricHP,ElectricStorage";//,HPHotWater";  //"NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";
    }
   
    // DWHR-System

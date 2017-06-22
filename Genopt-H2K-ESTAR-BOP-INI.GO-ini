@@ -38,7 +38,7 @@ Simulation{
    // Simulator options - windows only.
    CallParameter {
 
-      Prefix = "Ruby ";
+      Prefix = "Ruby substitute-h2k.rb ";
       
       Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000-ESTAR-BOP.options -b C:\\H2K-CLI-Min\\User\\A01_ON_Z1_code_e.h2k";//A01_ON_Z1_coreBOP_e.h2k";// 
    }
