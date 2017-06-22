@@ -2666,6 +2666,17 @@
 *option:DblStud_10in_cell_R-34:value:2 = 33.2        !R33.2 from HPO R22+ Illustrated Guide, assuming 2x4 and 3" gap, R4/in for dense pack
 *option:DblStud_10in_cell_R-34:cost = 5530           !$5530 is assumed cost for Kelowna LEEP optimisation
 
+!-----------------------------------------------------------------------
+! Extra definitions interpolated by Remi for BC step codes. 
+!-----------------------------------------------------------------------
+
+*option: R-50 :value:1 = 0.308
+*option: R-50 :value:2 = 50        
+*option: R-50 :cost = 20000  
+
+*option: R-60 :value:1 = 0.377
+*option: R-60 :value:2 = 60      
+*option: R-60 :cost = 26000 
 
 !-----------------------------------------------------------------------
 ! YHC generic wall definitions
