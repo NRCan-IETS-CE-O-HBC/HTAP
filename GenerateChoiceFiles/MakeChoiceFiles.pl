@@ -178,7 +178,7 @@ foreach my $ChoiceFile (@choiceLists){
   $ChoiceFileList .= " $ChoiceFile , ";
   $files++; 
   
-  if ( $files > 5000 ){
+  if ( $files > 1000 ){
     $outputFile++; 
     
     
@@ -202,8 +202,9 @@ foreach my $ChoiceFile (@choiceLists){
     close (OUTPUTINI) ; 
     
     $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt BC-Step-Codes\\Genopt-BC-rerun-auto-$outputFile++.GO-ini\n"; 
-    $BatchCmds .= "cp BC-Step-Codes\\OutputListingAll.txt BC-Step-Codes\\TempResultsBatch$outputFile.txt\n"; 
-    $BatchCmds .= "rm BC-Step-Codes\\OutputListingAll.txt\n";
+    $BatchCmds .= "timeout /t 10 \n";
+    $BatchCmds .= "copy BC-Step-Codes\\OutputListingAll.txt C:\\Ruby4HTAP\\BC-Step-Codes\\Gdrive-res\\\AwsSync\\TempResultsBatch$outputFile.txt\n"; 
+    $BatchCmds .= "del BC-Step-Codes\\OutputListingAll.txt\n";
     
     
     $files = 0; 
