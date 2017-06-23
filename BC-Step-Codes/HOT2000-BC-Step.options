@@ -147,7 +147,7 @@
 *attribute:tag:9 = <OptAtt-Win3Con>
 *attribute:tag:10= <OptAtt-Win3Opt>
 *attribute:tag:11= <OptAtt-Wall4Con>
-*attribute:tag:12= <OptAtt-Wall4Opt>
+*attribute:tag:32= <OptAtt-Wall4Opt>
 *attribute:tag:13= <OptAtt-Wall4BC>
 *attribute:tag:14= <OptAtt-Win4Con>
 *attribute:tag:15= <OptAtt-Win4Opt>
@@ -182,7 +182,7 @@
 *option:single:value:9 = <OptAtt-windows-3-BackCON>
 *option:single:value:10= <OptAtt-windows-3-BackOPT>
 *option:single:value:11= <Opt-MainWall-Bri>
-*option:single:value:12= OPAQUE
+*option:single:value:32= OPAQUE
 *option:single:value:13= EXTERIOR
 *option:single:value:14= <OptAtt-windows-4-RightCON>
 *option:single:value:15= <OptAtt-windows-4-RightOPT>
@@ -217,7 +217,7 @@
 *option:semi:value:9 = <OptAtt-windows-3-BackCON>
 *option:semi:value:10= <OptAtt-windows-3-BackOPT>
 *option:semi:value:11= <Opt-MainWall-Bri>
-*option:semi:value:12= OPAQUE
+*option:semi:value:32= OPAQUE
 *option:semi:value:13= EXTERIOR
 *option:semi:value:14= <OptAtt-windows-4-RightCON>
 *option:semi:value:15= <OptAtt-windows-4-RightOPT>
@@ -251,7 +251,7 @@
 *option:row:value:9 = <OptAtt-windows-3-BackCON>
 *option:row:value:10= <OptAtt-windows-3-BackOPT>
 *option:row:value:11= int_wl
-*option:row:value:12= OPAQUE
+*option:row:value:32= OPAQUE
 *option:row:value:13= ADIABATIC
 *option:row:value:14= int_wl
 *option:row:value:15= OPAQUE
@@ -1517,7 +1517,7 @@
 *attribute:tag:9    = <win-wall-2-left>
 *attribute:tag:10   = <win-wall-3-right>
 *attribute:tag:11   = <win-wall-3-left>
-*attribute:tag:12   = <win-wall-4-right>
+*attribute:tag:32   = <win-wall-4-right>
 *attribute:tag:13   = <win-wall-4-left>
 *attribute:tag:14   = <gar-width>
 *attribute:tag:15   = <gar-length>
@@ -1536,7 +1536,7 @@
 *option:MattOtt_2st_garage:value:9    = 0.623
 *option:MattOtt_2st_garage:value:10   = 6.74
 *option:MattOtt_2st_garage:value:11   = 3.120
-*option:MattOtt_2st_garage:value:12   = 11.84807
+*option:MattOtt_2st_garage:value:32   = 11.84807
 *option:MattOtt_2st_garage:value:13   = 10.613
 *option:MattOtt_2st_garage:value:14   = 3.0
 *option:MattOtt_2st_garage:value:15   = 6.05
@@ -1555,7 +1555,7 @@
 *option:Van_80_2st:value:9    = 3.947
 *option:Van_80_2st:value:10   = 11.0
 *option:Van_80_2st:value:11   = 7.550
-*option:Van_80_2st:value:12   = 10.9913
+*option:Van_80_2st:value:32   = 10.9913
 *option:Van_80_2st:value:13   = 7.544
 *option:Van_80_2st:value:14   = 0
 *option:Van_80_2st:value:15   = 0
@@ -1574,7 +1574,7 @@
 *option:Van_3st_garage:value:9    = 1.617
 *option:Van_3st_garage:value:10   = 4.5
 *option:Van_3st_garage:value:11   = 2.5
-*option:Van_3st_garage:value:12   = 10.667
+*option:Van_3st_garage:value:32   = 10.667
 *option:Van_3st_garage:value:13   = 9.550
 *option:Van_3st_garage:value:14   = 3.3019
 *option:Van_3st_garage:value:15   = 3.5052
@@ -1593,7 +1593,7 @@
 *option:Van_2st_garage:value:9    = 1.75
 *option:Van_2st_garage:value:10   = 4.5
 *option:Van_2st_garage:value:11   = 2.5
-*option:Van_2st_garage:value:12   = 12
+*option:Van_2st_garage:value:32   = 12
 *option:Van_2st_garage:value:13   = 10.750
 *option:Van_2st_garage:value:14   = 3.3019
 *option:Van_2st_garage:value:15   = 3.5052
@@ -1612,7 +1612,7 @@
 *option:NWT_Access:value:9    = 2.724
 *option:NWT_Access:value:10   = 8.034
 *option:NWT_Access:value:11   = 6.328
-*option:NWT_Access:value:12   = 11.0824
+*option:NWT_Access:value:32   = 11.0824
 *option:NWT_Access:value:13   = 9.860
 *option:NWT_Access:value:14   = 0
 *option:NWT_Access:value:15   = 0
@@ -1631,7 +1631,7 @@
 *option:NWT_1986:value:9    = 1.235
 *option:NWT_1986:value:10   = 7.120
 *option:NWT_1986:value:11   = 6.358
-*option:NWT_1986:value:12   = 6.852
+*option:NWT_1986:value:32   = 6.852
 *option:NWT_1986:value:13   = 4.646
 *option:NWT_1986:value:14   = 0.
 *option:NWT_1986:value:15   = 0.
@@ -1650,7 +1650,7 @@
 *option:BC_LEEP:value:9    = 0.51
 *option:BC_LEEP:value:10   = 6.104
 *option:BC_LEEP:value:11   = 3.066
-*option:BC_LEEP:value:12   = 8.853
+*option:BC_LEEP:value:32   = 8.853
 *option:BC_LEEP:value:13   = 6.234
 *option:BC_LEEP:value:14   = 5.94
 *option:BC_LEEP:value:15   = 6.604
@@ -1669,7 +1669,7 @@
 *option:VALIDATION-2Story:value:9    = 0.502
 *option:VALIDATION-2Story:value:10   = 9.500
 *option:VALIDATION-2Story:value:11   = 9.498
-*option:VALIDATION-2Story:value:12   = 9.5
+*option:VALIDATION-2Story:value:32   = 9.5
 *option:VALIDATION-2Story:value:13   = 9.498
 *option:VALIDATION-2Story:value:14   = 0.5 
 *option:VALIDATION-2Story:value:15   = 0.5
@@ -1782,7 +1782,7 @@
 *attribute:tag:9 = <Opt-win-SE-CON>     ! H2K SE windows lib code name
 *attribute:tag:10 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
 *attribute:tag:11 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
-*attribute:tag:12 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
+*attribute:tag:32 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
 *attribute:default = DoubleLowEHardCoatArgFill
 
 *option:NA:value:1 = NA   
@@ -1796,7 +1796,7 @@
 *option:NA:value:9 = NA   
 *option:NA:value:10 = NA  
 *option:NA:value:11 = NA  
-*option:NA:value:12 = NA  
+*option:NA:value:32 = NA  
 *option:NA:cost:total = 0.0
 
 
@@ -1812,7 +1812,7 @@
 *option:DoubleLowEHardCoatAirFill:value:9 = DblLeHcAir
 *option:DoubleLowEHardCoatAirFill:value:10 = DblLeHcAir
 *option:DoubleLowEHardCoatAirFill:value:11 = DblLeHcAir
-*option:DoubleLowEHardCoatAirFill:value:12 = DblLeHcAir
+*option:DoubleLowEHardCoatAirFill:value:32 = DblLeHcAir
 *option:DoubleLowEHardCoatAirFill:cost:total    = 0.0 ! Value changed for Van_2st_80_retro geometry. Originally 10584
 
 *option:DoubleLowEHardCoatArgFill:value:1 = DblLeHcArg   
@@ -1826,7 +1826,7 @@
 *option:DoubleLowEHardCoatArgFill:value:9 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:value:10 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:value:11 = DblLeHcArg 
-*option:DoubleLowEHardCoatArgFill:value:12 = DblLeHcArg 
+*option:DoubleLowEHardCoatArgFill:value:32 = DblLeHcArg 
 *option:DoubleLowEHardCoatArgFill:cost:total    = 0 ! Originally 11727
 
 *option:TripleLowEHardCoatKryFill:value:1 = TplLeHcKry   
@@ -1840,7 +1840,7 @@
 *option:TripleLowEHardCoatKryFill:value:9 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:value:10 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:value:11 = TplLeHcKry
-*option:TripleLowEHardCoatKryFill:value:12 = TplLeHcKry
+*option:TripleLowEHardCoatKryFill:value:32 = TplLeHcKry
 *option:TripleLowEHardCoatKryFill:cost:total    = 0 ! Originally 20871
 
 *option:TripleLowESoftCoatKryFill:value:1 = TplLeScKry   
@@ -1854,7 +1854,7 @@
 *option:TripleLowESoftCoatKryFill:value:9 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:value:10 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:value:11 = TplLeScKry
-*option:TripleLowESoftCoatKryFill:value:12 = TplLeScKry
+*option:TripleLowESoftCoatKryFill:value:32 = TplLeScKry
 *option:TripleLowESoftCoatKryFill:cost:total    = 0 ! Originally 19310
 
 *option:DoubleLowESoftCoatArgFill:value:1 = DblLeScArg   
@@ -1868,7 +1868,7 @@
 *option:DoubleLowESoftCoatArgFill:value:9 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:value:10 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:value:11 = DblLeScArg
-*option:DoubleLowESoftCoatArgFill:value:12 = DblLeScArg
+*option:DoubleLowESoftCoatArgFill:value:32 = DblLeScArg
 *option:DoubleLowESoftCoatArgFill:cost:total    = 0 	! Originally 10965
 
 !---------------------------------------------------------------------
@@ -1885,7 +1885,7 @@
 *option:DoubleArgon_HighGainOnSouth:value:9 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:10 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:11 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:12 = DblLeScArg
+*option:DoubleArgon_HighGainOnSouth:value:32 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:cost:total = 0
 
 *option:TripleKrypton_HighGainOnSouth:value:1 = TplLeHcKry
@@ -1899,7 +1899,7 @@
 *option:TripleKrypton_HighGainOnSouth:value:9 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:value:10 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:value:11 = TplLeScKry
-*option:TripleKrypton_HighGainOnSouth:value:12 = TplLeScKry
+*option:TripleKrypton_HighGainOnSouth:value:32 = TplLeScKry
 *option:TripleKrypton_HighGainOnSouth:cost:total  = 0	
 
 *option:Wind1_trp_CL :value:1 = Wind1_trp_CL     
@@ -1913,7 +1913,7 @@
 *option:Wind1_trp_CL :value:9 = Wind1_trp_CL
 *option:Wind1_trp_CL :value:10 = Wind1_trp_CL
 *option:Wind1_trp_CL :value:11 = Wind1_trp_CL
-*option:Wind1_trp_CL :value:12 = Wind1_trp_CL
+*option:Wind1_trp_CL :value:32 = Wind1_trp_CL
 *option:Wind1_trp_CL :cost:total    = 0   ! this is used as the base case for NWT, so no cost. origianlly $20551
 
 *option:Win2scLE1_tr:value:1 = Win2scLE1_tr   
@@ -1927,7 +1927,7 @@
 *option:Win2scLE1_tr:value:9 = Win2scLE1_tr 
 *option:Win2scLE1_tr:value:10 = Win2scLE1_tr 
 *option:Win2scLE1_tr:value:11 = Win2scLE1_tr 
-*option:Win2scLE1_tr:value:12 = Win2scLE1_tr 
+*option:Win2scLE1_tr:value:32 = Win2scLE1_tr 
 *option:Win2scLE1_tr:cost:total   = 0
 
 *option:Win3hcLE1_tr:value:1 = Win3hcLE1_tr   
@@ -1941,7 +1941,7 @@
 *option:Win3hcLE1_tr:value:9 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:value:10 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:value:11 = Win3hcLE1_tr
-*option:Win3hcLE1_tr:value:12 = Win3hcLE1_tr
+*option:Win3hcLE1_tr:value:32 = Win3hcLE1_tr
 *option:Win3hcLE1_tr:cost:total   = 0
 
 *option:Win4scLE2_tr:value:1 = Win4scLE2_tr    
@@ -1955,7 +1955,7 @@
 *option:Win4scLE2_tr:value:9 = Win4scLE2_tr
 *option:Win4scLE2_tr:value:10 = Win4scLE2_tr
 *option:Win4scLE2_tr:value:11 = Win4scLE2_tr
-*option:Win4scLE2_tr:value:12 = Win4scLE2_tr
+*option:Win4scLE2_tr:value:32 = Win4scLE2_tr
 *option:Win4scLE2_tr:cost:total   = 0
 
 *option:Win5hcLE2_tr:value:1 = Win5hcLE2_tr   
@@ -1969,7 +1969,7 @@
 *option:Win5hcLE2_tr:value:9 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:value:10 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:value:11 = Win5hcLE2_tr
-*option:Win5hcLE2_tr:value:12 = Win5hcLE2_tr
+*option:Win5hcLE2_tr:value:32 = Win5hcLE2_tr
 *option:Win5hcLE2_tr:cost:total   = 0
 
 *option:Win6_qd_CL:value:1 = Win6_qd_CL
@@ -1983,7 +1983,7 @@
 *option:Win6_qd_CL:value:9 = Win6_qd_CL
 *option:Win6_qd_CL:value:10 = Win6_qd_CL
 *option:Win6_qd_CL:value:11 = Win6_qd_CL
-*option:Win6_qd_CL:value:12 = Win6_qd_CL
+*option:Win6_qd_CL:value:32 = Win6_qd_CL
 *option:Win6_qd_CL:cost:total   = 0
 
 *option:Triple_win_shutter:value:1 = Wind3SHUTTER
@@ -1997,7 +1997,7 @@
 *option:Triple_win_shutter:value:9 = Wind3SHUTTER
 *option:Triple_win_shutter:value:10 = Wind3SHUTTER
 *option:Triple_win_shutter:value:11 = Wind3SHUTTER
-*option:Triple_win_shutter:value:12 = Wind3SHUTTER
+*option:Triple_win_shutter:value:32 = Wind3SHUTTER
 *option:Triple_win_shutter:cost:total   = 0
 
 *option:Quad_win_shutter:value:1 = Wind4SHUTTER
@@ -2011,7 +2011,7 @@
 *option:Quad_win_shutter:value:9 = Wind4SHUTTER
 *option:Quad_win_shutter:value:10 = Wind4SHUTTER
 *option:Quad_win_shutter:value:11 = Wind4SHUTTER
-*option:Quad_win_shutter:value:12 = Wind4SHUTTER
+*option:Quad_win_shutter:value:32 = Wind4SHUTTER
 *option:Quad_win_shutter:cost:total   = 0
 
 !---------------------------------------------------------------------
@@ -2131,7 +2131,7 @@
 *option:HG-i89-Triple-B:value:9 = HG-i89-Triple-B
 *option:HG-i89-Triple-B:value:10 = HG-i89-Triple-B
 *option:HG-i89-Triple-B:value:11 = HG-i89-Triple-B
-*option:HG-i89-Triple-B:value:12 = HG-i89-Triple-B
+*option:HG-i89-Triple-B:value:32 = HG-i89-Triple-B
 *option:HG-i89-Triple-B:WindowParams:name  = HG-i89-Triple-B
 *option:HG-i89-Triple-B:WindowParams:panes = 3 
 *option:HG-i89-Triple-B:WindowParams:SHGC  = 0.5
@@ -2150,7 +2150,7 @@
 *option:HG-i89-Triple-A:value:9 = HG-i89-Triple-A
 *option:HG-i89-Triple-A:value:10 = HG-i89-Triple-A
 *option:HG-i89-Triple-A:value:11 = HG-i89-Triple-A
-*option:HG-i89-Triple-A:value:12 = HG-i89-Triple-A
+*option:HG-i89-Triple-A:value:32 = HG-i89-Triple-A
 *option:HG-i89-Triple-A:WindowParams:name  = HG-i89-Triple-A
 *option:HG-i89-Triple-A:WindowParams:panes = 3 
 *option:HG-i89-Triple-A:WindowParams:SHGC  = 0.37
@@ -2168,7 +2168,7 @@
 *option:LG-HP-Double:value:9 = LG-HP-Double
 *option:LG-HP-Double:value:10 = LG-HP-Double
 *option:LG-HP-Double:value:11 = LG-HP-Double
-*option:LG-HP-Double:value:12 = LG-HP-Double
+*option:LG-HP-Double:value:32 = LG-HP-Double
 *option:LG-HP-Double:WindowParams:name  = LG-HP-Double
 *option:LG-HP-Double:WindowParams:panes = 2 
 *option:LG-HP-Double:WindowParams:SHGC  = 0.18
@@ -2186,7 +2186,7 @@
 *option:MG-HP-Double:value:9 = MG-HP-Double
 *option:MG-HP-Double:value:10 = MG-HP-Double
 *option:MG-HP-Double:value:11 = MG-HP-Double
-*option:MG-HP-Double:value:12 = MG-HP-Double
+*option:MG-HP-Double:value:32 = MG-HP-Double
 *option:MG-HP-Double:WindowParams:name  = MG-HP-Double
 *option:MG-HP-Double:WindowParams:panes = 2 
 *option:MG-HP-Double:WindowParams:SHGC  = 0.33
@@ -2204,7 +2204,7 @@
 *option:MG-i89-Double:value:9 = MG-i89-Double
 *option:MG-i89-Double:value:10 = MG-i89-Double
 *option:MG-i89-Double:value:11 = MG-i89-Double
-*option:MG-i89-Double:value:12 = MG-i89-Double
+*option:MG-i89-Double:value:32 = MG-i89-Double
 *option:MG-i89-Double:WindowParams:name  = MG-i89-Double
 *option:MG-i89-Double:WindowParams:panes = 2 
 *option:MG-i89-Double:WindowParams:SHGC  = 0.33
@@ -2222,7 +2222,7 @@
 *option:HG-HP-Triple:value:9 = HG-HP-Triple
 *option:HG-HP-Triple:value:10 = HG-HP-Triple
 *option:HG-HP-Triple:value:11 = HG-HP-Triple
-*option:HG-HP-Triple:value:12 = HG-HP-Triple
+*option:HG-HP-Triple:value:32 = HG-HP-Triple
 *option:HG-HP-Triple:WindowParams:name  = HG-HP-Triple
 *option:HG-HP-Triple:WindowParams:panes = 3
 *option:HG-HP-Triple:WindowParams:SHGC  = 0.35
@@ -2240,7 +2240,7 @@
 *option:HG-VHG-Double:value:9 = HG-VHG-Double
 *option:HG-VHG-Double:value:10 = HG-VHG-Double
 *option:HG-VHG-Double:value:11 = HG-VHG-Double
-*option:HG-VHG-Double:value:12 = HG-VHG-Double
+*option:HG-VHG-Double:value:32 = HG-VHG-Double
 *option:HG-VHG-Double:WindowParams:name  = HG-VHG-Double
 *option:HG-VHG-Double:WindowParams:panes = 2
 *option:HG-VHG-Double:WindowParams:SHGC  = 0.59
@@ -2258,7 +2258,7 @@
 *option:HG-avg-Double:value:9 = HG-avg-Double
 *option:HG-avg-Double:value:10 = HG-avg-Double
 *option:HG-avg-Double:value:11 = HG-avg-Double
-*option:HG-avg-Double:value:12 = HG-avg-Double
+*option:HG-avg-Double:value:32 = HG-avg-Double
 *option:HG-avg-Double:WindowParams:name  = HG-avg-Double
 *option:HG-avg-Double:WindowParams:panes = 2
 *option:HG-avg-Double:WindowParams:SHGC  = 0.51
@@ -2277,7 +2277,7 @@
 *option:HG-avg-Triple:value:9 = HG-avg-Triple
 *option:HG-avg-Triple:value:10 = HG-avg-Triple
 *option:HG-avg-Triple:value:11 = HG-avg-Triple
-*option:HG-avg-Triple:value:12 = HG-avg-Triple
+*option:HG-avg-Triple:value:32 = HG-avg-Triple
 *option:HG-avg-Triple:WindowParams:name  = HG-avg-Triple
 *option:HG-avg-Triple:WindowParams:panes = 3
 *option:HG-avg-Triple:WindowParams:SHGC  = 0.6
@@ -2296,7 +2296,7 @@
 *option:LG-avg-Triple:value:9 = LG-avg-Triple
 *option:LG-avg-Triple:value:10 = LG-avg-Triple
 *option:LG-avg-Triple:value:11 = LG-avg-Triple
-*option:LG-avg-Triple:value:12 = LG-avg-Triple
+*option:LG-avg-Triple:value:32 = LG-avg-Triple
 *option:LG-avg-Triple:WindowParams:name  = LG-avg-Triple
 *option:LG-avg-Triple:WindowParams:panes = 3
 *option:LG-avg-Triple:WindowParams:SHGC  = 0.2
@@ -2315,7 +2315,7 @@
 *option:LG-i89-Triple-B:value:9 = LG-i89-Triple-B
 *option:LG-i89-Triple-B:value:10 = LG-i89-Triple-B
 *option:LG-i89-Triple-B:value:11 = LG-i89-Triple-B
-*option:LG-i89-Triple-B:value:12 = LG-i89-Triple-B
+*option:LG-i89-Triple-B:value:32 = LG-i89-Triple-B
 *option:LG-i89-Triple-B:WindowParams:name  = LG-i89-Triple-B
 *option:LG-i89-Triple-B:WindowParams:panes = 3 
 *option:LG-i89-Triple-B:WindowParams:SHGC  = 0.18
@@ -2333,7 +2333,7 @@
 *option:LG-i89-Triple-A:value:9 = LG-i89-Triple-A
 *option:LG-i89-Triple-A:value:10 = LG-i89-Triple-A
 *option:LG-i89-Triple-A:value:11 = LG-i89-Triple-A
-*option:LG-i89-Triple-A:value:12 = LG-i89-Triple-A
+*option:LG-i89-Triple-A:value:32 = LG-i89-Triple-A
 *option:LG-i89-Triple-A:WindowParams:name  = LG-i89-Triple-A
 *option:LG-i89-Triple-A:WindowParams:panes = 3 
 *option:LG-i89-Triple-A:WindowParams:SHGC  = 0.14
@@ -2352,7 +2352,7 @@
 *option:LG-HP-Triple:value:9 = LG-HP-Triple
 *option:LG-HP-Triple:value:10 = LG-HP-Triple
 *option:LG-HP-Triple:value:11 = LG-HP-Triple
-*option:LG-HP-Triple:value:12 = LG-HP-Triple
+*option:LG-HP-Triple:value:32 = LG-HP-Triple
 *option:LG-HP-Triple:WindowParams:name  = LG-HP-Triple
 *option:LG-HP-Triple:WindowParams:panes = 3
 *option:LG-HP-Triple:WindowParams:SHGC  = 0.18
@@ -2370,7 +2370,7 @@
 *option:LG-avg-Double:value:9 = LG-avg-Double
 *option:LG-avg-Double:value:10 = LG-avg-Double
 *option:LG-avg-Double:value:11 = LG-avg-Double
-*option:LG-avg-Double:value:12 = LG-avg-Double
+*option:LG-avg-Double:value:32 = LG-avg-Double
 *option:LG-avg-Double:WindowParams:name  = LG-avg-Double
 *option:LG-avg-Double:WindowParams:panes = 2
 *option:LG-avg-Double:WindowParams:SHGC  = 0.33
@@ -3838,7 +3838,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:10  = Opt-H2K-Type1EqpType    ! H2K: Heating system equipment type --> depends on fuel and SysType1
 *attribute:tag:11  = Opt-H2K-Type1CapOpt     ! H2K: 1:UserSpec, 2:Calculated
 ! 12-14: Type 1 tags - Type 1 equipment only 
-*attribute:tag:12  = Opt-H2K-Type1CapVal     ! H2K: Type 1: Capacity value. 
+*attribute:tag:32  = Opt-H2K-Type1CapVal     ! H2K: Type 1: Capacity value. 
 *attribute:tag:13  = Opt-H2K-Type1EffType    ! H2K: Type 1: true=SS, false=AFUE
 *attribute:tag:14  = Opt-H2K-Type1EffVal     ! H2K: Type 1: Efficiency value (0->100)
 ! 15-16: Fan tags, needed for all definitions 
@@ -3896,7 +3896,7 @@ Whitehorse Wall Options (Code is R28)
 *option:NA:value:9  = NA
 *option:NA:value:10 = NA
 *option:NA:value:11 = NA
-*option:NA:value:12 = NA
+*option:NA:value:32 = NA
 *option:NA:value:13 = NA
 *option:NA:value:14 = NA
 *option:NA:value:15 = NA
@@ -3949,7 +3949,7 @@ Whitehorse Wall Options (Code is R28)
 *option:basefurnace:value:9 = 2
 *option:basefurnace:value:10 = 2       ! Spark ignition
 *option:basefurnace:value:11 = 2       ! Calculated
-*option:basefurnace:value:12 = NA      ! Capacity value will be calculated
+*option:basefurnace:value:32 = NA      ! Capacity value will be calculated
 *option:basefurnace:value:13 = true    ! SS
 *option:basefurnace:value:14 = 92      ! Efficiency
 *option:basefurnace:value:15 = 1       ! Auto fan control
@@ -3967,7 +3967,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-ecm:value:9 = 2
 *option:gas-furnace-ecm:value:10 = 2       ! Spark ignition
 *option:gas-furnace-ecm:value:11 = 2       ! User specified capacity
-*option:gas-furnace-ecm:value:12 = NA      ! Low capacity furnace 
+*option:gas-furnace-ecm:value:32 = NA      ! Low capacity furnace 
 *option:gas-furnace-ecm:value:13 = true    ! SS
 *option:gas-furnace-ecm:value:14 = 95      ! Efficiency
 *option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
@@ -3985,7 +3985,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-psc:value:9 = 2
 *option:gas-furnace-psc:value:10 = 2       ! Spark ignition
 *option:gas-furnace-psc:value:11 = 2       ! User specified
-*option:gas-furnace-psc:value:12 = NA      ! Capacity value
+*option:gas-furnace-psc:value:32 = NA      ! Capacity value
 *option:gas-furnace-psc:value:13 = true    ! SS
 *option:gas-furnace-psc:value:14 = 94      ! Efficiency
 *option:gas-furnace-psc:value:15 = 1       ! Auto fan control
@@ -4003,7 +4003,7 @@ Whitehorse Wall Options (Code is R28)
 *option:elec-baseboard:value:9 = NA
 *option:elec-baseboard:value:10 = NA
 *option:elec-baseboard:value:11 = 2
-*option:elec-baseboard:value:12 = NA
+*option:elec-baseboard:value:32 = NA
 *option:elec-baseboard:value:13 = NA
 *option:elec-baseboard:value:14 = NA
 *option:elec-baseboard:value:15 = NA
@@ -4030,7 +4030,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:CCASHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP:value:12 =  6                    ! H2K: Capacity value.     
+*option:CCASHP:value:32 =  6                    ! H2K: Capacity value.     
 *option:CCASHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -4058,7 +4058,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP-ecm:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:CCASHP-ecm:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP-ecm:value:12 =  NA                    ! H2K: Capacity value.     
+*option:CCASHP-ecm:value:32 =  NA                    ! H2K: Capacity value.     
 *option:CCASHP-ecm:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP-ecm:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP-ecm:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -4087,7 +4087,7 @@ Reflects southern Ontario costs
 *option:GSHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:GSHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:GSHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:GSHP:value:12 =  6                    ! H2K: Capacity value.     
+*option:GSHP:value:32 =  6                    ! H2K: Capacity value.     
 *option:GSHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:GSHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:GSHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -4112,11 +4112,13 @@ Reflects southern Ontario costs
 *option:ComboHeatA:value:8 = None                ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
 *option:ComboHeatA:value:9 = 2                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets  
 *option:ComboHeatA:value:10 = 2                  ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:ComboHeatA:value:11 = 2                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated (NOTE: P9 DOES NOT HAVE A "CALCULATED" MODE!)
-*option:ComboHeatA:value:12 =  NA ! 15000              ! H2K: Type 1: Capacity value. 
-						  ! = 43750              ! QUAD
-                          ! = 70000              ! 11 unit ROW
-                          ! = 115000             ! MURB
+*option:ComboHeatA:value:11 = 1                  ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated (NOTE: P9 DOES NOT HAVE A "CALCULATED" MODE!)
+*option[Opt-Archetype>SmallSFD]:ComboHeatA:value:32  =  15000 ! 15000              ! H2K: Type 1: Capacity value. 
+*option[Opt-Archetype>MediumSFD]:ComboHeatA:value:32 =  29000
+*option[Opt-Archetype>LargeSFD]:ComboHeatA:value:32  =  40000
+*option[Opt-Archetype>Quadplex]:ComboHeatA:value:32  =  43750              ! QUAD
+*option[Opt-Archetype>Rowhouse]:ComboHeatA:value:32  =  70000              ! 11 unit ROW
+*option[Opt-Archetype>MURB]:ComboHeatA:value:32  =  115000             ! MURB
 *option:ComboHeatA:value:13 = true               ! H2K: Type 1: true=SS, false=AFUE
 *option:ComboHeatA:value:14 = 95                 ! H2K: Type 1: Efficiency value (0->100)
 *option:ComboHeatA:value:15 = 1                  ! H2K: 1:Auto, 2:Continuous   
@@ -4130,6 +4132,12 @@ Reflects southern Ontario costs
                           !  = 21875            ! QUAD						  
                           !  = 35000            ! Row
                           !  = 58300            ! MURB
+*option[Opt-Archetype>SmallSFD]:ComboHeatA:value:32  =  15000 ! 15000              ! H2K: Type 1: Capacity value. 
+*option[Opt-Archetype>MediumSFD]:ComboHeatA:value:32 =  29000
+*option[Opt-Archetype>LargeSFD]:ComboHeatA:value:32  =  40000
+*option[Opt-Archetype>Quadplex]:ComboHeatA:value:32  =  43750              ! QUAD
+*option[Opt-Archetype>Rowhouse]:ComboHeatA:value:32  =  70000              ! 11 unit ROW
+*option[Opt-Archetype>MURB]:ComboHeatA:value:32      =  115000                                                    
 *option:ComboHeatA:value:33  = 95                ! P9 Recovery efficiency
 *option:ComboHeatA:value:34  = 7                 ! P9 Ctl power (W)
 *option:ComboHeatA:value:35  = 74                ! P9 Circ power (W)
@@ -5157,8 +5165,8 @@ Reflects southern Ontario costs
 *option:8-12:value:1 = 0.667
 *option:8-12:cost:total  = 0
 
-*option:12-12:value:1 = 1.000
-*option:12-12:cost:total  = 0
+*option:32-12:value:1 = 1.000
+*option:32-12:cost:total  = 0
 
 *attribute:end
 

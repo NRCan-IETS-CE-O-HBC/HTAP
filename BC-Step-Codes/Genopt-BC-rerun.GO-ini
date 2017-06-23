@@ -150,7 +150,7 @@ Simulation{
 Optimization{
    Files{
       Command {
-         File1 = "Genopt-BC-rerun.GO-cmd";
+         File1 = "Genopt-BC-rerun-1.GO-cmd";
          
       }
    }
