@@ -30,6 +30,7 @@ if (!@ARGV){
   die;
 }
 
+my @choiceLists;
 
 my $OptListFile = $ARGV[0];
 
@@ -40,7 +41,7 @@ my @choiceAttKeys;
 my @choiceAttValues;
 my %choiceHash = ();
 
-
+my $NumFiles = 0; 
 my $ChoiceFileList =""; 
 
 
@@ -130,10 +131,14 @@ while ( my $line = <OPTLISTFILE> ){
         print ( "> $ID : Generating scenario: $upgrades_name   \n"); 
       
         # Generate corresponding Choice File
-        WriteChoiceFile($choiceFilename); 
+        #WriteChoiceFile($choiceFilename); 
+      
+        push @choiceLists, $choiceFilename; 
+        
+        $NumFiles++;
       
         # Append name to list of choice files to be run. 
-        $ChoiceFileList .= " $choiceFilename , ";       
+    
       }
     }
   }
@@ -143,8 +148,104 @@ while ( my $line = <OPTLISTFILE> ){
 
 close (OPTLISTFILE);
 
+
+
+$ChoiceFileList = ""; 
+
+my $files = 0; 
+
+my $TemplateTxt = ""; 
+open(CMDTEMPLATE, "../BC-Step-Codes/Genopt-BC-rerun-template.GO-cmd") or die ("could not open ../BC-Step-Codes/Genopt-BC-rerun-template.GO-cmd") ; 
+while ( my $Line = <CMDTEMPLATE> ){
+  $TemplateTxt .= $Line;   
+}
+close (CMDTEMPLATE); 
+
+my $TemplateIniTxt = ""; 
+open(INITEMPLATE, "../BC-Step-Codes/Genopt-BC-rerun-template.GO-ini") or die ("could not open ../BC-Step-Codes/Genopt-BC-rerun-template.GO-ini") ; 
+while ( my $Line = <INITEMPLATE> ){
+  $TemplateIniTxt .= $Line;   
+}
+close (INITEMPLATE); 
+
+
+
+
+my $outputFile = 0; 
+my $BatchCmds = ""; 
+
+foreach my $ChoiceFile (@choiceLists){ 
+  $ChoiceFileList .= " $ChoiceFile , ";
+  $files++; 
+  
+  if ( $files > 5000 ){
+    $outputFile++; 
+    
+    
+    $ChoiceFileList =~ s/\s*,\s*$//g; 
+    $ChoiceFileList =~ s/\.\///g; 
+    
+    my $OutputTxt =  $TemplateTxt;
+    $OutputTxt =~ s/___FILES_GO_HERE___/$ChoiceFileList/g; 
+    
+    
+    
+    open( OUTPUTCMD, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO-cmd" ) ; 
+    print OUTPUTCMD $OutputTxt; 
+    close (OUTPUTCMD) ; 
+    
+    my $IniTxt = $TemplateIniTxt; 
+    $IniTxt =~ s/___CMD_FILE_GOES_HERE___/Genopt-BC-rerun-auto-$outputFile++.GO-cmd/g; 
+    
+    open( OUTPUTINI, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO-ini" ) ; 
+    print OUTPUTINI $IniTxt; 
+    close (OUTPUTINI) ; 
+    
+    $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt BC-Step-Codes\\Genopt-BC-rerun-auto-$outputFile++.GO-ini\n"; 
+    $BatchCmds .= "cp BC-Step-Codes\\OutputListingAll.txt BC-Step-Codes\\TempResultsBatch$outputFile.txt\n"; 
+    $BatchCmds .= "rm BC-Step-Codes\\OutputListingAll.txt\n";
+    
+    
+    $files = 0; 
+    $ChoiceFileList = ""; 
+  
+  
+  
+  }
+  
+}
+
+    open( OUTPUTBATCH, ">../Java-Runs.bat" ) ; 
+    print OUTPUTBATCH $BatchCmds; 
+    close (OUTPUTBATCH) ; 
+
+
+
+
+
+
+ 
+
+$outputFile++; 
+
+
 $ChoiceFileList =~ s/\s*,\s*$//g; 
 $ChoiceFileList =~ s/\.\///g; 
+
+my $OutputTxt =  $TemplateTxt;
+$OutputTxt =~ s/___FILES_GO_HERE___/$ChoiceFileList/g; 
+
+open( OUTPUTCMD, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO.cmd" ) ; 
+
+print OUTPUTCMD $OutputTxt; 
+
+close (OUTPUTCMD) ; 
+
+$files = 0; 
+$ChoiceFileList = ""; 
+  
+  
+
 
 print "\n\n CHOICE LIST ->$ChoiceFileList<- \n"; 
 
