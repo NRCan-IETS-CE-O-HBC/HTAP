@@ -200,7 +200,8 @@ foreach my $ChoiceFile (@choiceLists){
     open( OUTPUTINI, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO-ini" ) ; 
     print OUTPUTINI $IniTxt; 
     close (OUTPUTINI) ; 
-    
+    $BatchCmds .= "javaws -clearcache \n";
+     $BatchCmds .= "javaws -uninstall \n";
     $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt BC-Step-Codes\\Genopt-BC-rerun-auto-$outputFile++.GO-ini\n"; 
     $BatchCmds .= "timeout /t 10 \n";
     $BatchCmds .= "copy BC-Step-Codes\\OutputListingAll.txt C:\\Ruby4HTAP\\BC-Step-Codes\\Gdrive-res\\\AwsSync\\TempResultsBatch$outputFile.txt\n"; 
