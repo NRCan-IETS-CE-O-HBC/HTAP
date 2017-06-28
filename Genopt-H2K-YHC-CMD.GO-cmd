@@ -35,7 +35,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-ACH; 
       Ini  = 1;
-      Values = "NA";//,ACH_3,ACH_1_5";//,ACH_7,ACH_5,ACH_1";//,ACH_1_5";//, ACH_1, ACH_0_5"; //NA";
+      Values = "NA,ACH_7,ACH_5,ACH_4,ACH_3,ACH_2,ACH_1_5,ACH_1,ACH_0_5"; //NA";
    }
 
    // Mainwalls
@@ -56,7 +56,7 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-H2KFoundation;
       Ini     =  1;
-      Values  = "NA";//,BBIA_PWFR28_R10,BBIA_PWFR28_R20,BBIA_PWFR36_R10,BBIA_PWFR36_R20,BBIA_PWFR56_R10,BBIA_PWFR56_R20";     
+      Values  = "NA,BBIN_PWFR28,BBIN_PWFR36,BBIN_PWFR56,BBIA_PWFR28_R10,BBIA_PWFR28_R20,BBIA_PWFR36_R10,BBIA_PWFR36_R20,BBIA_PWFR56_R10,BBIA_PWFR56_R20"; 
    } 
    
    // Foundation walls
@@ -84,7 +84,7 @@ Vary{
    Parameter{   // 
       Name    =  GOtag:Opt-Ceilings;
       Ini     =  1;
-      Values  = "NA";//CeilR40,CeilR60,CeilR80,CeilR100";   //"CeilR50"NA,
+      Values  = "NA,CeilR40,CeilR60,CeilR80,CeilR100";   //"CeilR50"NA,
    }    
   
   // Windows
@@ -121,7 +121,7 @@ Vary{
    Parameter{ //
       Name    = GOtag:Opt-DHWSystem;
       Ini     = 1; 
-      Values  = "NA,ElectricHP,ElectricStorage";//,HPHotWater";  //"NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";
+      Values  = "NA";//,ElectricHP,ElectricStorage";//,HPHotWater";  //"NA, GasInstantaneous, ElectricStorage, ElectricHP, HPHotWater";
    }
   
    // DWHR-System
