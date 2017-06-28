@@ -131,7 +131,7 @@ while ( my $line = <OPTLISTFILE> ){
         print ( "> $ID : Generating scenario: $upgrades_name   \n"); 
       
         # Generate corresponding Choice File
-        #WriteChoiceFile($choiceFilename); 
+        WriteChoiceFile($choiceFilename); 
       
         push @choiceLists, $choiceFilename; 
         
@@ -201,10 +201,10 @@ foreach my $ChoiceFile (@choiceLists){
     print OUTPUTINI $IniTxt; 
     close (OUTPUTINI) ; 
     $BatchCmds .= "javaws -clearcache \n";
-     $BatchCmds .= "javaws -uninstall \n";
+    $BatchCmds .= "javaws -uninstall \n";
     $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt BC-Step-Codes\\Genopt-BC-rerun-auto-$outputFile++.GO-ini\n"; 
     $BatchCmds .= "timeout /t 10 \n";
-    $BatchCmds .= "copy BC-Step-Codes\\OutputListingAll.txt C:\\Ruby4HTAP\\BC-Step-Codes\\Gdrive-res\\\AwsSync\\TempResultsBatch$outputFile.txt\n"; 
+    $BatchCmds .= "copy BC-Step-Codes\\OutputListingAll.txt C:\\Ruby4HTAP\\BC-Step-Codes\\Gdrive-res\\\AwsSync\\CloudResultsBatch$outputFile.txt\n";
     $BatchCmds .= "del BC-Step-Codes\\OutputListingAll.txt\n";
     
     
