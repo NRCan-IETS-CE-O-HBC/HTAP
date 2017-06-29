@@ -1,0 +1,13 @@
+
+
+
+Step 1: Run CopyToH2k.Rb from Archetypes dir to copy archetypes to C:\h2k-cli-min
+
+Step 2: Go to GenerateChoiceFiles Dir; edit MakechoiceFiles.pl [line 207] to point output to your G-drive folder; and run `MakeChoiceFiles.pl <NameOfSourceCsvFile>` Where <NameOfSourceCsvFile> = C-Rerun-Complete-list.csv
+
+Step 3: Run 'Java-Runs.bat' from C:\Ruby4HTAP 
+
+Step 4: Navigate to your results folder, back up your output files, and run `RecoverResults.pl local` to generate CloudResultsAllData.csv
+
+Step 5: Copy CloudResultsAllData.csv alongside BC-Rerun-Complete-list.csv, and run MergeResults.pl 
+(from C:\Users\aferguso\Google Drive\NRCan work\NRCan-Optimization-Results\BC-Step-Codes-RemiCsRuns\New-reruns)
