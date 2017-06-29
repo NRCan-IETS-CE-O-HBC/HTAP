@@ -3838,7 +3838,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:10  = Opt-H2K-Type1EqpType    ! H2K: Heating system equipment type --> depends on fuel and SysType1
 *attribute:tag:11  = Opt-H2K-Type1CapOpt     ! H2K: 1:UserSpec, 2:Calculated
 ! 12-14: Type 1 tags - Type 1 equipment only 
-*attribute:tag:32  = Opt-H2K-Type1CapVal     ! H2K: Type 1: Capacity value. 
+*attribute:tag:12  = Opt-H2K-Type1CapVal     ! H2K: Type 1: Capacity value. 
 *attribute:tag:13  = Opt-H2K-Type1EffType    ! H2K: Type 1: true=SS, false=AFUE
 *attribute:tag:14  = Opt-H2K-Type1EffVal     ! H2K: Type 1: Efficiency value (0->100)
 ! 15-16: Fan tags, needed for all definitions 
@@ -3949,7 +3949,7 @@ Whitehorse Wall Options (Code is R28)
 *option:basefurnace:value:9 = 2
 *option:basefurnace:value:10 = 2       ! Spark ignition
 *option:basefurnace:value:11 = 2       ! Calculated
-*option:basefurnace:value:32 = NA      ! Capacity value will be calculated
+*option:basefurnace:value:12 = NA      ! Capacity value will be calculated
 *option:basefurnace:value:13 = true    ! SS
 *option:basefurnace:value:14 = 92      ! Efficiency
 *option:basefurnace:value:15 = 1       ! Auto fan control
@@ -3967,7 +3967,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-ecm:value:9 = 2
 *option:gas-furnace-ecm:value:10 = 2       ! Spark ignition
 *option:gas-furnace-ecm:value:11 = 2       ! User specified capacity
-*option:gas-furnace-ecm:value:32 = NA      ! Low capacity furnace 
+*option:gas-furnace-ecm:value:12 = NA      ! Low capacity furnace 
 *option:gas-furnace-ecm:value:13 = true    ! SS
 *option:gas-furnace-ecm:value:14 = 95      ! Efficiency
 *option:gas-furnace-ecm:value:15 = 1       ! Auto fan control
@@ -3985,7 +3985,7 @@ Whitehorse Wall Options (Code is R28)
 *option:gas-furnace-psc:value:9 = 2
 *option:gas-furnace-psc:value:10 = 2       ! Spark ignition
 *option:gas-furnace-psc:value:11 = 2       ! User specified
-*option:gas-furnace-psc:value:32 = NA      ! Capacity value
+*option:gas-furnace-psc:value:12 = NA      ! Capacity value
 *option:gas-furnace-psc:value:13 = true    ! SS
 *option:gas-furnace-psc:value:14 = 94      ! Efficiency
 *option:gas-furnace-psc:value:15 = 1       ! Auto fan control
@@ -4003,7 +4003,7 @@ Whitehorse Wall Options (Code is R28)
 *option:elec-baseboard:value:9 = NA
 *option:elec-baseboard:value:10 = NA
 *option:elec-baseboard:value:11 = 2
-*option:elec-baseboard:value:32 = NA
+*option:elec-baseboard:value:12 = NA
 *option:elec-baseboard:value:13 = NA
 *option:elec-baseboard:value:14 = NA
 *option:elec-baseboard:value:15 = NA
@@ -4030,7 +4030,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:CCASHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP:value:32 =  6                    ! H2K: Capacity value.     
+*option:CCASHP:value:12 =  NA                    ! H2K: Capacity value.     
 *option:CCASHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -4058,7 +4058,7 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP-ecm:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP-ecm:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:CCASHP-ecm:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP-ecm:value:32 =  NA                    ! H2K: Capacity value.     
+*option:CCASHP-ecm:value:12 =  NA                    ! H2K: Capacity value.     
 *option:CCASHP-ecm:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP-ecm:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP-ecm:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -4087,7 +4087,7 @@ Reflects southern Ontario costs
 *option:GSHP:value:9  =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:GSHP:value:10 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
 *option:GSHP:value:11 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:GSHP:value:32 =  6                    ! H2K: Capacity value.     
+*option:GSHP:value:12 =  6                    ! H2K: Capacity value.     
 *option:GSHP:value:13 =  true                 ! H2K: true=SS, false=AFUE    
 *option:GSHP:value:14 =  100                  ! H2K: Efficiency value (0->100)    
 *option:GSHP:value:15 = 1                     ! H2K: 1:Auto, 2:Continuous    
