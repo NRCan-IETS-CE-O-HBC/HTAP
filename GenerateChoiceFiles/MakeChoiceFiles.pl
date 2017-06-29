@@ -178,7 +178,7 @@ foreach my $ChoiceFile (@choiceLists){
   $ChoiceFileList .= " $ChoiceFile , ";
   $files++; 
   
-  if ( $files > 1000 ){
+  if ( $files > 1000 or $files == $#choiceLists ){
     $outputFile++; 
     
     
@@ -216,6 +216,10 @@ foreach my $ChoiceFile (@choiceLists){
   }
   
 }
+
+
+
+
 
     open( OUTPUTBATCH, ">../Java-Runs.bat" ) ; 
     print OUTPUTBATCH $BatchCmds; 
