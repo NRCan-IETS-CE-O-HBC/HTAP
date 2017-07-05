@@ -43,7 +43,7 @@ Opt-DHWSystem :  HPHotWater !ElectricStorage ! !NA    !GasTankless+DWHR !  GasTa
 Opt-DWHRSystem :  none  !DWHR-eff-30 DWHR-System-1   
 
 ! HVAC system 
-Opt-HVACSystem  : elec-baseboard !ComboHeatA
+Opt-HVACSystem  : CCASHP
 
 ! HRV spec 
 Opt-HRVspec : NA

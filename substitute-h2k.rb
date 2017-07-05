@@ -1404,7 +1404,11 @@ def processFile(filespec)
                      if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
-                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment/Type"
+                           if ( sysType2Name == "AirHeatPump" )
+                              locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment/Type"
+                           else
+                              locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment/Function"
+                           end
                            h2kElements[locationText].attributes["code"] = value 
                         end 
                      end 
@@ -3234,7 +3238,8 @@ def postprocess( scaleData )
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyGrossGJ'].round(1)} ( H2K Gross energy use GJ ) \n")
    
     if ( parseDebug )
-		stream_out ("       ( check: should = #{$check.round(1)} ?  ) \n ") 
+		stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
+		stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
     end 
 	
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
