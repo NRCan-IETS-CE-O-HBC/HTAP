@@ -88,7 +88,7 @@ end
 $MasterPath = Dir.getwd() 
 $LogFile  = "#{$MasterPath}\\Start-SubstituteRb-log.txt"
 
-$ChoiceFLDir = "C:\\Ruby4HTAP\\GenerateChoiceFiles\\"
+$ChoiceFLDir = "."
 
 
  
@@ -183,7 +183,7 @@ fGenOptChoices.close
 fLOG.write " The current directory is : #{$MasterPath} \n" 
 
 
-FileUtils.copy("#{$ChoiceFLDir}\\#{$choiceFileName}",".\\#{$choiceFileName}")
+FileUtils.copy("#{$choiceFileName}",".\\")
 
 fChoiceFileContent = File.new(".\\#{$choiceFileName}","r")
 
@@ -223,7 +223,7 @@ fChoiceFileContentEdited.write($line_edits)
 
 fChoiceFileContentEdited.close
 
-$cmd = "ruby C:\\Ruby4HTAP\\substitute-h2k.rb -vv -c #{$choiceFileName}-edit -o #{$OptionsFile} "
+$cmd = "ruby C:\\HTAP\\substitute-h2k.rb -vv -c #{$choiceFileName}-edit -o #{$OptionsFile} "
 fLOG.write("CMD: #{$cmd}\n")
 pid = Process.spawn($cmd)
 Process.wait pid, 0
