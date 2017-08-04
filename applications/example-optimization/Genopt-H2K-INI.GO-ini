@@ -7,14 +7,14 @@ Simulation{
    Files{
       // Name and path to file containing input template
       Template{
-         File1 = "Genopt-H2K-YHC-Template.GO-choices";
+         File1 = "..\\..\\Genopt-GENERIC-H2K-Template.GO-choices";
          Path1 = "./";
       }
       // Name and path to target file 
       Input{
          File1 = "GenOpt-picked-these-choices.GO-tmp";
          Path1 = "./";
-         SavePath1 = "./ArchGOChoiceFiles/"; 
+         SavePath1 = ".\\ArchGOChoiceFiles\\"; 
 
       }
       
@@ -30,7 +30,7 @@ Simulation{
       }
       // File explaining how to start simulator.
       Configuration{
-         File1 = "Genopt-GENERIC-CONFIG.GO-config";
+         File1 = "..\\..\\Genopt-GENERIC-CONFIG.GO-config";
       }
 
    } // end Simulation.Files
@@ -38,16 +38,16 @@ Simulation{
    // Simulator options - windows only.
    CallParameter {
 
-      Prefix = "Ruby substitute-h2k.rb";
+      Prefix = "Ruby  C:\\HTAP\\substitute-h2k.rb";
       
-      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000-YHC.options -b C:\\H2K-CLI-Min\\User\\1227D00169.h2k";
+      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o C:\\HTAP\\HOT2000.options -b C:\\H2K-CLI-Min\\User\\Arch-1-NZEH-detached-2-story.h2k";
    }
 
    ObjectiveFunctionLocation {
       // Rules for decoding ESP-r output. Genopt will read the text
       // immediately after the last occurrence of the given delimiter
 
-      // Note to editor: Ensure column spacing is maintained.
+      // Note to editor: Ensure column spacing is maintained.                                            
 
       // Cost function to be optimized
       Name1 = SimplePaybackYrs ;
@@ -77,56 +77,47 @@ Simulation{
       Name9 = UtilCostOilDoll;    
       Delimiter9 = "Util-Bill-Oil     =  ";
       
-      Name10 = UtilCostWoodDoll;    
-      Delimiter10 = "Util-Bill-Wood    =  ";
+      Name10 = EnergyPVkWh; 
+      Delimiter10 = "Energy-PV-kWh     =  ";
+      
+      Name11 = EnergyHeatingGJ; 
+      Delimiter11 = "Energy-HeatingGJ  =  ";
+      
+      Name12 = EnergyCoolingGJ; 
+      Delimiter12 = "Energy-CoolingGJ  =  ";
+      
+      Name13 = EnergyVentGJ; 
+      Delimiter13 = "Energy-VentGJ     =  ";
+      
+      Name14 = EnergyDHWGJ; 
+      Delimiter14 = "Energy-DHWGJ      =  ";
+      
+      Name15 = EnergyPlugGJ; 
+      Delimiter15 = "Energy-PlugGJ     =  ";
+      
+      Name16 = FuelEleckWh; 
+      Delimiter16 = "EnergyEleckWh     =  ";
+      
+      Name17 = FuelNaturalGasM3; 
+      Delimiter17 = "EnergyGasM3       =  ";
+      
+      Name18 = FuelOilL; 
+      Delimiter18 = "EnergyOil_l       =  ";
+            
+      Name19 = UpgradeCostDoll ;
+      Delimiter19 = "Upgrade-cost      =  ";
 
-      Name11 = EnergyPVkWh; 
-      Delimiter11 = "Energy-PV-kWh     =  ";
+      Name20 = PVSizekW;
+      Delimiter20 = "PV-size-kW        =  ";    
       
-      Name12 = EnergyHeatingGJ; 
-      Delimiter12 = "Energy-HeatingGJ  =  ";
+      Name21 = PEAKHeatingW;
+      Delimiter21 = "PEAK-Heating-W    =  ";
       
-      Name13 = EnergyCoolingGJ; 
-      Delimiter13 = "Energy-CoolingGJ  =  ";
+      Name22 = ERS-Value;
+      Delimiter22 = "ERS-Value         =  ";
       
-      Name14 = EnergyVentGJ; 
-      Delimiter14 = "Energy-VentGJ     =  ";
-      
-      Name15 = EnergyDHWGJ; 
-      Delimiter15 = "Energy-DHWGJ      =  ";
-      
-      Name16 = EnergyPlugGJ; 
-      Delimiter16 = "Energy-PlugGJ     =  ";
-      
-      Name17 = FuelEleckWh; 
-      Delimiter17 = "EnergyEleckWh     =  ";
-      
-      Name18 = FuelNaturalGasM3; 
-      Delimiter18 = "EnergyGasM3       =  ";
-      
-      Name19 = FuelOilL; 
-      Delimiter19 = "EnergyOil_l       =  ";
-          
-      Name20 = FuelPropaneL; 
-      Delimiter20 = "EnergyProp_L      =  ";
-
-      Name21 = FuelWoodCord; 
-      Delimiter21 = "EnergyWood_cord   =  ";
-	  
-      Name22 = UpgradeCostDoll ;
-      Delimiter22 = "Upgrade-cost      =  ";
-
-      Name23 = PVSizekW;
-      Delimiter23 = "PV-size-kW        =  ";      
-
-      Name24 = PEAKHeatingW;
-      Delimiter24 = "PEAK-Heating-W    =  ";
-      
-      Name25 = ERS-Value;
-      Delimiter25 = "ERS-Value         =  ";
-      
-      Name26 = NumTries;
-      Delimiter26 = "NumTries          =  ";
+      Name23 = NumTries;
+      Delimiter23 = "NumTries          =  ";
       
    } // end Simulation.ObjectiveFunctionLocation
    
@@ -136,7 +127,7 @@ Simulation{
 Optimization{
    Files{
       Command {
-         File1 = "Genopt-H2K-YHC-CMD.GO-cmd";
+         File1 = "Genopt-H2K-CMD.GO-cmd";
          
       }
    }
