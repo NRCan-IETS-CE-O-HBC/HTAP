@@ -1,9 +1,9 @@
 
 HOW TO (re-)GENERATE BC STEP CODE RUNS 
 
-Step 1: Run `CopyToH2k.Rb` from C:\Ruby4HTAP\Archetypes to copy archetypes to C:\H2K-cli-min
+Step 1: Run `CopyToH2k.Rb` from C:\HTAP\Archetypes to copy archetypes to C:\H2K-cli-min
 
-Step 2: Go to C:\Ruby4HTAP\GenerateChoiceFiles; edit MakechoiceFiles.pl [line 207] to 
+Step 2: Go to C:\HTAP\GenerateChoiceFiles; edit MakechoiceFiles.pl [line 207] to 
         point output to your Google drive folder; and run: 
         
            `MakeChoiceFiles.pl <NameOfSourceCsvFile>` 
@@ -11,7 +11,7 @@ Step 2: Go to C:\Ruby4HTAP\GenerateChoiceFiles; edit MakechoiceFiles.pl [line 20
         Where <NameOfSourceCsvFile> = BC-Rerun-Complete-list.csv, or BC-Rerun-problem-children.csv
                                                                   or some other csv file
 
-Step 3: Run 'Java-Runs.bat' from C:\Ruby4HTAP 
+Step 3: Run 'Java-Runs.bat' from C:\HTAP 
 
 Step 4: Navigate to your results folder, **BACK UP YOUR OUTPUT FILES***, and 
         run `RecoverResults.pl local` to generate CloudResultsAllData.csv

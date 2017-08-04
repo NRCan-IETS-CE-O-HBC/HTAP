@@ -65,9 +65,7 @@ while ( my $line = <OPTLISTFILE> ){
   $line =~ s/Cranbrook/CRANBROOK/g; 
   $line =~ s/Archetype/Opt-Archetype/g; 
   $line =~ s/GOtag://g; 
-
-  
-  
+ 
   
   $line =~ s/\!.*$//g; 
   $line =~ s/\s*//g;
@@ -126,14 +124,14 @@ while ( my $line = <OPTLISTFILE> ){
       
       # Call upgrade rule set to see if this upgrade can be applied 
       if($upgrade_package_is_valid == 1) {     
-        my $choiceFilename = "./".$Scenario."~".$choiceHash{"ID"} ."~".$upgrades_name.".choices";
+        my $choiceFilename = "./choice-files/".$Scenario."~".$choiceHash{"ID"} ."~".$upgrades_name.".choices";
       
-        print ( "> $ID : Generating scenario: $upgrades_name   \n"); 
+        print ( "> $ID : Generating scenario: $upgrades_name (writing $choiceFilename)  \n"); 
       
         # Generate corresponding Choice File
         WriteChoiceFile($choiceFilename); 
       
-        push @choiceLists, $choiceFilename; 
+        push @choiceLists, ".".$choiceFilename; 
         
         $NumFiles++;
       
@@ -155,14 +153,14 @@ $ChoiceFileList = "";
 my $files = 0; 
 
 my $TemplateTxt = ""; 
-open(CMDTEMPLATE, "../BC-Step-Codes/Genopt-BC-rerun-template.GO-cmd") or die ("could not open ../BC-Step-Codes/Genopt-BC-rerun-template.GO-cmd") ; 
+open(CMDTEMPLATE, "C:\\HTAP\\GenerateChoiceFiles\\Genopt-CMD-Template.GO-cmd") or die ("could not open C:\\HTAP\\GenerateChoiceFiles\\Genopt-CMD-Template.GO-cmd") ; 
 while ( my $Line = <CMDTEMPLATE> ){
   $TemplateTxt .= $Line;   
 }
 close (CMDTEMPLATE); 
 
 my $TemplateIniTxt = ""; 
-open(INITEMPLATE, "../BC-Step-Codes/Genopt-BC-rerun-template.GO-ini") or die ("could not open ../BC-Step-Codes/Genopt-BC-rerun-template.GO-ini") ; 
+open(INITEMPLATE, "C:\\HTAP\\GenerateChoiceFiles\\Genopt-INI-Template.GO-ini") or die ("could not open C:\\HTAP\\GenerateChoiceFiles\\Genopt-BC-rerun-template.GO-ini") ; 
 while ( my $Line = <INITEMPLATE> ){
   $TemplateIniTxt .= $Line;   
 }
@@ -183,29 +181,30 @@ foreach my $ChoiceFile (@choiceLists){
     
     
     $ChoiceFileList =~ s/\s*,\s*$//g; 
-    $ChoiceFileList =~ s/\.\///g; 
+    $ChoiceFileList =~ s/\//\\\\/g; 
     
     my $OutputTxt =  $TemplateTxt;
     $OutputTxt =~ s/___FILES_GO_HERE___/$ChoiceFileList/g; 
     
     
     
-    open( OUTPUTCMD, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO-cmd" ) ; 
+    open( OUTPUTCMD, ">./Genopt-run-auto-$outputFile++.GO-cmd" ) or die ("Could not write to Genopt-run-auto-$outputFile++.GO-cmd\n");  
     print OUTPUTCMD $OutputTxt; 
     close (OUTPUTCMD) ; 
     
     my $IniTxt = $TemplateIniTxt; 
-    $IniTxt =~ s/___CMD_FILE_GOES_HERE___/Genopt-BC-rerun-auto-$outputFile++.GO-cmd/g; 
+    $IniTxt =~ s/___CMD_FILE_GOES_HERE___/Genopt-run-auto-$outputFile++.GO-cmd/g; 
     
-    open( OUTPUTINI, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO-ini" ) ; 
+    open( OUTPUTINI, ">./Genopt-run-auto-$outputFile++.GO-ini" ) or die ("Could not write to Genopt-run-auto-$outputFile++.GO-ini\n"); 
     print OUTPUTINI $IniTxt; 
     close (OUTPUTINI) ; 
+    
     $BatchCmds .= "javaws -clearcache \n";
     $BatchCmds .= "javaws -uninstall \n";
-    $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt BC-Step-Codes\\Genopt-BC-rerun-auto-$outputFile++.GO-ini\n"; 
+    $BatchCmds .= "java -classpath \"C:\\Program Files\\genopt\\genopt.jar\" genopt.GenOpt Genopt-run-auto-$outputFile++.GO-ini\n"; 
     $BatchCmds .= "timeout /t 10 \n";
-    $BatchCmds .= "copy BC-Step-Codes\\OutputListingAll.txt C:\\Ruby4HTAP\\BC-Step-Codes\\Gdrive-res\\\AwsSync\\CloudResultsBatch$outputFile.txt\n";
-    $BatchCmds .= "del BC-Step-Codes\\OutputListingAll.txt\n";
+    $BatchCmds .= "copy OutputListingAll.txt CloudResultsBatch$outputFile.txt\n";
+    $BatchCmds .= "del OutputListingAll.txt\n";
     
     
     $files = 0; 
@@ -221,7 +220,7 @@ foreach my $ChoiceFile (@choiceLists){
 
 
 
-    open( OUTPUTBATCH, ">../Java-Runs.bat" ) ; 
+    open( OUTPUTBATCH, ">genopt-run-auto.bat" ) or die ("Could not open  genopt-run-auto.bat for writing\n");  ; 
     print OUTPUTBATCH $BatchCmds; 
     close (OUTPUTBATCH) ; 
 

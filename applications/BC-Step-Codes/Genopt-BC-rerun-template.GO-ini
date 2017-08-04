@@ -33,7 +33,7 @@ Simulation{
       }
       // File explaining how to start simulator.
       Configuration{
-         File1 = "..\\Genopt-GENERIC-CONFIG.GO-config";
+         File1 = "C:\HTAP\Genopt-GENERIC-CONFIG.GO-config";
       }
 
    } // end Simulation.Files
