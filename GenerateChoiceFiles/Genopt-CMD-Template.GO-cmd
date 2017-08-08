@@ -53,7 +53,7 @@ Vary{
   Parameter { 
     Name = GOtag:Opt-OptionsFile; 
     Ini    = 1; 
-    Values = "..\\HOT2000.options";  // File containing options to be used. ;
+    Values = "..\\HOT2000-list.options";  // File containing options to be used. ;
   }  
 
   
