@@ -7,7 +7,7 @@ Simulation{
    Files{
       // Name and path to file containing input template
       Template{
-         File1 = "Genopt-GENERIC-H2K-Template.GO-choices";
+         File1 = "HTAP-Template.choices";
          Path1 = "./";
       }
       // Name and path to target file 
@@ -35,12 +35,10 @@ Simulation{
 
    } // end Simulation.Files
    
-   // Simulator options - windows only.
+   // Simulator command:
    CallParameter {
-
       Prefix = "Ruby substitute-h2k.rb";
-      
-      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000.options -b C:\\H2K-CLI-Min\\User\\Arch-1-NZEH-detached-2-story.h2k";
+      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o HOT2000.options";
    }
 
    ObjectiveFunctionLocation {

@@ -9,7 +9,7 @@ Simulation{
       // Name and path to file containing input template
       
       Template{
-         File1 = "..\\..\\Genopt-GENERIC-MakeChoiceFile-Template.GO-choices";
+         File1 = "..\\..\\HTAP-Template-MakeChoices.choices";
          Path1 = "./";
       }
       

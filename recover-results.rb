@@ -45,7 +45,6 @@ optparse = OptionParser.new do |opts|
   
   opts.on("-l", "--local", "Search for OutputListingAll.txt in current (local) dirctory") do 
      $local = true
-     puts ">>> HERE"
 
   end 
   
@@ -77,9 +76,6 @@ Dir.glob('CloudResultsBatch*.txt').each do |f|
   FileList.push(f)
 end
 
-puts "---"
-puts FileList
-puts "---"
 #i = 0
 
 batch = 0
@@ -92,7 +88,7 @@ recoveredLines = 0
 FileList.each do |fileName|
    batch += 1
    lineCount = 0
-   puts "Recvering results from "  << fileName
+   puts "Recovering results from "  << fileName
    contents = File.open(fileName, 'r') 
    contents.each do |line|
       lineCount += 1
@@ -123,6 +119,8 @@ output = File.open('CloudResultsAllData.csv', 'a')
 output.write(header)
 output.write(data)
 output.close
+
+puts "Results written to file CloudResultsAllData.csv\n"
 
 #puts header
 #my @AllFiles = split /\s/, `ls CloudResultsBatch*.txt TempResultsBatch*.txt`; 

@@ -10,15 +10,19 @@
 Opt-DBFiles  : H2KCodeLibFile
 
 ! Weather location
-Opt-Location : NA !
+Opt-Location : NA 
 
 Opt-FuelCost : rates2016
+
+! Archetype file: 
+Opt-Archetype: NZEH-Arch-1
 
 ! ACH substitutions
 Opt-ACH : NA
 
 Opt-Ceilings : NA
 
+! Main wall definitins 
 Opt-MainWall : NA                    ! This one, OR
 Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 
@@ -26,21 +30,15 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : NA   !TripleLowEHardCoatKryFill 
+Opt-CasementWindows  : NA   
 
-Opt-H2KFoundation : NA  !Rigid+BattR30-R10BSlab
-
-! Hot water numbers (used only in Opt-DWHRandSDHW below)
-Opt-DHWLoadScale : No-Reduction
-
-! Hot water reduction technologies (SDHW, DHWR) 
-! References Opt_Loacation and Opt-DHWLoadScale for some choices
-Opt-DWHRandSDHW : NA    !none          
+! Foundation definitions
+Opt-H2KFoundation : NA  
 
 ! Hot water system. Choices:
-Opt-DHWSystem :  HPHotWater !ElectricStorage ! !NA    !GasTankless+DWHR !  GasTankless+DWHR
+Opt-DHWSystem :  HPHotWater
 
-Opt-DWHRSystem :  none  !DWHR-eff-30 DWHR-System-1   
+Opt-DWHRSystem :  DWHR-eff-30 
 
 ! HVAC system 
 Opt-HVACSystem  : CCASHP
@@ -64,19 +62,5 @@ Opt-H2K-PV : NA !  MonoSi-200m2   !MonoSi-50m2
 !          for HOT2000 -- it doesn't rotate the model yet.
 GOconfig_rotate      : S
 
-!Attachment options
-Opt-Attachment : single
-
-Opt-OverhangWidth : BaseOverhang
-
-! Add concrete to floors (internal partitions only)
-Opt-FloorSurface     : wood
-
-! Electric LOAD SCALES 
-Opt-ElecLoadScale    : NoReduction
-
-OPT-Furnace-Fan-Ctl  : Auto
-
 Opt-Cooling-Spec     : 2TonStdCooling
 
-Opt-HRVduct : interlock

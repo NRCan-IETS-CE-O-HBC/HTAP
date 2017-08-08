@@ -3488,8 +3488,8 @@ end
 
 if ( !$gBaseModelFile ) then
 
-  puts "Base file not specified. What next? "
-  $gBaseModelFile = "<To-Be-Found-In-Choice-File?>"
+
+  $gBaseModelFile = "Not specified. Using archetype specified in .choice file"
   $gLookForArchetype = 1
   
 else 

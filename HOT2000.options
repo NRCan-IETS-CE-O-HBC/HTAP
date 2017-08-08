@@ -88,11 +88,61 @@
 *attribute:end
 
 
+!-----------------HOT2000 Archetype file ---------------------------------
+!  
+!-------------------------------------------------------------------------
+*attribute:start 
+*attribute:name = Opt-Archetype
+*attribute:tag:1 = <NotARealTag>
+*attribute:default = NZEH-Arch-1
+
+*option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
+*option:SmallSFD:cost:total = 0
+
+*option:MediumSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-MediumSFD.h2k
+*option:MediumSFD:cost:total = 0
+
+*option:LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-LargeSFD.h2k
+*option:LargeSFD:cost:total = 0
+
+*option:Rowhouse:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Row.h2k
+*option:Rowhouse:cost:total = 0
+
+*option:Quadplex:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Quad.h2k
+*option:Quadplex:cost:total = 0
+
+*option:MURB:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Murb1.h2k
+*option:MURB:cost:total = 0
+
+*option:NZEH-Arch-1:value:1 = C:\H2K-CLI-Min\User\Arch-1-NZEH-detached-2-story.h2k
+*option:NZEH-Arch-1:cost:total = 0
+
+*option:BCLEEP-ROW:value:1 = C:\H2K-CLI-Min\User\Arch-2-BCLEEP-attached-endunit.h2k
+*option:BCLEEP-ROW:cost:total = 0
+
+*option:NZEH-arch-2:value:1 = C:\H2K-CLI-Min\User\Arch-3-NZEH-detached-2-story-narrow.h2k
+*option:NZEH-arch-2:cost:total = 0
+
+*option:MB-LEEP-bungalow:value:1 = C:\H2K-CLI-Min\User\Arch-4-MBLEEP-detached-bungalow.h2k
+*option:MB-LEEP-bungalow:cost:total = 0
+
+
+*option:BC-LEEP-Kelowna:value:1 = C:\H2K-CLI-Min\User\KelownaHouse.h2k
+*option:BC-LEEP-Kelowna:cost:total = 0
+
+*option:NORTH-JP:value:1 = C:\H2K-CLI-Min\User\north-1227D00169.h2k
+*option:NORTH-JP:cost:total = 0
+
+*option:BC-LEEP-PJHouse:value:1 = C:\H2K-CLI-Min\User\PrinceGeorgeHouse.h2k
+*option:BC-LEEP-PJHouse:cost:total = 0
+
+
+*attribute:end
 
 
 
 !-----------------------------------------------------------------------
-! Climate file manipulation
+! Climate 
 !-----------------------------------------------------------------------
 
 *attribute:start 
@@ -4356,7 +4406,7 @@ Reflects southern Ontario costs
 *attribute:end
 
 !-----------------------------------------------------------------------
-! PV internal
+! Photovoltaics 
 ! Use internal HOT2000 PV Generation model
 ! Choice file used to specify Internal PV OR External PV but not both!
 !-----------------------------------------------------------------------
@@ -4378,7 +4428,7 @@ Reflects southern Ontario costs
 *option:NA:value:6 = NA
 *option:NA:cost:total  = 0
 
-*option:MonoSi-5kW:value:1 = 53           !53m2 is required area for 5 kW for Mono-Si
+*option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
 *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
 *option:MonoSi-5kW:value:3 = 0
 *option:MonoSi-5kW:value:4 = 1
@@ -4387,12 +4437,12 @@ Reflects southern Ontario costs
 *option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system for Prince George & Kelowna LEEP
 
 *option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
-*option:MonoSi-10kW:value:2 = 18.4       !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
+*option:MonoSi-10kW:value:2 = 18.4         !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
 *option:MonoSi-10kW:value:3 = 0
 *option:MonoSi-10kW:value:4 = 1
 *option:MonoSi-10kW:value:5 = 90
 *option:MonoSi-10kW:value:6 = 90
-*option:MonoSi-10kW:cost:total = 33395       !$33395 assumed cost for 10 kW PV system for Prince George & Kelowna LEEP
+*option:MonoSi-10kW:cost:total = 33395     !$33395 assumed cost for 10 kW PV system for Prince George & Kelowna LEEP
 
 *option:MonoSi-200m2:value:1 = 200
 *option:MonoSi-200m2:value:2 = 43
@@ -4401,8 +4451,6 @@ Reflects southern Ontario costs
 *option:MonoSi-200m2:value:5 = 90
 *option:MonoSi-200m2:value:6 = 90
 *option:MonoSi-200m2:cost:total = 0
-
-
 
 *attribute:end
 

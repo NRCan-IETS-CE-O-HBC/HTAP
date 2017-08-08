@@ -7,7 +7,7 @@ Simulation{
    Files{
       // Name and path to file containing input template
       Template{
-         File1 = "..\\..\\Genopt-GENERIC-H2K-Template.GO-choices";
+         File1 = "..\\..\\Template-HTAP.choices";
          Path1 = "./";
       }
       // Name and path to target file 
