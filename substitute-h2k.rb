@@ -321,6 +321,7 @@ def processFile(filespec)
          for tagIndex in tagHash.keys()
             tag = tagHash[tagIndex]
             value = valHash[tagIndex]
+            
             if ( value == "" )
                debug_out (">>>ERR on #{tag}\n")
                value = ""
@@ -409,6 +410,8 @@ def processFile(filespec)
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
+            
+                          
             
             # Air Infiltration Rate
             #--------------------------------------------------------------------------
@@ -1815,10 +1818,23 @@ def processFile(filespec)
                   
                end
                
+               
+            elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
+                            
+               if ( value == "NA" )
+                  $outputHCode = "General" 
+               elsif ( value != "NA" )
+                  $outputHCode = value
+                         
+               end                
+               
+               
             else
                # Do nothing -- we're ignoring all other tags!
-               #debug_out("Tag #{tag} ignored!\n")
+               debug_out("Tag #{tag} ignored!\n")
             end
+           
+                        
          end
       end
    end
@@ -2878,7 +2894,7 @@ end   # runsims
 # =========================================================================================
 def postprocess( scaleData )
    
-   stream_out( "\n Parsing results...")
+   stream_out( "\n Parsing results from set: #{$outputHCode} ...")
   
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
@@ -2915,15 +2931,16 @@ def postprocess( scaleData )
             lineIn = fBrowseRpt.readline  # Sequentially read file lines
             lineIn.strip!                 # Remove leading and trailing whitespace
             if ( lineIn !~ /^\s*$/ )      # Not an empty line!
-               if ( bReadAuxEnergyHeating && lineIn =~ /^Auxiliary Energy Required/ )
-                  lineIn.sub!(/Auxiliary Energy Required                              =/, '')
-                  lineIn.sub!(/MJ/, '')
-                  lineIn.strip!
-                  $gAuxEnergyHeatingGJ = lineIn.to_f    # Use * scaleData?
-                  $gAuxEnergyHeatingGJ /= 1000
-                  bReadAuxEnergyHeating = false
-                  break if (!bReadOldERSValue && !$PVIntModel)     # Stop parsing Browse.rpt when ERS number found!
-               elsif ( bReadOldERSValue && lineIn =~ /^Energuide Rating \(not rounded\) =/ )
+               # This implementation is depreciated for one that reads the aux heating requirement out of the .xml file
+               #if ( bReadAuxEnergyHeating && lineIn =~ /^Auxiliary Energy Required/ )
+               #   lineIn.sub!(/Auxiliary Energy Required                              =/, '')
+               #   lineIn.sub!(/MJ/, '')
+               #   lineIn.strip!
+               #   $gAuxEnergyHeatingGJ = lineIn.to_f    # Use * scaleData?
+               #   $gAuxEnergyHeatingGJ /= 1000
+               #   bReadAuxEnergyHeating = false
+               #   break if (!bReadOldERSValue && !$PVIntModel)     # Stop parsing Browse.rpt when ERS number found!
+               if ( bReadOldERSValue && lineIn =~ /^Energuide Rating \(not rounded\) =/ )
                   lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
                   lineIn.strip!
                   $gERSNum = lineIn.to_f    # Use * scaleData?
@@ -2969,6 +2986,14 @@ def postprocess( scaleData )
       end
    end
    
+   # Get size of home. 
+   locationText = "HouseFile/House/Specifications"
+   
+   $gResults["allCodes"]["sumAreaAboveGradeM2"] = h2kPostElements[locationText].attributes["aboveGradeHeatedFloorArea"].to_f
+   $gResults["allCodes"]["sumAreaBelowGradeM2"] = h2kPostElements[locationText].attributes["belowGradeHeatedFloorArea"].to_f
+   
+
+   
    # ==================== Get results for all h2k calcs from XML file (exceptiing above case)
    
    parseDebug = true
@@ -2985,8 +3010,14 @@ def postprocess( scaleData )
       # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
       #                  spec only a single desired set via a commad line switch, or by defaulting to 
       #                  SOC and falling back to 'General' if it's not found.
-      if (houseCode =~ /SOC/ ||  houseCode =~ /General/ || houseCode =~ /Reference/)
+      
+      
+      if (houseCode == "#{$outputHCode}" )
+      
+
+         #if (houseCode =~ /ROC/  )
          # ENERGY CONSUMPTION (Annual)
+         
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -3041,11 +3072,22 @@ def postprocess( scaleData )
                                                       $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
 									 
 	   
+       
+         monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+         # Picking up  AUX energy requirement from each result set.
+         
+         $gAuxEnergyHeatingGJ = 0
+         $MonthlyAuxHeatingMJ = 0
+         monthArr.each do |mth|
+          
+          $gAuxEnergyHeatingGJ += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
+         end 
+         
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
          if ( $PVIntModel ) 
             pvAvailable = 0
             pvUtilized  = 0 
-            monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+            #monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             monthArr.each do |mth|
                # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsistent with convention used 
                #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
@@ -3083,6 +3125,9 @@ def postprocess( scaleData )
                    $gResults[houseCode]["avgFueluseNatGasGJ"].to_f -
                    $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
          $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
+         
+         else 
+
       end
 	  
    end # h2kPostElements |element| loop
@@ -4278,6 +4323,9 @@ if ( $gResults['Reference'].empty? ) then
 else
    RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
+
+
+
  
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Ref-En-Total-GJ   =  #{RefEnergy.round(1)} \n" )
@@ -4316,6 +4364,18 @@ fSUMMARY.write( "PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeati
 fSUMMARY.write( "PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
 
 fSUMMARY.write( "PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
+
+$FloorArea = ( $gResults["allCodes"]["sumAreaAboveGradeM2"] + $gResults["allCodes"]["sumAreaBelowGradeM2"]  )
+$TEDI_kWh_m2 = ( $gAuxEnergyHeatingGJ * 277.78 / $FloorArea )
+
+$MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] + 
+                  $gResults[$outputHCode]['avgEnergyCoolingGJ'] + 
+                  $gResults[$outputHCode]['avgEnergyVentilationGJ'] + 
+                  $gResults[$outputHCode]['avgEnergyWaterHeatingGJ']  ) * 277.78 / $FloorArea
+
+
+fSUMMARY.write( "TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
+fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )

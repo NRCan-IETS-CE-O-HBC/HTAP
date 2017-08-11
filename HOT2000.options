@@ -70,6 +70,10 @@
 
 *attribute:end
 
+
+
+
+
 !-----------------------------------------------------------------------
 ! This option can be used to load construction databases from the CEF,
 ! Whitehorse or retrofit definitions. 
@@ -87,6 +91,29 @@
 
 *attribute:end
 
+!-----------------HOT2000 Output Code ------------------------------------
+!  
+!-------------------------------------------------------------------------
+*attribute:start 
+*attribute:name = Opt-ResultHouseCode
+*attribute:tag:1 = <NotNOTARealTag>
+*attribute:default = General
+
+
+*option:General:value:1    = General 
+*option:General:cost:total = 0
+
+*option:SOC:value:1    = SOC
+*option:SOC:cost:total = 0
+
+*option:ROC:value:1    = ROC
+*option:ROC:cost:total = 0
+
+*option:HCV:value:1    = HCV
+*option:HCV:cost:total = 0
+
+*attribute:end
+
 
 !-----------------HOT2000 Archetype file ---------------------------------
 !  
@@ -95,6 +122,10 @@
 *attribute:name = Opt-Archetype
 *attribute:tag:1 = <NotARealTag>
 *attribute:default = NZEH-Arch-1
+
+*option:NA:value:1 = NA
+*option:NA:cost:total = 0
+
 
 *option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
 *option:SmallSFD:cost:total = 0
@@ -110,6 +141,9 @@
 
 *option:Quadplex:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Quad.h2k
 *option:Quadplex:cost:total = 0
+
+*option:BC-NZEH-ex-1:value:1 = C:\H2K-CLI-Min\User\BC-Step-NZEH-1-example.h2k
+*option:BC-NZEH-ex-1:cost:total = 0
 
 *option:MURB:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Murb1.h2k
 *option:MURB:cost:total = 0
@@ -3467,7 +3501,14 @@ Reflects southern Ontario costs
 *attribute:tag:2 = <OPT-Cooling-COP>
 *attribute:tag:3 = <OPT-Cooling-Fan-Power>
 *attribute:tag:4 = <OPT-Cooling-Fan-Power-Low>
-*attribute:default = SmallCooling
+*attribute:default = NA
+
+*option:NA:value:1 = NA
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:cost:total = NA
+
 
 *option:SmallCooling:value:1 = 10000.
 *option:SmallCooling:value:2 = 3.
