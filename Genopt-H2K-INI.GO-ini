@@ -117,6 +117,14 @@ Simulation{
       Name23 = NumTries;
       Delimiter23 = "NumTries          =  ";
       
+      Name24 = TEDI_kWh_m2; 
+      Delimiter24 = "TEDI_kWh_m2       =  ";
+      
+      
+      Name25 = MEUI_kWh_m2; 
+      Delimiter25 = "MEUI_kWh_m2       =  "; 
+      
+      
    } // end Simulation.ObjectiveFunctionLocation
    
 } // end Simulation
