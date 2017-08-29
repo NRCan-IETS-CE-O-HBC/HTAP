@@ -12,10 +12,12 @@ Opt-DBFiles  : H2KCodeLibFile
 ! Weather location
 Opt-Location : NA 
 
-Opt-FuelCost : rates2016
+Opt-FuelCost : NA
+
+Opt-ResultHouseCode: SOC
 
 ! Archetype file: 
-Opt-Archetype: NZEH-Arch-1
+Opt-Archetype: NA
 
 ! ACH substitutions
 Opt-ACH : NA
@@ -36,12 +38,12 @@ Opt-CasementWindows  : NA
 Opt-H2KFoundation : NA  
 
 ! Hot water system. Choices:
-Opt-DHWSystem :  HPHotWater
+Opt-DHWSystem :  NA 
 
-Opt-DWHRSystem :  DWHR-eff-30 
+Opt-DWHRSystem :  none
 
 ! HVAC system 
-Opt-HVACSystem  : CCASHP
+Opt-HVACSystem  : NA 
 
 ! HRV spec 
 Opt-HRVspec : NA
@@ -62,5 +64,5 @@ Opt-H2K-PV : NA !  MonoSi-200m2   !MonoSi-50m2
 !          for HOT2000 -- it doesn't rotate the model yet.
 GOconfig_rotate      : S
 
-Opt-Cooling-Spec     : 2TonStdCooling
+Opt-Cooling-Spec     : NA
 
