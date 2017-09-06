@@ -25,6 +25,8 @@ W_PER_KW = 1000.0
 
 # Desired ERS mode: 
 # (USE Data from SOC for now. We'll think of something to do with the other modes later)
+# 23-Aug-2017 JTB: Note that "SOC" will be changed to "General" when the house is not
+#                  in ERS Program mode.
 $outputHCode = "SOC" 
 
 
@@ -2894,7 +2896,7 @@ end   # runsims
 # =========================================================================================
 def postprocess( scaleData )
    
-   stream_out( "\n Parsing results from set: #{$outputHCode} ...")
+   stream_out( "\n Loading XML elements from #{$gWorkingModelFile} ...")
   
    # Load all XML elements from HOT2000 file (post-run results now available)
    h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
@@ -2991,7 +2993,6 @@ def postprocess( scaleData )
    
    $gResults["allCodes"]["sumAreaAboveGradeM2"] = h2kPostElements[locationText].attributes["aboveGradeHeatedFloorArea"].to_f
    $gResults["allCodes"]["sumAreaBelowGradeM2"] = h2kPostElements[locationText].attributes["belowGradeHeatedFloorArea"].to_f
-   
 
    
    # ==================== Get results for all h2k calcs from XML file (exceptiing above case)
@@ -3003,21 +3004,23 @@ def postprocess( scaleData )
       houseCode =  element.attributes["houseCode"]
    
       if (houseCode == nil) 
+         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element set!
+         #    When in Program mode there are multiple element sets and the last element set will have this same missing attribute.
          houseCode = "General"
-      end
+         $outputHCode = "General"
+      end 
       
       # ASF 04-Oct-2016: limiting results parsing to 2 sets - SOC and general -- because parsing takes a long time !
       # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
       #                  spec only a single desired set via a commad line switch, or by defaulting to 
       #                  SOC and falling back to 'General' if it's not found.
       
-      
       if (houseCode == "#{$outputHCode}" )
       
-
+         stream_out( "\n Parsing results from set: #{$outputHCode} ...")
+         
          #if (houseCode =~ /ROC/  )
          # ENERGY CONSUMPTION (Annual)
-         
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -3126,7 +3129,7 @@ def postprocess( scaleData )
                    $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
          $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
          
-         else 
+         break    # break out of the element loop to avoid processing "General" for ERS Program scenario!
 
       end
 	  
@@ -3141,12 +3144,6 @@ def postprocess( scaleData )
       end 
    end 
 
-   # Maybe the desired mode wasn't found? if not, reset it to "General"	
-   #==================================== 
-   if ( $gResults[$outputHCode].empty? )  
-		$outputHCode = "General"
-   end 
-   
    $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
    # Total of all fuels in GJ
