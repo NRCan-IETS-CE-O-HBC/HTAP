@@ -5,7 +5,7 @@ TRAINING NOTES:
 
 *** commands: 
 
-cd C:\HTAP\applications\training\batch-run
+cd C:\HTAP\applications\optimization-run\batch-run
 java -cp 'C:\Program Files\genopt\genopt.jar' genopt.GenOpt Genopt-H2K-INI.GO-ini
 
 C:\HTAP\recover-results.rb -l
@@ -27,10 +27,10 @@ b) Run command. Talk about what is happening.
     
     ]
 
-b) Stop the command, and intorduce 'optimization'
+b) Stop the command, and introduce 'optimization'
 
     [ - Examine the 'algorithm' section in the cmd file. Talk about how PSOIW 
-        optimizaiton works.
+        optimization works.
 
       - Comment out mesh algorithm, and replace with PSOIW     
         
