@@ -170,6 +170,68 @@
 *option:BC-LEEP-PJHouse:value:1 = C:\H2K-CLI-Min\User\PrinceGeorgeHouse.h2k
 *option:BC-LEEP-PJHouse:cost:total = 0
 
+*option:PH-example-1:value:1 = C:\H2K-CLI-Min\User\PH-example-1.h2k
+*option:PH-example-1:cost:total = 0
+
+*option:PH-example-3:value:1 = C:\H2K-CLI-Min\User\PH-example-3.h2k
+*option:PH-example-3:cost:total = 0
+
+*option:PH-example-4:value:1 = C:\H2K-CLI-Min\User\PH-example-4.h2k
+*option:PH-example-4:cost:total = 0
+
+*option:PH-example-8:value:1 = C:\H2K-CLI-Min\User\PH-example-8.h2k
+*option:PH-example-8:cost:total = 0
+
+*option:PH-example-9:value:1 = C:\H2K-CLI-Min\User\PH-example-9.h2k
+*option:PH-example-9:cost:total = 0
+
+*option:PA-edmonton-example-01:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-01.h2k
+*option:PA-edmonton-example-01:cost:total = 0
+
+! Doesn't run
+!*option:PA-edmonton-example-02:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-02.h2k
+!*option:PA-edmonton-example-02:cost:total = 0
+
+
+*option:PA-edmonton-example-03:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-03.h2k
+*option:PA-edmonton-example-03:cost:total = 0
+
+*option:PA-edmonton-example-04:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-04.h2k
+*option:PA-edmonton-example-04:cost:total = 0
+
+*option:PA-edmonton-example-05:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-05.h2k
+*option:PA-edmonton-example-05:cost:total = 0
+
+*option:PA-edmonton-example-06:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-06.h2k
+*option:PA-edmonton-example-06:cost:total = 0
+
+*option:PA-edmonton-example-07:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-07.h2k
+*option:PA-edmonton-example-07:cost:total = 0
+
+*option:PA-edmonton-example-09:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-09.h2k
+*option:PA-edmonton-example-09:cost:total = 0
+
+*option:PA-edmonton-example-10:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-10.h2k
+*option:PA-edmonton-example-10:cost:total = 0
+
+*option:PA-edmonton-example-11:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-11.h2k
+*option:PA-edmonton-example-11:cost:total = 0
+
+*option:PA-edmonton-example-12:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-12.h2k
+*option:PA-edmonton-example-12:cost:total = 0
+
+*option:PA-edmonton-example-13:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-13.h2k
+*option:PA-edmonton-example-13:cost:total = 0
+
+*option:PA-edmonton-example-14:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-14.h2k
+*option:PA-edmonton-example-14:cost:total = 0
+
+
+*option:PA-edmonton-example-15:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-16.h2k
+*option:PA-edmonton-example-15:cost:total = 0
+
+
+
 
 *attribute:end
 
@@ -1183,6 +1245,9 @@
 *option:ACH_2_5:value:1  = 2.5
 *option:ACH_2_5:cost:total  =  0
 
+*option:ACH_2_0:value:1  = 2.0
+*option:ACH_2_0:cost:total  =  0
+
 *option:ACH_1_75:value:1  = 1.75
 *option:ACH_1_75:cost:total  = 1804     !$1804 is assumed cost for Kelowna LEEP house
 
@@ -1909,6 +1974,9 @@
 *option:Stud_2x6_R18:value:2 = 17.5         
 *option:Stud_2x6_R18:cost    = 1325          !2650  for Row STEP
 
+*option:Stud_2x6_R22:value:1 = 0.08748 
+*option:Stud_2x6_R22:value:2 = 21.9         
+*option:Stud_2x6_R22:cost    = 3757.5          !7515  for Row STEP
 
 *option:Stud_2x4_2in_XPS_R-24:value:1 = 0.1366
 *option:Stud_2x4_2in_XPS_R-24:value:2 = 24
@@ -2867,7 +2935,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:end
 
 !-----------------------------------------------------------------------
-! Basement definitions 
+! Basement definitions ( not used in HOT2000!)
 !-----------------------------------------------------------------------
 *attribute:start 
 *attribute:name    = Opt-BasementConfiguration
@@ -3034,7 +3102,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:2  = <Opt-ExposedFloor-r>
 *attribute:tag:3  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
 *attribute:tag:4  = OPT-H2K-EffRValue   ! User-Specified R-value (Imperial)
-*attribute:default = BaseExpFloor-R31
+*attribute:default = NA          !THIS WAS BaseExpFloor-R31 Not sure why?
 
 *option:NA:value:1 = NA
 *option:NA:value:2 = NA
@@ -3494,6 +3562,7 @@ Reflects southern Ontario costs
 
 !-----------------------------------------------------------------------
 ! Cooling system spec in HVAC file (Added by JTB Dec 1, 2014)
+! *** Doesn't work for HOT2000 ! *** 
 !-----------------------------------------------------------------------
 *attribute:start 
 *attribute:name  = Opt-Cooling-Spec
