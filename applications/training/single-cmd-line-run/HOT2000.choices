@@ -10,7 +10,7 @@
 Opt-DBFiles  : H2KCodeLibFile
 
 ! Weather location
-Opt-Location : Calgary
+Opt-Location : NA
 
 Opt-FuelCost : NA
 
@@ -20,7 +20,7 @@ Opt-ResultHouseCode: SOC
 Opt-Archetype: SmallSFD
 
 ! ACH substitutions
-Opt-ACH : ACH_0_6
+Opt-ACH : NA
 
 Opt-Ceilings : NA
 
