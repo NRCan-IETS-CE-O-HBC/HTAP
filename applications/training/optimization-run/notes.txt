@@ -41,19 +41,38 @@ c) Re-Run command. Talk about what is happening.
     [ Genopt is now using the PSOIW algorithm to find optimal points - 
       that is, points that minimize the search criteria.
       
-      The search criteria are defined in the genopt INO file - 
+      The search criteria are defined in the genopt INI file - 
+      the first of the objective functions listed in the 
+      ObjectiveFunctionLocation section. The first one is optimized; 
+      the others are recorded for reporting purposes only.
+      
+      Note that the objective function can be changed to any 
+      other data recoreded in the substiture-pl-output.txt file. 
+      
 
-        
-d) Convert output to .csv format
+
+      You can also define your own output by adapting substiture-h2k.rb.
+
+      
+d) Stop command with Control-C. Point out that output-to-date is preserved.
+  
+    [ Talk about how you know when an optimization is complete. 
+    
+      Talk about GenOpt optimization efficiency
+
+      
+e) Convert output to .csv format
 
    [ run C:\HTAP\recover-results.rb -l 
    
      open up cloud-results-all-data.csv in excel. 
+     
+     note - Number of runs and number of results often do not match up. 
+     We believe this is because the PSOIW algorithm sometimes -re-runs #s/
    
-e) Add some parameters to the cmd file batch  - 
+e) Open up example file from results. 
 
-    [ Add ACH_1_0 to the ACH (air-tightness results). Re-run 
-      and note how the number of evaluations goes up from 27 to 36.
+    [ Examine contents - and use colours to illustrate attribution.
  
       
       
@@ -61,23 +80,3 @@ e) Add some parameters to the cmd file batch  -
     ]
 
     
-f) Demonstrate what happens if there is a miss-spelling in parameter
-   definitions.
-
-    [ Set ACH -> APH_1_0
-         
-          
-    ]
-    
-   
-    
-    
-g) Demonstrate a typical error - misspell Calggary
-
-
-
-
-
- 
- 
- 
