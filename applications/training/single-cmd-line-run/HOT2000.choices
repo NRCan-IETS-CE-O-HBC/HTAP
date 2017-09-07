@@ -10,7 +10,7 @@
 Opt-DBFiles  : H2KCodeLibFile
 
 ! Weather location
-Opt-Location : Calggary
+Opt-Location : Calgary
 
 Opt-FuelCost : NA
 
