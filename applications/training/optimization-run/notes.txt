@@ -1,0 +1,83 @@
+TRAINING NOTES:
+
+1) Genopt-Optimization run
+==========================
+
+*** commands: 
+
+cd C:\HTAP\applications\training\batch-run
+java -cp 'C:\Program Files\genopt\genopt.jar' genopt.GenOpt Genopt-H2K-INI.GO-ini
+
+C:\HTAP\recover-results.rb -l
+
+a) Open up the .cmd file. Look at contents
+
+    [ - Note that each parameter has a longer list, and more 
+        parameters will be explored. 
+           
+
+
+b) Run command. Talk about what is happening. 
+
+    [ Genopt is processing the batch run just as before. But because 
+      it has to explore more combinations across more parameters 
+      - 950,400 ! - the set will take much longer to complete. 
+      this clearly isn't a workable solution. 
+      
+    
+    ]
+
+b) Stop the command, and intorduce 'optimization'
+
+    [ - Examine the 'algorithm' section in the cmd file. Talk about how PSOIW 
+        optimizaiton works.
+
+      - Comment out mesh algorithm, and replace with PSOIW     
+        
+    ]
+       
+c) Re-Run command. Talk about what is happening. 
+
+    [ Genopt is now using the PSOIW algorithm to find optimal points - 
+      that is, points that minimize the search criteria.
+      
+      The search criteria are defined in the genopt INO file - 
+
+        
+d) Convert output to .csv format
+
+   [ run C:\HTAP\recover-results.rb -l 
+   
+     open up cloud-results-all-data.csv in excel. 
+   
+e) Add some parameters to the cmd file batch  - 
+
+    [ Add ACH_1_0 to the ACH (air-tightness results). Re-run 
+      and note how the number of evaluations goes up from 27 to 36.
+ 
+      
+      
+
+    ]
+
+    
+f) Demonstrate what happens if there is a miss-spelling in parameter
+   definitions.
+
+    [ Set ACH -> APH_1_0
+         
+          
+    ]
+    
+   
+    
+    
+g) Demonstrate a typical error - misspell Calggary
+
+
+
+
+
+ 
+ 
+ 

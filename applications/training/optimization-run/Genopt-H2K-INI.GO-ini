@@ -1,0 +1,165 @@
+/* GenOpt initialization file for housing optimization work. 
+
+*/
+
+Simulation{
+   // Files used during optimization
+   Files{
+      // Name and path to file containing input template
+      Template{
+         File1 = "..\\..\\..\\HTAP-template.choices";
+         Path1 = "./";
+      }
+      // Name and path to target file 
+      Input{
+         File1 = "GenOpt-picked-these-choices.GO-tmp";
+         Path1 = "./";
+         SavePath1 = ".\\ArchGOChoiceFiles\\"; 
+
+      }
+      
+      
+      // Log file containing simulator messages
+      Log{
+         File1 = "SubstitutePL-log.txt";
+      }
+      
+      // File containing simulator results
+      Output{
+         File1 = "SubstitutePL-output.txt";
+      }
+      // File explaining how to start simulator.
+      Configuration{
+         File1 = "..\\..\\..\\Genopt-GENERIC-CONFIG.GO-config";
+      }
+
+   } // end Simulation.Files
+   
+   // Simulator options - windows only.
+   CallParameter {
+
+      Prefix = "Ruby  C:\\HTAP\\substitute-h2k.rb";
+      
+      Suffix = " -v -c GenOpt-picked-these-choices.GO-tmp -o C:\\HTAP\\HOT2000.options -b C:\\H2K-CLI-Min\\User\\Arch-1-NZEH-detached-2-story.h2k";
+   }
+
+   ObjectiveFunctionLocation {
+      // Rules for decoding ESP-r output. Genopt will read the text
+      // immediately after the last occurrence of the given delimiter
+
+      // Note to editor: Ensure column spacing is maintained.                                            
+
+      // Cost function to be optimized
+      Name1 = SimplePaybackYrs ;
+      Delimiter1 = "SimplePaybackYrs  =  ";       
+      
+      Name2 = EnergyTotal ;
+      Delimiter2 = "Energy-Total-GJ   =  ";
+      
+      Name3 = UtilBillNoPVRevenueDoll;    
+      Delimiter3 = "Util-Bill-gross   =  ";
+      
+      Name4 = UtilRevenuePVDoll;    
+      Delimiter4 = "Util-PV-revenue   =  ";
+      
+      Name5 = UtilBillNetDoll;    
+      Delimiter5 = "Util-Bill-Net     =  ";
+      
+      Name6 = UtilCostElecDoll;    
+      Delimiter6 = "Util-Bill-Elec    =  ";
+      
+      Name7 = UtilCostGasDoll;      
+      Delimiter7 = "Util-Bill-Gas     =  ";
+      
+      Name8 = UtilCostPropaneDoll;     
+      Delimiter8 = "Util-Bill-Prop    =  ";
+      
+      Name9 = UtilCostOilDoll;    
+      Delimiter9 = "Util-Bill-Oil     =  ";
+      
+      Name10 = EnergyPVkWh; 
+      Delimiter10 = "Energy-PV-kWh     =  ";
+      
+      Name11 = EnergyHeatingGJ; 
+      Delimiter11 = "Energy-HeatingGJ  =  ";
+      
+      Name12 = EnergyCoolingGJ; 
+      Delimiter12 = "Energy-CoolingGJ  =  ";
+      
+      Name13 = EnergyVentGJ; 
+      Delimiter13 = "Energy-VentGJ     =  ";
+      
+      Name14 = EnergyDHWGJ; 
+      Delimiter14 = "Energy-DHWGJ      =  ";
+      
+      Name15 = EnergyPlugGJ; 
+      Delimiter15 = "Energy-PlugGJ     =  ";
+      
+      Name16 = FuelEleckWh; 
+      Delimiter16 = "EnergyEleckWh     =  ";
+      
+      Name17 = FuelNaturalGasM3; 
+      Delimiter17 = "EnergyGasM3       =  ";
+      
+      Name18 = FuelOilL; 
+      Delimiter18 = "EnergyOil_l       =  ";
+            
+      Name19 = UpgradeCostDoll ;
+      Delimiter19 = "Upgrade-cost      =  ";
+
+      Name20 = PVSizekW;
+      Delimiter20 = "PV-size-kW        =  ";    
+      
+      Name21 = PEAKHeatingW;
+      Delimiter21 = "PEAK-Heating-W    =  ";
+      
+      Name22 = ERS-Value;
+      Delimiter22 = "ERS-Value         =  ";
+      
+      Name23 = NumTries;
+      Delimiter23 = "NumTries          =  ";
+      
+      Name24 = PeakCoolingW;                                                    
+      Delimiter24 = "PEAK-Cooling-W    =  ";                        
+                                                                    
+      Name25 = GrossHeatingGJ;                                                    
+      Delimiter25 = "Gross-HeatLoss-GJ =  ";                        
+                                                                    
+                                                                    
+      Name26 = AuxHeatingReqGJ;                                                    
+      Delimiter26 = "AuxEnergyReq-HeatingGJ = ";                    
+                                                                    
+                                                                    
+      Name27 = RefEnTotalGJ;                                                    
+      Delimiter27 = "Ref-En-Total-GJ   =  ";               
+
+      
+      Name28 = FloorArea_m2; 
+      Delimiter28 = "Floor-Area-m2     =  "; 
+      
+      Name29 = TEDI_kWh_m2; 
+      Delimiter29 = "TEDI_kWh_m2       =  ";
+      
+      
+      Name30 = MEUI_kWh_m2; 
+      Delimiter30 = "MEUI_kWh_m2       =  ";          
+      
+      
+      
+      
+      
+      
+      
+   } // end Simulation.ObjectiveFunctionLocation
+   
+} // end Simulation
+
+// Optimization configuration.
+Optimization{
+   Files{
+      Command {
+         File1 = "Genopt-H2K-CMD.GO-cmd";
+         
+      }
+   }
+}
