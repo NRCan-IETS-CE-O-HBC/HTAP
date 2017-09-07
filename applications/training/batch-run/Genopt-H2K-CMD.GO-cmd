@@ -14,7 +14,7 @@ Vary{
    Parameter{ 
       Name = GOtag:Opt-Location; 
       Ini  = 1;
-      Values = "Calgary, Edmonton, Vavvncouver";      
+      Values = "Calgary, Edmonton, Vancouver";      
    }
   
    // =============================================
