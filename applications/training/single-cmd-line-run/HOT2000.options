@@ -1245,9 +1245,6 @@
 *option:ACH_2_5:value:1  = 2.5
 *option:ACH_2_5:cost:total  =  0
 
-*option:ACH_2_0:value:1  = 2.0
-*option:ACH_2_0:cost:total  =  0
-
 *option:ACH_1_75:value:1  = 1.75
 *option:ACH_1_75:cost:total  = 1804     !$1804 is assumed cost for Kelowna LEEP house
 
@@ -2935,7 +2932,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:end
 
 !-----------------------------------------------------------------------
-! Basement definitions ( not used in HOT2000!)
+! Basement definitions 
 !-----------------------------------------------------------------------
 *attribute:start 
 *attribute:name    = Opt-BasementConfiguration
@@ -3562,7 +3559,6 @@ Reflects southern Ontario costs
 
 !-----------------------------------------------------------------------
 ! Cooling system spec in HVAC file (Added by JTB Dec 1, 2014)
-! *** Doesn't work for HOT2000 ! *** 
 !-----------------------------------------------------------------------
 *attribute:start 
 *attribute:name  = Opt-Cooling-Spec

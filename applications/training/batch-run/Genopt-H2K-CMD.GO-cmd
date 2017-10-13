@@ -1,0 +1,175 @@
+/*
+
+ Genopt-H2K-CMD.GO-cmd:  GenOpt command file for general optimization run. Baseline.
+
+*/
+
+Vary{
+
+   // ==========================================
+   // Parameters that configure the simulation 
+   // ==========================================
+  
+   // Location  
+   Parameter{ 
+      Name = GOtag:Opt-Location; 
+      Ini  = 1;
+      Values = "Calgary, Edmonton, Vancouver";      
+   }
+  
+   // =============================================
+   // Parameters that change the building design
+   // =============================================
+  
+ 
+   // Setting the archetype 
+   Parameter{ 
+      Name = GOtag:Opt-Archetype;  
+      Ini  = 1;
+      Values = "SmallSFD, MediumSFD, LargeSFD";
+   }
+
+ 
+ 
+   
+   // Setting the ACH in the AIM-2 input file
+   Parameter{ 
+      Name = GOtag:Opt-ACH; 
+      Ini  = 1;
+      Values = "NA, ACH_1_5, ACH_0_6";
+   }
+
+   Parameter{   // 
+      Name    =  GOtag:Opt-GenericWall_1Layer_definitions;
+      Ini     =  1;
+      Values = "NA";
+     
+   }
+
+   // H2K Foundations : OBC-min-R12
+   Parameter{   // 
+      Name    =  GOtag:Opt-H2KFoundation;
+      Ini     =  1;
+      Values  = "NA";     //"OBCminR12-Slab0R, OBCminR12-Slab24R";
+   } 
+   
+   // Exposed floor
+   Parameter{   // 
+      Name    =  GOtag:Opt-ExposedFloor;
+      Ini     =  1;
+      Values  =  "NA";
+   }    
+   
+   // Ceilings
+   Parameter{   // 
+      Name    =  GOtag:Opt-Ceilings;
+      Ini     =  1;
+      Values  = "NA";   //"CeilR50"
+   }    
+  
+  // Windows
+  Parameter{   // 
+      Name    =  GOtag:Opt-CasementWindows;
+      Ini     =  1;
+      Values  =  "NA";         //"DoubleLowEHardCoatAirFill"
+   }    
+   
+   
+    
+ 
+   // Conventional DHW:  BaseDHW, 
+   Parameter{ //
+      Name    = GOtag:Opt-DHWSystem;
+      Ini     = 1; 
+      Values  = "NA";
+   }
+  
+   // DWHR-System
+   Parameter{ //
+      Name    = GOtag:Opt-DWHRSystem;
+      Ini     = 1; 
+      Values  = "none";
+   }
+  
+  
+   // Heating/cooling
+   Parameter { // 
+      Name   = GOtag:Opt-HVACSystem; 
+      Ini    = 1; 
+      Values = "NA";    //basefurnace
+   }
+  
+   // HRV specification
+   Parameter { 
+      Name = GOtag:Opt-HRVSpec; 
+      Ini  = 1; 
+      Values = "NA"; 
+   }
+  
+   // PV: Set to autosize to ensure each run actually achieves NZEH. 
+   // NoPV
+   // SizedPV 
+   Parameter{   // 
+     Name    =  GOtag:Opt-StandoffPV;
+     Ini     =  1;
+     Values  = "NoPV";
+   } 
+
+   // H2K PV (internal)
+   // NA for none
+   // MonoSi-50m2
+   Parameter{   // 
+      Name    =  GOtag:Opt-H2K-PV;
+      Ini     =  1;
+      Values  = "NA";
+   } 
+    
+   // ===================================================================
+   // Roof pitch 
+   // ===================================================================
+   Parameter {  
+      Name = GOtag:RoofPitch;
+      Ini  = 1; 
+      Values = "NA";    //6-12
+   }
+  
+   // Orientation: for parametric study. Set to one of 
+   // "S, N, E, W, or AVG", "AVG" causes substitute.pl 
+   // to run four simulations (in four different orientations) 
+   // for each set of parameters and average the results. 
+   
+   Parameter{   // 
+      Name    =  GOtag:GOconfig_rotate;
+      Ini     =  1;
+      Values  =  "S";
+   }      
+
+}
+
+OptimizationSettings{
+  MaxIte = 100000;
+  MaxEqualResults = 1000;
+  WriteStepNumber = true;
+}
+
+
+//Algorithm{
+//Main                       = PSOIW;
+//  NeighborhoodTopology      = vonNeumann;
+//  NeighborhoodSize          = 24; // Disregarded for vonNeumann topology
+//  NumberOfParticle          = 8;
+//  NumberOfGeneration        = 2000;
+//  Seed                      = 628;
+//  CognitiveAcceleration     = 2; // 0 < CognitiveAcceleration
+//  SocialAcceleration        = 3; // 0 < SocialAcceleration
+//  MaxVelocityGainContinuous = 1.0;
+//  MaxVelocityDiscrete       = 1.0; // 0 < MaxVelocityDiscrete
+//  InitialInertiaWeight      = 1.2;    // 0 < InitialInertiaWeight
+//  FinalInertiaWeight        = 0;      // 0 < FinalInertiaWeight
+//}
+
+
+Algorithm{
+  Main = Mesh;
+  StopAtError = true; 
+}

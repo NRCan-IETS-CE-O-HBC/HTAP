@@ -2798,6 +2798,9 @@ def runsims( direction )
    optionSwitch = "-inp"
    fileToLoad = "..\\" + $h2kFileName
    
+
+  
+   
    # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
    #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
@@ -2806,7 +2809,7 @@ def runsims( direction )
    maxTries = 10     # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
-   # AF: Extra counters to count how many times we've tried HOT2000.
+   # AF: Extra counters to count ls tmpvalhow many times we've tried HOT2000.
    keepTrying = true 
    tries = 0
    # This loop actually calls hot2000!
@@ -2820,10 +2823,16 @@ def runsims( direction )
             Process.wait pid, 0
             status = $?.exitstatus      
             stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+
             if status == 0 
                endRun = Time.now
                $runH2KTime = endRun - startRun  
                stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+
+   if ( ! system(" copy ..\\"+ $h2kFileName + " C:\\HTAP\\applications\\Hybrid-HPs\\h2kfiles\\ ")) then
+     "Couldn't archive .h2k file!"
+    end   
+               
                keepTrying = false       # Successful run - don't try agian 
             elsif status == 3    # Precheck message(s)
                endRun = Time.now
@@ -4310,6 +4319,8 @@ $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
 # Proxy for cost of ownership (JTB 05-10-2016: Vriable used to be "$payback")
 $optCOProxy = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
 
+
+
 sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
 fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
@@ -4370,7 +4381,7 @@ $MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] +
                   $gResults[$outputHCode]['avgEnergyVentilationGJ'] + 
                   $gResults[$outputHCode]['avgEnergyWaterHeatingGJ']  ) * 277.78 / $FloorArea
 
-
+fSUMMARY.write( "Floor-Area-m2     =  #{$FloorArea.round(1)} \n" )
 fSUMMARY.write( "TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 
