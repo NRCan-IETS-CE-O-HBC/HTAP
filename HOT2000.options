@@ -249,6 +249,7 @@
 *attribute:tag:4 = OPT-H2K-WTH-FILE
 *attribute:tag:5 = OPT-H2K-Region
 *attribute:tag:6 = OPT-H2K-Location
+*attribute:tag:7 = OPT-HDD
 *attribute:default = Ottawa 
 
 *option:NA:value:1 = NA
@@ -257,6 +258,7 @@
 *option:NA:value:4 = NA
 *option:NA:value:5 = NA
 *option:NA:value:6 = NA
+*option:NA:value:7 = NA
 *option:NA:cost:total    = 0
 
 *option:Whitehorse:value:1 = can_whitehorse.cwec
@@ -265,6 +267,7 @@
 *option:Whitehorse:value:4 = Wth110.dir
 *option:Whitehorse:value:5 = 11
 *option:Whitehorse:value:6 = 69
+*option:Whitehorse:value:7 = 6580
 *option:Whitehorse:cost:total    = 0
   
 *option:Toronto:value:1 = can_toronto.cwec
@@ -273,6 +276,7 @@
 *option:Toronto:value:4 = Wth110.dir
 *option:Toronto:value:5 = 5
 *option:Toronto:value:6 = 42
+*option:Toronto:value:7 = 3520
 *option:Toronto:cost:total    = 0
 
 *option:Ottawa:value:1 = can_ottawa.cwec
@@ -281,6 +285,7 @@
 *option:Ottawa:value:4 = Wth110.dir
 *option:Ottawa:value:5 = 5
 *option:Ottawa:value:6 = 36
+*option:Ottawa:value:7 = 4500
 *option:Ottawa:cost:total    = 0
 
 *option:Edmonton:value:1 = can_edmonton.cwec
@@ -289,6 +294,7 @@
 *option:Edmonton:value:4 = Wth110.dir
 *option:Edmonton:value:5 = 2
 *option:Edmonton:value:6 = 15
+*option:Edmonton:value:7 = 5120
 *option:Edmonton:cost:total    = 0
 
 *option:Calgary:value:1 = can_calgary.cwec
@@ -297,6 +303,7 @@
 *option:Calgary:value:4 = Wth110.dir
 *option:Calgary:value:5 = 2
 *option:Calgary:value:6 = 14
+*option:Calgary:value:7 = 5000
 *option:Calgary:cost:total    = 0
 
 *option:Montreal:value:1 = can_montreal.cwec
@@ -305,6 +312,7 @@
 *option:Montreal:value:4 = Wth110.dir
 *option:Montreal:value:5 = 6
 *option:Montreal:value:6 = 46
+*option:Montreal:value:7 = 4200
 *option:Montreal:cost:total    = 0
 
 *option:Quebec:value:1 = can_quebec.cwec
@@ -313,6 +321,7 @@
 *option:Quebec:value:4 = Wth110.dir
 *option:Quebec:value:5 = 6
 *option:Quebec:value:6 = 48
+*option:Quebec:value:7 = 5080
 *option:Quebec:cost:total    = 0
   
 *option:Halifax:value:1 = can_halifax.cwec
@@ -321,6 +330,7 @@
 *option:Halifax:value:4 = Wth110.dir
 *option:Halifax:value:5 = 8
 *option:Halifax:value:6 = 58
+*option:Halifax:value:7 = 4000
 *option:Halifax:cost:total    = 0  
 
 *option:Fredericton:value:1 = can_fredericton.cwec
@@ -329,6 +339,7 @@
 *option:Fredericton:value:4 = Wth110.dir
 *option:Fredericton:value:5 = 7
 *option:Fredericton:value:6 = 54
+*option:Fredericton:value:7 = 4670
 *option:Fredericton:cost:total    = 0  
   
 *option:Winnipeg:value:1 = can_winnipeg.cwec
@@ -337,6 +348,7 @@
 *option:Winnipeg:value:4 = Wth110.dir
 *option:Winnipeg:value:5 = 4
 *option:Winnipeg:value:6 = 30
+*option:Winnipeg:value:7 = 5670
 *option:Winnipeg:cost:total    = 0    
   
 *option:Regina:value:1 = can_regina.cwec
@@ -345,6 +357,7 @@
 *option:Regina:value:4 = Wth110.dir
 *option:Regina:value:5 = 3
 *option:Regina:value:6 = 22
+*option:Regina:value:7 = 5600
 *option:Regina:cost:total    = 0    
 
 *option:Vancouver:value:1 = can_vancouver.cwec
@@ -353,6 +366,7 @@
 *option:Vancouver:value:4 = Wth110.dir
 *option:Vancouver:value:5 = 1
 *option:Vancouver:value:6 = 11
+*option:Vancouver:value:7 = 2825
 *option:Vancouver:cost:total    = 0  
   
 *option:PrinceGeorge:value:1 = can_prince_george.cwec
@@ -361,6 +375,7 @@
 *option:PrinceGeorge:value:4 = Wth110.dir
 *option:PrinceGeorge:value:5 = 1
 *option:PrinceGeorge:value:6 = 7
+*option:PrinceGeorge:value:7 = 4720
 *option:PrinceGeorge:cost:total    = 0  
 
 *option:Kamloops:value:1 = can_kamloops.cwec
@@ -369,6 +384,7 @@
 *option:Kamloops:value:4 = Wth110.dir
 *option:Kamloops:value:5 = 1
 *option:Kamloops:value:6 = 5
+*option:Kamloops:value:7 = 3450
 *option:Kamloops:cost:total    = 0    
 
 *option:Yellowknife:value:1 = can_yellowknife.cwec
@@ -377,6 +393,7 @@
 *option:Yellowknife:value:4 = Wth110.dir
 *option:Yellowknife:value:5 = 12
 *option:Yellowknife:value:6 = 76
+*option:Yellowknife:value:7 = 8170
 *option:Yellowknife:cost:total    = 0
 
 *option:Inuvik:value:1 = can_inuvik.cwec
@@ -385,6 +402,7 @@
 *option:Inuvik:value:4 = Wth110.dir
 *option:Inuvik:value:5 = 12
 *option:Inuvik:value:6 = 73
+*option:Inuvik:value:7 = 9600
 *option:Inuvik:cost:total    = 0
 
 *option:ABBOTSFORD:value:1 = 
@@ -393,6 +411,7 @@
 *option:ABBOTSFORD:value:4 = Wth110.dir
 *option:ABBOTSFORD:value:5 = 1
 *option:ABBOTSFORD:value:6 = 1
+*option:ABBOTSFORD:value:7 = 2860
 *option:ABBOTSFORD:cost:total    = 0
 
 *option:CASTLEGAR:value:1 = 
@@ -401,6 +420,7 @@
 *option:CASTLEGAR:value:4 = Wth110.dir
 *option:CASTLEGAR:value:5 = 1
 *option:CASTLEGAR:value:6 = 2
+*option:CASTLEGAR:value:7 = 3580
 *option:CASTLEGAR:cost:total    = 0
 
 *option:FORTNELSON:value:1 = 
@@ -409,6 +429,7 @@
 *option:FORTNELSON:value:4 = Wth110.dir
 *option:FORTNELSON:value:5 = 1           ! H2K Region
 *option:FORTNELSON:value:6 = 3           ! H2K Location
+*option:FORTNELSON:value:7 = 6710
 *option:FORTNELSON:cost:total    = 0
 
 *option:FORTSTJOHN:value:1 = 
@@ -417,6 +438,7 @@
 *option:FORTSTJOHN:value:4 = Wth110.dir
 *option:FORTSTJOHN:value:5 = 1           ! H2K Region
 *option:FORTSTJOHN:value:6 = 4           ! H2K Location
+*option:FORTSTJOHN:value:7 = 5750
 *option:FORTSTJOHN:cost:total    = 0
 
 *option:PORTHARDY:value:1 = 
@@ -425,6 +447,7 @@
 *option:PORTHARDY:value:4 = Wth110.dir
 *option:PORTHARDY:value:5 = 1           ! H2K Region
 *option:PORTHARDY:value:6 = 6           ! H2K Location
+*option:PORTHARDY:value:7 = 3440
 *option:PORTHARDY:cost:total    = 0
 
 *option:PRINCERUPERT:value:1 = 
@@ -433,6 +456,7 @@
 *option:PRINCERUPERT:value:4 = Wth110.dir
 *option:PRINCERUPERT:value:5 = 1           ! H2K Region
 *option:PRINCERUPERT:value:6 = 8           ! H2K Location
+*option:PRINCERUPERT:value:7 = 3900
 *option:PRINCERUPERT:cost:total    = 0
 
 *option:SMITHERS:value:1 = 
@@ -441,6 +465,7 @@
 *option:SMITHERS:value:4 = Wth110.dir
 *option:SMITHERS:value:5 = 1           ! H2K Region
 *option:SMITHERS:value:6 = 9           ! H2K Location
+*option:SMITHERS:value:7 = 5040
 *option:SMITHERS:cost:total    = 0
 
 *option:SUMMERLAND:value:1 = 
@@ -449,6 +474,7 @@
 *option:SUMMERLAND:value:4 = Wth110.dir
 *option:SUMMERLAND:value:5 = 1           ! H2K Region
 *option:SUMMERLAND:value:6 = 10           ! H2K Location
+*option:SUMMERLAND:value:7 = 3350
 *option:SUMMERLAND:cost:total    = 0
 
 *option:VICTORIA:value:1 = 
@@ -456,7 +482,8 @@
 *option:VICTORIA:value:3 = 
 *option:VICTORIA:value:4 = Wth110.dir
 *option:VICTORIA:value:5 = 1           ! H2K Region
-*option:VICTORIA:value:6 = 12           ! H2K Location
+*option:VICTORIA:value:6 = 12          ! H2K Location
+*option:VICTORIA:value:7 = 2650
 *option:VICTORIA:cost:total    = 0
 
 *option:WILLIAMSLAKE:value:1 = 
@@ -465,6 +492,7 @@
 *option:WILLIAMSLAKE:value:4 = Wth110.dir
 *option:WILLIAMSLAKE:value:5 = 1           ! H2K Region
 *option:WILLIAMSLAKE:value:6 = 13           ! H2K Location
+*option:WILLIAMSLAKE:value:7 = 4400
 *option:WILLIAMSLAKE:cost:total    = 0
 
 *option:COMOX:value:1 = 
@@ -473,6 +501,7 @@
 *option:COMOX:value:4 = Wth110.dir
 *option:COMOX:value:5 = 1           ! H2K Region
 *option:COMOX:value:6 = 92           ! H2K Location
+*option:COMOX:value:7 = 3100
 *option:COMOX:cost:total    = 0
 
 *option:CRANBROOK:value:1 = 
@@ -481,6 +510,7 @@
 *option:CRANBROOK:value:4 = Wth110.dir
 *option:CRANBROOK:value:5 = 1           ! H2K Region
 *option:CRANBROOK:value:6 = 93           ! H2K Location
+*option:CRANBROOK:value:7 = 4400
 *option:CRANBROOK:cost:total    = 0
 
 *option:QUESNEL:value:1 = 
@@ -489,6 +519,7 @@
 *option:QUESNEL:value:4 = Wth110.dir
 *option:QUESNEL:value:5 = 1           ! H2K Region
 *option:QUESNEL:value:6 = 94           ! H2K Location
+*option:QUESNEL:value:7 = 4650
 *option:QUESNEL:cost:total    = 0
 
 *option:SANDSPIT:value:1 = 
@@ -497,6 +528,7 @@
 *option:SANDSPIT:value:4 = Wth110.dir
 *option:SANDSPIT:value:5 = 1           ! H2K Region
 *option:SANDSPIT:value:6 = 95           ! H2K Location
+*option:SANDSPIT:value:7 = 3450
 *option:SANDSPIT:cost:total    = 0
 
 *option:TERRACE:value:1 = 
@@ -505,6 +537,7 @@
 *option:TERRACE:value:4 = Wth110.dir
 *option:TERRACE:value:5 = 1           ! H2K Region
 *option:TERRACE:value:6 = 96           ! H2K Location
+*option:TERRACE:value:7 = 4150
 *option:TERRACE:cost:total    = 0
 
 *option:TOFINO:value:1 = 
@@ -513,6 +546,7 @@
 *option:TOFINO:value:4 = Wth110.dir
 *option:TOFINO:value:5 = 1           ! H2K Region
 *option:TOFINO:value:6 = 97           ! H2K Location
+*option:TOFINO:value:7 = 3150
 *option:TOFINO:cost:total    = 0
 
 *option:WHISTLER:value:1 = 
@@ -521,6 +555,7 @@
 *option:WHISTLER:value:4 = Wth110.dir
 *option:WHISTLER:value:5 = 1           ! H2K Region
 *option:WHISTLER:value:6 = 98           ! H2K Location
+*option:WHISTLER:value:7 = 4180
 *option:WHISTLER:cost:total    = 0
 
 *option:FORTMCMURRAY:value:1 = 
@@ -529,6 +564,7 @@
 *option:FORTMCMURRAY:value:4 = Wth110.dir
 *option:FORTMCMURRAY:value:5 = 2           ! H2K Region
 *option:FORTMCMURRAY:value:6 = 16           ! H2K Location
+*option:FORTMCMURRAY:value:7 = 6250
 *option:FORTMCMURRAY:cost:total    = 0
 
 *option:LETHBRIDGE:value:1 = 
@@ -537,6 +573,7 @@
 *option:LETHBRIDGE:value:4 = Wth110.dir
 *option:LETHBRIDGE:value:5 = 2           ! H2K Region
 *option:LETHBRIDGE:value:6 = 17           ! H2K Location
+*option:LETHBRIDGE:value:7 = 4500
 *option:LETHBRIDGE:cost:total    = 0
 
 *option:ROCKYMOUNTAINHOUSE:value:1 = 
@@ -545,6 +582,7 @@
 *option:ROCKYMOUNTAINHOUSE:value:4 = Wth110.dir
 *option:ROCKYMOUNTAINHOUSE:value:5 = 2           ! H2K Region
 *option:ROCKYMOUNTAINHOUSE:value:6 = 18           ! H2K Location
+*option:ROCKYMOUNTAINHOUSE:value:7 = 5640
 *option:ROCKYMOUNTAINHOUSE:cost:total    = 0
 
 *option:SUFFIELD:value:1 = 
@@ -553,6 +591,7 @@
 *option:SUFFIELD:value:4 = Wth110.dir
 *option:SUFFIELD:value:5 = 2           ! H2K Region
 *option:SUFFIELD:value:6 = 19           ! H2K Location
+*option:SUFFIELD:value:7 = 4770
 *option:SUFFIELD:cost:total    = 0
 
 *option:COLDLAKE:value:1 = 
@@ -561,6 +600,7 @@
 *option:COLDLAKE:value:4 = Wth110.dir
 *option:COLDLAKE:value:5 = 2           ! H2K Region
 *option:COLDLAKE:value:6 = 99           ! H2K Location
+*option:COLDLAKE:value:7 = 5860
 *option:COLDLAKE:cost:total    = 0
 
 *option:CORONATION:value:1 = 
@@ -569,6 +609,7 @@
 *option:CORONATION:value:4 = Wth110.dir
 *option:CORONATION:value:5 = 2           ! H2K Region
 *option:CORONATION:value:6 = 100           ! H2K Location
+*option:CORONATION:value:7 = 5640
 *option:CORONATION:cost:total    = 0
 
 *option:GRANDEPRAIRIE:value:1 = 
@@ -577,6 +618,7 @@
 *option:GRANDEPRAIRIE:value:4 = Wth110.dir
 *option:GRANDEPRAIRIE:value:5 = 2           ! H2K Region
 *option:GRANDEPRAIRIE:value:6 = 101           ! H2K Location
+*option:GRANDEPRAIRIE:value:7 = 5790
 *option:GRANDEPRAIRIE:cost:total    = 0
 
 *option:MEDICINEHAT:value:1 = 
@@ -585,6 +627,7 @@
 *option:MEDICINEHAT:value:4 = Wth110.dir
 *option:MEDICINEHAT:value:5 = 2           ! H2K Region
 *option:MEDICINEHAT:value:6 = 102           ! H2K Location
+*option:MEDICINEHAT:value:7 = 4540
 *option:MEDICINEHAT:cost:total    = 0
 
 *option:PEACERIVER:value:1 = 
@@ -593,6 +636,7 @@
 *option:PEACERIVER:value:4 = Wth110.dir
 *option:PEACERIVER:value:5 = 2           ! H2K Region
 *option:PEACERIVER:value:6 = 103           ! H2K Location
+*option:PEACERIVER:value:7 = 6050
 *option:PEACERIVER:cost:total    = 0
 
 *option:REDDEER:value:1 = 
@@ -601,6 +645,7 @@
 *option:REDDEER:value:4 = Wth110.dir
 *option:REDDEER:value:5 = 2           ! H2K Region
 *option:REDDEER:value:6 = 104           ! H2K Location
+*option:REDDEER:value:7 = 5550
 *option:REDDEER:cost:total    = 0
 
 *option:ESTEVAN:value:1 = 
@@ -609,6 +654,7 @@
 *option:ESTEVAN:value:4 = Wth110.dir
 *option:ESTEVAN:value:5 = 3           ! H2K Region
 *option:ESTEVAN:value:6 = 20           ! H2K Location
+*option:ESTEVAN:value:7 = 5340
 *option:ESTEVAN:cost:total    = 0
 
 *option:PRINCEALBERT:value:1 = 
@@ -617,6 +663,7 @@
 *option:PRINCEALBERT:value:4 = Wth110.dir
 *option:PRINCEALBERT:value:5 = 3           ! H2K Region
 *option:PRINCEALBERT:value:6 = 21           ! H2K Location
+*option:PRINCEALBERT:value:7 = 6100
 *option:PRINCEALBERT:cost:total    = 0
 
 *option:SASKATOON:value:1 = 
@@ -625,6 +672,7 @@
 *option:SASKATOON:value:4 = Wth110.dir
 *option:SASKATOON:value:5 = 3           ! H2K Region
 *option:SASKATOON:value:6 = 23           ! H2K Location
+*option:SASKATOON:value:7 = 5700
 *option:SASKATOON:cost:total    = 0
 
 *option:SWIFTCURRENT:value:1 = 
@@ -633,6 +681,7 @@
 *option:SWIFTCURRENT:value:4 = Wth110.dir
 *option:SWIFTCURRENT:value:5 = 3           ! H2K Region
 *option:SWIFTCURRENT:value:6 = 24           ! H2K Location
+*option:SWIFTCURRENT:value:7 = 5150
 *option:SWIFTCURRENT:cost:total    = 0
 
 *option:URANIUMCITY:value:1 = 
@@ -641,6 +690,7 @@
 *option:URANIUMCITY:value:4 = Wth110.dir
 *option:URANIUMCITY:value:5 = 3           ! H2K Region
 *option:URANIUMCITY:value:6 = 25           ! H2K Location
+*option:URANIUMCITY:value:7 = 7500
 *option:URANIUMCITY:cost:total    = 0
 
 *option:BROADVIEW:value:1 = 
@@ -649,6 +699,7 @@
 *option:BROADVIEW:value:4 = Wth110.dir
 *option:BROADVIEW:value:5 = 3           ! H2K Region
 *option:BROADVIEW:value:6 = 105           ! H2K Location
+*option:BROADVIEW:value:7 = 5760
 *option:BROADVIEW:cost:total    = 0
 
 *option:MOOSEJAW:value:1 = 
@@ -657,6 +708,7 @@
 *option:MOOSEJAW:value:4 = Wth110.dir
 *option:MOOSEJAW:value:5 = 3           ! H2K Region
 *option:MOOSEJAW:value:6 = 106           ! H2K Location
+*option:MOOSEJAW:value:7 = 5270
 *option:MOOSEJAW:cost:total    = 0
 
 *option:NORTHBATTLEFORD:value:1 = 
@@ -665,6 +717,7 @@
 *option:NORTHBATTLEFORD:value:4 = Wth110.dir
 *option:NORTHBATTLEFORD:value:5 = 3           ! H2K Region
 *option:NORTHBATTLEFORD:value:6 = 107           ! H2K Location
+*option:NORTHBATTLEFORD:value:7 = 5900
 *option:NORTHBATTLEFORD:cost:total    = 0
 
 *option:YORKTON:value:1 = 
@@ -673,6 +726,7 @@
 *option:YORKTON:value:4 = Wth110.dir
 *option:YORKTON:value:5 = 3           ! H2K Region
 *option:YORKTON:value:6 = 108           ! H2K Location
+*option:YORKTON:value:7 = 6000
 *option:YORKTON:cost:total    = 0
 
 *option:BRANDON:value:1 = 
@@ -681,6 +735,7 @@
 *option:BRANDON:value:4 = Wth110.dir
 *option:BRANDON:value:5 = 4           ! H2K Region
 *option:BRANDON:value:6 = 26           ! H2K Location
+*option:BRANDON:value:7 = 5760
 *option:BRANDON:cost:total    = 0
 
 *option:CHURCHILL:value:1 = 
@@ -689,6 +744,7 @@
 *option:CHURCHILL:value:4 = Wth110.dir
 *option:CHURCHILL:value:5 = 4           ! H2K Region
 *option:CHURCHILL:value:6 = 27           ! H2K Location
+*option:CHURCHILL:value:7 = 8950
 *option:CHURCHILL:cost:total    = 0
 
 *option:THEPAS:value:1 = 
@@ -697,6 +753,7 @@
 *option:THEPAS:value:4 = Wth110.dir
 *option:THEPAS:value:5 = 4           ! H2K Region
 *option:THEPAS:value:6 = 28           ! H2K Location
+*option:THEPAS:value:7 = 6480
 *option:THEPAS:cost:total    = 0
 
 *option:THOMPSON:value:1 = 
@@ -705,6 +762,7 @@
 *option:THOMPSON:value:4 = Wth110.dir
 *option:THOMPSON:value:5 = 4           ! H2K Region
 *option:THOMPSON:value:6 = 29           ! H2K Location
+*option:THOMPSON:value:7 = 7600
 *option:THOMPSON:cost:total    = 0
 
 *option:DAUPHIN:value:1 = 
@@ -713,6 +771,7 @@
 *option:DAUPHIN:value:4 = Wth110.dir
 *option:DAUPHIN:value:5 = 4           ! H2K Region
 *option:DAUPHIN:value:6 = 109           ! H2K Location
+*option:DAUPHIN:value:7 = 5900
 *option:DAUPHIN:cost:total    = 0
 
 *option:PORTAGELAPRAIRIE:value:1 = 
@@ -721,6 +780,7 @@
 *option:PORTAGELAPRAIRIE:value:4 = Wth110.dir
 *option:PORTAGELAPRAIRIE:value:5 = 4           ! H2K Region
 *option:PORTAGELAPRAIRIE:value:6 = 110           ! H2K Location
+*option:PORTAGELAPRAIRIE:value:7 = 5600
 *option:PORTAGELAPRAIRIE:cost:total    = 0
 
 *option:BIGTROUTLAKE:value:1 = 
@@ -729,6 +789,7 @@
 *option:BIGTROUTLAKE:value:4 = Wth110.dir
 *option:BIGTROUTLAKE:value:5 = 5           ! H2K Region
 *option:BIGTROUTLAKE:value:6 = 31           ! H2K Location
+*option:BIGTROUTLAKE:value:7 = 7650
 *option:BIGTROUTLAKE:cost:total    = 0
 
 *option:KINGSTON:value:1 = 
@@ -737,6 +798,7 @@
 *option:KINGSTON:value:4 = Wth110.dir
 *option:KINGSTON:value:5 = 5           ! H2K Region
 *option:KINGSTON:value:6 = 32           ! H2K Location
+*option:KINGSTON:value:7 = 4000
 *option:KINGSTON:cost:total    = 0
 
 *option:LONDON:value:1 = 
@@ -745,6 +807,7 @@
 *option:LONDON:value:4 = Wth110.dir
 *option:LONDON:value:5 = 5           ! H2K Region
 *option:LONDON:value:6 = 33           ! H2K Location
+*option:LONDON:value:7 = 3900
 *option:LONDON:cost:total    = 0
 
 *option:MUSKOKA:value:1 = 
@@ -753,6 +816,7 @@
 *option:MUSKOKA:value:4 = Wth110.dir
 *option:MUSKOKA:value:5 = 5           ! H2K Region
 *option:MUSKOKA:value:6 = 34           ! H2K Location
+*option:MUSKOKA:value:7 = 4760
 *option:MUSKOKA:cost:total    = 0
 
 *option:NORTHBAY:value:1 = 
@@ -761,6 +825,7 @@
 *option:NORTHBAY:value:4 = Wth110.dir
 *option:NORTHBAY:value:5 = 5           ! H2K Region
 *option:NORTHBAY:value:6 = 35           ! H2K Location
+*option:NORTHBAY:value:7 = 5150
 *option:NORTHBAY:cost:total    = 0
 
 *option:SAULTSTEMARIE:value:1 = 
@@ -769,6 +834,7 @@
 *option:SAULTSTEMARIE:value:4 = Wth110.dir
 *option:SAULTSTEMARIE:value:5 = 5           ! H2K Region
 *option:SAULTSTEMARIE:value:6 = 37           ! H2K Location
+*option:SAULTSTEMARIE:value:7 = 4960
 *option:SAULTSTEMARIE:cost:total    = 0
 
 *option:SIMCOE:value:1 = 
@@ -777,6 +843,7 @@
 *option:SIMCOE:value:4 = Wth110.dir
 *option:SIMCOE:value:5 = 5           ! H2K Region
 *option:SIMCOE:value:6 = 38           ! H2K Location
+*option:SIMCOE:value:7 = 3700
 *option:SIMCOE:cost:total    = 0
 
 *option:SUDBURY:value:1 = 
@@ -785,6 +852,7 @@
 *option:SUDBURY:value:4 = Wth110.dir
 *option:SUDBURY:value:5 = 5           ! H2K Region
 *option:SUDBURY:value:6 = 39           ! H2K Location
+*option:SUDBURY:value:7 = 5180
 *option:SUDBURY:cost:total    = 0
 
 *option:THUNDERBAY:value:1 = 
@@ -793,6 +861,7 @@
 *option:THUNDERBAY:value:4 = Wth110.dir
 *option:THUNDERBAY:value:5 = 5           ! H2K Region
 *option:THUNDERBAY:value:6 = 40           ! H2K Location
+*option:THUNDERBAY:value:7 = 5650
 *option:THUNDERBAY:cost:total    = 0
 
 *option:TIMMINS:value:1 = 
@@ -801,6 +870,7 @@
 *option:TIMMINS:value:4 = Wth110.dir
 *option:TIMMINS:value:5 = 5           ! H2K Region
 *option:TIMMINS:value:6 = 41           ! H2K Location
+*option:TIMMINS:value:7 = 5940
 *option:TIMMINS:cost:total    = 0
 
 *option:WINDSOR:value:1 = 
@@ -809,6 +879,7 @@
 *option:WINDSOR:value:4 = Wth110.dir
 *option:WINDSOR:value:5 = 5           ! H2K Region
 *option:WINDSOR:value:6 = 43           ! H2K Location
+*option:WINDSOR:value:7 = 3400
 *option:WINDSOR:cost:total    = 0
 
 *option:GOREBAY:value:1 = 
@@ -817,6 +888,7 @@
 *option:GOREBAY:value:4 = Wth110.dir
 *option:GOREBAY:value:5 = 5           ! H2K Region
 *option:GOREBAY:value:6 = 111           ! H2K Location
+*option:GOREBAY:value:7 = 4700
 *option:GOREBAY:cost:total    = 0
 
 *option:KAPUSKASING:value:1 = 
@@ -825,6 +897,7 @@
 *option:KAPUSKASING:value:4 = Wth110.dir
 *option:KAPUSKASING:value:5 = 5           ! H2K Region
 *option:KAPUSKASING:value:6 = 112           ! H2K Location
+*option:KAPUSKASING:value:7 = 6250
 *option:KAPUSKASING:cost:total    = 0
 
 *option:KENORA:value:1 = 
@@ -833,6 +906,7 @@
 *option:KENORA:value:4 = Wth110.dir
 *option:KENORA:value:5 = 5           ! H2K Region
 *option:KENORA:value:6 = 113           ! H2K Location
+*option:KENORA:value:7 = 5630
 *option:KENORA:cost:total    = 0
 
 *option:SIOUXLOOKOUT:value:1 = 
@@ -841,6 +915,7 @@
 *option:SIOUXLOOKOUT:value:4 = Wth110.dir
 *option:SIOUXLOOKOUT:value:5 = 5           ! H2K Region
 *option:SIOUXLOOKOUT:value:6 = 114           ! H2K Location
+*option:SIOUXLOOKOUT:value:7 = 5950
 *option:SIOUXLOOKOUT:cost:total    = 0
 
 *option:TORONTOMETRESSTN:value:1 = 
@@ -849,6 +924,7 @@
 *option:TORONTOMETRESSTN:value:4 = Wth110.dir
 *option:TORONTOMETRESSTN:value:5 = 5           ! H2K Region
 *option:TORONTOMETRESSTN:value:6 = 115           ! H2K Location
+*option:TORONTOMETRESSTN:value:7 = 3890
 *option:TORONTOMETRESSTN:cost:total    = 0
 
 *option:TRENTON:value:1 = 
@@ -857,6 +933,7 @@
 *option:TRENTON:value:4 = Wth110.dir
 *option:TRENTON:value:5 = 5           ! H2K Region
 *option:TRENTON:value:6 = 116           ! H2K Location
+*option:TRENTON:value:7 = 4110
 *option:TRENTON:cost:total    = 0
 
 *option:WIARTON:value:1 = 
@@ -865,6 +942,7 @@
 *option:WIARTON:value:4 = Wth110.dir
 *option:WIARTON:value:5 = 5           ! H2K Region
 *option:WIARTON:value:6 = 117           ! H2K Location
+*option:WIARTON:value:7 = 4300
 *option:WIARTON:cost:total    = 0
 
 *option:BAGOTVILLE:value:1 = 
@@ -873,6 +951,7 @@
 *option:BAGOTVILLE:value:4 = Wth110.dir
 *option:BAGOTVILLE:value:5 = 6           ! H2K Region
 *option:BAGOTVILLE:value:6 = 44           ! H2K Location
+*option:BAGOTVILLE:value:7 = 5700
 *option:BAGOTVILLE:cost:total    = 0
 
 *option:KUUJJUAQ:value:1 = 
@@ -881,6 +960,7 @@
 *option:KUUJJUAQ:value:4 = Wth110.dir
 *option:KUUJJUAQ:value:5 = 6           ! H2K Region
 *option:KUUJJUAQ:value:6 = 45           ! H2K Location
+*option:KUUJJUAQ:value:7 = 8550
 *option:KUUJJUAQ:cost:total    = 0
 
 *option:KUUJJUARAPIK:value:1 = 
@@ -889,6 +969,7 @@
 *option:KUUJJUARAPIK:value:4 = Wth110.dir
 *option:KUUJJUARAPIK:value:5 = 6           ! H2K Region
 *option:KUUJJUARAPIK:value:6 = 47           ! H2K Location
+*option:KUUJJUARAPIK:value:7 = 9150
 *option:KUUJJUARAPIK:cost:total    = 0
 
 *option:SCHEFFERVILLE:value:1 = 
@@ -897,6 +978,7 @@
 *option:SCHEFFERVILLE:value:4 = Wth110.dir
 *option:SCHEFFERVILLE:value:5 = 6           ! H2K Region
 *option:SCHEFFERVILLE:value:6 = 49           ! H2K Location
+*option:SCHEFFERVILLE:value:7 = 8550
 *option:SCHEFFERVILLE:cost:total    = 0
 
 *option:SEPTILES:value:1 = 
@@ -905,6 +987,7 @@
 *option:SEPTILES:value:4 = Wth110.dir
 *option:SEPTILES:value:5 = 6           ! H2K Region
 *option:SEPTILES:value:6 = 50           ! H2K Location
+*option:SEPTILES:value:7 = 6200
 *option:SEPTILES:cost:total    = 0
 
 *option:SHERBROOKE:value:1 = 
@@ -913,6 +996,7 @@
 *option:SHERBROOKE:value:4 = Wth110.dir
 *option:SHERBROOKE:value:5 = 6           ! H2K Region
 *option:SHERBROOKE:value:6 = 51           ! H2K Location
+*option:SHERBROOKE:value:7 = 4700
 *option:SHERBROOKE:cost:total    = 0
 
 *option:VALDOR:value:1 = 
@@ -921,6 +1005,7 @@
 *option:VALDOR:value:4 = Wth110.dir
 *option:VALDOR:value:5 = 6           ! H2K Region
 *option:VALDOR:value:6 = 52           ! H2K Location
+*option:VALDOR:value:7 = 6180
 *option:VALDOR:cost:total    = 0
 
 *option:BAIECOMEAU:value:1 = 
@@ -929,6 +1014,7 @@
 *option:BAIECOMEAU:value:4 = Wth110.dir
 *option:BAIECOMEAU:value:5 = 6           ! H2K Region
 *option:BAIECOMEAU:value:6 = 118           ! H2K Location
+*option:BAIECOMEAU:value:7 = 6020
 *option:BAIECOMEAU:cost:total    = 0
 
 *option:LAGRANDERIVIERE:value:1 = 
@@ -937,6 +1023,7 @@
 *option:LAGRANDERIVIERE:value:4 = Wth110.dir
 *option:LAGRANDERIVIERE:value:5 = 6           ! H2K Region
 *option:LAGRANDERIVIERE:value:6 = 119           ! H2K Location
+*option:LAGRANDERIVIERE:value:7 = 8100
 *option:LAGRANDERIVIERE:cost:total    = 0
 
 *option:MONTJOLI:value:1 = 
@@ -945,6 +1032,7 @@
 *option:MONTJOLI:value:4 = Wth110.dir
 *option:MONTJOLI:value:5 = 6           ! H2K Region
 *option:MONTJOLI:value:6 = 120           ! H2K Location
+*option:MONTJOLI:value:7 = 5370
 *option:MONTJOLI:cost:total    = 0
 
 *option:MONTREALMIRABEL:value:1 = 
@@ -953,6 +1041,7 @@
 *option:MONTREALMIRABEL:value:4 = Wth110.dir
 *option:MONTREALMIRABEL:value:5 = 6           ! H2K Region
 *option:MONTREALMIRABEL:value:6 = 121           ! H2K Location
+*option:MONTREALMIRABEL:value:7 = 4500  
 *option:MONTREALMIRABEL:cost:total    = 0
 
 *option:STHUBERT:value:1 = 
@@ -961,6 +1050,7 @@
 *option:STHUBERT:value:4 = Wth110.dir
 *option:STHUBERT:value:5 = 6           ! H2K Region
 *option:STHUBERT:value:6 = 122           ! H2K Location
+*option:STHUBERT:value:7 = 4490   
 *option:STHUBERT:cost:total    = 0
 
 *option:STEAGATHEDESMONTS:value:1 = 
@@ -969,7 +1059,9 @@
 *option:STEAGATHEDESMONTS:value:4 = Wth110.dir
 *option:STEAGATHEDESMONTS:value:5 = 6           ! H2K Region
 *option:STEAGATHEDESMONTS:value:6 = 123           ! H2K Location
+*option:STEAGATHEDESMONTS:value:7 = 5390
 *option:STEAGATHEDESMONTS:cost:total    = 0
+
 
 *option:CHATHAM:value:1 = 
 *option:CHATHAM:value:2 = 
@@ -977,6 +1069,7 @@
 *option:CHATHAM:value:4 = Wth110.dir
 *option:CHATHAM:value:5 = 7           ! H2K Region
 *option:CHATHAM:value:6 = 53           ! H2K Location
+*option:CHATHAM:value:7 = 4950
 *option:CHATHAM:cost:total    = 0
 
 *option:MONCTON:value:1 = 
@@ -985,6 +1078,7 @@
 *option:MONCTON:value:4 = Wth110.dir
 *option:MONCTON:value:5 = 7           ! H2K Region
 *option:MONCTON:value:6 = 55           ! H2K Location
+*option:MONCTON:value:7 = 4680
 *option:MONCTON:cost:total    = 0
 
 *option:SAINTJOHN:value:1 = 
@@ -993,6 +1087,7 @@
 *option:SAINTJOHN:value:4 = Wth110.dir
 *option:SAINTJOHN:value:5 = 7           ! H2K Region
 *option:SAINTJOHN:value:6 = 56           ! H2K Location
+*option:SAINTJOHN:value:7 = 4570
 *option:SAINTJOHN:cost:total    = 0
 
 *option:CHARLO:value:1 = 
@@ -1001,6 +1096,7 @@
 *option:CHARLO:value:4 = Wth110.dir
 *option:CHARLO:value:5 = 7           ! H2K Region
 *option:CHARLO:value:6 = 124           ! H2K Location
+*option:CHARLO:value:7 = 5500
 *option:CHARLO:cost:total    = 0
 
 *option:GREENWOOD:value:1 = 
@@ -1009,6 +1105,7 @@
 *option:GREENWOOD:value:4 = Wth110.dir
 *option:GREENWOOD:value:5 = 8           ! H2K Region
 *option:GREENWOOD:value:6 = 57           ! H2K Location
+*option:GREENWOOD:value:7 = 4140
 *option:GREENWOOD:cost:total    = 0
 
 *option:SYDNEY:value:1 = 
@@ -1017,6 +1114,7 @@
 *option:SYDNEY:value:4 = Wth110.dir
 *option:SYDNEY:value:5 = 8           ! H2K Region
 *option:SYDNEY:value:6 = 59           ! H2K Location
+*option:SYDNEY:value:7 = 4530
 *option:SYDNEY:cost:total    = 0
 
 *option:TRURO:value:1 = 
@@ -1025,6 +1123,7 @@
 *option:TRURO:value:4 = Wth110.dir
 *option:TRURO:value:5 = 8           ! H2K Region
 *option:TRURO:value:6 = 60           ! H2K Location
+*option:TRURO:value:7 = 4500
 *option:TRURO:cost:total    = 0
 
 *option:YARMOUTH:value:1 = 
@@ -1033,6 +1132,7 @@
 *option:YARMOUTH:value:4 = Wth110.dir
 *option:YARMOUTH:value:5 = 8           ! H2K Region
 *option:YARMOUTH:value:6 = 61           ! H2K Location
+*option:YARMOUTH:value:7 = 3990
 *option:YARMOUTH:cost:total    = 0
 
 *option:CHARLOTTETOWN:value:1 = 
@@ -1041,6 +1141,7 @@
 *option:CHARLOTTETOWN:value:4 = Wth110.dir
 *option:CHARLOTTETOWN:value:5 = 9           ! H2K Region
 *option:CHARLOTTETOWN:value:6 = 62           ! H2K Location
+*option:CHARLOTTETOWN:value:7 = 4460   
 *option:CHARLOTTETOWN:cost:total    = 0
 
 *option:SUMMERSIDE:value:1 = 
@@ -1049,6 +1150,7 @@
 *option:SUMMERSIDE:value:4 = Wth110.dir
 *option:SUMMERSIDE:value:5 = 9           ! H2K Region
 *option:SUMMERSIDE:value:6 = 63           ! H2K Location
+*option:SUMMERSIDE:value:7 = 4600
 *option:SUMMERSIDE:cost:total    = 0
 
 *option:BONAVISTA:value:1 = 
@@ -1057,6 +1159,7 @@
 *option:BONAVISTA:value:4 = Wth110.dir
 *option:BONAVISTA:value:5 = 10           ! H2K Region
 *option:BONAVISTA:value:6 = 64           ! H2K Location
+*option:BONAVISTA:value:7 = 5000
 *option:BONAVISTA:cost:total    = 0
 
 *option:GANDER:value:1 = 
@@ -1065,6 +1168,7 @@
 *option:GANDER:value:4 = Wth110.dir
 *option:GANDER:value:5 = 10           ! H2K Region
 *option:GANDER:value:6 = 65           ! H2K Location
+*option:GANDER:value:7 = 5110
 *option:GANDER:cost:total    = 0
 
 *option:GOOSEBAY:value:1 = 
@@ -1073,6 +1177,7 @@
 *option:GOOSEBAY:value:4 = Wth110.dir
 *option:GOOSEBAY:value:5 = 10           ! H2K Region
 *option:GOOSEBAY:value:6 = 66           ! H2K Location
+*option:GOOSEBAY:value:7 = 6670
 *option:GOOSEBAY:cost:total    = 0
 
 *option:SAINTJOHNS:value:1 = 
@@ -1081,6 +1186,7 @@
 *option:SAINTJOHNS:value:4 = Wth110.dir
 *option:SAINTJOHNS:value:5 = 10           ! H2K Region
 *option:SAINTJOHNS:value:6 = 67           ! H2K Location
+*option:SAINTJOHNS:value:7 = 4800
 *option:SAINTJOHNS:cost:total    = 0
 
 *option:STEPHENVILLE:value:1 = 
@@ -1089,6 +1195,7 @@
 *option:STEPHENVILLE:value:4 = Wth110.dir
 *option:STEPHENVILLE:value:5 = 10           ! H2K Region
 *option:STEPHENVILLE:value:6 = 68           ! H2K Location
+*option:STEPHENVILLE:value:7 = 4850
 *option:STEPHENVILLE:cost:total    = 0
 
 *option:CARTWRIGHT:value:1 = 
@@ -1097,6 +1204,7 @@
 *option:CARTWRIGHT:value:4 = Wth110.dir
 *option:CARTWRIGHT:value:5 = 10           ! H2K Region
 *option:CARTWRIGHT:value:6 = 125           ! H2K Location
+*option:CARTWRIGHT:value:7 = 6440
 *option:CARTWRIGHT:cost:total    = 0
 
 *option:DANIELSHARBOUR:value:1 = 
@@ -1105,6 +1213,7 @@
 *option:DANIELSHARBOUR:value:4 = Wth110.dir
 *option:DANIELSHARBOUR:value:5 = 10           ! H2K Region
 *option:DANIELSHARBOUR:value:6 = 126           ! H2K Location
+*option:DANIELSHARBOUR:value:7 = 4760
 *option:DANIELSHARBOUR:cost:total    = 0
 
 *option:DEERLAKE:value:1 = 
@@ -1113,6 +1222,7 @@
 *option:DEERLAKE:value:4 = Wth110.dir
 *option:DEERLAKE:value:5 = 10           ! H2K Region
 *option:DEERLAKE:value:6 = 127           ! H2K Location
+*option:DEERLAKE:value:7 = 4760
 *option:DEERLAKE:cost:total    = 0
 
 *option:WABUSHLAKE:value:1 = 
@@ -1121,6 +1231,7 @@
 *option:WABUSHLAKE:value:4 = Wth110.dir
 *option:WABUSHLAKE:value:5 = 10           ! H2K Region
 *option:WABUSHLAKE:value:6 = 128           ! H2K Location
+*option:WABUSHLAKE:value:7 = 7710
 *option:WABUSHLAKE:cost:total    = 0
 
 *option:DAWSONCITY:value:1 = 
@@ -1129,6 +1240,7 @@
 *option:DAWSONCITY:value:4 = Wth110.dir
 *option:DAWSONCITY:value:5 = 11           ! H2K Region
 *option:DAWSONCITY:value:6 = 91           ! H2K Location
+*option:DAWSONCITY:value:7 = 8120
 *option:DAWSONCITY:cost:total    = 0
 
 *option:FORTSMITH:value:1 = 
@@ -1137,6 +1249,7 @@
 *option:FORTSMITH:value:4 = Wth110.dir
 *option:FORTSMITH:value:5 = 12           ! H2K Region
 *option:FORTSMITH:value:6 = 71           ! H2K Location
+*option:FORTSMITH:value:7 = 7300
 *option:FORTSMITH:cost:total    = 0
 
 *option:NORMANWELLS:value:1 = 
@@ -1145,6 +1258,7 @@
 *option:NORMANWELLS:value:4 = Wth110.dir
 *option:NORMANWELLS:value:5 = 12           ! H2K Region
 *option:NORMANWELLS:value:6 = 74           ! H2K Location
+*option:NORMANWELLS:value:7 = 8510
 *option:NORMANWELLS:cost:total    = 0
 
 *option:BAKERLAKE:value:1 = 
@@ -1153,6 +1267,7 @@
 *option:BAKERLAKE:value:4 = Wth110.dir
 *option:BAKERLAKE:value:5 = 13           ! H2K Region
 *option:BAKERLAKE:value:6 = 70           ! H2K Location
+*option:BAKERLAKE:value:7 = 10700
 *option:BAKERLAKE:cost:total    = 0
 
 *option:IQALUIT:value:1 = 
@@ -1161,6 +1276,7 @@
 *option:IQALUIT:value:4 = Wth110.dir
 *option:IQALUIT:value:5 = 13           ! H2K Region
 *option:IQALUIT:value:6 = 72           ! H2K Location
+*option:IQALUIT:value:7 = 9980
 *option:IQALUIT:cost:total    = 0
 
 *option:RESOLUTE:value:1 = 
@@ -1169,6 +1285,7 @@
 *option:RESOLUTE:value:4 = Wth110.dir
 *option:RESOLUTE:value:5 = 13           ! H2K Region
 *option:RESOLUTE:value:6 = 75           ! H2K Location
+*option:RESOLUTE:value:7 = 12360
 *option:RESOLUTE:cost:total    = 0
 
 *option:CORALHARBOUR:value:1 = 
@@ -1177,6 +1294,7 @@
 *option:CORALHARBOUR:value:4 = Wth110.dir
 *option:CORALHARBOUR:value:5 = 13           ! H2K Region
 *option:CORALHARBOUR:value:6 = 129           ! H2K Location
+*option:CORALHARBOUR:value:7 = 10720
 *option:CORALHARBOUR:cost:total    = 0
 
 *option:HALLBEACH:value:1 = 
@@ -1185,6 +1303,7 @@
 *option:HALLBEACH:value:4 = Wth110.dir
 *option:HALLBEACH:value:5 = 13           ! H2K Region
 *option:HALLBEACH:value:6 = 130           ! H2K Location
+*option:HALLBEACH:value:7 = 10720
 *option:HALLBEACH:cost:total    = 0
 
 *option:XXXXX:value:1 = 
@@ -1193,6 +1312,7 @@
 *option:XXXXX:value:4 = Wth110.dir
 *option:XXXXX:value:5 = 1           ! H2K Region
 *option:XXXXX:value:6 = 1           ! H2K Location
+*option:XXXXX:value:7 = 1           ! HDD
 *option:XXXXX:cost:total    = 0
 
 *attribute:end
