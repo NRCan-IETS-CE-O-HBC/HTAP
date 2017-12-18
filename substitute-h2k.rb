@@ -120,6 +120,9 @@ $gAvgPropCons_l      = 0
 $gAvgPelletCons_t    = 0 
 $gDirection = ""
 
+# Flag for reporting choices in inputs
+$gReportChoices      = false
+
 $GenericWindowParams = Hash.new(&$blk)
 $GenericWindowParamsDefined = 0 
 
@@ -3495,13 +3498,20 @@ optparse = OptionParser.new do |opts|
       $gDebug = true
    end
 
+   opts.on("-r", "--report-choices", "Report .choice file input as part of output") do
+      $gReportChoices = true
+   end
+   
    opts.on("-c", "--choices FILE", "Specified choice file (mandatory)") do |c|
       $cmdlineopts["choices"] = c
       $gChoiceFile = c
       if ( !File.exist?($gChoiceFile) )
          fatalerror("Valid path to choice file must be specified with --choices (or -c) option!")
       end
-   end
+   end   
+   
+   
+   
    
    opts.on("-w", "--warnings", "Report warning messages") do 
       $gWarn = true
@@ -4388,6 +4398,21 @@ fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+
+
+
+
+
+if $gReportChoices then 
+   stream_out (" REPORTING CHOICES !!! \n")
+   $gChoices.sort.to_h
+   for attribute in $gChoices.keys()
+      choice = $gChoices[attribute]
+      stream_out("   > #{attribute}     = #{choice}\n")
+      fSUMMARY.write("input.#{attribute} = #{choice}\n")
+   end 
+end
+
 
 
 fSUMMARY.close() 
