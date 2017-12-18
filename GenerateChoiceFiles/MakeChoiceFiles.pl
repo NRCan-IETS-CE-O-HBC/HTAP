@@ -24,6 +24,131 @@ my $Help_msg = "
                       
 ";
 
+
+# setting Heating Degree Days
+    my $locale ;
+    my $locale_HDD ;
+    my %HDDHash = (
+	            "Whitehorse" => 6580 ,
+                "Toronto" => 3520 ,
+                "Ottawa" => 4500 ,
+                "Edmonton" => 5120 ,
+                "Calgary" => 5000 ,
+                "Montreal" => 4200 ,
+                "Quebec" => 5080 ,
+                "Halifax" => 4000 ,
+                "Fredericton" => 4670 ,
+                "Winnipeg" => 5670 ,
+                "Regina" => 5600 ,
+                "Vancouver" => 2825 ,
+                "PrinceGeorge" => 4720 ,
+                "Kamloops" => 3450 ,
+                "Yellowknife" => 8170 ,
+                "Inuvik" => 9600 ,
+                "ABBOTSFORD" => 2860 ,
+                "CASTLEGAR" => 3580 ,
+                "FORTNELSON" => 6710 ,
+                "FORTSTJOHN" => 5750 ,
+                "PORTHARDY" => 3440 ,
+                "PRINCERUPERT" => 3900 ,
+                "SMITHERS" => 5040 ,
+                "SUMMERLAND" => 3350 ,
+                "VICTORIA" => 2650 ,
+                "WILLIAMSLAKE" => 4400 ,
+                "COMOX" => 3100 ,
+                "CRANBROOK" => 4400 ,
+                "QUESNEL" => 4650 ,
+                "SANDSPIT" => 3450 ,
+                "TERRACE" => 4150 ,
+                "TOFINO" => 3150 ,
+                "WHISTLER" => 4180 ,
+                "FORTMCMURRAY" => 6250 ,
+                "LETHBRIDGE" => 4500 ,
+                "ROCKYMOUNTAINHOUSE" => 5640 ,
+                "SUFFIELD" => 4770 ,
+                "COLDLAKE" => 5860 ,
+                "CORONATION" => 5640 ,
+                "GRANDEPRAIRIE" => 5790 ,
+                "MEDICINEHAT" => 4540 ,
+                "PEACERIVER" => 6050 ,
+                "REDDEER" => 5550 ,
+                "ESTEVAN" => 5340 ,
+                "PRINCEALBERT" => 6100 ,
+                "SASKATOON" => 5700 ,
+                "SWIFTCURRENT" => 5150 ,
+                "URANIUMCITY" => 7500 ,
+                "BROADVIEW" => 5760 ,
+                "MOOSEJAW" => 5270 ,
+                "NORTHBATTLEFORD" => 5900 ,
+                "YORKTON" => 6000 ,
+                "BRANDON" => 5760 ,
+                "CHURCHILL" => 8950 ,
+                "THEPAS" => 6480 ,
+                "THOMPSON" => 7600 ,
+                "DAUPHIN" => 5900 ,
+                "PORTAGELAPRAIRIE" => 5600 ,
+                "BIGTROUTLAKE" => 7650 ,
+                "KINGSTON" => 4000 ,
+                "LONDON" => 3900 ,
+                "MUSKOKA" => 4760 ,
+                "NORTHBAY" => 5150 ,
+                "SAULTSTEMARIE" => 4960 ,
+                "SIMCOE" => 3700 ,
+                "SUDBURY" => 5180 ,
+                "THUNDERBAY" => 5650 ,
+                "TIMMINS" => 5940 ,
+                "WINDSOR" => 3400 ,
+                "GOREBAY" => 4700 ,
+                "KAPUSKASING" => 6250 ,
+                "KENORA" => 5630 ,
+                "SIOUXLOOKOUT" => 5950 ,
+                "TORONTOMETRESSTN" => 3890 ,
+                "TRENTON" => 4110 ,
+                "WIARTON" => 4300 ,
+                "BAGOTVILLE" => 5700 ,
+                "KUUJJUAQ" => 8550 ,
+                "KUUJJUARAPIK" => 9150 ,
+                "SCHEFFERVILLE" => 8550 ,
+                "SEPTILES" => 6200 ,
+                "SHERBROOKE" => 4700 ,
+                "VALDOR" => 6180 ,
+                "BAIECOMEAU" => 6020 ,
+                "LAGRANDERIVIERE" => 8100 ,
+                "MONTJOLI" => 5370 ,
+                "MONTREALMIRABEL" => 4500   ,
+                "STHUBERT" => 4490    ,
+                "STEAGATHEDESMONTS" => 5390 ,
+                "CHATHAM" => 4950 ,
+                "MONCTON" => 4680 ,
+                "SAINTJOHN" => 4570 ,
+                "CHARLO" => 5500 ,
+                "GREENWOOD" => 4140 ,
+                "SYDNEY" => 4530 ,
+                "TRURO" => 4500 ,
+                "YARMOUTH" => 3990 ,
+                "CHARLOTTETOWN" => 4460    ,
+                "SUMMERSIDE" => 4600 ,
+                "BONAVISTA" => 5000 ,
+                "GANDER" => 5110 ,
+                "GOOSEBAY" => 6670 ,
+                "SAINTJOHNS" => 4800 ,
+                "STEPHENVILLE" => 4850 ,
+                "CARTWRIGHT" => 6440 ,
+                "DANIELSHARBOUR" => 4760 ,
+                "DEERLAKE" => 4760 ,
+                "WABUSHLAKE" => 7710 ,
+                "DAWSONCITY" => 8120 ,
+                "FORTSMITH" => 7300 ,
+                "NORMANWELLS" => 8510 ,
+                "BAKERLAKE" => 10700 ,
+                "IQALUIT" => 9980 ,
+                "RESOLUTE" => 12360 ,
+                "CORALHARBOUR" => 10720 ,
+                "HALLBEACH" => 10720 ,
+                "XXXXX" => 1                );
+
+
+
 # dump help text, if no argument given
 if (!@ARGV){
   print $Help_msg;
@@ -47,7 +172,10 @@ my $ChoiceFileList ="";
 
 my %upgrade_packages = (
 
-                        "as-found" => ["as-found"],   # Original definitions from the .csv file 
+#                        "as-found"           => ["as-found"]          # Original definitions from the .csv file 
+#                        "NBC9_36_noHRV"      => ["NBC9_36_noHRV"]      # 2010
+                        "NBC9_36_HRV"        => ["NBC9_36_HRV"]       # 2010
+ 						
   
 );
 
@@ -106,6 +234,7 @@ while ( my $line = <OPTLISTFILE> ){
 
       my $Scenario = $choiceHash{"Scenario"} ; 
       my $ID       = $choiceHash{"ID"} ;
+
       # extra keys that weren't part of the original spreadsheet - "as-found condition"
       $choiceHash{"Opt-DWHRandSDHW"} = "none"; 
       $choiceHash{"Opt-ElecLoadScale"} = "NGERSNoReduction19"; 
@@ -113,6 +242,10 @@ while ( my $line = <OPTLISTFILE> ){
       $choiceHash{"Opt-HRV_ctl"} = "EightHRpDay"; 
       $choiceHash{"Opt-StandoffPV"} = "NoPV";
 
+      $locale = $choiceHash{"Opt-Location"} ; 
+      $locale_HDD = $HDDHash{$locale};
+	  
+	  
       foreach my $upgrade (@{$upgrade_packages{$upgrades_name}}) {
 
         $upgrade_is_valid = UpgradeRuleSet($upgrade);
@@ -131,7 +264,7 @@ while ( my $line = <OPTLISTFILE> ){
         # Generate corresponding Choice File
         WriteChoiceFile($choiceFilename); 
       
-        push @choiceLists, ".".$choiceFilename; 
+        push @choiceLists,".".$choiceFilename; 
         
         $NumFiles++;
       
@@ -172,6 +305,8 @@ close (INITEMPLATE);
 my $outputFile = 0; 
 my $BatchCmds = ""; 
 
+
+	
 foreach my $ChoiceFile (@choiceLists){ 
   $ChoiceFileList .= " $ChoiceFile , ";
   $files++; 
@@ -199,9 +334,9 @@ foreach my $ChoiceFile (@choiceLists){
     print OUTPUTINI $IniTxt; 
     close (OUTPUTINI) ; 
     
-    $BatchCmds .= "javaws -clearcache \n";
-    $BatchCmds .= "javaws -uninstall \n";
-    $BatchCmds .= "java -classpath \"C:\\Program Files\\genopt\\genopt.jar\" genopt.GenOpt Genopt-run-auto-$outputFile++.GO-ini\n"; 
+#    $BatchCmds .= "javaws -clearcache \n";
+#    $BatchCmds .= "javaws -uninstall \n";
+    $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt Genopt-run-auto-$outputFile++.GO-ini\n"; 
     $BatchCmds .= "timeout /t 10 \n";
     $BatchCmds .= "copy OutputListingAll.txt CloudResultsBatch$outputFile.txt\n";
     $BatchCmds .= "del OutputListingAll.txt\n";
@@ -260,7 +395,7 @@ print " UPGRADES CONSIDERED:\n";
 foreach my $upgrade_name ( keys %upgrade_packages){
       print "   -> %upgrade_packages{$upgrade_name} \n"; 
 }
-
+ 
 
 
 #--------------------------------------------------------------------
@@ -314,8 +449,257 @@ sub UpgradeRuleSet($){
       
       $validupgrade = 1; 
       last SWITCH; 
+	  
   
     }
+
+    #=========================================================================
+    # NBC - 9.36 - 2010
+    #=========================================================================
+    # thermal zones and HDD
+	#-------------------------------------------------------------------------
+    if ( $upgrade =~ /NBC9_36_noHRV/ ){
+
+       $choiceHash{ "Opt-ACH" }   =  "ACH_2_5"; 
+	# HVAC Equipment performance requirements (Table 9.36.3.10. and Table 9.36.4.2) 	
+       if ($choiceHash{"Opt-HVACSystem"} =~ /NA/){
+	       $choiceHash{"Opt-HVACSystem"}        =  "NA"; 
+		   $choiceHash{"Opt-DHWSystem"}         =  "NA"; }
+ 	   if ($choiceHash{"Opt-HVACSystem"} =~ /basefurnace/){
+   	       $choiceHash{"Opt-HVACSystem"}        =  "NBC-gas-furnace"; 
+		   $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_gas"; }
+       if ($choiceHash{"Opt-HVACSystem"} =~ /elec/){
+   	       $choiceHash{"Opt-HVACSystem"}        =  "NBC-elec-heat";
+ 		   $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_elec" ; }
+       if ($choiceHash{"Opt-HVACSystem"} =~ /ASHP/){
+   	       $choiceHash{"Opt-HVACSystem"}        =  "NBC-CCASHP";
+ 		   $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_elec" ; }
+#       if ($choiceHash{"Opt-HVACSystem"} =~ /oil-heat/){
+#   	    $choiceHash{"Opt-HVACSystem"}        =  "NBC-oil-heat";
+# 		    $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_oil" ; }
+	   
+	# Zone 4 ( HDD < 3000) without an HRV
+ 	   if ( $locale_HDD < 3000 ) {  
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone4";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone4";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone4";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone4-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+              $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone4"; }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+              $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone4"; }
+	}
+
+	
+    # Zone 5 ( 3000 < HDD < 3999) without an HRV
+       if (( $locale_HDD >= 3000 ) &&  ( $locale_HDD < 3999 )){ 
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone5_noHRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone5_noHRV";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone5";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone5-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+  		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone5_noHRV";  }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone5"; }
+  	  }
+
+    # Zone 6 ( 4000 < HDD < 4999) without an HRV
+       if (( $locale_HDD >= 4000 ) &&  ( $locale_HDD < 4999 )){     
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone6_noHRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone6_noHRV";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone6";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone6-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+              $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone6_noHRV"; }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone6"; }
+      }
+
+    # Zone 7A ( 5000 < HDD < 5999) without an HRV
+       if (( $locale_HDD >= 5000 ) &&  ( $locale_HDD < 5999 )){     
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone7A_noHRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone7A_noHRV";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone7A";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone7A-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+              $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone7A_noHRV"; }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone7"; }
+      }
+
+    # Zone 7B ( 6000 < HDD < 6999) without an HRV
+       if (( $locale_HDD >= 6000 ) &&  ( $locale_HDD < 6999 )){    
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone7B_noHRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone7B";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone7B";
+ 	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone7B-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+			  $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone7B_noHRV"; }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone7"; }
+       }
+
+    # Zone 8 (HDD <= 7000) without an HRV
+       if ( $locale_HDD >= 7000 ) {     
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone8_noHRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone8";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone8";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone8-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+        if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+			 $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone8_noHRV"; }
+        if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+		     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone8"; }
+		 }
+
+      $validupgrade = 1; 
+      last SWITCH; 
+  
+    }
+
+
+
+#-------------------------------------------------------------------------
+    if ( $upgrade =~ /NBC9_36_HRV/ ){
+
+	     $choiceHash{ "Opt-ACH" }   =  "ACH_2_5"; 
+    # HVAC Equipment performance requirements (Table 9.36.3.10. and Table 9.36.4.2) 	
+       if ($choiceHash{"Opt-HVACSystem"} =~ /NA/){
+	       $choiceHash{"Opt-HVACSystem"}        =  "NA"; 
+		   $choiceHash{"Opt-DHWSystem"}         =  "NA";
+		   $choiceHash{"Opt-HRVSpec"}           =  "NBC_HRV";		   }
+ 	   if ($choiceHash{"Opt-HVACSystem"} =~ /basefurnace/){
+   	       $choiceHash{"Opt-HVACSystem"}        =  "NBC-gas-furnace"; 
+		   $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_gas"; 
+		   $choiceHash{"Opt-HRVSpec"}           =  "NBC_HRV";		   }
+	   if ($choiceHash{"Opt-HVACSystem"} =~ /elec/){
+   	       $choiceHash{"Opt-HVACSystem"}        =  "NBC-elec-heat";
+ 		   $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_elec" ; 
+   		   $choiceHash{"Opt-HRVSpec"}           =  "NBC_HRV";		   }
+       if ($choiceHash{"Opt-HVACSystem"} =~ /ASHP/){
+   	       $choiceHash{"Opt-HVACSystem"}        =  "NBC-CCASHP";
+ 		   $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_elec" ; 
+		   $choiceHash{"Opt-HRVSpec"}           =  "NBC_HRV";		   }
+		   #       if ($choiceHash{"Opt-HVACSystem"} =~ /oil-heat/){
+#   	    $choiceHash{"Opt-HVACSystem"}        =  "NBC-oil-heat";
+# 		    $choiceHash{"Opt-DHWSystem"}         =  "NBC-HotWater_oil" ; 
+#  		    $choiceHash{"Opt-HRVSpec"}           =  "NBC_HRV";		   }
+	
+	# Zone 4 ( HDD < 3000) with an HRV
+	   if ( $locale_HDD < 3000 ) {  
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone4";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone4";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone4";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone4-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+  		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone4";   }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone4";    }
+
+	}
+
+	 
+    # Zone 5 ( 3000 < HDD < 3999) with an HRV
+       if (( $locale_HDD >= 3000 ) &&  ( $locale_HDD < 3999 )){ 
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone5_HRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone5_HRV";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone5";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone5-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+ 	          $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone5_HRV"; }
+         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+			  $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone5_HRV";      }
+  	  }
+
+    # Zone 6 ( 4000 < HDD < 4999) with an HRV
+       if (( $locale_HDD >= 4000 ) &&  ( $locale_HDD < 4999 )){     
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone6_HRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone6_HRV";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone6";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone6-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+        if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+    	 	 $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone6_HRV"; }
+        if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+	 	     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone6_HRV";  }
+		 }
+
+    # Zone 7A ( 5000 < HDD < 5999) with an HRV
+       if (( $locale_HDD >= 5000 ) &&  ( $locale_HDD < 5999 )){     
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone7A_HRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone7A_HRV";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone7A";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone7A-window";
+		 	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+        if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+             $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone7A_HRV"; }
+        if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+	 	     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone7A_HRV";  }
+	}
+
+    # Zone 7B ( 6000 < HDD < 6999) witht an HRV
+       if (( $locale_HDD >= 6000 ) &&  ( $locale_HDD < 6999 )){    
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone7B_HRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone7B";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone7B";
+ 	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone7B-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+        if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+ 		     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone7B_HRV"; }
+        if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+	 	     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone7B_HRV";  }			 
+       }
+
+    # Zone 8 (HDD <= 7000) with an HRV
+       if ( $locale_HDD >= 7000 ) {     
+	# effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $choiceHash{"Opt-GenericWall_1Layer_definitions"} =  "NBC_Wall_zone8_HRV";
+         $choiceHash{"Opt-Ceilings"}                       =  "NBC_Ceiling_zone8";
+         $choiceHash{"Opt-ExposedFloor"}                   =  "NBC_exposed_zone8";
+	# effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $choiceHash{"Opt-CasementWindows"}                =  "NBC-zone8-window";
+	# effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+        if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
+			 $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone8_HRV";  }
+        if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
+	 	     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone8_HRV";  }			 
+		 }
+
+      $validupgrade = 1; 
+      last SWITCH; 
+  
+    }
+
+	
     #=========================================================================
     # EMMC regs 
     #=========================================================================
@@ -2016,17 +2400,18 @@ sub WriteChoiceFile($){
    open(OPTIONSOUT, ">$FileName")
        || die "$0: Can't open $FileName in write-open mode: $!";    
   
-   print OPTIONSOUT "! Choice file $FileName generated for GHG work.\n";
+   print OPTIONSOUT "! Choice file $FileName generated for  work.\n";
  
    
   
    # Start H2k definitions. 
   
    # if locations are to be spec'd by GenOpt
-   print OPTIONSOUT "Opt-Location         : <LOCATION>\n";  
+#   print OPTIONSOUT "Opt-Location         : <LOCATION>\n";  
    
    # if locations are to be drawn from csv file:
    print OPTIONSOUT "Opt-Location         : ".$choiceHash{"Opt-Location"}."\n"; 
+
    
    print OPTIONSOUT "Opt-DBFiles          : H2KCodeLibFile\n"; 
    print OPTIONSOUT "Opt-FuelCost         : rates2016\n"; 
