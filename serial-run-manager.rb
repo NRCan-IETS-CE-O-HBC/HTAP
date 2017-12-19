@@ -205,14 +205,19 @@ ARGV.each do |choicefile|
         FileUtils.cp(choicefile,$RunDirectory)
         FileUtils.cp($gOptionFile,$RunDirectory)
         
-        $LocalChoiceFile = choicefile.gsub(/^.*\\/, '')
-        $LocalOptionsFile = $gOptionFile.gsub(/^.*\\/, '')
         
-                
+        
+        $LocalChoiceFile = File.basename choicefile
+        
+        
+        $LocalOptionsFile = File.basename $gOptionFile
+        
+  
+        
         
         Dir.chdir($RunDirectory)
         
-        cmdscript =  "ruby #{$gSubstitutePath} -o .\\#{$LocalOptionsFile} -c .\\#{$LocalChoiceFile} --report-choices  "
+        cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} --report-choices  "
         
         stream_out("Running  simulation # #{$RunNumber} ...")
         debug_out(" ( cmd: #{cmdscript} |  \n")
