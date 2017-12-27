@@ -157,6 +157,9 @@ optparse = OptionParser.new do |opts|
 
    opts.on("-t", "--threads X", "Number of threads to use") do |o|
       $gNumberOfThreads = o.to_i
+      if ( $gNumberOfThreads < 1 ) 
+        $gNumberOfThreads = 1 
+      end 
    end
    
    
@@ -201,7 +204,7 @@ ARGV.each do |choicefile|
   end
 end               
 
-stream_out(" - Preparing to process #{$FinishedTheseFiles.count} .choice files \n\n")
+stream_out(" - Preparing to process #{$FinishedTheseFiles.count} .choice files using #{$gNumberOfThreads} threads \n\n")
 
 
 $batchCount = 0 
