@@ -13,6 +13,7 @@
 require 'rexml/document'
 require 'optparse'
 require 'timeout'
+require 'fileutils'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
@@ -2831,10 +2832,6 @@ def runsims( direction )
                endRun = Time.now
                $runH2KTime = endRun - startRun  
                stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-
-   if ( ! system(" copy ..\\"+ $h2kFileName + " C:\\HTAP\\applications\\Hybrid-HPs\\h2kfiles\\ ")) then
-     "Couldn't archive .h2k file!"
-    end   
                
                keepTrying = false       # Successful run - don't try agian 
             elsif status == 3    # Precheck message(s)
@@ -2894,11 +2891,13 @@ def runsims( direction )
    # Note that most of the output is contained in the HOT2000 file in XML!
    if ( Dir.exist?("sim-output") )
       stream_out ("\n Copying results.")
-      if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
-         fatalerror("\n Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
-      else
-         debug_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
-      end
+      FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
+      #if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
+      #if ( ! FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\") ) 
+      #   fatalerror("\n Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
+      #else
+      #   debug_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
+      #end
    end
 
 end   # runsims
@@ -4226,9 +4225,10 @@ if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
       fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
    end
 end
-if ( ! system ("xcopy #{$h2k_src_path} #{$gMasterPath}\\H2K /S /Y /Q") )
-   fatalerror ("Fatal Error! Could not copy content to H2K folder below #{$gMasterPath}!\n XCopy return error code #{$?}\n")
-end
+FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K") 
+#if ( ! system ("xcopy #{$h2k_src_path} #{$gMasterPath}\\H2K /S /Y /Q") )
+#   fatalerror ("Fatal Error! Could not copy content to H2K folder below #{$gMasterPath}!\n XCopy return error code #{$?}\n")
+#end
 fix_H2K_INI()  # Fixes the paths in HOT2000.ini file in H2K folder created above
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
@@ -4240,9 +4240,11 @@ if ( File.exist?($gWorkingModelFile) )
       fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
    end
 end
-if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
-   fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
-end
+#if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
+FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
+#if (! FileUtils.cp($gBaseModelFile,$gWorkingModelFile) ) 
+#   fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
+#end
 stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
 
 # Process the working file by replacing all existing values with the values 
