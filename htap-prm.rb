@@ -99,15 +99,9 @@ end
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
 $help_msg = "
- ==========================================================================
- serial-run-manger.rb: 
- 
- This is a rudimentary run manager developed to test JP's 9.36 rule set.
- It's a prototype for an eventual multi-threaded genopt replacement.
-
- --------------------------------------------------------------------------
-      
-"
+ ======================================================
+ HTAP-prm.rb ( a simple parallel run manager for HTAP )
+ ======================================================\n\n"
 
 $gMasterPath = Dir.getwd()
 
@@ -192,19 +186,19 @@ $RunResults = Hash.new {|h,k| h[k] = Array.new }
 $RunTheseFiles = Array.new
 $FinishedTheseFiles = Hash.new
 stream_out("\n")
-stream_out(" =========================================================\n")
+stream_out(" ======================================================\n")
 stream_out(" HTAP-prm.rb ( a simple parallel run manager for HTAP ) \n")
-stream_out(" =========================================================\n\n")
+stream_out(" ======================================================\n\n")
 ARGV.each do |choicefile|
   if ( choicefile =~ /.*choices$/ )
     $RunTheseFiles.push choicefile
     $FinishedTheseFiles[choicefile] = false 
   else 
-    stream_out " ! Skipping: #{choicefile} ( not a .choice file? ) \n"
+    stream_out " ! Skipping: #{choicefile} ( not a '.choice' file? ) \n"
   end
 end               
 
-stream_out(" - Preparing to process #{$FinishedTheseFiles.count} .choice files using #{$gNumberOfThreads} threads \n\n")
+stream_out(" - Preparing to process #{$FinishedTheseFiles.count} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 
 
 $batchCount = 0 
@@ -256,7 +250,7 @@ while $FinishedTheseFiles.has_value?(false)
   
   
     count = thread + 1 
-    stream_out ("     + Starting thread : #{count} / #{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
+    stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
     
     
     # For this thread: Get the next choice file in the batch. 
@@ -308,7 +302,7 @@ while $FinishedTheseFiles.has_value?(false)
 
       $PIDS[thread] = pid 
       
-      stream_out(" (PID #{$PIDS[thread]} )")
+      stream_out("(PID #{$PIDS[thread]})...")
              
       # Cd to root, move to next choice file. 
       Dir.chdir($gMasterPath)
@@ -329,7 +323,7 @@ while $FinishedTheseFiles.has_value?(false)
       
      count = thread2 + 1  
      
-     stream_out ("     + Waiting on PID: #{$PIDS[thread2]} ( #{count} / #{$ThreadsNeeded} )...")
+     stream_out ("     - Waiting on PID: #{$PIDS[thread2]} (#{count}/#{$ThreadsNeeded})...")
       
       Process.wait $PIDS[thread2], 0
       status = $?.exitstatus   
@@ -351,7 +345,7 @@ while $FinishedTheseFiles.has_value?(false)
     
   for thread3 in 0..$ThreadsNeeded-1 
     count = thread3 + 1 
-    stream_out ("     + Post-processing results from PID: #{$PIDS[thread3]} ( #{count} / #{$ThreadsNeeded} )...")
+    stream_out ("     - Post-processing results from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
     
     Dir.chdir($RunDirs[thread3])
     
@@ -394,7 +388,7 @@ while $FinishedTheseFiles.has_value?(false)
  
   end 
   
-  stream_out ("     + Writing results to disk... ") 
+  stream_out ("     - Writing results to disk... ") 
   # Write out results intermittantly. 
   outputlines = ""
   
