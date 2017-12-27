@@ -113,6 +113,7 @@ $gOptionFile = ""
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
+$gFailFile = "HTAP-prm-failures.txt"
 
 $gNumberOfThreads = 3 
 
@@ -216,7 +217,7 @@ $CompletedRunCount = 0
 $FailedRunCount = 0 
 
 
-
+failures = File.open($gFailFile, 'w')
 output = File.open($gOutputFile, 'w') 
 
 $outputHeaderPrinted = false 
@@ -297,7 +298,8 @@ while $FinishedTheseFiles.has_value?(false)
       cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} --report-choices "
       
       
-      debug_out(" ( cmd: #{cmdscript} |  \n")     
+      debug_out(" ( cmd: #{cmdscript} |  \n")  
+         
       pid = Process.spawn( cmdscript, :out => File::NULL, :err => File::NULL ) 
 
       $PIDS[thread] = pid 
@@ -374,15 +376,22 @@ while $FinishedTheseFiles.has_value?(false)
        contents.close
        $CompletedRunCount = $CompletedRunCount + 1 
        stream_out (" done.\n")
+       
+       Dir.chdir($gMasterPath)
+       if ( ! FileUtils.rm_rf($RunDirs[thread3]) )
+        warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
+       end       
+       
     else 
     
-        stream_out (" RUN FAILED! \n")
+        stream_out (" RUN FAILED! (see dir: #{$RunDirs[thread3]}) \n")
+        failures.write "#{$choicefiles[thread]} (dir: #{$RunDirs[thread3]})\n"
         $FailedRuns.push "#{$choicefiles[thread]} (dir: #{$RunDirs[thread3]})"
-        $FailedRunCount = $FailedRunCount + 1 
+        $FailedRunCount = $FailedRunCount + 1
+        Dir.chdir($gMasterPath)        
+        
     end 
-    
-    Dir.chdir($gMasterPath)
-    
+
     #Update status of this thread. 
     $FinishedTheseFiles[$choicefiles[thread3]] = true        
  
@@ -428,8 +437,9 @@ while $FinishedTheseFiles.has_value?(false)
   end 
   
   output.write(outputlines) 
-  output.flush 
-
+  output.flush
+  failures.flush 
+  
   $RunResults.clear
   
   stream_out (" done.\n\n")
@@ -438,7 +448,7 @@ end
 
 
 output.close 
-
+failures.close 
 stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
 
 
