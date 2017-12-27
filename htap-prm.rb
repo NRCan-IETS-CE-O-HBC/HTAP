@@ -185,7 +185,7 @@ $RunNumber = 0
 
 $RunDirectoryRoot = "HTAP-Sim"
 $RunResultFilename = "SubstitutePL-output.txt"
-RunResults = Hash.new {|h,k| h[k] = Array.new }
+$RunResults = Hash.new {|h,k| h[k] = Array.new }
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
               
 
@@ -220,7 +220,15 @@ $RunNumbers  = Array.new
 $FailedRuns  = Array.new
 $CompletedRunCount = 0 
 $FailedRunCount = 0 
-stream_out (" - HTAP-prm: begin runs ----------------------------\n")
+
+
+
+output = File.open($gOutputFile, 'w') 
+
+$outputHeaderPrinted = false 
+
+
+stream_out (" - HTAP-prm: begin runs ----------------------------\n\n")
 
 
 # Loop until all files have been processed. 
@@ -355,10 +363,9 @@ while $FinishedTheseFiles.has_value?(false)
     
        contents = File.open($RunResultFilename, 'r') 
        
-       
-       RunResults["RunNumber"] << $RunNumbers[thread3]
-       RunResults["RunDir"] << $RunDirs[thread3]
-       RunResults["input.ChoiceFile"]<< $choicefiles[thread3]
+       $RunResults["RunNumber"] << $RunNumbers[thread3]
+       $RunResults["RunDir"] << $RunDirs[thread3]
+       $RunResults["input.ChoiceFile"]<< $choicefiles[thread3]
        
        lineCount = 0
        contents.each do |line|
@@ -367,7 +374,7 @@ while $FinishedTheseFiles.has_value?(false)
          line_clean = line.gsub(/\n/, '')
          token, value = line_clean.split('=')
          
-         RunResults[token] <<  value
+         $RunResults[token] <<  value
        
        end
        contents.close
@@ -387,57 +394,63 @@ while $FinishedTheseFiles.has_value?(false)
  
   end 
   
+  stream_out ("     + Writing results to disk... ") 
+  # Write out results intermittantly. 
+  outputlines = ""
   
+  row = 1 
+  
+  while row <= $RunResults["RunNumber"].length
+
+    #stream_out ( "\n           > Data for #{row} ? #{$outputHeaderPrinted}    \n")
+    $RunResults.each do |column, data| 
+  
+      #stream_out "                     - #{column} | #{data[row-1]} \n"
+  
+      if ( ! $outputHeaderPrinted ) 
+        
+        outputlines.concat(column.to_s)
+  
+      else 
+    
+        outputlines.concat(data[row-1].to_s)
+
+      end 
+    
+      outputlines.concat( ", " )
+    
+    end
+
+    if ( ! $outputHeaderPrinted ) 
+      $outputHeaderPrinted = true 
+    else 
+      row = row + 1
+    end 
+  
+    outputlines.concat( "\n " )
+  
+     
+
+  end 
+  
+  output.write(outputlines) 
+  output.flush 
+
+  $RunResults.clear
+  
+  stream_out (" done.\n\n")
   
 end 
+
+
+output.close 
+
 stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
 
 
 
-
-stream_out (" - HTAP-prm: writing results -----------------------\n")
-RowsToWrite =  RunResults["RunNumber"].length
-stream_out ("   + Writing #{RowsToWrite} lines to #{$gOutputFile}...")
-
-outputlines = ""
-row = 0
-
-while row <= RunResults["RunNumber"].length
-
-     
-  
-  RunResults.each do |column, data| 
-  
-    if ( row == 0 ) 
-        
-      outputlines.concat(column.to_s)
-  
-    else 
-    
-      outputlines.concat(data[row-1].to_s)
-
-    end 
-    
-    outputlines.concat( ", " )
-    
-  end
-
-  row = row + 1
-  outputlines.concat( "\n " )
-
-end 
-
-output = File.open($gOutputFile, 'w') 
-output.write(outputlines) 
-output.close 
-
-
-stream_out (" done.\n")
-
-stream_out (" - HTAP-prm: results written -----------------------\n\n")
-
 stream_out (" - HTAP-prm: Run complete -----------------------\n")
-stream_out ("   + #{$CompletedRunCount} files were evaluated successfully.\n")
+stream_out ("   + #{$CompletedRunCount} files were evaluated successfully.\n\n")
 stream_out ("   + #{$FailedRunCount} files failed to run \n")
 
 if ( $FailedRunCount > 0 ) 
@@ -452,4 +465,4 @@ end
   
 stream_out ("\n\n")
   
-  
+exit  
