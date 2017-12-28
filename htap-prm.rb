@@ -114,6 +114,7 @@ $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
 $gFailFile = "HTAP-prm-failures.txt"
+$gSaveAllRuns = false 
 
 $gNumberOfThreads = 3 
 
@@ -131,22 +132,27 @@ optparse = OptionParser.new do |opts|
       $gTest_params["verbosity"] = "verbose"
    end
 
-   opts.on("-d", "--debug", "Run in debug mode") do
-      $cmdlineopts["verbose"] = true
-      $gTest_params["verbosity"] = "debug"
-      $gDebug = true
-   end
+   #opts.on("-d", "--debug", "Run in debug mode") do
+   #   $cmdlineopts["verbose"] = true
+   #   $gTest_params["verbosity"] = "debug"
+   #   $gDebug = true
+   #end
 
    
-   opts.on("-w", "--warnings", "Report warning messages") do 
-      $gWarn = true
+   #opts.on("-w", "--warnings", "Report warning messages") do 
+   #   $gWarn = true
+   #end
+   
+   opts.on("-k", "--keep-all-files", "Keep all .h2k files and output") do 
+      $gSaveAllRuns = true
    end
+   
 
    opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
       $cmdlineopts["substitute"] = o
       $gSubstitutePath = o
       if ( !File.exist?($gOptionFile) )
-         fatalerror("Valid path to option file must be specified with --options (or -o) option!")
+         fatalerror("Valid path to substitute-h2k,rb script must be specified with --substitute-h2k-path (or -s) option!")
       end
    end
 
@@ -378,17 +384,35 @@ while $FinishedTheseFiles.has_value?(false)
        stream_out (" done.\n")
        
        Dir.chdir($gMasterPath)
-       if ( ! FileUtils.rm_rf($RunDirs[thread3]) )
-        warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
-       end       
+       
+       if ( ! $gSaveAllRuns ) 
+         if ( ! FileUtils.rm_rf($RunDirs[thread3]) )
+           warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
+         end      
+       else 
+         $LocalChoiceFile = File.basename $gOptionFile
+         if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
+           warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
+         end        
+       end 
+
+       
        
     else 
     
         stream_out (" RUN FAILED! (see dir: #{$RunDirs[thread3]}) \n")
-        failures.write "#{$choicefiles[thread]} (dir: #{$RunDirs[thread3]})\n"
-        $FailedRuns.push "#{$choicefiles[thread]} (dir: #{$RunDirs[thread3]})"
+        failures.write "#{$choicefiles[thread3]} (dir: #{$RunDirs[thread3]})\n"
+        $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$RunDirs[thread3]})"
         $FailedRunCount = $FailedRunCount + 1
-        Dir.chdir($gMasterPath)        
+        
+        Dir.chdir($gMasterPath) 
+        
+        $LocalChoiceFile = File.basename $gOptionFile
+        if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
+          warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
+        end           
+        
+               
         
     end 
 
