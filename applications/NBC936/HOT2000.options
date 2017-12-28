@@ -3944,7 +3944,7 @@ Reflects southern Ontario costs
 *option:NBC-gas-furnace:value:7 = Furnace
 *option:NBC-gas-furnace:value:8 = None
 *option:NBC-gas-furnace:value:9 = 2
-*option:NBC-gas-furnace:value:10 = 8       ! condensing
+*option:NBC-gas-furnace:value:10 = 5       ! condensing
 *option:NBC-gas-furnace:value:11 = 2       ! User specified capacity
 *option:NBC-gas-furnace:value:12 = NA      ! Low capacity furnace 
 *option:NBC-gas-furnace:value:13 = false   ! AFUE
@@ -4122,6 +4122,17 @@ Reflects southern Ontario costs
 *option:HRV_81:value:7 = 78    ! Eff% @ Rating1
 *option:HRV_81:value:8 = 72    ! Eff% @ Rating2
 *option:HRV_81:cost:total = 2314   !$2314 cost assumed for LEEP Prince George & Kelowna optimization
+
+
+*option:NBC_HRV:value:1 = HRV.vnt
+*option:NBC_HRV:value:2 = 
+*option:NBC_HRV:value:3 = 1     ! F326
+*option:NBC_HRV:value:4 = 1     ! Forced air heating ductwork
+*option:NBC_HRV:value:5 = 480   ! Min./Day
+*option:NBC_HRV:value:6 = 60    ! L/s (exhaust = supply)
+*option:NBC_HRV:value:7 = 60    ! Eff% @ Rating1
+*option:NBC_HRV:value:8 = 55    ! Eff% @ Rating2
+*option:NBC_HRV:cost:total = 0
 
 *attribute:end 
 
