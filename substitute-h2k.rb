@@ -4225,12 +4225,11 @@ if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
   if ( ! system("mkdir #{$gMasterPath}\\H2K") )
       fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
   end
+  FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
+   fix_H2K_INI()
 end 
 
-if ( Dir["#{$gMasterPath}\\H2K"].empty? ) 
-  FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K") 
-  fix_H2K_INI()# Fixes the paths in HOT2000.ini file in H2K folder created above
-end 
+
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
 stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
