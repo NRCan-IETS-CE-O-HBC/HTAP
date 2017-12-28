@@ -184,7 +184,8 @@ optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does 
 
 $RunNumber = 0
 
-$RunDirectoryRoot = "HTAP-Sim"
+$RunDirectoryRoot = "HTAP-work"
+$SaveDirectoryRoot = "HTAP-sim"
 $RunResultFilename = "SubstitutePL-output.txt"
 $RunResults = Hash.new {|h,k| h[k] = Array.new }
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
@@ -216,12 +217,27 @@ $processed_file_count = 0
 $choicefiles = Array.new
 $PIDS        = Array.new
 $RunDirs     = Array.new 
+$SaveDirs    = Array.new 
 $RunNumbers  = Array.new
+
+$ThreadDirs = 
 
 $FailedRuns  = Array.new
 $CompletedRunCount = 0 
 $FailedRunCount = 0 
 
+## Create working directories 
+
+stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
+FileUtils.rm_rf Dir.glob("HTAP-work-*") 
+for prethread in 0..$gNumberOfThreads-1 
+
+    $RunDirName = "#{$RunDirectoryRoot}-#{prethread}"
+    $RunDirs[prethread] = $RunDirName
+
+end 
+stream_out(" - Deleting prior HTAP-sim directories  \n\n")
+FileUtils.rm_rf Dir.glob("HTAP-sim-*") 
 
 failures = File.open($gFailFile, 'w')
 output = File.open($gOutputFile, 'w') 
@@ -241,8 +257,8 @@ while $FinishedTheseFiles.has_value?(false)
 
   # Empty arrays for current batch. 
   $choicefiles.clear
-  $PIDS.clear       
-  $RunDirs.clear    
+  $PIDS.clear          
+  $SaveDirs.clear
   
   
   # Compute the number of threads we will start: lesser of a) files remaining, or b) threads allowed.
@@ -268,25 +284,24 @@ while $FinishedTheseFiles.has_value?(false)
     
       # Increment run number and create name for unique simulation directory
       $RunNumber = $RunNumber + 1     
-      $RunDirectory = "#{$RunDirectoryRoot}-#{$RunNumber}"
+      $RunDirectory  = $RunDirs[thread]
+      
+      
+      $SaveDirectory = "#{$SaveDirectoryRoot}-#{$RunNumber}"
       
       # Store run number and directory fro this thread        
       $RunNumbers[thread] = $RunNumber
-      $RunDirs[thread] = $RunDirectory
-        
-        
-      # Delete prior run directory if it exists
-      if ( Dir.exist?($RunDirectory) )
-        if ( ! FileUtils.rm_rf("#{$RunDirectory}") )
-          fatalerror( " Fatal Error! Could not create #{$RunDirectory} below #{$gMasterPath}!\n MKDir Return code: #{$?}\n" )
-        end
-      end
-      
-      # Re-create empty run directory
+      $SaveDirs[thread]   = $SaveDirectory 
+
+      # create empty run directory
       if ( ! Dir.exist?($RunDirectory) )
         if ( ! Dir.mkdir($RunDirectory) )
           fatalerror( " Fatal Error! Could not create #{$RunDirectory} below #{$gMasterPath}!\n MKDir Return code: #{$?}\n" )
-        end
+        end 
+         
+      else 
+          # Delete contents, but not H2K folder
+          FileUtils.rm_r Dir.glob("#{$RunDirectory}/*.*")       
       end 
       
       # Copy choice and options file into intended run directory...
@@ -357,9 +372,7 @@ while $FinishedTheseFiles.has_value?(false)
     
     Dir.chdir($RunDirs[thread3])
     
-    if ( ! FileUtils.rm_rf("H2K") )
-        warn_out(" Warning! Could delete #{$RunDirs[thread3]}/H2K  rm_fr Return code: #{$?}\n" )
-    end
+    $runFailed = false 
     
     if ( File.exist?($RunResultFilename) ) 
     
@@ -383,38 +396,45 @@ while $FinishedTheseFiles.has_value?(false)
        $CompletedRunCount = $CompletedRunCount + 1 
        stream_out (" done.\n")
        
-       Dir.chdir($gMasterPath)
-       
-       if ( ! $gSaveAllRuns ) 
-         if ( ! FileUtils.rm_rf($RunDirs[thread3]) )
-           warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
-         end      
-       else 
-         $LocalChoiceFile = File.basename $gOptionFile
-         if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
-           warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
-         end        
-       end 
 
-       
        
     else 
     
-        stream_out (" RUN FAILED! (see dir: #{$RunDirs[thread3]}) \n")
-        failures.write "#{$choicefiles[thread3]} (dir: #{$RunDirs[thread3]})\n"
-        $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$RunDirs[thread3]})"
+        stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
+        failures.write "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]})\n"
+        $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]})"
         $FailedRunCount = $FailedRunCount + 1
         
-        Dir.chdir($gMasterPath) 
+
         
         $LocalChoiceFile = File.basename $gOptionFile
         if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
           warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
         end           
         
-               
+        $runFailed = true       
         
     end 
+    
+    Dir.chdir($gMasterPath)  
+    
+    # Save files from runs that failed, or possibly all runs. 
+    if ( $gSaveAllRuns || $runFailed ) 
+    
+      if ( ! Dir.exist?($SaveDirs[thread3]) ) 
+        
+        Dir.mkdir($SaveDirs[thread3]) 
+        
+      else 
+      
+        FileUtils.rm_rf Dir.glob("#{$SaveDirs[thread3]}/*.*") 
+        
+      end 
+      
+      FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
+    
+    end 
+    
 
     #Update status of this thread. 
     $FinishedTheseFiles[$choicefiles[thread3]] = true        
@@ -470,11 +490,21 @@ while $FinishedTheseFiles.has_value?(false)
   
 end 
 
-
 output.close 
 failures.close 
+
+
+
+
+
+
 stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
 
+
+
+stream_out (" - Deleting working directories\n\n")
+
+FileUtils.rm_rf Dir.glob("HTAP-work-*") 
 
 
 stream_out (" - HTAP-prm: Run complete -----------------------\n")
