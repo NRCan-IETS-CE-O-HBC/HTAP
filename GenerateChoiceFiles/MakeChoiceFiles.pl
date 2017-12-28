@@ -172,8 +172,8 @@ my $ChoiceFileList ="";
 
 my %upgrade_packages = (
 
-#                        "as-found"           => ["as-found"]          # Original definitions from the .csv file 
-#                        "NBC9_36_noHRV"      => ["NBC9_36_noHRV"]      # 2010
+                        "as-found"           => ["as-found"] ,         # Original definitions from the .csv file 
+                        "NBC9_36_noHRV"      => ["NBC9_36_noHRV"] ,    # 2010
                         "NBC9_36_HRV"        => ["NBC9_36_HRV"]       # 2010
  						
   
@@ -506,7 +506,7 @@ sub UpgradeRuleSet($){
          if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
   		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone5_noHRV";  }
          if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
-		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone5"; }
+		      $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone5_noHRV"; }
   	  }
 
     # Zone 6 ( 4000 < HDD < 4999) without an HRV
@@ -521,7 +521,7 @@ sub UpgradeRuleSet($){
          if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
               $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone6_noHRV"; }
          if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
-		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone6"; }
+		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone6_noHRV"; }
       }
 
     # Zone 7A ( 5000 < HDD < 5999) without an HRV
@@ -536,7 +536,7 @@ sub UpgradeRuleSet($){
          if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
               $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone7A_noHRV"; }
          if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
-		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone7"; }
+		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone7A_noHRV"; }
       }
 
     # Zone 7B ( 6000 < HDD < 6999) without an HRV
@@ -551,7 +551,7 @@ sub UpgradeRuleSet($){
          if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
 			  $choiceHash{"Opt-H2KFoundation"}             =  "NBC_BCIN_zone7B_noHRV"; }
          if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
-		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone7"; }
+		      $choiceHash{"Opt-H2KFoundation"}             =  "NBC_SCB_zone7B_noHRV"; }
        }
 
     # Zone 8 (HDD <= 7000) without an HRV
@@ -566,7 +566,7 @@ sub UpgradeRuleSet($){
         if ( $choiceHash{"Opt-Archetype"} =~ /Bsmt/ ) {
 			 $choiceHash{"Opt-H2KFoundation"}              =  "NBC_BCIN_zone8_noHRV"; }
         if ( $choiceHash{"Opt-Archetype"} =~ /slab/ ){
-		     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone8"; }
+		     $choiceHash{"Opt-H2KFoundation"}              =  "NBC_SCB_zone8_noHRV"; }
 		 }
 
       $validupgrade = 1; 
