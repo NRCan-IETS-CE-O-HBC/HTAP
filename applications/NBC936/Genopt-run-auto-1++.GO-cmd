@@ -1,0 +1,96 @@
+/*
+ GenOpt command file for general optimization run. Baseline. 
+*/
+
+Vary{
+
+  // ==========================================
+  // Parameters that configure the simulation 
+  // ==========================================
+  
+  Parameter { 
+    Name = GOtag:Opt-Choice_Files; 
+    Ini    = 1; 
+    Values = " ..\\choice-files\\NBC-arch1_fullBsmt-1~1~NBC9_36_noHRV.choices, ..\\choice-files\\NBC-arch1_fullBsmt-2~2~NBC9_36_noHRV.choices";
+	
+	}
+
+  Parameter { 
+    Name = GOtag:Opt-Location; 
+    Ini    = 1; 
+    Values = "NotUsed!SetByMakeChoiceFile.pl";
+  }
+  
+  Parameter { 
+    Name = GOtag:OPT-HRV_ctl; 
+    Ini    = 1; 
+    Values = "EightHRpDay";
+  }
+  
+    
+  Parameter { 
+    Name = GOtag:Opt-HeatCool-Control; 
+    Ini    = 1; 
+    Values = "HeatingOnly"; //", HeatingOnly";
+  }
+
+  
+  
+
+  Parameter { 
+    Name = GOtag:Opt-ElecLoadScale; 
+    Ini    = 1; 
+    Values = "NGERSNoReduction19";
+  }
+
+  Parameter { 
+    Name = GOtag:Opt-DHWLoadScale; 
+    Ini    = 1; 
+    Values = "No-Reduction";  //,EStar,Low-Flow";
+  }
+  
+  
+  Parameter { 
+    Name = GOtag:Opt-OptionsFile; 
+    Ini    = 1; 
+    Values = "..\\HOT2000.options";  // File containing options to be used. ;
+  }  
+
+  
+  //Parameter { 
+  //  Name = GOtag:Opt-Archetype; 
+  //  Ini    = 1; 
+  //  Values = "BC-Step-LargeSFD.h2k";  // h2k file name ;
+  //}  
+  
+  
+  
+  
+}
+
+OptimizationSettings{
+  MaxIte = 100000;
+  MaxEqualResults = 1000;
+  WriteStepNumber = true;
+}
+
+
+//Algorithm{
+// Main                       = PSOIW;
+//  NeighborhoodTopology      = vonNeumann;
+//  NeighborhoodSize          = 24; // Disregarded for vonNeumann topology
+//  NumberOfParticle          = 23;
+//  NumberOfGeneration        = 2000;
+//  Seed                      = 628;
+//  CognitiveAcceleration     = 2; // 0 < CognitiveAcceleration
+//  SocialAcceleration        = 3; // 0 < SocialAcceleration
+//  MaxVelocityGainContinuous = 1.0;
+//  MaxVelocityDiscrete       = 1.0; // 0 < MaxVelocityDiscrete
+//  InitialInertiaWeight      = 1.2;    // 0 < InitialInertiaWeight
+//  FinalInertiaWeight        = 0;      // 0 < FinalInertiaWeight
+//}
+
+Algorithm{
+  Main = Mesh;
+  StopAtError = true; 
+}

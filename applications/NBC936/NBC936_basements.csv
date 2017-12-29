@@ -1,0 +1,15 @@
+ID,Scenario,Archetype,GOtag:Opt-Location,GOtag:Opt-ACH,GOtag:Opt-GenericWall_1Layer_definitions,GOtag:Opt-H2KFoundation,GOtag:Opt-ExposedFloor,GOtag:Opt-Ceilings,GOtag:Opt-CasementWindows,GOtag:Opt-DHWSystem,GOtag:Opt-DWHRSystem,GOtag:Opt-HVACSystem,GOtag:Opt-HRVSpec
+1,NBC-arch1-1,NBC-arch1,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+2,NBC-arch2-2,NBC-arch2,Vancouver,NA,NA,NBC_SCB_zone4,NA,NA,NA,NA,none,NA,NA
+3,NBC-arch2-3,NBC-arch2,Vancouver,NA,NA,NBC_BCIN_zone4,NA,NA,NA,NA,none,NA,NA
+4,NBC-arch3-4,NBC-arch3,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+5,NBC-arch4-5,NBC-arch4,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+6,NBC-arch5-6,NBC-arch5,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+7,NBC-arch6-7,NBC-arch6,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+8,NBC-arch7-8,NBC-arch7,Edmonton,NA,NA,NBC_SCB_zone7A_noHRV,NA,NA,NA,NA,none,NA,NA
+9,NBC-arch7-9,NBC-arch7,Edmonton,NA,NA,NBC_BCIN_zone7A_noHRV,NA,NA,NA,NA,none,NA,NA
+10,NBC-arch8-10,NBC-arch8,Edmonton,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+11,NBC-arch9-11,NBC-arch9,Edmonton,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+12,NBC-arch10-12,NBC-arch10,Edmonton,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+13,NBC-arch11-13,NBC-arch11,Edmonton,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
+14,NBC-arch11-14,NBC-arch11,Edmonton,NA,NA,NA,NA,NA,NA,NA,none,NA,NA
