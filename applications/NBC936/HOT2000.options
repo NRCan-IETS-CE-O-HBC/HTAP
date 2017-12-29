@@ -229,37 +229,37 @@
 *option:PA-edmonton-example-15:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-16.h2k
 *option:PA-edmonton-example-15:cost:total = 0
 
-*option:NBC-arch1_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch1_1000sf_1storey_fullBsmt_E(b90).h2k
+*option:NBC-arch1_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch1_1000sf_1storey_fullBsmt.h2k
 *option:NBC-arch1_fullBsmt:cost:total = 0
 
-*option:NBC-arch2_slab:value:1 = C:\H2K-CLI-Min\User\NRCan-arch2_1900sqft_1storey_crawlSpace_E(b90).h2k
+*option:NBC-arch2_slab:value:1 = C:\H2K-CLI-Min\User\NRCan-arch2_1900sqft_1storey_crawlSpace.h2k
 *option:NBC-arch2_slab:cost:total = 0
 
-*option:NBC-arch3_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch3_1300sf_2storey_fullBsmt_E(b90).h2k
+*option:NBC-arch3_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch3_1300sf_2storey_fullBsmt.h2k
 *option:NBC-arch3_fullBsmt:cost:total = 0
 
-*option:NBC-arch4_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch4_2100sf_2storey_fullBsmt_E(b90).h2k
+*option:NBC-arch4_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch4_2100sf_2storey_fullBsmt.h2k
 *option:NBC-arch4_fullBsmt:cost:total = 0
 
-*option:NBC-arch5_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch5_3500sf_2storey_fullBsmt_E(b90).h2k
+*option:NBC-arch5_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch5_3500sf_2storey_fullBsmt.h2k
 *option:NBC-arch5_fullBsmt:cost:total = 0
 
-*option:NBC-arch6_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch6_3500sf_2st_15%moreGlass_fullBsmt_E(b90).h2k
+*option:NBC-arch6_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch6_3500sf_2st_15%moreGlass_fullBsmt.h2k
 *option:NBC-arch6_fullBsmt:cost:total = 0
 
-*option:NBC-arch7_slabOnGrade:value:1 = C:\H2K-CLI-Min\User\NRCan-arch7_2100sf_2storey_slabOnGrade_E(b90).h2k
+*option:NBC-arch7_slabOnGrade:value:1 = C:\H2K-CLI-Min\User\NRCan-arch7_2100sf_2storey_slabOnGrade.h2k
 *option:NBC-arch7_slabOnGrade:cost:total = 0
 
-*option:NBC-arch8_Bsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch8_2100sf_2storey_walkOut_E(b90).h2k
+*option:NBC-arch8_Bsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch8_2100sf_2storey_walkOut.h2k
 *option:NBC-arch8_Bsmt:cost:total = 0
 
-*option:NBC-arch9_Bsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-A9_3000sf_2stry_walkOut_E(b90).h2k
+*option:NBC-arch9_Bsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-A9_3000sf_2stry_walkOut.h2k
 *option:NBC-arch9_Bsmt:cost:total = 0
 
-*option:NBC-arch10_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch10_1500sf_2storey_rowEnd_fullBsmt_E(b90).h2k
+*option:NBC-arch10_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch10_1500sf_2storey_rowEnd_fullBsmt.h2k
 *option:NBC-arch10_fullBsmt:cost:total = 0
 
-*option:NBC-arch11_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-A11_1500sf_2storey_rowMid_fullBsmt_E(90).h2k
+*option:NBC-arch11_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-A11_1500sf_2storey_rowMid_fullBsmt.h2k
 *option:NBC-arch11_fullBsmt:cost:total = 0
 
 *attribute:end
