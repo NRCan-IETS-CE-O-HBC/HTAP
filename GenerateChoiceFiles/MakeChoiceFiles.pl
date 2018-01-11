@@ -5,7 +5,7 @@
  
 use warnings;
 use strict;
-
+ 
 sub UpgradeRuleSet($);
 sub WriteChoiceFile($);
 sub fatalerror($);
@@ -155,7 +155,56 @@ if (!@ARGV){
   die;
 }
 
-my @choiceLists;
+
+
+my ($arg, $cmd_arguements,@processed_args, @choiceLists);
+
+# Compress arguments into a space-separated string
+foreach $arg (@ARGV){
+  $cmd_arguements .= " $arg ";
+}
+
+# Compress white space, and convert to ';'
+$cmd_arguements =~ s/\s+/ /g;
+$cmd_arguements =~ s/\s+/;/g;
+
+# Translate shorthand arguments into longhand
+$cmd_arguements =~ s/-h;/--help;/g;
+$cmd_arguements =~ s/-v;/--verbose;/g;
+$cmd_arguements =~ s/-g;/--genopt;/g;
+
+# If any options expecting arguments are followed by other
+# options, insert empty argument:
+$cmd_arguements =~ s/:-/:;-/;
+
+# remove leading and trailing ;'s
+$cmd_arguements =~ s/^;//g;
+$cmd_arguements =~ s/;$//g;
+
+# split processed arguments back into array
+@processed_args = split /;/, $cmd_arguements;
+
+my $SetUpGenopt = 0; 
+
+# Interpret arguments
+foreach $arg (@processed_args){
+  SWITCH:
+  {
+    if ( $arg =~ /^--help/ ){
+      # Dump help messages and quit.
+      print $Help_msg;
+      die;
+      last SWITCH;
+    }
+    
+    if( $arg =~ /^--genopt/){
+      $SetUpGenopt = 1;
+      last SWITCH;
+    }
+  }
+}
+
+
 
 my $OptListFile = $ARGV[0];
 
@@ -284,23 +333,25 @@ close (OPTLISTFILE);
 $ChoiceFileList = ""; 
 
 my $files = 0; 
-
 my $TemplateTxt = ""; 
-open(CMDTEMPLATE, "C:\\HTAP\\GenerateChoiceFiles\\Genopt-CMD-Template.GO-cmd") or die ("could not open C:\\HTAP\\GenerateChoiceFiles\\Genopt-CMD-Template.GO-cmd") ; 
-while ( my $Line = <CMDTEMPLATE> ){
-  $TemplateTxt .= $Line;   
-}
-close (CMDTEMPLATE); 
-
 my $TemplateIniTxt = ""; 
-open(INITEMPLATE, "C:\\HTAP\\GenerateChoiceFiles\\Genopt-INI-Template.GO-ini") or die ("could not open C:\\HTAP\\GenerateChoiceFiles\\Genopt-BC-rerun-template.GO-ini") ; 
-while ( my $Line = <INITEMPLATE> ){
-  $TemplateIniTxt .= $Line;   
+
+if ( $SetUpGenopt ) {
+
+    open(CMDTEMPLATE, "C:\\HTAP\\GenerateChoiceFiles\\Genopt-CMD-Template.GO-cmd") or die ("could not open C:\\HTAP\\GenerateChoiceFiles\\Genopt-CMD-Template.GO-cmd") ; 
+    while ( my $Line = <CMDTEMPLATE> ){
+      $TemplateTxt .= $Line;   
+    }
+    close (CMDTEMPLATE); 
+
+
+    open(INITEMPLATE, "C:\\HTAP\\GenerateChoiceFiles\\Genopt-INI-Template.GO-ini") or die ("could not open C:\\HTAP\\GenerateChoiceFiles\\Genopt-BC-rerun-template.GO-ini") ; 
+    while ( my $Line = <INITEMPLATE> ){
+      $TemplateIniTxt .= $Line;   
+    }
+    close (INITEMPLATE); 
+
 }
-close (INITEMPLATE); 
-
-
-
 
 my $outputFile = 0; 
 my $BatchCmds = ""; 
@@ -323,24 +374,26 @@ foreach my $ChoiceFile (@choiceLists){
     
     
     
-    open( OUTPUTCMD, ">./Genopt-run-auto-$outputFile++.GO-cmd" ) or die ("Could not write to Genopt-run-auto-$outputFile++.GO-cmd\n");  
-    print OUTPUTCMD $OutputTxt; 
-    close (OUTPUTCMD) ; 
     
-    my $IniTxt = $TemplateIniTxt; 
-    $IniTxt =~ s/___CMD_FILE_GOES_HERE___/Genopt-run-auto-$outputFile++.GO-cmd/g; 
-    
-    open( OUTPUTINI, ">./Genopt-run-auto-$outputFile++.GO-ini" ) or die ("Could not write to Genopt-run-auto-$outputFile++.GO-ini\n"); 
-    print OUTPUTINI $IniTxt; 
-    close (OUTPUTINI) ; 
+    if ( $SetUpGenopt ) {
+        open( OUTPUTCMD, ">./Genopt-run-auto-$outputFile++.GO-cmd" ) or die ("Could not write to Genopt-run-auto-$outputFile++.GO-cmd\n");  
+        print OUTPUTCMD $OutputTxt; 
+        close (OUTPUTCMD) ; 
+        
+        my $IniTxt = $TemplateIniTxt; 
+        $IniTxt =~ s/___CMD_FILE_GOES_HERE___/Genopt-run-auto-$outputFile++.GO-cmd/g; 
+        
+        open( OUTPUTINI, ">./Genopt-run-auto-$outputFile++.GO-ini" ) or die ("Could not write to Genopt-run-auto-$outputFile++.GO-ini\n"); 
+        print OUTPUTINI $IniTxt; 
+        close (OUTPUTINI) ; 
     
 #    $BatchCmds .= "javaws -clearcache \n";
 #    $BatchCmds .= "javaws -uninstall \n";
-    $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt Genopt-run-auto-$outputFile++.GO-ini\n"; 
-    $BatchCmds .= "timeout /t 10 \n";
-    $BatchCmds .= "copy OutputListingAll.txt CloudResultsBatch$outputFile.txt\n";
-    $BatchCmds .= "del OutputListingAll.txt\n";
-    
+        $BatchCmds .= "java -classpath genopt.jar genopt.GenOpt Genopt-run-auto-$outputFile++.GO-ini\n"; 
+        $BatchCmds .= "timeout /t 10 \n";
+        $BatchCmds .= "copy OutputListingAll.txt CloudResultsBatch$outputFile.txt\n";
+        $BatchCmds .= "del OutputListingAll.txt\n";
+     }
     
     $files = 0; 
     $ChoiceFileList = ""; 
@@ -354,12 +407,12 @@ foreach my $ChoiceFile (@choiceLists){
 
 
 
-
+if ( $SetUpGenopt ) {
     open( OUTPUTBATCH, ">genopt-run-auto.bat" ) or die ("Could not open  genopt-run-auto.bat for writing\n");  ; 
     print OUTPUTBATCH $BatchCmds; 
     close (OUTPUTBATCH) ; 
 
-
+}
 
 
 
@@ -372,6 +425,7 @@ $outputFile++;
 $ChoiceFileList =~ s/\s*,\s*$//g; 
 $ChoiceFileList =~ s/\.\///g; 
 
+if ( $SetUpGenopt ) {
 my $OutputTxt =  $TemplateTxt;
 $OutputTxt =~ s/___FILES_GO_HERE___/$ChoiceFileList/g; 
 
@@ -380,6 +434,7 @@ open( OUTPUTCMD, ">../BC-Step-Codes/Genopt-BC-rerun-auto-$outputFile++.GO.cmd" )
 print OUTPUTCMD $OutputTxt; 
 
 close (OUTPUTCMD) ; 
+}
 
 $files = 0; 
 $ChoiceFileList = ""; 
