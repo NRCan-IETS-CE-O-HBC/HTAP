@@ -2110,7 +2110,7 @@
 *option:NBC_Ceiling_zone7A_noHRV:value:2 =  59.22
 *option:NBC_Ceiling_zone7A_noHRV:cost:total    =  0
                         
-*option:NBC_Ceiling_zone7A_HRV:value:1 =  NBC_Ceiling_zone7A_HRV
+*option:NBC_Ceiling_zone7A_HRV:value:1 =  NBC-zone7A-attic_HRV
 *option:NBC_Ceiling_zone7A_HRV:value:2 =  49.23
 *option:NBC_Ceiling_zone7A_HRV:cost:total    =  0
 
