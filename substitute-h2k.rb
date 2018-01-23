@@ -3649,6 +3649,17 @@ while !fOPTIONS.eof? do
             end
          
             $gOptions[$currentAttributeName]["default"]["defined"] = 0
+            $gOptions[$currentAttributeName]["stop-on-error"] = 1 
+            
+            
+        
+         elsif ( $token =~ /^\*attribute:on-error/ ) 
+           
+           if ($value =~ /ignore/ ) 
+           
+             $gOptions[$currentAttributeName]["stop-on-error"] = 0 
+             
+           end 
         
          elsif ( $token =~ /^\*attribute:tag/ )
             
@@ -3930,15 +3941,20 @@ $gChoices.each do |attrib, choice|
    end
   
    # Is choice in options?
-   if ( ! $gOptions[attrib]["options"].has_key?(choice) )
+   if ( ! $gOptions[attrib]["options"].has_key?(choice) ) 
+     if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
       $allok = false
-      
-      if ( !$allok )
+     else 
+       $gOptions[attrib]["options"][choice]["cost"] = 0
+     end 
+     
+     if ( !$allok )
          $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
          $ThisError +=   "        in choice file #{$gChoiceFile}), is not defined \n"
          $ThisError +=   "        in options file (#{$gOptionFile})\n"
          $ErrorBuffer += $ThisError
          stream_out( $ThisError )
+
       else
          debug_out ( "   - found $gOptions[\"#{attribute}\"][\"options\"][\"#{choice}\"} \n")
       end
