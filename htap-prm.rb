@@ -11,10 +11,14 @@ require 'timeout'
 require 'fileutils'
 require 'pp'
 
-$gRunDefInputs = Hash.new
-$gRunOptions = Array.new
-$gRunOptionsLimit     = Hash.new
-$gRunOptionsIterators = Hash.new 
+$gRunUpgrades         = Hash.new
+$gOptionList          = Array.new
+$gOptionListLimit     = Hash.new
+$gOptionListIterators = Hash.new 
+
+$gRulesets   = Array.new
+$gArchetypes = Array.new 
+$gLocations  = Array.new
 
 $gChoiceFileSet = Hash.new
 
@@ -23,6 +27,7 @@ $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
 $gGenChoiceFileList = Array.new
 
+#default (and only supported mode)
 $gRunDefMode   = "mesh"
 
 =begin rdoc
@@ -101,6 +106,9 @@ end
 
 def parse_def_file(filepath)
 
+  $runParamsOpen = false; 
+  $runScopeOpen  = false; 
+  $UpgradesOpen  = false;   
    
   rundefs = File.open(filepath, 'r') 
   
@@ -111,35 +119,79 @@ def parse_def_file(filepath)
     $defline.gsub!(/\!.*$/, '')
     $defline.gsub!(/\s*/, '')
     $defline.gsub!(/\^/,  '')
+    
     if ( $defline !~ /^\s*$/ ) 
-      
-  
-      
-      $token_values = Array.new
-      $token_values = $defline.split(":")
-    
- 
-    
-      if ( $token_values[0] =~ /run-mode/ ) 
-        
-        # only 'mesh' supported for now
-        $gRunDefMode = "mesh"
-      
-      else 
-        option  = $token_values[0]
-        choices = $token_values[1].to_s.split(",")
-    
-        $gRunDefInputs[option] = choices 
-        $gRunOptions.push option 
-      end 
-      
-      
-    end    
-    
-  end 
 
+      case 
+        # Section star/end in the file 
+        when $defline.match(/RunParameters:START/i)
+          $RunParamsOpen = true; 
+          
+        when $defline.match(/RunParameters:END/i)
+          $RunParamsOpen = false; 
+          
+        when $defline.match(/RunScope:START/i)
+          $RunScopeOpen = true; 
+          
+        when $defline.match(/RunScope:END/i)
+          $RunScopeOpen = false; 
+          
+        when $defline.match(/Upgrades:START/i)
+          $UpgradesOpen = true; 
+          
+        when $defline.match(/Upgrades:END/i)
+          $UpgradesOpen = false; 
+          
+        else 
+    
+          # definitions 
+          $token_values = Array.new
+          $token_values = $defline.split(":")
+            
+                      
+          if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i ) 
+            # This does nothing only 'mesh' supported for now!!!
+            $gRunDefMode = "mesh"
+             
+          end 
+          
+          if ( $RunScopeOpen && $token_values[0] =~ /rulesets/i ) 
+            # Rulesets that can be applied. 
+            $gRulesets = $token_values[1].to_s.split(",")
+          end 
+          
+          if ( $RunScopeOpen && $token_values[0] =~ /archetypes/i ) 
+             
+            # archetypes -  
+            $gArchetypes = $token_values[1].to_s.split(",")
+          
+          end 
+          
+          if ( $RunScopeOpen && $token_values[0] =~ /locations/i ) 
+             
+            # archetypes -  
+            $gLocations = $token_values[1].to_s.split(",")
+          
+          end           
+          
+          if ( $UpgradesOpen ) 
+          
+            option  = $token_values[0]
+            choices = $token_values[1].to_s.split(",")
+            $gRunUpgrades[option] = choices 
+            $gOptionList.push option             
+            
+            
+          end 
+    
 
-end
+      end  #Case 
+      
+    end # if ( $defline !~ /^\s*$/ ) 
+    
+  end # rundefs.each do | line |
+
+end # def parse_def_file(filepath)
 
 
 =begin rdoc
@@ -151,48 +203,90 @@ end
 # ----------------------------------------------------------------------------
 =end 
 
-
 def create_mesh_cartisian_combos(optIndex) 
 
-  if ( optIndex == $gRunOptions.count ) 
-
+  if ( optIndex == $gOptionList.count ) 
     
-    #stream_out " CHOICE FILE: \n"
+    
     
     generated_file = gen_choice_file($gChoiceFileSet) 
     
     $gGenChoiceFileList.push generated_file
     
-    #$gChoiceFileSet.each do | attribute, choice |
+    $gChoiceFileSet.each do | attribute, choice |
     
-      #stream_out "   - #{attribute}  : #{choice } \n"
+      
     
-    #end 
+    end  # 
 
          
     
-  else 
-  
+  else    
     
-    attribute  = $gRunOptions[optIndex]
-    choices = $gRunDefInputs[attribute]
+    case optIndex
+    when -3 
     
-    #stream_out ( "   + Adding combinations for parameter #{attribute} \n")
-    
-    #stream_out  " OptIndex > #{optIndex} #{attribute} \n"
-    
-    choices.each do | choice | 
-        #stream_out    "    >[#{optIndex}] #{choice} \n"     
+      $gLocations.each do |location|
         
-        $gChoiceFileSet[attribute] = choice
+        $gChoiceFileSet["Opt-Location"] = location 
         
-        # Recursive call for next step in order. 
         create_mesh_cartisian_combos(optIndex+1) 
+        
+      end 
+    
+    when -2 
+    
+      $gArchetypes.each do |archetype|
+      
+        $gChoiceFileSet["Opt-Archetype"] = archetype 
+        
+        create_mesh_cartisian_combos(optIndex+1) 
+        
+      end      
+    
+    
+    when -1 
+    
+      $gRulesets.each do |ruleset|
+      
+        $gChoiceFileSet["Opt-Ruleset"] = ruleset 
+        
+        
+        if ( ruleset.match(/evaluate-upgrades/) )
+          
+          create_mesh_cartisian_combos(optIndex+1) 
+         
+        else 
+          
+          $gOptionList.each do |attribute| 
+          
+            $gChoiceFileSet[attribute] = "NA" 
+            
+          end 
+          create_mesh_cartisian_combos($gOptionList.count) 
+        end
+        
+      end # $gRulesets.each do |ruleset|
+          
+ 
+    else 
+  
+       attribute  = $gOptionList[optIndex]
+       choices = $gRunUpgrades[attribute]
+       
+       choices.each do | choice | 
+           
+           $gChoiceFileSet[attribute] = choice           
+           # Recursive call for next step in order. 
+           create_mesh_cartisian_combos(optIndex+1) 
+       end 
+          
     end 
     
   end 
   
 end 
+
 =begin rdoc
 # ----------------------------------------------------------------------------
 # Gen Choice File 
@@ -716,7 +810,7 @@ else
   
     stream_out (" - Creating mesh run combinations from run definitions... ") 
       
-    create_mesh_cartisian_combos(0) 
+    create_mesh_cartisian_combos(-3) 
 
     $RunTheseFiles = $gGenChoiceFileList
 
@@ -726,6 +820,8 @@ else
   fileorgin = "generated"
   
 end 
+
+
 
 
 $batchCount = 0 
