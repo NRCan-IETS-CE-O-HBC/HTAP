@@ -114,6 +114,25 @@
 
 *attribute:end
 
+!-----------------RULESET  ------------------------------------
+!  This code isn't real
+!-------------------------------------------------------------------------
+*attribute:start 
+*attribute:name = Opt-Ruleset 
+*attribute:tag:1 = <NotNOTARealTag>
+*attribute:default = nil 
+*attribute:on-error = ignore 
+
+*option:nil:value:1    = nil
+*option:nil:cost:total = 0
+
+
+
+
+*attribute:end
+
+
+
 
 !-----------------HOT2000 Archetype file ---------------------------------
 !  
@@ -4162,6 +4181,9 @@ Reflects southern Ontario costs
 *attribute:tag:1   = <Opt-ElecLoadScale>
 *attribute:default = NGERSNoReduction19
 
+*option:NA:value:1  = NA
+*option:NA:cost:total     = 0
+
 
 ! --- NONE ERS: 0kwh/day ---- 
 *option:ZEROElecLoad:value:1  = 0.
@@ -4222,6 +4244,10 @@ Reflects southern Ontario costs
 !
 
 ! DHW load scale: new volume method.
+
+*option:NA:value:1        = NA
+*option:NA:cost:total     = 0
+
 
 *option:OldERS:value:1        = 0
 *option:OldERS:cost:total     = 0
@@ -4374,6 +4400,18 @@ Reflects southern Ontario costs
 *attribute:tag:10 = Opt-H2K-DWHR-dailyShowers             ! DWHR Number of daily showers e.g. 2.45
 
 *attribute:default = none
+
+*option:NA:value:1   = NA
+*option:NA:value:2   = NA
+*option:NA:value:3   = NA
+*option:NA:value:4   = NA
+*option:NA:value:5   = NA
+*option:NA:value:6   = NA
+*option:NA:value:7   = NA
+*option:NA:value:8   = NA
+*option:NA:value:9   = NA
+*option:NA:value:10  = NA
+*option:NA:cost:total = 0
 
 *option:none:value:1   = NA
 *option:none:value:2   = NA
