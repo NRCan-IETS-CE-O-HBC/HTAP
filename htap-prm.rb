@@ -22,6 +22,10 @@ $gLocations  = Array.new
 
 $gChoiceFileSet = Hash.new
 
+$gArchetypeDir = "C:/HTAP/archetypes"
+$gArchetypeHash = Hash.new
+
+
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
@@ -124,30 +128,40 @@ def parse_def_file(filepath)
 
       case 
         # Section star/end in the file 
-        when $defline.match(/RunParameters:START/i)
+        when $defline.match(/RunParameters_START/i)
           $RunParamsOpen = true; 
           
-        when $defline.match(/RunParameters:END/i)
+        when $defline.match(/RunParameters_END/i)
           $RunParamsOpen = false; 
           
-        when $defline.match(/RunScope:START/i)
+        when $defline.match(/RunScope_START/i)
           $RunScopeOpen = true; 
           
-        when $defline.match(/RunScope:END/i)
+        when $defline.match(/RunScope_END/i)
           $RunScopeOpen = false; 
           
-        when $defline.match(/Upgrades:START/i)
+        when $defline.match(/Upgrades_START/i)
           $UpgradesOpen = true; 
           
-        when $defline.match(/Upgrades:END/i)
+        when $defline.match(/Upgrades_END/i)
           $UpgradesOpen = false; 
           
         else 
     
           # definitions 
           $token_values = Array.new
-          $token_values = $defline.split(":")
+          $token_values = $defline.split("=")
+          
+
+         
+          if ( $RunParamsOpen && $token_values[0] =~ /archetype-dir/i ) 
+            # Where are our .h2k files located?
             
+            $gArchetypeDir = $token_values[1] 
+             
+             
+          end
+                     
                       
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i ) 
             # This does nothing only 'mesh' supported for now!!!
@@ -207,18 +221,13 @@ def create_mesh_cartisian_combos(optIndex)
 
   if ( optIndex == $gOptionList.count ) 
     
-    
-    
     generated_file = gen_choice_file($gChoiceFileSet) 
     
     $gGenChoiceFileList.push generated_file
     
-    $gChoiceFileSet.each do | attribute, choice |
-    
-      
-    
-    end  # 
-
+    # Save the name of the archetype that matches this choice file for invoking 
+    # with substitute.h2k.
+    $gArchetypeHash[generated_file] = $gChoiceFileSet["Opt-Archetype"] 
          
     
   else    
@@ -389,13 +398,16 @@ def run_these_cases(current_task_files)
         # For this thread: Get the next choice file in the batch. 
         $choicefiles[thread] = current_task_files[$choicefileIndex] 
       
+        # Get the name of the .h2k file for this thread. 
+        $H2kFile = $gArchetypeHash[$choicefiles[thread]]
       
         count = thread + 1 
         stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
         
         
         # For this thread: Get the next choice file in the batch. 
-        $choicefiles[thread] = $RunTheseFiles[$choicefileIndex]
+        $choicefiles[thread] = $RunTheseFiles[$choicefileIndex] 
+        
       
         # Make sure that's a real choice file ( this just duplicates a test above )
         if ( $choicefiles[thread] =~ /.*choices$/ )
@@ -422,20 +434,27 @@ def run_these_cases(current_task_files)
               FileUtils.rm_r Dir.glob("#{$RunDirectory}/*.*")       
           end 
           
+          
+          
+          
           # Copy choice and options file into intended run directory...
           FileUtils.cp($choicefiles[thread],$RunDirectory)
           FileUtils.cp($gOptionFile,$RunDirectory)      
-               
+          FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
+          
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile = File.basename $choicefiles[thread]    
           $LocalOptionsFile = File.basename $gOptionFile
             
           # CD to run directory, spawn substitute-h2k thread and save PID 
           Dir.chdir($RunDirectory)
-              
-          
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} --report-choices "
-          
+                        
+          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm "
+
+          # Save command for invoking substitute [ useful in debugging ]         
+          $cmdtxt = File.open("cmd.txt", 'w') 
+          $cmdtxt.write cmdscript
+          $cmdtxt.close
           
           debug_out(" ( cmd: #{cmdscript} |  \n")  
              

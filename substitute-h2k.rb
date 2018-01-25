@@ -15,6 +15,8 @@ require 'optparse'
 require 'timeout'
 require 'fileutils'
 
+
+
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
@@ -41,7 +43,7 @@ $gSkipSims = false
 $gTest_params = Hash.new        # test parameters
 $gChoiceFile  = ""
 $gOptionFile  = ""
-
+$PRMcall      = false 
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
@@ -269,7 +271,7 @@ end
 # and change values for settings defined in choice/options files. 
 # =========================================================================================
 def processFile(filespec)
-
+   
    # Load all XML elements from HOT2000 file
    h2kElements = get_elements_from_filename(filespec)
    
@@ -3552,6 +3554,11 @@ optparse = OptionParser.new do |opts|
       end
    end   
    
+   opts.on("-p", "--prm", "Run as a slave to htap-prm ") do 
+      $PRMcall = true
+   end
+   
+   
    
    
    
@@ -3590,17 +3597,17 @@ end
 
 
 if ( !$gBaseModelFile ) then
-
-
   $gBaseModelFile = "Not specified. Using archetype specified in .choice file"
   $gLookForArchetype = 1
   
 else 
     ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
     $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
-    $run_path = $gMasterPath + "\\H2K"
-    
+        
 end
+
+$h2k_src_path = "C:/H2K-CLI-Min" 
+$run_path = $gMasterPath + "\\H2K"
  
 stream_out ("\n > substitute-h2k.rb  \n")
 stream_out ("         path: #{$gMasterPath} \n")
@@ -3692,9 +3699,15 @@ while !fOPTIONS.eof? do
             end
          
             $gOptions[$currentAttributeName]["default"]["defined"] = 0
+            
+            
             $gOptions[$currentAttributeName]["stop-on-error"] = 1 
             
+            if ( $currentAttributeName =~ /Opt-Archetype/ && $gLookForArchetype == 0 ) 
             
+              $gOptions[$currentAttributeName]["stop-on-error"] = 0
+            
+            end 
         
          elsif ( $token =~ /^\*attribute:on-error/ ) 
            
@@ -4242,11 +4255,13 @@ if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then
   #puts  "\n user-spec archetype \n"
   #puts " BASEFILE    >#{$gBaseModelFile}<\n"
   $Archetype_value = $gChoices["Opt-Archetype"]
-  #puts " ARCH choice >#{$Archetype_value}<\n"
-   
-  #if ( $gOptions['Opt-Archetype']['options']['BC-Step-MediumSFD']['values']['1'].empty?  ) then 
-  #  puts "\n !!!!! nothing !!!! \n\n"
-  #end
+  
+  # IF NA is set, and nothing is given at the command line, default to SmallSFD.
+  if ( $Archetype_value =~ /NA/ ) 
+     $Archetype_value = "SmallSFD"
+  end 
+  
+
     
    
   $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
@@ -4260,6 +4275,7 @@ if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then
   stream_out ("            HOT2000 run folder: #{$run_path} \n")
 
   #puts " Points to -> #{$gBaseModelFile} \n"; 
+
 
   
 end
@@ -4285,26 +4301,32 @@ if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
       fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
   end
   FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
-   fix_H2K_INI()
+  fix_H2K_INI()
 end 
 
 
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
+# (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
 stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
 $gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
-# Remove any existing file first!  
-if ( File.exist?($gWorkingModelFile) )
-   if ( ! system ("del #{$gWorkingModelFile}") )
-      fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
-   end
-end
-#if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
-FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
-#if (! FileUtils.cp($gBaseModelFile,$gWorkingModelFile) ) 
-#   fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
-#end
-stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
+
+if ( ! $PRMcall ) 
+  
+  # Remove any existing file first!  
+  if ( File.exist?($gWorkingModelFile) )
+     if ( ! system ("del #{$gWorkingModelFile}") )
+        fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
+     end
+  end
+  #if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
+  FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
+  #if (! FileUtils.cp($gBaseModelFile,$gWorkingModelFile) ) 
+  #   fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
+  #end
+  stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
+
+end 
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
@@ -4477,6 +4499,10 @@ end
 
 
 fSUMMARY.close() 
+
+if ( ! $PRMcall ) 
+  FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+end 
 
 endProcessTime = Time.now
 totalDiff = endProcessTime - $startProcessTime
