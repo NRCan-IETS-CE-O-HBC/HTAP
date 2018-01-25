@@ -1911,7 +1911,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
    # Change ALL existing windows for this orientation (winOrient) to the library code name
    # specified in newValue. If this code name exists in the code library, use the code 
    # (either Fav or UsrDef) for all entries facing in this direction. Code names in library are unique.
-   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+   # Note: Not using "Standard", non-library codes (e.g., 202002)
 
    # Look for this code name in code library (Favorite and UserDefined)
    windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
@@ -1995,7 +1995,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      # Windows in basement wall elements
+      # Windows in basement
       locationText = "HouseFile/House/Components/Basement/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
@@ -2010,7 +2010,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      # Windows in walkout wall elements
+      # Windows in walkout
       locationText = "HouseFile/House/Components/Walkout/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
@@ -2025,9 +2025,52 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      # Windows in crawlspace elements             [******** Skip for now ********]
-      # Windows in ceiling elements (skylights)    [******** Skip for now ********]
-      # Windows in door elements                   [******** Skip for now ********]
+      # Windows in crawlspace (closed or vented) 
+      locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
+      # Windows in ceiling elements (skylights)
+      locationText = "HouseFile/House/Components/Ceiling/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
+	  
+      # Windows in door elements
+      locationText = "HouseFile/House/Components/Wall/Components/Door/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
    else
       # Code name not found in the code library
       # Since no User Specified option for windows this must be an error!
