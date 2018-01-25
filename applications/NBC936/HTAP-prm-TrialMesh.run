@@ -1,39 +1,40 @@
 ! Definitions file for HTAP-PRM RUN 
 
 ! Run-Mode: Parameters that affect how htap-prm is configured. 
-RunParameters:START
-  run-mode                           : mesh 
-RunParameters:END 
+RunParameters_START
+  run-mode                           = mesh 
+  archetype-dir                      = C:/HTAP/Archetypes
+RunParameters_END 
 
 
-! Run-scope: Parameters 
-RunScope:START
+! 
+RunScope_START
 
-  archetypes                        : NBC-arch2_slab , NBC-arch3_fullBsmt, NBC-arch1_fullBsmt
-  locations                         : YARMOUTH,  Halifax, Toronto
-  rulesets                          : as-found,  936_2015_AW  , evaluate-upgrades   
+  archetypes                        = BC-Step-MURB10.h2k 
+  locations                         = YARMOUTH,  Halifax, Toronto
+  rulesets                          = as-found !,  936_2015_AW  , evaluate-upgrades   
   
-RunScope:END
+RunScope_END
 
 
-Upgrades:START
+Upgrades_START
 
-    Opt-FuelCost                       : rates2016
-    Opt-ACH                            : ACH_3_5  , ACH_2_5 , ACH_1_5
-    Opt-MainWall                       : GenericWall_1Layer
-    Opt-GenericWall_1Layer_definitions : NA
-    Opt-Ceilings                       : NA
-    Opt-H2KFoundation                  : NA
-    Opt-ExposedFloor                   : NA
-    Opt-CasementWindows                : NA
-    Opt-H2K-PV                         : NA
-    Opt-DWHRandSDHW                    : NA 
-    Opt-RoofPitch                      : NA
-    Opt-DHWSystem                      : NA
-    Opt-DWHRSystem                     : NA
-    Opt-HVACSystem                     : NA 
-    Opt-HRVspec                        : NA
-    Opt-ElecLoadScale                  : NGERSNoReduction19 
-    Opt-DHWLoadScale                   : No-Reduction 
+    Opt-FuelCost                       = rates2016
+    Opt-ACH                            = ACH_3_5  , ACH_2_5 , ACH_1_5
+    Opt-MainWall                       = GenericWall_1Layer
+    Opt-GenericWall_1Layer_definitions = NA
+    Opt-Ceilings                       = NA
+    Opt-H2KFoundation                  = NA
+    Opt-ExposedFloor                   = NA
+    Opt-CasementWindows                = NA
+    Opt-H2K-PV                         = NA
+    Opt-DWHRandSDHW                    = NA 
+    Opt-RoofPitch                      = NA
+    Opt-DHWSystem                      = NA
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA 
+    Opt-HRVspec                        = NA
+    Opt-ElecLoadScale                  = NGERSNoReduction19 
+    Opt-DHWLoadScale                   = No-Reduction 
 
-Upgrades:END
+Upgrades_END
