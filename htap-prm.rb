@@ -451,10 +451,11 @@ def run_these_cases(current_task_files)
          
           case $Ruleset
           when /936_2015_AW_HRV/
-            #subcall = "C:\\HTAP\\NRC-scripts\\apply936-AW.pl #{$H2kFile} #{$LocalChoiceFile} #{$Location} 1 "
-            #stream_out("\n >>>#{subcall}<<<\n")
-            #system (subcall)
-                    
+            subcall = "perl C:\\HTAP\\NRC-scripts\\apply936-AW.pl #{$H2kFile} #{$LocalChoiceFile}  #{$LocalOptionsFile} #{$Location} 1 "
+            system (subcall)      
+          when /936_2015_AW_noHRV/
+            subcall = "perl C:\\HTAP\\NRC-scripts\\apply936-AW.pl #{$H2kFile} #{$LocalChoiceFile}  #{$LocalOptionsFile} #{$Location} 0 "
+            system (subcall)      
           end 
 
 
