@@ -95,6 +95,177 @@
 
 *attribute:end
 
+!-----------------RULESET  ------------------------------------
+!  This code isn't real
+!-------------------------------------------------------------------------
+*attribute:start 
+*attribute:name = Opt-Ruleset 
+*attribute:tag:1 = <NotNOTARealTag>
+*attribute:default = nil 
+*attribute:on-error = ignore 
+
+*option:nil:value:1    = nil
+*option:nil:cost:total = 0
+
+
+*attribute:end
+
+
+
+
+!-----------------HOT2000 Archetype file ---------------------------------
+!  
+!-------------------------------------------------------------------------
+*attribute:start 
+*attribute:name = Opt-Archetype
+*attribute:tag:1 = <NotARealTag>
+*attribute:default = NZEH-Arch-1
+
+*option:NA:value:1 = NA
+*option:NA:cost:total = 0
+
+
+*option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
+*option:SmallSFD:cost:total = 0
+
+*option:MediumSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-MediumSFD.h2k
+*option:MediumSFD:cost:total = 0
+
+*option:LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-LargeSFD.h2k
+*option:LargeSFD:cost:total = 0
+
+*option:Rowhouse:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Row.h2k
+*option:Rowhouse:cost:total = 0
+
+*option:Quadplex:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Quad.h2k
+*option:Quadplex:cost:total = 0
+
+*option:BC-NZEH-ex-1:value:1 = C:\H2K-CLI-Min\User\BC-Step-NZEH-1-example.h2k
+*option:BC-NZEH-ex-1:cost:total = 0
+
+*option:MURB:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-Murb1.h2k
+*option:MURB:cost:total = 0
+
+*option:NZEH-Arch-1:value:1 = C:\H2K-CLI-Min\User\Arch-1-NZEH-detached-2-story.h2k
+*option:NZEH-Arch-1:cost:total = 0
+
+*option:BCLEEP-ROW:value:1 = C:\H2K-CLI-Min\User\Arch-2-BCLEEP-attached-endunit.h2k
+*option:BCLEEP-ROW:cost:total = 0
+
+*option:NZEH-arch-2:value:1 = C:\H2K-CLI-Min\User\Arch-3-NZEH-detached-2-story-narrow.h2k
+*option:NZEH-arch-2:cost:total = 0
+
+*option:MB-LEEP-bungalow:value:1 = C:\H2K-CLI-Min\User\Arch-4-MBLEEP-detached-bungalow.h2k
+*option:MB-LEEP-bungalow:cost:total = 0
+
+
+*option:BC-LEEP-Kelowna:value:1 = C:\H2K-CLI-Min\User\KelownaHouse.h2k
+*option:BC-LEEP-Kelowna:cost:total = 0
+
+*option:NORTH-JP:value:1 = C:\H2K-CLI-Min\User\north-1227D00169.h2k
+*option:NORTH-JP:cost:total = 0
+
+*option:BC-LEEP-PJHouse:value:1 = C:\H2K-CLI-Min\User\PrinceGeorgeHouse.h2k
+*option:BC-LEEP-PJHouse:cost:total = 0
+
+*option:PH-example-1:value:1 = C:\H2K-CLI-Min\User\PH-example-1.h2k
+*option:PH-example-1:cost:total = 0
+
+*option:PH-example-3:value:1 = C:\H2K-CLI-Min\User\PH-example-3.h2k
+*option:PH-example-3:cost:total = 0
+
+*option:PH-example-4:value:1 = C:\H2K-CLI-Min\User\PH-example-4.h2k
+*option:PH-example-4:cost:total = 0
+
+*option:PH-example-8:value:1 = C:\H2K-CLI-Min\User\PH-example-8.h2k
+*option:PH-example-8:cost:total = 0
+
+*option:PH-example-9:value:1 = C:\H2K-CLI-Min\User\PH-example-9.h2k
+*option:PH-example-9:cost:total = 0
+
+*option:PA-edmonton-example-01:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-01.h2k
+*option:PA-edmonton-example-01:cost:total = 0
+
+! Doesn't run
+!*option:PA-edmonton-example-02:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-02.h2k
+!*option:PA-edmonton-example-02:cost:total = 0
+
+
+*option:PA-edmonton-example-03:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-03.h2k
+*option:PA-edmonton-example-03:cost:total = 0
+
+*option:PA-edmonton-example-04:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-04.h2k
+*option:PA-edmonton-example-04:cost:total = 0
+
+*option:PA-edmonton-example-05:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-05.h2k
+*option:PA-edmonton-example-05:cost:total = 0
+
+*option:PA-edmonton-example-06:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-06.h2k
+*option:PA-edmonton-example-06:cost:total = 0
+
+*option:PA-edmonton-example-07:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-07.h2k
+*option:PA-edmonton-example-07:cost:total = 0
+
+*option:PA-edmonton-example-09:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-09.h2k
+*option:PA-edmonton-example-09:cost:total = 0
+
+*option:PA-edmonton-example-10:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-10.h2k
+*option:PA-edmonton-example-10:cost:total = 0
+
+*option:PA-edmonton-example-11:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-11.h2k
+*option:PA-edmonton-example-11:cost:total = 0
+
+*option:PA-edmonton-example-12:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-12.h2k
+*option:PA-edmonton-example-12:cost:total = 0
+
+*option:PA-edmonton-example-13:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-13.h2k
+*option:PA-edmonton-example-13:cost:total = 0
+
+*option:PA-edmonton-example-14:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-14.h2k
+*option:PA-edmonton-example-14:cost:total = 0
+
+*option:PA-edmonton-example-15:value:1 = C:\H2K-CLI-Min\User\PA-edmonton-example-16.h2k
+*option:PA-edmonton-example-15:cost:total = 0
+
+*option:NBC-arch1_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch1_1000sf_1storey_fullBsmt.h2k
+*option:NBC-arch1_fullBsmt:cost:total = 0
+
+*option:NBC-arch2_slab:value:1 = C:\H2K-CLI-Min\User\NRCan-arch2_1900sqft_1storey_crawlSpace.h2k
+*option:NBC-arch2_slab:cost:total = 0
+
+*option:NBC-arch3_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch3_1300sf_2storey_fullBsmt.h2k
+*option:NBC-arch3_fullBsmt:cost:total = 0
+
+*option:NBC-arch4_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch4_2100sf_2storey_fullBsmt.h2k
+*option:NBC-arch4_fullBsmt:cost:total = 0
+
+*option:NBC-arch5_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch5_3500sf_2storey_fullBsmt.h2k
+*option:NBC-arch5_fullBsmt:cost:total = 0
+
+*option:NBC-arch6_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch6_3500sf_2st_15%moreGlass_fullBsmt.h2k
+*option:NBC-arch6_fullBsmt:cost:total = 0
+
+*option:NBC-arch7_slabOnGrade:value:1 = C:\H2K-CLI-Min\User\NRCan-arch7_2100sf_2storey_slabOnGrade.h2k
+*option:NBC-arch7_slabOnGrade:cost:total = 0
+
+*option:NBC-arch8_Bsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch8_2100sf_2storey_walkOut.h2k
+*option:NBC-arch8_Bsmt:cost:total = 0
+
+*option:NBC-arch9_Bsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-A9_3000sf_2stry_walkOut.h2k
+*option:NBC-arch9_Bsmt:cost:total = 0
+
+*option:NBC-arch10_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-arch10_1500sf_2storey_rowEnd_fullBsmt.h2k
+*option:NBC-arch10_fullBsmt:cost:total = 0
+
+*option:NBC-arch11_fullBsmt:value:1 = C:\H2K-CLI-Min\User\NRCan-A11_1500sf_2storey_rowMid_fullBsmt.h2k
+*option:NBC-arch11_fullBsmt:cost:total = 0
+
+*attribute:end
+
+
+
+
+
 !-----------------------------------------------------------------------
 ! This option defines an operations schedule for zoned systems, where all
 ! occupant and internal gains follow:
@@ -3603,6 +3774,18 @@ Whitehorse Wall Options (Code is R28)
 *option:none:value:9   = NA
 *option:none:value:10  = NA
 *option:none:cost:total = 0
+
+*option:NA:value:1   = NA
+*option:NA:value:2   = NA
+*option:NA:value:3   = NA
+*option:NA:value:4   = NA
+*option:NA:value:5   = NA
+*option:NA:value:6   = NA
+*option:NA:value:7   = NA
+*option:NA:value:8   = NA
+*option:NA:value:9   = NA
+*option:NA:value:10  = NA
+*option:NA:cost:total = 0
 
 
 *option:DWHR-eff-30:value:1   = true          ! Has DHWR? true/false
