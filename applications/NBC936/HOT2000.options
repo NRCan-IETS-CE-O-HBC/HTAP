@@ -127,8 +127,6 @@
 *option:nil:cost:total = 0
 
 
-
-
 *attribute:end
 
 
@@ -2163,6 +2161,13 @@
 
 ! BC LEEP Wall systems
 
+*option:936-Ruleset-AW-custom-R:value:1 = 0.08748 
+*option:936-Ruleset-AW-custom-R:value:2 = 15.8         
+*option:936-Ruleset-AW-custom-R:cost    = 0
+
+
+
+
 
 ! Thicknesses are defined in meters. Format * must * be #.#### (4 decimals)
 *option:Stud_2x6_R16:value:1 = 0.08748 
@@ -3528,6 +3533,14 @@ Whitehorse Wall Options (Code is R28)
 *option:ExpFloorFoamed-R52:value:3 = Foamed-R52    ! Use "NA" (or non-existent name) for user-Specified case
 *option:ExpFloorFoamed-R52:value:4 = NA            ! User-Specified R-value (Imperial) / NA for code name
 *option:ExpFloorFoamed-R52:cost:total    = 0
+        
+*option:936-Ruleset-AW-custom-R:value:1 = ExpFlR31
+*option:936-Ruleset-AW-custom-R:value:2 = ExpFlR31r
+*option:936-Ruleset-AW-custom-R:value:3 = NA     ! Use "NA" (or non-existent name) for user-Specified case
+*option:936-Ruleset-AW-custom-R:value:4 = 31     ! User-Specified R-value (Imperial) / NA for code name
+*option:936-Ruleset-AW-custom-R:cost:total    = 0
+
+
 
 !-----------------------------------------------------------------------
 ! NWT Crawl Space Floor is Exposed
@@ -4007,6 +4020,26 @@ Reflects southern Ontario costs
 *option:NBC-oil-heat:value:15 = 
 *option:NBC-oil-heat:value:16 = 
 *option:NBC-oil-heat:cost:total = 0
+
+! Adam's definition ? 
+*option:oilfurnace:value:1 = basefurnace_ACv2.hvac
+*option:oilfurnace:value:2 = #-no-GSHP-file
+*option:oilfurnace:value:3 = #No-IMS: 
+*option:oilfurnace:value:4 = 
+*option:oilfurnace:value:5 = 
+*option:oilfurnace:value:6 = shoulder-ideal.ctl
+*option:oilfurnace:value:7 = Furnace
+*option:oilfurnace:value:8 = None
+*option:oilfurnace:value:9 = 3
+*option:oilfurnace:value:10 = 2       ! Spark ignition
+*option:oilfurnace:value:11 = 2       ! Calculated
+*option:oilfurnace:value:12 = NA      ! Capacity value will be calculated
+*option:oilfurnace:value:13 = false    ! AFUE
+*option:oilfurnace:value:14 = 85      ! Efficiency
+*option:oilfurnace:value:15 = 1       ! Auto fan control
+*option:oilfurnace:value:16 = false   ! EE motor
+*option:oilfurnace:cost:total = 0
+
 
 *option:NBC-CCASHP:value:1  = CCASHPv2.hvac         ! ESP-r: Flag to activate/deactvate IMS file             
 *option:NBC-CCASHP:value:2  = #-no-GSHP-file        ! ESP-r: Flag to activate/deactvate GSHP file     
