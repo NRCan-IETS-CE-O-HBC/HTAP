@@ -1,0 +1,43 @@
+! Definitions file for HTAP-PRM RUN 
+
+! Run-Mode: Parameters that affect how htap-prm is configured. 
+RunParameters_START
+  run-mode                           = mesh 
+  archetype-dir                      = C:/HTAP/applications/NBC936-AW-ruleset/nrcan-archetypes-for-NBC-work
+RunParameters_END 
+
+
+! Parameters controlling archetypes, locations, reference rulests. (these will always be
+! run in mesh, even if anoptimization mode is added in the future. 
+
+RunScope_START
+
+  archetypes                        = NRCan-A11_1500sf_2storey_rowMid_E-b90.h2k,  NRCan-A9_3000sf_2stry_WOB_E-b90.h2k, NRCan-arch10_1500sf_2storey_rowEnd_Eb90.h2k       , NRCan-arch1_1000sf_1storey_fullBsmt_E-b90.h2k     , NRCan-arch2_1900sqft_1storey_crawlSpace_E-b90.h2k , NRCan-arch3_1300sf_2storey_fullBsmt_E-b90.h2k     , NRCan-arch4_2100sf_2storey_fullBsmt_E-b90.h2k     , NRCan-arch5_3500sf_2storey_fullBsmt_E-b90.h2k     , NRCan-arch6_3500sf_2st_15%moreGlass_E-b90.h2k     , NRCan-arch7_2100sf_2storey_slabOnGrade_E-b90.h2k  , NRCan-arch8_2100sf_2storey_walkOut_E-b90.h2k      
+  locations                         = Halifax 
+  rulesets                          = as-found, 936_2015_AW_HRV, 936_2015_AW_noHRV 
+  
+RunScope_END
+
+! Parameters controlling the design of the building 
+Upgrades_START
+
+    Opt-FuelCost                       = rates2016      ! Maybe this belongs in scope?
+    Opt-ACH                            = NA, ACH_1_0
+    Opt-MainWall                       = GenericWall_1Layer
+    Opt-GenericWall_1Layer_definitions = NA
+    Opt-Ceilings                       = NA
+    Opt-H2KFoundation                  = NA
+    Opt-ExposedFloor                   = NA
+    Opt-CasementWindows                = NA
+    Opt-H2K-PV                         = NA
+    Opt-DWHRandSDHW                    = NA 
+    Opt-RoofPitch                      = NA
+    Opt-DHWSystem                      = NA
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA 
+    Opt-HRVspec                        = NA
+
+Upgrades_END
+
+
+
