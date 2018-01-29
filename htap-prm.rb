@@ -24,6 +24,9 @@ $gChoiceFileSet = Hash.new
 
 $gArchetypeDir = "C:/HTAP/archetypes"
 $gArchetypeHash = Hash.new
+$gRulesetHash   = Hash.new
+$gLocationHash  = Hash.new 
+
 
 
 $gGenChoiceFileBaseName = "sim-X.choices"
@@ -228,7 +231,8 @@ def create_mesh_cartisian_combos(optIndex)
     # Save the name of the archetype that matches this choice file for invoking 
     # with substitute.h2k.
     $gArchetypeHash[generated_file] = $gChoiceFileSet["Opt-Archetype"] 
-         
+    $gLocationHash[generated_file]  = $gChoiceFileSet["Opt-Location"] 
+    $gRulesetHash[generated_file]   = $gChoiceFileSet["Opt-Ruleset"] 
     
   else    
     
@@ -259,21 +263,9 @@ def create_mesh_cartisian_combos(optIndex)
       $gRulesets.each do |ruleset|
       
         $gChoiceFileSet["Opt-Ruleset"] = ruleset 
-        
-        
-        if ( ruleset.match(/evaluate-upgrades/) )
           
-          create_mesh_cartisian_combos(optIndex+1) 
+        create_mesh_cartisian_combos(optIndex+1) 
          
-        else 
-          
-          $gOptionList.each do |attribute| 
-          
-            $gChoiceFileSet[attribute] = "NA" 
-            
-          end 
-          create_mesh_cartisian_combos($gOptionList.count) 
-        end
         
       end # $gRulesets.each do |ruleset|
           
@@ -400,13 +392,15 @@ def run_these_cases(current_task_files)
       
         # Get the name of the .h2k file for this thread. 
         $H2kFile = $gArchetypeHash[$choicefiles[thread]]
+        $Ruleset = $gRulesetHash[$choicefiles[thread]]
+        $Location = $gLocationHash[$choicefiles[thread]]
       
         count = thread + 1 
         stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
         
         
         # For this thread: Get the next choice file in the batch. 
-        $choicefiles[thread] = $RunTheseFiles[$choicefileIndex] 
+        #$choicefiles[thread] = $RunTheseFiles[$choicefileIndex] 
         
       
         # Make sure that's a real choice file ( this just duplicates a test above )
@@ -443,12 +437,29 @@ def run_these_cases(current_task_files)
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
           
           # ... And get base file names for insertion into the substitute-h2k.rb command.
-          $LocalChoiceFile = File.basename $choicefiles[thread]    
+          $LocalChoiceFile  = File.basename $choicefiles[thread]    
           $LocalOptionsFile = File.basename $gOptionFile
+         
+            
+          
             
           # CD to run directory, spawn substitute-h2k thread and save PID 
           Dir.chdir($RunDirectory)
-                        
+
+
+          # Possibly call another script to modify the .h2k and .choice files 
+         
+          case $Ruleset
+          when /936_2015_AW_HRV/
+            subcall = "perl C:\\HTAP\\NRC-scripts\\apply936-AW.pl #{$H2kFile} #{$LocalChoiceFile}  #{$LocalOptionsFile} #{$Location} 1 "
+            system (subcall)      
+          when /936_2015_AW_noHRV/
+            subcall = "perl C:\\HTAP\\NRC-scripts\\apply936-AW.pl #{$H2kFile} #{$LocalChoiceFile}  #{$LocalOptionsFile} #{$Location} 0 "
+            system (subcall)      
+          end 
+
+
+          
           cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm "
 
           # Save command for invoking substitute [ useful in debugging ]         
