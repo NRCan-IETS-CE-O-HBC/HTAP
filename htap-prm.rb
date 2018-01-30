@@ -440,12 +440,16 @@ def run_these_cases(current_task_files)
           $LocalChoiceFile  = File.basename $choicefiles[thread]    
           $LocalOptionsFile = File.basename $gOptionFile
          
-            
-          
+
             
           # CD to run directory, spawn substitute-h2k thread and save PID 
           Dir.chdir($RunDirectory)
 
+          if ( $gDebug ) 
+            FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p0")
+          end 
+                    
+          
 
           # Possibly call another script to modify the .h2k and .choice files 
          
@@ -458,7 +462,9 @@ def run_these_cases(current_task_files)
             system (subcall)      
           end 
 
-
+          if ( $gDebug ) 
+            FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p1")
+          end 
           
           cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm "
 
@@ -474,6 +480,9 @@ def run_these_cases(current_task_files)
           $PIDS[thread] = pid 
           
           stream_out("(PID #{$PIDS[thread]})...")
+          
+          
+          
                  
           # Cd to root, move to next choice file. 
           Dir.chdir($gMasterPath)
@@ -710,11 +719,11 @@ optparse = OptionParser.new do |opts|
       $gTest_params["verbosity"] = "verbose"
    end
 
-   #opts.on("-d", "--debug", "Run in debug mode") do
-   #   $cmdlineopts["verbose"] = true
-   #   $gTest_params["verbosity"] = "debug"
-   #   $gDebug = true
-   #end
+   opts.on("-d", "--debug", "Run in debug mode") do
+      $cmdlineopts["verbose"] = true
+      $gTest_params["verbosity"] = "verbose"
+      $gDebug = true
+   end
 
    
    #opts.on("-w", "--warnings", "Report warning messages") do 
