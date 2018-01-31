@@ -99,8 +99,11 @@ end
 # Does this do anything? ------------------------------------------------
 # =========================================================================================
 def parse_output_data(filepath)
-   
+   # NOPE!
 end
+
+
+
 
 =begin rdoc
 # ----------------------------------------------------------------------------
@@ -663,9 +666,12 @@ def run_these_cases(current_task_files)
   
   
   stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
-  stream_out (" - Deleting working directories\n\n")
   
-  FileUtils.rm_rf Dir.glob("HTAP-work-*") 
+  
+  if ( ! $gDebug ) then 
+     stream_out (" - Deleting working directories\n\n")  
+     FileUtils.rm_rf Dir.glob("HTAP-work-*") 
+  end
   
 end 
 
