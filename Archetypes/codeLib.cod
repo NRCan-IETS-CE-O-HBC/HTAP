@@ -3159,7 +3159,7 @@
                 </Layers>
             </Code>					
             <Code id="Code 93" nominalRValue="0">
-                <Label>YHC-W12</Label>
+                <Label>YHC-W13</Label>
                 <Description>quad-glazed, high SHGC</Description>
                 <Layers>
                     <Window frameHeight="0" shgc="0.2" rank="1">
