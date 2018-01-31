@@ -1829,12 +1829,12 @@ def processFile(filespec)
                
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
                             
-               if ( value == "NA" )
-                  $outputHCode = "General" 
-               elsif ( value != "NA" )
-                  $outputHCode = value
+#               if ( value == "NA" )
+#                  $outputHCode = "General" 
+#               elsif ( value != "NA" )
+                  $outputHCode = "SOC"
                          
-               end                
+#               end                
                
                
             else
