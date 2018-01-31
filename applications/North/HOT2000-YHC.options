@@ -2230,6 +2230,78 @@
 *option:YHC-W9:cost:total   = 0   
 
 
+*option:YHC-W10:value:1 = YHC-W10
+*option:YHC-W10:value:2 = YHC-W10
+*option:YHC-W10:value:3 = YHC-W10
+*option:YHC-W10:value:4 = YHC-W10
+*option:YHC-W10:value:5 = YHC-W10
+*option:YHC-W10:value:6 = YHC-W10
+*option:YHC-W10:value:7 = YHC-W10
+*option:YHC-W10:value:8 = YHC-W10
+*option:YHC-W10:value:9 = YHC-W10
+*option:YHC-W10:value:10 = YHC-W10
+*option:YHC-W10:value:11 = YHC-W10
+*option:YHC-W10:value:12 = YHC-W10
+*option:YHC-W10:WindowParams:name  = YHC-W10
+*option:YHC-W10:WindowParams:panes = 4
+*option:YHC-W10:WindowParams:SHGC  = 0.26
+*option:YHC-W10:WindowParams:Uval  = 1.03
+*option:YHC-W10:cost:total   = 0   
+
+*option:YHC-W11:value:1 = YHC-W11
+*option:YHC-W11:value:2 = YHC-W11
+*option:YHC-W11:value:3 = YHC-W11
+*option:YHC-W11:value:4 = YHC-W11
+*option:YHC-W11:value:5 = YHC-W11
+*option:YHC-W11:value:6 = YHC-W11
+*option:YHC-W11:value:7 = YHC-W11
+*option:YHC-W11:value:8 = YHC-W11
+*option:YHC-W11:value:9 = YHC-W11
+*option:YHC-W11:value:10 = YHC-W11
+*option:YHC-W11:value:11 = YHC-W11
+*option:YHC-W11:value:12 = YHC-W11
+*option:YHC-W11:WindowParams:name  = YHC-W11
+*option:YHC-W11:WindowParams:panes = 3
+*option:YHC-W11:WindowParams:SHGC  = 0.20
+*option:YHC-W11:WindowParams:Uval  = 0.96
+*option:YHC-W11:cost:total   = 0   
+
+*option:YHC-W12:value:1 = YHC-W12
+*option:YHC-W12:value:2 = YHC-W12
+*option:YHC-W12:value:3 = YHC-W12
+*option:YHC-W12:value:4 = YHC-W12
+*option:YHC-W12:value:5 = YHC-W12
+*option:YHC-W12:value:6 = YHC-W12
+*option:YHC-W12:value:7 = YHC-W12
+*option:YHC-W12:value:8 = YHC-W12
+*option:YHC-W12:value:9 = YHC-W12
+*option:YHC-W12:value:10 = YHC-W12
+*option:YHC-W12:value:11 = YHC-W12
+*option:YHC-W12:value:12 = YHC-W12
+*option:YHC-W12:WindowParams:name  = YHC-W12
+*option:YHC-W12:WindowParams:panes = 3
+*option:YHC-W12:WindowParams:SHGC  = 0.28
+*option:YHC-W12:WindowParams:Uval  = 1.17
+*option:YHC-W12:cost:total   = 0   
+
+*option:YHC-W13:value:1 = YHC-W13
+*option:YHC-W13:value:2 = YHC-W13
+*option:YHC-W13:value:3 = YHC-W13
+*option:YHC-W13:value:4 = YHC-W13
+*option:YHC-W13:value:5 = YHC-W13
+*option:YHC-W13:value:6 = YHC-W13
+*option:YHC-W13:value:7 = YHC-W13
+*option:YHC-W13:value:8 = YHC-W13
+*option:YHC-W13:value:9 = YHC-W13
+*option:YHC-W13:value:10 = YHC-W13
+*option:YHC-W13:value:11 = YHC-W13
+*option:YHC-W13:value:12 = YHC-W13
+*option:YHC-W13:WindowParams:name  = YHC-W13
+*option:YHC-W13:WindowParams:panes = 4
+*option:YHC-W13:WindowParams:SHGC  = 0.20
+*option:YHC-W13:WindowParams:Uval  = 1.00
+*option:YHC-W13:cost:total   = 0   
+
 *attribute:end
 
 
