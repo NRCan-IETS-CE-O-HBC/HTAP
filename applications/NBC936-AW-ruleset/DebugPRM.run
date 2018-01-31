@@ -1,0 +1,43 @@
+! Definitions file for HTAP-PRM RUN 
+
+! Run-Mode: Parameters that affect how htap-prm is configured. 
+RunParameters_START
+  run-mode                           = mesh 
+  archetype-dir                      = C:/HTAP/archetypes
+RunParameters_END 
+
+
+! Parameters controlling archetypes, locations, reference rulests. (these will always be
+! run in mesh, even if anoptimization mode is added in the future. 
+
+RunScope_START
+
+  archetypes                        = NRCan-A11_1500sf_2storey_rowMid_fullBsmt.h2k
+  locations                         = Halifax, Toronto, Calgary , Halifax
+  rulesets                          = as-found  !, 936_2015_AW_HRV, 936_2015_AW_noHRV  
+  
+RunScope_END
+
+! Parameters controlling the design of the building 
+Upgrades_START
+
+    Opt-FuelCost                       = rates2016      ! Maybe this belongs in scope?
+    Opt-ACH                            = NA
+    Opt-MainWall                       = GenericWall_1Layer
+    Opt-GenericWall_1Layer_definitions = NA
+    Opt-Ceilings                       = NA
+    Opt-H2KFoundation                  = NA
+    Opt-ExposedFloor                   = NA
+    Opt-CasementWindows                = NA
+    Opt-H2K-PV                         = NA
+    Opt-DWHRandSDHW                    = NA 
+    Opt-RoofPitch                      = NA
+    Opt-DHWSystem                      = NA
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA 
+    Opt-HRVspec                        = NA
+
+Upgrades_END
+
+
+
