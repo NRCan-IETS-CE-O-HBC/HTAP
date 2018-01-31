@@ -473,7 +473,7 @@ def run_these_cases(current_task_files)
           $cmdtxt.write cmdscript
           $cmdtxt.close
           
-          debug_out(" ( cmd: #{cmdscript} |  \n")  
+          #debug_out(" ( cmd: #{cmdscript} |  \n")  
              
           pid = Process.spawn( cmdscript, :out => File::NULL, :err => File::NULL ) 
 
@@ -590,6 +590,9 @@ def run_these_cases(current_task_files)
           end 
           
           FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
+          FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0] ,  "#{$SaveDirs[thread3]}/h2k-core-msgs.txt" )
+          FileUtils.cp( "#{$RunDirs[thread3]}/H2K/ROutStr.Txt",  "#{$SaveDirs[thread3]}/h2k-diagnostics.txt" )
+          FileUtils.rm_rf Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt") 
         
         end 
 
@@ -663,8 +666,7 @@ def run_these_cases(current_task_files)
   stream_out (" - Deleting working directories\n\n")
   
   FileUtils.rm_rf Dir.glob("HTAP-work-*") 
-  FileUtils.rm_rf Dir.glob("HTAP-work-*") 
-
+  
 end 
 
 
