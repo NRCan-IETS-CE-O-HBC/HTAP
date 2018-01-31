@@ -3998,13 +3998,13 @@ $gChoices.each do |attrib, choice|
   
    # Is choice in options?
    if ( ! $gOptions[attrib]["options"].has_key?(choice) ) 
-     if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
-      $allok = false
-     else 
-       $gOptions[attrib]["options"][choice]["cost"] = 0
-     end 
+      if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
+         $allok = false
+      else 
+         $gOptions[attrib]["options"][choice]["cost"] = 0
+      end 
      
-     if ( !$allok )
+      if ( !$allok )
          $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
          $ThisError +=   "        in choice file #{$gChoiceFile}), is not defined \n"
          $ThisError +=   "        in options file (#{$gOptionFile})\n"
