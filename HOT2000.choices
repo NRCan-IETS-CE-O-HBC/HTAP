@@ -24,7 +24,7 @@ Opt-ACH : NA
 
 Opt-Ceilings : NA
 
-! Main wall definitins 
+! Main wall definitions 
 Opt-MainWall : NA                    ! This one, OR
 Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 
@@ -32,7 +32,7 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : NA   
+Opt-CasementWindows  : DoubleLowEHardCoatArgFill   
 
 ! Foundation definitions
 Opt-H2KFoundation : NA  

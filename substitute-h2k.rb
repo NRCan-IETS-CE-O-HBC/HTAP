@@ -25,7 +25,6 @@ KWH_PER_GJ = 277.778
 W_PER_KW = 1000.0
 
 
-
 # Desired ERS mode: 
 # (USE Data from SOC for now. We'll think of something to do with the other modes later)
 # 23-Aug-2017 JTB: Note that "SOC" will be changed to "General" when the house is not
@@ -1958,14 +1957,11 @@ def processFile(filespec)
                
                
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
-                            
                if ( value == "NA" )
                   $outputHCode = "General" 
                elsif ( value != "NA" )
                   $outputHCode = value
-                         
                end                
-               
                
             else
                # Do nothing -- we're ignoring all other tags!
@@ -2043,7 +2039,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
    # Change ALL existing windows for this orientation (winOrient) to the library code name
    # specified in newValue. If this code name exists in the code library, use the code 
    # (either Fav or UsrDef) for all entries facing in this direction. Code names in library are unique.
-   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+   # Note: Not using "Standard", non-library codes (e.g., 202002)
 
    # Look for this code name in code library (Favorite and UserDefined)
    windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
@@ -2127,7 +2123,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      # Windows in basement wall elements
+      # Windows in basement
       locationText = "HouseFile/House/Components/Basement/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
@@ -2142,7 +2138,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      # Windows in walkout wall elements
+      # Windows in walkout
       locationText = "HouseFile/House/Components/Walkout/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
@@ -2157,9 +2153,52 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      # Windows in crawlspace elements             [******** Skip for now ********]
-      # Windows in ceiling elements (skylights)    [******** Skip for now ********]
-      # Windows in door elements                   [******** Skip for now ********]
+      # Windows in crawlspace (closed or vented) 
+      locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
+      # Windows in ceiling elements (skylights)
+      locationText = "HouseFile/House/Components/Ceiling/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
+	  
+      # Windows in door elements
+      locationText = "HouseFile/House/Components/Wall/Components/Door/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
    else
       # Code name not found in the code library
       # Since no User Specified option for windows this must be an error!
@@ -2986,7 +3025,7 @@ def runsims( direction )
                keepTrying = false   # Give up.
             end
            
-            # Forceably kill process, if needed
+            # Force kill process, if needed
             begin
                Process.kill('KILL', pid)
             rescue
@@ -3150,7 +3189,7 @@ def postprocess( scaleData )
    $gResults["allCodes"]["sumAreaBelowGradeM2"] = h2kPostElements[locationText].attributes["belowGradeHeatedFloorArea"].to_f
 
    
-   # ==================== Get results for all h2k calcs from XML file (exceptiing above case)
+   # ==================== Get results for all h2k calcs from XML file (except above case)
    
    parseDebug = true
    
@@ -3158,18 +3197,13 @@ def postprocess( scaleData )
    
       houseCode =  element.attributes["houseCode"]
    
-      if (houseCode == nil) 
-         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element set!
-         #    When in Program mode there are multiple element sets and the last element set will have this same missing attribute.
+      if (houseCode == nil && element.attributes["sha256"] != nil) 
+         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
+         # When in Program mode there are multiple element results sets.
          houseCode = "General"
-         $outputHCode = "General"
       end 
       
-      # ASF 04-Oct-2016: limiting results parsing to 2 sets - SOC and general -- because parsing takes a long time !
-      # ASF 05-Oct-2016: this is a place where we could speed things up by allowing users to 
-      #                  spec only a single desired set via a commad line switch, or by defaulting to 
-      #                  SOC and falling back to 'General' if it's not found.
-      
+      # JTB 31-Jan-2018: Limiting results parsing to 1 set specified by user in choice file and saved in $outputHCode
       if (houseCode == "#{$outputHCode}" )
       
          stream_out( "\n Parsing results from set: #{$outputHCode} ...")
@@ -3179,7 +3213,7 @@ def postprocess( scaleData )
          
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgGrossHeatLossGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -3237,8 +3271,7 @@ def postprocess( scaleData )
          $gAuxEnergyHeatingGJ = 0
          $MonthlyAuxHeatingMJ = 0
          monthArr.each do |mth|
-          
-          $gAuxEnergyHeatingGJ += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
+            $gAuxEnergyHeatingGJ += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
          end 
          
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
@@ -3284,7 +3317,7 @@ def postprocess( scaleData )
                    $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
          $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
          
-         break    # break out of the element loop to avoid processing "General" for ERS Program scenario!
+         break    # break out of the element loop to avoid further processing
 
       end
 	  
@@ -3386,7 +3419,7 @@ def postprocess( scaleData )
       # Set values for external PV model (initialized to zero above)...
       $gResults[$outputHCode]["avgEnergyPVAvailableGJ"] = $gEnergyPV
       if ( $gResults[$outputHCode]["avgFueluseElecGJ"] > $gEnergyPV )
-         # Decrease house electricty use by PV energy productions
+         # Decrease house electricity use by PV energy productions
          $gResults[$outputHCode]["avgEnergyPVUtilizedGJ"] = $gEnergyPV
          $gResults[$outputHCode]["avgFueluseElecGJ"] -= $gEnergyPV
          $gResults[$outputHCode]["avgFueluseEleckWh"] = $gResults[$outputHCode]["avgFueluseElecGJ"] * 277.77777778
@@ -4097,13 +4130,13 @@ $gChoices.each do |attrib, choice|
   
    # Is choice in options?
    if ( ! $gOptions[attrib]["options"].has_key?(choice) ) 
-     if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
-      $allok = false
-     else 
-       $gOptions[attrib]["options"][choice]["cost"] = 0
-     end 
+      if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
+         $allok = false
+      else 
+         $gOptions[attrib]["options"][choice]["cost"] = 0
+      end 
      
-     if ( !$allok )
+      if ( !$allok )
          $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
          $ThisError +=   "        in choice file #{$gChoiceFile}), is not defined \n"
          $ThisError +=   "        in options file (#{$gOptionFile})\n"
