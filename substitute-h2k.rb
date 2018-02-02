@@ -3189,7 +3189,7 @@ def postprocess( scaleData )
    $HCGeneralFound = false 
    $HCSOCFound = false 
    
-  # # Make sure that the code we want is avaliable 
+  # # Make sure that the code we want is available 
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
   # 
       houseCode =  element.attributes["houseCode"]
