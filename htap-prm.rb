@@ -593,9 +593,17 @@ def run_these_cases(current_task_files)
           end 
           
           FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
-          FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0] ,  "#{$SaveDirs[thread3]}/h2k-core-msgs.txt" )
-          FileUtils.cp( "#{$RunDirs[thread3]}/H2K/ROutStr.Txt",  "#{$SaveDirs[thread3]}/h2k-diagnostics.txt" )
-          FileUtils.rm_rf Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt") 
+          
+          #if ( ! Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0].nil? ) 
+          #  if ( File.file?(Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0]) )
+          #    FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0] ,  "#{$SaveDirs[thread3]}/h2k-core-msgs.txt" )
+          #    FileUtils.rm_rf Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt") 
+          #  end
+          #end 
+          #if ( File.file?("#{$RunDirs[thread3]}/H2K/ROutStr.Txt") ) 
+          #  FileUtils.cp( "#{$RunDirs[thread3]}/H2K/ROutStr.Txt",  "#{$SaveDirs[thread3]}/h2k-diagnostics.txt" )
+          #  FileUtils.rm_rf( "#{$RunDirs[thread3]}/H2K/ROutStr.Txt" )
+          #end 
         
         end 
 

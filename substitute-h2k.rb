@@ -3185,20 +3185,66 @@ def postprocess( scaleData )
    # ==================== Get results for all h2k calcs from XML file (except above case)
    
    parseDebug = true
+   $HCRequestedfound = false
+   $HCGeneralFound = false 
+   $HCSOCFound = false 
    
+  # # Make sure that the code we want is avaliable 
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
-   
+  # 
       houseCode =  element.attributes["houseCode"]
-   
+    
       if (houseCode == nil && element.attributes["sha256"] != nil) 
          # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
          # When in Program mode there are multiple element results sets.
          houseCode = "General"
       end 
       
-      # JTB 31-Jan-2018: Limiting results parsing to 1 set specified by user in choice file and saved in $outputHCode
       if (houseCode == "#{$outputHCode}" )
+        $HCRequestedfoundfound = true 
+      end 
+       
+      if ( houseCode == "SOC" ) 
+        $HCSOCFound = true 
+      end
       
+      if ( houseCode == "General" ) 
+        $HCGeneralFound = true 
+      end 
+      
+   end 
+   
+   if ( ! $HCRequestedfound )
+   
+     warn_out (" HOT2000 didn't generate \"#{$outputHCode}\" result set. \n")
+   
+     if ( $HCSOCFound ) 
+       $outputHCode = "SOC"
+       
+     elsif ( $HCGeneralFound ) 
+       $outputHCode = "General"
+     end 
+     
+     warn_out (" Reporting result set \"#{$outputHCode}\" result instead. \n")
+     
+     
+   end 
+  
+   h2kPostElements["HouseFile/AllResults"].elements.each do |element|
+   
+      houseCode =  element.attributes["houseCode"]
+      
+      if (houseCode == nil && element.attributes["sha256"] != nil) 
+         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
+         # When in Program mode there are multiple element results sets.
+         houseCode = "General"
+      end 
+      
+      
+      
+      # JTB 31-Jan-2018: Limiting results parsing to 1 set specified by user in choice file and saved in $outputHCode
+      if (houseCode =~ /#{$outputHCode}/ )
+         
          stream_out( "\n Parsing results from set: #{$outputHCode} ...")
          
          #if (houseCode =~ /ROC/  )
@@ -3314,6 +3360,8 @@ def postprocess( scaleData )
 
       end
 	  
+      
+      
    end # h2kPostElements |element| loop
    
    if ( $gDebug ) 
@@ -3568,31 +3616,22 @@ end
 # Fix the paths specified in the HOT2000.ini file
 # =========================================================================================
 def fix_H2K_INI()
-   # Adjust paths in HOT2000.ini file to match copied location
-   fH2K_ini_file = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "r") 
-   if fH2K_ini_file == nil then
-      fatalerror("Could not read HOT2000.ini file!\n")
-   end
-   linecount = 0
-   lineout = ""
-   while !fH2K_ini_file.eof? do
-      linecount += 1
-      linein = fH2K_ini_file.readline
-      if ( linein =~ /_FILE/ )
-         # Using $h2k_src_path to determine what to change in ini file. Regexp.escape is used
-         # to properly handle the "\\" characters in the path (i=case insensitive).
-         linein.sub!(/#{Regexp.escape($h2k_src_path)}/i, "#{$gMasterPath}\\H2K") 
-      end
-      lineout += linein
-   end
-   fH2K_ini_file.close
-
+   # Rewrite INI file with updated location !
    fH2K_ini_file_OUT = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "w") 
-   if fH2K_ini_file_OUT == nil then
-      fatalerror("Could not write modified HOT2000.ini file!\n")
-   end
-   fH2K_ini_file_OUT.write(lineout)
+   $ini_out="[HOT2000]
+LANGUAGE=E
+ECONOMIC_FILE=#{$gMasterPath}\\H2K\\StdLibs\\econLib.eda
+WEATHER_FILE=Dat\Wth110.dir
+FUELCOST_FILE=#{$gMasterPath}\\H2K\\StdLibs\\fuelLib.flc
+CODELIB_FILE=#{$gMasterPath}\\H2K\\StdLibs\\codeLib.cod
+HSEBLD_FILE=#{$gMasterPath}\\H2K\\Dat\\XPstd.slb    
+UPDATES_URI=http://198.103.48.154/hot2000/LatestVersions.xml
+CHECK_FOR_UPDATES=N
+UNITS=M
+"
+   fH2K_ini_file_OUT.write($ini_out)
    fH2K_ini_file_OUT.close
+
 end
 
 =begin rdoc
@@ -4546,16 +4585,16 @@ if fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
 if ( $gResults['Reference'].empty? ) then
-   RefEnergy = 0.0
+   $RefEnergy = 0.0
 else
-   RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
+   $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
 
 
 
- 
+fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n") 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
-fSUMMARY.write( "Ref-En-Total-GJ   =  #{RefEnergy.round(1)} \n" )
+fSUMMARY.write( "Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
 fSUMMARY.write( "Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
 fSUMMARY.write( "Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
