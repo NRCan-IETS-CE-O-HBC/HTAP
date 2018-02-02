@@ -15,8 +15,6 @@ require 'optparse'
 require 'timeout'
 require 'fileutils'
 
-
-
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
@@ -24,13 +22,23 @@ R_PER_RSI = 5.678263
 KWH_PER_GJ = 277.778
 W_PER_KW = 1000.0
 
-
-# Desired ERS mode: 
-# (USE Data from SOC for now. We'll think of something to do with the other modes later)
-# 23-Aug-2017 JTB: Note that "SOC" will be changed to "General" when the house is not
-#                  in ERS Program mode.
+# HOT2000 output data sets depend on the run mode set in the HOT2000 inputs. In General mode 
+# just one run is done and one set of outputs is generated, In ERS mode, multiple (7) runs of the 
+# H2K core are initiated by the interface (either CLI or GUI). The output data sets contain the
+# following sections ("houseCode is the XML attribute in each section):
+#    houseCode=nil: Runs without any imposed conditions on inputs (i.e., same as "General" mode)
+#    houseCode=SOC: ERS mode using "Standard Operating Conditions"
+#    houseCode=HOC: ERS mode using "Household Operating Conditions"
+#    houseCode=HCV: ERS mode "House with Continuous Scheduled Ventilation"
+#    houseCode=ROC: ERS mode "House with Reduced Operating Conditions"
+#    houseCode=Reference: ERS "Reference House"
+#    houseCode=UserHouse: ERS mode "General Mode"
+#
+# 01-Feb-2018 JTB: Note that this variable will be overridden by the choice file setting for 
+#                  Opt-ResultHouseCode. In the case where the user has set an ERS mode output 
+#                  data set but the input file is set to General mode, this variable will be 
+#                  changed to "General".
 $outputHCode = "SOC" 
-
 
 # Global variable names  (i.e., variables that maintain their content and use (scope) 
 # throughout this file). 
@@ -46,9 +54,7 @@ $PRMcall      = false
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
-
 $gRotate             = "S"
-
 $gGOStep             = 0
 $gArchGOChoiceFile   = 0
 
@@ -58,14 +64,10 @@ $gOptions = Hash.new(&$blk)
 $gChoices = Hash.new(&$blk)
 $gResults = Hash.new(&$blk)
 $gElecRate = Hash.new(&$blk)
-
 $gExtraDataSpecd  = Hash.new
-
 $ThisError   = ""
 $ErrorBuffer = "" 
-
 $SaveVPOutput = 0 
-
 $gEnergyPV = 0
 $gEnergySDHW = 0
 $gEnergyHeating = 0
@@ -74,11 +76,8 @@ $gEnergyVentilation = 0
 $gEnergyWaterHeating = 0
 $gEnergyEquipment = 0
 $gERSNum = 0  # ERS number
-
 $gRegionalCostAdj = 0
-
 $gRotationAngle = 0
-
 $gEnergyElec = 0
 $gEnergyGas = 0
 $gEnergyOil = 0 
@@ -89,14 +88,11 @@ $gEnergyHardWood = 0
 $gEnergyMixedWood = 0
 $gEnergySoftWood = 0
 $gEnergyTotalWood = 0
-
 $LapsedTime     = 0 
 $NumTries       = 0 
-
 $gTotalBaseCost = 0
 $gUtilityBaseCost = 0 
 $PVTarrifDollarsPerkWh = 0.10 # Default value if not set in Options file
-
 $gPeakCoolingLoadW    = 0 
 $gPeakHeatingLoadW    = 0 
 $gPeakElecLoadW    = 0 
@@ -127,9 +123,7 @@ $gReportChoices      = false
 
 $GenericWindowParams = Hash.new(&$blk)
 $GenericWindowParamsDefined = 0 
-
 $gLookForArchetype = 1
-
 $gAuxEnergyHeatingGJ = 0   # 29-Nov-2016 JTB: Added for use by RC
 $gEnergyHeatingElec = 0
 $gEnergyVentElec = 0
@@ -1955,11 +1949,10 @@ def processFile(filespec)
                   
                end
                
-               
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
                if ( value == "NA" )
                   $outputHCode = "General" 
-               elsif ( value != "NA" )
+               else
                   $outputHCode = value
                end                
                
