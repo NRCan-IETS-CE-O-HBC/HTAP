@@ -64,5 +64,3 @@ Opt-H2K-PV : NA !  MonoSi-200m2   !MonoSi-50m2
 !          for HOT2000 -- it doesn't rotate the model yet.
 GOconfig_rotate      : S
 
-Opt-Cooling-Spec     : NA
-

@@ -51,6 +51,7 @@ $gTest_params = Hash.new        # test parameters
 $gChoiceFile  = ""
 $gOptionFile  = ""
 $PRMcall      = false 
+$ExtraOutput1 = false
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
@@ -482,8 +483,6 @@ def processFile(filespec)
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
-            
-            
                           
             
             # Air Infiltration Rate
@@ -3175,9 +3174,8 @@ def postprocess( scaleData )
       end
    end
    
-   # Get size of home. 
+   # Get size of home. Nate that these two area inputs are optional and frequently not properly input! 
    locationText = "HouseFile/House/Specifications"
-   
    $gResults["allCodes"]["sumAreaAboveGradeM2"] = h2kPostElements[locationText].attributes["aboveGradeHeatedFloorArea"].to_f
    $gResults["allCodes"]["sumAreaBelowGradeM2"] = h2kPostElements[locationText].attributes["belowGradeHeatedFloorArea"].to_f
 
@@ -3189,14 +3187,16 @@ def postprocess( scaleData )
    $HCGeneralFound = false 
    $HCSOCFound = false 
    
-  # # Make sure that the code we want is available 
+   # Make sure that the code we want is available 
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
-  # 
+ 
       houseCode =  element.attributes["houseCode"]
     
+      # 05-Feb-2018 JTB: Note that in Non-Program (ERS) mode there is no "houseCode" attribute in the single element results set!
+      # When in Program mode there are multiple element results sets (7). The first set has no houseCode attribute, the next six (6)
+      # do have a value for the houseCode attribute. The last set has the houseCode attribute of "UserHouse", which almost exactly
+      # matches the first results set (General mode results).
       if (houseCode == nil && element.attributes["sha256"] != nil) 
-         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
-         # When in Program mode there are multiple element results sets.
          houseCode = "General"
       end 
       
@@ -3220,13 +3220,11 @@ def postprocess( scaleData )
    
      if ( $HCSOCFound ) 
        $outputHCode = "SOC"
-       
      elsif ( $HCGeneralFound ) 
        $outputHCode = "General"
      end 
      
      warn_out (" Reporting result set \"#{$outputHCode}\" result instead. \n")
-     
      
    end 
   
@@ -3235,21 +3233,15 @@ def postprocess( scaleData )
       houseCode =  element.attributes["houseCode"]
       
       if (houseCode == nil && element.attributes["sha256"] != nil) 
-         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
-         # When in Program mode there are multiple element results sets.
          houseCode = "General"
       end 
       
-      
-      
       # JTB 31-Jan-2018: Limiting results parsing to 1 set specified by user in choice file and saved in $outputHCode
-      if (houseCode =~ /#{$outputHCode}/ )
+      if (houseCode =~ /#{$outputHCode}/)
          
          stream_out( "\n Parsing results from set: #{$outputHCode} ...")
          
-         #if (houseCode =~ /ROC/  )
-         # ENERGY CONSUMPTION (Annual)
-         
+         # Energy Consumption (Annual GJ)
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
@@ -3257,13 +3249,30 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
          $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
-	  
+
+         # Total Heat Loss of all zones by component (GJ)
+         if $ExtraOutput1 then
+            $gResults[houseCode]["EnvHLTotalGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
+            $gResults[houseCode]["EnvHLCeilingGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ceiling"].to_f * scaleData
+            $gResults[houseCode]["EnvHLMainWallsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["mainWalls"].to_f * scaleData
+            $gResults[houseCode]["EnvHLWindowsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["windows"].to_f * scaleData
+            $gResults[houseCode]["EnvHLDoorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["doors"].to_f * scaleData
+            $gResults[houseCode]["EnvHLExpFloorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["exposedFloors"].to_f * scaleData
+            $gResults[houseCode]["EnvHLCrawlspaceGJ"] = element.elements[".//Annual/HeatLoss"].attributes["crawlspace"].to_f * scaleData
+            $gResults[houseCode]["EnvHLSlabGJ"] = element.elements[".//Annual/HeatLoss"].attributes["slab"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementBGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementBelowGradeWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementAGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementAboveGradeWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementFlrHdrsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementFloorHeaders"].to_f * scaleData
+            $gResults[houseCode]["EnvHLPonyWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ponyWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLFlrsAbvBasementGJ"] = element.elements[".//Annual/HeatLoss"].attributes["floorsAboveBasement"].to_f * scaleData
+            $gResults[houseCode]["EnvHLAirLkVentGJ"] = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f * scaleData
+         end
+         
          # Design loads, other data 
          $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
 	  
          $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
-         # ( what the heck is a 'cool loss rate' ?!? should be heat gain rate...)
-		
+	
          $gResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
          $gResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
          $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
@@ -3296,7 +3305,7 @@ def postprocess( scaleData )
          # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
          # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
          # avgEnergyTotalGJ does when there is an internal H2K PV model.
-          $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
+         $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
                                                       $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
                                                       $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
                                                       $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
@@ -3359,10 +3368,8 @@ def postprocess( scaleData )
          break    # break out of the element loop to avoid further processing
 
       end
-	  
       
-      
-   end # h2kPostElements |element| loop
+   end # h2kPostElements |element| loop (and scope of local variable houseCode!)
    
    if ( $gDebug ) 
       $gResults.each do |houseCode, data|
@@ -3436,7 +3443,7 @@ def postprocess( scaleData )
             $PVsize = "0.0 kW"
             $PVArrayCost  = 0.0
          end
-         # Degbug: How big is the sized array?
+         # Debug: How big is the sized array?
          debug_out ("\n PV array is #{$PVsize}  ...\n")
       end
    end
@@ -3488,17 +3495,10 @@ def postprocess( scaleData )
 	stream_out( " done \n")
   
    stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
-  
 
    stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
    stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
 
-   $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
-   
    stream_out("\n Energy Consumption: \n\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} ( Hot Water, GJ ) \n")
@@ -3507,12 +3507,52 @@ def postprocess( scaleData )
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} ( Appliances + Lights + Plugs + outdoor, GJ ) \n")
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyGrossGJ'].round(1)} ( H2K Gross energy use GJ ) \n")
-   
-    if ( parseDebug )
+
+   if ( parseDebug )
+      $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
 		stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
 		stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
-    end 
+   end 
 	
+   if $ExtraOutput1 then
+      stream_out("\n Components of envelope heat loss: \n\n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)} ( Envelope Ceiling Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)} ( Envelope Main Wall Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)} ( Envelope Window Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)} ( Envelope Door Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)} ( Envelope Exp Floor Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)} ( Envelope Crawlspace Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)} ( Envelope Slab Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)} ( Envelope BG Basement Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)} ( Envelope AG Basement Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)} ( Envelope Basement Floor Hdr Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)} ( Envelope Pony Wall Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)} ( Envelope Floors Above Basement Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)} ( Envelope Air Leakage & Ventilation Heat Loss (all zones), GJ ) \n")
+      stream_out ( " --------------------------------------------------------\n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)} ( Envelope Total Heat Loss (as reported in file), GJ ) \n")
+
+      if ( parseDebug )
+         $check = $gResults[$outputHCode]['EnvHLCeilingGJ'].to_f + 
+                  $gResults[$outputHCode]['EnvHLMainWallsGJ'].to_f + 
+                  $gResults[$outputHCode]['EnvHLWindowsGJ'].to_f + 
+                  $gResults[$outputHCode]['EnvHLDoorsGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLExpFloorsGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLCrawlspaceGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLSlabGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLBasementBGWallGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLBasementAGWallGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLPonyWallGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLAirLkVentGJ'].to_f 
+         stream_out ("       ( Note: sum above without basement floor above HL = #{$check.round(1)} )") 
+      end 
+   end
+      
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
@@ -3543,10 +3583,8 @@ def postprocess( scaleData )
    # ASF 03-Oct-2016: 
    # Wood/Pellets    
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Wood, cord)\n")                       
-#   stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
-   
+   # stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
    # stream_out ("> SCALE #{scaleData} \n"); 
-   
    # Estimate total cost of upgrades
    $gTotalCost = 0
   
@@ -3666,14 +3704,24 @@ $help_msg = "
                       
  example use for optimization work:
  
-  ruby substitute-h2k.rb -c HOT2000.choices
-                         -o HOT2000.options
-                         -b C:\\H2K-CLI-Min\\MyModel.h2k
-                         -v
-      
+  ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
+  
+ Command line options:
+   -h  This help message
+   -c  Name of choice file (mandatory but optionally with full path)
+   -o  Name of options file (mandatory but optionally with full path)
+   -b  Full path of model house file (mandatory)
+   -v  Verbose console output
+   -d  Debug output
+   -r  Report choice file input as part of output
+   -p  Run as a slave to htap-prm
+   -w  Report warning messages
+   -e1 Produce and save extended output (v1)
+   
+   
 "
 
-# dump help text, if no argument given
+# Dump help text, if no argument given
 if ARGV.empty? then
   puts $help_msg
   exit()
@@ -3707,6 +3755,7 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.on("-r", "--report-choices", "Report .choice file input as part of output") do
+      $cmdlineopts["report-choices"] = true
       $gReportChoices = true
    end
    
@@ -3718,15 +3767,13 @@ optparse = OptionParser.new do |opts|
       end
    end   
    
-   opts.on("-p", "--prm", "Run as a slave to htap-prm ") do 
+   opts.on("-p", "--prm", "Run as a slave to htap-prm") do 
+      $cmdlineopts["prm"] = true
       $PRMcall = true
    end
    
-   
-   
-   
-   
    opts.on("-w", "--warnings", "Report warning messages") do 
+      $cmdlineopts["warnings"] = true
       $gWarn = true
    end
   
@@ -3738,7 +3785,6 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-   # This may not be required for HOT2000! ***********************************
    opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
       $cmdlineopts["base_model"] = b
       $gBaseModelFile = b
@@ -3746,11 +3792,16 @@ optparse = OptionParser.new do |opts|
          fatalerror("Base folder file name missing after --base_folder (or -b) option!")
       end
       if (! File.exist?($gBaseModelFile) ) 
-         fatalerror("Base file does not exist - create file first!")
+         fatalerror("Base file does not exist in location specified!")
       end
       $gLookForArchetype = 0; 
    end
- 
+
+   opts.on("-e1", "--extra_output1", "Produce and save extended output (v1)") do
+      $cmdlineopts["extra_output1"] = true
+      $ExtraOutput1 = true
+   end
+   
 end
 
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
@@ -4578,7 +4629,6 @@ $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
 $optCOProxy = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
 
 
-
 sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
 fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
@@ -4589,8 +4639,6 @@ if ( $gResults['Reference'].empty? ) then
 else
    $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
-
-
 
 fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n") 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
@@ -4647,9 +4695,22 @@ fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
 
-
-
-
+if $ExtraOutput1 then
+   fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvCeilHL-GJ      =  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvWallHL-GJ      =  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvWinHL-GJ       =  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvDoorHL-GJ      =  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvFloorHL-GJ     =  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvCrawlHL-GJ     =  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvSlabHL-GJ      =  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvBGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvAGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvBsemntFHHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvPonyWallHL-GJ  =  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvFABsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvAirLkVntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)}\n")
+end
 
 if $gReportChoices then 
    #stream_out (" REPORTING CHOICES !!! \n")
@@ -4660,8 +4721,6 @@ if $gReportChoices then
       fSUMMARY.write("input.#{attribute} = #{choice}\n")
    end 
 end
-
-
 
 fSUMMARY.close() 
 
