@@ -32,10 +32,10 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : DoubleLowEHardCoatArgFill   
+Opt-CasementWindows  : NA   
 
 ! Foundation definitions
-Opt-H2KFoundation : NA  
+Opt-H2KFoundation : NA
 
 ! Hot water system. Choices:
 Opt-DHWSystem :  NA 
@@ -48,7 +48,7 @@ Opt-HVACSystem  : NA
 ! HRV spec 
 Opt-HRVspec : NA
 
-Opt-RoofPitch : NA   !6-12
+Opt-RoofPitch : NA
 
 ! External (Opt-StandoffPV) and Internal model (Opt-H2K-PV) PV options.
 ! Substitute-h2k.rb will select external if both are specified!
@@ -63,6 +63,4 @@ Opt-H2K-PV : NA !  MonoSi-200m2   !MonoSi-50m2
 ! ***NOTE: As of Dec 2015 this attribute only determines numbers of runs (1 or 4) 
 !          for HOT2000 -- it doesn't rotate the model yet.
 GOconfig_rotate      : S
-
-Opt-Cooling-Spec     : NA
 
