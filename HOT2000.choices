@@ -32,10 +32,10 @@ Opt-GenericWall_1Layer_definitions : NA   ! this one, but NOT BOTH
 Opt-ExposedFloor : NA
 
 ! Optical and thermal characteristics of casement windows (all)
-Opt-CasementWindows  : DoubleLowEHardCoatArgFill   
+Opt-CasementWindows  : NA   
 
 ! Foundation definitions
-Opt-H2KFoundation : NA  
+Opt-H2KFoundation : NA
 
 ! Hot water system. Choices:
 Opt-DHWSystem :  NA 
@@ -48,7 +48,7 @@ Opt-HVACSystem  : NA
 ! HRV spec 
 Opt-HRVspec : NA
 
-Opt-RoofPitch : NA   !6-12
+Opt-RoofPitch : NA
 
 ! External (Opt-StandoffPV) and Internal model (Opt-H2K-PV) PV options.
 ! Substitute-h2k.rb will select external if both are specified!
