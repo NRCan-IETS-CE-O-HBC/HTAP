@@ -265,7 +265,6 @@ end
 # =========================================================================================
 def write_h2k_magic_files(filepath) 
 
-
   $WinMBFile = "#{filepath}/H2K/WINMB.H2k" 
   $ROutFile  = "#{filepath}/H2K/ROutstr.H2k" 
 
@@ -324,9 +323,6 @@ bbradley@nrcan.gc.ca
 204-984-4920"
     $Handle.close 
   end 
-  
-
-
 
 end 
 
@@ -1248,7 +1244,7 @@ def processFile(filespec)
                   h2kElements[locationText].attributes["heatPumpCoefficient"] = value  # COP of integrated HP
                end
 				
-            # DWHR System (includies DWHR options for internal H2K model. Don't use
+            # DWHR System (includes DWHR options for internal H2K model. Don't use
             #              both external (explicit) method AND this one!)
             # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
             # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
@@ -3164,13 +3160,10 @@ def postprocess( scaleData )
          end
       end
    end
-   
-   # Get size of home. Nate that these two area inputs are optional and frequently not input! 
-   locationText = "HouseFile/House/Specifications"
-   $gResults["allCodes"]["sumAreaAboveGradeM2"] = h2kPostElements[locationText].attributes["aboveGradeHeatedFloorArea"].to_f
-   $gResults["allCodes"]["sumAreaBelowGradeM2"] = h2kPostElements[locationText].attributes["belowGradeHeatedFloorArea"].to_f
 
-   
+   # Get house heated floor area
+   $FloorArea = getHeatedFloorArea( h2kPostElements )
+
    # ==================== Get results for all h2k calcs from XML file (except above case)
    
    parseDebug = true
@@ -3285,14 +3278,26 @@ def postprocess( scaleData )
             $gResults[houseCode]["AnnSpcHeatOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f * scaleData
             $gResults[houseCode]["AnnSpcHeatPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f * scaleData
             $gResults[houseCode]["AnnSpcHeatWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["spaceHeating"].to_f * scaleData
-            $gResults[houseCode]["AnnHotWaterElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterElecGJ"] = element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
             $gResults[houseCode]["AnnHotWaterGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["hotWater"].to_f * scaleData
             $gResults[houseCode]["AnnHotWaterOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["hotWater"].to_f * scaleData
             $gResults[houseCode]["AnnHotWaterPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["hotWater"].to_f * scaleData
             $gResults[houseCode]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f * scaleData
          end
          
+         # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
          $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
+         if $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
+            $gResults[houseCode]["avgFueluseElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["appliance"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["lighting"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
+         end
          $gResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
@@ -3582,20 +3587,20 @@ def postprocess( scaleData )
    netUtilityCost = $gResults[$outputHCode]['avgFuelCostsTotal$'] - $gResults[$outputHCode]['avgPVRevenue']
    
    stream_out ( "    \$ #{netUtilityCost.round(2)} (Net utility costs).\n")
-   stream_out ( "\n\n")
+   stream_out ( "\n")
    
    if $ExtraOutput1 then
-      stream_out("\n\n Space Heating Energy Use by Fuel (GJ): \n\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatElecGJ"].round(0)} (Space Heating Electricity, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatGasGJ"].round(0)} (Space Heating Natural Gas, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatOilGJ"].round(0)} (Space Heating Oil, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatPropGJ"].round(0)} (Space Heating Propane, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatWoodGJ"].round(0)} (Space Heating Wood, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterElecGJ"].round(0)} (Hot Water Heating Electricity, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterGasGJ"].round(0)} (Hot Water Heating Natural Gas, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterOilGJ"].round(0)} (Hot Water Heating Oil, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterPropGJ"].round(0)} (Hot Water Heating Propane, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterWoodGJ"].round(0)} (Hot Water Heating Wood, GJ)\n")
+      stream_out("\n Space Heating Energy Use by Fuel (GJ): \n\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatElecGJ"].round(1)} (Space Heating Electricity, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatGasGJ"].round(1)} (Space Heating Natural Gas, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatOilGJ"].round(1)} (Space Heating Oil, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatPropGJ"].round(1)} (Space Heating Propane, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatWoodGJ"].round(1)} (Space Heating Wood, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterElecGJ"].round(1)} (Hot Water Heating Electricity, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterGasGJ"].round(1)} (Hot Water Heating Natural Gas, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterOilGJ"].round(1)} (Hot Water Heating Oil, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterPropGJ"].round(1)} (Hot Water Heating Propane, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterWoodGJ"].round(1)} (Hot Water Heating Wood, GJ)\n")
    end
    
    stream_out("\n\n Total Energy Use by Fuel (in fuel units, not including credit for PV, direction #{$gRotationAngle} ): \n\n")
@@ -3638,6 +3643,29 @@ def postprocess( scaleData )
    end
 
 end  # End of postprocess
+
+# =========================================================================================
+# Get the best estimate of the house heated floor area
+# =========================================================================================
+def getHeatedFloorArea( elements )
+   areaAboveGradeInput = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
+   areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
+   areaInputTotal = areaAboveGradeInput + areaBelowGradeInput
+   
+   numStoreysInput = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
+   
+   ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+   slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
+   areaEstimateTotal = ceilingAreaOut * numStoreysInput + slabAreaOut
+   
+   areaRatio = areaInputTotal / areaEstimateTotal
+   
+   if areaRatio > 0.50 && areaRatio < 2.0 then
+      return areaInputTotal
+   else
+      return areaEstimateTotal
+   end
+end
 
 # =========================================================================================
 # Calculate electricity cost using global results array and electricity cost rate structure
@@ -4500,8 +4528,6 @@ if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then
      $Archetype_value = "SmallSFD"
   end 
   
-
-    
    
   $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
   ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
@@ -4514,12 +4540,7 @@ if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then
   stream_out ("            HOT2000 run folder: #{$run_path} \n")
 
   #puts " Points to -> #{$gBaseModelFile} \n"; 
-
-
-  
 end
-  #
-  
 
 # Seems like we've found everything!
 
@@ -4619,6 +4640,7 @@ $gEnergyHeatingFossil = 0
 $gEnergyWaterHeatingElec = 0
 $gEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
+$FloorArea = 0
 
 orientations.each do |direction|
 
@@ -4702,7 +4724,6 @@ fSUMMARY.write( "PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCooli
 
 fSUMMARY.write( "PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
 
-$FloorArea = ( $gResults["allCodes"]["sumAreaAboveGradeM2"] + $gResults["allCodes"]["sumAreaBelowGradeM2"]  )
 $TEDI_kWh_m2 = ( $gAuxEnergyHeatingGJ * 277.78 / $FloorArea )
 
 $MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] + 
