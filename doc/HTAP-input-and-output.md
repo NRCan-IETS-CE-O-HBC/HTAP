@@ -2,15 +2,22 @@
 Input and Output in HTAP
 ========================
 
-Input/Output model 
+Contents
+------------------
+1. [Input/output model](#IOmodel)
+2. [Inputs](#inputs)
+    1. [`Opt-Location`](#opt-location)
+
+
+Input/Output model <a name="IOmodel"></a>
 ------------------
 
 To be written
 
-Inputs - 
+Inputs <a name="inputs"></a> 
 ------
 
-### 1) `Opt-Location`
+### 1) `Opt-Location` <a name="opt-location"></a>
 
 * **Description** : Defines weather file location to be used in the HTAP run.
 * **Typical values**: Municipal location corresponding to valid HOT2000 weather file 
@@ -55,7 +62,7 @@ Inputs -
          
          <snip>
          
-### 2) `Opt-Archetype`
+### 2) `Opt-Archetype` <a name="opt-archetype"></a>
 
 * **Description** : Defines the .h2k file that will be used for the basis of a 
     HTAP run 
@@ -96,7 +103,7 @@ Inputs -
          
 
 
-### 3) `Opt-ACH`
+### 3) `Opt-ACH` <a name="opt-ach"></a>
 
 * **Description** : Defines the infiltration characteristics of the building, using 
   inputs similar to those collected to a blower-door test. 
