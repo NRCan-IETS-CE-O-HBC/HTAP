@@ -7,17 +7,32 @@ Contents
 1. [Input/output model](#IOmodel)
 2. [Inputs](#inputs)
     1. [`Opt-Location`](#opt-location)
-
-
-Input/Output model <a name="IOmodel"></a>
+    2. [`Opt-Archetype`](#opt-archetype)
+    3. [`Opt-ACH`](#opt-ach)
+    4. [`Opt-Mainwall`](#opt-mainwall)
+    5. [`Opt-Ceilings`](#opt-ceilings)
+    6. [`Opt-H2KFoundation`](#opt-h2kfoundation)
+    7. [`Opt-ExposedFloor`](#opt-exposedfloor)
+    7. [`Opt-CasementWindows`](#opt-casementwindows)
+    8. [`Opt-H2K-PV`](#opt-h2k-pv)
+    9. [`Opt-HVAC`](#opt-hvac)
+    10. [`Opt-DHWsystem`](#opt-dhwsystem)
+    11. [`Opt-DHWRsystem`](#opt-dwhrsystem)
+    12. [`Opt-HRV`](#opt-hrv)
+3. [Legacy parameters not currently supported](#opt-skipped)    
+   
+<a name="IOmodel"></a>
+Input/Output model 
 ------------------
 
 To be written
 
-Inputs <a name="inputs"></a> 
+<a name="inputs"></a> 
+Inputs 
 ------
 
-### 1) `Opt-Location` <a name="opt-location"></a>
+<a name="opt-location"></a>
+### 1) `Opt-Location` 
 
 * **Description** : Defines weather file location to be used in the HTAP run.
 * **Typical values**: Municipal location corresponding to valid HOT2000 weather file 
@@ -61,8 +76,9 @@ Inputs <a name="inputs"></a>
          *option:Toronto:cost:total    = 0
          
          <snip>
-         
-### 2) `Opt-Archetype` <a name="opt-archetype"></a>
+
+<a name="opt-archetype"></a>         
+### 2) `Opt-Archetype` 
 
 * **Description** : Defines the .h2k file that will be used for the basis of a 
     HTAP run 
@@ -102,8 +118,8 @@ Inputs <a name="inputs"></a>
          *option:LargeSFD:cost:total = 0      
          
 
-
-### 3) `Opt-ACH` <a name="opt-ach"></a>
+<a name="opt-ach"></a>
+### 3) `Opt-ACH` 
 
 * **Description** : Defines the infiltration characteristics of the building, using 
   inputs similar to those collected to a blower-door test. 
@@ -141,7 +157,7 @@ Inputs <a name="inputs"></a>
          
          
 
-
+<a name="opt-mainwall"></a>
 ### 4) `Opt-MainWall`
 
 * **Description** : Defines insulation levels in above-grade opaque walls. 
@@ -207,7 +223,7 @@ Inputs <a name="inputs"></a>
          <snip>
 
 
-
+<a name="opt-ceilings"></a>
 ### 5) `Opt-Ceilings`
 
 * **Description** : Defines insulation levels in ceilings.
@@ -259,7 +275,7 @@ Inputs <a name="inputs"></a>
          *option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Kelowna optimization
 
 
-
+<a name="opt-h2kfoundation"></a>
 ### 6) `Opt-H2KFoundation`
 
 * **Description** : Defines the below-grade insulation configuration and specification
@@ -317,7 +333,7 @@ Inputs <a name="inputs"></a>
          <snip>
 
 
-
+<a name="opt-exposedfloor"></a>
 ### 7) `Opt-ExposedFloor`
 
 * **Description**: Defines insulation levels in exposed floors, including spaces 
@@ -364,7 +380,7 @@ Inputs <a name="inputs"></a>
          
          <snip>
          
-
+<a name="opt-casementwindows"></a>
 ### 8) `Opt-CasementWindows`
 
 * **Description** : Defines performance characteristics of windows.
@@ -383,6 +399,7 @@ Inputs <a name="inputs"></a>
     accordingly. 
   - Within HOT2000's code editor, you may define windows using overall U-value and 
     SHGC inputs, or via HOT2000's legacy window code selector.  
+  - This tag will edit all window types, not just casements. 
   
 #### Sample `.choice` definition for  `Opt-Location`  
          Opt-CasementWindows = DoubleLowEHardCoatAirFill
@@ -433,6 +450,7 @@ Inputs <a name="inputs"></a>
 
          <snip>
 
+<a name="opt-h2k-pv"></a>
 ### 9) `Opt-H2K-PV`
 
 * **Description**: Defines HOT2000's PV module inputs 
@@ -506,7 +524,7 @@ Inputs <a name="inputs"></a>
 
          <snip>
 
-         
+<a name="opt-hvac"></a>
 ### 10) `Opt-HVAC`
 
 >> <mark>**THIS PARAMETER IS LIKELY TO BE REDEFINED IN THE NEAR FUTURE**</mark>
@@ -698,7 +716,7 @@ Inputs <a name="inputs"></a>
          
          
          
-         
+<a name="opt-dhwsystem"></a>         
 ### 11) `Opt-DHWSystem`
 
 * **Description**: Defines hot water system type and performance 
@@ -753,7 +771,7 @@ Inputs <a name="inputs"></a>
 
 
          <snip>
-
+<a name="opt-dwhrsystem"></a> 
 ### 12) `DWHRSystem`
 
 * **Description** : Defines drain-water heat recovery 
@@ -826,7 +844,8 @@ Inputs <a name="inputs"></a>
 
          <snip>
 
-### X) `Opt-XXX =`
+<a name="opt-HRV"></a> 
+### 3) `Opt-HRV =`
 
 * **Description** : 
 * **Typical values**: 
@@ -846,29 +865,9 @@ Inputs <a name="inputs"></a>
 
          <snip>
 
-### X) `Opt-XXX =`
-
-* **Description** : 
-* **Typical values**: 
-* **HOT2000 bindings**:  
-* **Other things you should know**: 
-  - Note 1
-  - Note 2
-  
-#### Sample `.choice` definition for  `Opt-Location`  
-         Opt-Archetype = MediumSFD
-         
-#### Sample `.options` definition for  `Opt-Location`
-
-         *attribute:
-         
-
-
-         <snip>
 
          
-         
-         
+<a name="opt-skipped"></a>          
 Skipped for now 
 ---------------
 + Opt-Ruleset 
