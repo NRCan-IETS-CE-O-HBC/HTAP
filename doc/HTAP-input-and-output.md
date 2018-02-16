@@ -5,6 +5,9 @@ Input and Output in HTAP
 Contents
 ------------------
 1. [Input/output model](#IOmodel)
+    1. [The `.options` file](#options-definition)
+    1. [The `.choice` file](#choice-definition)
+    1. [The `.run` file](#choice-definition)
 2. [Inputs](#inputs)
     1. [`Opt-Location`](#opt-location)
     2. [`Opt-Archetype`](#opt-archetype)
@@ -25,7 +28,134 @@ Contents
 Input/Output model 
 ------------------
 
-To be written
+<a name "options-definition"></a>
+### The HOT2000.options file 
+Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) file. An excerpt from the HOT2000.options file follows:
+
+         !-----------------------------------------------------------------------
+         ! Photovoltaics 
+         ! Use internal HOT2000 PV Generation model
+         ! Choice file used to specify Internal PV OR External PV but not both!
+         !-----------------------------------------------------------------------
+         *attribute:start
+         *attribute:name  = Opt-H2K-PV
+         *attribute:tag:1 = Opt-H2K-Area           ! m2
+         *attribute:tag:2 = Opt-H2K-Slope          ! degrees from horizontal
+         *attribute:tag:3 = Opt-H2K-Azimuth        ! degrees from S
+         *attribute:tag:4 = Opt-H2K-PVModuleType   ! 1:Mono-Si, 2:Poly-Si, 3:a-Si, 4:CdTe, 5:CIS, 
+                                                   ! 6:UsrSpec
+         *attribute:tag:5 = Opt-H2K-GridAbsRate    ! %
+         *attribute:tag:6 = Opt-H2K-InvEff         ! %
+         *attribute:default = NA
+         
+         *option:NA:value:1 = NA
+         *option:NA:value:2 = NA
+         *option:NA:value:3 = NA
+         *option:NA:value:4 = NA
+         *option:NA:value:5 = NA
+         *option:NA:value:6 = NA
+         *option:NA:cost:total  = 0
+         
+         *option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
+         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
+         *option:MonoSi-5kW:value:3 = 0
+         *option:MonoSi-5kW:value:4 = 1
+         *option:MonoSi-5kW:value:5 = 90
+         *option:MonoSi-5kW:value:6 = 90
+         *option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system 
+         
+         *option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
+         *option:MonoSi-10kW:value:2 = 18.4         !22.6 for 5-12 roof in Prince George 
+         *option:MonoSi-10kW:value:3 = 0
+         *option:MonoSi-10kW:value:4 = 1
+         *option:MonoSi-10kW:value:5 = 90
+         *option:MonoSi-10kW:value:6 = 90
+         *option:MonoSi-10kW:cost:total = 33395     !$33395 assumed cost for 10 kW PV system for ! 
+                                                    !Prince George & Kelowna LEEP
+
+          *attribute:end
+
+This section defines data for the `Opt-H2K-PV` attribute.  Three options are available: `NA`, 
+`MonoSi-5kW`, and `MonoSi-10kW`.  __substitute-h2k.rb__ interprets the 
+`NA` specification as instructions to leave the existing .h2k file 
+unaltered – that is, the values for those inputs that were provided when the file
+was saved in HOT2000 will be preserved when the file is run in HTAP. 
+The remainder of the data for each attribute describe tags, values, 
+and costs. Each tag identifies a key word that substitute-h2k.rb 
+associates with part of the HOT2000 data model. For instance, `Opt-H2K-InvEff` 
+refers to the inverter efficiency of PV modules. Each value 
+provides the alphanumeric input that must be substituted within the 
+.h2k file. For example, the inverter efficiency will be set to 
+90% for the `MonoSI-10kW` case in the snippet above. 
+
+<a name "choice-definition"></a>
+### The HOT2000.choice file 
+The .choice file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (!).  Entries in the choice file must obey the following rules:
+- Each token must match one of the attributes in the .options file
+- Each value must match on of the options given for that attribute in the .options file
+- `NA` values instruct the substiture-h2k.rb script to leave the associated data in the .h2k file alone – that is, whatever inputs were provided when the file was created in HOT2000 will be used in the HTAP simulation.
+
+An example .choice file follows. In this example, the .choice file instructs HTAP to replace the heating system with a cold-climate air source heat pump, the DHW system with a heat pump water heater, and to add a drain-water heat recovery device. All other inputs are left unchanged. 
+
+        !-----------------------------------------------------------------------
+        ! Choice file for use in exercising HOT2000
+        !
+        ! The H2K model file used is a valid model and nothing needs to be 
+        ! changed for it to run!  Using "NA" on any of the options below
+        ! leaves the model unchanged for that option.
+        !-----------------------------------------------------------------------  
+        
+        ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
+        Opt-DBFiles  : H2KCodeLibFile
+        
+        ! Weather location
+        Opt-Location : NA 
+        
+        ! Archetype file: 
+        Opt-Archetype: NZEH-Arch-1
+        
+        ! Fuel costs 
+        Opt-FuelCost : rates2016
+        
+        ! Air tightness 
+        Opt-ACH : NA
+        
+        
+        ! Ceiling R-value
+        Opt-Ceilings : NA
+        
+        ! Main wall definitions 
+        Opt-GenericWall_1Layer_definitions : NA   
+        
+        ! Exposed floor
+        Opt-ExposedFloor : NA
+        
+        ! Optical and thermal characteristics of casement windows (all)
+        Opt-CasementWindows  : NA   
+        
+        ! Foundation definitions
+        Opt-H2KFoundation : NA  
+        
+        ! Hot water system.
+        Opt-DHWSystem :  HPHotWater
+        
+        
+        ! Drain-water heat recovery 
+        Opt-DWHRSystem :  DWHR-eff-30 
+        
+        ! HVAC system 
+        Opt-HVACSystem  : CCASHP
+        
+        ! HRV spec 
+        Opt-HRVspec : NA
+        
+        Opt-RoofPitch : NA   !6-12
+        
+        Opt-H2K-PV : NA 
+
+### The .run file 
+To be written!
+
 
 <a name="inputs"></a> 
 Inputs 
