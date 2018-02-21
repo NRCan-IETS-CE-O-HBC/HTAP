@@ -6,8 +6,8 @@ Contents
 ------------------
 1. [Input/output model](#IOmodel)
     1. [The `.options` file](#options-definition)
-    1. [The `.choice` file](#choice-definition)
-    1. [The `.run` file](#choice-definition)
+    2. [The `.choice` file](#choice-definition)
+    3. [The `.run` file](#run-definition)
 2. [Inputs](#inputs)
     1. [`Opt-Location`](#opt-location)
     2. [`Opt-Archetype`](#opt-archetype)
@@ -18,10 +18,10 @@ Contents
     7. [`Opt-ExposedFloor`](#opt-exposedfloor)
     8. [`Opt-CasementWindows`](#opt-casementwindows)
     9. [`Opt-H2K-PV`](#opt-h2k-pv)
-    10. [`Opt-HVAC`](#opt-hvac)
+    10. [`Opt-HVACSystem`](#opt-hvacsystem)
     11. [`Opt-DHWsystem`](#opt-dhwsystem)
     12. [`Opt-DWHRsystem`](#opt-dwhrsystem)
-    13. [`Opt-HRVSpec`](#opt-hrv)
+    13. [`Opt-HRVspec`](#opt-hrvspec)
     14. [`Opt-FuelCost`] (#opt-fuelcost)
 3. [Legacy parameters not currently supported](#opt-skipped)    
 4. [Outputs](#outputs)
@@ -147,7 +147,7 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         
         
         ! Drain-water heat recovery 
-        Opt-DWHRSystem :  DWHR-eff-30 
+        Opt-DWHRsystem:  DWHR-eff-30 
         
         ! HVAC system 
         Opt-HVACSystem  : CCASHP
@@ -159,8 +159,59 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         
         Opt-H2K-PV : NA 
 
+<a name "run-definition"></a>
 ### The .run file 
-To be written!
+The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
+* **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
+* **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
+  - Multiple `archetypes` can be defined for the HTAP runs, and each `*.h2K` file is separated by a comma (,). Each `archetypes` file must be located in the `archetype-dir`. These archetypes are not the same as `Opt-Archetype` tags, these are the HOT2000 file, `*.h2k`. 
+  - The `locations` parameter defines the weather location used for each HTAP run. These `locations` correspond to the municipal location defined in HOT2000 weather file, and are the same values as `Opt-Location`. Multiple locations can be defined, and each is comma-separated in the list.
+  - Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` file. 
+  - The `rulesets` parameter `as-found` will cause HTAP to run the `archetypes` for `locations` with no other upgrades. `rulesets` are defined as a set of upgrades to satisfy and a particular performance target: national building code energy requirements, EnergyStar targets, etc. `rulesets` are a functionality that is currently under develepment, and should be used with caution. Multiple rulesets can be defined, and each is comma-separated in the list.
+* **Upgrades** : Defines
+
+```
+! Run-Mode: Parameters that affect how htap-prm is configured. 
+RunParameters_START
+  run-mode                           = mesh 
+  archetype-dir                      = C:/HTAP/Archetypes
+RunParameters_END 
+
+
+! Parameters controlling archetypes, locations, reference rulesets.
+RunScope_START
+
+  archetypes                        = NRCan-A9_3000sf_2stry_walkOut.h2k
+  locations                         = Vancouver, Toronto, Halifax
+  rulesets                          = as-found, 936_2015_AW_noHRV, 936_2015_AW_HRV
+  
+RunScope_END
+
+! Parameters controlling the design of the building 
+Upgrades_START
+
+    Opt-FuelCost                       = rates2016  ! Maybe this belongs in scope?
+    Opt-ACH                            = NA
+    Opt-MainWall                       = GenericWall_1Layer
+    Opt-GenericWall_1Layer_definitions = NA
+    Opt-Ceilings                       = NA
+    Opt-H2KFoundation                  = NA
+    Opt-ExposedFloor                   = NA
+    Opt-CasementWindows                = NA
+    Opt-H2K-PV                         = NA
+    Opt-DWHRandSDHW                    = NA 
+    Opt-RoofPitch                      = NA
+    Opt-DHWSystem                      = NA
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA 
+    Opt-HRVspec                        = NA
+
+Upgrades_END
+```
+
+
+
+
 
 
 <a name="inputs"></a> 
@@ -230,10 +281,10 @@ Inputs
   - Alternatively, the archetype file can be passed to __substitute-h2k.rb__ via a command line, as below. In this 
     usage, the `Opt-Archetype` definition should be omitted from the choice file.
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-Archetype`  
          Opt-Archetype = MediumSFD
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-Archetype`
 
          *attribute:start 
          *attribute:name = Opt-Archetype
@@ -269,10 +320,10 @@ Inputs
   - Setting `Opt-ACH = NA` will cause __substitute-h2k.rb__ to leave air infiltration 
     unchanged int he archetype 
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-ACH`  
          Opt-ACH = ACH_7
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-ACH`
 
          *attribute:start
          *attribute:name     = Opt-ACH
@@ -384,10 +435,10 @@ Inputs
     regardless of their size or original construction. 
   - Work to add support for cathedral and scissor ceilings is currently underway
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-Ceilings`  
          Opt-Ceilings = CeilR50
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-Ceilings`
 
          attribute:name = Opt-Ceilings
          *attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
@@ -430,10 +481,10 @@ Inputs
   - Setting `Opt-H2KFoundation = NA ` leaves the archetype basements unchanged.
   
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-H2KFoundation`  
          Opt-H2KFoundation = OBCminR12-Slab0R
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-H2KFoundation`
 
          *attribute:name   = Opt-H2KFoundation
          *attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
@@ -492,10 +543,10 @@ Inputs
   - Setting `Opt-ExposedFloor = NA` will leave the archetype's floor definitions to 
     be unchanged.
 
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-ExposedFloor`  
          Opt-ExposedFloor  = BaseExpFloor-R31
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-ExposedFloor`
 
          *attribute:name   = Opt-ExposedFloor 
          *attribute:tag:1  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
@@ -537,10 +588,10 @@ Inputs
     SHGC inputs, or via HOT2000's legacy window code selector.  
   - This tag will edit all window types, not just casements. 
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-CasementWindows`  
          Opt-CasementWindows = DoubleLowEHardCoatAirFill
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-CasementWindows`
 
           *attribute:start 
           *attribute:name  = Opt-CasementWindows
@@ -607,10 +658,10 @@ Inputs
 
     
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-H2K-PV`  
          Opt-H2K-PV = MonoSi-10kW
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-H2K-PV`
 
            *attribute:start
            *attribute:name  = Opt-H2K-PV
@@ -660,8 +711,8 @@ Inputs
 
          <snip>
 
-<a name="opt-hvac"></a>
-### 10) `Opt-HVAC`
+<a name="opt-hvacsystem"></a>
+### 10) `Opt-HVACSystem`
 
 >> <mark>**THIS PARAMETER IS LIKELY TO BE REDEFINED IN THE NEAR FUTURE**</mark>
 
@@ -674,10 +725,10 @@ Inputs
     <mark>The number of inputs needed depends on which system is selected</mark>
   - Contrary to its name, the definition of this system does not include ventilation. Mechanical ventilation is defined in `Opt-HRVspec`
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-HVACSystem`  
          Opt-Archetype = MediumSFD
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-HVACSystem`
          *attribute:start
          *attribute:name    = Opt-HVACSystem          ! System Name. 
          *attribute:tag:1  = Opt-H2K-SysType1        ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9
@@ -864,10 +915,10 @@ Inputs
   - if `Opt-HVAC` is set to a combo system, this option will be ignored. 
  
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-DHWSystem`  
          Opt-DHWSystem = ElecInstantaneous
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-DHWSystem`
 
           *attribute:start
           *attribute:name  = Opt-DHWSystem
@@ -908,8 +959,7 @@ Inputs
 
          <snip>
 <a name="opt-dwhrsystem"></a> 
-### 12) `DWHRSystem`
-
+### 12) `Opt-DWHRSystem`
 * **Description** : Indicates presence and performance of drainwater heat recovery systems 
 * **Typical values**: Keyword defining DWHR system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
@@ -980,7 +1030,7 @@ Inputs
 
          <snip>
 
-<a name="opt-HRV"></a> 
+<a name="opt-HRVspec"></a> 
 ### 13) `Opt-HRVspec` 
 
 * **Description** : Creates/configures a whole-house ventilator item to the provided specification.
@@ -1042,7 +1092,7 @@ Inputs
 
          <snip>
 
-<a name="opt-FuelCost"></a>
+<a name="opt-fuelcost"></a>
 ### 14) `Opt-FuelCost`   
 
 * **Description** : Defines the fuel costs used to calculate the 
@@ -1087,13 +1137,20 @@ Skipped for now
 <a name="outputs"></a> 
 Outputs 
 ------
-The output file `HTAP-prm-output.csv` contains one line of data for each run. each line of output contains 3 main segments of information: the run number - unique identifiers, the HOT2000 run output, and the input data as defined above. The input data is 
+The output file `HTAP-prm-output.csv` contains one line of data for each run. each line of output contains 3 main segments of information: the run number - unique identifiers, the HOT2000 run output, and the input data as defined above. The input data is repeated in the output to 
+Each of these outpu segments is defined below.
+
+
 <a name="#runnumber"></a>
 ### 1) `RunNumber` 
+RunNumber	 RunDir	 iiiiiiinput.ChoiceFile	 Recovered-results 
 
 <a name="#h2k-outputs"></a>
 ### 2) `H2K-outputs` 
+Energy-Total-GJ   	 Ref-En-Total-GJ   	 Util-Bill-gross   	 Util-PV-revenue   	 Util-Bill-Net     	 Util-Bill-Elec    	 Util-Bill-Gas  Util-Bill-Prop    	 Util-Bill-Oil     	 Util-Bill-Wood    	 Energy-PV-kWh     	 Gross-HeatLoss-GJ 	 Energy-HeatingGJ  	 AuxEnergyReq-HeatingGJ 	 Energy-CoolingGJ  	 Energy-VentGJ     	 Energy-DHWGJ      	 Energy-PlugGJ     	 EnergyEleckWh     	 EnergyGasM3       	 EnergyOil_l       	 EnergyProp_L      	 EnergyWood_cord   	 Upgrade-cost      	 SimplePaybackYrs  	 PEAK-Heating-W    	 PEAK-Cooling-W    	 PV-size-kW        	 Floor-Area-m2     	 TEDI_kWh_m2       	 MEUI_kWh_m2       	 ERS-Value         	 NumTries          	 LapsedTime        
+
 
 <a name="#input.data"></a>
 ### 3) `input.data`
+input.Opt-Location 	 input.Opt-Archetype 	 input.Opt-Ruleset 	 input.Opt-FuelCost 	 input.Opt-ACH 	 input.Opt-MainWall 	 input.Opt-GenericWall_1Layer_definitions 	 input.Opt-Ceilings 	 input.Opt-H2KFoundation 	 input.Opt-ExposedFloor 	 input.Opt-CasementWindows 	 input.Opt-H2K-PV 	 input.Opt-DWHRandSDHW 	 input.Opt-RoofPitch 	 input.Opt-DHWSystem 	 input.Opt-DWHRSystem 	 input.Opt-HVACSystem 	 input.Opt-HRVspec 	 input.GOconfig_rotate 	 input.Opt-DBFiles 	 input.Opt-ResultHouseCode 	 input.Opt-BasementConfiguration 	 input.Opt-FloorSurface 	 input.Opt-Cooling-Spec 	 input.Opt-HRVduct 	 input.Opt-ElecLoadScale 	 input.Opt-DHWLoadScale 	 input.Opt-StandoffPV 
 
