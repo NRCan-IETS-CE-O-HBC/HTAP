@@ -904,7 +904,7 @@ Inputs
 <a name="opt-dwhrsystem"></a> 
 ### 12) `DWHRSystem`
 
-* **Description** : Defines drain-water heat recovery 
+* **Description** : Indicates presence and performance of drainwater heat recovery systems 
 * **Typical values**: Keyword defining DHW system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
   archetype to include the specified drain-water heat recovery system, according to 
@@ -975,22 +975,63 @@ Inputs
          <snip>
 
 <a name="opt-HRV"></a> 
-### 3) `Opt-HRV =`
+### 3) `Opt-HRV` 
 
-* **Description** : 
-* **Typical values**: 
-* **HOT2000 bindings**:  
+* **Description** : Creates/configures a whole-house ventilator item to the provided specification.
+* **Typical values**: Keyword specifying the HRV system  (o.e. 
+* **HOT2000 bindings**:   
+  - `OPT-H2K-FlowReq`: Integer flag indicating if H2K should warn when insufficient ventilation is provided. 
+    Values:  `1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable`
+  - `OPT-H2K-AirDistType`: Integer flag indicating if ventilator is tied to central air or dedicated duct work. 
+    Values: `1: Forced air heating ductwork, 2: DedIcated low volume ductwork, 3: 2 with transfer fans`
+  - `OPT-H2K-OpSched` : Specified number of minutes/day the unit will operate for. Sets         `HouseFile/House/Ventilation/WholeHouse/OperationSchedule`
+  - `OPT-H2K-HRVSupply`: Balanced supply/exhaust rate . Sets 
+     `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[supplyFlowRate]` and
+     `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[exhaustFlowRate]`
+  - `OPT-H2K-Rating1`:  SRE at 0°C. Sets `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[efficiency1]`
+  - `OPT-H2K-Rating1`:  SRE at -25°C. Sets `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[efficiency2]`
 * **Other things you should know**: 
-  - Note 1
-  - Note 2
+ - nil
   
 #### Sample `.choice` definition for  `Opt-Location`  
-         Opt-Archetype = MediumSFD
+         Opt-HRVspec = HRV_60
          
 #### Sample `.options` definition for  `Opt-Location`
 
-         *attribute:
+         *attribute:start 
+         *attribute:name    = Opt-HRVspec 
+         *attribute:tag:3   = OPT-H2K-FlowReq      ! 1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable
+         *attribute:tag:4   = OPT-H2K-AirDistType  ! 1: Forced air heating ductwork, 2: Dedecated low volume ductwork, 3: 2 with transfer fans
+         *attribute:tag:5   = OPT-H2K-OpSched      ! User Specified minutes/day
+         *attribute:tag:6   = OPT-H2K-HRVSupply    ! 
+         *attribute:tag:7   = OPT-H2K-Rating1
+         *attribute:tag:8   = OPT-H2K-Rating2
+         *attribute:default = CEF_SPEC
          
+         *option:NA:value:3 = NA     ! F326
+         *option:NA:value:4 = NA     ! Forced air heating ductwork
+         *option:NA:value:5 = NA   ! Min./Day
+         *option:NA:value:6 = NA    ! L/s (exhaust = supply)
+         *option:NA:value:7 = NA    ! Eff% @ Rating1
+         *option:NA:value:8 = NA    ! Eff% @ Rating2
+         *option:NA:cost:total = 0
+         
+         *option:CEF_SPEC:value:3 = 1     ! F326
+         *option:CEF_SPEC:value:4 = 1     ! Forced air heating ductwork
+         *option:CEF_SPEC:value:5 = 480   ! Min./Day
+         *option:CEF_SPEC:value:6 = 60    ! L/s (exhaust = supply)
+         *option:CEF_SPEC:value:7 = 64    ! Eff% @ Rating1
+         *option:CEF_SPEC:value:8 = 64    ! Eff% @ Rating2
+         *option:CEF_SPEC:cost:total = 0
+         
+         
+         *option:HRV_60:value:3 = 1     ! F326
+         *option:HRV_60:value:4 = 1     ! Forced air heating ductwork
+         *option:HRV_60:value:5 = 1440   ! Min./Day
+         *option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
+         *option:HRV_60:value:7 = 60    ! Eff% @ Rating1     Prince George used 70% at 0, 61% at -25C at $1386
+         *option:HRV_60:value:8 = 55    ! Eff% @ Rating2
+         *option:HRV_60:cost:total = 1496       !$1496 cost assumed for LEEP Kelowna optimization
 
 
          <snip>
