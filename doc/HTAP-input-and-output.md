@@ -16,14 +16,20 @@ Contents
     5. [`Opt-Ceilings`](#opt-ceilings)
     6. [`Opt-H2KFoundation`](#opt-h2kfoundation)
     7. [`Opt-ExposedFloor`](#opt-exposedfloor)
-    7. [`Opt-CasementWindows`](#opt-casementwindows)
-    8. [`Opt-H2K-PV`](#opt-h2k-pv)
-    9. [`Opt-HVAC`](#opt-hvac)
-    10. [`Opt-DHWsystem`](#opt-dhwsystem)
-    11. [`Opt-DHWRsystem`](#opt-dwhrsystem)
-    12. [`Opt-HRV`](#opt-hrv)
+    8. [`Opt-CasementWindows`](#opt-casementwindows)
+    9. [`Opt-H2K-PV`](#opt-h2k-pv)
+    10. [`Opt-HVAC`](#opt-hvac)
+    11. [`Opt-DHWsystem`](#opt-dhwsystem)
+    12. [`Opt-DWHRsystem`](#opt-dwhrsystem)
+    13. [`Opt-HRVSpec`](#opt-hrv)
+    14. [`Opt-FuelCost`] (#opt-fuelcost)
 3. [Legacy parameters not currently supported](#opt-skipped)    
-   
+4. [Outputs](#outputs)
+    1. [`RunNumber`](#runnumber)
+    2. [`H2K-outputs`](#h2k-outputs)
+    3. [`input.data`](#input.data)
+    
+    
 <a name="IOmodel"></a>
 Input/Output model 
 ------------------
@@ -411,7 +417,7 @@ Inputs
 * **Description** : Defines the below-grade insulation configuration and specification
 * **Typical values**: Keyword specifying desired foundation insulation configuration
 * **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify all basements in the 
-  .h2k file to reflect the corresponding parameters front the options file. For each 
+  .h2k file to reflect the corresponding parameters from the options file. For each 
   foundation specification, the options file must define:
     1. The foundation configuration code (.e.g. `BCCB_4`, `BCEB_4_ALL`, `SCB_29_ALL`)
     2. The interior wall construction code, __or__ 
@@ -595,7 +601,7 @@ Inputs
     a PV system, setting `Opt-H2K-PV  = NA` will leave this system unchanged, and 
     all runs will include a PV system. If you are studing designs with- and without PV,
     make sure PV is removed from the base archetype. 
-  - PV system sizes are commonly described according to it peak output (e.g. 5kW, 10kW), 
+  - PV system sizes are commonly described according to their peak output (e.g. 5kW, 10kW), 
     but HOT2000 describes PV according to collector area and system efficiency. The 
     actual DC output from these systems will vary by location. 
 
@@ -666,7 +672,7 @@ Inputs
 * **Other things you should know**: 
   - Currently this tag includes parameters for Type 1 (+/- AC), Type 2 and combo systems. 
     <mark>The number of inputs needed depends on which system is selected</mark>
-  - Contrary to its name, the definition of this system does not include ventilation.
+  - Contrary to its name, the definition of this system does not include ventilation. Mechanical ventilation is defined in `Opt-HRVspec`
   
 #### Sample `.choice` definition for  `Opt-Location`  
          Opt-Archetype = MediumSFD
@@ -853,7 +859,7 @@ Inputs
 * **Typical values**: Keyword defining DHW system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
   archetype's hot water system type and performance to match the corresponding 
-  parameters from from the .options file.
+  parameters from the .options file.
 * **Other things you should know**: 
   - if `Opt-HVAC` is set to a combo system, this option will be ignored. 
  
@@ -905,19 +911,19 @@ Inputs
 ### 12) `DWHRSystem`
 
 * **Description** : Indicates presence and performance of drainwater heat recovery systems 
-* **Typical values**: Keyword defining DHW system specifications 
+* **Typical values**: Keyword defining DWHR system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
   archetype to include the specified drain-water heat recovery system, according to 
   the specifications provided in the .options file.
 * **Other things you should know**: 
-  - HOT2000's DWHR inputs perimt specification of shower frequency, temperature  and duration
+  - HOT2000's DWHR inputs permit specification of shower frequency, temperature  and duration
     Running the model in ERS mode may override these inputs.
 
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-DWHRSystem`  
          Opt-DWHRSystem = DWHR-eff-30
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-DWHRSystem`
 
          *attribute:start
          *attribute:name  = Opt-DWHRSystem
@@ -975,7 +981,7 @@ Inputs
          <snip>
 
 <a name="opt-HRV"></a> 
-### 3) `Opt-HRV` 
+### 13) `Opt-HRVspec` 
 
 * **Description** : Creates/configures a whole-house ventilator item to the provided specification.
 * **Typical values**: Keyword specifying the HRV system  (o.e. 
@@ -993,10 +999,10 @@ Inputs
 * **Other things you should know**: 
  - nil
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-HRVspec`
          Opt-HRVspec = HRV_60
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-HRVspec`
 
          *attribute:start 
          *attribute:name    = Opt-HRVspec 
@@ -1036,15 +1042,58 @@ Inputs
 
          <snip>
 
+<a name="opt-FuelCost"></a>
+### 14) `Opt-FuelCost`   
 
+* **Description** : Defines the fuel costs used to calculate the 
+* **Typical values**: 
+* **HOT2000 bindings**:   
+  - `OPT-LibraryFile`: Fuel Library filename, file must be defined in the `StdLibs` directory
+  - `OPT-ElecName`: 
+  - `OPT-GasName`:
+  - `OPT-OilName`:
+  - `OPT-PropaneName`:
+  - `OPT-WoodName`:
+
+* **Other things you should know**: 
+ - there is a known issue when there is not an exact match between the `Opt-*Name` and an entry in the fuel cost library file. A solution is being developed.
+  
+#### Sample `.choice` definition for  `Opt-FuelCost`
+         Opt-FuelCost = rates2016
          
+#### Sample `.options` definition for  `Opt-FuelCost`
+        *attribute:start
+        *attribute:name     = Opt-FuelCost
+        *attribute:tag:1    = <OPT-LibraryFile>
+        *attribute:tag:2    = <OPT-ElecName>
+        *attribute:tag:3    = <OPT-GasName>
+        *attribute:tag:4    = <OPT-OilName>
+        *attribute:tag:5    = <OPT-PropaneName>
+        *attribute:tag:6    = <OPT-WoodName>
+        *attribute:default  = rates2016
+
+
 <a name="opt-skipped"></a>          
 Skipped for now 
 ---------------
-+ Opt-Ruleset 
-+ Opt-FuelCost   
++ Opt-Ruleset  
 + Opt-DWHRandSDHW       
 + Opt-RoofPitch     
 + Opt-ElecLoadScale
 + Opt-DHWLoadScale 
 + Opt-StandoffPV 
+
+
+<a name="outputs"></a> 
+Outputs 
+------
+The output file `HTAP-prm-output.csv` contains one line of data for each run. each line of output contains 3 main segments of information: the run number - unique identifiers, the HOT2000 run output, and the input data as defined above. The input data is 
+<a name="#runnumber"></a>
+### 1) `RunNumber` 
+
+<a name="#h2k-outputs"></a>
+### 2) `H2K-outputs` 
+
+<a name="#input.data"></a>
+### 3) `input.data`
+
