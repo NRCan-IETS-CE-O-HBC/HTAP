@@ -23,6 +23,7 @@ Contents
     12. [`Opt-DWHRsystem`](#opt-dwhrsystem)
     13. [`Opt-HRVspec`](#opt-hrvspec)
     14. [`Opt-FuelCost`](#opt-fuelcost)
+    15. [`Opt-RoofPitch`](#opt-roofpitch)
 3. [Legacy parameters not currently supported](#opt-skipped)    
 4. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
@@ -80,6 +81,8 @@ Most of HTAP’s data are stored in the .options file.  The option file contains
                                                     !Prince George & Kelowna LEEP
 
           *attribute:end
+    <snip>
+    
 
 This section defines data for the `Opt-H2K-PV` attribute.  Three options are available: `NA`, 
 `MonoSi-5kW`, and `MonoSi-10kW`.  __substitute-h2k.rb__ interprets the 
@@ -94,7 +97,7 @@ provides the alphanumeric input that must be substituted within the
 .h2k file. For example, the inverter efficiency will be set to 
 90% for the `MonoSI-10kW` case in the snippet above. 
 
-<a name "choice-definition"></a>
+<a name="choice-definition"></a>
 ### The HOT2000.choice file 
 The .choice file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (!).  Entries in the choice file must obey the following rules:
 - Each token must match one of the attributes in the .options file
@@ -125,8 +128,7 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         
         ! Air tightness 
         Opt-ACH : NA
-        
-        
+                
         ! Ceiling R-value
         Opt-Ceilings : NA
         
@@ -144,8 +146,7 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         
         ! Hot water system.
         Opt-DHWSystem :  HPHotWater
-        
-        
+                
         ! Drain-water heat recovery 
         Opt-DWHRsystem:  DWHR-eff-30 
         
@@ -158,8 +159,9 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         Opt-RoofPitch : NA   !6-12
         
         Opt-H2K-PV : NA 
+    <snip>
 
-<a name "run-definition"></a>
+<a name="run-definition"></a>
 ### The .run file 
 The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
 * **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
@@ -211,9 +213,6 @@ Upgrades_START
 
 Upgrades_END
 ```
-
-
-
 
 
 
@@ -270,8 +269,7 @@ Inputs
 <a name="opt-archetype"></a>         
 ### 2) `Opt-Archetype` 
 
-* **Description** : Defines the .h2k file that will be used for the basis of a 
-    HTAP run 
+* **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
 * **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
 * **HOT2000 bindings**:  The __substitute-h2k.rb__ script will make a copy of the 
     specified .h2k file, and will alter it according to your specified choices. __substitute-h2k.rb__
@@ -296,8 +294,7 @@ Inputs
          
          *option:NA:value:1 = NA
          *option:NA:cost:total = 0
-         
-         
+                  
          *option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
          *option:SmallSFD:cost:total = 0
          
@@ -306,6 +303,7 @@ Inputs
          
          *option:LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-LargeSFD.h2k
          *option:LargeSFD:cost:total = 0      
+         <snip>
          
 
 <a name="opt-ach"></a>
@@ -321,7 +319,7 @@ Inputs
   - HTAP can presently only change the blower-door test air change rate; options to 
     adjust the house volume, ELA or site characteristics are not supported.
   - Setting `Opt-ACH = NA` will cause __substitute-h2k.rb__ to leave air infiltration 
-    unchanged int he archetype 
+    unchanged in the archetype 
   
 #### Sample `.choice` definition for  `Opt-ACH`  
          Opt-ACH = ACH_7
@@ -341,10 +339,7 @@ Inputs
          
          *option:ACH_6_5:value:1  = 6.5
          *option:ACH_6_5:cost:total  =  0
-
-
          <snip>
-         
          
 
 <a name="opt-mainwall"></a>
@@ -407,9 +402,6 @@ Inputs
          *option:SIPS-R28-Wall:value:1 =   NA        ! Existing H2K code library wall name
          *option:SIPS-R28-Wall:value:2 =   28        ! OR, User-specified R-value (Imperial), but not both!
          *option:SIPS-R28-Wall:cost:total    =  0
-
-
-
          <snip>
 
 
@@ -462,7 +454,8 @@ Inputs
          
          *option:CeilR50:value:1 = CeilR50                
          *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
-         *option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Kelowna optimization
+         *option:CeilR50:cost:total    =   0       
+         <snip>
 
 
 <a name="opt-h2kfoundation"></a>
@@ -517,10 +510,8 @@ Inputs
          *option:OBCminR12-Slab24R:value:4 = NA          ! External wall added R-value (Imp)
          *option:OBCminR12-Slab24R:value:5 = 24          ! Below slab R-value
          *option:OBCminR12-Slab24R:cost:total = 0
-
-
-
          <snip>
+
 
 
 <a name="opt-exposedfloor"></a>
@@ -567,9 +558,10 @@ Inputs
          *option:ExpFloorFlash&Batt-R36:value:1 = NA     ! Use "NA" (or non-existent name) for user-Specified case
          *option:ExpFloorFlash&Batt-R36:value:2 = 36     ! User-Specified R-value (Imperial) / NA for code name
          *option:ExpFloorFlash&Batt-R36:cost:total    = 0
-         
          <snip>
+     
          
+
 <a name="opt-casementwindows"></a>
 ### 8) `Opt-CasementWindows`
 
@@ -590,6 +582,8 @@ Inputs
   - Within HOT2000's code editor, you may define windows using overall U-value and 
     SHGC inputs, or via HOT2000's legacy window code selector.  
   - This tag will edit all window types, not just casements. 
+  - Setting `Opt-CasementWindows = NA ` leaves the archetype windows unchanged.
+
   
 #### Sample `.choice` definition for  `Opt-CasementWindows`  
          Opt-CasementWindows = DoubleLowEHardCoatAirFill
@@ -637,8 +631,8 @@ Inputs
           *option:DoubleArgon_HighGainOnSouth:value:7 = DblLeScArg   
           *option:DoubleArgon_HighGainOnSouth:value:8 = DblLeScArg 
           *option:DoubleArgon_HighGainOnSouth:cost:total    = 0
+          <snip>
 
-         <snip>
 
 <a name="opt-h2k-pv"></a>
 ### 9) `Opt-H2K-PV`
@@ -707,12 +701,7 @@ Inputs
            *option:MonoSi-200m2:value:5 = 90
            *option:MonoSi-200m2:value:6 = 90
            *option:MonoSi-200m2:cost:total = 0
-           
-           *attribute:end
-         
-
-
-         <snip>
+           <snip>
 
 <a name="opt-hvacsystem"></a>
 ### 10) `Opt-HVACSystem`
@@ -727,6 +716,8 @@ Inputs
   - Currently this tag includes parameters for Type 1 (+/- AC), Type 2 and combo systems. 
     <mark>The number of inputs needed depends on which system is selected</mark>
   - Contrary to its name, the definition of this system does not include ventilation. Mechanical ventilation is defined in `Opt-HRVspec`
+  - Setting `Opt-HVACSystem = NA ` leaves the archetype HVAC system unchanged.
+
   
 #### Sample `.choice` definition for  `Opt-HVACSystem`  
          Opt-Archetype = MediumSFD
@@ -901,9 +892,8 @@ Inputs
          *option:ComboHeatA:value:32  = 117               ! P9 BlowerPower - 40
          *option:ComboHeatA:value:33  = 418               ! P9 BlowerPower - 100 
          *option:ComboHeatA:cost:total = 0
-         <snip>
-   
          
+         <snip>
          
          
 <a name="opt-dhwsystem"></a>         
@@ -916,8 +906,8 @@ Inputs
   parameters from the .options file.
 * **Other things you should know**: 
   - if `Opt-HVAC` is set to a combo system, this option will be ignored. 
- 
-  
+  - Setting `Opt-DHWSystem = NA ` leaves the archetype domestic hot water system unchanged.
+
 #### Sample `.choice` definition for  `Opt-DHWSystem`  
          Opt-DHWSystem = ElecInstantaneous
          
@@ -956,11 +946,11 @@ Inputs
           *option:ElecInstantaneous:value:5 = NA        
           *option:ElecInstantaneous:value:6 = 0
           *option:ElecInstantaneous:cost:total = 0
+          
+          <snip>
 
          
 
-
-         <snip>
 <a name="opt-dwhrsystem"></a> 
 ### 12) `Opt-DWHRSystem`
 * **Description** : Indicates presence and performance of drainwater heat recovery systems 
@@ -1028,16 +1018,15 @@ Inputs
          *option:DWHR-eff-42:value:9   = 4.53          ! Shower lenght (minutes)
          *option:DWHR-eff-42:value:10  = 3             ! number of daily showers
          *option:DWHR-eff-42:cost:total = 0
-         
-
-
          <snip>
+         
+         
 
 <a name="opt-HRVspec"></a> 
 ### 13) `Opt-HRVspec` 
 
 * **Description** : Creates/configures a whole-house ventilator item to the provided specification.
-* **Typical values**: Keyword specifying the HRV system  (o.e. 
+* **Typical values**: Keyword specifying the HRV system  (i.e., the mechanical ventilation system)
 * **HOT2000 bindings**:   
   - `OPT-H2K-FlowReq`: Integer flag indicating if H2K should warn when insufficient ventilation is provided. 
     Values:  `1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable`
@@ -1050,7 +1039,8 @@ Inputs
   - `OPT-H2K-Rating1`:  SRE at 0°C. Sets `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[efficiency1]`
   - `OPT-H2K-Rating1`:  SRE at -25°C. Sets `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[efficiency2]`
 * **Other things you should know**: 
- - nil
+  - Setting `Opt-HRVspec = NA` leaves the archetype ventilation system unchanged. If no mechanical ventilation system is defined in the archetype, then none will be run in HTAP. If the archetype has a mechanical system defined, then no changes will be made to it for the HTAP run.
+
   
 #### Sample `.choice` definition for  `Opt-HRVspec`
          Opt-HRVspec = HRV_60
@@ -1091,25 +1081,26 @@ Inputs
          *option:HRV_60:value:7 = 60    ! Eff% @ Rating1     Prince George used 70% at 0, 61% at -25C at $1386
          *option:HRV_60:value:8 = 55    ! Eff% @ Rating2
          *option:HRV_60:cost:total = 1496       !$1496 cost assumed for LEEP Kelowna optimization
-
-
          <snip>
+         
+
 
 <a name="opt-fuelcost"></a>
 ### 14) `Opt-FuelCost`   
 
-* **Description** : Defines the fuel costs used to calculate the 
-* **Typical values**: 
+* **Description** : Defines the fuel costs used to calculate the annual cost of electricity, gas, oil, propane and/or wood required by the specific arcehtype defined by __substitute-h2k.rb__. HOT2000 requires as exact match between the fuel cost selected and an entry in the FuelLib_.flc file
+* **Typical values**: `rates2016`
 * **HOT2000 bindings**:   
-  - `OPT-LibraryFile`: Fuel Library filename, file must be defined in the `StdLibs` directory
-  - `OPT-ElecName`: 
-  - `OPT-GasName`:
-  - `OPT-OilName`:
-  - `OPT-PropaneName`:
-  - `OPT-WoodName`:
+  - `OPT-LibraryFile`: Fuel Library filename, file must be defined in the `StdLibs` directory, FuelLib16.flc (fuel library files are `*.flc`)
+  - `OPT-ElecName`: the name of the entry in the fuel library that defines the electricity cost structure, by usage
+  - `OPT-GasName`: the name of the entry in the fuel library that defines the gas cost structure, by usage
+  - `OPT-OilName`: the name of the entry in the fuel library that defines the oil cost structure, by usage
+  - `OPT-PropaneName`: the name of the entry in the fuel library that defines the propane cost structure, by usage
+  - `OPT-WoodName`:the name of the entry in the fuel library that defines the wood cost structure, by usage
 
 * **Other things you should know**: 
  - there is a known issue when there is not an exact match between the `Opt-*Name` and an entry in the fuel cost library file. A solution is being developed.
+ - setting `Opt-FuelCost = NA` leaves the fuel costs unchanged.
   
 #### Sample `.choice` definition for  `Opt-FuelCost`
          Opt-FuelCost = rates2016
@@ -1126,23 +1117,55 @@ Inputs
         *attribute:default  = rates2016
 
 
+<a name="opt-roofpitch"></a>
+### 15) `Opt-RoofPitch`   
+
+* **Description** : Roof pitch is used by HOT2000 to calcualte the volume of the attic. The air change rate to the attic, its volume and solar gains, combined with the outdoor air temperature are used the heat balance to estimate the average attic temperature. That temperature is then used to estimate the heat loss or gain through the attic ceiling to the house.
+* **Typical values**: `rates2016`
+* **HOT2000 bindings**:   
+
+* **Other things you should know**: 
+ - setting `Opt-RoofPitch = NA` leaves the roof pitch unchanged.
+  
+#### Sample `.choice` definition for  `Opt-RoofPitch`
+     Opt-RoofPitch = 3-12
+         
+#### Sample `.options` definition for  `Opt-RoofPitch`
+    *attribute:start
+    *attribute:name     = Opt-RoofPitch
+    *attribute:tag:1    = Opt-H2K-RoofSlope
+    *attribute:default  = 8-12 
+
+    *option:NA:value:1 = NA
+    *option:NA:cost:total  = 0
+
+    *option:3-12:value:1 = 0.250
+    *option:3-12:cost:total  = 0
+
+    *option:6-12:value:1 = 0.500
+*option:6-12:cost:total  = 0
+
+*option:8-12:value:1 = 0.667
+*option:8-12:cost:total  = 0
+
+*option:12-12:value:1 = 1.000
+*option:12-12:cost:total  = 0
+
+
+
+
+
 <a name="opt-skipped"></a>          
 Skipped for now 
 ---------------
-+ Opt-Ruleset  
-+ Opt-DWHRandSDHW       
-+ Opt-RoofPitch     
-+ Opt-ElecLoadScale
-+ Opt-DHWLoadScale 
-+ Opt-StandoffPV 
-
++ Opt-Ruleset     
++     
 
 <a name="outputs"></a> 
 Outputs 
 ------
-The output file `HTAP-prm-output.csv` contains one line of data for each run. each line of output contains 3 main segments of information: the run number - unique identifiers, the HOT2000 run output, and the input data as defined above. The input data is repeated in the output to 
-Each of these outpu segments is defined below.
-
+The output file `HTAP-prm-output.csv` contains one line of data for each HTAP run. Each line of output contains **3 main segments** of information: the run number and unique run identifiers, the HOT2000 run output, and the input data as defined above. The input data is repeated in the output to allow for identification.
+Each of these output segments is defined below.
 
 <a name="#runnumber"></a>
 ### 1) `RunNumber` 
