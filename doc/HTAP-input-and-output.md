@@ -1169,7 +1169,7 @@ Each of these output segments is defined below.
 
 <a name="#runnumber"></a>
 ### 1) `RunNumber` 
-The first 4 columns of the output for each HTAP run are:`RunNumber`,`RunDir`,`iiiiiiinput.ChoiceFile`, and `Recovered-results`. Only the first column - `RunNumber` - is a unique identifier for each run. The other 3 columns can be idgnored.
+The first 4 columns of the output for each HTAP run are:`RunNumber`,`RunDir`,`iiiiiiinput.ChoiceFile`, and `Recovered-results`. Only the first column - `RunNumber` - is a unique identifier for each run. The other 3 columns can be ignored.
 
 <a name="#h2k-outputs"></a>
 ### 2) `H2K-outputs` 
