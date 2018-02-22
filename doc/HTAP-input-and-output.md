@@ -81,7 +81,7 @@ Most of HTAP’s data are stored in the .options file.  The option file contains
                                                     !Prince George & Kelowna LEEP
 
           *attribute:end
-    <snip>
+         <snip>
     
 
 This section defines data for the `Opt-H2K-PV` attribute.  Three options are available: `NA`, 
@@ -159,7 +159,7 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         Opt-RoofPitch : NA   !6-12
         
         Opt-H2K-PV : NA 
-    <snip>
+          <snip>
 
 <a name="run-definition"></a>
 ### The .run file 
@@ -168,10 +168,10 @@ The .run file contains a token-value list that defines the runs for `htap-prm.rb
 * **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
   - Multiple `archetypes` can be defined for the HTAP runs, and each `*.h2K` file is separated by a comma (,). Each `archetypes` file must be located in the `archetype-dir`. These archetypes are not the same as `Opt-Archetype` tags, these are the HOT2000 files, `*.h2k`. 
   - The `locations` parameter defines the weather location used for each HTAP run. These `locations` correspond to the municipal location defined in HOT2000 weather file, and are the same values as `Opt-Location`. Multiple locations can be defined, and each is comma-separated in the list.
-  - Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` file. 
+  - Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` archetype file. 
   - The `rulesets` parameter `as-found` will cause HTAP to run the `archetypes` for `locations` with no other upgrades. `rulesets` are defined as a set of upgrades to satisfy and a particular performance target: national building code energy requirements, EnergyStar targets, etc. `rulesets` are a functionality that is currently under develepment, and should be used with caution. Multiple rulesets can be defined, and each is comma-separated in the list.
   
-* **Upgrades** : Defines options to be investigated i mesh mode during the HTAP run. 
+* **Upgrades** : Defines options to be investigated in mesh mode during the HTAP run. 
    - If the `rulesets` tag is set to `as-found`, then  __substitute-h2k.rb__ will apply each combination of inputs as defined in the sections below.
    - If the `rulesets` tag is set to a specific ruleset, then  __substitute-h2k.rb__ will apply each combination of inputs using the ruleset as the _new_ base case archetype.
 
@@ -310,7 +310,7 @@ Inputs
 ### 3) `Opt-ACH` 
 
 * **Description** : Defines the infiltration characteristics of the building, using 
-  inputs similar to those collected to a blower-door test. 
+  inputs similar to those collected from a blower-door test. 
 * **Typical values**: Keyword indicating level of airtightness (e.g. `ACH_3`, `ACH_1_5`)
 * **HOT2000 bindings**: When run, __substitute-h2k.rb__ will map the keyword to values 
   in the .options file, and then edit the .h2k file to reflect the same air leakage 
@@ -961,6 +961,8 @@ Inputs
 * **Other things you should know**: 
   - HOT2000's DWHR inputs permit specification of shower frequency, temperature  and duration
     Running the model in ERS mode may override these inputs.
+  - setting `Opt-DWHRSystem = NA` leaves the drain water heat recovery system unchanged.
+
 
   
 #### Sample `.choice` definition for  `Opt-DWHRSystem`  
@@ -1089,7 +1091,7 @@ Inputs
 ### 14) `Opt-FuelCost`   
 
 * **Description** : Defines the fuel costs used to calculate the annual cost of electricity, gas, oil, propane and/or wood required by the specific arcehtype defined by __substitute-h2k.rb__. HOT2000 requires as exact match between the fuel cost selected and an entry in the FuelLib_.flc file
-* **Typical values**: `rates2016`
+* **Typical values**: Keyword indicating fuel library name
 * **HOT2000 bindings**:   
   - `OPT-LibraryFile`: Fuel Library filename, file must be defined in the `StdLibs` directory, FuelLib16.flc (fuel library files are `*.flc`)
   - `OPT-ElecName`: the name of the entry in the fuel library that defines the electricity cost structure, by usage
@@ -1122,8 +1124,7 @@ Inputs
 ### 15) `Opt-RoofPitch`   
 
 * **Description** : Roof pitch is used by HOT2000 to calcualte the volume of the attic. The air change rate to the attic, its volume and solar gains, combined with the outdoor air temperature are used the heat balance to estimate the average attic temperature. That temperature is then used to estimate the heat loss or gain through the attic ceiling to the house.
-* **Typical values**: 3-12
-
+* **Typical values**: Keyword indicating slope of the roof line, e.g. 3-12
 * **Other things you should know**: 
  - setting `Opt-RoofPitch = NA` leaves the roof pitch unchanged.
   
