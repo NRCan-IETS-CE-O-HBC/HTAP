@@ -22,7 +22,7 @@ Contents
     11. [`Opt-DHWsystem`](#opt-dhwsystem)
     12. [`Opt-DWHRsystem`](#opt-dwhrsystem)
     13. [`Opt-HRVspec`](#opt-hrvspec)
-    14. [`Opt-FuelCost`] (#opt-fuelcost)
+    14. [`Opt-FuelCost`](#opt-fuelcost)
 3. [Legacy parameters not currently supported](#opt-skipped)    
 4. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
