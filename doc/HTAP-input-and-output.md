@@ -34,7 +34,7 @@ Contents
 Input/Output model 
 ------------------
 
-<a name "options-definition"></a>
+<a name="options-definition"></a>
 ### The HOT2000.options file 
 Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) file. An excerpt from the HOT2000.options file follows:
 
@@ -63,7 +63,7 @@ Most of HTAP’s data are stored in the .options file.  The option file contains
          *option:NA:cost:total  = 0
          
          *option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
-         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
+         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George
          *option:MonoSi-5kW:value:3 = 0
          *option:MonoSi-5kW:value:4 = 1
          *option:MonoSi-5kW:value:5 = 90
@@ -164,11 +164,14 @@ An example .choice file follows. In this example, the .choice file instructs HTA
 The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
 * **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
 * **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
-  - Multiple `archetypes` can be defined for the HTAP runs, and each `*.h2K` file is separated by a comma (,). Each `archetypes` file must be located in the `archetype-dir`. These archetypes are not the same as `Opt-Archetype` tags, these are the HOT2000 file, `*.h2k`. 
+  - Multiple `archetypes` can be defined for the HTAP runs, and each `*.h2K` file is separated by a comma (,). Each `archetypes` file must be located in the `archetype-dir`. These archetypes are not the same as `Opt-Archetype` tags, these are the HOT2000 files, `*.h2k`. 
   - The `locations` parameter defines the weather location used for each HTAP run. These `locations` correspond to the municipal location defined in HOT2000 weather file, and are the same values as `Opt-Location`. Multiple locations can be defined, and each is comma-separated in the list.
   - Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` file. 
   - The `rulesets` parameter `as-found` will cause HTAP to run the `archetypes` for `locations` with no other upgrades. `rulesets` are defined as a set of upgrades to satisfy and a particular performance target: national building code energy requirements, EnergyStar targets, etc. `rulesets` are a functionality that is currently under develepment, and should be used with caution. Multiple rulesets can be defined, and each is comma-separated in the list.
-* **Upgrades** : Defines
+  
+* **Upgrades** : Defines options to be investigated i mesh mode during the HTAP run. 
+   - If the `rulesets` tag is set to `as-found`, then  __substitute-h2k.rb__ will apply each combination of inputs as defined in the sections below.
+   - If the `rulesets` tag is set to a specific ruleset, then  __substitute-h2k.rb__ will apply each combination of inputs using the ruleset as the _new_ base case archetype.
 
 ```
 ! Run-Mode: Parameters that affect how htap-prm is configured. 
@@ -190,7 +193,7 @@ RunScope_END
 ! Parameters controlling the design of the building 
 Upgrades_START
 
-    Opt-FuelCost                       = rates2016  ! Maybe this belongs in scope?
+    Opt-FuelCost                       = rates2016  
     Opt-ACH                            = NA
     Opt-MainWall                       = GenericWall_1Layer
     Opt-GenericWall_1Layer_definitions = NA
