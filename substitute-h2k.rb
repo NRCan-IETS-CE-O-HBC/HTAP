@@ -1925,6 +1925,39 @@ def processFile(h2kElements)
                      debug_out("Choice: #{choiceEntry} Tag: #{tag} \n  No rooms entered for F326 Ventilation requirement!")
                   end
                   
+                  
+                  # If F326 specified && basement exists, set vent-rate for other basement areas to 10/Ls. Otherwise, 0. 
+                  # This code is needed b/c setting F326 in homes with slab foundations can cause hot2000 to produce an errror.
+                  if ( value == 1 ) 
+                    $basementFound = false 
+                    locationCompontnets = "HouseFile/House/Components"
+                    
+                    h2kCodeElements.each(locationCompontnets) do |component|     
+                      
+                      # Should this also include crawlspace?
+                      if ( component =~ /Basement/ || component =~ /Walkout/ ) 
+                        $basementFound = true 
+                      end 
+                    
+                    end 
+                                       
+                  end
+                  
+                  
+                  locationVentRate = "HouseFile/House/Ventilation/Rooms/VentilationRate"
+                  if ( $basementFound ) 
+                    
+                    # 10L/s vent rate in basement 
+                    h2kElements[locationVentRate].attributes["code"] = 3 
+                    
+                  else 
+                  
+                    # "Non-applicable" - there is no basement 
+                    h2kElements[locationVentRate].attributes["code"] = 1 
+                  
+                  end 
+                  
+                  
                elsif ( tag =~ /OPT-H2K-AirDistType/ &&  value != "NA" )
                   locationText = "HouseFile/House/Ventilation/WholeHouse/AirDistributionType"
                   h2kElements[locationText].attributes["code"] = value
