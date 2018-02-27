@@ -1438,6 +1438,41 @@
 
 *attribute:end
 
+!-----------------------------------------------------------------------
+! Doors 
+!
+! Note: First seven entries below taken from HOT2000 drop-down list values
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name  = Opt-Doors
+*attribute:tag:1 = <Opt-R-value>     ! User specified R-value (Imperial) of door
+*attribute:default = SolidWood
+
+*option:NA:value:1 = NA   
+*option:NA:cost:total = 0.0
+
+*option:SolidWood:value:1 = 2.2
+*option:SolidWood:cost:total = 0.0
+
+*option:HollowWood:value:1 = 2.1
+*option:HollowWood:cost:total = 0.0
+
+*option:SteelFG:value:1 = 1.65      ! Steel Fibreglass core
+*option:SteelFG:cost:total = 0.0
+
+*option:SteelPS:value:1 = 5.57      ! Steel polystyrene core
+*option:SteelPS:cost:total = 0.0
+
+*option:SteelMDSprayCore:value:1 = 6.47    ! Steel medium density spray foam core
+*option:SteelMDSprayCore:cost:total = 0.0
+
+*option:FibrePolyCore:value:1 = 4.83    ! Fibreglass polystyrene core
+*option:FibrePolyCore:cost:total = 0.0
+
+*option:FibreMDSprayCore:value:1 = 5.57    ! Fibreglass medium density spray foam core
+*option:FibreMDSprayCore:cost:total = 0.0
+
+*attribute:end
 
 !-----------------------------------------------------------------------
 !   Ceiling 
