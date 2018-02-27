@@ -1015,16 +1015,78 @@ def processFile(h2kElements)
                elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
                   ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
                   
-               elsif ( tag =~ /Opt-win-S-OPT/ )    # Do nothing
-               elsif ( tag =~ /Opt-win-E-OPT/ )    # Do nothing
-               elsif ( tag =~ /Opt-win-N-OPT/ )    # Do nothing
-               elsif ( tag =~ /Opt-win-W-OPT/ )    # Do nothing
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
+            
+            # Skylights - windows in ceilings
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Skylights/ )
+               if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
+               elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               
+               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+
+            
+            # Windows in doors
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-DoorWindows/ )
+               if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               
+               elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               
+               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+            
+            
             # Foundations
             #  - All types: Basement, Walkout, Crawlspace, Slab-On-Grade
             #  - Interior & Exterior wall insulation, below slab insulation
@@ -2261,6 +2323,93 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
+	  
+   else
+      # Code name not found in the code library
+      # Since no User Specified option for windows this must be an error!
+      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+   end
+
+end
+
+
+# =========================================================================================
+#  Function to change skylight window codes by orientation
+# =========================================================================================
+def ChangeSkylightCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+   # Change ALL existing windows for this orientation (winOrient) to the library code name
+   # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
+   # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
+   # library are unique.
+   # Note: Not using "Standard", non-library codes (e.g., 202002)
+
+   # Look for this code name in code library (Favorite and UserDefined)
+   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+
+   $useThisCodeID  = {  "S"  =>  191 ,
+                        "SE" =>  192 ,
+                        "E"  =>  193 ,
+                        "NE" =>  194 ,
+                        "N"  =>  195 ,
+                        "NW" =>  196 ,  
+                        "W"  =>  197 ,
+                        "SW" =>  198   }
+   
+   thisCodeInHouse = false
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundCodeLibElement = ""
+   locationCodeFavText = "Codes/Window/Favorite/Code"
+   h2kCodeLibElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == newValue )
+         foundFavLibCode = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+      h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == newValue )
+            foundUsrDefLibCode = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Avoid duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/Window/Favorite"
+      else
+         locationText = "HouseFile/Codes/Window/UserDefined"
+      end
+      h2kFileElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == newValue )
+            thisCodeInHouse = true
+            $useThisCodeID[winOrient] = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
+            # No section of this type in house file Codes section -- add it!
+            h2kFileElements["HouseFile/Codes"].add_element("Window")
+         end
+         if ( h2kFileElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+            else
+               h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
+         h2kFileElements[locationText].add(foundCodeLibElement)
+      end
+
       # Windows in ceiling elements (skylights)
       locationText = "HouseFile/House/Components/Ceiling/Components/Window"
       h2kFileElements.each(locationText) do |element| 
@@ -2276,7 +2425,107 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-	  
+   else
+      # Code name not found in the code library
+      # Since no User Specified option for windows this must be an error!
+      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+   end
+
+end
+
+# =========================================================================================
+#  Function to change door window codes by orientation
+# =========================================================================================
+def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+   # Change ALL existing windows for this orientation (winOrient) to the library code name
+   # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
+   # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
+   # library are unique.
+   # Note: Not using "Standard", non-library codes (e.g., 202002)
+
+   # Look for this code name in code library (Favorite and UserDefined)
+   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+
+   $useThisCodeID  = {  "S"  =>  191 ,
+                        "SE" =>  192 ,
+                        "E"  =>  193 ,
+                        "NE" =>  194 ,
+                        "N"  =>  195 ,
+                        "NW" =>  196 ,  
+                        "W"  =>  197 ,
+                        "SW" =>  198   }
+   
+   thisCodeInHouse = false
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundCodeLibElement = ""
+   locationCodeFavText = "Codes/Window/Favorite/Code"
+   h2kCodeLibElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == newValue )
+         foundFavLibCode = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+      h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == newValue )
+            foundUsrDefLibCode = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Avoid duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/Window/Favorite"
+      else
+         locationText = "HouseFile/Codes/Window/UserDefined"
+      end
+      h2kFileElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == newValue )
+            thisCodeInHouse = true
+            $useThisCodeID[winOrient] = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
+            # No section of this type in house file Codes section -- add it!
+            h2kFileElements["HouseFile/Codes"].add_element("Window")
+         end
+         if ( h2kFileElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+            else
+               h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
+         h2kFileElements[locationText].add(foundCodeLibElement)
+      end
+
+      # Windows in ceiling elements (skylights)
+      locationText = "HouseFile/House/Components/Ceiling/Components/Window"
+      h2kFileElements.each(locationText) do |element| 
+         # 9=FacingDirection
+         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
+               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
+         end
+      end
+
       # Windows in door elements
       locationText = "HouseFile/House/Components/Wall/Components/Door/Components/Window"
       h2kFileElements.each(locationText) do |element| 
@@ -2292,7 +2541,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-      
    else
       # Code name not found in the code library
       # Since no User Specified option for windows this must be an error!
@@ -2300,6 +2548,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
    end
 
 end
+
 
 # =========================================================================================
 #  Add missing "AddedToSlab" section to Floor Construction of appropriate fnd
@@ -5223,7 +5472,7 @@ end
 fSUMMARY.close() 
 
 if ( ! $PRMcall ) 
-  FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+   FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
 end 
 
 endProcessTime = Time.now

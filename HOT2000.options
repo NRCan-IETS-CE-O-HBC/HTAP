@@ -967,8 +967,8 @@
 
 
 !-----------------------------------------------------------------------
-! This option sets the optical and thermal characteristics of 
-! the casement windows used in the model (currently all windows are 
+! Casement Windows: This option sets the optical and thermal characteristics  
+! of the casement windows used in the model (currently all windows are 
 ! considered casements)
 !-----------------------------------------------------------------------
 
@@ -1362,8 +1362,82 @@
 *option:NBC-zone8-window:value:8 = NBC-zone8-window
 *option:NBC-zone8-window:cost:total   = 0
 
+*attribute:end
+
+!-----------------------------------------------------------------------
+! Skylights 
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name  = Opt-Skylights
+*attribute:tag:1 = <Opt-win-S-CON>     ! H2K S windows lib code name
+*attribute:tag:2 = <Opt-win-E-CON>     ! H2K E windows lib code name
+*attribute:tag:3 = <Opt-win-N-CON>     ! H2K N windows lib code name
+*attribute:tag:4 = <Opt-win-W-CON>     ! H2K W windows lib code name
+*attribute:tag:5 = <Opt-win-SE-CON>    ! H2K SE windows lib code name
+*attribute:tag:6 = <Opt-win-SW-CON>    ! H2K SW windows lib code name
+*attribute:tag:7 = <Opt-win-NE-CON>    ! H2K NE windows lib code name
+*attribute:tag:8 = <Opt-win-NW-CON>    ! H2K NW windows lib code name
+*attribute:default = SkylightDef
+
+*option:NA:value:1 = NA   
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA   
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA   
+*option:NA:value:6 = NA
+*option:NA:value:7 = NA   
+*option:NA:value:8 = NA
+*option:NA:cost:total = 0.0
+
+*option:SkylightDef:value:1 = SkylightDef   
+*option:SkylightDef:value:2 = SkylightDef
+*option:SkylightDef:value:3 = SkylightDef   
+*option:SkylightDef:value:4 = SkylightDef
+*option:SkylightDef:value:5 = SkylightDef   
+*option:SkylightDef:value:6 = SkylightDef
+*option:SkylightDef:value:7 = SkylightDef   
+*option:SkylightDef:value:8 = SkylightDef
+*option:SkylightDef:cost:total = 0.0
 
 *attribute:end
+
+!-----------------------------------------------------------------------
+! Windows in Doors 
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name  = Opt-DoorWindows
+*attribute:tag:1 = <Opt-win-S-CON>     ! H2K S windows lib code name
+*attribute:tag:2 = <Opt-win-E-CON>     ! H2K E windows lib code name
+*attribute:tag:3 = <Opt-win-N-CON>     ! H2K N windows lib code name
+*attribute:tag:4 = <Opt-win-W-CON>     ! H2K W windows lib code name
+*attribute:tag:5 = <Opt-win-SE-CON>    ! H2K SE windows lib code name
+*attribute:tag:6 = <Opt-win-SW-CON>    ! H2K SW windows lib code name
+*attribute:tag:7 = <Opt-win-NE-CON>    ! H2K NE windows lib code name
+*attribute:tag:8 = <Opt-win-NW-CON>    ! H2K NW windows lib code name
+*attribute:default = DoorWinDef
+
+*option:NA:value:1 = NA   
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA   
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA   
+*option:NA:value:6 = NA
+*option:NA:value:7 = NA   
+*option:NA:value:8 = NA
+*option:NA:cost:total = 0.0
+
+*option:DoorWinDef:value:1 = DoorWinDef   
+*option:DoorWinDef:value:2 = DoorWinDef
+*option:DoorWinDef:value:3 = DoorWinDef   
+*option:DoorWinDef:value:4 = DoorWinDef
+*option:DoorWinDef:value:5 = DoorWinDef   
+*option:DoorWinDef:value:6 = DoorWinDef
+*option:DoorWinDef:value:7 = DoorWinDef   
+*option:DoorWinDef:value:8 = DoorWinDef
+*option:DoorWinDef:cost:total = 0.0
+
+*attribute:end
+
 
 !-----------------------------------------------------------------------
 !   Ceiling 

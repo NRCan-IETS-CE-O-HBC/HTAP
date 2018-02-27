@@ -36,6 +36,10 @@ Opt-ExposedFloor : NA
 ! Optical and thermal characteristics of casement windows (all)
 Opt-CasementWindows  : NA   
 
+Opt-Skylights : SkylightDef   ! NA
+
+Opt-DoorWindows : DoorWinDef  ! NA
+
 ! Foundation definitions
 Opt-H2KFoundation : NA
 
