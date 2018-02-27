@@ -53,6 +53,7 @@ $gChoiceFile  = ""
 $gOptionFile  = ""
 $PRMcall      = false 
 $ExtraOutput1 = false
+$keepH2KFolder = false
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
@@ -1086,7 +1087,19 @@ def processFile(h2kElements)
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
-            
+
+            # Doors - set all doors to User Specified
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Doors/ )
+               if ( tag =~ /Opt-R-value/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/Wall/Components/Door/Construction/Type"
+                  h2kElements.each(locationText) do |element| 
+                     element.attributes["code"] = 8
+                     element.attributes["value"] = (value.to_f / R_PER_RSI).to_s
+                  end
+               end
+                  
+                  
             # Foundations
             #  - All types: Basement, Walkout, Crawlspace, Slab-On-Grade
             #  - Interior & Exterior wall insulation, below slab insulation
@@ -2337,7 +2350,7 @@ end
 #  Function to change skylight window codes by orientation
 # =========================================================================================
 def ChangeSkylightCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
-   # Change ALL existing windows for this orientation (winOrient) to the library code name
+   # Change ALL existing windows in ceilings for this orientation (winOrient) to the library code name
    # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
    # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
    # library are unique.
@@ -2346,14 +2359,14 @@ def ChangeSkylightCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFile
    # Look for this code name in code library (Favorite and UserDefined)
    windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
 
-   $useThisCodeID  = {  "S"  =>  191 ,
-                        "SE" =>  192 ,
-                        "E"  =>  193 ,
-                        "NE" =>  194 ,
-                        "N"  =>  195 ,
-                        "NW" =>  196 ,  
-                        "W"  =>  197 ,
-                        "SW" =>  198   }
+   $useThisCodeID  = {  "S"  =>  201 ,
+                        "SE" =>  202 ,
+                        "E"  =>  203 ,
+                        "NE" =>  204 ,
+                        "N"  =>  205 ,
+                        "NW" =>  206 ,  
+                        "W"  =>  207 ,
+                        "SW" =>  208   }
    
    thisCodeInHouse = false
    foundFavLibCode = false
@@ -2415,8 +2428,8 @@ def ChangeSkylightCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFile
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
          if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-            # Check if each house entry has an "idref" attribute and add if it doesn't.
-            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            # Check if each entry has an "idref" attribute and add if it doesn't.
+            # Change each entry to reference a new <Codes> section $useThisCodeID[winOrient]
             if element[3][1].attributes["idref"] != nil            # ../Construction/Type
                element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
             else
@@ -2437,7 +2450,7 @@ end
 #  Function to change door window codes by orientation
 # =========================================================================================
 def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
-   # Change ALL existing windows for this orientation (winOrient) to the library code name
+   # Change ALL existing windows in doors for this orientation (winOrient) to the library code name
    # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
    # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
    # library are unique.
@@ -2446,14 +2459,14 @@ def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileE
    # Look for this code name in code library (Favorite and UserDefined)
    windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
 
-   $useThisCodeID  = {  "S"  =>  191 ,
-                        "SE" =>  192 ,
-                        "E"  =>  193 ,
-                        "NE" =>  194 ,
-                        "N"  =>  195 ,
-                        "NW" =>  196 ,  
-                        "W"  =>  197 ,
-                        "SW" =>  198   }
+   $useThisCodeID  = {  "S"  =>  211 ,
+                        "SE" =>  212 ,
+                        "E"  =>  213 ,
+                        "NE" =>  214 ,
+                        "N"  =>  215 ,
+                        "NW" =>  216 ,  
+                        "W"  =>  217 ,
+                        "SW" =>  218   }
    
    thisCodeInHouse = false
    foundFavLibCode = false
@@ -2508,22 +2521,6 @@ def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileE
          end
          foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
          h2kFileElements[locationText].add(foundCodeLibElement)
-      end
-
-      # Windows in ceiling elements (skylights)
-      locationText = "HouseFile/House/Components/Ceiling/Components/Window"
-      h2kFileElements.each(locationText) do |element| 
-         # 9=FacingDirection
-         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-            # Check if each house entry has an "idref" attribute and add if it doesn't.
-            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-            if element[3][1].attributes["idref"] != nil            # ../Construction/Type
-               element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-            else
-               element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-            end
-            element[3][1].text = newValue
-         end
       end
 
       # Windows in door elements
@@ -4455,6 +4452,7 @@ $help_msg = "
    -w  Report warning messages
    -e  Produce and save extended output (v1)
    -s  Name of the rule set
+   -k  Keep H2K folder after run
    
 "
 
@@ -4537,6 +4535,11 @@ optparse = OptionParser.new do |opts|
    opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
       $cmdlineopts["extra_output1"] = true
       $ExtraOutput1 = true
+   end
+
+   opts.on("-k", "--keep_H2K_folder", "Keep the H2K sub-folder generated during last run.") do
+      $cmdlineopts["keep_H2K_folder"] = true
+      $keepH2KFolder = true
    end
    
 end
@@ -5472,7 +5475,9 @@ end
 fSUMMARY.close() 
 
 if ( ! $PRMcall ) 
-   FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+   if !$keepH2KFolder
+      FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+   end
 end 
 
 endProcessTime = Time.now
