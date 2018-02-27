@@ -12,8 +12,8 @@ RunParameters_END
 RunScope_START
 
   archetypes                        = PrinceGeorgeHouse.h2k 
-  locations                         = Halifax 
-  rulesets                          = NBC9_36_noHRV
+  locations                         = Halifax, Toronto
+  rulesets                          = NBC9_36_noHRV, NBC9_36_noHRV
   
 RunScope_END
 
@@ -24,7 +24,7 @@ Upgrades_START
     Opt-ACH                            = NA, ACH_3_5  
     Opt-MainWall                       = GenericWall_1Layer
     Opt-GenericWall_1Layer_definitions = NA, DblStud_12in_cell_R-41
-    Opt-Ceilings                       = NA
+    Opt-Ceilings                       = NA, CeilR50, CeilR60, CeilR70
     Opt-H2KFoundation                  = NA
     Opt-ExposedFloor                   = NA
     Opt-CasementWindows                = NA
