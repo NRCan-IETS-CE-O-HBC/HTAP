@@ -59,6 +59,7 @@ $cost_type           = 0
 $gRotate             = "S"
 $gGOStep             = 0
 $gArchGOChoiceFile   = 0
+$gReadROutStrTxt = nil
 
 # Use lambda function to avoid the extra lines of creating each hash nesting
 $blk = lambda { |h,k| h[k] = Hash.new(&$blk) }
@@ -400,10 +401,10 @@ def write_h2k_magic_files(filepath)
   
   end 
   
- if ( ! File.file?( $ROutFile ) ) 
+   if ( ! File.file?( $ROutFile ) ) 
  
-    $Handle = File.open($ROutFile, 'w')
-    $Handle.write "Choose diagnostics>
+      $Handle = File.open($ROutFile, 'w')
+      $Handle.write "Choose diagnostics>
 All,
 <End>
      x 'Boot', ! 1 = Startup
@@ -445,8 +446,8 @@ the problem to be analysed.
 Brian Bradley
 bbradley@nrcan.gc.ca
 204-984-4920"
-    $Handle.close 
-  end 
+      $Handle.close 
+   end 
 
 end 
 
@@ -1629,9 +1630,6 @@ def processFile(h2kElements)
                #       end 
                #    end                     
                   
-
-
-                  
                   
                elsif ( tag =~ /Opt-H2K-Type2CoolCOP/ && value != "NA"  && "#{value}" != "" )
                   sysType2.each do |sysType2Name| 
@@ -1670,7 +1668,6 @@ def processFile(h2kElements)
     
               # Possibly set window characteristics / cooling types 
 
-
               # elsif ( tag =~ /Opt-H2K-CoolOperWindow/ && value != "NA"  && "#{value}" != "" )          
               #    sysType2.each do |sysType2Name| 
               #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
@@ -1703,12 +1700,6 @@ def processFile(h2kElements)
               #    end                      
               #
                   
-
-              
-    
-    
-    
-			   
                # ASF 06-Oct-2016 - Tags for P.9 performance start here. 
 			
                elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
@@ -2195,7 +2186,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       end
       if ( ! thisCodeInHouse )
          if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
-            # No section ofthis type in house file Codes section -- add it!
+            # No section of this type in house file Codes section -- add it!
             h2kFileElements["HouseFile/Codes"].add_element("Window")
          end
          if ( h2kFileElements[locationText] == nil )
@@ -3170,13 +3161,12 @@ def runsims( direction )
       FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
       
       if ( $gReadROutStrTxt  ) 
-        if ( ! FileUtils.cp("#{$run_path}\\Routstr.txt", ".\\sim-output\\") )
+         if ( ! FileUtils.cp("#{$run_path}\\Routstr.txt", ".\\sim-output\\") )
             fatalerror("\n Fatal Error! Could not copy Routstr.txt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
-        else
-           debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
-        end      
+         else
+            debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
+         end      
       end        
-      
       
       #if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
       #if ( ! FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\") ) 
@@ -3855,23 +3845,23 @@ end
 def getPrimaryHeatSys(elements)
    
    if elements["HouseFile/House/HeatingCooling/Type1/Baseboards"] != nil
-      sysType1 = "Baseboards"
+      #sysType1 = "Baseboards"
       fuelName = "electricity"
    elsif elements["HouseFile/House/HeatingCooling/Type1/Furnace"] != nil
-      sysType1 = "Furnace"
+      #sysType1 = "Furnace"
       fuelName = elements["HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EnergySource/English"].text
    elsif elements["HouseFile/House/HeatingCooling/Type1/Boiler"] != nil
-      sysType1 = "Boiler"
+      #sysType1 = "Boiler"
       fuelName = elements["HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EnergySource/English"].text
    elsif elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"] != nil
-      sysType1 = "Combo"
+      #sysType1 = "Combo"
       fuelName = elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EnergySource/English"].text
    elsif elements["HouseFile/House/HeatingCooling/Type1/P9"] != nil
-      sysType1 = "P9"
+      #sysType1 = "P9"
       fuelName = elements["HouseFile/House/HeatingCooling/Type1//TestData/EnergySource/English"].text
    end
    
-   return sysType1, fuelName
+   return fuelName
 end
 
 # =========================================================================================
@@ -3900,11 +3890,10 @@ end
 def getPrimaryDHWSys(elements)
    
    fuelName = elements["HouseFile/House/Components/HotWater/Primary/EnergySource/English"].text
-   tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
+   #tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
    
-   return tankType1, fuelName
+   return fuelName
 end
-
 
 # =========================================================================================
 # Rule Set: NBC-9.36-2010
@@ -3924,9 +3913,9 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    locale_HDD = $HDDHash[ locale ]
    
    # System data...
-   primSysType, primHeatFuelName = getPrimaryHeatSys( elements )
+   primHeatFuelName = getPrimaryHeatSys( elements )
    secSysType = getSecondaryHeatSys( elements )
-   primTankType, primDHWFuelName = getPrimaryDHWSys( elements )
+   primDHWFuelName = getPrimaryDHWSys( elements )
 
    # Basement, slab, or both in model file?
    # Decide which to use for compliance based on count!
@@ -3952,14 +3941,14 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    end
    
    # Choices that do NOT depend on ruleType!
-   $ruleSetChoices["Opt-HRV_ctl"] = "EightHRpDay"
+   #$ruleSetChoices["Opt-HRV_ctl"] = "EightHRpDay" # TODO: REMOVE BECAUSE NOT IN OPTIONS FILE?
    $ruleSetChoices["Opt-StandoffPV"] = "NoPV"
    $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
    
    # HVAC Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
-   if primHeatFuelName =~ /gas/
+   if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
       $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
-   elsif primHeatFuelName =~ /elect/
+   elsif (primHeatFuelName =~ /Elect/) != nil   # value is "Electricity
       if secSysType =~ "AirHeatPump"   # TODO: Should we also include WSHP & GSHP in this check?
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
       else
@@ -3968,14 +3957,14 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    end
    
    # DHW Equipment performance requirements (Table 9.36.4.2)
-   if primDHWFuelName =~ /gas/
+   if (primDHWFuelName =~ /gas/) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas" 
-   elsif primDHWFuelName =~ /elect/
+   elsif (primDHWFuelName =~ /Elect/) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
    end
 
    # Zone 4 ( HDD < 3000) with OR without an HRV - No dependency on ruleType!
-   if ( locale_HDD < 3000 ) 
+   if locale_HDD < 3000 
       # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
       $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
       $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone4"
@@ -3993,189 +3982,179 @@ def NBC_936_2010_RuleSet( ruleType, elements )
 
    # Thermal zones and HDD that depend on rule type
    #-------------------------------------------------------------------------
-   elsif ( ruleType =~ /NBC9_36_noHRV/ )
+   elsif ruleType =~ /NBC9_36_noHRV/
       
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
-      if ( locale_HDD >= 3000 && locale_HDD < 3999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      if locale_HDD >= 3000 && locale_HDD < 3999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_noHRV"
          $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone5_noHRV"
          $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone5"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"  
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
+         elsif isSlab
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_noHRV"
          end
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
-      elsif ( locale_HDD >= 4000 && locale_HDD < 4999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      elsif locale_HDD >= 4000 && locale_HDD < 4999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_noHRV"
          $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone6_noHRV"
          $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone6"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone6-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
+         elsif isSlab
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_noHRV"
          end
 
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
-      elsif ( locale_HDD >= 5000 && locale_HDD < 5999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      elsif locale_HDD >= 5000 && locale_HDD < 5999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7A_noHRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7A_noHRV"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7A"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7A-window"
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]             =  "NBC_BCIN_zone7A_noHRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]             =  "NBC_SCB_zone7A_noHRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_noHRV"
          end
 
       # Zone 7B ( 6000 < HDD < 6999) without an HRV
-      elsif ( locale_HDD >= 6000 && locale_HDD < 6999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      elsif locale_HDD >= 6000 && locale_HDD < 6999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7B_noHRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7B"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7B"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]             =  "NBC_BCIN_zone7B_noHRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]             =  "NBC_SCB_zone7B_noHRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_noHRV"
          end
 
       # Zone 8 (HDD <= 7000) without an HRV
-      elsif ( locale_HDD >= 7000 ) 
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      elsif locale_HDD >= 7000 
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone8_noHRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone8"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_BCIN_zone8_noHRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_SCB_zone8_noHRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_noHRV"
          end
       end
 
    #-------------------------------------------------------------------------
-   elsif ( ruleType =~ /NBC9_36_HRV/ )
+   elsif ruleType =~ /NBC9_36_HRV/
 
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
-      if ( locale_HDD >= 3000 && locale_HDD < 3999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      if locale_HDD >= 3000 && locale_HDD < 3999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone5_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone5_HRV"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone5"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone5-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]             =  "NBC_BCIN_zone5_HRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]             =  "NBC_SCB_zone5_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_noHRV"
          end
 
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
-      elsif ( locale_HDD >= 4000 && locale_HDD < 4999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+      elsif locale_HDD >= 4000 && locale_HDD < 4999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone6_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone6_HRV"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone6"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone6-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_BCIN_zone6_HRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_SCB_zone6_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_noHRV"
          end
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
-      elsif ( locale_HDD >= 5000 && locale_HDD < 5999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      elsif locale_HDD >= 5000 && locale_HDD < 5999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7A_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7A_HRV"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7A"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7A-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_BCIN_zone7A_HRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_SCB_zone7A_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_noHRV"
          end
 
       # Zone 7B ( 6000 < HDD < 6999) witht an HRV
-      elsif ( locale_HDD >= 6000 && locale_HDD < 6999 )
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+      elsif locale_HDD >= 6000 && locale_HDD < 6999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7B_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7B"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7B"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ ) 
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_BCIN_zone7B_HRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_SCB_zone7B_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_noHRV"
          end
 
       # Zone 8 (HDD <= 7000) with an HRV
-      elsif ( locale_HDD >= 7000 ) 
-         # effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+      elsif locale_HDD >= 7000 
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone8_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone8"
          
-         # effective thermal resistance of fenestration (Table 9.36.2.7.(1))
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
          
-         # effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /Bsmt/ )
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_BCIN_zone8_HRV"
-         end
-         if ( $ruleSetChoices["Opt-Archetype"] =~ /slab/ )
-            $ruleSetChoices["Opt-H2KFoundation"]              =  "NBC_SCB_zone8_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_noHRV"
          end
       end
    end   # Check on NBC rule set type
@@ -4286,11 +4265,6 @@ optparse = OptionParser.new do |opts|
       $gWarn = true
    end
 
-   opts.on("-s", "--rule-set NAME", "Name of Rule Set") do |n|
-      $cmdlineopts["rule-set-name"] = n
-      $ruleSetName = n
-   end
-   
    opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
       $cmdlineopts["options"] = o
       $gOptionFile = o
@@ -4641,9 +4615,79 @@ end
 fCHOICES.close
 stream_out (" ...done.\n\n")
 
-$gExtOptions = Hash.new(&$blk)
-# Report 
-$allok = true
+if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
+   $Archetype_value = $gChoices["Opt-Archetype"]
+  
+   # IF NA is set, and nothing is given at the command line, default to SmallSFD.
+   if ( $Archetype_value =~ /NA/ ) 
+      $Archetype_value = "SmallSFD"
+   end 
+   
+   $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
+   ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
+   $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
+   $run_path = $gMasterPath + "\\H2K"
+  
+   stream_out ("\n   UPDATED: Base model: #{$gBaseModelFile} \n")
+   stream_out ("            HOT2000 model file: #{$h2kFileName} \n")
+   stream_out ("            HOT2000 source folder: #{$h2k_src_path} \n")
+   stream_out ("            HOT2000 run folder: #{$run_path} \n")
+end
+
+if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
+   if ( ! system("mkdir #{$gMasterPath}\\H2K") )
+      fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
+   end
+   FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
+   fix_H2K_INI()
+end 
+
+write_h2k_magic_files("#{$gMasterPath}")
+
+# Create a copy of the HOT2000 file into the master folder for manipulation.
+# (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
+stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
+$gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
+
+if ( ! $PRMcall ) 
+   # Remove any existing file first!  
+   if ( File.exist?($gWorkingModelFile) )
+      if ( ! system ("del #{$gWorkingModelFile}") )
+         fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
+      end
+   end
+   FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
+   stream_out("\n  (File #{$gWorkingModelFile} created.)\n\n")
+end 
+
+# Load all XML elements from HOT2000 file
+h2kElements = get_elements_from_filename($gWorkingModelFile)
+stream_out(" READING to edit: #{$gWorkingModelFile} \n")
+
+# Get rule set choices hash values in $ruleSetChoices for the 
+# rule set name specified on the command line
+$ruleSetName = $gChoices["Opt-Ruleset"]
+if !$ruleSetName.empty? && ($ruleSetName =~ /NA/) == nil
+
+   stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
+   NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
+   
+   # Replace choices in $gChoices with rule set choices in $ruleSetChoices
+   stream_out(" Replacing user-defined choices with rule set choices where appropriate...\n")
+   $ruleSetChoices.each do |attrib, choice|
+      if choice.empty?
+         warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
+         next  # skip setting this empty choice!
+      elsif $gChoices[attrib] =~ /NA/
+         # Change choice to rule set value for all choices that are "NA"
+         $gChoices[attrib] = choice
+         stream_out ("   - #{attrib} -> #{choice} \n")
+      else
+         next  # skip changing this choice because it has a non-NA value!
+      end
+   end
+   
+end
 
 debug_out("-----------------------------------\n")
 debug_out("-----------------------------------\n")
@@ -4677,12 +4721,12 @@ end
 =end
 stream_out(" Validating choices and options...");  
 
-# Search through optons and determine if they are usedin Choices file (warn if not). 
+# Search through options and determine if they are used in Choices file (warn if not). 
 $gOptions.each do |option, ignore|
     debug_out ("> option : #{option} ?\n"); 
     if ( !$gChoices.has_key?(option)  )
       $ThisError = "\n WARNING: Option #{option} found in options file (#{$gOptionFile}) \n"
-      $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) \n"
+      $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) OR rule set (#{$ruleSetName})\n"
       $ErrorBuffer += $ThisError
       warn_out ( $ThisError )
    
@@ -4705,6 +4749,8 @@ $gOptions.each do |option, ignore|
     $ThisError = ""
 end
 
+$allok = true
+
 # Search through choices and determine if they match options in the Options file (error if not). 
 $gChoices.each do |attrib, choice|
    debug_out ( "\n ======================== #{attrib} ============================\n")
@@ -4712,7 +4758,7 @@ $gChoices.each do |attrib, choice|
     
    # Is attribute used in choices file defined in options ?
    if ( !$gOptions.has_key?(attrib) )
-      $ThisError  = "\n ERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}), \n"
+      $ThisError  = "\n ERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}) OR rule set (#{$ruleSetName}), \n"
       $ThisError +=  "        but can't be found in options file (#{$gOptionFile})\n"
       $ErrorBuffer += $ThisError
       stream_out( $ThisError )
@@ -4731,7 +4777,7 @@ $gChoices.each do |attrib, choice|
      
       if ( !$allok )
          $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
-         $ThisError +=   "        in choice file #{$gChoiceFile}), is not defined \n"
+         $ThisError +=   "        in choice file #{$gChoiceFile}) OR rule set (#{$ruleSetName}), is not defined \n"
          $ThisError +=   "        in options file (#{$gOptionFile})\n"
          $ErrorBuffer += $ThisError
          stream_out( $ThisError )
@@ -4784,7 +4830,6 @@ $gChoices.each do |attrib1, choice|
                      testValueArray = testValueList.split('|')
                      thesevalsmatch = 0
                      testValueArray.each do |testValue|
- #                      if ( $gChoices[testAttribute] =~ /testValue/ ) # JTB 12-Nov-2016: This doesn't work!!
                         if ( testValue.match($gChoices[testAttribute]) )
                            thesevalsmatch = 1
                         end
@@ -4861,7 +4906,6 @@ $gChoices.each do |attrib1, choice|
                   testValueArray = testValueList.split('|')
                   thesevalsmatch = 0
                   testValueArray.each do |testValue|
-#                    if ( $gChoices[testAttribute] =~ /testValue/ )  # JTB 12-Nov-2016: This doesn't work!!
                      if ( testValue.match($gChoices[testAttribute]) )
                         thesevalsmatch = 1
                         debug_out ("       \##{$gChoices[testAttribute]} = #{$gChoices[testAttribute]} / #{testValue} / -> #{thesevalsmatch} \n")
@@ -4975,25 +5019,6 @@ $gChoices.each do |attrib1, choice|
    end
 end   #end of do each gChoices loop
 
-if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
-   $Archetype_value = $gChoices["Opt-Archetype"]
-  
-   # IF NA is set, and nothing is given at the command line, default to SmallSFD.
-   if ( $Archetype_value =~ /NA/ ) 
-      $Archetype_value = "SmallSFD"
-   end 
-   
-   $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
-   ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
-   $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
-   $run_path = $gMasterPath + "\\H2K"
-  
-   stream_out ("\n   UPDATED: Base model: #{$gBaseModelFile} \n")
-   stream_out ("            HOT2000 model file: #{$h2kFileName} \n")
-   stream_out ("            HOT2000 source folder: #{$h2k_src_path} \n")
-   stream_out ("            HOT2000 run folder: #{$run_path} \n")
-end
-
 # Seems like we've found everything!
 
 if ( !$allok )
@@ -5005,53 +5030,10 @@ else
    stream_out (" ... done.\n\n")
 end
 
-# Create a copy of HOT2000 below master
-stream_out (" Creating a copying of HOT2000 executable directory below master... ")
-
-if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
-   if ( ! system("mkdir #{$gMasterPath}\\H2K") )
-      fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
-  end
-  FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
-  fix_H2K_INI()
-end 
-
-write_h2k_magic_files("#{$gMasterPath}")
-
-# Create a copy of the HOT2000 file into the master folder for manipulation.
-# (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
-stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
-$gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
-
-
-if ( ! $PRMcall ) 
-   # Remove any existing file first!  
-   if ( File.exist?($gWorkingModelFile) )
-      if ( ! system ("del #{$gWorkingModelFile}") )
-         fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
-      end
-   end
-   FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
-   stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
-end 
-
-# Load all XML elements from HOT2000 file
-h2kElements = get_elements_from_filename($gWorkingModelFile)
-stream_out(" READING to edit: #{$gWorkingModelFile} \n")
-
-# Set rule set choices hash values in $ruleSetChoices for the 
-# rule set name specified on the command line
-if !$ruleSetName.empty?
-   NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
-end
-
-
-
-
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
-processFile(h2kElements)
+processFile( h2kElements )
 
 
 # Orientation changes. For now, we assume the arrays must always point south.
