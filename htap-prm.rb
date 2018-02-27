@@ -28,7 +28,6 @@ $gRulesetHash   = Hash.new
 $gLocationHash  = Hash.new 
 
 
-
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
@@ -36,6 +35,7 @@ $gGenChoiceFileList = Array.new
 
 #default (and only supported mode)
 $gRunDefMode   = "mesh"
+$RunScopeOpen = false
 
 =begin rdoc
 =========================================================================================
@@ -754,7 +754,7 @@ optparse = OptionParser.new do |opts|
    opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
       $cmdlineopts["substitute"] = o
       $gSubstitutePath = o
-      if ( !File.exist?($gOptionFile) )
+      if ( !File.exist?($gSubstitutePath) )
          fatalerror("Valid path to substitute-h2k,rb script must be specified with --substitute-h2k-path (or -s) option!")
       end
    end
