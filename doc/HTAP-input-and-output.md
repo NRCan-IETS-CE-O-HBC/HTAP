@@ -463,14 +463,14 @@ Inputs
 
 * **Description** : Defines the below-grade insulation configuration and specification
 * **Typical values**: Keyword specifying desired foundation insulation configuration
-* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify all basements in the 
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify all foundations in the 
   .h2k file to reflect the corresponding parameters from the options file. For each 
   foundation specification, the options file must define:
-    1. The foundation configuration code (.e.g. `BCCB_4`, `BCEB_4_ALL`, `SCB_29_ALL`)
+    1. The foundation configuration code (.e.g. `BCCB_4_B`, `BCEB_4_ALL`, `SCB_29_ALL`). Note that this code is a concatenation of the HOT2000 configuration type (e.g., BCCB_4) and a suffix (ALL, B, W, C, S)
     2. The interior wall construction code, __or__ 
-    3. The interior wall specified R-value
-    4. The exterior wall specified R-value 
-    5. The R-valye of insulation added to the slab.  
+    3. The interior wall specified R-value (Note: One of the two must be NA)
+    4. The exterior wall specified R-value or NA
+    5. The R-value of insulation added to the slab or NA.  
 * **Other things you should know**: 
   - Below grade heat loss is also sensitive to the _depth of frost_ input. Work is underway 
   to add support to HTAP for this parameter. 
