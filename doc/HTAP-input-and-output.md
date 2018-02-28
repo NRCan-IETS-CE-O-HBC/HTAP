@@ -24,6 +24,9 @@ Contents
     13. [`Opt-HRVspec`](#opt-hrvspec)
     14. [`Opt-FuelCost`](#opt-fuelcost)
     15. [`Opt-RoofPitch`](#opt-roofpitch)
+    16. [`Opt-Doors`](#opt-doors)
+    17. [`Opt-Skylights`](#opt-sylights)
+    18. [`Opt-DoorWindows`](#opt-doorwindows)
 3. [Legacy parameters not currently supported](#opt-skipped)    
 4. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
@@ -1119,7 +1122,6 @@ Inputs
         *attribute:default  = rates2016
         <snip>
         
-
 <a name="opt-roofpitch"></a>
 ### 15) `Opt-RoofPitch`   
 
@@ -1153,6 +1155,29 @@ Inputs
     *option:12-12:cost:total  = 0
     <snip>
 
+<a name="opt-doors"></a>
+### 16) `Opt-Doors`   
+
+* **Description** : .
+* **Typical values**: 
+* **Other things you should know**: 
+ 
+  
+#### Sample `.choice` definition for  `Opt-Doors`
+     Opt-Doors = SolidWood
+         
+#### Sample `.options` definition for  `Opt-Doors`
+    *attribute:start 
+    *attribute:name  = Opt-Doors
+    *attribute:tag:1 = <Opt-R-value>     ! User specified R-value (Imperial) of door
+    *attribute:default = SolidWood
+    
+    *option:NA:value:1 = NA   
+    *option:NA:cost:total = 0.0
+    
+    *option:SolidWood:value:1 = 2.2
+    *option:SolidWood:cost:total = 0.0
+    <snip>
 
 
 <a name="opt-skipped"></a>          
