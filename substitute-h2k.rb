@@ -1103,7 +1103,7 @@ def processFile(h2kElements)
             # Foundations
             #  - All types: Basement, Walkout, Crawlspace, Slab-On-Grade
             #  - Interior & Exterior wall insulation, below slab insulation
-            #    based on insulaion configuration type
+            #    based on insulation configuration type
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-H2KFoundation/ )
                locHouseStr = [ "", "" ]
@@ -1119,8 +1119,9 @@ def processFile(h2kElements)
                   elsif ( fndTypes == "S" )
                      locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
                   elsif ( fndTypes == "ALL" )
-                     # Check to avoid configs starting with "S" used in B or W and
-                     # configs starting with "B" used in C or S!
+                     # Check to AVOID:
+                     # - configurations that start with "B" used to modify configurations starting with C or S!
+                     # - configurations that start with "S" used to modify configurations starting with B or W AND
                      if ( configType =~ /^B/ )
                         locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                         locHouseStr[1] = "HouseFile/House/Components/Walkout/Configuration"
@@ -1146,7 +1147,7 @@ def processFile(h2kElements)
                               # Add missing XML section to Wall for "ExteriorAddedInsulation"
                               addMissingExteriorAddedInsulation(element)
                            end
-                           # Change existing configutaion values to match choice
+                           # Change existing configuration values to match choice
                            element.attributes["type"] = configType
                            element.attributes["subtype"] = configSubType
                            element.text = configType + "_" + configSubType
@@ -1156,8 +1157,8 @@ def processFile(h2kElements)
                   
                elsif ( tag =~ /OPT-H2K-IntWallCode/ &&  value != "NA" )
                   # If this code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all entries. Code names in library are unique.
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  # (either Favorite or UsrDef) for all entries. Code names in library are unique.
+                  # Note: *Not* using "Standard", non-library codes (e.g., 2221292000)
                   
                   # Look for this code name in code library (Favorite and UserDefined)
                   thisCodeInHouse = false
@@ -2545,7 +2546,6 @@ def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileE
    end
 
 end
-
 
 # =========================================================================================
 #  Add missing "AddedToSlab" section to Floor Construction of appropriate fnd
@@ -4244,7 +4244,7 @@ def NBC_936_2010_RuleSet( ruleType, elements )
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"  
          elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_SCB_zone5_noHRV"
          end
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV

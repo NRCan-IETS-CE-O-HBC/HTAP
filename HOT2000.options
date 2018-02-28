@@ -1920,10 +1920,10 @@ Whitehorse Wall Options (Code is R28)
 *attribute:start
 *attribute:name   = Opt-H2KFoundation
 *attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
-*attribute:tag:2  = OPT-H2K-IntWallCode    ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x
-*attribute:tag:3  = OPT-H2K-IntWall-RValue ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x
-*attribute:tag:4  = OPT-H2K-ExtWall-RVal   ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x
-*attribute:tag:5  = OPT-H2K-BelowSlab-RVal ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x
+*attribute:tag:2  = OPT-H2K-IntWallCode    ! Int. wall Fav/UsrDef code for BCCx_x, BCIx_x or NA
+*attribute:tag:3  = OPT-H2K-IntWall-RValue ! Int. wall User-Specified R-value (Imp) for BCCx_x, BCIx_x or NA
+*attribute:tag:4  = OPT-H2K-ExtWall-RVal   ! Ext. wall User-Specified R-value (Imp) for BCCx_x, BCEx_x or NA
+*attribute:tag:5  = OPT-H2K-BelowSlab-RVal ! Below slab User-Specified R-value(Imp) for BCCB_x, BCEB_x or NA
 *attribute:default = NA
 
 *option:NA:value:1 = NA
@@ -2356,7 +2356,7 @@ Whitehorse Wall Options (Code is R28)
 *option:STEP_R25FDN_R20_under:cost:total = 4005    !Assumed cost of $4005 for MURB STEP
 
 !-----------------------------------------------------------------------
-!   NBC 9.36 Baseline
+!   NBC 9.36 Baseline foundations
 !-----------------------------------------------------------------------
 *option:NBC_BCIN_zone4:value:1 = BCIN_1_ALL  ! Change all Basements in model
 *option:NBC_BCIN_zone4:value:2 = NA          !
