@@ -12,7 +12,7 @@ RunParameters_END
 
 RunScope_START
 
-  archetypes                        = NRCan-A11_1500sf_2storey_rowMid_E-b90.h2k,  NRCan-A9_3000sf_2stry_WOB_E-b90.h2k, NRCan-arch10_1500sf_2storey_rowEnd_Eb90.h2k       , NRCan-arch1_1000sf_1storey_fullBsmt_E-b90.h2k     , NRCan-arch2_1900sqft_1storey_crawlSpace_E-b90.h2k , NRCan-arch3_1300sf_2storey_fullBsmt_E-b90.h2k     , NRCan-arch4_2100sf_2storey_fullBsmt_E-b90.h2k     , NRCan-arch5_3500sf_2storey_fullBsmt_E-b90.h2k     , NRCan-arch6_3500sf_2st_15%moreGlass_E-b90.h2k     , NRCan-arch7_2100sf_2storey_slabOnGrade_E-b90.h2k  , NRCan-arch8_2100sf_2storey_walkOut_E-b90.h2k      
+  archetypes                        = NRCan-A11_1500sf_2storey_rowMid_E_NBC936.h2k , NRCan-A9_3000sf_2stry_WOB_E_NBC936.h2k , NRCan-arch10_1500sf_2storey_rowEnd_E_NBC936.h2k , NRCan-arch1_1000sf_1storey_fullBsmt_E_NBC936.h2k , NRCan-arch2_1900sqft_1storey_crawlSpace_E_NBC936.h2k , NRCan-arch3_1300sf_2storey_fullBsmt_E_NBC936.h2k , NRCan-arch4_2100sf_2storey_fullBsmt_E_NBC936.h2k , NRCan-arch5_3500sf_2storey_fullBsmt_E_NBC936.h2k , NRCan-arch6_3500sf_2st_15%moreGlass_E_NBC936.h2k , NRCan-arch7_2100sf_2storey_slabOnGrade_E_NBC936.h2k , NRCan-arch8_2100sf_2storey_walkOut_E_NBC936.h2k    
   locations                         = Halifax 
   rulesets                          = as-found, 936_2015_AW_HRV, 936_2015_AW_noHRV 
   
@@ -36,8 +36,8 @@ Upgrades_START
     Opt-DWHRSystem                     = NA
     Opt-HVACSystem                     = NA 
     Opt-HRVspec                        = NA
-
+    Opt-StandoffPV                     = NA 
+    
 Upgrades_END
-
 
 
