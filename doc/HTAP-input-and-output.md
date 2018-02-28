@@ -1183,7 +1183,9 @@ Inputs
 <a name="opt-skipped"></a>          
 Skipped for now 
 ---------------
-+ Opt-Ruleset     
++ Opt-Ruleset
++ Opt-DoorWindows
++ Opt-Skylights
 
 <a name="outputs"></a> 
 Outputs 
