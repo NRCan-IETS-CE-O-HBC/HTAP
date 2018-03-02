@@ -4272,7 +4272,7 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    end
    locale.gsub!(/\./, '')
    
-   locale_HDD = $HDDHash[ locale ]
+   locale_HDD = $HDDHash[ locale.upcase ]
    
    stream_out(">NBC_936_2010_RuleSet> #{ruleType}> 1. #{$Locale} 2. #{locale} 3. #{locale_HDD} \n")
    
