@@ -2128,23 +2128,23 @@ def processFile(h2kElements)
                end
                
             # Results and Program Mode - change program mode so correct results sets produced
+            # Note: The XML file does not contain a mode setting parameter. 
+            #       It uses the presence or absence of the <Program> section.
             #--------------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
-               if ( value == "NA" )
+               if ( value == "NA" || value == "General" )
                   $outputHCode = "General" 
-               else
-                  $outputHCode = value
-               end                
-               # Set the run mode of the h2k file.
-               if $outputHCode == "General"
+                  
                   if h2kElements[HouseFile/Program] != nil
                      h2kElements[HouseFile].delete_element("Program")
                   end
-               else  # ERS Program mode
+               else  # ERS mode with one of its output types
+                  $outputHCode = value
+                  
                   if h2kElements[HouseFile/Program] == nil
                      createProgramXMLSection( h2kElements )
                   end
-               end
+               end                
                
             else
                # Do nothing -- we're ignoring all other tags!
@@ -2162,6 +2162,13 @@ def processFile(h2kElements)
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
 
+end
+
+# =========================================================================================
+#  Function to create the Program XML section that contains the ERS program mode data
+# =========================================================================================
+def createProgramXMLSection( houseElements )
+   
 end
 
 # =========================================================================================
@@ -4159,11 +4166,11 @@ end
 def NBC_936_2010_RuleSet( ruleType, elements )
 
    # Get some data from the base house model file...
-   
+
    $Locale = $gChoices["Opt-Location"] 
    
    # Weather city name
-   if $Locale.empty?
+   if $Locale.empty? || $Locale == "NA"
       # from base model file
       locale = getWeatherCity( elements )
    else
@@ -4175,8 +4182,6 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    locale_HDD = $HDDHash[ locale ]
    
    stream_out(">NBC_936_2010_RuleSet> #{ruleType}> 1. #{$Locale} 2. #{locale} 3. #{locale_HDD} \n")
-   
-    
    
    # System data...
    primHeatFuelName = getPrimaryHeatSys( elements )
@@ -4205,8 +4210,6 @@ def NBC_936_2010_RuleSet( ruleType, elements )
       isBasement = false
       isSlab = true
    end
-   
-   
    
    # Choices that do NOT depend on ruleType!
    #$ruleSetChoices["Opt-HRV_ctl"] = "EightHRpDay" # TODO: REMOVE BECAUSE NOT IN OPTIONS FILE?
@@ -4939,9 +4942,7 @@ h2kElements = get_elements_from_filename($gWorkingModelFile)
 stream_out(" READING to edit: #{$gWorkingModelFile} \n")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
-# rule set name specified on the command line
-
-
+# rule set name specified on the choice file
 
 $ruleSetName = $gChoices["Opt-Ruleset"]
 if !$ruleSetName.empty? && ($ruleSetName =~ /NA/) == nil
@@ -4949,24 +4950,16 @@ if !$ruleSetName.empty? && ($ruleSetName =~ /NA/) == nil
    stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
    
    if ( $ruleSetName =~ /as-found/ ) 
-   
-     # Do nothing ! 
-     
+     # Do nothing! 
      stream_out ("  (a) ")
    
    elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
-   
       stream_out ("  (b) ")
-   
       NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
-            
 
    elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
-
-   
-     stream_out ("  (c) ")
-   
-     # Do nothing - this is the AW ruleset. 
+      stream_out ("  (c) ")
+      # Do nothing - this is the AW rule set. 
       
    end 
    
