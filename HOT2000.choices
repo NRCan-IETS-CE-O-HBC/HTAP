@@ -7,7 +7,7 @@
 ! that are noted in comments below).
 !-----------------------------------------------------------------------  
 
-Opt-Ruleset : NA ! NA, NBC9_36_HRV, NBC9_36_noHRV
+Opt-Ruleset : NBC9_36_noHRV  ! NA, NBC9_36_HRV, NBC9_36_noHRV
 
 ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
 Opt-DBFiles  : H2KCodeLibFile
@@ -20,13 +20,13 @@ Opt-FuelCost : NA
 ! Set the output results set that is used to extract outputs
 ! Note: This is also used to set the "mode" used to run the core.
 !       NA won't change the input mode in the file and uses the general run results section regardless of mode
-Opt-ResultHouseCode: NA     !NA, General, SOC, HOC, HCV, ROC, Reference, UserHouse
+Opt-ResultHouseCode: General     !NA, General, SOC, HOC, HCV, ROC, Reference, UserHouse
 
 ! Archetype file: 
 Opt-Archetype: NA
 
 ! ACH substitutions
-Opt-ACH : ACH_1_0    !NA
+Opt-ACH : NA    !NA, ACH_1_0
 
 Opt-Ceilings : NA
 
