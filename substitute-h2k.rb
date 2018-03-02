@@ -4160,6 +4160,8 @@ def NBC_936_2010_RuleSet( ruleType, elements )
 
    # Get some data from the base house model file...
    
+   $Locale = $gChoices["Opt-Location"] 
+   
    # Weather city name
    if $Locale.empty?
       # from base model file
@@ -4168,7 +4170,13 @@ def NBC_936_2010_RuleSet( ruleType, elements )
       # from Opt-Location
       locale = $Locale
    end
+   locale.gsub!(/\./, '')
+   
    locale_HDD = $HDDHash[ locale ]
+   
+   stream_out(">NBC_936_2010_RuleSet> #{ruleType}> 1. #{$Locale} 2. #{locale} 3. #{locale_HDD} \n")
+   
+    
    
    # System data...
    primHeatFuelName = getPrimaryHeatSys( elements )
@@ -4197,6 +4205,8 @@ def NBC_936_2010_RuleSet( ruleType, elements )
       isBasement = false
       isSlab = true
    end
+   
+   
    
    # Choices that do NOT depend on ruleType!
    #$ruleSetChoices["Opt-HRV_ctl"] = "EightHRpDay" # TODO: REMOVE BECAUSE NOT IN OPTIONS FILE?
@@ -4930,11 +4940,35 @@ stream_out(" READING to edit: #{$gWorkingModelFile} \n")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
 # rule set name specified on the command line
+
+
+
 $ruleSetName = $gChoices["Opt-Ruleset"]
 if !$ruleSetName.empty? && ($ruleSetName =~ /NA/) == nil
 
    stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
-   NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
+   
+   if ( $ruleSetName =~ /as-found/ ) 
+   
+     # Do nothing ! 
+     
+     stream_out ("  (a) ")
+   
+   elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
+   
+      stream_out ("  (b) ")
+   
+      NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
+            
+
+   elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
+
+   
+     stream_out ("  (c) ")
+   
+     # Do nothing - this is the AW ruleset. 
+      
+   end 
    
    # Replace choices in $gChoices with rule set choices in $ruleSetChoices
    stream_out(" Replacing user-defined choices with rule set choices where appropriate...\n")
@@ -5015,8 +5049,12 @@ end
 
 $allok = true
 
+
+
 # Search through choices and determine if they match options in the Options file (error if not). 
 $gChoices.each do |attrib, choice|
+
+   stream_out( " ->>>>> #{attrib} | #{choice} \n")
    debug_out ( "\n ======================== #{attrib} ============================\n")
    debug_out ( "Choosing #{attrib} -> #{choice} \n")
     
