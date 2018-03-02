@@ -3,7 +3,8 @@
 !
 ! The H2K model file used is a valid model and nothing needs to be 
 ! changed for it to run!  Using "NA" on any of the options below
-! leaves the model unchanged for that option.
+! leaves the model unchanged for that option (with a few exceptions 
+! that are noted in comments below).
 !-----------------------------------------------------------------------  
 
 Opt-Ruleset : NBC9_36_noHRV
@@ -16,7 +17,10 @@ Opt-Location : NA
 
 Opt-FuelCost : NA
 
-Opt-ResultHouseCode: SOC
+! Set the output results set that is used to extract outputs
+! Note: This is also used to set the "mode" used to run the core.
+!       NA won't change the input mode in the file and uses the general run results section regardless of mode
+Opt-ResultHouseCode: NA     !NA, General, SOC, HOC, HCV, ROC, Reference, UserHouse
 
 ! Archetype file: 
 Opt-Archetype: NA

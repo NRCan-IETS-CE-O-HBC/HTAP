@@ -99,6 +99,8 @@
 *attribute:tag:1 = <NotNOTARealTag>
 *attribute:default = General
 
+*option:NA:value:1    = NA    ! Doesn't change the current run mode
+*option:NA:cost:total = 0
 
 *option:General:value:1    = General 
 *option:General:cost:total = 0

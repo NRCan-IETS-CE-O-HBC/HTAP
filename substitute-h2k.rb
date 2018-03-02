@@ -2127,21 +2127,26 @@ def processFile(h2kElements)
                   
                end
                
-            # Results and Program Mode - change program mode so correct results sets produced
-            # Note: The XML file does not contain a mode setting parameter. 
-            #       It uses the presence or absence of the <Program> section.
+            # Results and Program Mode - change program mode so correct result sets produced
+            # Note: The XML file does not contain a "mode" parameter. It uses the presence or
+            #       absence of the <Program> section to indicate the mode.
             #--------------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
-               if ( value == "NA" || value == "General" )
-                  $outputHCode = "General" 
+               if value == "NA"
+                  # Don't change the run mode but use the "General" output section!
+                  $outputHCode = "General"
                   
-                  if h2kElements[HouseFile/Program] != nil
+               elsif value == "General"
+                  # Change run mode and set output section
+                  $outputHCode = "General"
+                  if h2kElements["HouseFile/Program"] != nil
                      h2kElements[HouseFile].delete_element("Program")
                   end
-               else  # ERS mode with one of its output types
+
+               else
+                  # Change run mode to ERS and set output section
                   $outputHCode = value
-                  
-                  if h2kElements[HouseFile/Program] == nil
+                  if h2kElements["HouseFile/Program"] == nil
                      createProgramXMLSection( h2kElements )
                   end
                end                
@@ -2168,6 +2173,94 @@ end
 #  Function to create the Program XML section that contains the ERS program mode data
 # =========================================================================================
 def createProgramXMLSection( houseElements )
+   loc = "HouseFile"
+   houseElements[loc].add_element("Program")
+
+   loc = "HouseFile/Program"
+   houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
+   houseElements[loc].add_element("Labels")
+
+   loc = "HouseFile/Program/Labels"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Labels/English"
+   houseElements[loc].add_text("EnerGuide Rating System")
+   loc = "HouseFile/Program/Labels"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Labels/French"
+   houseElements[loc].add_text("Système de cote ÉnerGuide")
+
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("Version")
+   loc = "HouseFile/Program/Version"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].attributes["major"] = "15"
+   houseElements[loc].attributes["minor"] = "1"
+   houseElements[loc].attributes["build"] = "19"
+   houseElements[loc].add_element("Labels")
+   loc = "HouseFile/Program/Version/Labels"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Labels/English"
+   houseElements[loc].add_text("v15.1b19")
+   loc = "HouseFile/Program/Version/Labels"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Labels/French"
+   houseElements[loc].add_text("v15.1b19")
+
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("SdkVersion")
+   loc = "HouseFile/Program/SdkVersion"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].attributes["major"] = "1"
+   houseElements[loc].attributes["minor"] = "11"
+   houseElements[loc].add_element("Labels")
+   loc = "HouseFile/Program/SdkVersion/Labels"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Labels/English"
+   houseElements[loc].add_text("v1.11")
+   loc = "HouseFile/Program/SdkVersion/Labels"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Labels/French"
+   houseElements[loc].add_text("v1.11")
+   
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("Options")
+   loc = "HouseFile/Program/Options"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].add_element("Main")
+   loc = "HouseFile/Program/Options/Main"
+   houseElements[loc].attributes["applyHouseholdOperatingConditions"] = "false"
+   houseElements[loc].attributes["applyReducedOperatingConditions"] = "false"
+   houseElements[loc].attributes["atypicalElectricalLoads"] = "false"
+   houseElements[loc].attributes["waterConservation"] = "false"
+   houseElements[loc].attributes["referenceHouse"] = "false"
+   houseElements[loc].add_element("Vermiculite")
+   loc = "HouseFile/Program/Options/Main/Vermiculite"
+   houseElements[loc].attributes["code"] = "1"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Options/Main/Vermiculite/English"
+   houseElements[loc].add_text("Unknown")
+   loc = "HouseFile/Program/Options/Main/Vermiculite"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Options/Main/Vermiculite/French"
+   houseElements[loc].add_text("Inconnu")
+   loc = "HouseFile/Program/Options"
+   houseElements[loc].add_element("RURComments")
+   loc = "HouseFile/Program/Options/RURComments"
+   houseElements[loc].attributes["xml:space"] = "preserve"
+   
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("Results")
+   loc = "HouseFile/Program/Results"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].add_element("Tsv")
+   houseElements[loc].add_element("Ers")
+   houseElements[loc].add_element("RefHse")
    
 end
 
@@ -2364,7 +2457,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
    end
 
 end
-
 
 # =========================================================================================
 #  Function to change skylight window codes by orientation
@@ -2731,6 +2823,9 @@ def createHRV( elements )
    elements[locationText].add_element("French")
 end
 
+# =========================================================================================
+# Get and return primary (type 1) system space heating capacity in Watts
+# =========================================================================================
 def getBaseSystemCapacity( elements, sysType1Arr )
    capValue = 0
    locationText = "HouseFile/House/HeatingCooling/Type1"
@@ -3334,8 +3429,6 @@ def runsims( direction )
    optionSwitch = "-inp"
    fileToLoad = "..\\" + $h2kFileName
    
-
-  
    
    # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
@@ -3345,7 +3438,7 @@ def runsims( direction )
    maxTries = 10     # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
-   # AF: Extra counters to count ls tmpvalhow many times we've tried HOT2000.
+   # JB TODO: What does this comment mean? --> AF: Extra counters to count ls tmpval how many times we've tried HOT2000.
    keepTrying = true 
    tries = 0
    # This loop actually calls hot2000!
@@ -4161,7 +4254,7 @@ def getPrimaryDHWSys(elements)
 end
 
 # =========================================================================================
-# Rule Set: NBC-9.36-2010
+# Rule Set: NBC-9.36-2010 Creates global rule set hash $ruleSetChoices
 # =========================================================================================
 def NBC_936_2010_RuleSet( ruleType, elements )
 
@@ -5010,7 +5103,7 @@ end
 =begin rdoc
  Validate choices and options. 
 =end
-stream_out(" Validating choices and options...");  
+stream_out(" Validating choices and options...\n");  
 
 # Search through options and determine if they are used in Choices file (warn if not). 
 $gOptions.each do |option, ignore|
