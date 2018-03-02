@@ -2127,12 +2127,24 @@ def processFile(h2kElements)
                   
                end
                
+            # Results and Program Mode - change program mode so correct results sets produced
+            #--------------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
                if ( value == "NA" )
                   $outputHCode = "General" 
                else
                   $outputHCode = value
                end                
+               # Set the run mode of the h2k file.
+               if $outputHCode == "General"
+                  if h2kElements[HouseFile/Program] != nil
+                     h2kElements[HouseFile].delete_element("Program")
+                  end
+               else  # ERS Program mode
+                  if h2kElements[HouseFile/Program] == nil
+                     createProgramXMLSection( h2kElements )
+                  end
+               end
                
             else
                # Do nothing -- we're ignoring all other tags!
