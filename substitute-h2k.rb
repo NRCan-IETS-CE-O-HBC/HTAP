@@ -2140,7 +2140,7 @@ def processFile(h2kElements)
                   # Change run mode and set output section
                   $outputHCode = "General"
                   if h2kElements["HouseFile/Program"] != nil
-                     h2kElements[HouseFile].delete_element("Program")
+                     h2kElements["HouseFile"].delete_element("Program")
                   end
 
                else
@@ -5035,10 +5035,9 @@ h2kElements = get_elements_from_filename($gWorkingModelFile)
 stream_out(" READING to edit: #{$gWorkingModelFile} \n")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
-# rule set name specified on the choice file
-
+# rule set name specified in the choice file
 $ruleSetName = $gChoices["Opt-Ruleset"]
-if !$ruleSetName.empty? && ($ruleSetName =~ /NA/) == nil
+if !$ruleSetName.empty? && $ruleSetName != "NA"
 
    stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
    

@@ -122,11 +122,11 @@
 *attribute:start 
 *attribute:name = Opt-Ruleset 
 *attribute:tag:1 = <NotNOTARealTag>
-*attribute:default = nil 
+*attribute:default = NA
 *attribute:on-error = ignore 
 
-*option:nil:value:1    = nil
-*option:nil:cost:total = 0
+*option:NA:value:1    = NA
+*option:NA:cost:total = 0
 
 *option:NBC9_36_noHRV:value:1    = NBC9_36_noHRV
 *option:NBC9_36_noHRV:cost:total = 0
