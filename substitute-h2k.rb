@@ -3449,7 +3449,7 @@ def runsims( direction )
             # Run HOT2000! 
             pid = Process.spawn( runThis, optionSwitch, fileToLoad ) 
             stream_out ("\n Invoking HOT2000 (PID #{pid})...")
-            Process.wait pid, 0
+            Process.waitpid(pid, 0)
             status = $?.exitstatus      
             stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
 
@@ -3457,24 +3457,29 @@ def runsims( direction )
                endRun = Time.now
                $runH2KTime = endRun - startRun  
                stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-               
                keepTrying = false       # Successful run - don't try agian 
-            elsif status == 3    # Precheck message(s)
+            
+            elsif status == 3    # Pre-check message(s)
                endRun = Time.now
                $runH2KTime = endRun - startRun  
-               stream_out( " The run completed but had precheck messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+               stream_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                keepTrying = false       # Successful run - don't try agian 
+            
             elsif status == nil  
                # Get nil status when can't load an h2k file.
+               stream_out( " Got a nil return code! (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                fatalerror( " Fatal Error! HOT2000 message box or couldn't load file!\n" )
                keepTrying = false   # Give up.
+            
             elsif tries < maxTries      # Unsuccessful run - try again for up to maxTries     
                tries = tries + 1
                keepTrying = true
+            
             else
                # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
                fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
                keepTrying = false   # Give up.
+            
             end
            
             # Force kill process, if needed
@@ -4174,7 +4179,7 @@ def fix_H2K_INI()
    $ini_out="[HOT2000]
 LANGUAGE=E
 ECONOMIC_FILE=#{$gMasterPath}\\H2K\\StdLibs\\econLib.eda
-WEATHER_FILE=Dat\Wth110.dir
+WEATHER_FILE=#{$gMasterPath}\\H2K\\Dat\\Wth110.dir
 FUELCOST_FILE=#{$gMasterPath}\\H2K\\StdLibs\\fuelLib.flc
 CODELIB_FILE=#{$gMasterPath}\\H2K\\StdLibs\\codeLib.cod
 HSEBLD_FILE=#{$gMasterPath}\\H2K\\Dat\\XPstd.slb    
@@ -5102,7 +5107,7 @@ end
 =begin rdoc
  Validate choices and options. 
 =end
-stream_out(" Validating choices and options...\n");  
+stream_out("\n Validating choices and options...\n");  
 
 # Search through options and determine if they are used in Choices file (warn if not). 
 $gOptions.each do |option, ignore|
