@@ -7,7 +7,7 @@
 ! that are noted in comments below).
 !-----------------------------------------------------------------------  
 
-Opt-Ruleset : NBC9_36_noHRV  ! NA, NBC9_36_HRV, NBC9_36_noHRV
+Opt-Ruleset : NA  ! NA, NBC9_36_HRV, NBC9_36_noHRV
 
 ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
 Opt-DBFiles  : H2KCodeLibFile
@@ -28,7 +28,9 @@ Opt-Archetype: NA
 ! ACH substitutions
 Opt-ACH : NA    !NA, ACH_1_0
 
-Opt-Ceilings : NA
+Opt-Ceilings : UsrSpecR40  !NA, CeilR40, UsrSpecR40
+
+Opt-AtticCeilings : NA  !NA, CeilR40
 
 ! Main wall definitions 
 Opt-MainWall : NA                    ! This one, OR

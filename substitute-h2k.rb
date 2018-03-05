@@ -625,109 +625,23 @@ def processFile(h2kElements)
                end
             
             
-            # Ceilings
+            # Ceilings - All ceiling constructions (UsrSpec all but codes can't do all!)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Ceilings/ )
                if ( tag =~ /Opt-Ceiling/ && value != "NA" )
                   # If this surface code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for ceiling and ceiling_flat surfaces. 
-                  # Code names in library are unique.
+                  # (either Favourite or UsrDef) for ceiling and ceiling_flat surfaces. 
+                  # Code names in library are unique and slit into two groups: "Ceiling Codes"
+                  # and "Flat or Cathedral Ceiling Codes" so the code name specified CAN ONLY EXIST
+                  # in one of these groups!
                   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
                   
-                  # Look for this code name in code library (Favorite and UserDefined)
-                  thisCodeInHouse = false
+                  foundCodeLibElement = nil
                   useThisCodeID = "Code 99"
-                  foundFavLibCode = false
-                  foundUsrDefLibCode = false
-                  foundAtticCeil = false
-                  foundCathCeil = false
-                  ceilngType = ""
-                  foundCodeLibElement = ""
-                  # Check in Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
-                  locationCodeFavText = "Codes/Ceiling/Favorite/Code"
-                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                     if ( codeElement.get_text("Label") == value )
-                        foundFavLibCode = true
-                        foundAtticCeil = true
-                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                        break
-                     end
-                  end
-                  if ( ! foundFavLibCode )
-                     # Also check in CeilingFlat Codes used for: Cathedral and Flat
-                     locationCodeFavText = "Codes/CeilingFlat/Favorite/Code"
-                     h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundFavLibCode = true
-                           foundCathCeil = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  # Code library names are also unique across Favorite and User Defined codes
-                  if ( ! foundFavLibCode )
-                     # Check in Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
-                     locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundAtticCeil = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( ! foundFavLibCode && ! foundUsrDefLibCode )
-                     # Also check in CeilingFlat Codes used for: Cathedral and Flat
-                     locationCodeUsrDefText = "Codes/CeilingFlat/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundCathCeil = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( foundAtticCeil )
-                     ceilngType = "Ceiling"
-                  else
-                     ceilngType = "CeilingFlat"
-                  end
                   
-                  if ( foundFavLibCode || foundUsrDefLibCode )
-                     # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Can't have duplicates!
-                     if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/#{ceilngType}/Favorite"
-                     else
-                        locationText = "HouseFile/Codes/#{ceilngType}/UserDefined"
-                     end
-                     h2kElements.each(locationText + "/Code") do |element| 
-                        if ( element.get_text("Label") == value )
-                           thisCodeInHouse = true
-                           useThisCodeID = element.attributes["id"]
-                           break
-                        end
-                     end
-                     if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/#{ceilngType}"] == nil )
-                           # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element(ceilngType)
-                        end
-                        if ( h2kElements[locationText] == nil )
-                           # No Favorite or UserDefined section in house file Codes section -- add it!
-                           if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("Favorite")
-                           else
-                              h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("UserDefined")
-                           end
-                        end
-                        foundCodeLibElement.attributes["id"] = useThisCodeID
-                        h2kElements[locationText].add(foundCodeLibElement)
-                     end
-                     
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
                      # Change all existing surface references of this type to useThisCodeID
                      # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
                      # section distinguishes between "Ceiling" and "CeilingFlat"
@@ -743,8 +657,8 @@ def processFile(h2kElements)
                         element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
                      end
                   else
-                     # Code name not found in the code library
-                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
                      # or NA in OPT-H2K-EffRValue
                      debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
@@ -766,6 +680,62 @@ def processFile(h2kElements)
                end
                
             
+            # AtticCeilings - All Attic/gable or Attic/Hip ceiling constructions
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-AtticCeilings/ )
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Favourite or UsrDef) for ceiling and ceiling_flat surfaces. 
+                  # Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  foundCodeLibElement = nil
+                  useThisCodeID = "Code 99"
+                  
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
+                     # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
+                     locationText = "HouseFile/House/Components/Ceiling/Construction"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if construction type (element 1) is Attic/gable (2) or Attic/hip (3)
+                        if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3"
+                           # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
+                           if element[3].attributes["idref"] != nil
+                              element[3].attributes["idref"] = useThisCodeID
+                           else
+                              element[3].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3].text = value
+                           element[3].attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                        end
+                     end
+                  else
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  # Change ALL existing ceiling codes to User Specified R-value
+                  locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+                  h2kElements.each(locationText) do |element| 
+                     element.text = "User specified"
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+
+
             # Main Walls
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-MainWall/ )
@@ -2167,6 +2137,109 @@ def processFile(h2kElements)
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
 
+end
+
+# =========================================================================================
+#  Function to find a ceiling code in the Code Library (Favourite or User Defined code)
+# =========================================================================================
+def findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+   # Look for this code name in code library (Favourite and UserDefined)
+   thisCodeInHouse = false
+   useThisCodeID = "Code 99"
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundAtticCeil = false
+   foundCathCeil = false
+   ceilngType = ""
+   foundCodeLibElement = nil
+   
+   # Check in Favourite Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
+   locationCodeFavText = "Codes/Ceiling/Favorite/Code"
+   h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == value )
+         foundFavLibCode = true
+         foundAtticCeil = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   if ( ! foundFavLibCode )
+      # Also check in Favourite CeilingFlat Codes used for: Cathedral and Flat
+      locationCodeFavText = "Codes/CeilingFlat/Favorite/Code"
+      h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+         if ( codeElement.get_text("Label") == value )
+            foundFavLibCode = true
+            foundCathCeil = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      # Check in User Defined Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
+      locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
+      h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == value )
+            foundUsrDefLibCode = true
+            foundAtticCeil = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( ! foundFavLibCode && ! foundUsrDefLibCode )
+      # Also check in User Defined CeilingFlat Codes used for: Cathedral and Flat
+      locationCodeUsrDefText = "Codes/CeilingFlat/UserDefined/Code"
+      h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == value )
+            foundUsrDefLibCode = true
+            foundCathCeil = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundAtticCeil )
+      ceilngType = "Ceiling"
+   else
+      ceilngType = "CeilingFlat"
+   end
+   
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Can't have duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/#{ceilngType}/Favorite"
+      else
+         locationText = "HouseFile/Codes/#{ceilngType}/UserDefined"
+      end
+      h2kElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == value )
+            thisCodeInHouse = true
+            useThisCodeID = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kElements["HouseFile/Codes/#{ceilngType}"] == nil )
+            # No section ofthis type in house file Codes section -- add it!
+            h2kElements["HouseFile/Codes"].add_element(ceilngType)
+         end
+         if ( h2kElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("Favorite")
+            else
+               h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = useThisCodeID
+         h2kElements[locationText].add(foundCodeLibElement)
+      end
+   end   
+
+   return foundCodeLibElement, useThisCodeID
 end
 
 # =========================================================================================

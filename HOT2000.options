@@ -1477,7 +1477,7 @@
 *attribute:end
 
 !-----------------------------------------------------------------------
-!   Ceiling 
+!   Ceiling : Change all ceilings regardless of construction type
 ! Costs updated by JP 2014-08-21
 ! These values calculated based on the Vancouver retrofit geometry
 !-----------------------------------------------------------------------
@@ -1572,6 +1572,32 @@
 *option:NBC_Ceiling_zone8:cost:total    =  0
 
 *attribute:end
+
+!-----------------------------------------------------------------------
+!   AtticCeiling : Change all ceilings of construction type Attic/gable
+!                  and Attic/hip
+!-----------------------------------------------------------------------
+*attribute:start 
+   
+*attribute:name = Opt-AtticCeilings
+*attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
+*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+*attribute:default = CeilR40
+
+*option:NA:value:1 = NA     ! No change
+*option:NA:value:2 = NA
+*option:NA:cost:total = 0
+
+*option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name must NOT exist in code library
+*option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+*option:UsrSpecR40:cost:total = 0
+
+*option:CeilR40:value:1 =  CeilR40     ! H2K: Code name must exist in code library
+*option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+*option:CeilR40:cost:total = 0
+
+*attribute:end
+
 
 !-----------------------------------------------------------------------
 !   Generic wall insulation thickness settings: - one layer
