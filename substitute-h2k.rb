@@ -484,9 +484,13 @@ def processFile(h2kElements)
       $PVIntModel = true
    end
    
-   # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change (further down)!
+   # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundation to determine which foundations to change (further down)!
    config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
    (configType, configSubType, fndTypes) = config.split('_')
+
+   # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundationSlabCrawl to determine which foundations to change (further down)!
+   config2 = $gOptions["Opt-H2KFoundationSlabCrawl"]["options"][ $gChoices["Opt-H2KFoundationSlabCrawl"] ]["values"]["1"]["conditions"]["all"]
+   (configType2, configSubType2, fndTypes2) = config2.split('_')
    
    optDHWTankSize = "1"  # DHW variable defined here so scope includes all DHW tags
    
@@ -1196,11 +1200,11 @@ def processFile(h2kElements)
             #  - Interior & Exterior wall insulation, below slab insulation
             #    based on insulation configuration type
             #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-H2KFoundation/ )
+            elsif ( choiceEntry == "Opt-H2KFoundation" )
                locHouseStr = [ "", "" ]
                
                if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
-                  # Set the configuration type for the fnd types specified in choice file
+                  # Set the configuration type for the foundation types specified in choice file
                   if ( fndTypes == "B" )
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                   elsif ( fndTypes == "W" )
@@ -1211,8 +1215,8 @@ def processFile(h2kElements)
                      locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
                   elsif ( fndTypes == "ALL" )
                      # Check to AVOID:
-                     # - configurations that start with "B" used to modify configurations starting with C or S!
-                     # - configurations that start with "S" used to modify configurations starting with B or W AND
+                     # - configurations that start with "B" cannot modify configurations starting with C or S!
+                     # - configurations that start with "S" cannot modify configurations starting with B or W AND
                      if ( configType =~ /^B/ )
                         locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                         locHouseStr[1] = "HouseFile/House/Components/Walkout/Configuration"
@@ -1224,11 +1228,11 @@ def processFile(h2kElements)
                   locHouseStr.each do |locStr|
                      if ( locStr != "" )
                         h2kElements.each(locStr) do |element| 
-                           # Use the existing configuration type to determine if a new XML section req'd
+                           # Use the existing configuration type to determine if a new XML section is required
                            existConfigType = element.attributes["type"]
                            if ( existConfigType.match('N', 3) && !configType.match('N', 3) )
                               # Add missing XML section to Floor for "AddedToSlab"
-                              addMissingAddedToSlab(element)
+                              addMissingAddedToSlab(locStr[27], element)
                            end
                            if ( existConfigType.match('E', 2) && !configType.match('E', 2) )
                               # Add missing XML section to Wall for "InteriorAddedInsulation"
@@ -1439,6 +1443,191 @@ def processFile(h2kElements)
                      locHouseStr[1] = "HouseFile/House/Components/Walkout/Floor/Construction/AddedToSlab"
                      locHouseStr[2] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
                      locHouseStr[3] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           element.text = "User specified"     # Description tag
+                           element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                           if element.attributes["code"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("code")
+                           end
+                        end
+                     end
+                  end
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+               
+               
+            # Slab or Crawl Foundations
+            #  - Types: Slab-On-Grade or Crawlspace only
+            #  - Interior & Exterior wall insulation, below slab insulation
+            #    based on insulation configuration type
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-H2KFoundationSlabCrawl/ )
+               locHouseStr = [ "", "" ]
+               
+               if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
+                  # Set the configuration type for the foundation types specified in choice file
+                  if ( fndTypes2 == "C" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
+                  elsif ( fndTypes2 == "S" )
+                     locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
+                  elsif ( fndTypes2 == "ALL" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
+                     locHouseStr[1] = "HouseFile/House/Components/Slab/Configuration"
+                  end
+                  locHouseStr.each do |locStr|
+                     if ( locStr != "" )
+                        h2kElements.each(locStr) do |element| 
+                           # Use the existing configuration type to determine if a new XML section is required
+                           existConfigType = element.attributes["type"]
+                           if ( existConfigType.match('N', 2) && !configType2.match('N', 2) )
+                              # Add missing XML section to Floor for "AddedToSlab"
+                              addMissingAddedToSlab(locStr[27], element)
+                           end
+                           # Change existing configuration values to match choice
+                           element.attributes["type"] = configType2
+                           element.attributes["subtype"] = configSubType2
+                           element.text = configType + "_" + configSubType2
+                        end
+                     end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-CrawlWallCode/ &&  value != "NA" )
+                  # If this code name exists in the code library, use the code 
+                  # (either Favorite or UsrDef) for all entries. Code names in library are unique.
+                  # Note: *Not* using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 210"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  # Note: Both Basement and Walkout interior wall codes saved under "BasementWall"
+                  fndWallNum = 0
+                  locationCodeFavText = "Codes/CrawlspaceWall/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are unique so also check User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/CrawlspaceWall/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  locStr = ""
+                  locTextArr2 = [ "Favorite", "UserDefined" ]
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     locTextArr2.each do |favOrUsrDefTxt|
+                        locStr = "HouseFile/Codes/CrawlspaceWall/#{favOrUsrDefTxt}/Code"
+                        h2kElements.each(locStr) do |element| 
+                           if ( element.get_text("Label") == value )
+                              thisCodeInHouse = true
+                              useThisCodeID = element.attributes["id"]
+                              break
+                           end
+                        end
+                        break if thisCodeInHouse   # break Fav/UsrDef loop if found
+                     end
+                     if ( ! thisCodeInHouse )
+                        locStr = "HouseFile/Codes/CrawlspaceWall"
+                        if ( h2kElements[locStr] == nil )
+                           # No section of this type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("CrawlspaceWall")
+                        end
+                        if ( foundFavLibCode )
+                           locationText = locStr + "/Favorite"
+                        else
+                           locationText = locStr + "/UserDefined"
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements[locStr].add_element("Favorite")
+                           else
+                              h2kElements[locStr].add_element("UserDefined")
+                           end
+                        end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
+                        h2kElements[locationText].add(foundCodeLibElement)
+                     end
+                     # Change all interior insulated surface references of this type to useThisCodeID
+                     locHouseStr = [ "", "" ]
+                     if ( fndTypes2 == "C" || ( fndTypes2 == "ALL" && configType2 =~ /^S/ ) )
+                        locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+                     end
+                     locHouseStr.each do |locationString|
+                        if ( locationString != "" )
+                           h2kElements.each(locationString) do |element| 
+                              # Check if each house entry has an "idref" attribute and add if it doesn't.
+                              if element.attributes["idref"] != nil
+                                 element.attributes["idref"] = useThisCodeID
+                              else
+                                 element.add_attribute("idref", useThisCodeID)
+                              end
+                              element[1].text = value    # Description tag
+                              element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                           end
+                        end
+                     end
+                  else
+                     # Code name not found in the code library
+                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-CrawlWall-RValue/ &&  value != "NA" )
+                  # Change ALL existing interior wall codes to User Specified R-value
+                  locHouseStr = [ "", "" ]
+                  if ( fndTypes2 == "C" || ( fndTypes2 == "ALL" && configType2 =~ /^S/ ) )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           if element.attributes["idref"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("idref")
+                           end
+                        end
+                        h2kElements.each(locationString+"/Description") do |element| 
+                           element.text = "User specified"     # Description tag
+                        end
+                        h2kElements.each(locationString+"/Composite/Section") do |element| 
+                           element.attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
+                           element.attributes["rank"] = "1"
+                           element.attributes["percentage"] = "100"
+                        end
+                     end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-BelowSlab-RVal/ &&  value != "NA" )
+                  locHouseStr = [ "", "", "", "" ]
+                  if ( fndTypes2 == "C" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes2 == "S" )
+                     locHouseStr[0] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes2 == "ALL")
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
+                     locHouseStr[1] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
                   end
                   locHouseStr.each do |locationString|
                      if ( locationString != "" )
@@ -2860,11 +3049,18 @@ end
 # =========================================================================================
 #  Add missing "AddedToSlab" section to Floor Construction of appropriate fnd
 # =========================================================================================
-def addMissingAddedToSlab(theElement)
+def addMissingAddedToSlab(type, theElement)
    # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
    # "Walkout", "Crawlspace" or "Slab"
-   # The Floor element is always three elements from the basement Configuration element
-   theFloorElement = theElement.next_element.next_element.next_element
+   # The Floor element is always three elements from the basement Configuration element,
+   # two elements from the Crawlspace config and one from the slab config.
+   if type == "B"
+      theFloorElement = theElement.next_element.next_element.next_element
+   elsif type == "C"
+      theFloorElement = theElement.next_element.next_element
+   elsif type == "S"
+      theFloorElement = theElement.next_element
+   end
    theFloorConstElement = theFloorElement[1] # First child element is always "Construction"
    theSlabElement = theFloorConstElement.add_element("AddedToSlab", {"rValue"=>"0", "nominalInsulation"=>"0"})
    theSlabElement.add_text("User specified")

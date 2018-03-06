@@ -1985,6 +1985,7 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end
 
+
 !--------------------------------------------------------------------------------------------
 ! HOT2000 Foundations (not using Opt-BasementWallInsulation, Opt-BasementSlabInsulation or
 !   the recently added Opt-BasementConfiguration. Some mapping between these may be required!
@@ -2078,7 +2079,6 @@ Whitehorse Wall Options (Code is R28)
 *option:4in_Ext_Rigid_XPS_R10_under:value:4 = 20        ! Ext wall added R-value
 *option:4in_Ext_Rigid_XPS_R10_under:value:5 = 10        ! Under slab added R-value
 *option:4in_Ext_Rigid_XPS_R10_under:cost:total = 3820  !1740 for exterior and 3080 for underslab XPS for LEEP Kelowna
-
 
 
 *option:STEP_BaseFDN_R0_above:value:1 = BCIA_1_ALL  ! Change all Basements in model
@@ -2591,6 +2591,39 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end
 
+
+!--------------------------------------------------------------------------------------------
+! HOT2000 Slab or Crawl Foundations
+!   Use for all foundation types: Slab-On-Grade (SCx_x) or Crawlspace (SCx_x)
+!   Skips pony wall insulation for now (Dec 2015)
+!--------------------------------------------------------------------------------------------
+*attribute:start
+*attribute:name   = Opt-H2KFoundationSlabCrawl
+*attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., SCA_4 + _C or _S)
+*attribute:tag:2  = OPT-H2K-CrawlWallCode    ! Crawlspace wall Fav/UsrDef code or NA
+*attribute:tag:3  = OPT-H2K-CrawlWall-RValue ! Crawlspace wall User-Specified R-value (Imp) or NA
+*attribute:tag:4  = OPT-H2K-BelowSlab-RVal   ! Below slab User-Specified R-value(Imp) or NA
+*attribute:default = NA
+
+*option:NA:value:1 = NA
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:cost:total = 0
+
+*option:STEP_SLAB_R0_under:value:1 = SCB_29_ALL ! Change all in model
+*option:STEP_SLAB_R0_under:value:2 = NA         ! 
+*option:STEP_SLAB_R0_under:value:3 = NA         ! 
+*option:STEP_SLAB_R0_under:value:4 = 0          ! Under slab added R-value
+*option:STEP_SLAB_R0_under:cost:total = 0       ! Base case STEP
+
+*option:NBC_SCB_zone4:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone4:value:2 = NA           
+*option:NBC_SCB_zone4:value:3 = NA           
+*option:NBC_SCB_zone4:value:4 = 11.13        
+*option:NBC_SCB_zone4:cost:total = 0
+
+*attribute:end
 
 
 !-----------------------------------------------------------------------
