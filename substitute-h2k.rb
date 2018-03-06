@@ -289,6 +289,8 @@ $HDDHash =  {
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
 
+$HDDs = ""
+
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
@@ -4460,25 +4462,9 @@ end
 # =========================================================================================
 # Rule Set: NBC-9.36-2010 Creates global rule set hash $ruleSetChoices
 # =========================================================================================
-def NBC_936_2010_RuleSet( ruleType, elements )
+def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD )
 
-   # Get some data from the base house model file...
-
-   $Locale = $gChoices["Opt-Location"] 
-   
-   # Weather city name
-   if $Locale.empty? || $Locale == "NA"
-      # from base model file
-      locale = getWeatherCity( elements )
-   else
-      # from Opt-Location
-      locale = $Locale
-   end
-   locale.gsub!(/\./, '')
-   
-   locale_HDD = $HDDHash[ locale.upcase ]
-   
-   stream_out(">NBC_936_2010_RuleSet> #{ruleType}> 1. #{$Locale} 2. #{locale} 3. #{locale_HDD} \n")
+  
    
    # System data...
    primHeatFuelName = getPrimaryHeatSys( elements )
@@ -5241,6 +5227,23 @@ stream_out(" READING to edit: #{$gWorkingModelFile} \n")
 # Get rule set choices hash values in $ruleSetChoices for the 
 # rule set name specified in the choice file
 $ruleSetName = $gChoices["Opt-Ruleset"]
+
+   # Get some data from the base house model file...
+
+$Locale = $gChoices["Opt-Location"] 
+
+# Weather city name
+if $Locale.empty? || $Locale == "NA"
+   # from base model file
+   locale = getWeatherCity( elements )
+else
+   # from Opt-Location
+   locale = $Locale
+end
+locale.gsub!(/\./, '')
+$HDDs = $HDDHash[ locale.upcase ]
+
+
 if !$ruleSetName.empty? && $ruleSetName != "NA"
 
    stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
@@ -5251,7 +5254,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
    
    elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
       stream_out ("  (b) ")
-      NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
+      NBC_936_2010_RuleSet( $ruleSetName, h2kElements, $HDDs )
 
    elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
       stream_out ("  (c) ")
@@ -5720,6 +5723,7 @@ else
 end
 
 fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n") 
+fSUMMARY.write( "HDDs              =  #{$HDDs}\n" ) 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
@@ -5771,6 +5775,7 @@ fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+
 
 if $ExtraOutput1 then
    fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
