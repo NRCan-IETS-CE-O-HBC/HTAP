@@ -541,7 +541,7 @@ def run_these_cases(current_task_files)
            
            $RunResults["RunNumber"] << $RunNumbers[thread3]
            $RunResults["RunDir"] << $RunDirs[thread3]
-           $RunResults["iiiiiiinput.ChoiceFile"]<< $choicefiles[thread3]
+           $RunResults["input.ChoiceFile"]<< $choicefiles[thread3]
            
            lineCount = 0
            contents.each do |line|

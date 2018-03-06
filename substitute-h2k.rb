@@ -289,6 +289,8 @@ $HDDHash =  {
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
 
+$HDDs = ""
+
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
@@ -4656,25 +4658,9 @@ end
 # =========================================================================================
 # Rule Set: NBC-9.36-2010 Creates global rule set hash $ruleSetChoices
 # =========================================================================================
-def NBC_936_2010_RuleSet( ruleType, elements )
+def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD )
 
-   # Get some data from the base house model file...
-
-   $Locale = $gChoices["Opt-Location"] 
-   
-   # Weather city name
-   if $Locale.empty? || $Locale == "NA"
-      # from base model file
-      locale = getWeatherCity( elements )
-   else
-      # from Opt-Location
-      locale = $Locale
-   end
-   locale.gsub!(/\./, '')
-   
-   locale_HDD = $HDDHash[ locale.upcase ]
-   
-   stream_out(">NBC_936_2010_RuleSet> #{ruleType}> 1. #{$Locale} 2. #{locale} 3. #{locale_HDD} \n")
+  
    
    # System data...
    primHeatFuelName = getPrimaryHeatSys( elements )
@@ -4705,11 +4691,10 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    end
    
    # Choices that do NOT depend on ruleType!
-   #$ruleSetChoices["Opt-HRV_ctl"] = "EightHRpDay" # TODO: REMOVE BECAUSE NOT IN OPTIONS FILE?
    $ruleSetChoices["Opt-StandoffPV"] = "NoPV"
    $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
    
-   # HVAC Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
+   # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
       $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Elect/) != nil   # value is "Electricity
@@ -4727,29 +4712,29 @@ def NBC_936_2010_RuleSet( ruleType, elements )
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
    end
 
-   # Zone 4 ( HDD < 3000) with OR without an HRV - No dependency on ruleType!
-   if locale_HDD < 3000 
+   # Thermal zones and HDD by rule type
+   #-------------------------------------------------------------------------
+   if ruleType =~ /NBC9_36_noHRV/
+      
+      # Zone 4 ( HDD < 3000) without an HRV
+      if locale_HDD < 3000 
       # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
-      $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
-      $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone4"
-      $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone4"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
+         $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone4"
       
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-      $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
-      if isBasement 
-         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
-      elsif isSlab
-         $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
-      end
-
-   # Thermal zones and HDD that depend on rule type
-   #-------------------------------------------------------------------------
-   elsif ruleType =~ /NBC9_36_noHRV/
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
+         end
       
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
-      if locale_HDD >= 3000 && locale_HDD < 3999
+      elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_noHRV"
          $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone5_noHRV"
@@ -4836,8 +4821,27 @@ def NBC_936_2010_RuleSet( ruleType, elements )
    #-------------------------------------------------------------------------
    elsif ruleType =~ /NBC9_36_HRV/
 
+      # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3) 	
+  		$ruleSetChoices["Opt-HRVspec"]                        =  "NBC_HRV"		
+
+     # Zone 4 ( HDD < 3000) without an HRV
+      if locale_HDD < 3000 
+      # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
+         $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone4"
+      
+      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+      
+      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
+         end         
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
-      if locale_HDD >= 3000 && locale_HDD < 3999
+      elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone5_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone5_HRV"
@@ -4848,11 +4852,11 @@ def NBC_936_2010_RuleSet( ruleType, elements )
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_HRV"
          elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_HRV"
          end
-
+         
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -4865,9 +4869,9 @@ def NBC_936_2010_RuleSet( ruleType, elements )
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_HRV"
          elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_HRV"
          end
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
@@ -4882,12 +4886,12 @@ def NBC_936_2010_RuleSet( ruleType, elements )
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_HRV"
          elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_HRV"
          end
 
-      # Zone 7B ( 6000 < HDD < 6999) witht an HRV
+      # Zone 7B ( 6000 < HDD < 6999) with an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7B_HRV"
@@ -4899,9 +4903,9 @@ def NBC_936_2010_RuleSet( ruleType, elements )
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_HRV"
          elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_HRV"
          end
 
       # Zone 8 (HDD <= 7000) with an HRV
@@ -4910,16 +4914,17 @@ def NBC_936_2010_RuleSet( ruleType, elements )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone8_HRV"
          $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone8"
-         
+                  
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
          if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_HRV"
          elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_noHRV"
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_HRV"
          end
+
       end
    end   # Check on NBC rule set type
 end
@@ -5437,6 +5442,23 @@ stream_out(" READING to edit: #{$gWorkingModelFile} \n")
 # Get rule set choices hash values in $ruleSetChoices for the 
 # rule set name specified in the choice file
 $ruleSetName = $gChoices["Opt-Ruleset"]
+
+   # Get some data from the base house model file...
+
+$Locale = $gChoices["Opt-Location"] 
+
+# Weather city name
+if $Locale.empty? || $Locale == "NA"
+   # from base model file
+   locale = getWeatherCity( elements )
+else
+   # from Opt-Location
+   locale = $Locale
+end
+locale.gsub!(/\./, '')
+$HDDs = $HDDHash[ locale.upcase ]
+
+
 if !$ruleSetName.empty? && $ruleSetName != "NA"
 
    stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
@@ -5447,7 +5469,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
    
    elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
       stream_out ("  (b) ")
-      NBC_936_2010_RuleSet( $ruleSetName, h2kElements )
+      NBC_936_2010_RuleSet( $ruleSetName, h2kElements, $HDDs )
 
    elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
       stream_out ("  (c) ")
@@ -5916,6 +5938,7 @@ else
 end
 
 fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n") 
+fSUMMARY.write( "HDDs              =  #{$HDDs}\n" ) 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
@@ -5967,6 +5990,7 @@ fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+
 
 if $ExtraOutput1 then
    fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
