@@ -625,12 +625,15 @@ def processFile(h2kElements)
                end
             
             
-            # Ceilings - All ceiling constructions (UsrSpec all but codes can't do all!)
+            # Ceilings - All ceiling constructions 
+            # Note: UsrSpec R-values will change all ceilings regardless of construction type but code library entries
+            #       must match the code names that appear in code lib "Ceiling Codes" group or the 
+            #       "Flat or Cathedral Ceiling Codes" group.
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Ceilings/ )
                if ( tag =~ /Opt-Ceiling/ && value != "NA" )
                   # If this surface code name exists in the code library, use the code 
-                  # (either Favourite or UsrDef) for ceiling and ceiling_flat surfaces. 
+                  # (either Favourite or UsrDef) for ceiling and ceiling_flat groupings. 
                   # Code names in library are unique and slit into two groups: "Ceiling Codes"
                   # and "Flat or Cathedral Ceiling Codes" so the code name specified CAN ONLY EXIST
                   # in one of these groups!
@@ -680,12 +683,12 @@ def processFile(h2kElements)
                end
                
             
-            # AtticCeilings - All Attic/gable or Attic/Hip ceiling constructions
-            #--------------------------------------------------------------------------
+            # Attic Ceilings - All Attic/gable, Attic/Hip or Scissor ceiling constructions
+            #-----------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-AtticCeilings/ )
                if ( tag =~ /Opt-Ceiling/ && value != "NA" )
                   # If this surface code name exists in the code library, use the code 
-                  # (either Favourite or UsrDef) for ceiling and ceiling_flat surfaces. 
+                  # (either Favourite or UsrDef) for "Ceiling Codes" grouping. 
                   # Code names in library are unique.
                   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
                   
@@ -700,8 +703,8 @@ def processFile(h2kElements)
                      # section distinguishes between "Ceiling" and "CeilingFlat"
                      locationText = "HouseFile/House/Components/Ceiling/Construction"
                      h2kElements.each(locationText) do |element| 
-                        # Check if construction type (element 1) is Attic/gable (2) or Attic/hip (3)
-                        if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3"
+                        # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+                        if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
                            # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
                            if element[3].attributes["idref"] != nil
                               element[3].attributes["idref"] = useThisCodeID
@@ -720,14 +723,16 @@ def processFile(h2kElements)
                   end
                   
                elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
-                  # Change ALL existing ceiling codes to User Specified R-value
-                  locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+                  locationText = "HouseFile/House/Components/Ceiling/Construction"
                   h2kElements.each(locationText) do |element| 
-                     element.text = "User specified"
-                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
-                     if element.attributes["idref"] != nil then
-                        # Must delete attribute for User Specified!
-                        element.delete_attribute("idref")
+                     # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+                     if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+                        element[3].text = "User specified"
+                        element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                        if element[3].attributes["idref"] != nil then
+                           # Must delete attribute for User Specified!
+                           element[3].delete_attribute("idref")
+                        end
                      end
                   end
                else
@@ -736,6 +741,122 @@ def processFile(h2kElements)
                end
 
 
+            # Cathedral Ceilings - All Cathedral ceiling constructions
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-CathCeilings/ )
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Favourite or UsrDef) for "Flat or Cathedral Ceiling Codes" grouping. 
+                  # Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  foundCodeLibElement = nil
+                  useThisCodeID = "Code 99"
+                  
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
+                     # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
+                     locationText = "HouseFile/House/Components/Ceiling/Construction"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if construction type (element 1) is Cathedral (4)
+                        if element[1].attributes["code"] == "4"
+                           # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
+                           if element[3].attributes["idref"] != nil
+                              element[3].attributes["idref"] = useThisCodeID
+                           else
+                              element[3].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3].text = value
+                           element[3].attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                        end
+                     end
+                  else
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/Ceiling/Construction"
+                  h2kElements.each(locationText) do |element| 
+                     # Check if construction type (element 1) is Cathedral (4)
+                     if element[1].attributes["code"] == "4"
+                        element[3].text = "User specified"
+                        element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                        if element[3].attributes["idref"] != nil then
+                           # Must delete attribute for User Specified!
+                           element[3].delete_attribute("idref")
+                        end
+                     end
+                  end
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+
+
+            # Flat Ceilings - All Flat ceiling constructions
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-FlatCeilings/ )
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Favourite or UsrDef) from the "Flat or Cathedral Ceiling Codes" grouping. 
+                  # Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  foundCodeLibElement = nil
+                  useThisCodeID = "Code 99"
+                  
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
+                     # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
+                     locationText = "HouseFile/House/Components/Ceiling/Construction"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if construction type (element 1) is Flat (5)
+                        if element[1].attributes["code"] == "5"
+                           # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
+                           if element[3].attributes["idref"] != nil
+                              element[3].attributes["idref"] = useThisCodeID
+                           else
+                              element[3].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3].text = value
+                           element[3].attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                        end
+                     end
+                  else
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/Ceiling/Construction"
+                  h2kElements.each(locationText) do |element| 
+                     # Check if construction type (element 1) is Flat (5)
+                     if element[1].attributes["code"] == "5"
+                        element[3].text = "User specified"
+                        element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                        if element[3].attributes["idref"] != nil then
+                           # Must delete attribute for User Specified!
+                           element[3].delete_attribute("idref")
+                        end
+                     end
+                  end
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+               
+               
             # Main Walls
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-MainWall/ )
@@ -2140,7 +2261,12 @@ def processFile(h2kElements)
 end
 
 # =========================================================================================
-#  Function to find a ceiling code in the Code Library (Favourite or User Defined code)
+#  Function to find a ceiling code name in the Code Library (Favourite or User Defined).
+#  This function will return the entire code library XML element for the found code or nil, 
+#  if not found. It also returns the code ID to use. Note that since code library names are
+#  unique across all groups, a code name can occur in only one code group element. That
+#  means a ceiling code cannot appear in both "Ceiling Codes" and 
+#  "Flat or Cathedral Ceiling Codes".
 # =========================================================================================
 def findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
    # Look for this code name in code library (Favourite and UserDefined)

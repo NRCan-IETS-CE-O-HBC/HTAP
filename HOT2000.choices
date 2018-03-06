@@ -28,9 +28,13 @@ Opt-Archetype: NA
 ! ACH substitutions
 Opt-ACH : NA    !NA, ACH_1_0
 
-Opt-Ceilings : UsrSpecR40  !NA, CeilR40, UsrSpecR40
+Opt-Ceilings : NA  !NA, CeilR40, UsrSpecR40
 
-Opt-AtticCeilings : NA  !NA, CeilR40
+Opt-AtticCeilings : NA  !NA, CeilR40, UsrSpecR40
+
+Opt-CathCeilings : NA  !NA, CeilR40, UsrSpecR40
+
+Opt-FlatCeilings : NA  !NA, CeilR40, UsrSpecR40
 
 ! Main wall definitions 
 Opt-MainWall : NA                    ! This one, OR
