@@ -1,5 +1,0 @@
-ID,Scenario,Archetype,GOtag:Opt-Location,GOtag:Opt-ACH,GOtag:Opt-GenericWall_1Layer_definitions,GOtag:Opt-H2KFoundation,GOtag:Opt-ExposedFloor,GOtag:Opt-Ceilings,GOtag:Opt-CasementWindows,GOtag:Opt-DHWSystem,GOtag:Opt-DWHRSystem,GOtag:Opt-HVACSystem,GOtag:Opt-HRVSpec
-1,NBC-arch1_fullBsmt-1,NBC-arch1_fullBsmt,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NBC-gas-furnace,NA
-2,NBC-arch2_slab-2,NBC-arch2_slab,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NBC-gas-furnace,NA
-3,NBC-arch3_fullBsmt-3,NBC-arch3_fullBsmt,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NBC-gas-furnace,NA
-4,NBC-arch4_fullBsmt-4,NBC-arch4_fullBsmt,Vancouver,NA,NA,NA,NA,NA,NA,NA,none,NBC-gas-furnace,NA
