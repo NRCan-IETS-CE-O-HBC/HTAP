@@ -15,18 +15,19 @@ Contents
     4. [`Opt-Mainwall`](#opt-mainwall)
     5. [`Opt-Ceilings`](#opt-ceilings)
     6. [`Opt-H2KFoundation`](#opt-h2kfoundation)
-    7. [`Opt-ExposedFloor`](#opt-exposedfloor)
-    8. [`Opt-CasementWindows`](#opt-casementwindows)
-    9. [`Opt-H2K-PV`](#opt-h2k-pv)
-    10. [`Opt-HVACSystem`](#opt-hvacsystem)
-    11. [`Opt-DHWsystem`](#opt-dhwsystem)
-    12. [`Opt-DWHRsystem`](#opt-dwhrsystem)
-    13. [`Opt-HRVspec`](#opt-hrvspec)
-    14. [`Opt-FuelCost`](#opt-fuelcost)
-    15. [`Opt-RoofPitch`](#opt-roofpitch)
-    16. [`Opt-Doors`](#opt-doors)
-    17. [`Opt-Skylights`](#opt-sylights)
-    18. [`Opt-DoorWindows`](#opt-doorwindows)
+    7. [`Opt-H2KFoundationSlabCrawl`](#opt-h2kfoundationslabcrawl)
+    8. [`Opt-ExposedFloor`](#opt-exposedfloor)
+    9. [`Opt-CasementWindows`](#opt-casementwindows)
+    10. [`Opt-H2K-PV`](#opt-h2k-pv)
+    11. [`Opt-HVACSystem`](#opt-hvacsystem)
+    12. [`Opt-DHWsystem`](#opt-dhwsystem)
+    13. [`Opt-DWHRsystem`](#opt-dwhrsystem)
+    14. [`Opt-HRVspec`](#opt-hrvspec)
+    15. [`Opt-FuelCost`](#opt-fuelcost)
+    16. [`Opt-RoofPitch`](#opt-roofpitch)
+    17. [`Opt-Doors`](#opt-doors)
+    18. [`Opt-Skylights`](#opt-sylights)
+    19. [`Opt-DoorWindows`](#opt-doorwindows)
 3. [Legacy parameters not currently supported](#opt-skipped)    
 4. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
@@ -517,8 +518,44 @@ Inputs
 
 
 
+<a name="opt-h2kfoundationslabcrawl"></a>
+### 7) `Opt-FoundationSlabCrawl`
+
+* **Description** : Defines the below-grade insulation configuration and specification for Slab-On-Grade and Crawlspace foundations
+* **Typical values**: Keyword specifying desired foundation insulation configuration
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify Slab and/or Crawl foundations in the 
+  .h2k file to reflect the corresponding parameters from the options file. For each 
+  foundation specification, the options file must define:
+    1. The foundation configuration code (.e.g. `SCB_29_ALL`, `SCB_29_S`). Note that this code is a concatenation of the HOT2000 configuration type (e.g., BCCB_4) and a suffix (ALL, B, W, C, S)
+    2. The interior wall construction code, __or__ 
+    3. The interior wall specified R-value (Note: One of the two must be NA)
+    4. The exterior wall specified R-value or NA
+    5. The R-value of insulation added to the slab or NA.  
+* **Other things you should know**: 
+  - Below grade heat loss is also sensitive to the _depth of frost_ input. Work is underway 
+  to add support to HTAP for this parameter. 
+  - Setting `Opt-H2KFoundation = NA ` leaves the archetype basements unchanged.
+  
+  
+#### Sample `.choice` definition for  `Opt-H2KFoundationSlabCrawl`  
+         Opt-H2KFoundationSlabCrawl = OBCminR12-Slab0R
+         
+#### Sample `.options` definition for  `Opt-H2KFoundation`
+
+         *attribute:name   = Opt-H2KFoundationSlabCrawl
+         *attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
+         *attribute:tag:2  = 
+         *attribute:tag:3  = 
+         *attribute:tag:4  = 
+         *attribute:tag:5  = 
+         *attribute:default = NA
+         
+         <snip>
+
+
+
 <a name="opt-exposedfloor"></a>
-### 7) `Opt-ExposedFloor`
+### 8) `Opt-ExposedFloor`
 
 * **Description**: Defines insulation levels in exposed floors, including spaces 
     above garages, and porches. 
@@ -566,7 +603,7 @@ Inputs
          
 
 <a name="opt-casementwindows"></a>
-### 8) `Opt-CasementWindows`
+### 9) `Opt-CasementWindows`
 
 * **Description** : Defines performance characteristics of windows.
 * **Typical values**: Keyword specifying the desired window specification 
@@ -638,7 +675,7 @@ Inputs
 
 
 <a name="opt-h2k-pv"></a>
-### 9) `Opt-H2K-PV`
+### 10) `Opt-H2K-PV`
 
 * **Description**: Defines HOT2000's PV module inputs 
 * **Typical values**:  Keyword defining PV system specification. 
@@ -707,7 +744,7 @@ Inputs
            <snip>
 
 <a name="opt-hvacsystem"></a>
-### 10) `Opt-HVACSystem`
+### 11) `Opt-HVACSystem`
 
 >> <mark>**THIS PARAMETER IS LIKELY TO BE REDEFINED IN THE NEAR FUTURE**</mark>
 
@@ -900,7 +937,7 @@ Inputs
          
          
 <a name="opt-dhwsystem"></a>         
-### 11) `Opt-DHWSystem`
+### 12) `Opt-DHWSystem`
 
 * **Description**: Defines hot water system type and performance 
 * **Typical values**: Keyword defining DHW system specifications 
@@ -955,7 +992,7 @@ Inputs
          
 
 <a name="opt-dwhrsystem"></a> 
-### 12) `Opt-DWHRSystem`
+### 13) `Opt-DWHRSystem`
 * **Description** : Indicates presence and performance of drainwater heat recovery systems 
 * **Typical values**: Keyword defining DWHR system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
@@ -1028,7 +1065,7 @@ Inputs
          
 
 <a name="opt-HRVspec"></a> 
-### 13) `Opt-HRVspec` 
+### 14) `Opt-HRVspec` 
 
 * **Description** : Creates/configures a whole-house ventilator item to the provided specification.
 * **Typical values**: Keyword specifying the HRV system  (i.e., the mechanical ventilation system)
@@ -1091,7 +1128,7 @@ Inputs
 
 
 <a name="opt-fuelcost"></a>
-### 14) `Opt-FuelCost`   
+### 15) `Opt-FuelCost`   
 
 * **Description** : Defines the fuel costs used to calculate the annual cost of electricity, gas, oil, propane and/or wood required by the specific arcehtype defined by __substitute-h2k.rb__. HOT2000 requires as exact match between the fuel cost selected and an entry in the FuelLib_.flc file
 * **Typical values**: Keyword indicating fuel library name
@@ -1123,7 +1160,7 @@ Inputs
         <snip>
         
 <a name="opt-roofpitch"></a>
-### 15) `Opt-RoofPitch`   
+### 16) `Opt-RoofPitch`   
 
 * **Description** : Roof pitch is used by HOT2000 to calcualte the volume of the attic. The air change rate to the attic, its volume and solar gains, combined with the outdoor air temperature are used the heat balance to estimate the average attic temperature. That temperature is then used to estimate the heat loss or gain through the attic ceiling to the house.
 * **Typical values**: Keyword indicating slope of the roof line, e.g. 3-12
@@ -1156,7 +1193,7 @@ Inputs
     <snip>
 
 <a name="opt-doors"></a>
-### 16) `Opt-Doors`   
+### 17) `Opt-Doors`   
 
 * **Description** : .
 * **Typical values**: 
