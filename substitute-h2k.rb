@@ -5450,7 +5450,7 @@ $Locale = $gChoices["Opt-Location"]
 # Weather city name
 if $Locale.empty? || $Locale == "NA"
    # from base model file
-   locale = getWeatherCity( elements )
+   locale = getWeatherCity( h2kElements )
 else
    # from Opt-Location
    locale = $Locale
