@@ -286,10 +286,37 @@ $HDDHash =  {
             "HALLBEACH" => 10720 ,
             "XXXXX" => 1
             }
+
+# Setting hash for permafrost locations
+$PermafrostHash =  {
+            "YELLOWKNIFE"  => "discontinuous" ,
+            "INUVIK"       => "continuous",
+            "CHURCHILL"    => "continuous",
+            "KUUJJUAQ"     => "continuous" ,
+            "DAWSONCITY"   => "discontinuous" ,
+            "NORMANWELLS"  => "discontinuous" ,
+            "BAKERLAKE"    => "continuous",
+            "IQALUIT"      => "continuous",
+            "RESOLUTE"     => "continuous" ,
+            "CORALHARBOUR" => "continuous",
+            "HALLBEACH"    => "continuous"
+            }
+
+            
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
 
 $HDDs = ""
+
+
+
+
+
+
+
+
+
+
 
 =begin rdoc
 =========================================================================================
@@ -347,6 +374,7 @@ def warn_out(debmsg)
       $fLOG.write(debmsg)
    end
 end
+
 
 # =========================================================================================
 # Returns XML elements of HOT2000 file.
@@ -528,7 +556,12 @@ def processFile(h2kElements)
             #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
                $Locale = $gChoices["Opt-Location"] 
-               
+
+               # changing the soil condition to permafrost if the location is within 
+               # continuous permafrost zone
+               set_permafrost_by_location(h2kElements,$Locale)
+
+                 
                if ( tag =~ /OPT-H2K-WTH-FILE/ && value != "NA" )
                   # Weather file to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather"
@@ -4656,12 +4689,26 @@ def getPrimaryDHWSys(elements)
 end
 
 # =========================================================================================
+# Permafrost  ------------------------------------------------
+# =========================================================================================
+def set_permafrost_by_location(elements,cityName)
+   
+   if $PermafrostHash[cityName] == "continuous" 
+
+      soilCondition = elements["HouseFile/House/Specifications/SoilCondition"].attributes["code"]
+      soilCondition = "3"
+      elements["HouseFile/House/Specifications/SoilCondition"].attributes["code"] = soilCondition
+   
+   end
+end
+
+
+# =========================================================================================
 # Rule Set: NBC-9.36-2010 Creates global rule set hash $ruleSetChoices
 # =========================================================================================
-def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD )
+def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
   
-   
    # System data...
    primHeatFuelName = getPrimaryHeatSys( elements )
    secSysType = getSecondaryHeatSys( elements )
@@ -5469,7 +5516,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
    
    elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
       stream_out ("  (b) ")
-      NBC_936_2010_RuleSet( $ruleSetName, h2kElements, $HDDs )
+      NBC_936_2010_RuleSet( $ruleSetName, h2kElements, $HDDs,locale )
 
    elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
       stream_out ("  (c) ")
