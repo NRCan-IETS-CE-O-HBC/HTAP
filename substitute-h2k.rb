@@ -4552,11 +4552,16 @@ def getHeatedFloorArea( elements )
    
    numStoreysInput = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
    
+   # Get house area estimate from XML results section
    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
-   slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
+   slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
    areaEstimateTotal = ceilingAreaOut * numStoreysInput + slabAreaOut
    
-   areaRatio = areaInputTotal / areaEstimateTotal
+   if areaEstimateTotal > 0
+      areaRatio = areaInputTotal / areaEstimateTotal
+   else
+      fatalerror("***House area estimate from results section is zero!\n")
+   end
    
    if areaRatio > 0.50 && areaRatio < 2.0 then
       return areaInputTotal
