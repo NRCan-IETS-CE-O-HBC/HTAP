@@ -4546,16 +4546,32 @@ end  # End of postprocess
 # Get the best estimate of the house heated floor area
 # =========================================================================================
 def getHeatedFloorArea( elements )
+   # Initialize vars
+   areaRatio = 0
+   heatedFloorArea = 0
+   
    areaAboveGradeInput = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
    areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
    areaInputTotal = areaAboveGradeInput + areaBelowGradeInput
    
    numStoreysInput = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
    
-   # Get house area estimate from XML results section
-   ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+   # Get house area estimates from the first XML <results> section - these are totals of multiple surfaces
+   ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
    slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
-   areaEstimateTotal = ceilingAreaOut * numStoreysInput + slabAreaOut
+   if numStoreysInput == 1
+      # Single storey house -- avoid counting a basement heated area 
+      areaEstimateTotal = ceilingAreaOut
+   else
+      # Multi-storey houses add area of "heated" basement & crawlspace (check if heated!)
+      loc = "HouseFile/House/Temperatures/Basement"
+      loc2 = "HouseFile/House/Temperatures/Crawlspace"
+      if elements[loc].attributes["heated"] == "true" || elements[loc].attributes["heatingSetPoint"] == "true" || elements[loc2].attributes["heated"] == "true"
+         areaEstimateTotal = ceilingAreaOut * numStoreysInput + slabAreaOut
+      else
+         areaEstimateTotal = ceilingAreaOut * numStoreysInput
+      end
+   end
    
    if areaEstimateTotal > 0
       areaRatio = areaInputTotal / areaEstimateTotal
@@ -4563,11 +4579,20 @@ def getHeatedFloorArea( elements )
       fatalerror("***House area estimate from results section is zero!\n")
    end
    
+   # Accept user input area if it's between 50% and 200% of the estimated area!
    if areaRatio > 0.50 && areaRatio < 2.0 then
-      return areaInputTotal
+      heatedFloorArea = areaInputTotal
    else
-      return areaEstimateTotal
+      # Use user input area if a row house (end or middle) regardless of area ratio (but non-zero)
+      houseType = elements["HouseFile/House/Specifications/HouseType"].attributes["code"].to_i
+      if (houseType == 6 || houseType == 8) && areaInputTotal > 0
+         heatedFloorArea = areaInputTotal
+      else
+         heatedFloorArea = areaEstimateTotal
+      end
    end
+   
+   return heatedFloorArea
 end
 
 # =========================================================================================
