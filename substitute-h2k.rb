@@ -1857,7 +1857,7 @@ def processFile(h2kElements)
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
                         # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is 
-                        # NOT a conventional fireplace,add the "EPA/CSA" attribute field in the 
+                        # NOT a conventional fireplace, add the "EPA/CSA" attribute field in the 
                         # EquipmentInformation section to avoid a crash!
                         locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EnergySource"
                         if ( h2kElements[locationText2].attributes["code"].to_i > 4 && value != "8" )
@@ -3273,7 +3273,6 @@ def getBaseSystemCapacity( elements, sysType1Arr )
    return capValue.to_f * 1000   # Always returns Watts!
 end
 
-# Procedure to create a new H2K system Type 1 in the XML house file
 # =========================================================================================
 # Add a System Type 1 section (check for existence done external to this method)
 # =========================================================================================
@@ -4775,7 +4774,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
       $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Elect/) != nil   # value is "Electricity
-      if secSysType =~ "AirHeatPump"   # TODO: Should we also include WSHP & GSHP in this check?
+      if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
       else
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-elec-heat"
