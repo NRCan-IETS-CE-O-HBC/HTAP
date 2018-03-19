@@ -961,6 +961,9 @@
 *option:ACH_0_6:value:1  = 0.6
 *option:ACH_0_6:cost:total  =  0
 
+*option:ACH_0_6:value:1  = 0.6
+*option:ACH_0_6:cost:total  =  0
+
 *option:ACH_0_1:value:1  = 0.1
 *option:ACH_0_1:cost:total  =  0
 
@@ -1535,39 +1538,39 @@
 !-----------------------------------------------------------------------
 !   NBC 9.36 Baseline
 !-----------------------------------------------------------------------
-*option:NBC_Ceiling_zone4:value:1 =  NBC-zone4-attic
+*option:NBC_Ceiling_zone4:value:1 =  NA
 *option:NBC_Ceiling_zone4:value:2 =  39.24
 *option:NBC_Ceiling_zone4:cost:total    =  0
 
-*option:NBC_Ceiling_zone5_noHRV:value:1 =  NBC-zone5-attic
+*option:NBC_Ceiling_zone5_noHRV:value:1 =  NA
 *option:NBC_Ceiling_zone5_noHRV:value:2 =  49.23
 *option:NBC_Ceiling_zone5_noHRV:cost:total    =  0
 
-*option:NBC_Ceiling_zone5_HRV:value:1 =  NBC-zone5-attic
+*option:NBC_Ceiling_zone5_HRV:value:1 =  NA
 *option:NBC_Ceiling_zone5_HRV:value:2 =  39.24
 *option:NBC_Ceiling_zone5_HRV:cost:total    =  0
 
-*option:NBC_Ceiling_zone6_noHRV:value:1 =  NBC-zone6-attic_noHRV
+*option:NBC_Ceiling_zone6_noHRV:value:1 =  NA
 *option:NBC_Ceiling_zone6_noHRV:value:2 =  49.23
 *option:NBC_Ceiling_zone6_noHRV:cost:total    =  0
 
-*option:NBC_Ceiling_zone6_HRV:value:1 =  NBC-zone6-attic_HRV
+*option:NBC_Ceiling_zone6_HRV:value:1 =  NA
 *option:NBC_Ceiling_zone6_HRV:value:2 =  49.23
 *option:NBC_Ceiling_zone6_HRV:cost:total    =  0
 
-*option:NBC_Ceiling_zone7A_noHRV:value:1 =  NBC-zone7A-attic_noHRV
+*option:NBC_Ceiling_zone7A_noHRV:value:1 = NA
 *option:NBC_Ceiling_zone7A_noHRV:value:2 =  59.22
 *option:NBC_Ceiling_zone7A_noHRV:cost:total    =  0
                         
-*option:NBC_Ceiling_zone7A_HRV:value:1 =  NBC-zone7A-attic_HRV
+*option:NBC_Ceiling_zone7A_HRV:value:1 =  NA
 *option:NBC_Ceiling_zone7A_HRV:value:2 =  49.23
 *option:NBC_Ceiling_zone7A_HRV:cost:total    =  0
 
-*option:NBC_Ceiling_zone7B:value:1 =  NBC-zone7B-attic
+*option:NBC_Ceiling_zone7B:value:1 =  NA
 *option:NBC_Ceiling_zone7B:value:2 =  59.22
 *option:NBC_Ceiling_zone7B:cost:total    =  0
 
-*option:NBC_Ceiling_zone8:value:1 =  NBC-zone8-attic
+*option:NBC_Ceiling_zone8:value:1 =  NA
 *option:NBC_Ceiling_zone8:value:2 =  59.22
 *option:NBC_Ceiling_zone8:cost:total    =  0
 
@@ -1596,6 +1599,38 @@
 *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
 *option:CeilR40:cost:total = 0
 
+*option:NBC_Ceiling_zone4:value:1 =  NA
+*option:NBC_Ceiling_zone4:value:2 =  39.24
+*option:NBC_Ceiling_zone4:cost:total    =  0
+
+*option:NBC_Ceiling_zone5_noHRV:value:1 =  NA
+*option:NBC_Ceiling_zone5_noHRV:value:2 =  49.23
+*option:NBC_Ceiling_zone5_noHRV:cost:total    =  0
+
+*option:NBC_Ceiling_zone5_HRV:value:1 =  NA
+*option:NBC_Ceiling_zone5_HRV:value:2 =  39.24
+*option:NBC_Ceiling_zone5_HRV:cost:total    =  0
+
+*option:NBC_Ceiling_zone6:value:1 =  NA
+*option:NBC_Ceiling_zone6:value:2 =  49.23
+*option:NBC_Ceiling_zone6:cost:total    =  0
+
+*option:NBC_Ceiling_zone7A_noHRV:value:1 =  NA
+*option:NBC_Ceiling_zone7A_noHRV:value:2 =  59.22
+*option:NBC_Ceiling_zone7A_noHRV:cost:total    =  0
+
+*option:NBC_Ceiling_zone7A_HRV:value:1 =  NA
+*option:NBC_Ceiling_zone7A_HRV:value:2 =  49.23
+*option:NBC_Ceiling_zone7A_HRV:cost:total    =  0
+                        
+*option:NBC_Ceiling_zone7B:value:1 =  NA
+*option:NBC_Ceiling_zone7B:value:2 =  59.22
+*option:NBC_Ceiling_zone7B:cost:total    =  0
+
+*option:NBC_Ceiling_zone8:value:1 =  NA
+*option:NBC_Ceiling_zone8:value:2 =  59.22
+*option:NBC_Ceiling_zone8:cost:total    =  0
+
 *attribute:end
 
 
@@ -1621,6 +1656,30 @@
 *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
 *option:CeilR40:cost:total = 0
 
+*option:NBC_FlatCeiling_zone4:value:1 =  NA
+*option:NBC_FlatCeiling_zone4:value:2 =  26.52
+*option:NBC_FlatCeiling_zone4:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone5:value:1 =  NA
+*option:NBC_FlatCeiling_zone5:value:2 =  26.52
+*option:NBC_FlatCeiling_zone5:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone6:value:1 =  NA
+*option:NBC_FlatCeiling_zone6:value:2 =  26.52
+*option:NBC_FlatCeiling_zone6:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone7A:value:1 =  NA
+*option:NBC_FlatCeiling_zone7A:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7A:cost:total    =  0
+                        
+*option:NBC_FlatCeiling_zone7B:value:1 =  NA
+*option:NBC_FlatCeiling_zone7B:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7B:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone8:value:1 =  NA
+*option:NBC_FlatCeiling_zone8:value:2 =  28.50
+*option:NBC_FlatCeiling_zone8:cost:total    =  0
+
 *attribute:end
 
 !-------------------------------------------------------------------------
@@ -1644,6 +1703,30 @@
 *option:CeilR40:value:1 =  CeilR-40     ! H2K: Code name must exist in code library
 *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
 *option:CeilR40:cost:total = 0
+
+*option:NBC_FlatCeiling_zone4:value:1 =  NA
+*option:NBC_FlatCeiling_zone4:value:2 =  26.52
+*option:NBC_FlatCeiling_zone4:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone5:value:1 =  NA
+*option:NBC_FlatCeiling_zone5:value:2 =  26.52
+*option:NBC_FlatCeiling_zone5:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone6:value:1 =  NA
+*option:NBC_FlatCeiling_zone6:value:2 =  26.52
+*option:NBC_FlatCeiling_zone6:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone7A:value:1 =  NA
+*option:NBC_FlatCeiling_zone7A:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7A:cost:total    =  0
+                        
+*option:NBC_FlatCeiling_zone7B:value:1 =  NA
+*option:NBC_FlatCeiling_zone7B:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7B:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone8:value:1 =  NA
+*option:NBC_FlatCeiling_zone8:value:2 =  28.50
+*option:NBC_FlatCeiling_zone8:cost:total    =  0
 
 *attribute:end
 

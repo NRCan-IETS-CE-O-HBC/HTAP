@@ -4805,8 +4805,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       if locale_HDD < 3000 
       # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
-         $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone4"
-         $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone4"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
+                  
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
       
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
@@ -4821,9 +4825,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_noHRV"
-         $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone5_noHRV"
-         $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone5"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"]    = "NBC_Wall_zone5_noHRV"
+         $ruleSetChoices["Opt-Ceilings"]                          = "NBC_Ceiling_zone5_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                     = "NBC_Ceiling_zone5_noHRV"
+         $ruleSetChoices["Opt-CathCeilings"]                      = "NBC_FlatCeiling_zone5"
+         $ruleSetChoices["Opt-FlatCeilings"]                      = "NBC_FlatCeiling_zone5"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_exposed_zone5"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
@@ -4839,11 +4847,15 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       elsif locale_HDD >= 4000 && locale_HDD < 4999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_noHRV"
-         $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone6_noHRV"
-         $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone6"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone6_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
+         
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone6-window"
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -4855,12 +4867,16 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7A_noHRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7A_noHRV"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7A"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_noHRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone7A_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_noHRV"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
+           
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7A-window"
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
@@ -4871,12 +4887,16 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 7B ( 6000 < HDD < 6999) without an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7B_noHRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7B"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7B"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_noHRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -4888,9 +4908,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 8 (HDD <= 7000) without an HRV
       elsif locale_HDD >= 7000 
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone8_noHRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone8"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone8"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_noHRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone8"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
+                                                                 
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
@@ -4913,8 +4937,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       if locale_HDD < 3000 
       # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
-         $ruleSetChoices["Opt-Ceilings"] = "NBC_Ceiling_zone4"
-         $ruleSetChoices["Opt-ExposedFloor"] = "NBC_exposed_zone4"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
+                  
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
       
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
@@ -4928,12 +4956,16 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone5_HRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone5_HRV"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone5"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_HRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone5_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone5_HRV"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone5"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone5"
+                  
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone5"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone5-window"
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -4945,12 +4977,16 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone6_HRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone6_HRV"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone6"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_HRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone6_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone6-window"
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -4962,12 +4998,16 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7A_HRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7A_HRV"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7A"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_HRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone7A_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_HRV"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7A-window"
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -4979,9 +5019,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 7B ( 6000 < HDD < 6999) with an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone7B_HRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone7B"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone7B"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_HRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
@@ -4996,9 +5040,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Zone 8 (HDD <= 7000) with an HRV
       elsif locale_HDD >= 7000 
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
-         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] =  "NBC_Wall_zone8_HRV"
-         $ruleSetChoices["Opt-Ceilings"]                       =  "NBC_Ceiling_zone8"
-         $ruleSetChoices["Opt-ExposedFloor"]                   =  "NBC_exposed_zone8"
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_HRV"
+         $ruleSetChoices["Opt-Ceilings"]                       = "NBC_Ceiling_zone8"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
                   
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
