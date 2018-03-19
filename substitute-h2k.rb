@@ -1811,7 +1811,7 @@ def processFile(h2kElements)
                         end
                      end
                   else
-                     # System type 1 is already set to this value -- do nothing!
+                     # System type 1 is already set to this value -- do nothing (here)!
                   end
                   
                elsif ( tag =~ /Opt-H2K-SysType2/ &&  value != "NA" )
@@ -1843,6 +1843,15 @@ def processFile(h2kElements)
                         end
                         if ( h2kElements[locationText] != nil )
                            h2kElements[locationText].attributes["code"] = value
+                           
+                           # If fuel is NG/Propane/Oil/wood, make sure there is a non-zero flue size.
+                           # This can happen when switching fuel from electricity. Skip check for P9.
+                           if value != "1" && sysType1Name != "P9"
+                              locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
+                              if h2kElements[locationText].attributes["flueDiameter"].to_i == 0
+                                 h2kElements[locationText].attributes["flueDiameter"] = "127"   #mm
+                              end
+                           end
                         end
                      end
                   end
@@ -1857,7 +1866,7 @@ def processFile(h2kElements)
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
                         # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is 
-                        # NOT a conventional fireplace,add the "EPA/CSA" attribute field in the 
+                        # NOT a conventional fireplace, add the "EPA/CSA" attribute field in the 
                         # EquipmentInformation section to avoid a crash!
                         locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EnergySource"
                         if ( h2kElements[locationText2].attributes["code"].to_i > 4 && value != "8" )
@@ -3273,7 +3282,6 @@ def getBaseSystemCapacity( elements, sysType1Arr )
    return capValue.to_f * 1000   # Always returns Watts!
 end
 
-# Procedure to create a new H2K system Type 1 in the XML house file
 # =========================================================================================
 # Add a System Type 1 section (check for existence done external to this method)
 # =========================================================================================
