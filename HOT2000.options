@@ -3025,6 +3025,20 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC-oil-heat:value:10 = 
 *option:NBC-oil-heat:cost:total = 0
 
+!------------------------------------
+!R-2000 Standard Mechanical
+*option:R2000-elec-baseboard:value:1 = Baseboards
+*option:R2000-elec-baseboard:value:2 = None
+*option:R2000-elec-baseboard:value:3 = 1
+*option:R2000-elec-baseboard:value:4 = NA
+*option:R2000-elec-baseboard:value:5 = 2
+*option:R2000-elec-baseboard:value:6 = NA
+*option:R2000-elec-baseboard:value:7 = 1
+*option:R2000-elec-baseboard:value:8 = 100
+*option:R2000-elec-baseboard:value:9 = NA
+*option:R2000-elec-baseboard:value:10 = NA
+*option:R2000-elec-baseboard:cost:total       = 0
+
 ! Adam's definition ? 
 *option:oilfurnace:value:1 = Furnace
 *option:oilfurnace:value:2 = None
@@ -3132,6 +3146,16 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC_HRV:value:7 = 60    ! Eff% @ Rating1
 *option:NBC_HRV:value:8 = 55    ! Eff% @ Rating2
 *option:NBC_HRV:cost:total = 0
+
+*option:R2000_HRV:value:1 = HRV.vnt
+*option:R2000_HRV:value:2 = 
+*option:R2000_HRV:value:3 = 1     ! F326
+*option:R2000_HRV:value:4 = 1     ! Forced air heating ductwork
+*option:R2000_HRV:value:5 = 480   ! Min./Day
+*option:R2000_HRV:value:6 = 60    ! L/s (exhaust = supply)
+*option:R2000_HRV:value:7 = 60    ! Eff% @ Rating1
+*option:R2000_HRV:value:8 = 50    ! Eff% @ Rating2
+*option:R2000_HRV:cost:total = 0
 
 *attribute:end 
 
@@ -3261,6 +3285,16 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC-HotWater_oil4:value:5 = NA        ! 
 *option:NBC-HotWater_oil4:value:6  = 0
 *option:NBC-HotWater_oil4:cost:total = 0
+
+!---------------------------------------------------------------------------------------------
+!R-2000 Standard condition
+*option:R2000-HotWater-elec:value:1 = 1         ! Elec
+*option:R2000-HotWater-elec:value:2 = 2         ! Conventional Tank
+*option:R2000-HotWater-elec:value:3 = 189.3     ! Litres (50 USGal)
+*option:R2000-HotWater-elec:value:4 = 0.86    ! EF
+*option:R2000-HotWater-elec:value:5 = NA        ! HP COP
+*option:R2000-HotWater-elec:value:6 = 0
+*option:R2000-HotWater-elec:cost:total    = 0
 
 *attribute:end
 
@@ -3427,6 +3461,16 @@ Whitehorse Wall Options (Code is R28)
 *option:MonoSi-200m2:value:5 = 90
 *option:MonoSi-200m2:value:6 = 90
 *option:MonoSi-200m2:cost:total = 0
+
+!-------------------------------
+! R-2000 test - NO PV generation
+*option:R2000_test:value:1 = 0				!0m2 to cancel PV generation
+*option:R2000_test:value:2 = 0
+*option:R2000_test:value:3 = 0
+*option:R2000_test:value:4 = 1
+*option:R2000_test:value:5 = 90
+*option:R2000_test:value:6 = 90
+*option:R2000_test:cost:total = 0
 
 *attribute:end
 

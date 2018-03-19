@@ -4775,7 +4775,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
       $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Elect/) != nil   # value is "Electricity
-      if secSysType =~ "AirHeatPump"   # TODO: Should we also include WSHP & GSHP in this check?
+      if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
       else
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-elec-heat"
@@ -5006,6 +5006,28 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    end   # Check on NBC rule set type
 end
 
+#===============================================================================
+def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
+ 
+   # R-2000 standard test requirements
+   if ruleType =~ /R2000_NZE_Pilot_Env/
+
+      # R-2000 Standard Mechanical Conditions. (Table 2)
+	  $ruleSetChoices["Opt-HVACSystem"] = "R2000-elec-baseboard" 
+	  $ruleSetChoices["Opt-DHWSystem"] = "R2000-HotWater-elec" 
+	  $ruleSetChoices["Opt-HRVspec"] = "R2000_HRV"
+	  
+	  # No renewable generation for envelope test
+	  $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
+		
+   elsif ruleType =~ /R2000_NZE_Pilot_Mech/
+   
+	  # No renewable generation for mechanical systems test
+	  $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
+	  
+   end
+end
+#===============================================================================
 =begin rdoc
 =========================================================================================
   END OF ALL METHODS 
@@ -5552,6 +5574,15 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
       stream_out ("  (c) ")
       # Do nothing - this is the AW rule set. 
       
+   elsif ( $ruleSetName =~ /R2000_NZE_Pilot_Env/ ||  $ruleSetName =~ /R2000_NZE_Pilot_Mech/ )
+      stream_out ("  (d) ")
+	  R2000_NZE_Pilot_RuleSet( $ruleSetName, h2kElements, locale )
+   
+   elsif ( $ruleSetName =~ /R2000_NZE_Pilot_Base/)
+      stream_out ("  (e) ")
+	  NBC_936_2010_RuleSet( "NBC9_36_HRV", h2kElements, $HDDs,locale )
+	  R2000_NZE_Pilot_RuleSet( "R2000_NZE_Pilot_Env", h2kElements, locale )
+	  
    end 
    
    # Replace choices in $gChoices with rule set choices in $ruleSetChoices
