@@ -1811,7 +1811,7 @@ def processFile(h2kElements)
                         end
                      end
                   else
-                     # System type 1 is already set to this value -- do nothing!
+                     # System type 1 is already set to this value -- do nothing (here)!
                   end
                   
                elsif ( tag =~ /Opt-H2K-SysType2/ &&  value != "NA" )
@@ -1843,6 +1843,15 @@ def processFile(h2kElements)
                         end
                         if ( h2kElements[locationText] != nil )
                            h2kElements[locationText].attributes["code"] = value
+                           
+                           # If fuel is NG/Propane/Oil/wood, make sure there is a non-zero flue size.
+                           # This can happen when switching fuel from electricity. Skip check for P9.
+                           if value != "1" && sysType1Name != "P9"
+                              locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
+                              if h2kElements[locationText].attributes["flueDiameter"].to_i == 0
+                                 h2kElements[locationText].attributes["flueDiameter"] = "127"   #mm
+                              end
+                           end
                         end
                      end
                   end
