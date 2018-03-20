@@ -6,29 +6,44 @@ Contents
 ------------------
 1. [Input/output model](#IOmodel)
     1. [The `.options` file](#options-definition)
-    1. [The `.choice` file](#choice-definition)
-    1. [The `.run` file](#choice-definition)
+    2. [The `.choice` file](#choice-definition)
+    3. [The `.run` file](#run-definition)
 2. [Inputs](#inputs)
     1. [`Opt-Location`](#opt-location)
     2. [`Opt-Archetype`](#opt-archetype)
     3. [`Opt-ACH`](#opt-ach)
     4. [`Opt-Mainwall`](#opt-mainwall)
     5. [`Opt-Ceilings`](#opt-ceilings)
-    6. [`Opt-H2KFoundation`](#opt-h2kfoundation)
-    7. [`Opt-ExposedFloor`](#opt-exposedfloor)
-    7. [`Opt-CasementWindows`](#opt-casementwindows)
-    8. [`Opt-H2K-PV`](#opt-h2k-pv)
-    9. [`Opt-HVAC`](#opt-hvac)
-    10. [`Opt-DHWsystem`](#opt-dhwsystem)
-    11. [`Opt-DHWRsystem`](#opt-dwhrsystem)
-    12. [`Opt-HRV`](#opt-hrv)
+    6. [`Opt-AtticCeilings`](#opt-attic-ceilings)
+    7. [`Opt-CathCeilings`](#opt-cath-ceilings)
+    8. [`Opt-FlatCeilings`](#opt-flat-ceilings)
+    9. [`Opt-H2KFoundation`](#opt-h2kfoundation)
+    10. [`Opt-H2KFoundationSlabCrawl`](#opt-h2kfoundation-slabcrawl)
+    11. [`Opt-ExposedFloor`](#opt-exposedfloor)
+    12. [`Opt-CasementWindows`](#opt-casementwindows)
+    13. [`Opt-Skylights`](#opt-sylights)
+    14. [`Opt-DoorWindows`](#opt-door-windows)
+    15. [`Opt-Doors`](#opt-doors)
+    16. [`Opt-H2K-PV`](#opt-h2k-pv)
+    17. [`Opt-HVACSystem`](#opt-hvacsystem)
+    18. [`Opt-DHWsystem`](#opt-dhwsystem)
+    19. [`Opt-DWHRsystem`](#opt-dwhrsystem)
+    20. [`Opt-HRVspec`](#opt-hrvspec)
+    21. [`Opt-FuelCost`](#opt-fuelcost)
+    22. [`Opt-RoofPitch`](#opt-roofpitch)
+    23. [`Opt-Ruleset`](#opt-ruleset)
 3. [Legacy parameters not currently supported](#opt-skipped)    
-   
+4. [Outputs](#outputs)
+    1. [`RunNumber`](#runnumber)
+    2. [`H2K-outputs`](#h2k-outputs)
+    3. [`input.data`](#input.data)
+    
+    
 <a name="IOmodel"></a>
 Input/Output model 
 ------------------
 
-<a name "options-definition"></a>
+<a name="options-definition"></a>
 ### The HOT2000.options file 
 Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) file. An excerpt from the HOT2000.options file follows:
 
@@ -57,7 +72,7 @@ Most of HTAP’s data are stored in the .options file.  The option file contains
          *option:NA:cost:total  = 0
          
          *option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
-         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
+         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George
          *option:MonoSi-5kW:value:3 = 0
          *option:MonoSi-5kW:value:4 = 1
          *option:MonoSi-5kW:value:5 = 90
@@ -74,6 +89,8 @@ Most of HTAP’s data are stored in the .options file.  The option file contains
                                                     !Prince George & Kelowna LEEP
 
           *attribute:end
+         <snip>
+    
 
 This section defines data for the `Opt-H2K-PV` attribute.  Three options are available: `NA`, 
 `MonoSi-5kW`, and `MonoSi-10kW`.  __substitute-h2k.rb__ interprets the 
@@ -88,7 +105,7 @@ provides the alphanumeric input that must be substituted within the
 .h2k file. For example, the inverter efficiency will be set to 
 90% for the `MonoSI-10kW` case in the snippet above. 
 
-<a name "choice-definition"></a>
+<a name="choice-definition"></a>
 ### The HOT2000.choice file 
 The .choice file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (!).  Entries in the choice file must obey the following rules:
 - Each token must match one of the attributes in the .options file
@@ -119,8 +136,7 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         
         ! Air tightness 
         Opt-ACH : NA
-        
-        
+                
         ! Ceiling R-value
         Opt-Ceilings : NA
         
@@ -138,10 +154,9 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         
         ! Hot water system.
         Opt-DHWSystem :  HPHotWater
-        
-        
+                
         ! Drain-water heat recovery 
-        Opt-DWHRSystem :  DWHR-eff-30 
+        Opt-DWHRsystem:  DWHR-eff-30 
         
         ! HVAC system 
         Opt-HVACSystem  : CCASHP
@@ -152,9 +167,61 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         Opt-RoofPitch : NA   !6-12
         
         Opt-H2K-PV : NA 
+          <snip>
 
+<a name="run-definition"></a>
 ### The .run file 
-To be written!
+The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
+* **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
+* **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
+  - Multiple `archetypes` can be defined for the HTAP runs, and each `*.h2K` file is separated by a comma (,). Each `archetypes` file must be located in the `archetype-dir`. These archetypes are not the same as `Opt-Archetype` tags, these are the HOT2000 files, `*.h2k`. 
+  - The `locations` parameter defines the weather location used for each HTAP run. These `locations` correspond to the municipal location defined in HOT2000 weather file, and are the same values as `Opt-Location`. Multiple locations can be defined, and each is comma-separated in the list.
+  - Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` archetype file. 
+  - The `rulesets` parameter `as-found` will cause HTAP to run the `archetypes` for `locations` with no other upgrades. `rulesets` are defined as a set of upgrades to satisfy and a particular performance target: national building code energy requirements, EnergyStar targets, etc. `rulesets` are a functionality that is currently under develepment, and should be used with caution. Multiple rulesets can be defined, and each is comma-separated in the list.
+  
+* **Upgrades** : Defines options to be investigated in mesh mode during the HTAP run. 
+   - If the `rulesets` tag is set to `as-found`, then  __substitute-h2k.rb__ will apply each combination of inputs as defined in the sections below.
+   - If the `rulesets` tag is set to a specific ruleset, then  __substitute-h2k.rb__ will apply each combination of inputs using the ruleset as the _new_ base case archetype.
+
+```
+! Run-Mode: Parameters that affect how htap-prm is configured. 
+RunParameters_START
+  run-mode                           = mesh 
+  archetype-dir                      = C:/HTAP/Archetypes
+RunParameters_END 
+
+
+! Parameters controlling archetypes, locations, reference rulesets.
+RunScope_START
+
+  archetypes                        = NRCan-A9_3000sf_2stry_walkOut.h2k
+  locations                         = Vancouver, Toronto, Halifax
+  rulesets                          = as-found, 936_2015_AW_noHRV, 936_2015_AW_HRV
+  
+RunScope_END
+
+! Parameters controlling the design of the building 
+Upgrades_START
+
+    Opt-FuelCost                       = rates2016  
+    Opt-ACH                            = NA
+    Opt-MainWall                       = GenericWall_1Layer
+    Opt-GenericWall_1Layer_definitions = NA
+    Opt-Ceilings                       = NA
+    Opt-H2KFoundation                  = NA
+    Opt-ExposedFloor                   = NA
+    Opt-CasementWindows                = NA
+    Opt-H2K-PV                         = NA
+    Opt-DWHRandSDHW                    = NA 
+    Opt-RoofPitch                      = NA
+    Opt-DHWSystem                      = NA
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA 
+    Opt-HRVspec                        = NA
+
+Upgrades_END
+```
+
 
 
 <a name="inputs"></a> 
@@ -210,8 +277,7 @@ Inputs
 <a name="opt-archetype"></a>         
 ### 2) `Opt-Archetype` 
 
-* **Description** : Defines the .h2k file that will be used for the basis of a 
-    HTAP run 
+* **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
 * **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
 * **HOT2000 bindings**:  The __substitute-h2k.rb__ script will make a copy of the 
     specified .h2k file, and will alter it according to your specified choices. __substitute-h2k.rb__
@@ -224,10 +290,10 @@ Inputs
   - Alternatively, the archetype file can be passed to __substitute-h2k.rb__ via a command line, as below. In this 
     usage, the `Opt-Archetype` definition should be omitted from the choice file.
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-Archetype`  
          Opt-Archetype = MediumSFD
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-Archetype`
 
          *attribute:start 
          *attribute:name = Opt-Archetype
@@ -236,8 +302,7 @@ Inputs
          
          *option:NA:value:1 = NA
          *option:NA:cost:total = 0
-         
-         
+                  
          *option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
          *option:SmallSFD:cost:total = 0
          
@@ -246,13 +311,14 @@ Inputs
          
          *option:LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-LargeSFD.h2k
          *option:LargeSFD:cost:total = 0      
+         <snip>
          
 
 <a name="opt-ach"></a>
 ### 3) `Opt-ACH` 
 
 * **Description** : Defines the infiltration characteristics of the building, using 
-  inputs similar to those collected to a blower-door test. 
+  inputs similar to those collected from a blower-door test. 
 * **Typical values**: Keyword indicating level of airtightness (e.g. `ACH_3`, `ACH_1_5`)
 * **HOT2000 bindings**: When run, __substitute-h2k.rb__ will map the keyword to values 
   in the .options file, and then edit the .h2k file to reflect the same air leakage 
@@ -261,12 +327,12 @@ Inputs
   - HTAP can presently only change the blower-door test air change rate; options to 
     adjust the house volume, ELA or site characteristics are not supported.
   - Setting `Opt-ACH = NA` will cause __substitute-h2k.rb__ to leave air infiltration 
-    unchanged int he archetype 
+    unchanged in the archetype 
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-ACH`  
          Opt-ACH = ACH_7
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-ACH`
 
          *attribute:start
          *attribute:name     = Opt-ACH
@@ -281,10 +347,7 @@ Inputs
          
          *option:ACH_6_5:value:1  = 6.5
          *option:ACH_6_5:cost:total  =  0
-
-
          <snip>
-         
          
 
 <a name="opt-mainwall"></a>
@@ -347,9 +410,6 @@ Inputs
          *option:SIPS-R28-Wall:value:1 =   NA        ! Existing H2K code library wall name
          *option:SIPS-R28-Wall:value:2 =   28        ! OR, User-specified R-value (Imperial), but not both!
          *option:SIPS-R28-Wall:cost:total    =  0
-
-
-
          <snip>
 
 
@@ -357,7 +417,7 @@ Inputs
 ### 5) `Opt-Ceilings`
 
 * **Description** : Defines insulation levels in ceilings.
-* **Typical values**: Keyword specifying desired celing assembly (e.g. `CeilR40`, `CeilR50`...)
+* **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
 * **HOT2000 bindings**:  Depending on the definitions in the options file, 
     __substitute-h2k.rb__ will do one of two things:
     1. Replace the ceiling construction definition with a specified code from the 
@@ -369,22 +429,28 @@ Inputs
     R-value - not both!
 
 * **Other things you should know**: 
-  - __substitute-h2k.rb__ expects US insulation values (R-19, R-22, R-26...), not
+  - __substitute-h2k.rb__ expects Imperial/US insulation values (R-19, R-22, R-26...), not
     RSI values. __substitute-h2k.rb__ will automatically convert R-values to RSI 
     when creating the .h2k file.   
-  - Setting `Opt-Ceilings = NA` will leave the archetype's ceiling definitions to 
-    be unchanged.
+  - Setting `Opt-Ceilings = NA` will leave the archetype's ceiling definitions 
+    unchanged.
   - __substitute-h2k.rb__ will apply the same definition to all ceilings, 
     regardless of their size or original construction. 
-  - Work to add support for cathedral and scissor ceilings is currently underway
+  - If the User Specified option is used, then all ceilings, regardless of type will
+    be changed (i.e., Attic/Gable, Attic/Hip, Scissor, Flat or Cathedral). 
+  - If the code library names option is used, then only one group of code library  
+    ceilings will be changed depending on which group the chosen code name
+    appears in. There are two code library ceiling groups: "Ceiling Codes" (i.e., 
+    Attic/Gable, Attic/Hip and Scissor) and "Flat or Cathedral Ceiling Codes".
+  - This option should not be combined with any other ceiling option!
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-Ceilings`  
          Opt-Ceilings = CeilR50
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-Ceilings`
 
          attribute:name = Opt-Ceilings
-         *attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
+         *attribute:tag:1  = <Opt-Ceiling>       ! H2K uses this for library code name
          *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
          *attribute:default = CeilR50
          
@@ -392,7 +458,7 @@ Inputs
          *option:NA:value:2 = NA
          *option:NA:cost:total = 0
          
-         *option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name must NOT exist in code library
+         *option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name in code library
          *option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
          *option:UsrSpecR40:cost:total = 0
          
@@ -402,32 +468,199 @@ Inputs
          
          *option:CeilR50:value:1 = CeilR50                
          *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
-         *option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Kelowna optimization
+         *option:CeilR50:cost:total    =   0       
+         <snip>
 
+         
+<a name="opt-attic-ceilings"></a>
+### 6) `Opt-AtticCeilings`
+
+* **Description** : Defines insulation levels in attic/gable, attic/hip, and scissor ceilings only.
+* **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
+* **HOT2000 bindings**:  Depending on the definitions in the options file, 
+    __substitute-h2k.rb__ will do one of two things:
+    1. Replace the ceiling construction definition with a specified code from the 
+       construction code library
+    2. Replace the ceiling construction definition with a user-specified RSI value 
+       from the .options file. 
+    
+>>**Note** that the .options file should provide the construction code **OR** the 
+    R-value - not both!
+
+* **Other things you should know**: 
+  - __substitute-h2k.rb__ expects Imperial/US insulation values (R-19, R-22, R-26...), not
+    RSI values. __substitute-h2k.rb__ will automatically convert R-values to RSI 
+    when creating the .h2k file.   
+  - Setting `Opt-AtticCeilings = NA` will leave the archetype's ceiling definitions 
+    unchanged.
+  - Attic ceilings are all ceilings of type Attic/Gable, Attic/Hip or Scissor
+  - __substitute-h2k.rb__ will apply the same definition to all attic ceilings, 
+    regardless of their size or original construction. 
+  - The "Ceiling Codes" code library group must contain an entry for the name specified
+    when the ceiling code name option is used.
+  - This option should not be combined with the Opt-Ceilings option!
+    
+#### Sample `.choice` definition for  `Opt-AtticCeilings`  
+         Opt-AtticCeilings = CeilR50
+         
+#### Sample `.options` definition for  `Opt-AtticCeilings`
+
+         attribute:name = Opt-AtticCeilings
+         *attribute:tag:1  = <Opt-Ceiling>       ! H2K uses this for library code name
+         *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+         *attribute:default = CeilR50
+         
+         *option:NA:value:1 = NA     ! No change
+         *option:NA:value:2 = NA
+         *option:NA:cost:total = 0
+         
+         *option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name for code library
+         *option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+         *option:UsrSpecR40:cost:total = 0
+         
+         *option:CeilR40:value:1 =  CeilR40     ! H2K: Code name must exist in code library
+         *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+         *option:CeilR40:cost:total = 0
+         
+         *option:CeilR50:value:1 = CeilR50                
+         *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
+         *option:CeilR50:cost:total    =   0       
+         <snip>
+
+         
+<a name="opt-cath-ceilings"></a>
+### 7) `Opt-CathCeilings`
+
+* **Description** : Defines insulation levels in cathedral ceilings only.
+* **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
+* **HOT2000 bindings**:  Depending on the definitions in the options file, 
+    __substitute-h2k.rb__ will do one of two things:
+    1. Replace the ceiling construction definition with a specified code from the 
+       construction code library
+    2. Replace the ceiling construction definition with a user-specified RSI value 
+       from the .options file. 
+    
+>>**Note** that the .options file should provide the construction code **OR** the 
+    R-value - not both!
+
+* **Other things you should know**: 
+  - __substitute-h2k.rb__ expects Imperial/US insulation values (R-19, R-22, R-26...), not
+    RSI values. __substitute-h2k.rb__ will automatically convert R-values to RSI 
+    when creating the .h2k file.   
+  - Setting option to `NA` will leave the archetype's ceiling definitions 
+    unchanged.
+  - __substitute-h2k.rb__ will apply the same definition to all cathedral ceilings, 
+    regardless of their size or original construction. 
+  - The "Flat or Cathedral Ceiling Codes" code library group must contain an entry for 
+    the name specified when the ceiling code name option is used.
+  - This option should not be combined with the Opt-Ceilings option!
+    
+#### Sample `.choice` definition for  `Opt-CathCeilings`  
+         Opt-CathCeilings = CeilR50
+         
+#### Sample `.options` definition for  `Opt-CathCeilings`
+
+         attribute:name = Opt-CathCeilings
+         *attribute:tag:1  = <Opt-Ceiling>       ! H2K uses this for library code name
+         *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+         *attribute:default = CeilR50
+         
+         *option:NA:value:1 = NA     ! No change
+         *option:NA:value:2 = NA
+         *option:NA:cost:total = 0
+         
+         *option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name for code library
+         *option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+         *option:UsrSpecR40:cost:total = 0
+         
+         *option:CeilR40:value:1 =  CeilR40     ! H2K: Code name must exist in code library
+         *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+         *option:CeilR40:cost:total = 0
+         
+         *option:CeilR50:value:1 = CeilR50                
+         *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
+         *option:CeilR50:cost:total    =   0       
+         <snip>
+
+         
+<a name="opt-flat-ceilings"></a>
+### 8) `Opt-FlatCeilings`
+
+* **Description** : Defines insulation levels in flat ceilings only.
+* **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
+* **HOT2000 bindings**:  Depending on the definitions in the options file, 
+    __substitute-h2k.rb__ will do one of two things:
+    1. Replace the ceiling construction definition with a specified code from the 
+       construction code library
+    2. Replace the ceiling construction definition with a user-specified RSI value 
+       from the .options file. 
+    
+>>**Note** that the .options file should provide the construction code **OR** the 
+    R-value - not both!
+
+* **Other things you should know**: 
+  - __substitute-h2k.rb__ expects Imperial/US insulation values (R-19, R-22, R-26...), not
+    RSI values. __substitute-h2k.rb__ will automatically convert R-values to RSI 
+    when creating the .h2k file.   
+  - Setting option to `NA` will leave the archetype's ceiling definitions 
+    unchanged.
+  - __substitute-h2k.rb__ will apply the same definition to all flat ceilings, 
+    regardless of their size or original construction. 
+  - The "Flat or Cathedral Ceiling Codes" code library group must contain an entry for 
+    the name specified when the ceiling code name option is used.
+  - This option should not be combined with the Opt-Ceilings option!
+    
+#### Sample `.choice` definition for  `Opt-FlatCeilings`  
+         Opt-FlatCeilings = CeilR50
+         
+#### Sample `.options` definition for  `Opt-FlatCeilings`
+
+         attribute:name = Opt-FlatCeilings
+         *attribute:tag:1  = <Opt-Ceiling>       ! H2K uses this for library code name
+         *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+         *attribute:default = CeilR50
+         
+         *option:NA:value:1 = NA     ! No change
+         *option:NA:value:2 = NA
+         *option:NA:cost:total = 0
+         
+         *option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name for code library
+         *option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+         *option:UsrSpecR40:cost:total = 0
+         
+         *option:CeilR40:value:1 =  CeilR40     ! H2K: Code name must exist in code library
+         *option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+         *option:CeilR40:cost:total = 0
+         
+         *option:CeilR50:value:1 = CeilR50                
+         *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
+         *option:CeilR50:cost:total    =   0       
+         <snip>
+         
 
 <a name="opt-h2kfoundation"></a>
-### 6) `Opt-H2KFoundation`
+### 9) `Opt-H2KFoundation`
 
 * **Description** : Defines the below-grade insulation configuration and specification
 * **Typical values**: Keyword specifying desired foundation insulation configuration
-* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify all basements in the 
-  .h2k file to reflect the corresponding parameters front the options file. For each 
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify all foundations in the 
+  .h2k file to reflect the corresponding parameters from the options file. For each 
   foundation specification, the options file must define:
-    1. The foundation configuration code (.e.g. `BCCB_4`, `BCEB_4_ALL`, `SCB_29_ALL`)
+    1. The foundation configuration code (.e.g. `BCCB_4_B`, `BCEB_4_ALL`, `SCB_29_ALL`). Note that this code is a concatenation of the HOT2000 configuration type (e.g., BCCB_4) and a suffix (ALL, B, W, C, S)
     2. The interior wall construction code, __or__ 
-    3. The interior wall specified R-value
-    4. The exterior wall specified R-value 
-    5. The R-valye of insulation added to the slab.  
+    3. The interior wall specified R-value (Note: One of the two must be NA)
+    4. The exterior wall specified R-value or NA
+    5. The R-value of insulation added to the slab or NA.  
 * **Other things you should know**: 
   - Below grade heat loss is also sensitive to the _depth of frost_ input. Work is underway 
   to add support to HTAP for this parameter. 
   - Setting `Opt-H2KFoundation = NA ` leaves the archetype basements unchanged.
   
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-H2KFoundation`  
          Opt-H2KFoundation = OBCminR12-Slab0R
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-H2KFoundation`
 
          *attribute:name   = Opt-H2KFoundation
          *attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
@@ -457,14 +690,46 @@ Inputs
          *option:OBCminR12-Slab24R:value:4 = NA          ! External wall added R-value (Imp)
          *option:OBCminR12-Slab24R:value:5 = 24          ! Below slab R-value
          *option:OBCminR12-Slab24R:cost:total = 0
+         <snip>
 
 
+<a name="opt-h2kfoundation-slabcrawl"></a>
+### 10) `Opt-FoundationSlabCrawl`
 
+* **Description** : Defines the below-grade insulation configuration and specification for Slab-On-Grade and Crawlspace foundations
+* **Typical values**: Keyword specifying desired foundation insulation configuration
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will modify Slab and/or Crawl foundations in the 
+  .h2k file to reflect the corresponding parameters from the options file. For each 
+  foundation specification, the options file must define:
+    1. The foundation configuration code (.e.g. `SCB_29_ALL`, `SCB_29_S`). Note that this code is a concatenation of the HOT2000 configuration type (e.g., BCCB_4) and a suffix (ALL, B, W, C, S)
+    2. The interior wall construction code, __or__ 
+    3. The interior wall specified R-value (Note: One of the two must be NA)
+    4. The exterior wall specified R-value or NA
+    5. The R-value of insulation added to the slab or NA.  
+* **Other things you should know**: 
+  - Below grade heat loss is also sensitive to the _depth of frost_ input. Work is underway 
+  to add support to HTAP for this parameter. 
+  - Setting `Opt-H2KFoundation = NA ` leaves the archetype basements unchanged.
+  
+  
+#### Sample `.choice` definition for  `Opt-H2KFoundationSlabCrawl`  
+         Opt-H2KFoundationSlabCrawl = OBCminR12-Slab0R
+         
+#### Sample `.options` definition for  `Opt-H2KFoundation`
+
+         *attribute:name   = Opt-H2KFoundationSlabCrawl
+         *attribute:tag:1  = OPT-H2K-ConfigType     ! Fnd config code (e.g., BCCB_4 + _ALL or _B or _W or _C or _S)
+         *attribute:tag:2  = 
+         *attribute:tag:3  = 
+         *attribute:tag:4  = 
+         *attribute:tag:5  = 
+         *attribute:default = NA
+         
          <snip>
 
 
 <a name="opt-exposedfloor"></a>
-### 7) `Opt-ExposedFloor`
+### 11) `Opt-ExposedFloor`
 
 * **Description**: Defines insulation levels in exposed floors, including spaces 
     above garages, and porches. 
@@ -486,10 +751,10 @@ Inputs
   - Setting `Opt-ExposedFloor = NA` will leave the archetype's floor definitions to 
     be unchanged.
 
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-ExposedFloor`  
          Opt-ExposedFloor  = BaseExpFloor-R31
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-ExposedFloor`
 
          *attribute:name   = Opt-ExposedFloor 
          *attribute:tag:1  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
@@ -507,34 +772,38 @@ Inputs
          *option:ExpFloorFlash&Batt-R36:value:1 = NA     ! Use "NA" (or non-existent name) for user-Specified case
          *option:ExpFloorFlash&Batt-R36:value:2 = 36     ! User-Specified R-value (Imperial) / NA for code name
          *option:ExpFloorFlash&Batt-R36:cost:total    = 0
-         
          <snip>
+     
          
+
 <a name="opt-casementwindows"></a>
-### 8) `Opt-CasementWindows`
+### 12) `Opt-CasementWindows`
 
 * **Description** : Defines performance characteristics of windows.
 * **Typical values**: Keyword specifying the desired window specification 
 * **HOT2000 bindings**: When run, __substitute-h2k.rb__ will alter the window 
   definitions according to the corresponding specifications in the .options file. 
   In each case, the script will replace the existing window definition with 
-  definition from the code library. The values provided in the .options file 
+  a definition from the code library. The values provided in the .options file 
   must match window definition names in the code library. For instance, 
   in the example below, the codes `DblLeHcAir`, `DblLeHcArg` and `DblLeScArg` 
   must all exist in the code library. 
 * **Other things you should know**: 
   - __substitute-h2k__ supports unique window definitions by orientation; each 
-    window spec must explicitly name the corresponding code for each of  the S/SE/E/NE/N/NW/W/SW. 
-    cardinal points. __substitute-h2k.rb__ will modify the windows for each orientation 
+    window spec must explicitly name the corresponding code for each of the S/SE/E/NE/N/NW/W/SW 
+    orientations. __substitute-h2k.rb__ will modify the windows for each orientation 
     accordingly. 
   - Within HOT2000's code editor, you may define windows using overall U-value and 
     SHGC inputs, or via HOT2000's legacy window code selector.  
-  - This tag will edit all window types, not just casements. 
+  - This tag will edit all window types in walls, not just casements. However, it will not change
+    windows in doors or ceilings (i.e., skylights).
+  - Setting `Opt-CasementWindows = NA ` leaves the archetype windows unchanged.
+
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-CasementWindows`  
          Opt-CasementWindows = DoubleLowEHardCoatAirFill
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-CasementWindows`
 
           *attribute:start 
           *attribute:name  = Opt-CasementWindows
@@ -577,11 +846,185 @@ Inputs
           *option:DoubleArgon_HighGainOnSouth:value:7 = DblLeScArg   
           *option:DoubleArgon_HighGainOnSouth:value:8 = DblLeScArg 
           *option:DoubleArgon_HighGainOnSouth:cost:total    = 0
+          <snip>
 
-         <snip>
+          
+<a name="opt-skylights"></a>
+### 13) `Opt-Skylights`
 
+* **Description** : Defines performance characteristics of skylights (i.e., windows in ceilings).
+* **Typical values**: Keyword specifying the desired skylight specification 
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will alter the ceiling window 
+  definitions according to the corresponding specifications in the .options file. 
+  In each case, the script will replace the existing windows (in ceilings) definitions with 
+  the definition from the code library. The values provided in the .options file 
+  must match window definition names in the code library. For instance, 
+  in the example below, the code `SkylightDef` must exist in the code library. 
+* **Other things you should know**: 
+  - __substitute-h2k__ supports unique window definitions by orientation; each 
+    window spec must explicitly name the corresponding code for each of the S/SE/E/NE/N/NW/W/SW 
+    directions. __substitute-h2k.rb__ will modify the windows for each orientation 
+    accordingly. 
+  - Within HOT2000's code editor, you may define windows using overall U-value and 
+    SHGC inputs, or via HOT2000's legacy window code selector.  
+  - This tag will edit all ceiling window types. It will not effect windows in doors or walls.
+  - Setting `Opt-Skylights = NA` leaves the archetype ceiling windows unchanged.
+
+  
+#### Sample `.choice` definition for  `Opt-Skylights`  
+         Opt-Skylights = SkylightDef
+         
+#### Sample `.options` definition for  `Opt-Skylights`
+
+          *attribute:start 
+          *attribute:name  = Opt-Skylights
+          *attribute:tag:1 = <Opt-win-S-CON>     ! Also H2K S windows lib code name
+          *attribute:tag:2 = <Opt-win-E-CON>     ! Also H2K E windows lib code name
+          *attribute:tag:3 = <Opt-win-N-CON>     ! Also H2K N windows lib code name
+          *attribute:tag:4 = <Opt-win-W-CON>     ! Also H2K W windows lib code name
+          *attribute:tag:5 = <Opt-win-SE-CON>     ! H2K SE windows lib code name
+          *attribute:tag:6 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
+          *attribute:tag:7 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
+          *attribute:tag:8 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
+          *attribute:default = SkylightDef
+          
+          *option:NA:value:1 = NA   
+          *option:NA:value:2 = NA
+          *option:NA:value:3 = NA   
+          *option:NA:value:4 = NA
+          *option:NA:value:5 = NA   
+          *option:NA:value:6 = NA
+          *option:NA:value:7 = NA   
+          *option:NA:value:8 = NA
+          *option:NA:cost:total = 0.0
+          
+          *option:SkylightDef:value:1 = SkylightDef   
+          *option:SkylightDef:value:2 = SkylightDef
+          *option:SkylightDef:value:3 = SkylightDef   
+          *option:SkylightDef:value:4 = SkylightDef
+          *option:SkylightDef:value:5 = SkylightDef   
+          *option:SkylightDef:value:6 = SkylightDef
+          *option:SkylightDef:value:7 = SkylightDef   
+          *option:SkylightDef:value:8 = SkylightDef
+          *option:SkylightDef:cost:total = 0.0
+          <snip>
+
+          
+          
+<a name="opt-door-windows"></a>
+### 14) `Opt-DoorWindows`
+
+* **Description** : Defines performance characteristics of windows in doors.
+* **Typical values**: Keyword specifying the desired door window specification 
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will alter the door window 
+  definitions according to the corresponding specifications in the .options file. 
+  In each case, the script will replace the existing windows (in doors) definitions with 
+  the definition from the code library. The values provided in the .options file 
+  must match window definition names in the code library. For instance, 
+  in the example below, the codes `DoorWinDef` must exist in the code library. 
+* **Other things you should know**: 
+  - __substitute-h2k__ supports unique door window definitions by orientation; each 
+    window spec must explicitly name the corresponding code for each of the S/SE/E/NE/N/NW/W/SW 
+    directions. __substitute-h2k.rb__ will modify the door windows for each orientation 
+    accordingly. 
+  - Within HOT2000's code editor, you may define windows using overall U-value and 
+    SHGC inputs, or via HOT2000's legacy window code selector.  
+  - This tag will edit all door window types. It will not effect skylights or windows in walls.
+  - Setting `Opt-DoorWindows = NA` leaves the archetype ceiling windows unchanged.
+
+  
+#### Sample `.choice` definition for  `Opt-DoorWindows`  
+         Opt-DoorWindows = DoubleLowEHardCoatAirFill
+         
+#### Sample `.options` definition for  `Opt-DoorWindows`
+
+          *attribute:start 
+          *attribute:name  = Opt-DoorWindows
+          *attribute:tag:1 = <Opt-win-S-CON>     ! Also H2K S windows lib code name
+          *attribute:tag:2 = <Opt-win-E-CON>     ! Also H2K E windows lib code name
+          *attribute:tag:3 = <Opt-win-N-CON>     ! Also H2K N windows lib code name
+          *attribute:tag:4 = <Opt-win-W-CON>     ! Also H2K W windows lib code name
+          *attribute:tag:5 = <Opt-win-SE-CON>     ! H2K SE windows lib code name
+          *attribute:tag:6 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
+          *attribute:tag:7 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
+          *attribute:tag:8 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
+          *attribute:default = DoorWinDef
+          
+          *option:NA:value:1 = NA   
+          *option:NA:value:2 = NA
+          *option:NA:value:3 = NA   
+          *option:NA:value:4 = NA
+          *option:NA:value:5 = NA   
+          *option:NA:value:6 = NA
+          *option:NA:value:7 = NA   
+          *option:NA:value:8 = NA
+          *option:NA:cost:total = 0.0
+          
+          *option:DoorWinDef:value:1 = DoorWinDef   
+          *option:DoorWinDef:value:2 = DoorWinDef
+          *option:DoorWinDef:value:3 = DoorWinDef   
+          *option:DoorWinDef:value:4 = DoorWinDef
+          *option:DoorWinDef:value:5 = DoorWinDef   
+          *option:DoorWinDef:value:6 = DoorWinDef
+          *option:DoorWinDef:value:7 = DoorWinDef   
+          *option:DoorWinDef:value:8 = DoorWinDef
+          *option:DoorWinDef:cost:total = 0.0
+          <snip>
+
+
+<a name="opt-doors"></a>
+### 15) `Opt-Doors`
+
+* **Description** : Defines performance characteristics of doors.
+* **Typical values**: Keyword specifying the desired door specification 
+* **HOT2000 bindings**: When run, __substitute-h2k.rb__ will alter the door  
+  definitions according to the corresponding specifications in the .options file. 
+  In each case, the script will replace the existing door R-value with 
+  the value specified. 
+* **Other things you should know**: 
+  - This tag will edit all doors in the archetype.
+  - Setting `Opt-Doors = NA` leaves the archetype doors unchanged.
+
+  
+#### Sample `.choice` definition for  `Opt-Doors`  
+         Opt-Doors = SolidWood
+         
+#### Sample `.options` definition for  `Opt-Doors`
+
+          *attribute:start 
+          *attribute:name  = Opt-Doors
+          *attribute:tag:1 = <Opt-R-value>     ! User specified R-value (Imperial) of door
+          *attribute:default = SolidWood
+
+          *option:NA:value:1 = NA   
+          *option:NA:cost:total = 0.0
+
+          *option:SolidWood:value:1 = 2.2
+          *option:SolidWood:cost:total = 0.0
+
+          *option:HollowWood:value:1 = 2.1
+          *option:HollowWood:cost:total = 0.0
+
+          *option:SteelFG:value:1 = 1.65      ! Steel Fibreglass core
+          *option:SteelFG:cost:total = 0.0
+
+          *option:SteelPS:value:1 = 5.57      ! Steel polystyrene core
+          *option:SteelPS:cost:total = 0.0
+
+          *option:SteelMDSprayCore:value:1 = 6.47    ! Steel medium density spray foam core
+          *option:SteelMDSprayCore:cost:total = 0.0
+
+          *option:FibrePolyCore:value:1 = 4.83    ! Fibreglass polystyrene core
+          *option:FibrePolyCore:cost:total = 0.0
+
+          *option:FibreMDSprayCore:value:1 = 5.57    ! Fibreglass medium density spray foam core
+          *option:FibreMDSprayCore:cost:total = 0.0
+          <snip>
+
+          
+          
 <a name="opt-h2k-pv"></a>
-### 9) `Opt-H2K-PV`
+### 16) `Opt-H2K-PV`
 
 * **Description**: Defines HOT2000's PV module inputs 
 * **Typical values**:  Keyword defining PV system specification. 
@@ -595,16 +1038,16 @@ Inputs
     a PV system, setting `Opt-H2K-PV  = NA` will leave this system unchanged, and 
     all runs will include a PV system. If you are studing designs with- and without PV,
     make sure PV is removed from the base archetype. 
-  - PV system sizes are commonly described according to it peak output (e.g. 5kW, 10kW), 
+  - PV system sizes are commonly described according to their peak output (e.g. 5kW, 10kW), 
     but HOT2000 describes PV according to collector area and system efficiency. The 
     actual DC output from these systems will vary by location. 
 
     
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-H2K-PV`  
          Opt-H2K-PV = MonoSi-10kW
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-H2K-PV`
 
            *attribute:start
            *attribute:name  = Opt-H2K-PV
@@ -647,15 +1090,10 @@ Inputs
            *option:MonoSi-200m2:value:5 = 90
            *option:MonoSi-200m2:value:6 = 90
            *option:MonoSi-200m2:cost:total = 0
-           
-           *attribute:end
-         
+           <snip>
 
-
-         <snip>
-
-<a name="opt-hvac"></a>
-### 10) `Opt-HVAC`
+<a name="opt-hvacsystem"></a>
+### 17) `Opt-HVACSystem`
 
 >> <mark>**THIS PARAMETER IS LIKELY TO BE REDEFINED IN THE NEAR FUTURE**</mark>
 
@@ -666,12 +1104,14 @@ Inputs
 * **Other things you should know**: 
   - Currently this tag includes parameters for Type 1 (+/- AC), Type 2 and combo systems. 
     <mark>The number of inputs needed depends on which system is selected</mark>
-  - Contrary to its name, the definition of this system does not include ventilation.
+  - Contrary to its name, the definition of this system does not include ventilation. Mechanical ventilation is defined in `Opt-HRVspec`
+  - Setting `Opt-HVACSystem = NA ` leaves the archetype HVAC system unchanged.
+
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-HVACSystem`  
          Opt-Archetype = MediumSFD
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-HVACSystem`
          *attribute:start
          *attribute:name    = Opt-HVACSystem          ! System Name. 
          *attribute:tag:1  = Opt-H2K-SysType1        ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9
@@ -841,27 +1281,26 @@ Inputs
          *option:ComboHeatA:value:32  = 117               ! P9 BlowerPower - 40
          *option:ComboHeatA:value:33  = 418               ! P9 BlowerPower - 100 
          *option:ComboHeatA:cost:total = 0
-         <snip>
-   
          
+         <snip>
          
          
 <a name="opt-dhwsystem"></a>         
-### 11) `Opt-DHWSystem`
+### 18) `Opt-DHWSystem`
 
 * **Description**: Defines hot water system type and performance 
 * **Typical values**: Keyword defining DHW system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
   archetype's hot water system type and performance to match the corresponding 
-  parameters from from the .options file.
+  parameters from the .options file.
 * **Other things you should know**: 
   - if `Opt-HVAC` is set to a combo system, this option will be ignored. 
- 
-  
-#### Sample `.choice` definition for  `Opt-Location`  
+  - Setting `Opt-DHWSystem = NA ` leaves the archetype domestic hot water system unchanged.
+
+#### Sample `.choice` definition for  `Opt-DHWSystem`  
          Opt-DHWSystem = ElecInstantaneous
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-DHWSystem`
 
           *attribute:start
           *attribute:name  = Opt-DHWSystem
@@ -896,28 +1335,29 @@ Inputs
           *option:ElecInstantaneous:value:5 = NA        
           *option:ElecInstantaneous:value:6 = 0
           *option:ElecInstantaneous:cost:total = 0
+          
+          <snip>
 
          
 
-
-         <snip>
 <a name="opt-dwhrsystem"></a> 
-### 12) `DWHRSystem`
-
-* **Description** : Defines drain-water heat recovery 
-* **Typical values**: Keyword defining DHW system specifications 
+### 19) `Opt-DWHRSystem`
+* **Description** : Indicates presence and performance of drainwater heat recovery systems 
+* **Typical values**: Keyword defining DWHR system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
   archetype to include the specified drain-water heat recovery system, according to 
   the specifications provided in the .options file.
 * **Other things you should know**: 
-  - HOT2000's DWHR inputs perimt specification of shower frequency, temperature  and duration
+  - HOT2000's DWHR inputs permit specification of shower frequency, temperature  and duration
     Running the model in ERS mode may override these inputs.
+  - setting `Opt-DWHRSystem = NA` leaves the drain water heat recovery system unchanged.
+
 
   
-#### Sample `.choice` definition for  `Opt-Location`  
+#### Sample `.choice` definition for  `Opt-DWHRSystem`  
          Opt-DWHRSystem = DWHR-eff-30
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-DWHRSystem`
 
          *attribute:start
          *attribute:name  = Opt-DWHRSystem
@@ -969,41 +1409,216 @@ Inputs
          *option:DWHR-eff-42:value:9   = 4.53          ! Shower lenght (minutes)
          *option:DWHR-eff-42:value:10  = 3             ! number of daily showers
          *option:DWHR-eff-42:cost:total = 0
+         <snip>
+         
+         
+
+<a name="opt-HRVspec"></a> 
+### 20) `Opt-HRVspec` 
+
+* **Description** : Creates/configures a whole-house ventilator item to the provided specification.
+* **Typical values**: Keyword specifying the HRV system  (i.e., the mechanical ventilation system)
+* **HOT2000 bindings**:   
+  - `OPT-H2K-FlowReq`: Integer flag indicating if H2K should warn when insufficient ventilation is provided. 
+    Values:  `1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable`
+  - `OPT-H2K-AirDistType`: Integer flag indicating if ventilator is tied to central air or dedicated duct work. 
+    Values: `1: Forced air heating ductwork, 2: DedIcated low volume ductwork, 3: 2 with transfer fans`
+  - `OPT-H2K-OpSched` : Specified number of minutes/day the unit will operate for. Sets         `HouseFile/House/Ventilation/WholeHouse/OperationSchedule`
+  - `OPT-H2K-HRVSupply`: Balanced supply/exhaust rate . Sets 
+     `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[supplyFlowRate]` and
+     `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[exhaustFlowRate]`
+  - `OPT-H2K-Rating1`:  SRE at 0°C. Sets `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[efficiency1]`
+  - `OPT-H2K-Rating1`:  SRE at -25°C. Sets `HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv[efficiency2]`
+* **Other things you should know**: 
+  - Setting `Opt-HRVspec = NA` leaves the archetype ventilation system unchanged. If no mechanical ventilation system is defined in the archetype, then none will be run in HTAP. If the archetype has a mechanical system defined, then no changes will be made to it for the HTAP run.
+
+  
+#### Sample `.choice` definition for  `Opt-HRVspec`
+         Opt-HRVspec = HRV_60
+         
+#### Sample `.options` definition for  `Opt-HRVspec`
+
+         *attribute:start 
+         *attribute:name    = Opt-HRVspec 
+         *attribute:tag:3   = OPT-H2K-FlowReq      ! 1:F326, 2:ACH, 3:Flow Rate, 4:Not Applicable
+         *attribute:tag:4   = OPT-H2K-AirDistType  ! 1: Forced air heating ductwork, 2: Dedecated low volume ductwork, 3: 2 with transfer fans
+         *attribute:tag:5   = OPT-H2K-OpSched      ! User Specified minutes/day
+         *attribute:tag:6   = OPT-H2K-HRVSupply    ! 
+         *attribute:tag:7   = OPT-H2K-Rating1
+         *attribute:tag:8   = OPT-H2K-Rating2
+         *attribute:default = CEF_SPEC
+         
+         *option:NA:value:3 = NA     ! F326
+         *option:NA:value:4 = NA     ! Forced air heating ductwork
+         *option:NA:value:5 = NA   ! Min./Day
+         *option:NA:value:6 = NA    ! L/s (exhaust = supply)
+         *option:NA:value:7 = NA    ! Eff% @ Rating1
+         *option:NA:value:8 = NA    ! Eff% @ Rating2
+         *option:NA:cost:total = 0
+         
+         *option:CEF_SPEC:value:3 = 1     ! F326
+         *option:CEF_SPEC:value:4 = 1     ! Forced air heating ductwork
+         *option:CEF_SPEC:value:5 = 480   ! Min./Day
+         *option:CEF_SPEC:value:6 = 60    ! L/s (exhaust = supply)
+         *option:CEF_SPEC:value:7 = 64    ! Eff% @ Rating1
+         *option:CEF_SPEC:value:8 = 64    ! Eff% @ Rating2
+         *option:CEF_SPEC:cost:total = 0
+         
+         
+         *option:HRV_60:value:3 = 1     ! F326
+         *option:HRV_60:value:4 = 1     ! Forced air heating ductwork
+         *option:HRV_60:value:5 = 1440   ! Min./Day
+         *option:HRV_60:value:6 = 60    ! L/s (exhaust = supply)
+         *option:HRV_60:value:7 = 60    ! Eff% @ Rating1     Prince George used 70% at 0, 61% at -25C at $1386
+         *option:HRV_60:value:8 = 55    ! Eff% @ Rating2
+         *option:HRV_60:cost:total = 1496       !$1496 cost assumed for LEEP Kelowna optimization
+         <snip>
          
 
 
-         <snip>
+<a name="opt-fuelcost"></a>
+### 21) `Opt-FuelCost`   
 
-<a name="opt-HRV"></a> 
-### 3) `Opt-HRV =`
+* **Description** : Defines the fuel costs used to calculate the annual cost of electricity, gas, oil, propane and/or wood required by the specific arcehtype defined by __substitute-h2k.rb__. HOT2000 requires as exact match between the fuel cost selected and an entry in the FuelLib_.flc file
+* **Typical values**: Keyword indicating fuel library name
+* **HOT2000 bindings**:   
+  - `OPT-LibraryFile`: Fuel Library filename, file must be defined in the `StdLibs` directory, FuelLib16.flc (fuel library files are `*.flc`)
+  - `OPT-ElecName`: the name of the entry in the fuel library that defines the electricity cost structure, by usage
+  - `OPT-GasName`: the name of the entry in the fuel library that defines the gas cost structure, by usage
+  - `OPT-OilName`: the name of the entry in the fuel library that defines the oil cost structure, by usage
+  - `OPT-PropaneName`: the name of the entry in the fuel library that defines the propane cost structure, by usage
+  - `OPT-WoodName`:the name of the entry in the fuel library that defines the wood cost structure, by usage
+
+* **Other things you should know**: 
+ - there is a known issue when there is not an exact match between the `Opt-*Name` and an entry in the fuel cost library file. A solution is being developed.
+ - setting `Opt-FuelCost = NA` leaves the fuel costs unchanged.
+  
+#### Sample `.choice` definition for  `Opt-FuelCost`
+         Opt-FuelCost = rates2016
+         
+#### Sample `.options` definition for  `Opt-FuelCost`
+        *attribute:start
+        *attribute:name     = Opt-FuelCost
+        *attribute:tag:1    = <OPT-LibraryFile>
+        *attribute:tag:2    = <OPT-ElecName>
+        *attribute:tag:3    = <OPT-GasName>
+        *attribute:tag:4    = <OPT-OilName>
+        *attribute:tag:5    = <OPT-PropaneName>
+        *attribute:tag:6    = <OPT-WoodName>
+        *attribute:default  = rates2016
+        <snip>
+        
+<a name="opt-roofpitch"></a>
+### 22) `Opt-RoofPitch`   
+
+* **Description** : Roof pitch is used by HOT2000 to calcualte the volume of the attic. The air change rate to the attic, its volume and solar gains, combined with the outdoor air temperature are used the heat balance to estimate the average attic temperature. That temperature is then used to estimate the heat loss or gain through the attic ceiling to the house.
+* **Typical values**: Keyword indicating slope of the roof line, e.g. 3-12
+* **Other things you should know**: 
+ - setting `Opt-RoofPitch = NA` leaves the roof pitch unchanged.
+  
+#### Sample `.choice` definition for  `Opt-RoofPitch`
+     Opt-RoofPitch = 3-12
+         
+#### Sample `.options` definition for  `Opt-RoofPitch`
+    *attribute:start
+    *attribute:name     = Opt-RoofPitch
+    *attribute:tag:1    = Opt-H2K-RoofSlope
+    *attribute:default  = 8-12 
+
+    *option:NA:value:1 = NA
+    *option:NA:cost:total  = 0
+
+    *option:3-12:value:1 = 0.250
+    *option:3-12:cost:total  = 0
+
+    *option:6-12:value:1 = 0.500
+    *option:6-12:cost:total  = 0
+
+    *option:8-12:value:1 = 0.667
+    *option:8-12:cost:total  = 0
+
+    *option:12-12:value:1 = 1.000
+    *option:12-12:cost:total  = 0
+    <snip>
+
+
+<a name="opt-ruleset"></a>
+### 23) `Opt-Ruleset`   
 
 * **Description** : 
 * **Typical values**: 
-* **HOT2000 bindings**:  
 * **Other things you should know**: 
-  - Note 1
-  - Note 2
+  - 
   
-#### Sample `.choice` definition for  `Opt-Location`  
-         Opt-Archetype = MediumSFD
+#### Sample `.choice` definition for  `Opt-Ruleset`
+     Opt-Ruleset = 
          
-#### Sample `.options` definition for  `Opt-Location`
+#### Sample `.options` definition for  `Opt-Ruleset`
+    *attribute:start
+    *attribute:name = Opt-Ruleset 
+    *attribute:tag:1 = <NotNOTARealTag>
+    *attribute:default = NA
+    *attribute:on-error = ignore 
 
-         *attribute:
-         
+    *option:NA:value:1    = NA
+    *option:NA:cost:total = 0
+
+    *option:NBC9_36_noHRV:value:1    = NBC9_36_noHRV
+    *option:NBC9_36_noHRV:cost:total = 0
+
+    *option:NBC9_36_HRV:value:1    = NBC9_36_HRV
+    *option:NBC9_36_HRV:cost:total = 0
+    <snip>
 
 
-         <snip>
+<a name="outputs"></a> 
+Outputs 
+------
+The output file `HTAP-prm-output.csv` contains one line of data for each HTAP run. Each line of output contains **3 main segments** of information: 1. the run number and unique run identifiers, 2. the HOT2000 run output, and 3. the input data as defined above. The input data is repeated in the output to allow for HTAP run identification.
+
+Each of these output segments is defined below.
+
+<a name="#runnumber"></a>
+### 1) `RunNumber` 
+The first 4 columns of the output for each HTAP run are:`RunNumber`,`RunDir`,`iiiiiiinput.ChoiceFile`, and `Recovered-results`. Only the first column - `RunNumber` - is a unique identifier for each run. The other 3 columns can be ignored.
+
+<a name="#h2k-outputs"></a>
+### 2) `H2K-outputs` 
+The next 34 columns are pulled from the HOT2000 results, in the _.h2k_ xml file.
+
+  - `Energy-Total-GJ`: the total energy consumption from the HOT2000 run for the archetype and the inputs defined above.
+  - `Ref-En-Total-GJ`: the total energy consumption for the HOT2000 reference house run (in ERS mode)
+All outputs named `Util-Bill-_` are calculated based on the consumption of each fuel as calculated by HOT2000 (for each applicable use: heating, cooling, hot water, ventilation, and plug loads) using and the `Opt-FuelCost` identified for each HTAP run. 
+  - `Util-Bill-gross`: the sum of all the fuel costs, i.e., `Util-Bill-Elec + Util-Bill-Gas + Util-Bill-Prop + Util-Bill-Oil + Util-Bill-Wood`
+  - `Util-PV-revenue`: the net annual PV generation (kWh) * PV Tarrif ($/kWh). HTAP Assumes that all annual PV energy available is used to reduce house electricity to zero first, the balance is sold to utility at the rate PV Tarrif. _This is currently set to 0_ 
+  - `Util-Bill-Net = Util-Bill-gross - Util-PV-revenue`
+  - `Util-Bill-Elec`, `Util-Bill-Gas`, `Util-Bill-Prop`, `Util-Bill-Oil`,`Util-Bill-Wood`: the individual fuel consumptions * fuel cost rates.
+  - `Energy-PV-kWh`: the amount of energy generated by any PV system identified (kWh)
+  - `Gross-HeatLoss-GJ`: the annual heat loss as calculated in HOT2000
+  - `Energy-HeatingGJ`: the total heating energy required
+  - `AuxEnergyReq-HeatingGJ`: the furnace output, i.e., the total furnace thermal output
+  - `Energy-CoolingGJ`: the amount of cooling energy 	 
+  - `Energy-VentGJ`: the mechanical ventilation energy consumption 
+  - `Energy-DHWGJ`: the water heating energy consumption
+  - `Energy-PlugGJ`: the plug load energy consumption - based on standard operating conditions.
+The following 5 output report the consumption of each fuel, in the units used for fuel costs. These output report the consumption for all uses, as applicable: heating, cooling, hot water, ventilation, and plug loads.
+  - `EnergyEleckWh`: the total number of kWh of electricity consumed
+  - `EnergyGasM3`: the total number of m3 of natural gas consumed
+  - `EnergyOil_l`: the total number of L of oil consumed
+  - `EnergyProp_L`: the total number of L of propane consumed
+  - `EnergyWood_cord`: the number of cords of wood consumed
+  - `Upgrade-cost`: if the upgrade costs are defined in the .options file, then the costs for each upgrade considered will be summed.
+  _Note: many options do not include costs at this time._
+  - `SimplePaybackYrs`: This is a legacy output that should not be used
+  - `PEAK-Heating-W` and `PEAK-Cooling-W`: Peak heating and cooling loads.
+  - `PV-size-kW`: size of the PV system in kW        	 
+  - `Floor-Area-m2`: conditioned floor area in m2
+  - `TEDI_kWh_m2`: Thermal Energy Demand Intensity = AuxEnergyReq-HeatingGJ (converted to kWh) / Floor-Area-m2
+  - `MEUI_kWh_m2`: Mechanical Energy Utilization Intensity = (Energy-HeatingGJ + Energy-CoolingGJ + Energy-VentGJ + Energy-DHWGJ)(converted to kWh) / Floor-Area-m2
+  - `ERS-Value`: the Energy Rating System Value is only available if the file is run in ERS mode.
+  - `NumTries` and `LapsedTime`: are for information purposes only.
 
 
-         
-<a name="opt-skipped"></a>          
-Skipped for now 
----------------
-+ Opt-Ruleset 
-+ Opt-FuelCost   
-+ Opt-DWHRandSDHW       
-+ Opt-RoofPitch     
-+ Opt-ElecLoadScale
-+ Opt-DHWLoadScale 
-+ Opt-StandoffPV 
+<a name="#input.data"></a>
+### 3) `input.data`
+All of the inputs (#inputs) defined above are repeated for each HTAP run to help identify. These inputs are identified by the tag `input.Opt-__`.
