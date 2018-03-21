@@ -6,34 +6,34 @@ Contents
 ------------------
 1. [Input/output model](#IOmodel)
     1. [The `.options` file](#options-definition)
-    2. [The `.choice` file](#choice-definition)
-    3. [The `.run` file](#run-definition)
-2. [Inputs](#inputs)
+    1. [The `.choice` file](#choice-definition)
+    1. [The `.run` file](#run-definition)
+1. [Inputs](#inputs)
     1. [`Opt-Location`](#opt-location)
-    2. [`Opt-Archetype`](#opt-archetype)
-    3. [`Opt-ACH`](#opt-ach)
-    4. [`Opt-Mainwall`](#opt-mainwall)
-    5. [`Opt-Ceilings`](#opt-ceilings)
-    6. [`Opt-AtticCeilings`](#opt-attic-ceilings)
-    7. [`Opt-CathCeilings`](#opt-cath-ceilings)
-    8. [`Opt-FlatCeilings`](#opt-flat-ceilings)
-    9. [`Opt-H2KFoundation`](#opt-h2kfoundation)
-    10. [`Opt-H2KFoundationSlabCrawl`](#opt-h2kfoundation-slabcrawl)
-    11. [`Opt-ExposedFloor`](#opt-exposedfloor)
-    12. [`Opt-CasementWindows`](#opt-casementwindows)
-    13. [`Opt-Skylights`](#opt-sylights)
-    14. [`Opt-DoorWindows`](#opt-door-windows)
-    15. [`Opt-Doors`](#opt-doors)
-    16. [`Opt-H2K-PV`](#opt-h2k-pv)
-    17. [`Opt-HVACSystem`](#opt-hvacsystem)
-    18. [`Opt-DHWsystem`](#opt-dhwsystem)
-    19. [`Opt-DWHRsystem`](#opt-dwhrsystem)
-    20. [`Opt-HRVspec`](#opt-hrvspec)
-    21. [`Opt-FuelCost`](#opt-fuelcost)
-    22. [`Opt-RoofPitch`](#opt-roofpitch)
-    23. [`Opt-Ruleset`](#opt-ruleset)
-3. [Legacy parameters not currently supported](#opt-skipped)    
-4. [Outputs](#outputs)
+    1. [`Opt-Archetype`](#opt-archetype)
+    1. [`Opt-ACH`](#opt-ach)
+    1. [`Opt-Mainwall`](#opt-mainwall)
+    1. [`Opt-Ceilings`](#opt-ceilings)
+    1. [`Opt-AtticCeilings`](#opt-attic-ceilings)
+    1. [`Opt-CathCeilings`](#opt-cath-ceilings)
+    1. [`Opt-FlatCeilings`](#opt-flat-ceilings)
+    1. [`Opt-H2KFoundation`](#opt-h2kfoundation)
+    1. [`Opt-H2KFoundationSlabCrawl`](#opt-h2kfoundation-slabcrawl)
+    1. [`Opt-ExposedFloor`](#opt-exposedfloor)
+    1. [`Opt-CasementWindows`](#opt-casementwindows)
+    1. [`Opt-Skylights`](#opt-sylights)
+    1. [`Opt-DoorWindows`](#opt-door-windows)
+    1. [`Opt-Doors`](#opt-doors)
+    1. [`Opt-H2K-PV`](#opt-h2k-pv)
+    1. [`Opt-HVACSystem`](#opt-hvacsystem)
+    1. [`Opt-DHWsystem`](#opt-dhwsystem)
+    1. [`Opt-DWHRsystem`](#opt-dwhrsystem)
+    1. [`Opt-HRVspec`](#opt-hrvspec)
+    1. [`Opt-FuelCost`](#opt-fuelcost)
+    1. [`Opt-RoofPitch`](#opt-roofpitch)
+    1. [`Opt-Ruleset`](#opt-ruleset)
+1. [Legacy parameters not currently supported](#opt-skipped)    
+1. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
     2. [`H2K-outputs`](#h2k-outputs)
     3. [`input.data`](#input.data)
@@ -45,7 +45,7 @@ Input/Output model
 
 <a name="options-definition"></a>
 ### The HOT2000.options file 
-Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) file. An excerpt from the HOT2000.options file follows:
+Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) files. The HOT2000 input files are XML format files. An excerpt from the HOT2000.options file follows:
 
          !-----------------------------------------------------------------------
          ! Photovoltaics 
@@ -229,7 +229,7 @@ Inputs
 ------
 
 <a name="opt-location"></a>
-### 1) `Opt-Location` 
+### `Opt-Location` 
 
 * **Description** : Defines weather file location to be used in the HTAP run.
 * **Typical values**: Municipal location corresponding to valid HOT2000 weather file 
@@ -275,7 +275,7 @@ Inputs
          <snip>
 
 <a name="opt-archetype"></a>         
-### 2) `Opt-Archetype` 
+### `Opt-Archetype` 
 
 * **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
 * **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
@@ -315,7 +315,7 @@ Inputs
          
 
 <a name="opt-ach"></a>
-### 3) `Opt-ACH` 
+### `Opt-ACH` 
 
 * **Description** : Defines the infiltration characteristics of the building, using 
   inputs similar to those collected from a blower-door test. 
@@ -351,7 +351,7 @@ Inputs
          
 
 <a name="opt-mainwall"></a>
-### 4) `Opt-MainWall`
+### `Opt-MainWall`
 
 * **Description** : Defines insulation levels in above-grade opaque walls. 
 * **Typical values**: Keyword specifying desired wall assembly (e.g. `BaseR20`,
@@ -414,7 +414,7 @@ Inputs
 
 
 <a name="opt-ceilings"></a>
-### 5) `Opt-Ceilings`
+### `Opt-Ceilings`
 
 * **Description** : Defines insulation levels in ceilings.
 * **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
@@ -473,7 +473,7 @@ Inputs
 
          
 <a name="opt-attic-ceilings"></a>
-### 6) `Opt-AtticCeilings`
+### `Opt-AtticCeilings`
 
 * **Description** : Defines insulation levels in attic/gable, attic/hip, and scissor ceilings only.
 * **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
@@ -529,7 +529,7 @@ Inputs
 
          
 <a name="opt-cath-ceilings"></a>
-### 7) `Opt-CathCeilings`
+### `Opt-CathCeilings`
 
 * **Description** : Defines insulation levels in cathedral ceilings only.
 * **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
@@ -584,7 +584,7 @@ Inputs
 
          
 <a name="opt-flat-ceilings"></a>
-### 8) `Opt-FlatCeilings`
+### `Opt-FlatCeilings`
 
 * **Description** : Defines insulation levels in flat ceilings only.
 * **Typical values**: Keyword specifying desired ceiling assembly (e.g. `CeilR40`, `CeilR50`...)
@@ -639,7 +639,7 @@ Inputs
          
 
 <a name="opt-h2kfoundation"></a>
-### 9) `Opt-H2KFoundation`
+### `Opt-H2KFoundation`
 
 * **Description** : Defines the below-grade insulation configuration and specification
 * **Typical values**: Keyword specifying desired foundation insulation configuration
@@ -694,7 +694,7 @@ Inputs
 
 
 <a name="opt-h2kfoundation-slabcrawl"></a>
-### 10) `Opt-FoundationSlabCrawl`
+### `Opt-FoundationSlabCrawl`
 
 * **Description** : Defines the below-grade insulation configuration and specification for Slab-On-Grade and Crawlspace foundations
 * **Typical values**: Keyword specifying desired foundation insulation configuration
@@ -729,7 +729,7 @@ Inputs
 
 
 <a name="opt-exposedfloor"></a>
-### 11) `Opt-ExposedFloor`
+### `Opt-ExposedFloor`
 
 * **Description**: Defines insulation levels in exposed floors, including spaces 
     above garages, and porches. 
@@ -777,7 +777,7 @@ Inputs
          
 
 <a name="opt-casementwindows"></a>
-### 12) `Opt-CasementWindows`
+### `Opt-CasementWindows`
 
 * **Description** : Defines performance characteristics of windows.
 * **Typical values**: Keyword specifying the desired window specification 
@@ -850,7 +850,7 @@ Inputs
 
           
 <a name="opt-skylights"></a>
-### 13) `Opt-Skylights`
+### `Opt-Skylights`
 
 * **Description** : Defines performance characteristics of skylights (i.e., windows in ceilings).
 * **Typical values**: Keyword specifying the desired skylight specification 
@@ -912,7 +912,7 @@ Inputs
           
           
 <a name="opt-door-windows"></a>
-### 14) `Opt-DoorWindows`
+### `Opt-DoorWindows`
 
 * **Description** : Defines performance characteristics of windows in doors.
 * **Typical values**: Keyword specifying the desired door window specification 
@@ -973,7 +973,7 @@ Inputs
 
 
 <a name="opt-doors"></a>
-### 15) `Opt-Doors`
+### `Opt-Doors`
 
 * **Description** : Defines performance characteristics of doors.
 * **Typical values**: Keyword specifying the desired door specification 
@@ -1024,7 +1024,7 @@ Inputs
           
           
 <a name="opt-h2k-pv"></a>
-### 16) `Opt-H2K-PV`
+### `Opt-H2K-PV`
 
 * **Description**: Defines HOT2000's PV module inputs 
 * **Typical values**:  Keyword defining PV system specification. 
@@ -1093,7 +1093,7 @@ Inputs
            <snip>
 
 <a name="opt-hvacsystem"></a>
-### 17) `Opt-HVACSystem`
+### `Opt-HVACSystem`
 
 >> <mark>**THIS PARAMETER IS LIKELY TO BE REDEFINED IN THE NEAR FUTURE**</mark>
 
@@ -1102,7 +1102,7 @@ Inputs
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the heating
   and cooling system definitions according to the parameters defined in the .options file.
 * **Other things you should know**: 
-  - Currently this tag includes parameters for Type 1 (+/- AC), Type 2 and combo systems. 
+  - Currently this tag includes parameters for Type 1 (+/- AC), Type 2 and combo systems (P9). 
     <mark>The number of inputs needed depends on which system is selected</mark>
   - Contrary to its name, the definition of this system does not include ventilation. Mechanical ventilation is defined in `Opt-HRVspec`
   - Setting `Opt-HVACSystem = NA ` leaves the archetype HVAC system unchanged.
@@ -1286,7 +1286,7 @@ Inputs
          
          
 <a name="opt-dhwsystem"></a>         
-### 18) `Opt-DHWSystem`
+### `Opt-DHWSystem`
 
 * **Description**: Defines hot water system type and performance 
 * **Typical values**: Keyword defining DHW system specifications 
@@ -1341,7 +1341,7 @@ Inputs
          
 
 <a name="opt-dwhrsystem"></a> 
-### 19) `Opt-DWHRSystem`
+### `Opt-DWHRSystem`
 * **Description** : Indicates presence and performance of drainwater heat recovery systems 
 * **Typical values**: Keyword defining DWHR system specifications 
 * **HOT2000 bindings**:  When run, __substitute-h2k.rb__ will modify the
@@ -1414,7 +1414,7 @@ Inputs
          
 
 <a name="opt-HRVspec"></a> 
-### 20) `Opt-HRVspec` 
+### `Opt-HRVspec` 
 
 * **Description** : Creates/configures a whole-house ventilator item to the provided specification.
 * **Typical values**: Keyword specifying the HRV system  (i.e., the mechanical ventilation system)
@@ -1477,7 +1477,7 @@ Inputs
 
 
 <a name="opt-fuelcost"></a>
-### 21) `Opt-FuelCost`   
+### `Opt-FuelCost`   
 
 * **Description** : Defines the fuel costs used to calculate the annual cost of electricity, gas, oil, propane and/or wood required by the specific arcehtype defined by __substitute-h2k.rb__. HOT2000 requires as exact match between the fuel cost selected and an entry in the FuelLib_.flc file
 * **Typical values**: Keyword indicating fuel library name
@@ -1509,7 +1509,7 @@ Inputs
         <snip>
         
 <a name="opt-roofpitch"></a>
-### 22) `Opt-RoofPitch`   
+### `Opt-RoofPitch`   
 
 * **Description** : Roof pitch is used by HOT2000 to calcualte the volume of the attic. The air change rate to the attic, its volume and solar gains, combined with the outdoor air temperature are used the heat balance to estimate the average attic temperature. That temperature is then used to estimate the heat loss or gain through the attic ceiling to the house.
 * **Typical values**: Keyword indicating slope of the roof line, e.g. 3-12
@@ -1543,15 +1543,16 @@ Inputs
 
 
 <a name="opt-ruleset"></a>
-### 23) `Opt-Ruleset`   
+### `Opt-Ruleset`   
 
-* **Description** : 
-* **Typical values**: 
+* **Description** : The rule set option is used to access a Ruby function that ensures compliance with specific named rule sets such as the NBC 9.36 code or R-2000.
+* **Typical values**: Keyword indicating rule set name, e.g., "NBC9_36_noHRV"
 * **Other things you should know**: 
-  - 
+  - Any new rule set requires Ruby code to be added to __substitute-h2k.rb__ to enforce the attribute settings required for compliance 
+  - This option over-rides other option choices that may appear in the choice file in order to achieve compliance
   
 #### Sample `.choice` definition for  `Opt-Ruleset`
-     Opt-Ruleset = 
+     Opt-Ruleset = NBC9_36_noHRV
          
 #### Sample `.options` definition for  `Opt-Ruleset`
     *attribute:start
@@ -1579,11 +1580,11 @@ The output file `HTAP-prm-output.csv` contains one line of data for each HTAP ru
 Each of these output segments is defined below.
 
 <a name="#runnumber"></a>
-### 1) `RunNumber` 
+### `RunNumber` 
 The first 4 columns of the output for each HTAP run are:`RunNumber`,`RunDir`,`iiiiiiinput.ChoiceFile`, and `Recovered-results`. Only the first column - `RunNumber` - is a unique identifier for each run. The other 3 columns can be ignored.
 
 <a name="#h2k-outputs"></a>
-### 2) `H2K-outputs` 
+### `H2K-outputs` 
 The next 34 columns are pulled from the HOT2000 results, in the _.h2k_ xml file.
 
   - `Energy-Total-GJ`: the total energy consumption from the HOT2000 run for the archetype and the inputs defined above.
@@ -1620,5 +1621,5 @@ The following 5 output report the consumption of each fuel, in the units used fo
 
 
 <a name="#input.data"></a>
-### 3) `input.data`
+### `input.data`
 All of the inputs (#inputs) defined above are repeated for each HTAP run to help identify. These inputs are identified by the tag `input.Opt-__`.
