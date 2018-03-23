@@ -166,6 +166,12 @@ $PVInt = "NA"
 $PVIntModel = false
 $annPVPowerFromBrowseRpt = 0.0
 
+# Flags for AC Performance Data from Browse.rpt file
+$annACSensibleLoadFromBrowseRpt = 0.0
+$annACLatentLoadFromBrowseRpt = 0.0
+$TotalAirConditioningLoad = 0.0
+$AvgACCOP = 0.0
+
 # Setting Heating Degree Days
 $HDDHash =  {
             "WHITEHORSE" => 6580 ,
@@ -4008,13 +4014,15 @@ def postprocess( scaleData )
    bReadAuxEnergyHeating = true  # Always get Auxiliary Heating Energy (only available mthly in XML)
    bReadOldERSValue = false
    bUseNextPVLine = false
+   bUseNextACLine = false
+   bReadAirConditioningLoad = true  # Always get Air Conditioning Load (not available in XML)
    # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
    end
    
    # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
-   if ( bReadAuxEnergyHeating || bReadOldERSValue || $PVIntModel)
+   if ( bReadAuxEnergyHeating || bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel)
       begin
          fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
          while !fBrowseRpt.eof? do
@@ -4034,7 +4042,18 @@ def postprocess( scaleData )
                      $annPVPowerFromBrowseRpt = valuesArr[4].to_f * 12.0 / 1000.0  # kW (approx PV power)
                      break # PV power near bottom of file so no more need to read!
                   end
-               end
+               elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
+                  bUseNextACLine = true                  
+				  if ( lineIn =~ /^Ann/ )
+                     valuesArr = lineIn.split()   # Uses spaces by default to split-up line
+                     $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 
+					 $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 
+					 $AvgACCOP = valuesArr[8].to_f
+					 $TotalAirConditioningLoad = $annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt
+					 bUseNextACLine = false
+                     break # Stop parsing Browse.rpt when AC System annual Performance found!
+				  end
+			   end
             end
          end
          fBrowseRpt.close()
@@ -4069,7 +4088,7 @@ def postprocess( scaleData )
 
    # Get house heated floor area
    $FloorArea = getHeatedFloorArea( h2kPostElements )
-
+   $HouseVolume= h2kPostElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
    # ==================== Get results for all h2k calcs from XML file (except above case)
    
    parseDebug = true
@@ -6110,6 +6129,8 @@ fSUMMARY.write( "Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLos
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
 fSUMMARY.write( "AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
+fSUMMARY.write( "TotalAirConditioning-LoadMJ = #{$TotalAirConditioningLoad.round(1)} \n" )
+fSUMMARY.write( "AvgAirConditioning-COP = #{$AvgACCOP.round(1)} \n" )
 
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
@@ -6137,6 +6158,7 @@ $MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] +
                   $gResults[$outputHCode]['avgEnergyWaterHeatingGJ']  ) * 277.78 / $FloorArea
 
 fSUMMARY.write( "Floor-Area-m2     =  #{$FloorArea.round(1)} \n" )
+fSUMMARY.write( "House-Volume-m3   =  #{$HouseVolume.round(1)} \n" )
 fSUMMARY.write( "TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 
