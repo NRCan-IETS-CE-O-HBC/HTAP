@@ -4049,7 +4049,7 @@ def postprocess( scaleData )
                      $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 
 					 $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 
 					 $AvgACCOP = valuesArr[8].to_f
-					 $TotalAirConditioningLoad = $annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt
+					 $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0
 					 bUseNextACLine = false
                      break # Stop parsing Browse.rpt when AC System annual Performance found!
 				  end
@@ -6129,7 +6129,7 @@ fSUMMARY.write( "Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLos
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
 fSUMMARY.write( "AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
-fSUMMARY.write( "TotalAirConditioning-LoadMJ = #{$TotalAirConditioningLoad.round(1)} \n" )
+fSUMMARY.write( "TotalAirConditioning-LoadGJ = #{$TotalAirConditioningLoad.round(1)} \n" )
 fSUMMARY.write( "AvgAirConditioning-COP = #{$AvgACCOP.round(1)} \n" )
 
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
