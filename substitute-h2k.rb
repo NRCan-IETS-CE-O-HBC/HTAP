@@ -4011,18 +4011,18 @@ def postprocess( scaleData )
    end
    
    # Set flags for reading from Browse.rpt file
-   bReadAuxEnergyHeating = true  # Always get Auxiliary Heating Energy (only available mthly in XML)
    bReadOldERSValue = false
    bUseNextPVLine = false
    bUseNextACLine = false
    bReadAirConditioningLoad = true  # Always get Air Conditioning Load (not available in XML)
+   
    # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
    end
    
    # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
-   if ( bReadAuxEnergyHeating || bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel)
+   if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
       begin
          fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
          while !fBrowseRpt.eof? do
@@ -4044,16 +4044,16 @@ def postprocess( scaleData )
                   end
                elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
                   bUseNextACLine = true                  
-				  if ( lineIn =~ /^Ann/ )
+                  if ( lineIn =~ /^Ann/ )
                      valuesArr = lineIn.split()   # Uses spaces by default to split-up line
                      $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 
-					 $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 
-					 $AvgACCOP = valuesArr[8].to_f
-					 $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0
-					 bUseNextACLine = false
+                     $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 
+                     $AvgACCOP = valuesArr[8].to_f
+                     $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0
+                     bUseNextACLine = false
                      break # Stop parsing Browse.rpt when AC System annual Performance found!
-				  end
-			   end
+                  end
+               end
             end
          end
          fBrowseRpt.close()
