@@ -4044,12 +4044,12 @@ def postprocess( scaleData )
                   end
                elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
                   bUseNextACLine = true                  
-                  if ( lineIn =~ /^Ann/ )
-                     valuesArr = lineIn.split()   # Uses spaces by default to split-up line
-                     $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 
-                     $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 
-                     $AvgACCOP = valuesArr[8].to_f
-                     $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0
+                  if ( lineIn =~ /^Ann/ )												# Look for the annual results
+                     valuesArr = lineIn.split()   									# Uses spaces by default to split-up line
+                     $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 	#Annual AirConditioning Sensible Load (MJ)
+                     $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 		#Annual AirConditioning Latent Load (MJ)
+                     $AvgACCOP = valuesArr[8].to_f									#Average COP of AirConditioning
+                     $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0	# Divided by 1000 to convert unit to GJ
                      bUseNextACLine = false
                      break # Stop parsing Browse.rpt when AC System annual Performance found!
                   end
@@ -4062,6 +4062,39 @@ def postprocess( scaleData )
       end
    end
    
+	# ====================================================================================
+	# Parameter      Location
+	# ====================================================================================
+	# Orientation		HouseFile/House/Components/*/Components/Window/FacingDirection[code]
+	# SHGC				HouseFile/House/Components/*/Components/Window[SHGC]
+	# r-value			HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
+	# Height				HouseFile/House/Components/*/Components/Window/Measurements/[height]
+	# Width				HouseFile/House/Components/*/Components/Window/Measurements/[width]   
+   
+	$SHGCWin_sum 	= Hash.new(0)
+	$rValueWin_sum = Hash.new(0)
+	$AreaWin_sum 	= Hash.new(0)
+	$rValueWin 		= Hash.new(0)
+	$SHGCWin 		= Hash.new(0)
+	locationText = "HouseFile/House/Components/*/Components/Window"
+	
+	h2kPostElements.each(locationText) do |window| 
+		areaWin_temp = 0.0		# store the area of each windows 
+		winOrient = window.elements["FacingDirection"].attributes["code"].to_i		# Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+		areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)/1000000	# Height (mm) * Width (mm)
+		$SHGCWin_sum [winOrient]  += window.attributes["shgc"].to_f * areaWin_temp		# Adds the (SHGC * area) of each windows to summation for individual orientations
+		$rValueWin_sum [winOrient] += window.elements["Construction"].elements["Type"].attributes["rValue"].to_f * areaWin_temp 	# Adds the (RSI * area) of each windows to summation for individual orientations
+		$AreaWin_sum [winOrient] += areaWin_temp		# Adds area of each windows to summation for individual orientations
+	end
+
+	(1..8).each do |winOrient| 	# Calculate the average weighted values for each orientation
+		if $AreaWin_sum [winOrient] != 0		# No windows exist if the total area is zero for an orientation
+			$rValueWin [winOrient] = ($rValueWin_sum [winOrient] / $AreaWin_sum [winOrient]).round(2)		# Divide the summation of (SHGC * area) by total area
+			$SHGCWin [winOrient] = ($SHGCWin_sum [winOrient] / $AreaWin_sum [winOrient]).round(2)		# Divide the summation of (RSI * area) by total area
+		end
+	end
+	
+
    # ==================== Get electricity rate structure for external PV model use
    if ($PVsize !~ /NoPV/ )
       locationText = "HouseFile/FuelCosts/Electricity/Fuel/Minimum"
@@ -6165,7 +6198,23 @@ fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
-
+# Windows characteristics
+fSUMMARY.write( "Win-SHGC-S			=  #{$SHGCWin[1].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-S		=  #{$rValueWin[1].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-SE			=  #{$SHGCWin[2].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-SE		=  #{$rValueWin[2].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-E			=  #{$SHGCWin[3].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-E		=  #{$rValueWin[3].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-NE			=  #{$SHGCWin[4].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-NE		=  #{$rValueWin[4].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-N			=  #{$SHGCWin[5].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-N		=  #{$rValueWin[5].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-NW			=  #{$SHGCWin[6].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-NW		=  #{$rValueWin[6].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-W			=  #{$SHGCWin[7].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-W		=  #{$rValueWin[7].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-SW			=  #{$SHGCWin[8].round(1)}\n" )
+fSUMMARY.write( "Win-R-value-SW		=  #{$rValueWin[8].round(1)}\n" )
 
 if $ExtraOutput1 then
    fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
