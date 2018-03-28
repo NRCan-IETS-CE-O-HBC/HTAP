@@ -4082,15 +4082,15 @@ def postprocess( scaleData )
 		areaWin_temp = 0.0		# store the area of each windows 
 		winOrient = window.elements["FacingDirection"].attributes["code"].to_i		# Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
 		areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)/1000000	# Height (mm) * Width (mm)
-		$SHGCWin_sum [winOrient]  += window.attributes["shgc"].to_f * areaWin_temp		# Adds the (SHGC * area) of each windows to summation for individual orientations
-		$rValueWin_sum [winOrient] += window.elements["Construction"].elements["Type"].attributes["rValue"].to_f * areaWin_temp 	# Adds the (RSI * area) of each windows to summation for individual orientations
-		$AreaWin_sum [winOrient] += areaWin_temp		# Adds area of each windows to summation for individual orientations
+		$SHGCWin_sum[winOrient]  += window.attributes["shgc"].to_f * areaWin_temp		# Adds the (SHGC * area) of each windows to summation for individual orientations
+		$rValueWin_sum[winOrient] += window.elements["Construction"].elements["Type"].attributes["rValue"].to_f * areaWin_temp 	# Adds the (RSI * area) of each windows to summation for individual orientations
+		$AreaWin_sum[winOrient] += areaWin_temp		# Adds area of each windows to summation for individual orientations
 	end
 
 	(1..8).each do |winOrient| 	# Calculate the average weighted values for each orientation
-		if $AreaWin_sum [winOrient] != 0		# No windows exist if the total area is zero for an orientation
-			$rValueWin [winOrient] = ($rValueWin_sum [winOrient] / $AreaWin_sum [winOrient]).round(2)		# Divide the summation of (SHGC * area) by total area
-			$SHGCWin [winOrient] = ($SHGCWin_sum [winOrient] / $AreaWin_sum [winOrient]).round(2)		# Divide the summation of (RSI * area) by total area
+		if $AreaWin_sum[winOrient] != 0		# No windows exist if the total area is zero for an orientation
+			$rValueWin[winOrient] = ($rValueWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3)		# Divide the summation of (SHGC * area) by total area
+			$SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3)		# Divide the summation of (RSI * area) by total area
 		end
 	end
 	
@@ -6199,22 +6199,30 @@ fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
 # Windows characteristics
-fSUMMARY.write( "Win-SHGC-S         =  #{$SHGCWin[1].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-S      =  #{$rValueWin[1].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-SE        =  #{$SHGCWin[2].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-SE     =  #{$rValueWin[2].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-E         =  #{$SHGCWin[3].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-E      =  #{$rValueWin[3].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-NE        =  #{$SHGCWin[4].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-NE     =  #{$rValueWin[4].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-N         =  #{$SHGCWin[5].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-N      =  #{$rValueWin[5].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-NW        =  #{$SHGCWin[6].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-NW     =  #{$rValueWin[6].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-W         =  #{$SHGCWin[7].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-W      =  #{$rValueWin[7].round(1)}\n" )
-fSUMMARY.write( "Win-SHGC-SW        =  #{$SHGCWin[8].round(1)}\n" )
-fSUMMARY.write( "Win-R-value-SW     =  #{$rValueWin[8].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-S        =  #{$SHGCWin[1].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-S     =  #{$rValueWin[1].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-S     =  #{$AreaWin_sum[1].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-SE       =  #{$SHGCWin[2].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-SE    =  #{$rValueWin[2].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-SE    =  #{$AreaWin_sum[2].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-E        =  #{$SHGCWin[3].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-E     =  #{$rValueWin[3].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-E     =  #{$AreaWin_sum[3].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-NE       =  #{$SHGCWin[4].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-NE    =  #{$rValueWin[4].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-NE    =  #{$AreaWin_sum[4].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-N        =  #{$SHGCWin[5].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-N     =  #{$rValueWin[5].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-N     =  #{$AreaWin_sum[5].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-NW       =  #{$SHGCWin[6].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-NW    =  #{$rValueWin[6].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-NW    =  #{$AreaWin_sum[6].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-W        =  #{$SHGCWin[7].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-W     =  #{$rValueWin[7].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-W     =  #{$AreaWin_sum[7].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-SW       =  #{$SHGCWin[8].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-SW    =  #{$rValueWin[8].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-SW    =  #{$AreaWin_sum[8].round(1)}\n" )
 
 if $ExtraOutput1 then
    fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
