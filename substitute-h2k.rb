@@ -4079,7 +4079,7 @@ def postprocess( scaleData )
 	locationText = "HouseFile/House/Components/*/Components/Window"
 	
 	h2kPostElements.each(locationText) do |window| 
-		areaWin_temp = 0.0		# store the area of each windows 
+		areaWin_temp = 0.0		# store the area of each windows
 		winOrient = window.elements["FacingDirection"].attributes["code"].to_i		# Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
 		areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)/1000000	# Height (mm) * Width (mm)
 		$SHGCWin_sum[winOrient]  += window.attributes["shgc"].to_f * areaWin_temp		# Adds the (SHGC * area) of each windows to summation for individual orientations
@@ -4636,16 +4636,17 @@ def getHeatedFloorArea( elements )
    if areaEstimateTotal > 0
       areaRatio = areaInputTotal / areaEstimateTotal
    else
-      fatalerror("***House area estimate from results section is zero!\n")
+      stream_out("\nNote: House area estimate from results section is zero.\n")
    end
    
    # Accept user input area if it's between 50% and 200% of the estimated area!
    if areaRatio > 0.50 && areaRatio < 2.0 then
       heatedFloorArea = areaInputTotal
    else
-      # Use user input area if a row house (end or middle) regardless of area ratio (but non-zero)
+      # Use user input area if a row house (end:6 or middle:8) regardless of area ratio (but non-zero)
+      # Also applicable to Triplexes (type 4) and Apartments (type 5)
       houseType = elements["HouseFile/House/Specifications/HouseType"].attributes["code"].to_i
-      if (houseType == 6 || houseType == 8) && areaInputTotal > 0
+      if (houseType == 4 || houseType == 5 || houseType == 6 || houseType == 8) && areaInputTotal > 0
          heatedFloorArea = areaInputTotal
       else
          heatedFloorArea = areaEstimateTotal
