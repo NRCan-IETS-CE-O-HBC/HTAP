@@ -4062,38 +4062,8 @@ def postprocess( scaleData )
       end
    end
    
-	# ====================================================================================
-	# Parameter      Location
-	# ====================================================================================
-	# Orientation		HouseFile/House/Components/*/Components/Window/FacingDirection[code]
-	# SHGC				HouseFile/House/Components/*/Components/Window[SHGC]
-	# r-value			HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
-	# Height				HouseFile/House/Components/*/Components/Window/Measurements/[height]
-	# Width				HouseFile/House/Components/*/Components/Window/Measurements/[width]   
-   
-	$SHGCWin_sum 	= Hash.new(0)
-	$rValueWin_sum = Hash.new(0)
-	$AreaWin_sum 	= Hash.new(0)
-	$rValueWin 		= Hash.new(0)
-	$SHGCWin 		= Hash.new(0)
-	locationText = "HouseFile/House/Components/*/Components/Window"
-	
-	h2kPostElements.each(locationText) do |window| 
-		areaWin_temp = 0.0		# store the area of each windows
-		winOrient = window.elements["FacingDirection"].attributes["code"].to_i		# Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
-		areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)/1000000	# Height (mm) * Width (mm)
-		$SHGCWin_sum[winOrient]  += window.attributes["shgc"].to_f * areaWin_temp		# Adds the (SHGC * area) of each windows to summation for individual orientations
-		$rValueWin_sum[winOrient] += window.elements["Construction"].elements["Type"].attributes["rValue"].to_f * areaWin_temp 	# Adds the (RSI * area) of each windows to summation for individual orientations
-		$AreaWin_sum[winOrient] += areaWin_temp		# Adds area of each windows to summation for individual orientations
-	end
-
-	(1..8).each do |winOrient| 	# Calculate the average weighted values for each orientation
-		if $AreaWin_sum[winOrient] != 0		# No windows exist if the total area is zero for an orientation
-			$rValueWin[winOrient] = ($rValueWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3)		# Divide the summation of (SHGC * area) by total area
-			$SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3)		# Divide the summation of (RSI * area) by total area
-		end
-	end
-	
+  # ===================== Get envelope characteristics from the XML file
+   getEnvelopeSpecs(h2kPostElements)
 
    # ==================== Get electricity rate structure for external PV model use
    if ($PVsize !~ /NoPV/ )
@@ -4601,6 +4571,44 @@ def postprocess( scaleData )
    end
 
 end  # End of postprocess
+
+# =========================================================================================
+# Get the average characteristics of building facade by orientation
+# =========================================================================================
+def getEnvelopeSpecs(elements)
+   # ====================================================================================
+   # Parameter      Location
+   # ====================================================================================
+   # Orientation		HouseFile/House/Components/*/Components/Window/FacingDirection[code]
+   # SHGC				HouseFile/House/Components/*/Components/Window[SHGC]
+   # r-value			HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
+   # Height				HouseFile/House/Components/*/Components/Window/Measurements/[height]
+   # Width				HouseFile/House/Components/*/Components/Window/Measurements/[width]
+
+   $SHGCWin_sum = Hash.new(0)
+   $rValueWin_sum = Hash.new(0)
+   $AreaWin_sum = Hash.new(0)
+   $rValueWin = Hash.new(0)
+   $SHGCWin = Hash.new(0)
+   locationText = "HouseFile/House/Components/*/Components/Window"  # Door-window is NOT included, Should it?
+
+   elements.each(locationText) do |window|
+      areaWin_temp = 0.0 # store the area of each windows
+      winOrient = window.elements["FacingDirection"].attributes["code"].to_i # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+      areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
+      $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp # Adds the (SHGC * area) of each windows to summation for individual orientations
+      $rValueWin_sum[winOrient] += window.elements["Construction"].elements["Type"].attributes["rValue"].to_f * areaWin_temp # Adds the (RSI * area) of each windows to summation for individual orientations
+      $AreaWin_sum[winOrient] += areaWin_temp # Adds area of each windows to summation for individual orientations
+   end
+
+   (1..8).each do |winOrient| # Calculate the average weighted values for each orientation
+      if $AreaWin_sum[winOrient] != 0 # No windows exist if the total area is zero for an orientation
+         $rValueWin[winOrient] = ($rValueWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3) # Divide the summation of (SHGC * area) by total area
+         $SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3) # Divide the summation of (RSI * area) by total area
+      end
+   end
+
+end # End of getEnvelopeSpecs
 
 # =========================================================================================
 # Get the best estimate of the house heated floor area
