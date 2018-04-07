@@ -4040,7 +4040,7 @@ def postprocess( scaleData )
                   if ( lineIn =~ /^Annual/ )
                      valuesArr = lineIn.split()   # Uses spaces by default to split-up line
                      $annPVPowerFromBrowseRpt = valuesArr[4].to_f * 12.0 / 1000.0  # kW (approx PV power)
-                     break # PV power near bottom of file so no more need to read!
+                     break # PV power near bottom and last value to read!
                   end
                elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
                   bUseNextACLine = true                  
@@ -4051,7 +4051,7 @@ def postprocess( scaleData )
                      $AvgACCOP = valuesArr[8].to_f									#Average COP of AirConditioning
                      $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0	# Divided by 1000 to convert unit to GJ
                      bUseNextACLine = false
-                     break # Stop parsing Browse.rpt when AC System annual Performance found!
+                     break if !$PVIntModel # Stop parsing Browse.rpt if noting else required!
                   end
                end
             end
@@ -4213,9 +4213,11 @@ def postprocess( scaleData )
             $gResults[houseCode]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f * scaleData
          end
          
-         # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
          $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
-         if $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
+
+         # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
+         # 07-APR-2018 JTB: This should only be checked when there is NO internal PV model in use!
+         if !$PVIntModel && $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
             $gResults[houseCode]["avgFueluseElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["appliance"].to_f * scaleData +
