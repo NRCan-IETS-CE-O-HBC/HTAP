@@ -4586,27 +4586,147 @@ def getEnvelopeSpecs(elements)
    # Width				HouseFile/House/Components/*/Components/Window/Measurements/[width]
 
    $SHGCWin_sum = Hash.new(0)
-   $rValueWin_sum = Hash.new(0)
+   $uAValueWin_sum = Hash.new(0)
    $AreaWin_sum = Hash.new(0)
    $rValueWin = Hash.new(0)
    $SHGCWin = Hash.new(0)
-   locationText = "HouseFile/House/Components/*/Components/Window"  # Door-window is NOT included, Should it?
+   $UAValue = Hash.new(0)
+   $RSI = Hash.new(0)
+   $AreaComp = Hash.new(0)
+
+   locationText = "HouseFile/House/Components/*/Components/Window"
 
    elements.each(locationText) do |window|
       areaWin_temp = 0.0 # store the area of each windows
       winOrient = window.elements["FacingDirection"].attributes["code"].to_i # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
       areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
       $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp # Adds the (SHGC * area) of each windows to summation for individual orientations
-      $rValueWin_sum[winOrient] += window.elements["Construction"].elements["Type"].attributes["rValue"].to_f * areaWin_temp # Adds the (RSI * area) of each windows to summation for individual orientations
+      $uAValueWin_sum[winOrient] += areaWin_temp / (window.elements["Construction"].elements["Type"].attributes["rValue"].to_f)  # Adds the (area/RSI) of each windows to summation for individual orientations
+      $AreaWin_sum[winOrient] += areaWin_temp # Adds area of each windows to summation for individual orientations
+   end
+
+   locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"  # Adds door-window
+
+   elements.each(locationText) do |window|
+      areaWin_temp = 0.0 # store the area of each windows
+      winOrient = window.elements["FacingDirection"].attributes["code"].to_i # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+      areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
+      $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp # Adds the (SHGC * area) of each windows to summation for individual orientations
+      $uAValueWin_sum[winOrient] += areaWin_temp / (window.elements["Construction"].elements["Type"].attributes["rValue"].to_f)  # Adds the (area/RSI) of each windows to summation for individual orientations
       $AreaWin_sum[winOrient] += areaWin_temp # Adds area of each windows to summation for individual orientations
    end
 
    (1..8).each do |winOrient| # Calculate the average weighted values for each orientation
       if $AreaWin_sum[winOrient] != 0 # No windows exist if the total area is zero for an orientation
-         $rValueWin[winOrient] = ($rValueWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3) # Divide the summation of (SHGC * area) by total area
-         $SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3) # Divide the summation of (RSI * area) by total area
+         $rValueWin[winOrient] = ($AreaWin_sum[winOrient] / $uAValueWin_sum[winOrient]).round(3) # Overall R-value is [A_tot/(U_tot*A_tot)]
+         $SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3) # Divide the summation of (area* SHGC) by total area
+         $UAValue["win"] += $uAValueWin_sum[winOrient] # overall UA value is the summation of individual UA values
+         $AreaComp["win"] += $AreaWin_sum[winOrient] # overall window area of the buildings
       end
    end
+
+   locationText = "HouseFile/House/Components/*/Components/Door"
+
+   elements.each(locationText) do |door|
+      areaDoor_temp = 0.0 # store area of each Door
+      idDoor = door.attributes["id"].to_i
+      areaDoor_temp = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f) # [Height (m) * Width (m)]
+
+      locationWindows = "HouseFile/House/Components/*/Components/Door/Components/Window"
+      areaWin_sum = 0.0
+      elements.each(locationWindows) do |openings|
+         if (openings.parent.parent.attributes["id"].to_i == idDoor)
+            areaWin_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)*openings.attributes["number"].to_i / 1000000
+            areaWin_sum += areaWin_temp
+         end
+      end
+
+      areaDoor_temp -= areaWin_sum
+
+      $UAValue["door"] += areaDoor_temp / (door.attributes["rValue"].to_f)  # Adds the (area/RSI) of each door to summation
+      $AreaComp["door"] += areaDoor_temp # Adds area of each door to summation
+      $AreaComp["doorwin"] += areaWin_sum
+   end
+
+   $AreaWall_sum = 0.0
+   $uAValueWall_sum = 0.0
+   locationText = "HouseFile/House/Components/Wall"
+   elements.each(locationText) do |wall|
+      areaWall_temp = 0.0
+      idWall = wall.attributes["id"].to_i
+      areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
+
+      locationWindows = "HouseFile/House/Components/Wall/Components/Window"
+      areaWin_sum = 0.0
+      elements.each(locationWindows) do |openings|
+         if (openings.parent.parent.attributes["id"].to_i == idWall)
+            areaWin_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)*openings.attributes["number"].to_i / 1000000
+            areaWin_sum += areaWin_temp
+         end
+      end
+
+      locationDoors = "HouseFile/House/Components/Wall/Components/Door"
+         areaDoor_sum = 0.0
+         elements.each(locationDoors) do |openings|
+            if (openings.parent.parent.attributes["id"].to_i == idWall)
+               areaDoor_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)
+               areaDoor_sum += areaDoor_temp
+            end
+         end
+
+      locationDoors = "HouseFile/House/Components/Wall/Components/FloorHeader"
+      areaHeader_sum = 0.0
+      uAValueHeader = 0.0
+      elements.each(locationDoors) do |head|
+         if (head.parent.parent.attributes["id"].to_i == idWall)
+            areaHeader_temp = (head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f)
+            uAValueHeader_temp = areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+            areaHeader_sum += areaHeader_temp
+            uAValueHeader += uAValueHeader_temp
+         end
+      end
+
+      areaWall_temp -= (areaWin_sum + areaDoor_sum)
+      uAValueWall = areaWall_temp / wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+      $UAValue["wall"] += uAValueWall
+      $AreaComp["wall"] += areaWall_temp
+   end
+
+   locationText = "HouseFile/House/Components/*/Components/FloorHeader"
+   elements.each(locationText) do |head|
+      areaHeader_temp = 0.0
+      areaHeader_temp = head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f
+      $UAValue["header"] += areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+      $AreaComp["header"] += areaHeader_temp
+   end
+
+   locationText = "HouseFile/House/Components/Ceiling"
+   elements.each(locationText) do |ceiling|
+      areaCeiling_temp = 0.0
+      areaCeiling_temp = ceiling.elements["Measurements"].attributes["area"].to_f
+      $UAValue["ceiling"] += areaCeiling_temp / ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
+      $AreaComp["ceiling"] += areaCeiling_temp
+   end
+
+   locationText = "HouseFile/House/Components/Floor"
+   elements.each(locationText) do |floor|
+      areaFloor_temp = 0.0
+      areaFloor_temp = floor.elements["Measurements"].attributes["area"].to_f
+      $UAValue["floor"] += areaFloor_temp / floor.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+      $AreaComp["floor"] += areaFloor_temp
+   end
+
+   $UAValue["house"] = 0.0
+   $AreaComp["house"] = 0.0
+   $UAValue.each_key do |component|
+      if ($UAValue[component]!= 0.0 && component !="house")
+         $RSI[component] = $AreaComp[component] / $UAValue[component]
+         $UAValue["house"] += $UAValue[component]
+         $AreaComp["house"] += $AreaComp[component]
+      end
+   end
+   $RSI["house"] = $AreaComp["house"] / $UAValue["house"]
+   $R_ValueHouse = ($RSI["house"] * 5.67826).round(0)
 
 end # End of getEnvelopeSpecs
 
