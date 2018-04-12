@@ -101,6 +101,18 @@ $gPeakCoolingLoadW    = 0
 $gPeakHeatingLoadW    = 0 
 $gPeakElecLoadW    = 0 
 
+# Variables for saving part-load data from hourly-bins
+$binDatHrs    = Array.new
+$binDatTmp    = Array.new
+$binDatTsfB   = Array.new
+$binDatHLR    = Array.new
+$binDatT2cap  = Array.new
+$binDatT2cap  = Array.new
+$binDatT2PLR  = Array.new
+$binDatT1PLR = Array.new
+
+
+
 # Path where this script was started and considered master
 # When running GenOpt, it will be a Tmp folder!
 $gMasterPath = Dir.getwd()
@@ -1807,6 +1819,8 @@ def processFile(h2kElements)
 			
                if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
                   locationText = "HouseFile/House/HeatingCooling/Type1"
+                  
+
                   if ( h2kElements[locationText + "/#{value}"] == nil )
                      # Create a new system type 1 element with default values for all of its sub-elements
                      createH2KSysType1(h2kElements,value)
@@ -1987,7 +2001,9 @@ def processFile(h2kElements)
                   end 
 
                elsif ( tag =~ /Opt-H2K-Type2CapOpt/ && value != "NA" )
+
                   sysType2.each do |sysType2Name| 
+                  
                      if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
@@ -1996,7 +2012,19 @@ def processFile(h2kElements)
                            h2kElements[locationText].attributes["value"] = "5.6"
                            h2kElements[locationText].attributes["uiUnits"] = "kW"
                         end 
+                     
+                     elsif ( sysType2Name == "AirConditioning" ) 
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/RatedCapacity"
+                           h2kElements[locationText].attributes["code"] = value 
+                           h2kElements[locationText].attributes["value"] = "5.6"
+                           h2kElements[locationText].attributes["uiUnits"] = "kW"
+                        end 
+                                          
+                     
                      end 
+                     
                   end 
                  
                elsif ( tag =~ /Opt-H2K-Type2CapVal/ && value != "NA"  && "#{value}" != "" )
@@ -2008,7 +2036,17 @@ def processFile(h2kElements)
                            h2kElements[locationText].attributes["value"] = value 
                            h2kElements[locationText].attributes["uiUnits"] = "kW"
                         end 
+                     
+                     elsif  ( sysType2Name == "AirConditioning")
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/RatedCapacity"
+                           h2kElements[locationText].attributes["value"] = value 
+                           h2kElements[locationText].attributes["uiUnits"] = "kW"
+                        end 
+                     
                      end 
+                     
                   end                  
                   
                elsif ( tag =~ /Opt-H2K-Type2HeatCOP/ && value != "NA"  && "#{value}" != "" )
@@ -2024,29 +2062,38 @@ def processFile(h2kElements)
                   end                       
 
                # Possibly set the rating temperature 
-               # elsif ( tag =~ /Opt-H2K-Type2RatingTemp/ && value != "NA"  && "#{value}" != "" )
-               #    sysType2.each do |sysType2Name| 
-               #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-               #          locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
-               #          if ( h2kElements[locationText] != nil )
-               #             locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Temperature/RatingType"
-               #             h2kElements[locationText].attributes["code"] = "3" 
-               #             h2kElements[locationText].attributes["value"] = value
-               #          end 
-               #       end 
-               #    end                     
+               elsif ( tag =~ /Opt-H2K-Type2RatingTemp/ && value != "NA"  && "#{value}" != "" )
+                  sysType2.each do |sysType2Name| 
+                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Temperature/RatingType"
+                           h2kElements[locationText].attributes["code"] = "3" 
+                           h2kElements[locationText].attributes["value"] = value
+                        end 
+                     end 
+                  end                     
                   
                   
                elsif ( tag =~ /Opt-H2K-Type2CoolCOP/ && value != "NA"  && "#{value}" != "" )
                   sysType2.each do |sysType2Name| 
-                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump" )
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
                            locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
                            h2kElements[locationText].attributes["isCop"] = "true" 
                            h2kElements[locationText].attributes["value"] = value
                         end 
+                     
+                     elsif ( sysType2Name == "AirConditioning" )
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/Efficiency"
+                           h2kElements[locationText].attributes["isCop"] = "true" 
+                           h2kElements[locationText].attributes["value"] = value
+                        end 
                      end 
+                     
                   end                     
                   
                elsif ( tag =~ /Opt-H2K-Type2CutoffType/ && value != "NA"  && "#{value}" != "" )
@@ -2074,37 +2121,37 @@ def processFile(h2kElements)
     
               # Possibly set window characteristics / cooling types 
 
-              # elsif ( tag =~ /Opt-H2K-CoolOperWindow/ && value != "NA"  && "#{value}" != "" )          
-              #    sysType2.each do |sysType2Name| 
-              #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-              #          locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"
-              #          if ( h2kElements[locationText] != nil )
-              #             h2kElements[locationText].attributes["openableWindowArea"] = value
-              #          end 
-              #       end 
-              #    end                      
-              #
-              # elsif ( tag =~ /Opt-H2K-CoolSpecType/ && value != "NA"  && "#{value}" != "" )          
-              #    sysType2.each do |sysType2Name| 
-              #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-              #          if ( "#{value}" != "COP" ) then
-              #            
-              #            result = "false"
-              #            
-              #          else
-              #          
-              #            result = "true"
-              #          
-              #          end 
-              #          
-              #          locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
-              #          
-              #          if ( h2kElements[locationText] != nil )
-              #             h2kElements[locationText].attributes["isCop"] = result
-              #          end 
-              #       end 
-              #    end                      
-              #
+              elsif ( tag =~ /Opt-H2K-CoolOperWindow/ && value != "NA"  && "#{value}" != "" )          
+                 sysType2.each do |sysType2Name| 
+                    if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "AirConditioning"  )
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"
+                       if ( h2kElements[locationText] != nil )
+                          h2kElements[locationText].attributes["openableWindowArea"] = value
+                       end 
+                    end 
+                 end                      
+              
+              elsif ( tag =~ /Opt-H2K-CoolSpecType/ && value != "NA"  && "#{value}" != "" )          
+                 sysType2.each do |sysType2Name| 
+                    if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                       if ( "#{value}" != "COP" ) then
+                         
+                         result = "false"
+                         
+                       else
+                       
+                         result = "true"
+                       
+                       end 
+                       
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
+                       
+                       if ( h2kElements[locationText] != nil )
+                          h2kElements[locationText].attributes["isCop"] = result
+                       end 
+                    end 
+                 end                      
+              
                   
                # ASF 06-Oct-2016 - Tags for P.9 performance start here. 
 			
@@ -3315,6 +3362,10 @@ def createH2KSysType1( elements, sysType1Name )
       elements[locationText].add_element("French")
       
    elsif ( sysType1Name == "Furnace" )
+   
+   
+      stream_out ("ADDING FURNACE ....\n")
+    
       locationText = "HouseFile/House/HeatingCooling/Type1/Furnace"
       elements[locationText].add_element("EquipmentInformation")
       locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/EquipmentInformation"
@@ -3804,7 +3855,7 @@ def createH2KSysType2( elements, sysType2Name )
       elements[locationText].add_element("CoolingParameters")
       locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters"
       elements[locationText].attributes["sensibleHeatRatio"] = "0.76"
-      elements[locationText].attributes["openableWindowArea"] = "0"
+      elements[locationText].attributes["openableWindowArea"] = "20"
       elements[locationText].add_element("FansAndPump")
       locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump"
       elements[locationText].attributes["flowRate"] = "0"
@@ -4016,10 +4067,296 @@ def postprocess( scaleData )
    bUseNextACLine = false
    bReadAirConditioningLoad = true  # Always get Air Conditioning Load (not available in XML)
    
+      #Open diagnostics file and possibly read in interesting info  !?!
+   $lineNo = 0
+   if ( $gReadROutStrTxt  ) 
+     #begin
+       stream_out("\nParsing diagnostics from #{$OutputFolder}\\Routstr.txt ...")
+       fRoutStr = File.new("#{$OutputFolder}\\Routstr.txt", "r") 
+
+       $SOCparse     = false
+       $SHTiniparse  = false 
+       $FFBCparse    = false 
+       $EFBCparse    = false  
+       $HPparse      = false 
+       $bHeatingDone = false 
+       $EBakparse    = false 
+       $GOPparse     = false 
+       # Zero arrays
+       32.times do |n|       
+       
+        $binDatHrs[n+1]=0
+        $binDatTmp[n+1]=0
+        $binDatTsfB[n+1]=0
+        $binDatHLR[n+1]=0
+        $binDatT2cap[n+1]=0
+        #$binDatT1cap[n+1]=0
+        $binDatT2PLR[n+1]=0
+        $binDatT1PLR[n+1]=0
+       
+       end 
+       
+       
+       
+       while !fRoutStr.eof? do 
+       
+        $lineNo = $lineNo + 1
+        
+        $lineIn = fRoutStr.readline 
+        $lineIn.strip!
+       
+        if ( $lineIn =~ /^\s*$/ ||  $bHeatingDone ) then
+          next # Skip empty line. 
+        end   
+        
+         
+         
+        if ($lineIn =~ /Starting Run: House with standard operating conditions/ )
+          debug_out("ROUTSTR ? SOC open #{$lineNo} | #{$lineIn} \n")
+          $SOCparse = true 
+        elsif ($lineIn =~ /Starting Run: / &&  $SOCparse)
+          debug_out("ROUTSTR ? SOC close  #{$lineNo} |  #{$lineIn} \n")
+          $SOCparse = false 
+        end 
+        
+        if ( ! $SOCparse ) then 
+            next # Skip if we're not within standard OCs.
+        end 
+        
+        # Test if cooling sectins have been reached.  
+        if ( $lineIn =~ /Cooling calculations ../ ) 
+          debug_out("ROUTSTR ? COOLING SECTION : #{$lineIn} \n")
+          $bHeatingDone = true 
+          next 
+        end         
+        
+        
+        
+        # Set flags for sections in the file 
+        if ($lineIn =~ /SpaceHTini/ )
+          debug_out("ROUTSTR ? SpaceHTini open #{$lineNo} | #{$lineIn} \n")
+          $SHTiniparse = true 
+        elsif ($lineIn =~ /Space00/ && $SHTiniparse )
+          debug_out("ROUTSTR ? SpaceHTini close  #{$lineNo} | #{$lineIn}  \n")
+          $SHTiniparse = false 
+        end 
+                   
+        if ($lineIn =~ /FossilFurnaceBC/ )
+          debug_out("ROUTSTR ? FossilFurnaceBC open #{$lineNo} | #{$lineIn} \n")
+          $FFBCparse = true 
+        elsif ($FFBCparse && 
+                ( $lineIn =~ /HPBPLocated/ || $lineIn =~ /ElectricFurnaceBC/ || $lineIn =~ /oSpaceHT/ ) )
+          debug_out("ROUTSTR ? FossilFurnaceBC close  #{$lineNo} | #{$lineIn}  \n")
+          $FFBCparse = false 
+        end            
+        
+        
+        if ($lineIn =~ /GOPBackup: Gas\/Oil\/Propane backup../ )
+          debug_out("ROUTSTR ? Gas/Oil/Propoane backup open #{$lineNo} | #{$lineIn} \n")
+          $GOPparse = true 
+        elsif ( $GOPparse && 
+                ( $lineIn =~ /HPBPLocated/ || $lineIn =~ /ElectricFurnaceBC/ || $lineIn =~ /oSpaceHT/ ) )
+          debug_out("ROUTSTR ? Gas/Oil/Propoane backup close  #{$lineNo} | #{$lineIn}  \n")
+          $GOPparse = false 
+        end            
+        
+        
+        if ($lineIn =~ /ElectricFurnaceBC/  )
+          debug_out("ROUTSTR ? ElectricFurnaceBC open #{$lineNo} | #{$lineIn} \n")
+          $EFBCparse = true 
+        elsif ($EFBCparse  && 
+                ( $lineIn =~ /HPBPLocated/ || $lineIn =~ /oSpaceHT/ ) ) 
+          debug_out("ROUTSTR ? ElectricFurnaceBC close  #{$lineNo} | #{$lineIn}  \n")
+          $EFBCparse = false 
+        end  
+        
+        if ($lineIn =~ /ElectricBackup: ELECTRIC BACK-UP/  )
+          debug_out("ROUTSTR ? ElectricBack open #{$lineNo} | #{$lineIn} \n")
+          $EBakparse = true 
+        elsif ( $EBakparse && 
+                 ( $lineIn =~ /ElectricFurnaceBC: ELECTRIC HEAT BELOW CUT-OFF../ ) )
+          debug_out("ROUTSTR ? ElectricBack close  #{$lineNo} | #{$lineIn}  \n")
+          $EBakparse = false 
+        end  
+        
+        
+        if ($lineIn =~ /AboveHPBP @160/ )
+          debug_out("ROUTSTR ? HP open #{$lineNo} | #{$lineIn} \n")
+          $HPparse = true 
+        elsif ( $HPparse &&
+                ( $lineIn =~ /FALLS THU OPS/ || $lineIn =~ /Exit AboveHPBP @ 180/ || $lineIn =~/HPBPLocated 180   T/) )
+          debug_out("ROUTSTR ? HP close  #{$lineNo} | #{$lineIn}  \n")
+          $HPparse = false 
+        end             
+           
+     
+        # ==== Parse Data =====   
+         
+        # Read fan power 
+        if ($lineIn =~ /QFFAN/ ) 
+           debug_out("ROUTSTR ? QFFAN : #{$lineNo} | #{$lineIn}  \n")
+           valuesArr = $lineIn.split() 
+           $FurnFanPower = valuesArr[3]
+           $HPFanPower = valuesArr[4]
+           debug_out("ROUTSTR ? #{$lineNo} | QFFAN = #{$FurnFanPower} , QHPFAN = #{$HPFanPower} \n ")
+        end 
+        
+        # Read T1 capacity        
+        if ($lineIn =~ /oSpaceHT FURNPW/ )  
+            valuesArr = $lineIn.split() 
+            debug_out("ROUTSTR ? oCpaceHTFURN : #{$lineIn} \n")
+            $T1Capacity = valuesArr[2]
+        end 
+
+        # Get SH bin definitions             
+        if ($SHTiniparse) 
+          debug_out("ROUTSTR ? SHITI : #{$lineIn} \n")
+          # Headerline  - ignore
+          if ($lineIn =~ /Bin  BinHours   TbinC    HLcvs    HLAir    TsfB    CShtr     HLR0     HLR1     HLR2/ ) 
+          
+          else 
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHrs[binNo]  = valuesArr[1].to_f
+            $binDatTmp[binNo]  = valuesArr[2].to_f
+            $binDatTsfB[binNo] = valuesArr[5].to_f
+          end               
+                      
+        end 
+         
+         
+         
+         
+         
+        # Get furnace performace data 
+        if ( $FFBCparse ) 
+          debug_out("ROUTSTR ? FossilFurnace : #{$lineIn} \n")
+          if ($lineIn =~ /FossilFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
+            # Header - ignore 
+          else 
+          
+            debug_out(">>>FOSIL Furnace  Parsing #{$lineIn} \n")
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]  = valuesArr[3].to_f
+            $binDatT1PLR[binNo]  = valuesArr[6].to_f
+        
+                   
+          end 
+        end 
+        
+        # Get Heat pump w/ electric back-up data 
+        if ( $EBakparse ) 
+          debug_out("ROUTSTR ? E-Backup: #{$lineIn} \n")
+          if ($lineIn =~ /ElectricFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
+            # Header - ignore 
+          else 
+
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]  = valuesArr[1].to_f
+            $binDatT2cap[binNo]  = valuesArr[3].to_f
+            $binDatT2PLR[binNo]  = 1.0
+            $binDatT1PLR[binNo]  = valuesArr[5].to_f
+         
+                   
+          end 
+        end              
+         
+         
+        #Get heat pump w/gas back up data. 
+        if ( $GOPparse ) 
+
+          if ( $lineIn !~ /^@290/ ) 
+            # Header - ignore 
+          else 
+            debug_out("ROUTSTR ? GOP parse: #{$lineIn} \n")                      
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[1].to_i 
+            $binDatHLR[binNo]  = valuesArr[2].to_f
+            $binDatT2cap[binNo]  = valuesArr[3].to_f
+            $binDatT2PLR[binNo]  = 1.0
+            $binDatT1PLR[binNo]  = valuesArr[6].to_f
+         
+                   
+          end         
+        
+        
+        
+        end 
+            
+            
+            
+        # Get Electric furnace data 
+        if ( $EFBCparse ) 
+        debug_out("ROUTSTR ? Electric Furnace :  #{$lineIn} \n")
+          if ($lineIn =~ /ElectricFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
+            # Header - ignore 
+          else 
+
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]  = valuesArr[1].to_f
+            $binDatT1PLR[binNo]  = valuesArr[3].to_f
+        
+                   
+          end 
+        end             
+        
+
+        # Get heat pump data 
+        if ( $HPparse ) 
+          debug_out("ROUTSTR ? Heat pump : #{$lineIn} \n")
+          if ($lineIn =~ /AboveHPBP/ || $lineIn !~ /^\s*[0-9]/ ) 
+            # Header - ignore 
+          else 
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]    = valuesArr[2].to_f
+            $binDatT2cap[binNo]  = valuesArr[4].to_f
+            $binDatT2PLR[binNo]  = valuesArr[5].to_f
+        
+                   
+          end 
+        end  
+            
+                 
+       end 
+       
+       stream_out("done.\n")
+       fRoutStr.close()
+    #rescue 
+     #  fatalerror("Could not read ROutStr.txt\n")
+       
+     #end 
+   end 
+   
+   
+   
+   
+   stream_out("Diagnostics block done ...\n") 
+   debug_out(" bin data: #{'%4s' "bin"} #{'%12s' % "$binDatHrs"} #{'%12s' % "$binDatTmp"}  #{'%12s' % "$binDatTsfB"} #{'%12s' % "$binDatHLR"} #{'%12s' % "$binDatT1PLR"} #{'%12s' % "$binDatT2PLR"} #{'%12s' % "$binDatT2cap"}\n" )
+   32.times do |n|
+   
+    bin = n + 1 
+    debug_out(" bin data: #{'%4s' % bin} #{'%12s' % $binDatHrs[bin]} #{'%12s' % $binDatTmp[bin]}  #{'%12s' % $binDatTsfB[bin]} #{'%12s' % $binDatHLR[bin]} #{'%12s' % $binDatT1PLR[bin]} #{'%12s' % $binDatT2PLR[bin]}  #{'%12s' % $binDatT2cap[bin]}\n" )
+   
+   end 
+   
+   
+
+
+   
+   
+   
+   
+   
+   
    # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
    end
+   
    
    # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
    if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
@@ -4040,7 +4377,7 @@ def postprocess( scaleData )
                   if ( lineIn =~ /^Annual/ )
                      valuesArr = lineIn.split()   # Uses spaces by default to split-up line
                      $annPVPowerFromBrowseRpt = valuesArr[4].to_f * 12.0 / 1000.0  # kW (approx PV power)
-                     break # PV power near bottom of file so no more need to read!
+                     break # PV power near bottom and last value to read!
                   end
                elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
                   bUseNextACLine = true                  
@@ -4051,7 +4388,7 @@ def postprocess( scaleData )
                      $AvgACCOP = valuesArr[8].to_f									#Average COP of AirConditioning
                      $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0	# Divided by 1000 to convert unit to GJ
                      bUseNextACLine = false
-                     break # Stop parsing Browse.rpt when AC System annual Performance found!
+                     break if !$PVIntModel # Stop parsing Browse.rpt if noting else required!
                   end
                end
             end
@@ -4213,9 +4550,11 @@ def postprocess( scaleData )
             $gResults[houseCode]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f * scaleData
          end
          
-         # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
          $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
-         if $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
+
+         # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
+         # 07-APR-2018 JTB: This should only be checked when there is NO internal PV model in use!
+         if !$PVIntModel && $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
             $gResults[houseCode]["avgFueluseElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["appliance"].to_f * scaleData +
@@ -6391,6 +6730,135 @@ if $gReportChoices then
       fSUMMARY.write("input.#{attribute} = #{choice}\n")
    end 
 end
+
+
+# Possibly report Binned data from diagnostics file 
+if ($gReadROutStrTxt) then 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+   fSUMMARY.write("BIN-data-HRS-#{binstr}   =  #{$binDatHrs[bin].round(4)}\n")
+          
+   end 
+
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+
+   fSUMMARY.write("BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")       
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+         
+   fSUMMARY.write("BIN-data-HLR-#{binstr}   =  #{$binDatHLR[bin].round(4)}\n")       
+
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+          
+   fSUMMARY.write("BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")       
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+    
+   fSUMMARY.write("BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")   
+
+
+          
+   end 
+
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+         
+   #fSUMMARY.write("BIN-data-T1cap-#{binstr} = #{$binDatT1cap[bin].round(4)}\n")  
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+      
+   fSUMMARY.write("BIN-data-T1PLR-#{binstr} =  #{$binDatT1PLR[bin].round(4)}\n")   
+
+          
+   end 
+
+end 
+
+
+
+
+
+
+
+
+
+
+
+
 
 fSUMMARY.close() 
 
