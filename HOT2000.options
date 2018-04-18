@@ -3072,6 +3072,7 @@ Whitehorse Wall Options (Code is R28)
 
 !--------------------------
 !NBC 9.36
+
 *option:NBC-gas-furnace:value:1 = Furnace
 *option:NBC-gas-furnace:value:2 = None
 *option:NBC-gas-furnace:value:3 = 2
@@ -3083,6 +3084,26 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC-gas-furnace:value:9 = 1       ! Auto fan control
 *option:NBC-gas-furnace:value:10 = true    ! EE motor
 *option:NBC-gas-furnace:cost:total = 0
+
+
+*option:NBC-gas-furnace-AC:value:1  = Furnace                ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:NBC-gas-furnace-AC:value:2  = AirConditioning            ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:NBC-gas-furnace-AC:value:3  =  2                     ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:NBC-gas-furnace-AC:value:4  =  2                     ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:NBC-gas-furnace-AC:value:5  =  2                     ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:NBC-gas-furnace-AC:value:6  =  NA                    ! H2K: Capacity value.     
+*option:NBC-gas-furnace-AC:value:7  =  false                 ! H2K: true=SS, false=AFUE    
+*option:NBC-gas-furnace-AC:value:8  =  92                    ! H2K: Efficiency value (0->100)    
+*option:NBC-gas-furnace-AC:value:9  = 1                      ! H2K: 1:Auto, 2:Continuous    
+*option:NBC-gas-furnace-AC:value:10 = true                   ! H2K: ee-motor true/false   
+*option:NBC-gas-furnace-AC:value:11 = 60                     ! H2K: Crankcase heater?
+*option:NBC-gas-furnace-AC:value:12 = 2                      ! Function heating/cooling 
+*option:NBC-gas-furnace-AC:value:13 = 1                      ! Type: central split 
+*option:NBC-gas-furnace-AC:value:14 = 2                      ! Capacity: Calculated 
+*option:NBC-gas-furnace-AC:value:15 = NA                     ! Capacity value (W)
+*option:NBC-gas-furnace-AC:value:17 = 4.27                   ! COOLING COP
+*option:NBC-gas-furnace-AC:value:20 = 4                      ! Operable window area
+*option:NBC-gas-furnace-AC:cost:total = 0                    !
 
 *option:NBC-elec-heat:value:1 = Baseboards
 *option:NBC-elec-heat:value:2 = None
@@ -3096,16 +3117,35 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC-elec-heat:value:10 = false
 *option:NBC-elec-heat:cost:total = 0
 
+*option:NBC-elec-heat-AC:value:1  = Baseboards                ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:NBC-elec-heat-AC:value:2  = AirConditioning            ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:NBC-elec-heat-AC:value:3  =  1                     ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:NBC-elec-heat-AC:value:4  =  NA                     ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:NBC-elec-heat-AC:value:5  =  2                     ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:NBC-elec-heat-AC:value:6  =  NA                    ! H2K: Capacity value.     
+*option:NBC-elec-heat-AC:value:7  =  true                 ! H2K: true=SS, false=AFUE    
+*option:NBC-elec-heat-AC:value:8  =  100                   ! H2K: Efficiency value (0->100)    
+*option:NBC-elec-heat-AC:value:9  = 1                      ! H2K: 1:Auto, 2:Continuous    
+*option:NBC-elec-heat-AC:value:10 = false                   ! H2K: ee-motor true/false   
+*option:NBC-elec-heat-AC:value:11 = 0                    ! H2K: Crankcase heater?
+*option:NBC-elec-heat-AC:value:12 = 2                      ! Function heating/cooling 
+*option:NBC-elec-heat-AC:value:13 = 1                      ! Type: central split 
+*option:NBC-elec-heat-AC:value:14 = 2                      ! Capacity: Calculated 
+*option:NBC-elec-heat-AC:value:15 = NA                     ! Capacity value (W)
+*option:NBC-elec-heat-AC:value:17 = 4.27                   ! COOLING COP
+*option:NBC-elec-heat-AC:value:20 = NA                      ! Operable window area
+*option:NBC-elec-heat-AC:cost:total = 0                    !
+
 *option:NBC-oil-heat:value:1 = Furnace
 *option:NBC-oil-heat:value:2 = None
 *option:NBC-oil-heat:value:3 = 3
-*option:NBC-oil-heat:value:4 = 13
+*option:NBC-oil-heat:value:4 = 4
 *option:NBC-oil-heat:value:5 = 2
 *option:NBC-oil-heat:value:6 = NA
 *option:NBC-oil-heat:value:7 = false
 *option:NBC-oil-heat:value:8 = 85
-*option:NBC-oil-heat:value:9 = 
-*option:NBC-oil-heat:value:10 = 
+*option:NBC-oil-heat:value:9 = 1
+*option:NBC-oil-heat:value:10 = false
 *option:NBC-oil-heat:cost:total = 0
 
 !------------------------------------
