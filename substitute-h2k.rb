@@ -5081,8 +5081,21 @@ def getHeatedFloorArea( elements )
    areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
    areaInputTotal = areaAboveGradeInput + areaBelowGradeInput
    
-   numStoreysInput = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
-   
+   case elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
+   when 1
+      numStoreysInput = 1
+   when 2
+      numStoreysInput = 1.5  # 1.5 storeys
+   when 3
+      numStoreysInput = 2
+   when 4
+      numStoreysInput = 2.5  # 2.5 storeys
+   when 5
+      numStoreysInput = 3
+   when 6..7
+      numStoreysInput = 2    # Split level or Spli entry/raised basement
+   end
+
    # Get house area estimates from the first XML <results> section - these are totals of multiple surfaces
    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
    slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
