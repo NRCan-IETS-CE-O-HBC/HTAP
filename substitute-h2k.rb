@@ -1240,7 +1240,7 @@ def processFile(h2kElements)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Doors/ )
                if ( tag =~ /Opt-R-value/ && value != "NA" )
-                  locationText = "HouseFile/House/Components/Wall/Components/Door/Construction/Type"
+                  locationText = "HouseFile/House/Components/*/Components/Door/Construction/Type"
                   h2kElements.each(locationText) do |element| 
                      element.attributes["code"] = 8
                      element.attributes["value"] = (value.to_f / R_PER_RSI).to_s
@@ -3121,7 +3121,7 @@ def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileE
       end
 
       # Windows in door elements
-      locationText = "HouseFile/House/Components/Wall/Components/Door/Components/Window"
+      locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
          if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
@@ -5346,6 +5346,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
          if isBasement 
@@ -5366,6 +5368,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5386,6 +5390,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5406,6 +5412,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
@@ -5425,6 +5433,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5445,6 +5455,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5472,6 +5484,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
          if isBasement 
@@ -5491,6 +5505,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5511,6 +5527,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5531,6 +5549,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5551,6 +5571,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5572,6 +5594,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
                   
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
          if isBasement 

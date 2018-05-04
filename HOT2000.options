@@ -1441,6 +1441,71 @@
 *option:DoorWinDef:value:8 = DoorWinDef
 *option:DoorWinDef:cost:total = 0.0
 
+!-----------------------------------------------------------------------
+!   NBC 9.36 Baseline
+!-----------------------------------------------------------------------
+*option:NBC-zone4-window:value:1 = NBC-zone4-window
+*option:NBC-zone4-window:value:2 = NBC-zone4-window
+*option:NBC-zone4-window:value:3 = NBC-zone4-window
+*option:NBC-zone4-window:value:4 = NBC-zone4-window
+*option:NBC-zone4-window:value:5 = NBC-zone4-window
+*option:NBC-zone4-window:value:6 = NBC-zone4-window
+*option:NBC-zone4-window:value:7 = NBC-zone4-window
+*option:NBC-zone4-window:value:8 = NBC-zone4-window
+*option:NBC-zone4-window:cost:total   = 0
+
+
+*option:NBC-zone5-window:value:1 = NBC-zone5-window
+*option:NBC-zone5-window:value:2 = NBC-zone5-window
+*option:NBC-zone5-window:value:3 = NBC-zone5-window
+*option:NBC-zone5-window:value:4 = NBC-zone5-window
+*option:NBC-zone5-window:value:5 = NBC-zone5-window
+*option:NBC-zone5-window:value:6 = NBC-zone5-window
+*option:NBC-zone5-window:value:7 = NBC-zone5-window
+*option:NBC-zone5-window:value:8 = NBC-zone5-window
+*option:NBC-zone5-window:cost:total   = 0
+
+*option:NBC-zone6-window:value:1 = NBC-zone6-window
+*option:NBC-zone6-window:value:2 = NBC-zone6-window
+*option:NBC-zone6-window:value:3 = NBC-zone6-window
+*option:NBC-zone6-window:value:4 = NBC-zone6-window
+*option:NBC-zone6-window:value:5 = NBC-zone6-window
+*option:NBC-zone6-window:value:6 = NBC-zone6-window
+*option:NBC-zone6-window:value:7 = NBC-zone6-window
+*option:NBC-zone6-window:value:8 = NBC-zone6-window
+*option:NBC-zone6-window:cost:total   = 0
+
+
+*option:NBC-zone7A-window:value:1 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:2 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:3 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:4 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:5 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:6 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:7 = NBC-zone7A-window
+*option:NBC-zone7A-window:value:8 = NBC-zone7A-window
+*option:NBC-zone7A-window:cost:total   = 0
+
+*option:NBC-zone7B-window:value:1 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:2 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:3 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:4 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:5 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:6 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:7 = NBC-zone7B-window
+*option:NBC-zone7B-window:value:8 = NBC-zone7B-window
+*option:NBC-zone7B-window:cost:total   = 0
+
+*option:NBC-zone8-window:value:1 = NBC-zone8-window
+*option:NBC-zone8-window:value:2 = NBC-zone8-window
+*option:NBC-zone8-window:value:3 = NBC-zone8-window
+*option:NBC-zone8-window:value:4 = NBC-zone8-window
+*option:NBC-zone8-window:value:5 = NBC-zone8-window
+*option:NBC-zone8-window:value:6 = NBC-zone8-window
+*option:NBC-zone8-window:value:7 = NBC-zone8-window
+*option:NBC-zone8-window:value:8 = NBC-zone8-window
+*option:NBC-zone8-window:cost:total   = 0
+
 *attribute:end
 
 !-----------------------------------------------------------------------
@@ -1476,6 +1541,27 @@
 
 *option:FibreMDSprayCore:value:1 = 5.57    ! Fibreglass medium density spray foam core
 *option:FibreMDSprayCore:cost:total = 0.0
+
+!-----------------------------------------------------------------------
+!   NBC 9.36 Baseline
+!-----------------------------------------------------------------------
+*option:NBC-zone4-door:value:1 = 3.15    ! User specified R-value (Imperial) of door
+*option:NBC-zone4-door:cost:total = 0.0
+
+*option:NBC-zone5-door:value:1 = 3.15    ! User specified R-value (Imperial) of door
+*option:NBC-zone5-door:cost:total = 0.0
+
+*option:NBC-zone6-door:value:1 = 3.55    ! User specified R-value (Imperial) of door
+*option:NBC-zone6-door:cost:total = 0.0
+
+*option:NBC-zone7A-door:value:1 = 3.55    ! User specified R-value (Imperial) of door
+*option:NBC-zone7A-door:cost:total = 0.0
+
+*option:NBC-zone7B-door:value:1 = 4.05    ! User specified R-value (Imperial) of door
+*option:NBC-zone7B-door:cost:total = 0.0
+
+*option:NBC-zone8-door:value:1 = 4.05    ! User specified R-value (Imperial) of door
+*option:NBC-zone8-door:cost:total = 0.0
 
 *attribute:end
 
