@@ -2424,7 +2424,134 @@ def processFile(h2kElements)
                   
                end
             
-               
+            # Boundary Conditions
+            # ADW 07-May-2018: Original development of option
+            # Notes: If this option is active, baseloads are switched to user-defined
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Baseloads/ )
+                # Instead of looping through tags, update all values in this pass
+                locationText = "HouseFile/House/BaseLoads/"
+
+                # Set to specified
+                h2kElements[locationText + "Summary"].attributes["isSpecified"] = "true"
+
+                # Update occupancy
+                h2kElements[locationText + "Occupancy"].attributes["isOccupied"] = "true"
+                h2kElements[locationText + "Occupancy/Adults"].attributes["occupants"] = valHash["1"]
+                h2kElements[locationText + "Occupancy/Adults"].attributes["atHome"] = valHash["2"]
+                h2kElements[locationText + "Occupancy/Children"].attributes["occupants"] = valHash["3"]
+                h2kElements[locationText + "Occupancy/Children"].attributes["atHome"] = valHash["4"]
+                h2kElements[locationText + "Occupancy/Infants"].attributes["occupants"] = valHash["5"]
+                h2kElements[locationText + "Occupancy/Infants"].attributes["atHome"] = valHash["6"]
+                h2kElements[locationText].attributes["basementFractionOfInternalGains"] = valHash["7"]
+
+                # Remove any defined user gains if they exist
+                h2kElements[locationText + "Summary"].delete_element("WaterUsage")
+                h2kElements[locationText + "Summary"].delete_element("ElectricalUsage")
+                h2kElements[locationText + "Summary"].delete_element("AdvancedUserSpecified")
+
+                # Define user gains
+                h2kElements[locationText + "Summary"].add_attribute("isSpecified", "true")
+                h2kElements[locationText + "Summary"].attributes["electricalAppliances"] = valHash["8"]
+                h2kElements[locationText + "Summary"].attributes["lighting"] = valHash["9"]
+                h2kElements[locationText + "Summary"].attributes["otherElectric"] = valHash["10"]
+                h2kElements[locationText + "Summary"].attributes["exteriorUse"] = valHash["11"]
+                h2kElements[locationText + "Summary"].attributes["hotWaterLoad"] = valHash["12"]
+                h2kElements[locationText].add_element("AdvancedUserSpecified")
+                h2kElements[locationText + "AdvancedUserSpecified"].add_attribute("hotWaterTemperature", valHash["13"])
+
+                # Determine if a gas stove has been defined
+                if (valHash["14"] == "2" || valHash["14"] == "4") # 
+                   h2kElements[locationText + "AdvancedUserSpecified"].add_element("GasStove")
+                   if(valHash["15"] == "NA") # Fuel for stove has been specified, but no consumption. Don't add stove
+                      warn_out("In Opt-Baseloads: Stove fuel specified, but no stove consumption!\n")
+                      h2kElements[locationText + "AdvancedUserSpecified"].delete_element("GasStove")
+                   elsif(valHash["14"] == "2") # Natural Gas Stove
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_attribute["code"] = "2"
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_element("English")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove/English"].add_text("Natural Gas")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_element("French")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove/French"].add_text("Gaz naturel")
+                   elsif(valHash["14"] == "4") # Propane Stove
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_attribute["code"] = "4"
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_element("English")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove/English"].add_text("Propane")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_element("French")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove/French"].add_text("Propane")
+                   else
+                      warn_out("WARNING: For Opt-Baseloads, unknown stove fuel type #{valHash["14"]}!\n")
+                   end
+                   if(valHash["15"] != "NA") # If a value was provided for stove consumption, update 
+                      h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_attribute["value"] = valHash["15"]
+                   end
+                elsif (valHash["14"] != "NA")
+                    warn_out("WARNING: For Opt-Baseloads, unknown stove fuel type #{valHash["14"]}!\n")
+                end
+
+                # Determine if a gas dryer has been defined
+                if (valHash["16"] == "2" || valHash["16"] == "4") # 
+                   h2kElements[locationText + "AdvancedUserSpecified"].add_element("GasDryer")
+                   if(valHash["17"] == "NA") # Fuel for Dryer has been specified, but no consumption. Don't add stove
+                      warn_out("In Opt-Baseloads: Dryer fuel specified, but no Dryer consumption!\n")
+                      h2kElements[locationText + "AdvancedUserSpecified"].delete_element("GasDryer")
+                   elsif(valHash["16"] == "2") # Natural Gas Dryer
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_attribute["code"] = "2"
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_element("English")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer/English"].add_text("Natural Gas")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_element("French")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer/French"].add_text("Gaz naturel")
+                   elsif(valHash["16"] == "4") # Propane Dryer
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_attribute["code"] = "4"
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_element("English")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer/English"].add_text("Propane")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_element("French")
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer/French"].add_text("Propane")
+                   else
+                      warn_out("In Opt-Baseloads: Unknown dryer fuel type #{valHash["16"]}!\n")
+                   end
+                   if(valHash["17"] != "NA") # If a value was provided for dryer consumption, update 
+                      h2kElements[locationText + "AdvancedUserSpecified/GasDryer"].add_attribute["value"] = valHash["17"]
+                   end
+                elsif (valHash["16"] != "NA")
+                    warn_out("In Opt-Baseloads: Unknown dryer fuel type #{valHash["16"]}!\n")
+                end
+
+                # Determine the dryer location
+                $basementFound = false
+                h2kCodeElements.each(locationComponents) do |component|     
+                   if ( component =~ /Basement/ || component =~ /Walkout/ ) 
+                      $basementFound = true 
+                   end 
+                end 
+
+                h2kElements[locationText + "AdvancedUserSpecified"].add_element("DryerLocation")
+                h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_element("English")
+                h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_element("French")
+
+                if(valHash["16"] != "NA") # There is a dryer
+                   if(valHash["18"] == "1" || (valHash["18"] == "2" && !$basementFound)) # On the main floor, or foundation requested but there is no full basement
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_attribute("code", "1")
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/English"].add_text("Main Floor")
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/French"].add_text("Plancher Principal")
+                   elsif(valHash["18"] == "2") # In the foundation zone, and full basement is present
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_attribute("code", "2")
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_text("Foundation - 1")
+                   else 
+                      # There is a dryer, but the user has not specified a location. Assume main floor
+                      debug_out("In Opt-Baseloads: Unknown dryer location #{valHash["18"]}! Setting to main floor\n")
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_attribute("code", "1")
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/English"].add_text("Main Floor")
+                      h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/French"].add_text("Plancher Principal")
+                   end
+                else # There is no dryer
+                   h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_attribute("code", "0")
+                   h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/English"].add_text("No Laundry Equipment")
+                   h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/French"].add_text("Aucun Ã‰qu. de Buandrie")
+                end
+                # Move to the next choiceEntry with a break
+                break
+
+
             # Roof Pitch - change slope of all ext. ceilings (i.e., roofs)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-RoofPitch/ )
