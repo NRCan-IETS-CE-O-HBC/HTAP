@@ -3512,9 +3512,8 @@ Whitehorse Wall Options (Code is R28)
 !---------------------------------------------------------------------------------------------
 ! Baseloads 
 ! Note:
-!   DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
-!   "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
-!   changes made here will be overwritten by the Base Loads user inputs for Water Usage.
+!   If this option is included in the choice file, any existing model baseload inputs WILL
+!   BE OVER-WRITTEN. Only attributes 14 to 18 may have "NA" as an input.
 !
 !---------------------------------------------------------------------------------------------
 *attribute:start
