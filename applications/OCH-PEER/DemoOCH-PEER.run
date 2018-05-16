@@ -12,7 +12,7 @@ RunParameters_END
 
 RunScope_START
 
-  archetypes                        = NRCan-A11_1500sf_2storey_rowMid_fullBsmt.h2k
+  archetypes                        = PEER-OCH-197to203-Presland-Block-v3.5.h2k
   locations                         = OTTAWA
   rulesets                          = as-found 
   
@@ -29,18 +29,18 @@ Upgrades_START
 	 Opt-AtticCeilings                  = NA, OCH_Ceiling_R60, OCH_Ceiling_R70, OCH_Ceiling_R80, OCH_Ceiling_R90, OCH_Ceiling_R100, OCH_Ceiling_R120
 	 Opt-CathCeilings                   = NA
 	 Opt-FlatCeilings                   = NA	
-    Opt-H2KFoundation                  = NA, OCH_BCIN_R20, OCH_BCIN_R25, OCH_BCIN_R30, OCH_BCIN_R35,OCH_BCIN_R40
+    Opt-H2KFoundation                  = NA, OCH_BCCB_R20, OCH_BCCB_R25, OCH_BCCB_R30, OCH_BCCB_R35,OCH_BCCB_R40
     Opt-ExposedFloor                   = NA
-    Opt-CasementWindows                = NA, LG-HP-Double, HG-avg-Double, LG-i89-Triple-B, HG-i89-Triple-B
+    Opt-CasementWindows                = NA, LG-avg-Double, HG-avg-Double, LG-HP-Triple, HG-HP-Triple
     Opt-H2K-PV                         = NA
     Opt-Skylights                      = NA   
-    Opt-Doors                          = NA
+    Opt-Doors                          = NA, OCH-SteelPS
     Opt-DoorWindows                    = NA
     Opt-RoofPitch                      = NA
-    Opt-DHWSystem                      = NA, NBC-HotWater_gas, NBC-HotWater_elec, HPHotWater
-    Opt-DWHRSystem                     = NA, !DWHR-eff-55
-    Opt-HVACSystem                     = NA, NBC-gas-furnace, NBC-elec-heat, NBC-CCASHP, OCH-CCASHP-Gas 
-    Opt-HRVspec                        = NA, NBC_HRV
+    Opt-DHWSystem                      = NA, OCH-HotWater_gas, OCH-HotWater_elec, OCH-HPHotWater
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA, OCH-gas-furnace-AC, OCH-elec-heat-AC, OCH-CCASHP, OCH-CCASHP-Gas 
+    Opt-HRVspec                        = NA, OCH-HRV
     Opt-StandoffPV                     = NoPV
 
 Upgrades_END
