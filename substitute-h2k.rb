@@ -1699,7 +1699,22 @@ def processFile(h2kElements)
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
-               
+            
+            # Floor above crawlspace
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-FloorAboveCrawl/ )
+               # If there is a crawlspace and an R-value has been specified for the floor above the crawlspace, update
+               if ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" && h2kElements["HouseFile/House/Components/Crawlspace"] != nil)
+                  locationText = "HouseFile/House/Components/Crawlspace/Floor/Construction/FloorsAbove"
+                  h2kElements.each(locationText) do |element|
+                     element.text = "User specified"     # Description tag
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               end            
                
             # DHW System 
             #--------------------------------------------------------------------------
@@ -5412,31 +5427,21 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
    # Basement, slab, or both in model file?
    # Decide which to use for compliance based on count!
-   # TODO: Provide new options for Basements and Slabs so can change each!
-   isBasement = false
-   isSlab = false
-   numOfBasements = 0
-   numOfSlabs = 0
-   elements.each("HouseFile/House/Components") do |component|     
-      # TODO: Should this also include crawlspace?
-      if component =~ /Basement/ || component =~ /Walkout/
-         numOfBasements += 1
-      elsif component =~ /Slab/
-         numOfSlabs += 1
-      end 
-   end 
-   if numOfBasements >= numOfSlabs
-      isBasement = true
-      isSlab = false
-   else
-      isBasement = false
-      isSlab = true
+   # ADW May 17 2018: Basements are modified through Opt-H2KFoundation, slabs and crawlspaces through Opt-H2KFoundationSlabCrawl
+   # Determine if a crawlspace is present, and if it is, if the crawlspace is heated
+   numOfCrawl = 0
+   isCrawlHeated = false
+   if elements["HouseFile/House/Components/Crawlspace"] != nil
+      numOfCrawl += 1
+      if elements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
+         isCrawlHeated = true
+      end
    end
    
    # Choices that do NOT depend on ruleType!
    $ruleSetChoices["Opt-StandoffPV"] = "NoPV"
    $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
-   $ruleSetChoices["Opt-Baseloads"] = "NBC-BaseLoads"
+   $ruleSetChoices["Opt-Baseloads"] = "NBC-Baseloads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
    
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
@@ -5476,11 +5481,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
       
-      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
+      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
          end
       
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
@@ -5499,10 +5506,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"  
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_SCB_zone5_noHRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone5_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
          end
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
@@ -5521,10 +5530,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_noHRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone6_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone6_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone6" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
          end
 
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
@@ -5541,12 +5552,14 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_noHRV"
-         end
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7A_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7A_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_noHRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
+         end         
 
       # Zone 7B ( 6000 < HDD < 6999) without an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
@@ -5563,12 +5576,14 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_noHRV"
-         end
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7B_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7B_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7B_noHRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
+         end 
 
       # Zone 8 (HDD <= 7000) without an HRV
       elsif locale_HDD >= 7000 
@@ -5586,11 +5601,14 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_noHRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone8_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone8_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_noHRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
+         end 
+
       end
 
    #-------------------------------------------------------------------------
@@ -5615,11 +5633,14 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
-         end         
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
+         end 
+         
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
@@ -5636,11 +5657,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_HRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone5_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
+         end 
          
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
@@ -5657,12 +5680,14 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_HRV"
-         end
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone6_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone6_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone6" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
+         end 
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
@@ -5679,11 +5704,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7A_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7A_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_HRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
          end
 
       # Zone 7B ( 6000 < HDD < 6999) with an HRV
@@ -5701,11 +5728,13 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_HRV"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7B_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7B_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7B_HRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
          end
 
       # Zone 8 (HDD <= 7000) with an HRV
@@ -5725,10 +5754,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_HRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone8_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone8_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_HRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
          end
 
       end
