@@ -1,0 +1,46 @@
+! Definitions file for HTAP-PRM RUN 
+
+! Run-Mode: Parameters that affect how htap-prm is configured. 
+RunParameters_START
+  run-mode                           = mesh 
+  archetype-dir                      = C:\HTAP\Archetypes
+RunParameters_END 
+
+
+! Parameters controlling archetypes, locations, reference rulesets. (these will always be
+! run in mesh, even if an optimization mode is added in the future. 
+
+RunScope_START
+
+  archetypes                        = PEER-OCH-197to203-Presland-Block-v3.5.h2k
+  locations                         = OTTAWA
+  rulesets                          = as-found 
+  
+RunScope_END
+
+! Parameters controlling the design of the building 
+Upgrades_START
+
+    Opt-FuelCost                       = rates2016  ! Maybe this belongs in scope?
+    Opt-ACH                            = NA, ACH_2_5, ACH_2_0, ACH_1_5, ACH_1_0, ACH_0_75, ACH_0_5
+    Opt-MainWall                       = NA
+    Opt-GenericWall_1Layer_definitions = NA, Main_Wall_R30, Main_Wall_R35, Main_Wall_R40, Main_Wall_R45, Main_Wall_R50, Main_Wall_R55, Main_Wall_R60
+    Opt-Ceilings                       = NA
+	 Opt-AtticCeilings                  = NA, OCH_Ceiling_R60, OCH_Ceiling_R70, OCH_Ceiling_R80, OCH_Ceiling_R90, OCH_Ceiling_R100, OCH_Ceiling_R120
+	 Opt-CathCeilings                   = NA
+	 Opt-FlatCeilings                   = NA	
+    Opt-H2KFoundation                  = NA, OCH_BCCB_R20, OCH_BCCB_R25, OCH_BCCB_R30, OCH_BCCB_R35,OCH_BCCB_R40
+    Opt-ExposedFloor                   = NA
+    Opt-CasementWindows                = NA, LG-avg-Double, HG-avg-Double, LG-HP-Triple, HG-HP-Triple
+    Opt-H2K-PV                         = NA
+    Opt-Skylights                      = NA   
+    Opt-Doors                          = NA, OCH-SteelPS
+    Opt-DoorWindows                    = NA
+    Opt-RoofPitch                      = NA
+    Opt-DHWSystem                      = NA, OCH-HotWater_gas, OCH-HotWater_elec, OCH-HPHotWater
+    Opt-DWHRSystem                     = NA
+    Opt-HVACSystem                     = NA, OCH-gas-furnace-AC, OCH-elec-heat-AC, OCH-CCASHP, OCH-CCASHP-Gas 
+    Opt-HRVspec                        = NA, OCH-HRV
+    Opt-StandoffPV                     = NoPV
+
+Upgrades_END

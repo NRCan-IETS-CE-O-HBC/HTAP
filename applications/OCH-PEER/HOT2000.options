@@ -958,11 +958,14 @@
 *option:ACH_1_0:value:1  = 1.00
 *option:ACH_1_0:cost:total  =  0
 
-*option:ACH_0_6:value:1  = 0.6
-*option:ACH_0_6:cost:total  =  0
+*option:ACH_0_75:value:1  = 0.75
+*option:ACH_0_75:cost:total  =  0
 
 *option:ACH_0_6:value:1  = 0.6
 *option:ACH_0_6:cost:total  =  0
+
+*option:ACH_0_5:value:1  = 0.5
+*option:ACH_0_5:cost:total  =  0
 
 *option:ACH_0_1:value:1  = 0.1
 *option:ACH_0_1:cost:total  =  0
@@ -1441,71 +1444,6 @@
 *option:DoorWinDef:value:8 = DoorWinDef
 *option:DoorWinDef:cost:total = 0.0
 
-!-----------------------------------------------------------------------
-!   NBC 9.36 Baseline
-!-----------------------------------------------------------------------
-*option:NBC-zone4-window:value:1 = NBC-zone4-window
-*option:NBC-zone4-window:value:2 = NBC-zone4-window
-*option:NBC-zone4-window:value:3 = NBC-zone4-window
-*option:NBC-zone4-window:value:4 = NBC-zone4-window
-*option:NBC-zone4-window:value:5 = NBC-zone4-window
-*option:NBC-zone4-window:value:6 = NBC-zone4-window
-*option:NBC-zone4-window:value:7 = NBC-zone4-window
-*option:NBC-zone4-window:value:8 = NBC-zone4-window
-*option:NBC-zone4-window:cost:total   = 0
-
-
-*option:NBC-zone5-window:value:1 = NBC-zone5-window
-*option:NBC-zone5-window:value:2 = NBC-zone5-window
-*option:NBC-zone5-window:value:3 = NBC-zone5-window
-*option:NBC-zone5-window:value:4 = NBC-zone5-window
-*option:NBC-zone5-window:value:5 = NBC-zone5-window
-*option:NBC-zone5-window:value:6 = NBC-zone5-window
-*option:NBC-zone5-window:value:7 = NBC-zone5-window
-*option:NBC-zone5-window:value:8 = NBC-zone5-window
-*option:NBC-zone5-window:cost:total   = 0
-
-*option:NBC-zone6-window:value:1 = NBC-zone6-window
-*option:NBC-zone6-window:value:2 = NBC-zone6-window
-*option:NBC-zone6-window:value:3 = NBC-zone6-window
-*option:NBC-zone6-window:value:4 = NBC-zone6-window
-*option:NBC-zone6-window:value:5 = NBC-zone6-window
-*option:NBC-zone6-window:value:6 = NBC-zone6-window
-*option:NBC-zone6-window:value:7 = NBC-zone6-window
-*option:NBC-zone6-window:value:8 = NBC-zone6-window
-*option:NBC-zone6-window:cost:total   = 0
-
-
-*option:NBC-zone7A-window:value:1 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:2 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:3 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:4 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:5 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:6 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:7 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:8 = NBC-zone7A-window
-*option:NBC-zone7A-window:cost:total   = 0
-
-*option:NBC-zone7B-window:value:1 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:2 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:3 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:4 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:5 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:6 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:7 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:8 = NBC-zone7B-window
-*option:NBC-zone7B-window:cost:total   = 0
-
-*option:NBC-zone8-window:value:1 = NBC-zone8-window
-*option:NBC-zone8-window:value:2 = NBC-zone8-window
-*option:NBC-zone8-window:value:3 = NBC-zone8-window
-*option:NBC-zone8-window:value:4 = NBC-zone8-window
-*option:NBC-zone8-window:value:5 = NBC-zone8-window
-*option:NBC-zone8-window:value:6 = NBC-zone8-window
-*option:NBC-zone8-window:value:7 = NBC-zone8-window
-*option:NBC-zone8-window:value:8 = NBC-zone8-window
-*option:NBC-zone8-window:cost:total   = 0
-
 *attribute:end
 
 !-----------------------------------------------------------------------
@@ -1543,25 +1481,10 @@
 *option:FibreMDSprayCore:cost:total = 0.0
 
 !-----------------------------------------------------------------------
-!   NBC 9.36 Baseline
+!   OCH-PEER door insulation
 !-----------------------------------------------------------------------
-*option:NBC-zone4-door:value:1 = 3.15    ! User specified R-value (Imperial) of door
-*option:NBC-zone4-door:cost:total = 0.0
-
-*option:NBC-zone5-door:value:1 = 3.15    ! User specified R-value (Imperial) of door
-*option:NBC-zone5-door:cost:total = 0.0
-
-*option:NBC-zone6-door:value:1 = 3.55    ! User specified R-value (Imperial) of door
-*option:NBC-zone6-door:cost:total = 0.0
-
-*option:NBC-zone7A-door:value:1 = 3.55    ! User specified R-value (Imperial) of door
-*option:NBC-zone7A-door:cost:total = 0.0
-
-*option:NBC-zone7B-door:value:1 = 4.05    ! User specified R-value (Imperial) of door
-*option:NBC-zone7B-door:cost:total = 0.0
-
-*option:NBC-zone8-door:value:1 = 4.05    ! User specified R-value (Imperial) of door
-*option:NBC-zone8-door:cost:total = 0.0
+*option:OCH-SteelPS:value:1 = 7.22      ! Steel polystyrene core (5.57 new door + 1.65 existing door)
+*option:OCH-SteelPS:cost:total = 0.0
 
 *attribute:end
 
@@ -1593,8 +1516,8 @@
 *option:CeilR50:value:2 = NA              ! H2K R-value (Imperial)         
 *option:CeilR50:cost:total    =   0       !$0 is assumed cost for LEEP Kelowna optimization
 
-*option:CeilR60:value:1 =  CeilR60
-*option:CeilR60:value:2 =  NA
+*option:CeilR60:value:1 =  NA		!CeilR60
+*option:CeilR60:value:2 =  60
 *option:CeilR60:cost:total    =  0
 
 *option:CeilR70:value:1 =  CeilR70
@@ -1716,6 +1639,34 @@
 *option:NBC_Ceiling_zone8:value:1 =  NA
 *option:NBC_Ceiling_zone8:value:2 =  59.22
 *option:NBC_Ceiling_zone8:cost:total    =  0
+
+!-----------------------------------------------------------------------
+!   OCH-PEER attic insulation
+!-----------------------------------------------------------------------
+
+*option:OCH_Ceiling_R60:value:1 =  NA
+*option:OCH_Ceiling_R60:value:2 =  60
+*option:OCH_Ceiling_R60:cost:total    =  0
+
+*option:OCH_Ceiling_R70:value:1 =  NA
+*option:OCH_Ceiling_R70:value:2 =  70
+*option:OCH_Ceiling_R70:cost:total    =  0
+
+*option:OCH_Ceiling_R80:value:1 =  NA
+*option:OCH_Ceiling_R80:value:2 =  80
+*option:OCH_Ceiling_R80:cost:total    =  0
+
+*option:OCH_Ceiling_R90:value:1 =  NA
+*option:OCH_Ceiling_R90:value:2 =  90
+*option:OCH_Ceiling_R90:cost:total    =  0
+
+*option:OCH_Ceiling_R100:value:1 =  NA
+*option:OCH_Ceiling_R100:value:2 =  100
+*option:OCH_Ceiling_R100:cost:total    =  0
+
+*option:OCH_Ceiling_R120:value:1 =  NA
+*option:OCH_Ceiling_R120:value:2 =  120
+*option:OCH_Ceiling_R120:cost:total    =  0
 
 *attribute:end
 
@@ -2003,6 +1954,37 @@
 *option:NBC_Wall_zone8_HRV:value:1 =  NBC_Wall_zone8_HRV
 *option:NBC_Wall_zone8_HRV:value:2 =  17.49
 *option:NBC_Wall_zone8_HRV:cost:total    =  0
+
+!-----------------------------------------------------------------------
+!   OCH-PEER options
+!-----------------------------------------------------------------------
+*option:Main_Wall_R30:value:1 =  Main_Wall_R30
+*option:Main_Wall_R30:value:2 =  30
+*option:Main_Wall_R30:cost:total    =  0
+
+*option:Main_Wall_R35:value:1 =  Main_Wall_R35
+*option:Main_Wall_R35:value:2 =  35
+*option:Main_Wall_R35:cost:total    =  0
+
+*option:Main_Wall_R40:value:1 =  Main_Wall_R40
+*option:Main_Wall_R40:value:2 =  40
+*option:Main_Wall_R40:cost:total    =  0
+
+*option:Main_Wall_R45:value:1 =  Main_Wall_R45
+*option:Main_Wall_R45:value:2 =  45
+*option:Main_Wall_R45:cost:total    =  0
+
+*option:Main_Wall_R50:value:1 =  Main_Wall_R50
+*option:Main_Wall_R50:value:2 =  50
+*option:Main_Wall_R50:cost:total    =  0
+
+*option:Main_Wall_R55:value:1 =  Main_Wall_R55
+*option:Main_Wall_R55:value:2 =  55
+*option:Main_Wall_R55:cost:total    =  0
+
+*option:Main_Wall_R60:value:1 =  Main_Wall_R60
+*option:Main_Wall_R60:value:2 =  60
+*option:Main_Wall_R60:cost:total    =  0
 
 *attribute:end
 
@@ -2757,6 +2739,43 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC_SCB_zone8_HRV:value:5 = 21.24        
 *option:NBC_SCB_zone8_HRV:cost:total = 0
 
+!-----------------------------------------------------------------------
+!   OCH-PEER below grade wall insulation
+!-----------------------------------------------------------------------
+*option:OCH_BCCB_R20:value:1 = BCCB_4_ALL  ! Change all Basements in model
+*option:OCH_BCCB_R20:value:2 = NA          !	
+*option:OCH_BCCB_R20:value:3 = NA       ! Internal wall added R-value
+*option:OCH_BCCB_R20:value:4 = 20          ! External wall added R-value
+*option:OCH_BCCB_R20:value:5 = NA   	    ! underslab added R-value
+*option:OCH_BCCB_R20:cost:total = 0
+
+*option:OCH_BCCB_R25:value:1 = BCCB_4_ALL  ! Change all Basements in model
+*option:OCH_BCCB_R25:value:2 = NA          !	
+*option:OCH_BCCB_R25:value:3 = NA       ! Internal wall added R-value
+*option:OCH_BCCB_R25:value:4 = 25          ! External wall added R-value
+*option:OCH_BCCB_R25:value:5 = NA   	    ! underslab added R-value
+*option:OCH_BCCB_R25:cost:total = 0
+
+*option:OCH_BCCB_R30:value:1 = BCCB_4_ALL  ! Change all Basements in model
+*option:OCH_BCCB_R30:value:2 = NA          !	
+*option:OCH_BCCB_R30:value:3 = NA       ! Internal wall added R-value
+*option:OCH_BCCB_R30:value:4 = 30          ! External wall added R-value
+*option:OCH_BCCB_R30:value:5 = NA   	    ! underslab added R-value
+*option:OCH_BCCB_R30:cost:total = 0
+
+*option:OCH_BCCB_R35:value:1 = BCCB_4_ALL  ! Change all Basements in model
+*option:OCH_BCCB_R35:value:2 = NA          !	
+*option:OCH_BCCB_R35:value:3 = NA       ! Internal wall added R-value
+*option:OCH_BCCB_R35:value:4 = 35          ! External wall added R-value
+*option:OCH_BCCB_R35:value:5 = NA   	    ! underslab added R-value
+*option:OCH_BCCB_R35:cost:total = 0
+
+*option:OCH_BCCB_R40:value:1 = BCCB_4_ALL  ! Change all Basements in model
+*option:OCH_BCCB_R40:value:2 = NA          !	
+*option:OCH_BCCB_R40:value:3 = NA       ! Internal wall added R-value
+*option:OCH_BCCB_R40:value:4 = 40          ! External wall added R-value
+*option:OCH_BCCB_R40:value:5 = NA   	    ! underslab added R-value
+*option:OCH_BCCB_R40:cost:total = 0
 
 *attribute:end
 
@@ -3285,6 +3304,91 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC-CCASHP:value:20 = 25                    ! Operable window area
 *option:NBC-CCASHP:cost:total   = 0                 
 
+!-----------------------------------------------------------------------
+!   OCH-PEER HVAC System
+!-----------------------------------------------------------------------
+*option:OCH-elec-heat-AC:value:1  = Baseboards                ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:OCH-elec-heat-AC:value:2  = AirConditioning            ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:OCH-elec-heat-AC:value:3  =  1                     ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:OCH-elec-heat-AC:value:4  =  NA                     ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:OCH-elec-heat-AC:value:5  =  2                     ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:OCH-elec-heat-AC:value:6  =  NA                    ! H2K: Capacity value.     
+*option:OCH-elec-heat-AC:value:7  =  true                 ! H2K: true=SS, false=AFUE    
+*option:OCH-elec-heat-AC:value:8  =  100                   ! H2K: Efficiency value (0->100)    
+*option:OCH-elec-heat-AC:value:9  = 1                      ! H2K: 1:Auto, 2:Continuous    
+*option:OCH-elec-heat-AC:value:10 = false                   ! H2K: ee-motor true/false   
+*option:OCH-elec-heat-AC:value:11 = 0                    ! H2K: Crankcase heater?
+*option:OCH-elec-heat-AC:value:12 = 2                      ! Function heating/cooling 
+*option:OCH-elec-heat-AC:value:13 = 1                      ! Type: central split 
+*option:OCH-elec-heat-AC:value:14 = 2                      ! Capacity: Calculated 
+*option:OCH-elec-heat-AC:value:15 = NA                     ! Capacity value (W)
+*option:OCH-elec-heat-AC:value:17 = 4.3                   ! COOLING COP
+*option:OCH-elec-heat-AC:value:20 = NA                      ! Operable window area
+*option:OCH-elec-heat-AC:cost:total = 0                    !
+
+*option:OCH-gas-furnace-AC:value:1  = Furnace                ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:OCH-gas-furnace-AC:value:2  = AirConditioning            ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:OCH-gas-furnace-AC:value:3  =  2                     ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:OCH-gas-furnace-AC:value:4  =  2                     ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:OCH-gas-furnace-AC:value:5  =  2                     ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:OCH-gas-furnace-AC:value:6  =  NA                    ! H2K: Capacity value.     
+*option:OCH-gas-furnace-AC:value:7  =  false                 ! H2K: true=SS, false=AFUE    
+*option:OCH-gas-furnace-AC:value:8  =  92                    ! H2K: Efficiency value (0->100)    
+*option:OCH-gas-furnace-AC:value:9  = 1                      ! H2K: 1:Auto, 2:Continuous    
+*option:OCH-gas-furnace-AC:value:10 = true                   ! H2K: ee-motor true/false   
+*option:OCH-gas-furnace-AC:value:11 = 60                     ! H2K: Crankcase heater?
+*option:OCH-gas-furnace-AC:value:12 = 2                      ! Function heating/cooling 
+*option:OCH-gas-furnace-AC:value:13 = 1                      ! Type: central split 
+*option:OCH-gas-furnace-AC:value:14 = 2                      ! Capacity: Calculated 
+*option:OCH-gas-furnace-AC:value:15 = NA                     ! Capacity value (W)
+*option:OCH-gas-furnace-AC:value:17 = 4.3                   ! COOLING COP
+*option:OCH-gas-furnace-AC:value:20 = 4                      ! Operable window area
+*option:OCH-gas-furnace-AC:cost:total = 0                    !
+
+*option:OCH-CCASHP:value:1 = Baseboards            ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:OCH-CCASHP:value:2 = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:OCH-CCASHP:value:3 =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:OCH-CCASHP:value:4 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:OCH-CCASHP:value:5 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:OCH-CCASHP:value:6 =  6                    ! H2K: Capacity value.     
+*option:OCH-CCASHP:value:7 =  true                 ! H2K: true=COP, false=HSPF    
+*option:OCH-CCASHP:value:8 =  100                  ! H2K: Efficiency value (0->100)    
+*option:OCH-CCASHP:value:9 = 1                     ! H2K: 1:Auto, 2:Continuous    
+*option:OCH-CCASHP:value:10 = false                 ! H2K: ee-motor true/false   
+*option:OCH-CCASHP:value:11 = 60                    ! H2K: Crankcase heater?
+*option:OCH-CCASHP:value:12 = 2                     ! Function heating/cooling 
+*option:OCH-CCASHP:value:13 = 1                     ! Type: central split 
+*option:OCH-CCASHP:value:14 = 2                     ! Capacity: Calculated 
+*option:OCH-CCASHP:value:15 = NA                    ! Capacity value (W)
+*option:OCH-CCASHP:value:16 = 7.1                     ! Heating COP/HSPF 
+*option:OCH-CCASHP:value:17 = 4.3                   ! Cooling COP/HSPF 
+*option:OCH-CCASHP:value:18 = 2                     ! Cut off type : Restricted 
+*option:OCH-CCASHP:value:19 = -20                   ! Cut off temp 
+*option:OCH-CCASHP:value:20 = 25                    ! Operable window area
+*option:OCH-CCASHP:cost:total   = 0                 
+
+*option:OCH-CCASHP-Gas:value:1 = Furnace	   	       ! H2K: Baseboards, Furnace, Boiler, ComboHeatDhw, P9    
+*option:OCH-CCASHP-Gas:value:2 = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
+*option:OCH-CCASHP-Gas:value:3 =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
+*option:OCH-CCASHP-Gas:value:4 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
+*option:OCH-CCASHP-Gas:value:5 =  2                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:OCH-CCASHP-Gas:value:6 =  6                    ! H2K: Capacity value.     
+*option:OCH-CCASHP-Gas:value:7 =  true                 ! H2K: true=COP, false=HSPF    
+*option:OCH-CCASHP-Gas:value:8 =  92                  ! H2K: Efficiency value (0->100)    
+*option:OCH-CCASHP-Gas:value:9 = 1                     ! H2K: 1:Auto, 2:Continuous    
+*option:OCH-CCASHP-Gas:value:10 = false                 ! H2K: ee-motor true/false   
+*option:OCH-CCASHP-Gas:value:11 = 60                    ! H2K: Crankcase heater?
+*option:OCH-CCASHP-Gas:value:12 = 2                     ! Function heating/cooling 
+*option:OCH-CCASHP-Gas:value:13 = 1                     ! Type: central split 
+*option:OCH-CCASHP-Gas:value:14 = 2                     ! Capacity: Calculated 
+*option:OCH-CCASHP-Gas:value:15 = NA                    ! Capacity value (W)
+*option:OCH-CCASHP-Gas:value:16 = 7.1                     ! Heating COP/HSPF 
+*option:OCH-CCASHP-Gas:value:17 = 4.3                   ! Cooling COP/HSPF 
+*option:OCH-CCASHP-Gas:value:18 = 2                     ! Cut off type : Restricted 
+*option:OCH-CCASHP-Gas:value:19 = -20                   ! Cut off temp 
+*option:OCH-CCASHP-Gas:value:20 = 25                    ! Operable window area
+*option:OCH-CCASHP-Gas:cost:total   = 0                 
+
 
 *attribute:end
 
@@ -3365,6 +3469,16 @@ Whitehorse Wall Options (Code is R28)
 *option:R2000_HRV:value:7 = 60    ! Eff% @ Rating1
 *option:R2000_HRV:value:8 = 50    ! Eff% @ Rating2
 *option:R2000_HRV:cost:total = 0
+
+*option:OCH-HRV:value:1 = HRV.vnt
+*option:OCH-HRV:value:2 = 
+*option:OCH-HRV:value:3 = 1     ! F326
+*option:OCH-HRV:value:4 = 1     ! Forced air heating ductwork
+*option:OCH-HRV:value:5 = 480   ! Min./Day
+*option:OCH-HRV:value:6 = 60    ! L/s (exhaust = supply)
+*option:OCH-HRV:value:7 = 75    ! Eff% @ Rating1 (Sensible Efficincy @0C)
+*option:OCH-HRV:value:8 = 61    ! Eff% @ Rating2 (Sensible Efficincy @-25C)
+*option:OCH-HRV:cost:total = 0
 
 *attribute:end 
 
@@ -3504,6 +3618,34 @@ Whitehorse Wall Options (Code is R28)
 *option:R2000-HotWater-elec:value:5 = NA        ! HP COP
 *option:R2000-HotWater-elec:value:6 = 0
 *option:R2000-HotWater-elec:cost:total    = 0
+
+!-----------------------------------------------------------------------
+!   OCH-PEER DHW System
+!-----------------------------------------------------------------------
+*option:OCH-HPHotWater:value:1 = 1         ! Elec
+*option:OCH-HPHotWater:value:2 = 7         ! Integrated Heat Pump
+*option:OCH-HPHotWater:value:3 = 605.3     ! Litres (4*40 USGal)
+*option:OCH-HPHotWater:value:4 = 0.78       ! EF (must be 0.1 - 1.0) H2K help prescibes 0.9
+*option:OCH-HPHotWater:value:5 = 2.5       ! Integrated HP COP (H2K help prescribes HP-Mfg-EF/0.9)
+*option:OCH-HPHotWater:value:6  = NA
+*option:OCH-HPHotWater:cost:total  = 0
+
+*option:OCH-HotWater_gas:value:1 = 2         ! Gas
+*option:OCH-HotWater_gas:value:2 = 11        ! Condensing
+*option:OCH-HotWater_gas:value:3 = 605.3     ! Litres (4*40 USGal)
+*option:OCH-HotWater_gas:value:4 = 0.67      ! EF 
+*option:OCH-HotWater_gas:value:5 = NA        ! 
+*option:OCH-HotWater_gas:value:6  = 76.2
+*option:OCH-HotWater_gas:cost:total = 0
+
+
+*option:OCH-HotWater_elec:value:1 = 1         ! Elec
+*option:OCH-HotWater_elec:value:2 = 3         ! conserver
+*option:OCH-HotWater_elec:value:3 = 605.3     ! Litres (4*40 USGal)
+*option:OCH-HotWater_elec:value:4 = 0.84     ! EF 
+*option:OCH-HotWater_elec:value:5 = NA        ! 
+*option:OCH-HotWater_elec:value:6  = 0
+*option:OCH-HotWater_elec:cost:total = 0
 
 *attribute:end
 

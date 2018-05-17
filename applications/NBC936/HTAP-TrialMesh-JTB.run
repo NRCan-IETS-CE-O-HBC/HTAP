@@ -7,13 +7,13 @@ RunParameters_START
 RunParameters_END 
 
 
-! Parameters controlling archetypes, locations, reference rulests. (these will always be
-! run in mesh, even if anoptimization mode is added in the future. 
+! Parameters controlling archetypes, locations, reference rule sets. (these will always be
+! run in mesh, even if an optimization mode is added in the future. 
 RunScope_START
 
-  archetypes                        = NRCan*.h2k
-  locations                         = HALIFAX, CALGARY, TORONTO, VANCOUVER, EDMONTON
-  rulesets                          = as-found, NBC9_36_HRV
+  archetypes                        = PrinceGeorgeHouse.h2k 
+  locations                         = Halifax, Toronto
+  rulesets                          = NBC9_36_noHRV, NBC9_36_noHRV
   
 RunScope_END
 
@@ -21,16 +21,10 @@ RunScope_END
 Upgrades_START
 
     Opt-FuelCost                       = rates2016  ! Maybe this belongs in scope?
-    Opt-ACH                            = NA
-	Opt-ACH                            = NA
+    Opt-ACH                            = NA, ACH_3_5  
     Opt-MainWall                       = GenericWall_1Layer
-    Opt-GenericWall_1Layer_definitions = NA
-    Opt-Ceilings                       = NA
-	Opt-AtticCeilings                  = NA 
-	Opt-CathCeilings                   = NA
-	                                  
-	Opt-FlatCeilings                   = NA
-	
+    Opt-GenericWall_1Layer_definitions = NA, DblStud_12in_cell_R-41
+    Opt-Ceilings                       = NA, CeilR50, CeilR60, CeilR70
     Opt-H2KFoundation                  = NA
     Opt-ExposedFloor                   = NA
     Opt-CasementWindows                = NA
@@ -40,15 +34,6 @@ Upgrades_START
     Opt-DWHRSystem                     = NA
     Opt-HVACSystem                     = NA 
     Opt-HRVspec                        = NA
-	
-	Opt-StandoffPV                     = NoPV
-	Opt-Skylights                      = NA  
-
-	Opt-DoorWindows                    = NA  
-
-	Opt-Doors                          = NA  
-
-	
-	
+    Opt-StandoffPV                     = NA
 
 Upgrades_END

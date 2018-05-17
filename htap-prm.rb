@@ -28,7 +28,6 @@ $gRulesetHash   = Hash.new
 $gLocationHash  = Hash.new 
 
 
-
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
@@ -36,6 +35,7 @@ $gGenChoiceFileList = Array.new
 
 #default (and only supported mode)
 $gRunDefMode   = "mesh"
+$RunScopeOpen = false
 
 =begin rdoc
 =========================================================================================
@@ -184,7 +184,8 @@ def parse_def_file(filepath)
              
             # archetypes -  
             $gArchetypes = $token_values[1].to_s.split(",")
-          
+			
+			          
           end 
           
           if ( $RunScopeOpen && $token_values[0] =~ /locations/i ) 
@@ -210,6 +211,13 @@ def parse_def_file(filepath)
     end # if ( $defline !~ /^\s*$/ ) 
     
   end # rundefs.each do | line |
+  
+  # What if archetypes are defined using a wildcard? 
+  
+  
+  
+  
+  
 
 end # def parse_def_file(filepath)
 
@@ -252,11 +260,23 @@ def create_mesh_cartisian_combos(optIndex)
     
     when -2 
     
-      $gArchetypes.each do |archetype|
+      $gArchetypes.each do |archentry|
       
-        $gChoiceFileSet["Opt-Archetype"] = archetype 
+	  
+	    $Folder = $gArchetypeDir 
+	    # Allow wildcards; expand list! 
+	    
+		$ArchetypeFiles = Dir["#{$Folder}/#{archentry}"] 
+	 
+        $ArchetypeFiles.each do |h2kpath|
+	  
+		  $h2kfile = File.basename(h2kpath)
+	  
+          $gChoiceFileSet["Opt-Archetype"] = $h2kfile 
         
-        create_mesh_cartisian_combos(optIndex+1) 
+          create_mesh_cartisian_combos(optIndex+1) 
+		
+		end 
         
       end      
     
@@ -541,7 +561,7 @@ def run_these_cases(current_task_files)
            
            $RunResults["RunNumber"] << $RunNumbers[thread3]
            $RunResults["RunDir"] << $RunDirs[thread3]
-           $RunResults["iiiiiiinput.ChoiceFile"]<< $choicefiles[thread3]
+           $RunResults["input.ChoiceFile"]<< $choicefiles[thread3]
            
            lineCount = 0
            contents.each do |line|
@@ -754,7 +774,7 @@ optparse = OptionParser.new do |opts|
    opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
       $cmdlineopts["substitute"] = o
       $gSubstitutePath = o
-      if ( !File.exist?($gOptionFile) )
+      if ( !File.exist?($gSubstitutePath) )
          fatalerror("Valid path to substitute-h2k,rb script must be specified with --substitute-h2k-path (or -s) option!")
       end
    end

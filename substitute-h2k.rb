@@ -3,10 +3,11 @@
 # substitute-h2k.rb
 # Developed by Jeff Blake, CanmetENERGY-Ottawa, Natural Resources Canada
 # Created Nov 2015
-# Master maintained in Get Hub
+# Master maintained in GitHub
 #
-# This is a Ruby version of the substitute-h2k.rb script customized for HOT2000 runs.
-# Can be used stand-alone or with GenOpt for parametric runs or optimizations of 
+# This is a Ruby version of the substitute-h2k.pl script originall written by Alex 
+# Ferguson. This version is customized for HOT2000 runs. This script can be used
+# stand-alone, with GenOpt or HTAP-PRM.rb for parametric runs or optimizations of 
 # HOT2000 inputs.
 # ************************************************************************************
 
@@ -15,8 +16,6 @@ require 'optparse'
 require 'timeout'
 require 'fileutils'
 
-
-
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
@@ -24,13 +23,23 @@ R_PER_RSI = 5.678263
 KWH_PER_GJ = 277.778
 W_PER_KW = 1000.0
 
-
-# Desired ERS mode: 
-# (USE Data from SOC for now. We'll think of something to do with the other modes later)
-# 23-Aug-2017 JTB: Note that "SOC" will be changed to "General" when the house is not
-#                  in ERS Program mode.
+# HOT2000 output data sets depend on the run mode set in the HOT2000 inputs. In General mode 
+# just one run is done and one set of outputs is generated, In ERS mode, multiple (7) runs of the 
+# H2K core are initiated by the interface (either CLI or GUI). The output data sets contain the
+# following sections ("houseCode is the XML attribute in each section):
+#    houseCode=nil: Runs without any imposed conditions on inputs (i.e., same as "General" mode)
+#    houseCode=SOC: ERS mode using "Standard Operating Conditions"
+#    houseCode=HOC: ERS mode using "Household Operating Conditions"
+#    houseCode=HCV: ERS mode "House with Continuous Scheduled Ventilation"
+#    houseCode=ROC: ERS mode "House with Reduced Operating Conditions"
+#    houseCode=Reference: ERS "Reference House"
+#    houseCode=UserHouse: ERS mode "General Mode"
+#
+# 01-Feb-2018 JTB: Note that this variable will be overridden by the choice file setting for 
+#                  Opt-ResultHouseCode. In the case where the user has set an ERS mode output 
+#                  data set but the input file is set to General mode, this variable will be 
+#                  changed to "General".
 $outputHCode = "SOC" 
-
 
 # Global variable names  (i.e., variables that maintain their content and use (scope) 
 # throughout this file). 
@@ -43,14 +52,15 @@ $gTest_params = Hash.new        # test parameters
 $gChoiceFile  = ""
 $gOptionFile  = ""
 $PRMcall      = false 
+$ExtraOutput1 = false
+$keepH2KFolder = false
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
-
 $gRotate             = "S"
-
 $gGOStep             = 0
 $gArchGOChoiceFile   = 0
+$gReadROutStrTxt = nil
 
 # Use lambda function to avoid the extra lines of creating each hash nesting
 $blk = lambda { |h,k| h[k] = Hash.new(&$blk) }
@@ -58,14 +68,10 @@ $gOptions = Hash.new(&$blk)
 $gChoices = Hash.new(&$blk)
 $gResults = Hash.new(&$blk)
 $gElecRate = Hash.new(&$blk)
-
 $gExtraDataSpecd  = Hash.new
-
 $ThisError   = ""
 $ErrorBuffer = "" 
-
 $SaveVPOutput = 0 
-
 $gEnergyPV = 0
 $gEnergySDHW = 0
 $gEnergyHeating = 0
@@ -74,11 +80,8 @@ $gEnergyVentilation = 0
 $gEnergyWaterHeating = 0
 $gEnergyEquipment = 0
 $gERSNum = 0  # ERS number
-
 $gRegionalCostAdj = 0
-
 $gRotationAngle = 0
-
 $gEnergyElec = 0
 $gEnergyGas = 0
 $gEnergyOil = 0 
@@ -89,17 +92,26 @@ $gEnergyHardWood = 0
 $gEnergyMixedWood = 0
 $gEnergySoftWood = 0
 $gEnergyTotalWood = 0
-
 $LapsedTime     = 0 
 $NumTries       = 0 
-
 $gTotalBaseCost = 0
 $gUtilityBaseCost = 0 
 $PVTarrifDollarsPerkWh = 0.10 # Default value if not set in Options file
-
 $gPeakCoolingLoadW    = 0 
 $gPeakHeatingLoadW    = 0 
 $gPeakElecLoadW    = 0 
+
+# Variables for saving part-load data from hourly-bins
+$binDatHrs    = Array.new
+$binDatTmp    = Array.new
+$binDatTsfB   = Array.new
+$binDatHLR    = Array.new
+$binDatT2cap  = Array.new
+$binDatT2cap  = Array.new
+$binDatT2PLR  = Array.new
+$binDatT1PLR = Array.new
+
+
 
 # Path where this script was started and considered master
 # When running GenOpt, it will be a Tmp folder!
@@ -127,9 +139,7 @@ $gReportChoices      = false
 
 $GenericWindowParams = Hash.new(&$blk)
 $GenericWindowParamsDefined = 0 
-
 $gLookForArchetype = 1
-
 $gAuxEnergyHeatingGJ = 0   # 29-Nov-2016 JTB: Added for use by RC
 $gEnergyHeatingElec = 0
 $gEnergyVentElec = 0
@@ -167,7 +177,165 @@ $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
 $PVInt = "NA"
 $PVIntModel = false
 $annPVPowerFromBrowseRpt = 0.0
-						   
+
+# Flags for AC Performance Data from Browse.rpt file
+$annACSensibleLoadFromBrowseRpt = 0.0
+$annACLatentLoadFromBrowseRpt = 0.0
+$TotalAirConditioningLoad = 0.0
+$AvgACCOP = 0.0
+
+# Setting Heating Degree Days
+$HDDHash =  {
+            "WHITEHORSE" => 6580 ,
+            "TORONTO" => 3520 ,
+            "OTTAWA" => 4500 ,
+            "EDMONTON" => 5120 ,
+            "CALGARY" => 5000 ,
+            "MONTREAL" => 4200 ,
+            "QUEBEC" => 5080 ,
+            "HALIFAX" => 4000 ,
+            "FREDERICTON" => 4670 ,
+            "WINNIPEG" => 5670 ,
+            "REGINA" => 5600 ,
+            "VANCOUVER" => 2825 ,
+            "PRINCEGEORGE" => 4720 ,
+            "KAMLOOPS" => 3450 ,
+            "YELLOWKNIFE" => 8170 ,
+            "INUVIK" => 9600 ,
+            "ABBOTSFORD" => 2860 ,
+            "CASTLEGAR" => 3580 ,
+            "FORTNELSON" => 6710 ,
+            "FORTSTJOHN" => 5750 ,
+            "PORTHARDY" => 3440 ,
+            "PRINCERUPERT" => 3900 ,
+            "SMITHERS" => 5040 ,
+            "SUMMERLAND" => 3350 ,
+            "VICTORIA" => 2650 ,
+            "WILLIAMSLAKE" => 4400 ,
+            "COMOX" => 3100 ,
+            "CRANBROOK" => 4400 ,
+            "QUESNEL" => 4650 ,
+            "SANDSPIT" => 3450 ,
+            "TERRACE" => 4150 ,
+            "TOFINO" => 3150 ,
+            "WHISTLER" => 4180 ,
+            "FORTMCMURRAY" => 6250 ,
+            "LETHBRIDGE" => 4500 ,
+            "ROCKYMOUNTAINHOUSE" => 5640 ,
+            "SUFFIELD" => 4770 ,
+            "COLDLAKE" => 5860 ,
+            "CORONATION" => 5640 ,
+            "GRANDEPRAIRIE" => 5790 ,
+            "MEDICINEHAT" => 4540 ,
+            "PEACERIVER" => 6050 ,
+            "REDDEER" => 5550 ,
+            "ESTEVAN" => 5340 ,
+            "PRINCEALBERT" => 6100 ,
+            "SASKATOON" => 5700 ,
+            "SWIFTCURRENT" => 5150 ,
+            "URANIUMCITY" => 7500 ,
+            "BROADVIEW" => 5760 ,
+            "MOOSEJAW" => 5270 ,
+            "NORTHBATTLEFORD" => 5900 ,
+            "YORKTON" => 6000 ,
+            "BRANDON" => 5760 ,
+            "CHURCHILL" => 8950 ,
+            "THEPAS" => 6480 ,
+            "THOMPSON" => 7600 ,
+            "DAUPHIN" => 5900 ,
+            "PORTAGELAPRAIRIE" => 5600 ,
+            "BIGTROUTLAKE" => 7650 ,
+            "KINGSTON" => 4000 ,
+            "LONDON" => 3900 ,
+            "MUSKOKA" => 4760 ,
+            "NORTHBAY" => 5150 ,
+            "SAULTSTEMARIE" => 4960 ,
+            "SIMCOE" => 3700 ,
+            "SUDBURY" => 5180 ,
+            "THUNDERBAY" => 5650 ,
+            "TIMMINS" => 5940 ,
+            "WINDSOR" => 3400 ,
+            "GOREBAY" => 4700 ,
+            "KAPUSKASING" => 6250 ,
+            "KENORA" => 5630 ,
+            "SIOUXLOOKOUT" => 5950 ,
+            "TORONTOMETRESSTN" => 3890 ,
+            "TRENTON" => 4110 ,
+            "WIARTON" => 4300 ,
+            "BAGOTVILLE" => 5700 ,
+            "KUUJJUAQ" => 8550 ,
+            "KUUJJUARAPIK" => 9150 ,
+            "SCHEFFERVILLE" => 8550 ,
+            "SEPTILES" => 6200 ,
+            "SHERBROOKE" => 4700 ,
+            "VALDOR" => 6180 ,
+            "BAIECOMEAU" => 6020 ,
+            "LAGRANDERIVIERE" => 8100 ,
+            "MONTJOLI" => 5370 ,
+            "MONTREALMIRABEL" => 4500   ,
+            "STHUBERT" => 4490    ,
+            "STEAGATHEDESMONTS" => 5390 ,
+            "CHATHAM" => 4950 ,
+            "MONCTON" => 4680 ,
+            "SAINTJOHN" => 4570 ,
+            "CHARLO" => 5500 ,
+            "GREENWOOD" => 4140 ,
+            "SYDNEY" => 4530 ,
+            "TRURO" => 4500 ,
+            "YARMOUTH" => 3990 ,
+            "CHARLOTTETOWN" => 4460    ,
+            "SUMMERSIDE" => 4600 ,
+            "BONAVISTA" => 5000 ,
+            "GANDER" => 5110 ,
+            "GOOSEBAY" => 6670 ,
+            "SAINTJOHNS" => 4800 ,
+            "STEPHENVILLE" => 4850 ,
+            "CARTWRIGHT" => 6440 ,
+            "DANIELSHARBOUR" => 4760 ,
+            "DEERLAKE" => 4760 ,
+            "WABUSHLAKE" => 7710 ,
+            "DAWSONCITY" => 8120 ,
+            "FORTSMITH" => 7300 ,
+            "NORMANWELLS" => 8510 ,
+            "BAKERLAKE" => 10700 ,
+            "IQALUIT" => 9980 ,
+            "RESOLUTE" => 12360 ,
+            "CORALHARBOUR" => 10720 ,
+            "HALLBEACH" => 10720 ,
+            "XXXXX" => 1
+            }
+
+# Setting hash for permafrost locations
+$PermafrostHash =  {
+            "YELLOWKNIFE"  => "discontinuous" ,
+            "INUVIK"       => "continuous",
+            "CHURCHILL"    => "continuous",
+            "KUUJJUAQ"     => "continuous" ,
+            "DAWSONCITY"   => "discontinuous" ,
+            "NORMANWELLS"  => "discontinuous" ,
+            "BAKERLAKE"    => "continuous",
+            "IQALUIT"      => "continuous",
+            "RESOLUTE"     => "continuous" ,
+            "CORALHARBOUR" => "continuous",
+            "HALLBEACH"    => "continuous"
+            }
+
+            
+$ruleSetChoices = Hash.new
+$ruleSetName = ""
+
+$HDDs = ""
+
+
+
+
+
+
+
+
+
+
+
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
@@ -225,6 +393,7 @@ def warn_out(debmsg)
    end
 end
 
+
 # =========================================================================================
 # Returns XML elements of HOT2000 file.
 # =========================================================================================
@@ -270,7 +439,6 @@ end
 # =========================================================================================
 def write_h2k_magic_files(filepath) 
 
-
   $WinMBFile = "#{filepath}/H2K/WINMB.H2k" 
   $ROutFile  = "#{filepath}/H2K/ROutstr.H2k" 
 
@@ -282,10 +450,10 @@ def write_h2k_magic_files(filepath)
   
   end 
   
- if ( ! File.file?( $ROutFile ) ) 
+   if ( ! File.file?( $ROutFile ) ) 
  
-    $Handle = File.open($ROutFile, 'w')
-    $Handle.write "Choose diagnostics>
+      $Handle = File.open($ROutFile, 'w')
+      $Handle.write "Choose diagnostics>
 All,
 <End>
      x 'Boot', ! 1 = Startup
@@ -327,26 +495,16 @@ the problem to be analysed.
 Brian Bradley
 bbradley@nrcan.gc.ca
 204-984-4920"
-    $Handle.close 
-  end 
-  
-
-
+      $Handle.close 
+   end 
 
 end 
-
-
 
 # =========================================================================================
 # Search through the HOT2000 working file (copy of input file specified on command line) 
 # and change values for settings defined in choice/options files. 
 # =========================================================================================
-def processFile(filespec)
-   
-   # Load all XML elements from HOT2000 file
-   h2kElements = get_elements_from_filename(filespec)
-   
-   stream_out(" READING to edit: #{filespec} \n")
+def processFile(h2kElements)
    
    # Load all XML elements from HOT2000 code library file. This file is specified
    # in option Opt-DBFiles 
@@ -374,9 +532,13 @@ def processFile(filespec)
       $PVIntModel = true
    end
    
-   # Refer to tag value for OPT-H2K-ConfigType to determine which foundations to change (further down)!
+   # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundation to determine which foundations to change (further down)!
    config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
    (configType, configSubType, fndTypes) = config.split('_')
+
+   # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundationSlabCrawl to determine which foundations to change (further down)!
+   config2 = $gOptions["Opt-H2KFoundationSlabCrawl"]["options"][ $gChoices["Opt-H2KFoundationSlabCrawl"] ]["values"]["1"]["conditions"]["all"]
+   (configType2, configSubType2, fndTypes2) = config2.split('_')
    
    optDHWTankSize = "1"  # DHW variable defined here so scope includes all DHW tags
    
@@ -412,7 +574,12 @@ def processFile(filespec)
             #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
                $Locale = $gChoices["Opt-Location"] 
-               
+
+               # changing the soil condition to permafrost if the location is within 
+               # continuous permafrost zone
+               set_permafrost_by_location(h2kElements,$Locale)
+
+                 
                if ( tag =~ /OPT-H2K-WTH-FILE/ && value != "NA" )
                   # Weather file to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather"
@@ -434,8 +601,6 @@ def processFile(filespec)
                   # Weather location to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Location"
                   h2kElements[locationText].attributes["code"] = value
-                  
-                  
                   
                elsif ( tag =~ /OPT-WEATHER-FILE/ ) # Do nothing
                elsif ( tag =~ /OPT-Latitude/ ) # Do nothing
@@ -488,8 +653,6 @@ def processFile(filespec)
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
-            
-            
                           
             
             # Air Infiltration Rate
@@ -519,109 +682,26 @@ def processFile(filespec)
                end
             
             
-            # Ceilings
+            # Ceilings - All ceiling constructions 
+            # Note: UsrSpec R-values will change all ceilings regardless of construction type but code library entries
+            #       must match the code names that appear in code lib "Ceiling Codes" group or the 
+            #       "Flat or Cathedral Ceiling Codes" group.
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-Ceilings/ )
                if ( tag =~ /Opt-Ceiling/ && value != "NA" )
                   # If this surface code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for ceiling and ceiling_flat surfaces. 
-                  # Code names in library are unique.
+                  # (either Favourite or UsrDef) for ceiling and ceiling_flat groupings. 
+                  # Code names in library are unique and slit into two groups: "Ceiling Codes"
+                  # and "Flat or Cathedral Ceiling Codes" so the code name specified CAN ONLY EXIST
+                  # in one of these groups!
                   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
                   
-                  # Look for this code name in code library (Favorite and UserDefined)
-                  thisCodeInHouse = false
+                  foundCodeLibElement = nil
                   useThisCodeID = "Code 99"
-                  foundFavLibCode = false
-                  foundUsrDefLibCode = false
-                  foundAtticCeil = false
-                  foundCathCeil = false
-                  ceilngType = ""
-                  foundCodeLibElement = ""
-                  # Check in Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
-                  locationCodeFavText = "Codes/Ceiling/Favorite/Code"
-                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                     if ( codeElement.get_text("Label") == value )
-                        foundFavLibCode = true
-                        foundAtticCeil = true
-                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                        break
-                     end
-                  end
-                  if ( ! foundFavLibCode )
-                     # Also check in CeilingFlat Codes used for: Cathedral and Flat
-                     locationCodeFavText = "Codes/CeilingFlat/Favorite/Code"
-                     h2kCodeElements.each(locationCodeFavText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundFavLibCode = true
-                           foundCathCeil = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  # Code library names are also unique across Favorite and User Defined codes
-                  if ( ! foundFavLibCode )
-                     # Check in Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
-                     locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundAtticCeil = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( ! foundFavLibCode && ! foundUsrDefLibCode )
-                     # Also check in CeilingFlat Codes used for: Cathedral and Flat
-                     locationCodeUsrDefText = "Codes/CeilingFlat/UserDefined/Code"
-                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
-                        if ( codeElement.get_text("Label") == value )
-                           foundUsrDefLibCode = true
-                           foundCathCeil = true
-                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-                           break
-                        end
-                     end
-                  end
-                  if ( foundAtticCeil )
-                     ceilngType = "Ceiling"
-                  else
-                     ceilngType = "CeilingFlat"
-                  end
                   
-                  if ( foundFavLibCode || foundUsrDefLibCode )
-                     # Check to see if this code is already used in H2K file and add, if not.
-                     # Code references are in the <Codes> section. Can't have duplicates!
-                     if ( foundFavLibCode )
-                        locationText = "HouseFile/Codes/#{ceilngType}/Favorite"
-                     else
-                        locationText = "HouseFile/Codes/#{ceilngType}/UserDefined"
-                     end
-                     h2kElements.each(locationText + "/Code") do |element| 
-                        if ( element.get_text("Label") == value )
-                           thisCodeInHouse = true
-                           useThisCodeID = element.attributes["id"]
-                           break
-                        end
-                     end
-                     if ( ! thisCodeInHouse )
-                        if ( h2kElements["HouseFile/Codes/#{ceilngType}"] == nil )
-                           # No section ofthis type in house file Codes section -- add it!
-                           h2kElements["HouseFile/Codes"].add_element(ceilngType)
-                        end
-                        if ( h2kElements[locationText] == nil )
-                           # No Favorite or UserDefined section in house file Codes section -- add it!
-                           if ( foundFavLibCode )
-                              h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("Favorite")
-                           else
-                              h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("UserDefined")
-                           end
-                        end
-                        foundCodeLibElement.attributes["id"] = useThisCodeID
-                        h2kElements[locationText].add(foundCodeLibElement)
-                     end
-                     
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
                      # Change all existing surface references of this type to useThisCodeID
                      # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
                      # section distinguishes between "Ceiling" and "CeilingFlat"
@@ -637,8 +717,8 @@ def processFile(filespec)
                         element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
                      end
                   else
-                     # Code name not found in the code library
-                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
                      # or NA in OPT-H2K-EffRValue
                      debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
                   end
@@ -660,6 +740,180 @@ def processFile(filespec)
                end
                
             
+            # Attic Ceilings - All Attic/gable, Attic/Hip or Scissor ceiling constructions
+            #-----------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-AtticCeilings/ )
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Favourite or UsrDef) for "Ceiling Codes" grouping. 
+                  # Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  foundCodeLibElement = nil
+                  useThisCodeID = "Code 99"
+                  
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
+                     # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
+                     locationText = "HouseFile/House/Components/Ceiling/Construction"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+                        if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+                           # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
+                           if element[3].attributes["idref"] != nil
+                              element[3].attributes["idref"] = useThisCodeID
+                           else
+                              element[3].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3].text = value
+                           element[3].attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                        end
+                     end
+                  else
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/Ceiling/Construction"
+                  h2kElements.each(locationText) do |element| 
+                     # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+                     if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+                        element[3].text = "User specified"
+                        element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                        if element[3].attributes["idref"] != nil then
+                           # Must delete attribute for User Specified!
+                           element[3].delete_attribute("idref")
+                        end
+                     end
+                  end
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+
+
+            # Cathedral Ceilings - All Cathedral ceiling constructions
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-CathCeilings/ )
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Favourite or UsrDef) for "Flat or Cathedral Ceiling Codes" grouping. 
+                  # Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  foundCodeLibElement = nil
+                  useThisCodeID = "Code 99"
+                  
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
+                     # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
+                     locationText = "HouseFile/House/Components/Ceiling/Construction"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if construction type (element 1) is Cathedral (4)
+                        if element[1].attributes["code"] == "4"
+                           # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
+                           if element[3].attributes["idref"] != nil
+                              element[3].attributes["idref"] = useThisCodeID
+                           else
+                              element[3].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3].text = value
+                           element[3].attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                        end
+                     end
+                  else
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/Ceiling/Construction"
+                  h2kElements.each(locationText) do |element| 
+                     # Check if construction type (element 1) is Cathedral (4)
+                     if element[1].attributes["code"] == "4"
+                        element[3].text = "User specified"
+                        element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                        if element[3].attributes["idref"] != nil then
+                           # Must delete attribute for User Specified!
+                           element[3].delete_attribute("idref")
+                        end
+                     end
+                  end
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+
+
+            # Flat Ceilings - All Flat ceiling constructions
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-FlatCeilings/ )
+               if ( tag =~ /Opt-Ceiling/ && value != "NA" )
+                  # If this surface code name exists in the code library, use the code 
+                  # (either Favourite or UsrDef) from the "Flat or Cathedral Ceiling Codes" grouping. 
+                  # Code names in library are unique.
+                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  foundCodeLibElement = nil
+                  useThisCodeID = "Code 99"
+                  
+                  foundCodeLibElement, useThisCodeID = findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+                  
+                  if foundCodeLibElement != nil
+                     # Change all existing surface references of this type to useThisCodeID
+                     # NOTE: House ceiling components all under "Ceiling" tag - only <Codes> 
+                     # section distinguishes between "Ceiling" and "CeilingFlat"
+                     locationText = "HouseFile/House/Components/Ceiling/Construction"
+                     h2kElements.each(locationText) do |element| 
+                        # Check if construction type (element 1) is Flat (5)
+                        if element[1].attributes["code"] == "5"
+                           # Check if each house entry has an "idref" attribute for CeilingType (element 3) and add if it doesn't.
+                           if element[3].attributes["idref"] != nil
+                              element[3].attributes["idref"] = useThisCodeID
+                           else
+                              element[3].add_attribute("idref", useThisCodeID)
+                           end
+                           element[3].text = value
+                           element[3].attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                        end
+                     end
+                  else
+                     # Code name not found in the code library!
+                     # Code missing or a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/Ceiling/Construction"
+                  h2kElements.each(locationText) do |element| 
+                     # Check if construction type (element 1) is Flat (5)
+                     if element[1].attributes["code"] == "5"
+                        element[3].text = "User specified"
+                        element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                        if element[3].attributes["idref"] != nil then
+                           # Must delete attribute for User Specified!
+                           element[3].delete_attribute("idref")
+                        end
+                     end
+                  end
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+               
+               
             # Main Walls
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-MainWall/ )
@@ -910,26 +1164,100 @@ def processFile(filespec)
                elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
                   ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
                   
-               elsif ( tag =~ /Opt-win-S-OPT/ )    # Do nothing
-               elsif ( tag =~ /Opt-win-E-OPT/ )    # Do nothing
-               elsif ( tag =~ /Opt-win-N-OPT/ )    # Do nothing
-               elsif ( tag =~ /Opt-win-W-OPT/ )    # Do nothing
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
+            
+            # Skylights - windows in ceilings
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Skylights/ )
+               if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
                
+               elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               
+               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+                  ChangeSkylightCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+
+            
+            # Windows in doors
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-DoorWindows/ )
+               if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               
+               elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               
+               elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+
+               elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+                  ChangeDoorWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               end
+            
+
+            # Doors - set all doors to User Specified
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Doors/ )
+               if ( tag =~ /Opt-R-value/ && value != "NA" )
+                  locationText = "HouseFile/House/Components/*/Components/Door/Construction/Type"
+                  h2kElements.each(locationText) do |element| 
+                     element.attributes["code"] = 8
+                     element.attributes["value"] = (value.to_f / R_PER_RSI).to_s
+                  end
+               end
+                  
+                  
             # Foundations
             #  - All types: Basement, Walkout, Crawlspace, Slab-On-Grade
             #  - Interior & Exterior wall insulation, below slab insulation
-            #    based on insulaion configuration type
+            #    based on insulation configuration type
             #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-H2KFoundation/ )
+            elsif ( choiceEntry == "Opt-H2KFoundation" )
                locHouseStr = [ "", "" ]
                
                if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
-                  # Set the configuration type for the fnd types specified in choice file
+                  # Set the configuration type for the foundation types specified in choice file
                   if ( fndTypes == "B" )
                      locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                   elsif ( fndTypes == "W" )
@@ -939,8 +1267,9 @@ def processFile(filespec)
                   elsif ( fndTypes == "S" )
                      locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
                   elsif ( fndTypes == "ALL" )
-                     # Check to avoid configs starting with "S" used in B or W and
-                     # configs starting with "B" used in C or S!
+                     # Check to AVOID:
+                     # - configurations that start with "B" cannot modify configurations starting with C or S!
+                     # - configurations that start with "S" cannot modify configurations starting with B or W AND
                      if ( configType =~ /^B/ )
                         locHouseStr[0] = "HouseFile/House/Components/Basement/Configuration"
                         locHouseStr[1] = "HouseFile/House/Components/Walkout/Configuration"
@@ -952,11 +1281,11 @@ def processFile(filespec)
                   locHouseStr.each do |locStr|
                      if ( locStr != "" )
                         h2kElements.each(locStr) do |element| 
-                           # Use the existing configuration type to determine if a new XML section req'd
+                           # Use the existing configuration type to determine if a new XML section is required
                            existConfigType = element.attributes["type"]
                            if ( existConfigType.match('N', 3) && !configType.match('N', 3) )
                               # Add missing XML section to Floor for "AddedToSlab"
-                              addMissingAddedToSlab(element)
+                              addMissingAddedToSlab(locStr[27], element)
                            end
                            if ( existConfigType.match('E', 2) && !configType.match('E', 2) )
                               # Add missing XML section to Wall for "InteriorAddedInsulation"
@@ -966,7 +1295,7 @@ def processFile(filespec)
                               # Add missing XML section to Wall for "ExteriorAddedInsulation"
                               addMissingExteriorAddedInsulation(element)
                            end
-                           # Change existing configutaion values to match choice
+                           # Change existing configuration values to match choice
                            element.attributes["type"] = configType
                            element.attributes["subtype"] = configSubType
                            element.text = configType + "_" + configSubType
@@ -976,8 +1305,8 @@ def processFile(filespec)
                   
                elsif ( tag =~ /OPT-H2K-IntWallCode/ &&  value != "NA" )
                   # If this code name exists in the code library, use the code 
-                  # (either Fav or UsrDef) for all entries. Code names in library are unique.
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+                  # (either Favorite or UsrDef) for all entries. Code names in library are unique.
+                  # Note: *Not* using "Standard", non-library codes (e.g., 2221292000)
                   
                   # Look for this code name in code library (Favorite and UserDefined)
                   thisCodeInHouse = false
@@ -1187,26 +1516,190 @@ def processFile(filespec)
                end
                
                
-            # DWHR (+SDHW) - uses explicit values in options file (not internal models)!
-            #---------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-DWHRandSDHW / )
-               if ( tag =~ /Opt-DHWDailyDrawLperDay/ &&  value != "NA" )
-                  # Turn off DWHR model flag in DHW system
-                  locationText = "HouseFile/House/Components/HotWater/Primary"
-                  h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = "false"
-                  # Set draw based on options file settings for Opt-DHWLoadScale, location & plate options
-                  locationText = "HouseFile/House/BaseLoads/Summary"
-                  h2kElements[locationText].attributes["hotWaterLoad"] = value
-               end
-            
-               
-            # Electrical Loads
+            # Slab or Crawl Foundations
+            #  - Types: Slab-On-Grade or Crawlspace only
+            #  - Interior & Exterior wall insulation, below slab insulation
+            #    based on insulation configuration type
             #--------------------------------------------------------------------------
-            elsif ( choiceEntry =~ /Opt-ElecLoadScale/ )
-               if ( tag =~ /Opt-ElecLoadScale/ &&  value != "NA" )
-                  # Do nothing until determine how to handle!
+            elsif ( choiceEntry =~ /Opt-H2KFoundationSlabCrawl/ )
+               locHouseStr = [ "", "" ]
+               
+               if ( tag =~ /OPT-H2K-ConfigType/ &&  value != "NA" )
+                  # Set the configuration type for the foundation types specified in choice file
+                  if ( fndTypes2 == "C" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
+                  elsif ( fndTypes2 == "S" )
+                     locHouseStr[0] = "HouseFile/House/Components/Slab/Configuration"
+                  elsif ( fndTypes2 == "ALL" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Configuration"
+                     locHouseStr[1] = "HouseFile/House/Components/Slab/Configuration"
+                  end
+                  locHouseStr.each do |locStr|
+                     if ( locStr != "" )
+                        h2kElements.each(locStr) do |element| 
+                           # Use the existing configuration type to determine if a new XML section is required
+                           existConfigType = element.attributes["type"]
+                           if ( existConfigType.match('N', 2) && !configType2.match('N', 2) )
+                              # Add missing XML section to Floor for "AddedToSlab"
+                              addMissingAddedToSlab(locStr[27], element)
+                           end
+                           # Change existing configuration values to match choice
+                           element.attributes["type"] = configType2
+                           element.attributes["subtype"] = configSubType2
+                           element.text = configType + "_" + configSubType2
+                        end
+                     end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-CrawlWallCode/ &&  value != "NA" )
+                  # If this code name exists in the code library, use the code 
+                  # (either Favorite or UsrDef) for all entries. Code names in library are unique.
+                  # Note: *Not* using "Standard", non-library codes (e.g., 2221292000)
+                  
+                  # Look for this code name in code library (Favorite and UserDefined)
+                  thisCodeInHouse = false
+                  useThisCodeID = "Code 210"
+                  foundFavLibCode = false
+                  foundUsrDefLibCode = false
+                  foundCodeLibElement = ""
+                  # Note: Both Basement and Walkout interior wall codes saved under "BasementWall"
+                  fndWallNum = 0
+                  locationCodeFavText = "Codes/CrawlspaceWall/Favorite/Code"
+                  h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+                     if ( codeElement.get_text("Label") == value )
+                        foundFavLibCode = true
+                        foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                        break
+                     end
+                  end
+                  # Code library names are unique so also check User Defined codes
+                  if ( ! foundFavLibCode )
+                     locationCodeUsrDefText = "Codes/CrawlspaceWall/UserDefined/Code"
+                     h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+                        if ( codeElement.get_text("Label") == value )
+                           foundUsrDefLibCode = true
+                           foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                           break
+                        end
+                     end
+                  end
+                  locStr = ""
+                  locTextArr2 = [ "Favorite", "UserDefined" ]
+                  if ( foundFavLibCode || foundUsrDefLibCode )
+                     # Check to see if this code is already used in H2K file and add, if not.
+                     # Code references are in the <Codes> section. Avoid duplicates!
+                     locTextArr2.each do |favOrUsrDefTxt|
+                        locStr = "HouseFile/Codes/CrawlspaceWall/#{favOrUsrDefTxt}/Code"
+                        h2kElements.each(locStr) do |element| 
+                           if ( element.get_text("Label") == value )
+                              thisCodeInHouse = true
+                              useThisCodeID = element.attributes["id"]
+                              break
+                           end
+                        end
+                        break if thisCodeInHouse   # break Fav/UsrDef loop if found
+                     end
+                     if ( ! thisCodeInHouse )
+                        locStr = "HouseFile/Codes/CrawlspaceWall"
+                        if ( h2kElements[locStr] == nil )
+                           # No section of this type in house file Codes section -- add it!
+                           h2kElements["HouseFile/Codes"].add_element("CrawlspaceWall")
+                        end
+                        if ( foundFavLibCode )
+                           locationText = locStr + "/Favorite"
+                        else
+                           locationText = locStr + "/UserDefined"
+                        end
+                        if ( h2kElements[locationText] == nil )
+                           # No Favorite or UserDefined section in house file Codes section -- add it!
+                           if ( foundFavLibCode )
+                              h2kElements[locStr].add_element("Favorite")
+                           else
+                              h2kElements[locStr].add_element("UserDefined")
+                           end
+                        end
+                        foundCodeLibElement.attributes["id"] = useThisCodeID
+                        h2kElements[locationText].add(foundCodeLibElement)
+                     end
+                     # Change all interior insulated surface references of this type to useThisCodeID
+                     locHouseStr = [ "", "" ]
+                     if ( fndTypes2 == "C" || ( fndTypes2 == "ALL" && configType2 =~ /^S/ ) )
+                        locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+                     end
+                     locHouseStr.each do |locationString|
+                        if ( locationString != "" )
+                           h2kElements.each(locationString) do |element| 
+                              # Check if each house entry has an "idref" attribute and add if it doesn't.
+                              if element.attributes["idref"] != nil
+                                 element.attributes["idref"] = useThisCodeID
+                              else
+                                 element.add_attribute("idref", useThisCodeID)
+                              end
+                              element[1].text = value    # Description tag
+                              element.attributes["nominalInsulation"] = foundCodeLibElement.attributes["nominalRValue"]
+                           end
+                        end
+                     end
+                  else
+                     # Code name not found in the code library
+                     # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+                     # or NA in OPT-H2K-EffRValue
+                     debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-CrawlWall-RValue/ &&  value != "NA" )
+                  # Change ALL existing interior wall codes to User Specified R-value
+                  locHouseStr = [ "", "" ]
+                  if ( fndTypes2 == "C" || ( fndTypes2 == "ALL" && configType2 =~ /^S/ ) )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           if element.attributes["idref"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("idref")
+                           end
+                        end
+                        h2kElements.each(locationString+"/Description") do |element| 
+                           element.text = "User specified"     # Description tag
+                        end
+                        h2kElements.each(locationString+"/Composite/Section") do |element| 
+                           element.attributes["rsi"] = (value.to_f / R_PER_RSI).to_s
+                           element.attributes["rank"] = "1"
+                           element.attributes["percentage"] = "100"
+                        end
+                     end
+                  end
+                  
+               elsif ( tag =~ /OPT-H2K-BelowSlab-RVal/ &&  value != "NA" )
+                  locHouseStr = [ "", "", "", "" ]
+                  if ( fndTypes2 == "C" )
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes2 == "S" )
+                     locHouseStr[0] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
+                  elsif ( fndTypes2 == "ALL")
+                     locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Floor/Construction/AddedToSlab"
+                     locHouseStr[1] = "HouseFile/House/Components/Slab/Floor/Construction/AddedToSlab"
+                  end
+                  locHouseStr.each do |locationString|
+                     if ( locationString != "" )
+                        h2kElements.each(locationString) do |element| 
+                           element.text = "User specified"     # Description tag
+                           element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                           if element.attributes["code"] != nil then
+                              # Must delete attribute for User Specified!
+                              element.delete_attribute("code")
+                           end
+                        end
+                     end
+                  end
+                  
+               else
+                  if ( value == "NA" ) # Don't change anything
+                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
-            
+               
                
             # DHW System 
             #--------------------------------------------------------------------------
@@ -1255,7 +1748,7 @@ def processFile(filespec)
                   h2kElements[locationText].attributes["heatPumpCoefficient"] = value  # COP of integrated HP
                end
 				
-            # DWHR System (includies DWHR options for internal H2K model. Don't use
+            # DWHR System (includes DWHR options for internal H2K model. Don't use
             #              both external (explicit) method AND this one!)
             # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
             # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
@@ -1326,6 +1819,8 @@ def processFile(filespec)
 			
                if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
                   locationText = "HouseFile/House/HeatingCooling/Type1"
+                  
+
                   if ( h2kElements[locationText + "/#{value}"] == nil )
                      # Create a new system type 1 element with default values for all of its sub-elements
                      createH2KSysType1(h2kElements,value)
@@ -1336,7 +1831,7 @@ def processFile(filespec)
                         end
                      end
                   else
-                     # System type 1 is already set to this value -- do nothing!
+                     # System type 1 is already set to this value -- do nothing (here)!
                   end
                   
                elsif ( tag =~ /Opt-H2K-SysType2/ &&  value != "NA" )
@@ -1368,6 +1863,15 @@ def processFile(filespec)
                         end
                         if ( h2kElements[locationText] != nil )
                            h2kElements[locationText].attributes["code"] = value
+                           
+                           # If fuel is NG/Propane/Oil/wood, make sure there is a non-zero flue size.
+                           # This can happen when switching fuel from electricity. Skip check for P9.
+                           if value != "1" && sysType1Name != "P9"
+                              locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications"
+                              if h2kElements[locationText].attributes["flueDiameter"].to_i == 0
+                                 h2kElements[locationText].attributes["flueDiameter"] = "127"   #mm
+                              end
+                           end
                         end
                      end
                   end
@@ -1382,7 +1886,7 @@ def processFile(filespec)
                      if ( h2kElements[locationText] != nil )
                         h2kElements[locationText].attributes["code"] = value
                         # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is 
-                        # NOT a conventional fireplace,add the "EPA/CSA" attribute field in the 
+                        # NOT a conventional fireplace, add the "EPA/CSA" attribute field in the 
                         # EquipmentInformation section to avoid a crash!
                         locationText2 = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Equipment/EnergySource"
                         if ( h2kElements[locationText2].attributes["code"].to_i > 4 && value != "8" )
@@ -1497,7 +2001,9 @@ def processFile(filespec)
                   end 
 
                elsif ( tag =~ /Opt-H2K-Type2CapOpt/ && value != "NA" )
+
                   sysType2.each do |sysType2Name| 
+                  
                      if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
@@ -1506,7 +2012,19 @@ def processFile(filespec)
                            h2kElements[locationText].attributes["value"] = "5.6"
                            h2kElements[locationText].attributes["uiUnits"] = "kW"
                         end 
+                     
+                     elsif ( sysType2Name == "AirConditioning" ) 
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/RatedCapacity"
+                           h2kElements[locationText].attributes["code"] = value 
+                           h2kElements[locationText].attributes["value"] = "5.6"
+                           h2kElements[locationText].attributes["uiUnits"] = "kW"
+                        end 
+                                          
+                     
                      end 
+                     
                   end 
                  
                elsif ( tag =~ /Opt-H2K-Type2CapVal/ && value != "NA"  && "#{value}" != "" )
@@ -1518,7 +2036,17 @@ def processFile(filespec)
                            h2kElements[locationText].attributes["value"] = value 
                            h2kElements[locationText].attributes["uiUnits"] = "kW"
                         end 
+                     
+                     elsif  ( sysType2Name == "AirConditioning")
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/RatedCapacity"
+                           h2kElements[locationText].attributes["value"] = value 
+                           h2kElements[locationText].attributes["uiUnits"] = "kW"
+                        end 
+                     
                      end 
+                     
                   end                  
                   
                elsif ( tag =~ /Opt-H2K-Type2HeatCOP/ && value != "NA"  && "#{value}" != "" )
@@ -1534,32 +2062,38 @@ def processFile(filespec)
                   end                       
 
                # Possibly set the rating temperature 
-               # elsif ( tag =~ /Opt-H2K-Type2RatingTemp/ && value != "NA"  && "#{value}" != "" )
-               #    sysType2.each do |sysType2Name| 
-               #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-               #          locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
-               #          if ( h2kElements[locationText] != nil )
-               #             locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Temperature/RatingType"
-               #             h2kElements[locationText].attributes["code"] = "3" 
-               #             h2kElements[locationText].attributes["value"] = value
-               #          end 
-               #       end 
-               #    end                     
-                  
-
-
+               elsif ( tag =~ /Opt-H2K-Type2RatingTemp/ && value != "NA"  && "#{value}" != "" )
+                  sysType2.each do |sysType2Name| 
+                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Temperature/RatingType"
+                           h2kElements[locationText].attributes["code"] = "3" 
+                           h2kElements[locationText].attributes["value"] = value
+                        end 
+                     end 
+                  end                     
                   
                   
                elsif ( tag =~ /Opt-H2K-Type2CoolCOP/ && value != "NA"  && "#{value}" != "" )
                   sysType2.each do |sysType2Name| 
-                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                     if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump" )
                         locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                         if ( h2kElements[locationText] != nil )
                            locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
                            h2kElements[locationText].attributes["isCop"] = "true" 
                            h2kElements[locationText].attributes["value"] = value
                         end 
+                     
+                     elsif ( sysType2Name == "AirConditioning" )
+                        locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                        if ( h2kElements[locationText] != nil )
+                           locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/Efficiency"
+                           h2kElements[locationText].attributes["isCop"] = "true" 
+                           h2kElements[locationText].attributes["value"] = value
+                        end 
                      end 
+                     
                   end                     
                   
                elsif ( tag =~ /Opt-H2K-Type2CutoffType/ && value != "NA"  && "#{value}" != "" )
@@ -1587,45 +2121,38 @@ def processFile(filespec)
     
               # Possibly set window characteristics / cooling types 
 
-
-              # elsif ( tag =~ /Opt-H2K-CoolOperWindow/ && value != "NA"  && "#{value}" != "" )          
-              #    sysType2.each do |sysType2Name| 
-              #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-              #          locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"
-              #          if ( h2kElements[locationText] != nil )
-              #             h2kElements[locationText].attributes["openableWindowArea"] = value
-              #          end 
-              #       end 
-              #    end                      
-              #
-              # elsif ( tag =~ /Opt-H2K-CoolSpecType/ && value != "NA"  && "#{value}" != "" )          
-              #    sysType2.each do |sysType2Name| 
-              #       if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
-              #          if ( "#{value}" != "COP" ) then
-              #            
-              #            result = "false"
-              #            
-              #          else
-              #          
-              #            result = "true"
-              #          
-              #          end 
-              #          
-              #          locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
-              #          
-              #          if ( h2kElements[locationText] != nil )
-              #             h2kElements[locationText].attributes["isCop"] = result
-              #          end 
-              #       end 
-              #    end                      
-              #
-                  
-
+              elsif ( tag =~ /Opt-H2K-CoolOperWindow/ && value != "NA"  && "#{value}" != "" )          
+                 sysType2.each do |sysType2Name| 
+                    if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "AirConditioning"  )
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"
+                       if ( h2kElements[locationText] != nil )
+                          h2kElements[locationText].attributes["openableWindowArea"] = value
+                       end 
+                    end 
+                 end                      
               
-    
-    
-    
-			   
+              elsif ( tag =~ /Opt-H2K-CoolSpecType/ && value != "NA"  && "#{value}" != "" )          
+                 sysType2.each do |sysType2Name| 
+                    if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
+                       if ( "#{value}" != "COP" ) then
+                         
+                         result = "false"
+                         
+                       else
+                       
+                         result = "true"
+                       
+                       end 
+                       
+                       locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
+                       
+                       if ( h2kElements[locationText] != nil )
+                          h2kElements[locationText].attributes["isCop"] = result
+                       end 
+                    end 
+                 end                      
+              
+                  
                # ASF 06-Oct-2016 - Tags for P.9 performance start here. 
 			
                elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
@@ -1842,6 +2369,28 @@ def processFile(filespec)
                      debug_out("Choice: #{choiceEntry} Tag: #{tag} \n  No rooms entered for F326 Ventilation requirement!")
                   end
                   
+                  # If F326 specified && basement exists, set vent-rate for other basement areas to 10/Ls. Otherwise, 0. 
+                  # This code is needed b/c setting F326 in homes with slab foundations can cause hot2000 to produce an errror.
+                  if ( value == 1 ) 
+                     $basementFound = false 
+                     locationComponents = "HouseFile/House/Components"
+                     h2kCodeElements.each(locationComponents) do |component|     
+                        # TODO: Should this also include crawlspace?
+                        if ( component =~ /Basement/ || component =~ /Walkout/ ) 
+                           $basementFound = true 
+                        end 
+                     end 
+                  end
+                  
+                  locationVentRate = "HouseFile/House/Ventilation/Rooms/VentilationRate"
+                  if ( $basementFound ) 
+                     # 10L/s vent rate in basement 
+                     h2kElements[locationVentRate].attributes["code"] = 3 
+                  else 
+                     # "Non-applicable" - there is no basement 
+                     h2kElements[locationVentRate].attributes["code"] = 1 
+                  end 
+                  
                elsif ( tag =~ /OPT-H2K-AirDistType/ &&  value != "NA" )
                   locationText = "HouseFile/House/Ventilation/WholeHouse/AirDistributionType"
                   h2kElements[locationText].attributes["code"] = value
@@ -1955,12 +2504,28 @@ def processFile(filespec)
                   
                end
                
-               
+            # Results and Program Mode - change program mode so correct result sets produced
+            # Note: The XML file does not contain a "mode" parameter. It uses the presence or
+            #       absence of the <Program> section to indicate the mode.
+            #--------------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
-               if ( value == "NA" )
-                  $outputHCode = "General" 
-               elsif ( value != "NA" )
+               if value == "NA"
+                  # Don't change the run mode but use the "General" output section!
+                  $outputHCode = "General"
+                  
+               elsif value == "General"
+                  # Change run mode and set output section
+                  $outputHCode = "General"
+                  if h2kElements["HouseFile/Program"] != nil
+                     h2kElements["HouseFile"].delete_element("Program")
+                  end
+
+               else
+                  # Change run mode to ERS and set output section
                   $outputHCode = value
+                  if h2kElements["HouseFile/Program"] == nil
+                     createProgramXMLSection( h2kElements )
+                  end
                end                
                
             else
@@ -1974,14 +2539,214 @@ def processFile(filespec)
    end
    
    # Save changes to the XML doc in existing working H2K file (overwrite original)
-   
-   stream_out (" Overwriting: #{filespec} \n")
-   
-   newXMLFile = File.open(filespec, "w")
+   stream_out (" Overwriting: #{$gWorkingModelFile} \n")
+   newXMLFile = File.open($gWorkingModelFile, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
-  
 
+end
+
+# =========================================================================================
+#  Function to find a ceiling code name in the Code Library (Favourite or User Defined).
+#  This function will return the entire code library XML element for the found code or nil, 
+#  if not found. It also returns the code ID to use. Note that since code library names are
+#  unique across all groups, a code name can occur in only one code group element. That
+#  means a ceiling code cannot appear in both "Ceiling Codes" and 
+#  "Flat or Cathedral Ceiling Codes".
+# =========================================================================================
+def findCeilingCodeInLibrary( h2kElements, h2kCodeElements, value )
+   # Look for this code name in code library (Favourite and UserDefined)
+   thisCodeInHouse = false
+   useThisCodeID = "Code 99"
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundAtticCeil = false
+   foundCathCeil = false
+   ceilngType = ""
+   foundCodeLibElement = nil
+   
+   # Check in Favourite Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
+   locationCodeFavText = "Codes/Ceiling/Favorite/Code"
+   h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == value )
+         foundFavLibCode = true
+         foundAtticCeil = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   if ( ! foundFavLibCode )
+      # Also check in Favourite CeilingFlat Codes used for: Cathedral and Flat
+      locationCodeFavText = "Codes/CeilingFlat/Favorite/Code"
+      h2kCodeElements.each(locationCodeFavText) do |codeElement| 
+         if ( codeElement.get_text("Label") == value )
+            foundFavLibCode = true
+            foundCathCeil = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      # Check in User Defined Ceiling Codes used for: Attic/Gable, Attic/Hip, Scissor
+      locationCodeUsrDefText = "Codes/Ceiling/UserDefined/Code"
+      h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == value )
+            foundUsrDefLibCode = true
+            foundAtticCeil = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( ! foundFavLibCode && ! foundUsrDefLibCode )
+      # Also check in User Defined CeilingFlat Codes used for: Cathedral and Flat
+      locationCodeUsrDefText = "Codes/CeilingFlat/UserDefined/Code"
+      h2kCodeElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == value )
+            foundUsrDefLibCode = true
+            foundCathCeil = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundAtticCeil )
+      ceilngType = "Ceiling"
+   else
+      ceilngType = "CeilingFlat"
+   end
+   
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Can't have duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/#{ceilngType}/Favorite"
+      else
+         locationText = "HouseFile/Codes/#{ceilngType}/UserDefined"
+      end
+      h2kElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == value )
+            thisCodeInHouse = true
+            useThisCodeID = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kElements["HouseFile/Codes/#{ceilngType}"] == nil )
+            # No section ofthis type in house file Codes section -- add it!
+            h2kElements["HouseFile/Codes"].add_element(ceilngType)
+         end
+         if ( h2kElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("Favorite")
+            else
+               h2kElements["HouseFile/Codes/#{ceilngType}"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = useThisCodeID
+         h2kElements[locationText].add(foundCodeLibElement)
+      end
+   end   
+
+   return foundCodeLibElement, useThisCodeID
+end
+
+# =========================================================================================
+#  Function to create the Program XML section that contains the ERS program mode data
+# =========================================================================================
+def createProgramXMLSection( houseElements )
+   loc = "HouseFile"
+   houseElements[loc].add_element("Program")
+
+   loc = "HouseFile/Program"
+   houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
+   houseElements[loc].add_element("Labels")
+
+   loc = "HouseFile/Program/Labels"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Labels/English"
+   houseElements[loc].add_text("EnerGuide Rating System")
+   loc = "HouseFile/Program/Labels"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Labels/French"
+   houseElements[loc].add_text("Système de cote ÉnerGuide")
+
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("Version")
+   loc = "HouseFile/Program/Version"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].attributes["major"] = "15"
+   houseElements[loc].attributes["minor"] = "1"
+   houseElements[loc].attributes["build"] = "19"
+   houseElements[loc].add_element("Labels")
+   loc = "HouseFile/Program/Version/Labels"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Labels/English"
+   houseElements[loc].add_text("v15.1b19")
+   loc = "HouseFile/Program/Version/Labels"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Labels/French"
+   houseElements[loc].add_text("v15.1b19")
+
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("SdkVersion")
+   loc = "HouseFile/Program/SdkVersion"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].attributes["major"] = "1"
+   houseElements[loc].attributes["minor"] = "11"
+   houseElements[loc].add_element("Labels")
+   loc = "HouseFile/Program/SdkVersion/Labels"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Labels/English"
+   houseElements[loc].add_text("v1.11")
+   loc = "HouseFile/Program/SdkVersion/Labels"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Labels/French"
+   houseElements[loc].add_text("v1.11")
+   
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("Options")
+   loc = "HouseFile/Program/Options"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].add_element("Main")
+   loc = "HouseFile/Program/Options/Main"
+   houseElements[loc].attributes["applyHouseholdOperatingConditions"] = "false"
+   houseElements[loc].attributes["applyReducedOperatingConditions"] = "false"
+   houseElements[loc].attributes["atypicalElectricalLoads"] = "false"
+   houseElements[loc].attributes["waterConservation"] = "false"
+   houseElements[loc].attributes["referenceHouse"] = "false"
+   houseElements[loc].add_element("Vermiculite")
+   loc = "HouseFile/Program/Options/Main/Vermiculite"
+   houseElements[loc].attributes["code"] = "1"
+   houseElements[loc].add_element("English")
+   loc = "HouseFile/Program/Options/Main/Vermiculite/English"
+   houseElements[loc].add_text("Unknown")
+   loc = "HouseFile/Program/Options/Main/Vermiculite"
+   houseElements[loc].add_element("French")
+   loc = "HouseFile/Program/Options/Main/Vermiculite/French"
+   houseElements[loc].add_text("Inconnu")
+   loc = "HouseFile/Program/Options"
+   houseElements[loc].add_element("RURComments")
+   loc = "HouseFile/Program/Options/RURComments"
+   houseElements[loc].attributes["xml:space"] = "preserve"
+   
+   loc = "HouseFile/Program"
+   houseElements[loc].add_element("Results")
+   loc = "HouseFile/Program/Results"
+   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+   houseElements[loc].add_element("Tsv")
+   houseElements[loc].add_element("Ers")
+   houseElements[loc].add_element("RefHse")
+   
 end
 
 # =========================================================================================
@@ -2037,8 +2802,9 @@ end
 # =========================================================================================
 def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
    # Change ALL existing windows for this orientation (winOrient) to the library code name
-   # specified in newValue. If this code name exists in the code library, use the code 
-   # (either Fav or UsrDef) for all entries facing in this direction. Code names in library are unique.
+   # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
+   # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
+   # library are unique.
    # Note: Not using "Standard", non-library codes (e.g., 202002)
 
    # Look for this code name in code library (Favorite and UserDefined)
@@ -2093,7 +2859,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       end
       if ( ! thisCodeInHouse )
          if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
-            # No section ofthis type in house file Codes section -- add it!
+            # No section of this type in house file Codes section -- add it!
             h2kFileElements["HouseFile/Codes"].add_element("Window")
          end
          if ( h2kFileElements[locationText] == nil )
@@ -2168,13 +2934,99 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
+	  
+   else
+      # Code name not found in the code library
+      # Since no User Specified option for windows this must be an error!
+      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+   end
+
+end
+
+# =========================================================================================
+#  Function to change skylight window codes by orientation
+# =========================================================================================
+def ChangeSkylightCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+   # Change ALL existing windows in ceilings for this orientation (winOrient) to the library code name
+   # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
+   # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
+   # library are unique.
+   # Note: Not using "Standard", non-library codes (e.g., 202002)
+
+   # Look for this code name in code library (Favorite and UserDefined)
+   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+
+   $useThisCodeID  = {  "S"  =>  201 ,
+                        "SE" =>  202 ,
+                        "E"  =>  203 ,
+                        "NE" =>  204 ,
+                        "N"  =>  205 ,
+                        "NW" =>  206 ,  
+                        "W"  =>  207 ,
+                        "SW" =>  208   }
+   
+   thisCodeInHouse = false
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundCodeLibElement = ""
+   locationCodeFavText = "Codes/Window/Favorite/Code"
+   h2kCodeLibElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == newValue )
+         foundFavLibCode = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+      h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == newValue )
+            foundUsrDefLibCode = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Avoid duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/Window/Favorite"
+      else
+         locationText = "HouseFile/Codes/Window/UserDefined"
+      end
+      h2kFileElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == newValue )
+            thisCodeInHouse = true
+            $useThisCodeID[winOrient] = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
+            # No section of this type in house file Codes section -- add it!
+            h2kFileElements["HouseFile/Codes"].add_element("Window")
+         end
+         if ( h2kFileElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+            else
+               h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
+         h2kFileElements[locationText].add(foundCodeLibElement)
+      end
+
       # Windows in ceiling elements (skylights)
       locationText = "HouseFile/House/Components/Ceiling/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
          if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-            # Check if each house entry has an "idref" attribute and add if it doesn't.
-            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            # Check if each entry has an "idref" attribute and add if it doesn't.
+            # Change each entry to reference a new <Codes> section $useThisCodeID[winOrient]
             if element[3][1].attributes["idref"] != nil            # ../Construction/Type
                element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
             else
@@ -2183,9 +3035,93 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-	  
+   else
+      # Code name not found in the code library
+      # Since no User Specified option for windows this must be an error!
+      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+   end
+
+end
+
+# =========================================================================================
+#  Function to change door window codes by orientation
+# =========================================================================================
+def ChangeDoorWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+   # Change ALL existing windows in doors for this orientation (winOrient) to the library code name
+   # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements), 
+   # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
+   # library are unique.
+   # Note: Not using "Standard", non-library codes (e.g., 202002)
+
+   # Look for this code name in code library (Favorite and UserDefined)
+   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+
+   $useThisCodeID  = {  "S"  =>  211 ,
+                        "SE" =>  212 ,
+                        "E"  =>  213 ,
+                        "NE" =>  214 ,
+                        "N"  =>  215 ,
+                        "NW" =>  216 ,  
+                        "W"  =>  217 ,
+                        "SW" =>  218   }
+   
+   thisCodeInHouse = false
+   foundFavLibCode = false
+   foundUsrDefLibCode = false
+   foundCodeLibElement = ""
+   locationCodeFavText = "Codes/Window/Favorite/Code"
+   h2kCodeLibElements.each(locationCodeFavText) do |codeElement| 
+      if ( codeElement.get_text("Label") == newValue )
+         foundFavLibCode = true
+         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+         break
+      end
+   end
+   # Code library names are also unique across Favorite and User Defined codes
+   if ( ! foundFavLibCode )
+      locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+      h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement| 
+         if ( codeElement.get_text("Label") == newValue )
+            foundUsrDefLibCode = true
+            foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+            break
+         end
+      end
+   end
+   if ( foundFavLibCode || foundUsrDefLibCode )
+      # Check to see if this code is already used in H2K file and add, if not.
+      # Code references are in the <Codes> section. Avoid duplicates!
+      if ( foundFavLibCode )
+         locationText = "HouseFile/Codes/Window/Favorite"
+      else
+         locationText = "HouseFile/Codes/Window/UserDefined"
+      end
+      h2kFileElements.each(locationText + "/Code") do |element| 
+         if ( element.get_text("Label") == newValue )
+            thisCodeInHouse = true
+            $useThisCodeID[winOrient] = element.attributes["id"]
+            break
+         end
+      end
+      if ( ! thisCodeInHouse )
+         if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
+            # No section of this type in house file Codes section -- add it!
+            h2kFileElements["HouseFile/Codes"].add_element("Window")
+         end
+         if ( h2kFileElements[locationText] == nil )
+            # No Favorite or UserDefined section in house file Codes section -- add it!
+            if ( foundFavLibCode )
+               h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+            else
+               h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
+            end
+         end
+         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
+         h2kFileElements[locationText].add(foundCodeLibElement)
+      end
+
       # Windows in door elements
-      locationText = "HouseFile/House/Components/Wall/Components/Door/Components/Window"
+      locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"
       h2kFileElements.each(locationText) do |element| 
          # 9=FacingDirection
          if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
@@ -2210,11 +3146,18 @@ end
 # =========================================================================================
 #  Add missing "AddedToSlab" section to Floor Construction of appropriate fnd
 # =========================================================================================
-def addMissingAddedToSlab(theElement)
+def addMissingAddedToSlab(type, theElement)
    # locationStr contains "HouseFile/House/Components/X/", where X is "Basement", 
    # "Walkout", "Crawlspace" or "Slab"
-   # The Floor element is always three elements from the basement Configuration element
-   theFloorElement = theElement.next_element.next_element.next_element
+   # The Floor element is always three elements from the basement Configuration element,
+   # two elements from the Crawlspace config and one from the slab config.
+   if type == "B"
+      theFloorElement = theElement.next_element.next_element.next_element
+   elsif type == "C"
+      theFloorElement = theElement.next_element.next_element
+   elsif type == "S"
+      theFloorElement = theElement.next_element
+   end
    theFloorConstElement = theFloorElement[1] # First child element is always "Construction"
    theSlabElement = theFloorConstElement.add_element("AddedToSlab", {"rValue"=>"0", "nominalInsulation"=>"0"})
    theSlabElement.add_text("User specified")
@@ -2372,6 +3315,9 @@ def createHRV( elements )
    elements[locationText].add_element("French")
 end
 
+# =========================================================================================
+# Get and return primary (type 1) system space heating capacity in Watts
+# =========================================================================================
 def getBaseSystemCapacity( elements, sysType1Arr )
    capValue = 0
    locationText = "HouseFile/House/HeatingCooling/Type1"
@@ -2389,7 +3335,6 @@ def getBaseSystemCapacity( elements, sysType1Arr )
    return capValue.to_f * 1000   # Always returns Watts!
 end
 
-# Procedure to create a new H2K system Type 1 in the XML house file
 # =========================================================================================
 # Add a System Type 1 section (check for existence done external to this method)
 # =========================================================================================
@@ -2417,6 +3362,10 @@ def createH2KSysType1( elements, sysType1Name )
       elements[locationText].add_element("French")
       
    elsif ( sysType1Name == "Furnace" )
+   
+   
+      stream_out ("ADDING FURNACE ....\n")
+    
       locationText = "HouseFile/House/HeatingCooling/Type1/Furnace"
       elements[locationText].add_element("EquipmentInformation")
       locationText = "HouseFile/House/HeatingCooling/Type1/Furnace/EquipmentInformation"
@@ -2906,7 +3855,7 @@ def createH2KSysType2( elements, sysType2Name )
       elements[locationText].add_element("CoolingParameters")
       locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters"
       elements[locationText].attributes["sensibleHeatRatio"] = "0.76"
-      elements[locationText].attributes["openableWindowArea"] = "0"
+      elements[locationText].attributes["openableWindowArea"] = "20"
       elements[locationText].add_element("FansAndPump")
       locationText = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump"
       elements[locationText].attributes["flowRate"] = "0"
@@ -2975,8 +3924,6 @@ def runsims( direction )
    optionSwitch = "-inp"
    fileToLoad = "..\\" + $h2kFileName
    
-
-  
    
    # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
@@ -2986,7 +3933,7 @@ def runsims( direction )
    maxTries = 10     # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
-   # AF: Extra counters to count ls tmpvalhow many times we've tried HOT2000.
+   # JB TODO: What does this comment mean? --> AF: Extra counters to count ls tmpval how many times we've tried HOT2000.
    keepTrying = true 
    tries = 0
    # This loop actually calls hot2000!
@@ -2997,7 +3944,7 @@ def runsims( direction )
             # Run HOT2000! 
             pid = Process.spawn( runThis, optionSwitch, fileToLoad ) 
             stream_out ("\n Invoking HOT2000 (PID #{pid})...")
-            Process.wait pid, 0
+            Process.waitpid(pid, 0)
             status = $?.exitstatus      
             stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
 
@@ -3005,24 +3952,29 @@ def runsims( direction )
                endRun = Time.now
                $runH2KTime = endRun - startRun  
                stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-               
                keepTrying = false       # Successful run - don't try agian 
-            elsif status == 3    # Precheck message(s)
+            
+            elsif status == 3    # Pre-check message(s)
                endRun = Time.now
                $runH2KTime = endRun - startRun  
-               stream_out( " The run completed but had precheck messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+               stream_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                keepTrying = false       # Successful run - don't try agian 
+            
             elsif status == nil  
                # Get nil status when can't load an h2k file.
+               stream_out( " Got a nil return code! (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                fatalerror( " Fatal Error! HOT2000 message box or couldn't load file!\n" )
                keepTrying = false   # Give up.
+            
             elsif tries < maxTries      # Unsuccessful run - try again for up to maxTries     
                tries = tries + 1
                keepTrying = true
+            
             else
                # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
                fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
                keepTrying = false   # Give up.
+            
             end
            
             # Force kill process, if needed
@@ -3067,13 +4019,12 @@ def runsims( direction )
       FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
       
       if ( $gReadROutStrTxt  ) 
-        if ( ! FileUtils.cp("#{$run_path}\\Routstr.txt", ".\\sim-output\\") )
+         if ( ! FileUtils.cp("#{$run_path}\\Routstr.txt", ".\\sim-output\\") )
             fatalerror("\n Fatal Error! Could not copy Routstr.txt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
-        else
-           debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
-        end      
+         else
+            debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
+         end      
       end        
-      
       
       #if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
       #if ( ! FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\") ) 
@@ -3111,31 +4062,310 @@ def postprocess( scaleData )
    end
    
    # Set flags for reading from Browse.rpt file
-   bReadAuxEnergyHeating = true  # Always get Auxiliary Heating Energy (only available mthly in XML)
    bReadOldERSValue = false
    bUseNextPVLine = false
+   bUseNextACLine = false
+   bReadAirConditioningLoad = true  # Always get Air Conditioning Load (not available in XML)
+   
+      #Open diagnostics file and possibly read in interesting info  !?!
+   $lineNo = 0
+   if ( $gReadROutStrTxt  ) 
+     #begin
+       stream_out("\nParsing diagnostics from #{$OutputFolder}\\Routstr.txt ...")
+       fRoutStr = File.new("#{$OutputFolder}\\Routstr.txt", "r") 
+
+       $SOCparse     = false
+       $SHTiniparse  = false 
+       $FFBCparse    = false 
+       $EFBCparse    = false  
+       $HPparse      = false 
+       $bHeatingDone = false 
+       $EBakparse    = false 
+       $GOPparse     = false 
+       # Zero arrays
+       32.times do |n|       
+       
+        $binDatHrs[n+1]=0
+        $binDatTmp[n+1]=0
+        $binDatTsfB[n+1]=0
+        $binDatHLR[n+1]=0
+        $binDatT2cap[n+1]=0
+        #$binDatT1cap[n+1]=0
+        $binDatT2PLR[n+1]=0
+        $binDatT1PLR[n+1]=0
+       
+       end 
+       
+       
+       
+       while !fRoutStr.eof? do 
+       
+        $lineNo = $lineNo + 1
+        
+        $lineIn = fRoutStr.readline 
+        $lineIn.strip!
+       
+        if ( $lineIn =~ /^\s*$/ ||  $bHeatingDone ) then
+          next # Skip empty line. 
+        end   
+        
+         
+         
+        if ($lineIn =~ /Starting Run: House with standard operating conditions/ )
+          debug_out("ROUTSTR ? SOC open #{$lineNo} | #{$lineIn} \n")
+          $SOCparse = true 
+        elsif ($lineIn =~ /Starting Run: / &&  $SOCparse)
+          debug_out("ROUTSTR ? SOC close  #{$lineNo} |  #{$lineIn} \n")
+          $SOCparse = false 
+        end 
+        
+        if ( ! $SOCparse ) then 
+            next # Skip if we're not within standard OCs.
+        end 
+        
+        # Test if cooling sectins have been reached.  
+        if ( $lineIn =~ /Cooling calculations ../ ) 
+          debug_out("ROUTSTR ? COOLING SECTION : #{$lineIn} \n")
+          $bHeatingDone = true 
+          next 
+        end         
+        
+        
+        
+        # Set flags for sections in the file 
+        if ($lineIn =~ /SpaceHTini/ )
+          debug_out("ROUTSTR ? SpaceHTini open #{$lineNo} | #{$lineIn} \n")
+          $SHTiniparse = true 
+        elsif ($lineIn =~ /Space00/ && $SHTiniparse )
+          debug_out("ROUTSTR ? SpaceHTini close  #{$lineNo} | #{$lineIn}  \n")
+          $SHTiniparse = false 
+        end 
+                   
+        if ($lineIn =~ /FossilFurnaceBC/ )
+          debug_out("ROUTSTR ? FossilFurnaceBC open #{$lineNo} | #{$lineIn} \n")
+          $FFBCparse = true 
+        elsif ($FFBCparse && 
+                ( $lineIn =~ /HPBPLocated/ || $lineIn =~ /ElectricFurnaceBC/ || $lineIn =~ /oSpaceHT/ ) )
+          debug_out("ROUTSTR ? FossilFurnaceBC close  #{$lineNo} | #{$lineIn}  \n")
+          $FFBCparse = false 
+        end            
+        
+        
+        if ($lineIn =~ /GOPBackup: Gas\/Oil\/Propane backup../ )
+          debug_out("ROUTSTR ? Gas/Oil/Propoane backup open #{$lineNo} | #{$lineIn} \n")
+          $GOPparse = true 
+        elsif ( $GOPparse && 
+                ( $lineIn =~ /HPBPLocated/ || $lineIn =~ /ElectricFurnaceBC/ || $lineIn =~ /oSpaceHT/ ) )
+          debug_out("ROUTSTR ? Gas/Oil/Propoane backup close  #{$lineNo} | #{$lineIn}  \n")
+          $GOPparse = false 
+        end            
+        
+        
+        if ($lineIn =~ /ElectricFurnaceBC/  )
+          debug_out("ROUTSTR ? ElectricFurnaceBC open #{$lineNo} | #{$lineIn} \n")
+          $EFBCparse = true 
+        elsif ($EFBCparse  && 
+                ( $lineIn =~ /HPBPLocated/ || $lineIn =~ /oSpaceHT/ ) ) 
+          debug_out("ROUTSTR ? ElectricFurnaceBC close  #{$lineNo} | #{$lineIn}  \n")
+          $EFBCparse = false 
+        end  
+        
+        if ($lineIn =~ /ElectricBackup: ELECTRIC BACK-UP/  )
+          debug_out("ROUTSTR ? ElectricBack open #{$lineNo} | #{$lineIn} \n")
+          $EBakparse = true 
+        elsif ( $EBakparse && 
+                 ( $lineIn =~ /ElectricFurnaceBC: ELECTRIC HEAT BELOW CUT-OFF../ ) )
+          debug_out("ROUTSTR ? ElectricBack close  #{$lineNo} | #{$lineIn}  \n")
+          $EBakparse = false 
+        end  
+        
+        
+        if ($lineIn =~ /AboveHPBP @160/ )
+          debug_out("ROUTSTR ? HP open #{$lineNo} | #{$lineIn} \n")
+          $HPparse = true 
+        elsif ( $HPparse &&
+                ( $lineIn =~ /FALLS THU OPS/ || $lineIn =~ /Exit AboveHPBP @ 180/ || $lineIn =~/HPBPLocated 180   T/) )
+          debug_out("ROUTSTR ? HP close  #{$lineNo} | #{$lineIn}  \n")
+          $HPparse = false 
+        end             
+           
+     
+        # ==== Parse Data =====   
+         
+        # Read fan power 
+        if ($lineIn =~ /QFFAN/ ) 
+           debug_out("ROUTSTR ? QFFAN : #{$lineNo} | #{$lineIn}  \n")
+           valuesArr = $lineIn.split() 
+           $FurnFanPower = valuesArr[3]
+           $HPFanPower = valuesArr[4]
+           debug_out("ROUTSTR ? #{$lineNo} | QFFAN = #{$FurnFanPower} , QHPFAN = #{$HPFanPower} \n ")
+        end 
+        
+        # Read T1 capacity        
+        if ($lineIn =~ /oSpaceHT FURNPW/ )  
+            valuesArr = $lineIn.split() 
+            debug_out("ROUTSTR ? oCpaceHTFURN : #{$lineIn} \n")
+            $T1Capacity = valuesArr[2]
+        end 
+
+        # Get SH bin definitions             
+        if ($SHTiniparse) 
+          debug_out("ROUTSTR ? SHITI : #{$lineIn} \n")
+          # Headerline  - ignore
+          if ($lineIn =~ /Bin  BinHours   TbinC    HLcvs    HLAir    TsfB    CShtr     HLR0     HLR1     HLR2/ ) 
+          
+          else 
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHrs[binNo]  = valuesArr[1].to_f
+            $binDatTmp[binNo]  = valuesArr[2].to_f
+            $binDatTsfB[binNo] = valuesArr[5].to_f
+          end               
+                      
+        end 
+         
+         
+         
+         
+         
+        # Get furnace performace data 
+        if ( $FFBCparse ) 
+          debug_out("ROUTSTR ? FossilFurnace : #{$lineIn} \n")
+          if ($lineIn =~ /FossilFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
+            # Header - ignore 
+          else 
+          
+            debug_out(">>>FOSIL Furnace  Parsing #{$lineIn} \n")
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]  = valuesArr[3].to_f
+            $binDatT1PLR[binNo]  = valuesArr[6].to_f
+        
+                   
+          end 
+        end 
+        
+        # Get Heat pump w/ electric back-up data 
+        if ( $EBakparse ) 
+          debug_out("ROUTSTR ? E-Backup: #{$lineIn} \n")
+          if ($lineIn =~ /ElectricFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
+            # Header - ignore 
+          else 
+
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]  = valuesArr[1].to_f
+            $binDatT2cap[binNo]  = valuesArr[3].to_f
+            $binDatT2PLR[binNo]  = 1.0
+            $binDatT1PLR[binNo]  = valuesArr[5].to_f
+         
+                   
+          end 
+        end              
+         
+         
+        #Get heat pump w/gas back up data. 
+        if ( $GOPparse ) 
+
+          if ( $lineIn !~ /^@290/ ) 
+            # Header - ignore 
+          else 
+            debug_out("ROUTSTR ? GOP parse: #{$lineIn} \n")                      
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[1].to_i 
+            $binDatHLR[binNo]  = valuesArr[2].to_f
+            $binDatT2cap[binNo]  = valuesArr[3].to_f
+            $binDatT2PLR[binNo]  = 1.0
+            $binDatT1PLR[binNo]  = valuesArr[6].to_f
+         
+                   
+          end         
+        
+        
+        
+        end 
+            
+            
+            
+        # Get Electric furnace data 
+        if ( $EFBCparse ) 
+        debug_out("ROUTSTR ? Electric Furnace :  #{$lineIn} \n")
+          if ($lineIn =~ /ElectricFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
+            # Header - ignore 
+          else 
+
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]  = valuesArr[1].to_f
+            $binDatT1PLR[binNo]  = valuesArr[3].to_f
+        
+                   
+          end 
+        end             
+        
+
+        # Get heat pump data 
+        if ( $HPparse ) 
+          debug_out("ROUTSTR ? Heat pump : #{$lineIn} \n")
+          if ($lineIn =~ /AboveHPBP/ || $lineIn !~ /^\s*[0-9]/ ) 
+            # Header - ignore 
+          else 
+            valuesArr = $lineIn.split() 
+            binNo = valuesArr[0].to_i 
+            $binDatHLR[binNo]    = valuesArr[2].to_f
+            $binDatT2cap[binNo]  = valuesArr[4].to_f
+            $binDatT2PLR[binNo]  = valuesArr[5].to_f
+        
+                   
+          end 
+        end  
+            
+                 
+       end 
+       
+       stream_out("done.\n")
+       fRoutStr.close()
+    #rescue 
+     #  fatalerror("Could not read ROutStr.txt\n")
+       
+     #end 
+   end 
+   
+   
+   
+   
+   stream_out("Diagnostics block done ...\n") 
+   debug_out(" bin data: #{'%4s' "bin"} #{'%12s' % "$binDatHrs"} #{'%12s' % "$binDatTmp"}  #{'%12s' % "$binDatTsfB"} #{'%12s' % "$binDatHLR"} #{'%12s' % "$binDatT1PLR"} #{'%12s' % "$binDatT2PLR"} #{'%12s' % "$binDatT2cap"}\n" )
+   32.times do |n|
+   
+    bin = n + 1 
+    debug_out(" bin data: #{'%4s' % bin} #{'%12s' % $binDatHrs[bin]} #{'%12s' % $binDatTmp[bin]}  #{'%12s' % $binDatTsfB[bin]} #{'%12s' % $binDatHLR[bin]} #{'%12s' % $binDatT1PLR[bin]} #{'%12s' % $binDatT2PLR[bin]}  #{'%12s' % $binDatT2cap[bin]}\n" )
+   
+   end 
+   
+   
+
+
+   
+   
+   
+   
+   
+   
    # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
    end
    
-   # Open Browse.rpt ASCII file *if* some data needs to be extracted (not in XML)!
-   if ( bReadAuxEnergyHeating || bReadOldERSValue || $PVIntModel)
+   
+   # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
+   if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
       begin
          fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r") 
          while !fBrowseRpt.eof? do
             lineIn = fBrowseRpt.readline  # Sequentially read file lines
             lineIn.strip!                 # Remove leading and trailing whitespace
             if ( lineIn !~ /^\s*$/ )      # Not an empty line!
-               # This implementation is depreciated for one that reads the aux heating requirement out of the .xml file
-               #if ( bReadAuxEnergyHeating && lineIn =~ /^Auxiliary Energy Required/ )
-               #   lineIn.sub!(/Auxiliary Energy Required                              =/, '')
-               #   lineIn.sub!(/MJ/, '')
-               #   lineIn.strip!
-               #   $gAuxEnergyHeatingGJ = lineIn.to_f    # Use * scaleData?
-               #   $gAuxEnergyHeatingGJ /= 1000
-               #   bReadAuxEnergyHeating = false
-               #   break if (!bReadOldERSValue && !$PVIntModel)     # Stop parsing Browse.rpt when ERS number found!
                if ( bReadOldERSValue && lineIn =~ /^Energuide Rating \(not rounded\) =/ )
                   lineIn.sub!(/Energuide Rating \(not rounded\) =/, '')
                   lineIn.strip!
@@ -3147,7 +4377,18 @@ def postprocess( scaleData )
                   if ( lineIn =~ /^Annual/ )
                      valuesArr = lineIn.split()   # Uses spaces by default to split-up line
                      $annPVPowerFromBrowseRpt = valuesArr[4].to_f * 12.0 / 1000.0  # kW (approx PV power)
-                     break # PV power near bottom of file so no more need to read!
+                     break # PV power near bottom and last value to read!
+                  end
+               elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
+                  bUseNextACLine = true                  
+                  if ( lineIn =~ /^Ann/ )												# Look for the annual results
+                     valuesArr = lineIn.split()   									# Uses spaces by default to split-up line
+                     $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 	#Annual AirConditioning Sensible Load (MJ)
+                     $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 		#Annual AirConditioning Latent Load (MJ)
+                     $AvgACCOP = valuesArr[8].to_f									#Average COP of AirConditioning
+                     $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0	# Divided by 1000 to convert unit to GJ
+                     bUseNextACLine = false
+                     break if !$PVIntModel # Stop parsing Browse.rpt if noting else required!
                   end
                end
             end
@@ -3158,6 +4399,9 @@ def postprocess( scaleData )
       end
    end
    
+  # ===================== Get envelope characteristics from the XML file
+   getEnvelopeSpecs(h2kPostElements)
+
    # ==================== Get electricity rate structure for external PV model use
    if ($PVsize !~ /NoPV/ )
       locationText = "HouseFile/FuelCosts/Electricity/Fuel/Minimum"
@@ -3181,14 +4425,10 @@ def postprocess( scaleData )
          end
       end
    end
-   
-   # Get size of home. 
-   locationText = "HouseFile/House/Specifications"
-   
-   $gResults["allCodes"]["sumAreaAboveGradeM2"] = h2kPostElements[locationText].attributes["aboveGradeHeatedFloorArea"].to_f
-   $gResults["allCodes"]["sumAreaBelowGradeM2"] = h2kPostElements[locationText].attributes["belowGradeHeatedFloorArea"].to_f
 
-   
+   # Get house heated floor area
+   $FloorArea = getHeatedFloorArea( h2kPostElements )
+   $HouseVolume= h2kPostElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
    # ==================== Get results for all h2k calcs from XML file (except above case)
    
    parseDebug = true
@@ -3196,14 +4436,16 @@ def postprocess( scaleData )
    $HCGeneralFound = false 
    $HCSOCFound = false 
    
-  # # Make sure that the code we want is avaliable 
+   # Make sure that the code we want is available 
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
-  # 
+ 
       houseCode =  element.attributes["houseCode"]
     
+      # 05-Feb-2018 JTB: Note that in Non-Program (ERS) mode there is no "houseCode" attribute in the single element results set!
+      # When in Program mode there are multiple element results sets (7). The first set has no houseCode attribute, the next six (6)
+      # do have a value for the houseCode attribute. The last set has the houseCode attribute of "UserHouse", which almost exactly
+      # matches the first results set (General mode results).
       if (houseCode == nil && element.attributes["sha256"] != nil) 
-         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
-         # When in Program mode there are multiple element results sets.
          houseCode = "General"
       end 
       
@@ -3227,13 +4469,11 @@ def postprocess( scaleData )
    
      if ( $HCSOCFound ) 
        $outputHCode = "SOC"
-       
      elsif ( $HCGeneralFound ) 
        $outputHCode = "General"
      end 
      
      warn_out (" Reporting result set \"#{$outputHCode}\" result instead. \n")
-     
      
    end 
   
@@ -3242,21 +4482,15 @@ def postprocess( scaleData )
       houseCode =  element.attributes["houseCode"]
       
       if (houseCode == nil && element.attributes["sha256"] != nil) 
-         # 23-Aug-2017 JTB: Note that in Non-Program mode there is no "houseCode" attribute in the single element results set!
-         # When in Program mode there are multiple element results sets.
          houseCode = "General"
       end 
       
-      
-      
       # JTB 31-Jan-2018: Limiting results parsing to 1 set specified by user in choice file and saved in $outputHCode
-      if (houseCode =~ /#{$outputHCode}/ )
+      if (houseCode =~ /#{$outputHCode}/)
          
          stream_out( "\n Parsing results from set: #{$outputHCode} ...")
          
-         #if (houseCode =~ /ROC/  )
-         # ENERGY CONSUMPTION (Annual)
-         
+         # Energy Consumption (Annual GJ)
          $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
@@ -3264,25 +4498,73 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
          $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
          $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
-	  
+
+         if $ExtraOutput1 then
+            # Total Heat Loss of all zones by component (GJ)
+            $gResults[houseCode]["EnvHLTotalGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
+            $gResults[houseCode]["EnvHLCeilingGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ceiling"].to_f * scaleData
+            $gResults[houseCode]["EnvHLMainWallsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["mainWalls"].to_f * scaleData
+            $gResults[houseCode]["EnvHLWindowsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["windows"].to_f * scaleData
+            $gResults[houseCode]["EnvHLDoorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["doors"].to_f * scaleData
+            $gResults[houseCode]["EnvHLExpFloorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["exposedFloors"].to_f * scaleData
+            $gResults[houseCode]["EnvHLCrawlspaceGJ"] = element.elements[".//Annual/HeatLoss"].attributes["crawlspace"].to_f * scaleData
+            $gResults[houseCode]["EnvHLSlabGJ"] = element.elements[".//Annual/HeatLoss"].attributes["slab"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementBGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementBelowGradeWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementAGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementAboveGradeWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementFlrHdrsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementFloorHeaders"].to_f * scaleData
+            $gResults[houseCode]["EnvHLPonyWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ponyWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLFlrsAbvBasementGJ"] = element.elements[".//Annual/HeatLoss"].attributes["floorsAboveBasement"].to_f * scaleData
+            $gResults[houseCode]["EnvHLAirLkVentGJ"] = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f * scaleData
+            
+            # Annual DHW heating load [GJ] -- heating load (or demand) on DHW system (before efficiency applied)
+            $gResults[houseCode]["AnnHotWaterLoadGJ"] = element.elements[".//Annual/HotWaterDemand"].attributes["base"].to_f * scaleData
+         end
+         
          # Design loads, other data 
          $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
-	  
          $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
-         # ( what the heck is a 'cool loss rate' ?!? should be heat gain rate...)
-		
+	
          $gResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
          $gResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
          $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f * scaleData
          $gResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f * scaleData
+
          $gResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f * scaleData
          $gResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f * scaleData
          $gResults[houseCode]["avgFuelCostsOil$"]     = element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f * scaleData
          $gResults[houseCode]["avgFuelCostsPropane$"] = element.elements[".//Annual/ActualFuelCosts"].attributes["propane"].to_f * scaleData
          $gResults[houseCode]["avgFuelCostsWood$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["wood"].to_f * scaleData
 
+         if $ExtraOutput1 then
+            # Annual SpaceHeating and HotWater energy by fuel type [GJ]
+            $gResults[houseCode]["AnnSpcHeatElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterElecGJ"] = element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f * scaleData
+         end
+         
          $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
+
+         # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
+         # 07-APR-2018 JTB: This should only be checked when there is NO internal PV model in use!
+         if !$PVIntModel && $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
+            $gResults[houseCode]["avgFueluseElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["appliance"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["lighting"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData +
+                                                       element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
+         end
          $gResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
@@ -3303,7 +4585,7 @@ def postprocess( scaleData )
          # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
          # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
          # avgEnergyTotalGJ does when there is an internal H2K PV model.
-          $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
+         $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
                                                       $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
                                                       $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
                                                       $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
@@ -3366,10 +4648,8 @@ def postprocess( scaleData )
          break    # break out of the element loop to avoid further processing
 
       end
-	  
       
-      
-   end # h2kPostElements |element| loop
+   end # h2kPostElements |element| loop (and scope of local variable houseCode!)
    
    if ( $gDebug ) 
       $gResults.each do |houseCode, data|
@@ -3443,7 +4723,7 @@ def postprocess( scaleData )
             $PVsize = "0.0 kW"
             $PVArrayCost  = 0.0
          end
-         # Degbug: How big is the sized array?
+         # Debug: How big is the sized array?
          debug_out ("\n PV array is #{$PVsize}  ...\n")
       end
    end
@@ -3495,17 +4775,10 @@ def postprocess( scaleData )
 	stream_out( " done \n")
   
    stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
-  
 
    stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
    stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
 
-   $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
-            $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
-   
    stream_out("\n Energy Consumption: \n\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} ( Hot Water, GJ ) \n")
@@ -3514,12 +4787,54 @@ def postprocess( scaleData )
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} ( Appliances + Lights + Plugs + outdoor, GJ ) \n")
    stream_out ( " --------------------------------------------------------\n")
    stream_out ( "  #{$gResults[$outputHCode]['avgEnergyGrossGJ'].round(1)} ( H2K Gross energy use GJ ) \n")
-   
-    if ( parseDebug )
+
+   if ( parseDebug )
+      $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
+               $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
 		stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
 		stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
-    end 
+   end 
 	
+   if $ExtraOutput1 then
+      stream_out("\n Components of envelope heat loss: \n\n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)} ( Envelope Ceiling Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)} ( Envelope Main Wall Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)} ( Envelope Window Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)} ( Envelope Door Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)} ( Envelope Exp Floor Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)} ( Envelope Crawlspace Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)} ( Envelope Slab Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)} ( Envelope BG Basement Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)} ( Envelope AG Basement Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)} ( Envelope Basement Floor Hdr Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)} ( Envelope Pony Wall Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)} ( Envelope Floors Above Basement Heat Loss (all zones), GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)} ( Envelope Air Leakage & Ventilation Heat Loss (all zones), GJ ) \n")
+      stream_out ( " --------------------------------------------------------\n")
+      stream_out ( "  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)} ( Envelope Total Heat Loss (as reported in file), GJ ) \n")
+
+      if ( parseDebug )
+         $check = $gResults[$outputHCode]['EnvHLCeilingGJ'].to_f + 
+                  $gResults[$outputHCode]['EnvHLMainWallsGJ'].to_f + 
+                  $gResults[$outputHCode]['EnvHLWindowsGJ'].to_f + 
+                  $gResults[$outputHCode]['EnvHLDoorsGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLExpFloorsGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLCrawlspaceGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLSlabGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLBasementBGWallGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLBasementAGWallGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLPonyWallGJ'].to_f +
+                  $gResults[$outputHCode]['EnvHLAirLkVentGJ'].to_f 
+         stream_out ("       ( Note: sum above without basement floor above HL = #{$check.round(1)} )") 
+      end
+      
+      stream_out ( "\n\n  #{$gResults[$outputHCode]["AnnHotWaterLoadGJ"].round(1)} ( Annual DHW heating load, GJ ) \n")
+   end
+      
    stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
    stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
@@ -3539,21 +4854,33 @@ def postprocess( scaleData )
    netUtilityCost = $gResults[$outputHCode]['avgFuelCostsTotal$'] - $gResults[$outputHCode]['avgPVRevenue']
    
    stream_out ( "    \$ #{netUtilityCost.round(2)} (Net utility costs).\n")
-   stream_out ( "\n\n")
+   stream_out ( "\n")
    
-   stream_out("\n\n Energy Use (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Electricity, kWh)\n")         
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Natural Gas, m3)\n")                	
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Oil, l)\n")
-   stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Propane, l)\n")
+   if $ExtraOutput1 then
+      stream_out("\n Space Heating Energy Use by Fuel (GJ): \n\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatElecGJ"].round(1)} (Space Heating Electricity, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatGasGJ"].round(1)} (Space Heating Natural Gas, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatOilGJ"].round(1)} (Space Heating Oil, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatPropGJ"].round(1)} (Space Heating Propane, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatWoodGJ"].round(1)} (Space Heating Wood, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterElecGJ"].round(1)} (Hot Water Heating Electricity, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterGasGJ"].round(1)} (Hot Water Heating Natural Gas, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterOilGJ"].round(1)} (Hot Water Heating Oil, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterPropGJ"].round(1)} (Hot Water Heating Propane, GJ)\n")
+      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterWoodGJ"].round(1)} (Hot Water Heating Wood, GJ)\n")
+   end
+   
+   stream_out("\n\n Total Energy Use by Fuel (in fuel units, not including credit for PV, direction #{$gRotationAngle} ): \n\n")
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Total Electricity, kWh)\n")         
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Total Natural Gas, m3)\n")                	
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Total Oil, l)\n")
+   stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Total Propane, l)\n")
 
    # ASF 03-Oct-2016: 
    # Wood/Pellets    
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Wood, cord)\n")                       
-#   stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
-   
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Total Wood, cord)\n")                       
+   # stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
    # stream_out ("> SCALE #{scaleData} \n"); 
-   
    # Estimate total cost of upgrades
    $gTotalCost = 0
   
@@ -3583,6 +4910,231 @@ def postprocess( scaleData )
    end
 
 end  # End of postprocess
+
+# =========================================================================================
+# Get the average characteristics of building facade by orientation
+# =========================================================================================
+def getEnvelopeSpecs(elements)
+   # ====================================================================================
+   # Parameter      Location
+   # ====================================================================================
+   # Orientation		HouseFile/House/Components/*/Components/Window/FacingDirection[code]
+   # SHGC				HouseFile/House/Components/*/Components/Window[SHGC]
+   # r-value			HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
+   # Height				HouseFile/House/Components/*/Components/Window/Measurements/[height]
+   # Width				HouseFile/House/Components/*/Components/Window/Measurements/[width]
+
+   $SHGCWin_sum = Hash.new(0)
+   $uAValueWin_sum = Hash.new(0)
+   $AreaWin_sum = Hash.new(0)
+   $rValueWin = Hash.new(0)
+   $SHGCWin = Hash.new(0)
+   $UAValue = Hash.new(0)
+   $RSI = Hash.new(0)
+   $AreaComp = Hash.new(0)
+
+   locationText = "HouseFile/House/Components/*/Components/Window"
+
+   elements.each(locationText) do |window|
+      areaWin_temp = 0.0 # store the area of each windows
+      winOrient = window.elements["FacingDirection"].attributes["code"].to_i # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+      areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
+      $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp # Adds the (SHGC * area) of each windows to summation for individual orientations
+      $uAValueWin_sum[winOrient] += areaWin_temp / (window.elements["Construction"].elements["Type"].attributes["rValue"].to_f)  # Adds the (area/RSI) of each windows to summation for individual orientations
+      $AreaWin_sum[winOrient] += areaWin_temp # Adds area of each windows to summation for individual orientations
+   end
+
+   locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"  # Adds door-window
+
+   elements.each(locationText) do |window|
+      areaWin_temp = 0.0 # store the area of each windows
+      winOrient = window.elements["FacingDirection"].attributes["code"].to_i # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+      areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
+      $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp # Adds the (SHGC * area) of each windows to summation for individual orientations
+      $uAValueWin_sum[winOrient] += areaWin_temp / (window.elements["Construction"].elements["Type"].attributes["rValue"].to_f)  # Adds the (area/RSI) of each windows to summation for individual orientations
+      $AreaWin_sum[winOrient] += areaWin_temp # Adds area of each windows to summation for individual orientations
+   end
+
+   (1..8).each do |winOrient| # Calculate the average weighted values for each orientation
+      if $AreaWin_sum[winOrient] != 0 # No windows exist if the total area is zero for an orientation
+         $rValueWin[winOrient] = ($AreaWin_sum[winOrient] / $uAValueWin_sum[winOrient]).round(3) # Overall R-value is [A_tot/(U_tot*A_tot)]
+         $SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3) # Divide the summation of (area* SHGC) by total area
+         $UAValue["win"] += $uAValueWin_sum[winOrient] # overall UA value is the summation of individual UA values
+         $AreaComp["win"] += $AreaWin_sum[winOrient] # overall window area of the buildings
+      end
+   end
+
+   locationText = "HouseFile/House/Components/*/Components/Door"
+
+   elements.each(locationText) do |door|
+      areaDoor_temp = 0.0 # store area of each Door
+      idDoor = door.attributes["id"].to_i
+      areaDoor_temp = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f) # [Height (m) * Width (m)]
+
+      locationWindows = "HouseFile/House/Components/*/Components/Door/Components/Window"
+      areaWin_sum = 0.0
+      elements.each(locationWindows) do |openings|
+         if (openings.parent.parent.attributes["id"].to_i == idDoor)
+            areaWin_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)*openings.attributes["number"].to_i / 1000000
+            areaWin_sum += areaWin_temp
+         end
+      end
+
+      areaDoor_temp -= areaWin_sum
+
+      $UAValue["door"] += areaDoor_temp / (door.attributes["rValue"].to_f)  # Adds the (area/RSI) of each door to summation
+      $AreaComp["door"] += areaDoor_temp # Adds area of each door to summation
+      $AreaComp["doorwin"] += areaWin_sum
+   end
+
+   $AreaWall_sum = 0.0
+   $uAValueWall_sum = 0.0
+   locationText = "HouseFile/House/Components/Wall"
+   elements.each(locationText) do |wall|
+      areaWall_temp = 0.0
+      idWall = wall.attributes["id"].to_i
+      areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
+
+      locationWindows = "HouseFile/House/Components/Wall/Components/Window"
+      areaWin_sum = 0.0
+      elements.each(locationWindows) do |openings|
+         if (openings.parent.parent.attributes["id"].to_i == idWall)
+            areaWin_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)*openings.attributes["number"].to_i / 1000000
+            areaWin_sum += areaWin_temp
+         end
+      end
+
+      locationDoors = "HouseFile/House/Components/Wall/Components/Door"
+         areaDoor_sum = 0.0
+         elements.each(locationDoors) do |openings|
+            if (openings.parent.parent.attributes["id"].to_i == idWall)
+               areaDoor_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)
+               areaDoor_sum += areaDoor_temp
+            end
+         end
+
+      locationDoors = "HouseFile/House/Components/Wall/Components/FloorHeader"
+      areaHeader_sum = 0.0
+      uAValueHeader = 0.0
+      elements.each(locationDoors) do |head|
+         if (head.parent.parent.attributes["id"].to_i == idWall)
+            areaHeader_temp = (head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f)
+            uAValueHeader_temp = areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+            areaHeader_sum += areaHeader_temp
+            uAValueHeader += uAValueHeader_temp
+         end
+      end
+
+      areaWall_temp -= (areaWin_sum + areaDoor_sum)
+      uAValueWall = areaWall_temp / wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+      $UAValue["wall"] += uAValueWall
+      $AreaComp["wall"] += areaWall_temp
+   end
+
+   locationText = "HouseFile/House/Components/*/Components/FloorHeader"
+   elements.each(locationText) do |head|
+      areaHeader_temp = 0.0
+      areaHeader_temp = head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f
+      $UAValue["header"] += areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+      $AreaComp["header"] += areaHeader_temp
+   end
+
+   locationText = "HouseFile/House/Components/Ceiling"
+   elements.each(locationText) do |ceiling|
+      areaCeiling_temp = 0.0
+      areaCeiling_temp = ceiling.elements["Measurements"].attributes["area"].to_f
+      $UAValue["ceiling"] += areaCeiling_temp / ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
+      $AreaComp["ceiling"] += areaCeiling_temp
+   end
+
+   locationText = "HouseFile/House/Components/Floor"
+   elements.each(locationText) do |floor|
+      areaFloor_temp = 0.0
+      areaFloor_temp = floor.elements["Measurements"].attributes["area"].to_f
+      $UAValue["floor"] += areaFloor_temp / floor.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+      $AreaComp["floor"] += areaFloor_temp
+   end
+
+   $UAValue["house"] = 0.0
+   $AreaComp["house"] = 0.0
+   $UAValue.each_key do |component|
+      if ($UAValue[component]!= 0.0 && component !="house")
+         $RSI[component] = $AreaComp[component] / $UAValue[component]
+         $UAValue["house"] += $UAValue[component]
+         $AreaComp["house"] += $AreaComp[component]
+      end
+   end
+   $RSI["house"] = $AreaComp["house"] / $UAValue["house"]
+   $R_ValueHouse = ($RSI["house"] * 5.67826).round(0)
+
+end # End of getEnvelopeSpecs
+
+# =========================================================================================
+# Get the best estimate of the house heated floor area
+# =========================================================================================
+def getHeatedFloorArea( elements )
+   # Initialize vars
+   areaRatio = 0
+   heatedFloorArea = 0
+   
+   areaAboveGradeInput = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
+   areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
+   areaInputTotal = areaAboveGradeInput + areaBelowGradeInput
+   
+   case elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
+   when 1
+      numStoreysInput = 1
+   when 2
+      numStoreysInput = 1.5  # 1.5 storeys
+   when 3
+      numStoreysInput = 2
+   when 4
+      numStoreysInput = 2.5  # 2.5 storeys
+   when 5
+      numStoreysInput = 3
+   when 6..7
+      numStoreysInput = 2    # Split level or Spli entry/raised basement
+   end
+
+   # Get house area estimates from the first XML <results> section - these are totals of multiple surfaces
+   ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
+   slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
+   if numStoreysInput == 1
+      # Single storey house -- avoid counting a basement heated area 
+      areaEstimateTotal = ceilingAreaOut
+   else
+      # Multi-storey houses add area of "heated" basement & crawlspace (check if heated!)
+      loc = "HouseFile/House/Temperatures/Basement"
+      loc2 = "HouseFile/House/Temperatures/Crawlspace"
+      if elements[loc].attributes["heated"] == "true" || elements[loc].attributes["heatingSetPoint"] == "true" || elements[loc2].attributes["heated"] == "true"
+         areaEstimateTotal = ceilingAreaOut * numStoreysInput + slabAreaOut
+      else
+         areaEstimateTotal = ceilingAreaOut * numStoreysInput
+      end
+   end
+   
+   if areaEstimateTotal > 0
+      areaRatio = areaInputTotal / areaEstimateTotal
+   else
+      stream_out("\nNote: House area estimate from results section is zero.\n")
+   end
+   
+   # Accept user input area if it's between 50% and 200% of the estimated area!
+   if areaRatio > 0.50 && areaRatio < 2.0 then
+      heatedFloorArea = areaInputTotal
+   else
+      # Use user input area if a row house (end:6 or middle:8) regardless of area ratio (but non-zero)
+      # Also applicable to Triplexes (type 4) and Apartments (type 5)
+      houseType = elements["HouseFile/House/Specifications/HouseType"].attributes["code"].to_i
+      if (houseType == 4 || houseType == 5 || houseType == 6 || houseType == 8) && areaInputTotal > 0
+         heatedFloorArea = areaInputTotal
+      else
+         heatedFloorArea = areaEstimateTotal
+      end
+   end
+   
+   return heatedFloorArea
+end
 
 # =========================================================================================
 # Calculate electricity cost using global results array and electricity cost rate structure
@@ -3628,7 +5180,7 @@ def fix_H2K_INI()
    $ini_out="[HOT2000]
 LANGUAGE=E
 ECONOMIC_FILE=#{$gMasterPath}\\H2K\\StdLibs\\econLib.eda
-WEATHER_FILE=Dat\Wth110.dir
+WEATHER_FILE=#{$gMasterPath}\\H2K\\Dat\\Wth110.dir
 FUELCOST_FILE=#{$gMasterPath}\\H2K\\StdLibs\\fuelLib.flc
 CODELIB_FILE=#{$gMasterPath}\\H2K\\StdLibs\\codeLib.cod
 HSEBLD_FILE=#{$gMasterPath}\\H2K\\Dat\\XPstd.slb    
@@ -3641,6 +5193,443 @@ UNITS=M
 
 end
 
+# =========================================================================================
+# Get the name of the base file weather city
+# =========================================================================================
+def getWeatherCity(elements)
+   wth_cityName = elements["HouseFile/ProgramInformation/Weather/Location/English"].text
+   wth_cityName.gsub!(/\s*/, '')    # Removes mid-line white space
+   
+   return wth_cityName   
+end
+
+# =========================================================================================
+# Get primary heating system type and fuel
+# =========================================================================================
+def getPrimaryHeatSys(elements)
+   
+   if elements["HouseFile/House/HeatingCooling/Type1/Baseboards"] != nil
+      #sysType1 = "Baseboards"
+      fuelName = "electricity"
+   elsif elements["HouseFile/House/HeatingCooling/Type1/Furnace"] != nil
+      #sysType1 = "Furnace"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EnergySource/English"].text
+   elsif elements["HouseFile/House/HeatingCooling/Type1/Boiler"] != nil
+      #sysType1 = "Boiler"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EnergySource/English"].text
+   elsif elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"] != nil
+      #sysType1 = "Combo"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EnergySource/English"].text
+   elsif elements["HouseFile/House/HeatingCooling/Type1/P9"] != nil
+      #sysType1 = "P9"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1//TestData/EnergySource/English"].text
+   end
+   
+   return fuelName
+end
+
+# =========================================================================================
+# Get secondary heating system type
+# =========================================================================================
+def getSecondaryHeatSys(elements)
+   
+   sysType2 = "NA"
+   
+   if elements["HouseFile/House/HeatingCooling/Type2/AirHeatPump"] != nil
+      sysType2 = "AirHeatPump"
+   elsif elements["HouseFile/House/HeatingCooling/Type2/WaterHeatPump"] != nil
+      sysType2 = "WaterHeatPump"
+   elsif elements["HouseFile/House/HeatingCooling/Type2/GroundHeatPump"] != nil
+      sysType2 = "GroundHeatPump"
+   elsif elements["HouseFile/House/HeatingCooling/Type2/AirConditioning"] != nil
+      sysType2 = "AirConditioning"
+   end
+   
+   return sysType2
+end
+
+# =========================================================================================
+# Get primary DHW system type and fuel
+# =========================================================================================
+def getPrimaryDHWSys(elements)
+   
+   fuelName = elements["HouseFile/House/Components/HotWater/Primary/EnergySource/English"].text
+   #tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
+   
+   return fuelName
+end
+
+# =========================================================================================
+# Permafrost  ------------------------------------------------
+# =========================================================================================
+def set_permafrost_by_location(elements,cityName)
+   
+   if $PermafrostHash[cityName] == "continuous" 
+
+      soilCondition = elements["HouseFile/House/Specifications/SoilCondition"].attributes["code"]
+      soilCondition = "3"
+      elements["HouseFile/House/Specifications/SoilCondition"].attributes["code"] = soilCondition
+   
+   end
+end
+
+
+# =========================================================================================
+# Rule Set: NBC-9.36-2010 Creates global rule set hash $ruleSetChoices
+# =========================================================================================
+def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
+
+  
+   # System data...
+   primHeatFuelName = getPrimaryHeatSys( elements )
+   secSysType = getSecondaryHeatSys( elements )
+   primDHWFuelName = getPrimaryDHWSys( elements )
+
+   # Basement, slab, or both in model file?
+   # Decide which to use for compliance based on count!
+   # TODO: Provide new options for Basements and Slabs so can change each!
+   isBasement = false
+   isSlab = false
+   numOfBasements = 0
+   numOfSlabs = 0
+   elements.each("HouseFile/House/Components") do |component|     
+      # TODO: Should this also include crawlspace?
+      if component =~ /Basement/ || component =~ /Walkout/
+         numOfBasements += 1
+      elsif component =~ /Slab/
+         numOfSlabs += 1
+      end 
+   end 
+   if numOfBasements >= numOfSlabs
+      isBasement = true
+      isSlab = false
+   else
+      isBasement = false
+      isSlab = true
+   end
+   
+   # Choices that do NOT depend on ruleType!
+   $ruleSetChoices["Opt-StandoffPV"] = "NoPV"
+   $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
+   
+   # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
+   if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
+      $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
+   elsif (primHeatFuelName =~ /Elect/) != nil   # value is "Electricity
+      if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
+         $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
+      else
+         $ruleSetChoices["Opt-HVACSystem"] = "NBC-elec-heat"
+      end
+   end
+   
+   # DHW Equipment performance requirements (Table 9.36.4.2)
+   if (primDHWFuelName =~ /gas/) != nil
+      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas" 
+   elsif (primDHWFuelName =~ /Elect/) != nil
+      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
+   end
+
+   # Thermal zones and HDD by rule type
+   #-------------------------------------------------------------------------
+   if ruleType =~ /NBC9_36_noHRV/
+      
+      # Zone 4 ( HDD < 3000) without an HRV
+      if locale_HDD < 3000 
+      # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
+                  
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
+      
+      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
+      
+      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
+         end
+      
+      # Zone 5 ( 3000 < HDD < 3999) without an HRV
+      elsif locale_HDD >= 3000 && locale_HDD < 3999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"]    = "NBC_Wall_zone5_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                     = "NBC_Ceiling_zone5_noHRV"
+         $ruleSetChoices["Opt-CathCeilings"]                      = "NBC_FlatCeiling_zone5"
+         $ruleSetChoices["Opt-FlatCeilings"]                      = "NBC_FlatCeiling_zone5"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_exposed_zone5"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"  
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_SCB_zone5_noHRV"
+         end
+
+      # Zone 6 ( 4000 < HDD < 4999) without an HRV
+      elsif locale_HDD >= 4000 && locale_HDD < 4999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
+         
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_noHRV"
+         end
+
+      # Zone 7A ( 5000 < HDD < 5999) without an HRV
+      elsif locale_HDD >= 5000 && locale_HDD < 5999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_noHRV"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
+           
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_noHRV"
+         end
+
+      # Zone 7B ( 6000 < HDD < 6999) without an HRV
+      elsif locale_HDD >= 6000 && locale_HDD < 6999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_noHRV"
+         end
+
+      # Zone 8 (HDD <= 7000) without an HRV
+      elsif locale_HDD >= 7000 
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_noHRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
+                                                                 
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_noHRV"
+         end
+      end
+
+   #-------------------------------------------------------------------------
+   elsif ruleType =~ /NBC9_36_HRV/
+
+      # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3) 	
+  		$ruleSetChoices["Opt-HRVspec"]                        =  "NBC_HRV"		
+
+     # Zone 4 ( HDD < 3000) without an HRV
+      if locale_HDD < 3000 
+      # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
+                  
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
+      
+      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
+      
+      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
+         end         
+      # Zone 5 ( 3000 < HDD < 3999) with an HRV
+      elsif locale_HDD >= 3000 && locale_HDD < 3999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone5_HRV"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone5"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone5"
+                  
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone5"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_HRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_HRV"
+         end
+         
+      # Zone 6 ( 4000 < HDD < 4999) with an HRV
+      elsif locale_HDD >= 4000 && locale_HDD < 4999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_HRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_HRV"
+         end
+
+      # Zone 7A ( 5000 < HDD < 5999) with an HRV
+      elsif locale_HDD >= 5000 && locale_HDD < 5999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_HRV"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_HRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_HRV"
+         end
+
+      # Zone 7B ( 6000 < HDD < 6999) with an HRV
+      elsif locale_HDD >= 6000 && locale_HDD < 6999
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
+         
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_HRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_HRV"
+         end
+
+      # Zone 8 (HDD <= 7000) with an HRV
+      elsif locale_HDD >= 7000 
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_HRV"
+         $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
+
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
+                  
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
+         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
+         
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         if isBasement 
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_HRV"
+         elsif isSlab
+            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_HRV"
+         end
+
+      end
+   end   # Check on NBC rule set type
+end
+
+#===============================================================================
+def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
+ 
+   # R-2000 standard test requirements
+   if ruleType =~ /R2000_NZE_Pilot_Env/
+
+      # R-2000 Standard Mechanical Conditions. (Table 2)
+	  $ruleSetChoices["Opt-HVACSystem"] = "R2000-elec-baseboard" 
+	  $ruleSetChoices["Opt-DHWSystem"] = "R2000-HotWater-elec" 
+	  $ruleSetChoices["Opt-HRVspec"] = "R2000_HRV"
+	  
+	  # No renewable generation for envelope test
+	  $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
+		
+   elsif ruleType =~ /R2000_NZE_Pilot_Mech/
+   
+	  # No renewable generation for mechanical systems test
+	  $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
+	  
+   end
+end
+#===============================================================================
 =begin rdoc
 =========================================================================================
   END OF ALL METHODS 
@@ -3673,14 +5662,25 @@ $help_msg = "
                       
  example use for optimization work:
  
-  ruby substitute-h2k.rb -c HOT2000.choices
-                         -o HOT2000.options
-                         -b C:\\H2K-CLI-Min\\MyModel.h2k
-                         -v
-      
+  ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
+  
+ Command line options:
+   -h  This help message
+   -c  Name of choice file (mandatory but optionally with full path)
+   -o  Name of options file (mandatory but optionally with full path)
+   -b  Full path of model house file (mandatory)
+   -v  Verbose console output
+   -d  Debug output
+   -r  Report choice file input as part of output
+   -p  Run as a slave to htap-prm
+   -w  Report warning messages
+   -e  Produce and save extended output (v1)
+   -s  Name of the rule set
+   -k  Keep H2K folder after run
+   
 "
 
-# dump help text, if no argument given
+# Dump help text, if no argument given
 if ARGV.empty? then
   puts $help_msg
   exit()
@@ -3714,6 +5714,7 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.on("-r", "--report-choices", "Report .choice file input as part of output") do
+      $cmdlineopts["report-choices"] = true
       $gReportChoices = true
    end
    
@@ -3725,18 +5726,16 @@ optparse = OptionParser.new do |opts|
       end
    end   
    
-   opts.on("-p", "--prm", "Run as a slave to htap-prm ") do 
+   opts.on("-p", "--prm", "Run as a slave to htap-prm") do 
+      $cmdlineopts["prm"] = true
       $PRMcall = true
    end
    
-   
-   
-   
-   
    opts.on("-w", "--warnings", "Report warning messages") do 
+      $cmdlineopts["warnings"] = true
       $gWarn = true
    end
-  
+
    opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
       $cmdlineopts["options"] = o
       $gOptionFile = o
@@ -3745,7 +5744,6 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-   # This may not be required for HOT2000! ***********************************
    opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
       $cmdlineopts["base_model"] = b
       $gBaseModelFile = b
@@ -3753,31 +5751,42 @@ optparse = OptionParser.new do |opts|
          fatalerror("Base folder file name missing after --base_folder (or -b) option!")
       end
       if (! File.exist?($gBaseModelFile) ) 
-         fatalerror("Base file does not exist - create file first!")
+         fatalerror("Base file does not exist in location specified!")
       end
       $gLookForArchetype = 0; 
    end
- 
+
+   opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
+      $cmdlineopts["extra_output1"] = true
+      $ExtraOutput1 = true
+   end
+
+   opts.on("-k", "--keep_H2K_folder", "Keep the H2K sub-folder generated during last run.") do
+      $cmdlineopts["keep_H2K_folder"] = true
+      $keepH2KFolder = true
+   end
+   
 end
 
-optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
+# Note: .parse! strips all arguments from ARGV and .parse does not
+#       The parsing code above effects only those options that occur on the command line!
+optparse.parse!
 
 if $gDebug 
   debug_out( $cmdlineopts )
 end
 
-
-if ( !$gBaseModelFile ) then
-  $gBaseModelFile = "Not specified. Using archetype specified in .choice file"
-  $gLookForArchetype = 1
-  
-else 
-    ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
-    $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
-        
+if !$gBaseModelFile then
+   $gBaseModelFile = "Not specified. Using archetype specified in .choice file"
+   $gLookForArchetype = 1
+else
+   # Note: !! This code is over-written below by a hard-coded path for the $h2k_src_path (executable path)
+   # The two lines below ASSUME that all model files are located below the H2K CLI program!
+   ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
+   $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
 end
 
-$h2k_src_path = "C:/H2K-CLI-Min" 
+$h2k_src_path = "C:\\H2K-CLI-Min" 
 $run_path = $gMasterPath + "\\H2K"
  
 stream_out ("\n > substitute-h2k.rb  \n")
@@ -3871,21 +5880,16 @@ while !fOPTIONS.eof? do
          
             $gOptions[$currentAttributeName]["default"]["defined"] = 0
             
-            
             $gOptions[$currentAttributeName]["stop-on-error"] = 1 
             
             if ( $currentAttributeName =~ /Opt-Archetype/ && $gLookForArchetype == 0 ) 
-            
               $gOptions[$currentAttributeName]["stop-on-error"] = 0
-            
             end 
         
          elsif ( $token =~ /^\*attribute:on-error/ ) 
            
            if ($value =~ /ignore/ ) 
-           
              $gOptions[$currentAttributeName]["stop-on-error"] = 0 
-             
            end 
         
          elsif ( $token =~ /^\*attribute:tag/ )
@@ -4087,9 +6091,118 @@ end
 fCHOICES.close
 stream_out (" ...done.\n\n")
 
-$gExtOptions = Hash.new(&$blk)
-# Report 
-$allok = true
+if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
+   $Archetype_value = $gChoices["Opt-Archetype"]
+  
+   # IF NA is set, and nothing is given at the command line, default to SmallSFD.
+   if ( $Archetype_value =~ /NA/ ) 
+      $Archetype_value = "SmallSFD"
+   end 
+   
+   $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
+   ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
+   $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
+   $run_path = $gMasterPath + "\\H2K"
+  
+   stream_out ("\n   UPDATED: Base model: #{$gBaseModelFile} \n")
+   stream_out ("            HOT2000 model file: #{$h2kFileName} \n")
+   stream_out ("            HOT2000 source folder: #{$h2k_src_path} \n")
+   stream_out ("            HOT2000 run folder: #{$run_path} \n")
+end
+
+if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
+   if ( ! system("mkdir #{$gMasterPath}\\H2K") )
+      fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
+   end
+   FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
+   fix_H2K_INI()
+end 
+
+write_h2k_magic_files("#{$gMasterPath}")
+
+# Create a copy of the HOT2000 file into the master folder for manipulation.
+# (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
+stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
+$gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
+
+if ( ! $PRMcall ) 
+   # Remove any existing file first!  
+   if ( File.exist?($gWorkingModelFile) )
+      if ( ! system ("del #{$gWorkingModelFile}") )
+         fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
+      end
+   end
+   FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
+   stream_out("\n  (File #{$gWorkingModelFile} created.)\n\n")
+end 
+
+# Load all XML elements from HOT2000 file
+h2kElements = get_elements_from_filename($gWorkingModelFile)
+stream_out(" READING to edit: #{$gWorkingModelFile} \n")
+
+# Get rule set choices hash values in $ruleSetChoices for the 
+# rule set name specified in the choice file
+$ruleSetName = $gChoices["Opt-Ruleset"]
+
+   # Get some data from the base house model file...
+
+$Locale = $gChoices["Opt-Location"] 
+
+# Weather city name
+if $Locale.empty? || $Locale == "NA"
+   # from base model file
+   locale = getWeatherCity( h2kElements )
+else
+   # from Opt-Location
+   locale = $Locale
+end
+locale.gsub!(/\./, '')
+$HDDs = $HDDHash[ locale.upcase ]
+
+
+if !$ruleSetName.empty? && $ruleSetName != "NA"
+
+   stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
+   
+   if ( $ruleSetName =~ /as-found/ ) 
+     # Do nothing! 
+     stream_out ("  (a) ")
+   
+   elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
+      stream_out ("  (b) ")
+      NBC_936_2010_RuleSet( $ruleSetName, h2kElements, $HDDs,locale )
+
+   elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
+      stream_out ("  (c) ")
+      # Do nothing - this is the AW rule set. 
+      
+   elsif ( $ruleSetName =~ /R2000_NZE_Pilot_Env/ ||  $ruleSetName =~ /R2000_NZE_Pilot_Mech/ )
+      stream_out ("  (d) ")
+	  R2000_NZE_Pilot_RuleSet( $ruleSetName, h2kElements, locale )
+   
+   elsif ( $ruleSetName =~ /R2000_NZE_Pilot_Base/)
+      stream_out ("  (e) ")
+	  NBC_936_2010_RuleSet( "NBC9_36_HRV", h2kElements, $HDDs,locale )
+	  R2000_NZE_Pilot_RuleSet( "R2000_NZE_Pilot_Env", h2kElements, locale )
+	  
+   end 
+   
+   # Replace choices in $gChoices with rule set choices in $ruleSetChoices
+   stream_out(" Replacing user-defined choices with rule set choices where appropriate...\n")
+   $ruleSetChoices.each do |attrib, choice|
+      if choice.empty?
+         warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
+         next  # skip setting this empty choice!
+      elsif $gChoices[attrib] =~ /NA/
+         # Change choice to rule set value for all choices that are "NA"
+         $gChoices[attrib] = choice
+         stream_out ("   - #{attrib} -> #{choice} \n")
+      else
+         next  # skip changing this choice because it has a non-NA value!
+      end
+   end
+   
+end
 
 debug_out("-----------------------------------\n")
 debug_out("-----------------------------------\n")
@@ -4121,14 +6234,14 @@ end
 =begin rdoc
  Validate choices and options. 
 =end
-stream_out(" Validating choices and options...");  
+stream_out("\n Validating choices and options...\n");  
 
-# Search through optons and determine if they are usedin Choices file (warn if not). 
+# Search through options and determine if they are used in Choices file (warn if not). 
 $gOptions.each do |option, ignore|
     debug_out ("> option : #{option} ?\n"); 
     if ( !$gChoices.has_key?(option)  )
       $ThisError = "\n WARNING: Option #{option} found in options file (#{$gOptionFile}) \n"
-      $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) \n"
+      $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) OR rule set (#{$ruleSetName})\n"
       $ErrorBuffer += $ThisError
       warn_out ( $ThisError )
    
@@ -4151,14 +6264,20 @@ $gOptions.each do |option, ignore|
     $ThisError = ""
 end
 
+$allok = true
+
+
+
 # Search through choices and determine if they match options in the Options file (error if not). 
 $gChoices.each do |attrib, choice|
+
+   stream_out( " ->>>>> #{attrib} | #{choice} \n")
    debug_out ( "\n ======================== #{attrib} ============================\n")
    debug_out ( "Choosing #{attrib} -> #{choice} \n")
     
    # Is attribute used in choices file defined in options ?
    if ( !$gOptions.has_key?(attrib) )
-      $ThisError  = "\n ERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}), \n"
+      $ThisError  = "\n ERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}) OR rule set (#{$ruleSetName}), \n"
       $ThisError +=  "        but can't be found in options file (#{$gOptionFile})\n"
       $ErrorBuffer += $ThisError
       stream_out( $ThisError )
@@ -4177,7 +6296,7 @@ $gChoices.each do |attrib, choice|
      
       if ( !$allok )
          $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
-         $ThisError +=   "        in choice file #{$gChoiceFile}), is not defined \n"
+         $ThisError +=   "        in choice file #{$gChoiceFile}) OR rule set (#{$ruleSetName}), is not defined \n"
          $ThisError +=   "        in options file (#{$gOptionFile})\n"
          $ErrorBuffer += $ThisError
          stream_out( $ThisError )
@@ -4230,7 +6349,6 @@ $gChoices.each do |attrib1, choice|
                      testValueArray = testValueList.split('|')
                      thesevalsmatch = 0
                      testValueArray.each do |testValue|
- #                      if ( $gChoices[testAttribute] =~ /testValue/ ) # JTB 12-Nov-2016: This doesn't work!!
                         if ( testValue.match($gChoices[testAttribute]) )
                            thesevalsmatch = 1
                         end
@@ -4307,7 +6425,6 @@ $gChoices.each do |attrib1, choice|
                   testValueArray = testValueList.split('|')
                   thesevalsmatch = 0
                   testValueArray.each do |testValue|
-#                    if ( $gChoices[testAttribute] =~ /testValue/ )  # JTB 12-Nov-2016: This doesn't work!!
                      if ( testValue.match($gChoices[testAttribute]) )
                         thesevalsmatch = 1
                         debug_out ("       \##{$gChoices[testAttribute]} = #{$gChoices[testAttribute]} / #{testValue} / -> #{thesevalsmatch} \n")
@@ -4421,38 +6538,6 @@ $gChoices.each do |attrib1, choice|
    end
 end   #end of do each gChoices loop
 
-
-if ( $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty? ) then 
-  #puts  "\n user-spec archetype \n"
-  #puts " BASEFILE    >#{$gBaseModelFile}<\n"
-  $Archetype_value = $gChoices["Opt-Archetype"]
-  
-  # IF NA is set, and nothing is given at the command line, default to SmallSFD.
-  if ( $Archetype_value =~ /NA/ ) 
-     $Archetype_value = "SmallSFD"
-  end 
-  
-
-    
-   
-  $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
-  ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
-  $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path
-  $run_path = $gMasterPath + "\\H2K"
-  
-  stream_out ("\n   UPDATED: Base model: #{$gBaseModelFile} \n")
-  stream_out ("            HOT2000 source folder: #{$h2kFileName} \n")
-  stream_out ("            HOT2000 source folder: #{$h2k_src_path} \n")
-  stream_out ("            HOT2000 run folder: #{$run_path} \n")
-
-  #puts " Points to -> #{$gBaseModelFile} \n"; 
-
-
-  
-end
-  #
-  
-
 # Seems like we've found everything!
 
 if ( !$allok )
@@ -4464,45 +6549,10 @@ else
    stream_out (" ... done.\n\n")
 end
 
-# Create a copy of HOT2000 below master
-stream_out (" Creating a copying of HOT2000 executable directory below master... ")
-
-if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
-  if ( ! system("mkdir #{$gMasterPath}\\H2K") )
-      fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
-  end
-  FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
-  fix_H2K_INI()
-
-end 
-  write_h2k_magic_files("#{$gMasterPath}")
-
-
-# Create a copy of the HOT2000 file into the master folder for manipulation.
-# (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
-stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
-$gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
-
-if ( ! $PRMcall ) 
-  
-  # Remove any existing file first!  
-  if ( File.exist?($gWorkingModelFile) )
-     if ( ! system ("del #{$gWorkingModelFile}") )
-        fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
-     end
-  end
-  #if ( ! system ("copy #{$gBaseModelFile} #{$gWorkingModelFile}") )
-  FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
-  #if (! FileUtils.cp($gBaseModelFile,$gWorkingModelFile) ) 
-  #   fatalerror ("Fatal Error! Could not create copy of #{$gBaseModelFile} in #{$gWorkingModelFile}!\n Copy return error code #{$?}\n")
-  #end
-  stream_out(" (File #{$gWorkingModelFile} created.)\n\n")
-
-end 
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
-processFile($gWorkingModelFile)
+processFile( h2kElements )
 
 
 # Orientation changes. For now, we assume the arrays must always point south.
@@ -4551,6 +6601,7 @@ $gEnergyHeatingFossil = 0
 $gEnergyWaterHeatingElec = 0
 $gEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
+$FloorArea = 0
 
 orientations.each do |direction|
 
@@ -4585,7 +6636,6 @@ $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
 $optCOProxy = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
 
 
-
 sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
 fSUMMARY = File.new(sumFileSpec, "w")
 if fSUMMARY == nil then
@@ -4597,9 +6647,8 @@ else
    $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
 
-
-
 fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n") 
+fSUMMARY.write( "HDDs              =  #{$HDDs}\n" ) 
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
@@ -4618,6 +6667,8 @@ fSUMMARY.write( "Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLos
 fSUMMARY.write( "Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
 fSUMMARY.write( "AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
+fSUMMARY.write( "TotalAirConditioning-LoadGJ = #{$TotalAirConditioningLoad.round(1)} \n" )
+fSUMMARY.write( "AvgAirConditioning-COP = #{$AvgACCOP.round(1)} \n" )
 
 fSUMMARY.write( "Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
 fSUMMARY.write( "Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
@@ -4628,7 +6679,6 @@ fSUMMARY.write( "EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGa
 fSUMMARY.write( "EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
 fSUMMARY.write( "EnergyProp_L      =  #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(1)}    \n" )
 fSUMMARY.write( "EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )   # includes pellets
-
 fSUMMARY.write( "Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
 fSUMMARY.write( "SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 
@@ -4638,7 +6688,6 @@ fSUMMARY.write( "PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCooli
 
 fSUMMARY.write( "PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
 
-$FloorArea = ( $gResults["allCodes"]["sumAreaAboveGradeM2"] + $gResults["allCodes"]["sumAreaBelowGradeM2"]  )
 $TEDI_kWh_m2 = ( $gAuxEnergyHeatingGJ * 277.78 / $FloorArea )
 
 $MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] + 
@@ -4647,16 +6696,67 @@ $MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] +
                   $gResults[$outputHCode]['avgEnergyWaterHeatingGJ']  ) * 277.78 / $FloorArea
 
 fSUMMARY.write( "Floor-Area-m2     =  #{$FloorArea.round(1)} \n" )
+fSUMMARY.write( "House-Volume-m3   =  #{$HouseVolume.round(1)} \n" )
 fSUMMARY.write( "TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
 fSUMMARY.write( "MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 
 fSUMMARY.write( "ERS-Value         =  #{$gERSNum.round(1)}\n" )
 fSUMMARY.write( "NumTries          =  #{$NumTries.round(1)}\n" )
 fSUMMARY.write( "LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+# Windows characteristics
+fSUMMARY.write( "Win-SHGC-S        =  #{$SHGCWin[1].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-S     =  #{$rValueWin[1].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-S     =  #{$AreaWin_sum[1].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-SE       =  #{$SHGCWin[2].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-SE    =  #{$rValueWin[2].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-SE    =  #{$AreaWin_sum[2].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-E        =  #{$SHGCWin[3].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-E     =  #{$rValueWin[3].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-E     =  #{$AreaWin_sum[3].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-NE       =  #{$SHGCWin[4].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-NE    =  #{$rValueWin[4].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-NE    =  #{$AreaWin_sum[4].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-N        =  #{$SHGCWin[5].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-N     =  #{$rValueWin[5].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-N     =  #{$AreaWin_sum[5].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-NW       =  #{$SHGCWin[6].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-NW    =  #{$rValueWin[6].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-NW    =  #{$AreaWin_sum[6].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-W        =  #{$SHGCWin[7].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-W     =  #{$rValueWin[7].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-W     =  #{$AreaWin_sum[7].round(1)}\n" )
+fSUMMARY.write( "Win-SHGC-SW       =  #{$SHGCWin[8].round(3)}\n" )
+fSUMMARY.write( "Win-R-value-SW    =  #{$rValueWin[8].round(3)}\n" )
+fSUMMARY.write( "Win-Area-m2-SW    =  #{$AreaWin_sum[8].round(1)}\n" )
 
-
-
-
+if $ExtraOutput1 then
+   fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvCeilHL-GJ      =  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvWallHL-GJ      =  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvWinHL-GJ       =  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvDoorHL-GJ      =  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvFloorHL-GJ     =  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvCrawlHL-GJ     =  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvSlabHL-GJ      =  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvBGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvAGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvBsemntFHHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvPonyWallHL-GJ  =  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvFABsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)}\n")
+   fSUMMARY.write( "EnvAirLkVntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)}\n")
+   fSUMMARY.write( "AnnDHWLoad-GJ     =  #{$gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)}\n")
+   
+   fSUMMARY.write( "SpcHeatElec-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)}\n")
+   fSUMMARY.write( "SpcHeatGas-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)} \n")
+   fSUMMARY.write( "SpcHeatOil-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)} \n")
+   fSUMMARY.write( "SpcHeatProp-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)} \n")
+   fSUMMARY.write( "SpcHeatWood-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)} \n")
+   fSUMMARY.write( "HotWaterElec-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
+   fSUMMARY.write( "HotWaterGas-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)} \n")
+   fSUMMARY.write( "HotWaterOil-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)} \n")
+   fSUMMARY.write( "HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
+   fSUMMARY.write( "HotWaterWood-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)} \n")
+end
 
 if $gReportChoices then 
    #stream_out (" REPORTING CHOICES !!! \n")
@@ -4669,11 +6769,140 @@ if $gReportChoices then
 end
 
 
+# Possibly report Binned data from diagnostics file 
+if ($gReadROutStrTxt) then 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+   fSUMMARY.write("BIN-data-HRS-#{binstr}   =  #{$binDatHrs[bin].round(4)}\n")
+          
+   end 
+
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+
+   fSUMMARY.write("BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")       
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+         
+   fSUMMARY.write("BIN-data-HLR-#{binstr}   =  #{$binDatHLR[bin].round(4)}\n")       
+
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+          
+   fSUMMARY.write("BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")       
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+     
+    
+   fSUMMARY.write("BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")   
+
+
+          
+   end 
+
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+         
+   #fSUMMARY.write("BIN-data-T1cap-#{binstr} = #{$binDatT1cap[bin].round(4)}\n")  
+
+          
+   end 
+
+   32.times do |n|       
+   bin =n+1       
+   if (bin<10)  then 
+     pad = "0"
+   else
+     pad = ""
+   end 
+     
+   binstr = "#{pad}#{bin.to_i}"  
+      
+   fSUMMARY.write("BIN-data-T1PLR-#{binstr} =  #{$binDatT1PLR[bin].round(4)}\n")   
+
+          
+   end 
+
+end 
+
+
+
+
+
+
+
+
+
+
+
+
 
 fSUMMARY.close() 
 
 if ( ! $PRMcall ) 
-  FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+   if !$keepH2KFolder
+      FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+   end
 end 
 
 endProcessTime = Time.now
