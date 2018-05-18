@@ -1033,7 +1033,23 @@ def processFile(h2kElements)
                      end
                   end
                end
-            
+
+            # Floor header User-Specified R-values
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-FloorHeader/ )
+               if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+                  # Change ALL existing floor headers codes to User Specified R-value
+                  # Should it be different for the main floors and basement??
+                  locationText = "HouseFile/House/Components/*/Components/FloorHeader/Construction/Type"
+                  h2kElements.each(locationText) do |element|
+                     element.text = "User specified"
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               end
                
             # Exposed Floor User-Specified R-Values
             #--------------------------------------------------------------------------
@@ -4933,6 +4949,14 @@ def getEnvelopeSpecs(elements)
    $RSI = Hash.new(0)
    $AreaComp = Hash.new(0)
 
+   $HouseType = elements["HouseFile/House/Specifications/HouseType/English"].text
+   $HouseType.gsub!(/\s*/, '')    # Removes mid-line white space
+   $HouseType.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+
+   $HouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
+   $HouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
+   $HouseStoreys.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+
    locationText = "HouseFile/House/Components/*/Components/Window"
 
    elements.each(locationText) do |window|
@@ -5065,7 +5089,7 @@ def getEnvelopeSpecs(elements)
       end
    end
    $RSI["house"] = $AreaComp["house"] / $UAValue["house"]
-   $R_ValueHouse = ($RSI["house"] * 5.67826).round(0)
+   $R_ValueHouse = ($RSI["house"] * 5.67826).round(1)
 
 end # End of getEnvelopeSpecs
 
@@ -6158,6 +6182,7 @@ else
 end
 locale.gsub!(/\./, '')
 $HDDs = $HDDHash[ locale.upcase ]
+$Locale_model = locale
 
 
 if !$ruleSetName.empty? && $ruleSetName != "NA"
@@ -6647,8 +6672,11 @@ else
    $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
 
-fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n") 
-fSUMMARY.write( "HDDs              =  #{$HDDs}\n" ) 
+fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n")
+fSUMMARY.write( "House-Type        =  #{$HouseType}\n" )
+fSUMMARY.write( "House-Storeys     =  #{$HouseStoreys}\n" )
+fSUMMARY.write( "Weather-Locale    =  #{$Locale_model}\n" )
+fSUMMARY.write( "HDDs              =  #{$HDDs}\n" )
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
 fSUMMARY.write( "Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
@@ -6728,6 +6756,17 @@ fSUMMARY.write( "Win-Area-m2-W     =  #{$AreaWin_sum[7].round(1)}\n" )
 fSUMMARY.write( "Win-SHGC-SW       =  #{$SHGCWin[8].round(3)}\n" )
 fSUMMARY.write( "Win-R-value-SW    =  #{$rValueWin[8].round(3)}\n" )
 fSUMMARY.write( "Win-Area-m2-SW    =  #{$AreaWin_sum[8].round(1)}\n" )
+# House components
+fSUMMARY.write( "Area-Door-m2      =  #{$AreaComp['door'].round(3)}\n" )
+fSUMMARY.write( "Area-DoorWin-m2   =  #{$AreaComp['doorwin'].round(3)}\n" )
+fSUMMARY.write( "Area-Windows-m2   =  #{$AreaComp['win'].round(3)}\n" )
+fSUMMARY.write( "Area-Wall-m2      =  #{$AreaComp['wall'].round(3)}\n" )
+fSUMMARY.write( "Area-Header-m2    =  #{$AreaComp['header'].round(3)}\n" )
+fSUMMARY.write( "Area-Ceiling-m2   =  #{$AreaComp['ceiling'].round(3)}\n" )
+fSUMMARY.write( "Area-ExposedFloor-m2     =  #{$AreaComp['floor'].round(3)}\n" )
+fSUMMARY.write( "Area-House-m2     =  #{$AreaComp['house'].round(3)}\n" )
+# House R-Value
+fSUMMARY.write( "House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
 
 if $ExtraOutput1 then
    fSUMMARY.write( "EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")

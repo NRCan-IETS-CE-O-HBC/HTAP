@@ -2154,6 +2154,41 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end
 
+!-----------------------------------------------------------------------
+!   Floor Headers
+!-----------------------------------------------------------------------
+*attribute:start 
+   
+*attribute:name = Opt-FloorHeader
+*attribute:tag:1  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
+*attribute:tag:2  = Opt-H2K-EffRValue   ! User-Specified R-value (Imperial)
+*attribute:default = NA
+
+*option:NA:value:1 =   NA
+*option:NA:value:2 =   NA
+*option:NA:cost:total = 0
+
+*option:Header_R20:value:1 =  NA
+*option:Header_R20:value:2 =  20
+*option:Header_R20:cost:total    =  0
+
+*option:Header_R30:value:1 =  NA
+*option:Header_R30:value:2 =  30
+*option:Header_R30:cost:total    =  0
+
+*option:Header_R40:value:1 =  NA
+*option:Header_R40:value:2 =  40
+*option:Header_R40:cost:total    =  0
+
+*option:Header_R50:value:1 =  NA
+*option:Header_R50:value:2 =  50
+*option:Header_R50:cost:total    =  0
+
+*option:Header_R60:value:1 =  NA
+*option:Header_R60:value:2 =  60
+*option:Header_R60:cost:total    =  0
+
+*attribute:end
 
 !--------------------------------------------------------------------------------------------
 ! HOT2000 Foundations (not using Opt-BasementWallInsulation, Opt-BasementSlabInsulation or
