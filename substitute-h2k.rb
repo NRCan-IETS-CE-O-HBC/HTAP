@@ -5572,6 +5572,9 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    # Thermal zones and HDD by rule type
    #-------------------------------------------------------------------------
    if ruleType =~ /NBC9_36_noHRV/
+   
+      # Implement reference ventilation system (HRV with 0% recovery efficiency)
+      $ruleSetChoices["Opt-HRVonly"]                        =  "NBC_noHRV"		 
       
       # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000 
@@ -5722,7 +5725,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    elsif ruleType =~ /NBC9_36_HRV/
 
       # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3) 	
-  		$ruleSetChoices["Opt-HRVspec"]                        =  "NBC_HRV"		
+  		$ruleSetChoices["Opt-HRVonly"]                        =  "NBC_HRV"		
 
      # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000 
