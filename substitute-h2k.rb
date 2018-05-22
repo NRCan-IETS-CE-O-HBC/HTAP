@@ -2370,8 +2370,84 @@ def processFile(h2kElements)
                   end				  
 				  
                end # END of elsif under HVACSystem section
+          
+            # HRV Ventilation System
+            # Note: This option will remove all other ventilation systems
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-HRVonly/ )
+                if(valHash["1"] == "false") # Option not active, skip
+                    break
+                elsif(valHash["1"] == "true") # Option is active
+                    # Delete all existing systems
+                    locationText = "HouseFile/House/Ventilation/"
+                    h2kElements[locationText].delete_element("WholeHouseVentilatorList")
+                    h2kElements[locationText].delete_element("SupplementalVentilatorList")
+                    
+                    # Make fresh elements
+                    h2kElements[locationText].add_element("WholeHouseVentilatorList")
+                    h2kElements[locationText].add_element("SupplementalVentilatorList")
 
-			  
+                    # Construct the HRV input framework
+                    createHRV(h2kElements)
+                    
+                    # Set the ventilation code requirement to 4 (Not applicable)
+                    h2kElements[locationText + "Requirements/Use"].attributes["code"] = "4"
+                    
+                    # Set the air distribution type
+                    h2kElements[locationText + "WholeHouse/AirDistributionType"].attributes["code"] = valHash["2"]
+                    
+                    # Set the operation schedule
+                    h2kElements[locationText + "WholeHouse/OperationSchedule"].attributes["code"] = "0"    # User Specified
+                    h2kElements[locationText + "WholeHouse/OperationSchedule"].attributes["value"] = valHash["3"]
+                    
+                    # Determine flow calculation
+                    calcFlow = 0
+                    if(valHash["4"] == "2") # The flow rate is supplied
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = valHash["5"]    # L/s supply
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = valHash["5"]   # Exhaust = Supply
+                        calcFlow = valHash["5"].to_f
+                    elsif(valHash["4"] == "1") # The flow rate is calculated using F326
+                        calcFlow = getF326FlowRates(h2kElements)
+                        if(calcFlow < 1)
+                            fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 flow rates!\n")
+                        else
+                            h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = calcFlow.to_s    # L/s supply
+                            h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = calcFlow.to_s   # Exhaust = Supply
+                        end
+                    else
+                        fatalerror("ERROR: For Opt-HRVonly, invalid flow calculation input  #{valHash["4"]}!\n")
+                    end
+                    
+                    # Update the HRV efficiency
+                    h2kElements[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency1"] = valHash["6"]    # Rating 1 Efficiency
+                    h2kElements[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency2"] = valHash["7"]    # Rating 2 Efficiency
+                    h2kElements[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["coolingEfficiency"] = valHash["8"]    # Rating 3 Efficiency
+                    
+                    # Determine fan power calculation
+                    if(valHash["9"] == "default")
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "true"    # Let HOT2000 calculate the fan power
+                    elsif(valHash["9"] == "specified")
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "false"    # Specify the fan power
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  valHash["10"]  # Supply the fan power at operating point 1 [W]
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  valHash["11"]  # Supply the fan power at operating point 2 [W]
+                    elsif(valHash["9"] == "NBC")
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "false"    # Specify the fan power
+                        # Determine fan power from flow rate as stated in 9.36.5.11(14a)
+                        fanPower = calcFlow*2.32
+                        fanPower = sprintf("%0.2f", fanPower) # Format to two decimal places
+                        
+                        # Assume same fan power for all temperatures
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  fanPower  # Supply the fan power at operating point 1 [W]
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  fanPower  # Supply the fan power at operating point 2 [W]
+                    else
+                       fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
+                    end
+                else
+                    fatalerror("ERROR: For Opt-HRVonly, unknown active input  #{valHash["1"]}!\n")
+                end
+                
+                break
+
             # HRV System
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
@@ -3472,6 +3548,37 @@ def createHRV( elements )
    elements[locationText].attributes["code"] = "2" # Sealed
    elements[locationText].add_element("English")
    elements[locationText].add_element("French")
+end
+
+# =========================================================================================
+# Determine the F326 flow rate for a house
+# =========================================================================================
+def getF326FlowRates( elements )
+   locationText = "HouseFile/House/Ventilation/Rooms"
+   roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
+   ventRequired = 0
+   roomLabels.each do |roommName|
+      if(roommName == "living" || roommName == "bathrooms" || roommName == "utility" || roommName == "otherHabitable")
+        numRooms = elements[locationText].attributes[roommName].to_i
+        ventRequired += (numRooms*5)
+      elsif(roommName == "bedrooms")
+        numRooms = elements[locationText].attributes[roommName].to_i
+        if(numRooms >= 1)
+            ventRequired += 10
+            if(numRooms > 1)
+                numRooms--
+                ventRequired += (numRooms*5)
+            end
+        end
+      end   
+   end
+   
+   # If there is a basement, add another 10 L/s
+   if(elements["HouseFile/House/Components/Basement"] != nil)
+        ventRequired += 10
+   end
+
+   return ventRequired
 end
 
 # =========================================================================================
