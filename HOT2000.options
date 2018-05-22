@@ -3436,7 +3436,6 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end
 
-
 !-----------------------------------------------------------------------
 ! HRV spec
 !-----------------------------------------------------------------------
@@ -3516,6 +3515,65 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end 
 
+!-----------------------------------------------------------------------
+! HRVonly spec
+! Removes all ventilation fans and replaces with a single HRV
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name    = Opt-HRVonly 
+*attribute:tag:1   = Opt-IsActive         ! "true" or "false"
+*attribute:tag:2   = OPT-H2K-AirDistType  ! 1: Forced air heating ductwork, 2: Dedecated low volume ductwork, 3: 2 with transfer fans
+*attribute:tag:3   = OPT-H2K-OpSched      ! User Specified minutes/day
+*attribute:tag:4   = OPT-FlowCalc         ! Flow calculated using 1:F326, 2:supplied Flow Rate [L/s]
+*attribute:tag:5   = OPT-H2K-HRVSupply    ! If FlowCalc = 2, use this flow rate
+*attribute:tag:6   = OPT-H2K-Rating1
+*attribute:tag:7   = OPT-H2K-Rating2
+*attribute:tag:8   = OPT-H2K-Rating3      ! Cooling season efficiency
+*attribute:tag:9   = OPT-H2K-FanPowerCalc ! "default", "NBC", "specified"
+*attribute:tag:10   = OPT-H2K-FanPower1     ! If "specified", fan power in W
+*attribute:tag:11   = OPT-H2K-FanPower2     ! If "specified", fan power in W
+*attribute:default = NA
+
+*option:NA:value:1 = NA
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA 
+*option:NA:value:4 = NA 
+*option:NA:value:5 = NA 
+*option:NA:value:6 = NA 
+*option:NA:value:7 = NA 
+*option:NA:value:8 = NA 
+*option:NA:value:9 = NA 
+*option:NA:value:10 = NA 
+*option:NA:value:11 = NA 
+*option:NA:cost:total = 0
+
+*option:NBC_HRV:value:1 = true
+*option:NBC_HRV:value:2 = 1
+*option:NBC_HRV:value:3 = 480     
+*option:NBC_HRV:value:4 = 1     
+*option:NBC_HRV:value:5 = NA   
+*option:NBC_HRV:value:6 = 60    ! Eff% @ Rating1
+*option:NBC_HRV:value:7 = 55    ! Eff% @ Rating2
+*option:NBC_HRV:value:8 = 0     ! Eff% @ Rating3
+*option:NBC_HRV:value:9 = NBC
+*option:NBC_HRV:value:10 = NA
+*option:NBC_HRV:value:11 = NA
+*option:NBC_HRV:cost:total = 0
+
+*option:NBC_noHRV:value:1 = true
+*option:NBC_noHRV:value:2 = 1
+*option:NBC_noHRV:value:3 = 480     
+*option:NBC_noHRV:value:4 = 1     
+*option:NBC_noHRV:value:5 = NA   
+*option:NBC_noHRV:value:6 = 0    ! Eff% @ Rating1
+*option:NBC_noHRV:value:7 = 0    ! Eff% @ Rating2
+*option:NBC_noHRV:value:8 = 0    ! Eff% @ Rating3
+*option:NBC_noHRV:value:9 = NBC
+*option:NBC_noHRV:value:10 = NA
+*option:NBC_noHRV:value:11 = NA
+*option:NBC_noHRV:cost:total = 0
+
+*attribute:end 
 
 *attribute:start 
 *attribute:name    = Opt-HRVduct 
