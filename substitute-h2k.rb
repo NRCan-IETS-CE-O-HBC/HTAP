@@ -2640,6 +2640,54 @@ def processFile(h2kElements)
                 # Move to the next choiceEntry with a break
                 break
 
+            # Temperature inputs
+            # ADW 23-May-2018: Original development of option
+            # Notes: 
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Temperatures/ )
+               locationText = "HouseFile/House/Temperatures/"
+               if ( tag =~ /Opt-H2K-DayHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["daytimeHeatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-NightHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["nighttimeHeatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-SetbackDur/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["nighttimeSetbackDuration"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSet/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["coolingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-AllowRise/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3")
+                     fatalerror("In Opt-Temperatures: Invalid allowable rise option #{value}! Must be NA, 1, 2, or 3 \n")
+                  end
+                  h2kElements[locationText + "MainFloors/AllowableRise"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtIsHeat/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is basement heated must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Basement"].attributes["heated"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtIsCool/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is basement cooled must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Basement"].attributes["cooled"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtSepTherm/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is basement separate thermostat must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Basement"].attributes["separateThermostat"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "Basement"].attributes["heatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-EqipHeat/ &&  value != "NA" )
+                  h2kElements[locationText + "Equipment"].attributes["heatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-EqipCool/ &&  value != "NA" )
+                  h2kElements[locationText + "Equipment"].attributes["coolingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-CrawlIsHeat/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is crawlspace must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Crawlspace"].attributes["heated"] = value
+               elsif ( tag =~ /Opt-H2K-CrawlHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "Crawlspace"].attributes["heatingSetPoint"] = value
+               end
 
             # Roof Pitch - change slope of all ext. ceilings (i.e., roofs)
             #--------------------------------------------------------------------------
@@ -5550,6 +5598,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
    $ruleSetChoices["Opt-Baseloads"] = "NBC-Baseloads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
+   $ruleSetChoices["Opt-Temperatures"] = "NBC_Temps"
    
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
