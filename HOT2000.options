@@ -3573,7 +3573,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:11   = OPT-H2K-FanPower2     ! If "specified", fan power in W
 *attribute:default = NA
 
-*option:NA:value:1 = NA
+*option:NA:value:1 = false
 *option:NA:value:2 = NA
 *option:NA:value:3 = NA 
 *option:NA:value:4 = NA 
