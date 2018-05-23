@@ -3912,6 +3912,59 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end
 
+!-----------------------------------------------------------------------
+! Temperatures
+!
+! Updating of the temperature inputs is HOT2000
+!-----------------------------------------------------------------------
+*attribute:start
+*attribute:name     = Opt-Temperatures
+*attribute:tag:1    = Opt-H2K-DayHeatSet            ! Daytime heating setpoint [oC]; or NA
+*attribute:tag:2    = Opt-H2K-NightHeatSet          ! Nighttime heating setpoint [oC]; or NA
+*attribute:tag:3    = Opt-H2K-SetbackDur            ! Duration of nighttime setback [h]; or NA
+*attribute:tag:4    = Opt-H2K-CoolSet               ! Cooling setpoint [oC]; or NA
+*attribute:tag:5    = Opt-H2K-AllowRise             ! Allowable rise; 1=Low (0 oC),2=Medium (2.8 oC), 3=High (5 oC); or NA
+*attribute:tag:6    = Opt-H2K-BsmtIsHeat            ! Is basement heated?; "true" or "false"; or NA
+*attribute:tag:7    = Opt-H2K-BsmtIsCool            ! Is basement cooled?; "true" or "false"; or NA
+*attribute:tag:8    = Opt-H2K-BsmtHeatSet           ! Basement heating setpoint [oC]; or NA
+*attribute:tag:9    = Opt-H2K-BsmtSepTherm          ! Does basement have separate thermostat; "true" or "false"; or NA
+*attribute:tag:10    = Opt-H2K-EqipHeat             ! Equipment heating setpoint [oC]; or NA
+*attribute:tag:11    = Opt-H2K-EqipCool             ! Equipment cooling setpoint [oC]; or NA
+*attribute:tag:12    = Opt-H2K-CrawlIsHeat          ! Is crawlspace heated?; "true" or "false"; or NA
+*attribute:tag:13    = Opt-H2K-CrawlHeatSet         ! Crawlspace heating setpoint [oC]; or NA (Value will be updated if crawlspace is heated
+*attribute:default  = NA
+
+*option:NA:value:1   = NA
+*option:NA:value:2   = NA
+*option:NA:value:3   = NA
+*option:NA:value:4   = NA
+*option:NA:value:5   = NA
+*option:NA:value:6   = NA
+*option:NA:value:7   = NA
+*option:NA:value:8   = NA
+*option:NA:value:9   = NA
+*option:NA:value:10  = NA
+*option:NA:value:11  = NA
+*option:NA:value:12  = NA
+*option:NA:value:13  = NA
+*option:NA:cost:total = 0
+
+*option:NBC_Temps:value:1   = 21
+*option:NBC_Temps:value:2   = 21
+*option:NBC_Temps:value:3   = 8
+*option:NBC_Temps:value:4   = 25
+*option:NBC_Temps:value:5   = 3
+*option:NBC_Temps:value:6   = true
+*option:NBC_Temps:value:7   = false
+*option:NBC_Temps:value:8   = 19
+*option:NBC_Temps:value:9   = true
+*option:NBC_Temps:value:10  = 22
+*option:NBC_Temps:value:11  = 24
+*option:NBC_Temps:value:12  = NA
+*option:NBC_Temps:value:13  = 15
+*option:NBC_Temps:cost:total = 0
+
+*attribute:end
 
 !-----------------------------------------------------------------------
 ! Roof pitch. Used for PV calculation. Tag doesn't do anything in ESP-r!
