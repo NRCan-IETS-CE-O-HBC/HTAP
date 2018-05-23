@@ -3045,8 +3045,8 @@ Whitehorse Wall Options (Code is R28)
 *option:NBC_crawlceiling_zone7A:value:1 =  28.50
 *option:NBC_crawlceiling_zone7A:cost:total    =  0
 
-*option:NBC_ecrawlceiling_zone7B:value:1 =  28.50
-*option:NBC_ecrawlceiling_zone7B:cost:total    =  0
+*option:NBC_crawlceiling_zone7B:value:1 =  28.50
+*option:NBC_crawlceiling_zone7B:cost:total    =  0
 
 *option:NBC_crawlceiling_zone8:value:1 =  28.50
 *option:NBC_crawlceiling_zone8:cost:total    =  0
