@@ -3660,7 +3660,7 @@ def createH2KSysType2( elements, sysType2Name )
       # CHECK this - should be 8.3 ? 
             
       locationText = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/RatingType"
-      elements[locationText].attributes["code"] = "1"
+      elements[locationText].attributes["code"] = "3"
       elements[locationText].attributes["value"] = "-5.0"
       elements[locationText].add_element("English")
       elements[locationText].add_element("French")
