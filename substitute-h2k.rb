@@ -3450,6 +3450,24 @@ def processFile(h2kElements)
                   h2kElements[locationText + "Crawlspace"].attributes["heated"] = value
                elsif ( tag =~ /Opt-H2K-CrawlHeatSet/ &&  value != "NA" )
                   h2kElements[locationText + "Crawlspace"].attributes["heatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSeasStart/ &&  value != "NA" )
+                  if(value.to_i < 1 || value.to_i > 12)
+                     fatalerror("In #{choiceEntry}: Invalid cooling season start #{value}")
+                  end
+                  locationText = "HouseFile/House/HeatingCooling/CoolingSeason/"
+                  h2kElements[locationText + "Start"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSeasEnd/ &&  value != "NA" )
+                  if(value.to_i < 1 || value.to_i > 12)
+                     fatalerror("In #{choiceEntry}: Invalid cooling season end #{value}")
+                  end
+                  locationText = "HouseFile/House/HeatingCooling/CoolingSeason/"
+                  h2kElements[locationText + "End"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSeasDes/ &&  value != "NA" )
+                  if(value.to_i < 1 || value.to_i > 12)
+                     fatalerror("In #{choiceEntry}: Invalid cooling season design month #{value}")
+                  end
+                  locationText = "HouseFile/House/HeatingCooling/CoolingSeason/"
+                  h2kElements[locationText + "Design"].attributes["code"] = value
                end
                
             # House specifications inputs
