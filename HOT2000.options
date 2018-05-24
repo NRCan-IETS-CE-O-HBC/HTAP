@@ -3967,6 +3967,43 @@ Whitehorse Wall Options (Code is R28)
 *attribute:end
 
 !-----------------------------------------------------------------------
+! H2K Specifications
+!
+! Used to update the H2K model specifications
+!-----------------------------------------------------------------------
+*attribute:start
+*attribute:name     = Opt-Specifications
+*attribute:tag:1    = Opt-H2K-ThermalMass           ! 1=light wood frame, 2=medium wood frame, 3=heavy masonry, 4=very heavy concrete; or NA
+*attribute:tag:2    = Opt-H2K-WallColour            ! Solar absorptivity, between 0 and 1
+*attribute:tag:3    = Opt-H2K-SoilCondition         ! 1=Normal conductivity (dry sand, loam, clay), 2=High conductivity (moist soil), 3=Perma-frost soil
+*attribute:tag:4    = Opt-H2K-RoofColour            ! Cooling setpoint [oC]; or NA
+*attribute:tag:5    = Opt-H2K-WaterLevel            ! 1=Shallow (5-7m/16-23ft),2=Normal (7-10m/23-33ft), 3=Deep (&gt;10M/&gt;33ft); or NA
+*attribute:default  = NA
+
+*option:NA:value:1   = NA
+*option:NA:value:2   = NA
+*option:NA:value:3   = NA
+*option:NA:value:4   = NA
+*option:NA:value:5   = NA
+*option:NA:cost:total = 0
+
+*option:NBC_Specs_Normal:value:1   = 1
+*option:NBC_Specs_Normal:value:2   = 0.4
+*option:NBC_Specs_Normal:value:3   = 1
+*option:NBC_Specs_Normal:value:4   = 0.4
+*option:NBC_Specs_Normal:value:5   = 2
+*option:NBC_Specs_Normal:cost:total = 0
+
+*option:NBC_Specs_Perma:value:1   = 1
+*option:NBC_Specs_Perma:value:2   = 0.4
+*option:NBC_Specs_Perma:value:3   = 3
+*option:NBC_Specs_Perma:value:4   = 0.4
+*option:NBC_Specs_Perma:value:5   = 2
+*option:NBC_Specs_Perma:cost:total = 0
+
+*attribute:end
+
+!-----------------------------------------------------------------------
 ! Roof pitch. Used for PV calculation. Tag doesn't do anything in ESP-r!
 !
 ! Tag does set roof pitch in each roof surface associated with a ceiling

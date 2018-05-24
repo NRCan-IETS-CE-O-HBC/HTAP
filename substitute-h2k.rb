@@ -3433,6 +3433,41 @@ def processFile(h2kElements)
                elsif ( tag =~ /Opt-H2K-CrawlHeatSet/ &&  value != "NA" )
                   h2kElements[locationText + "Crawlspace"].attributes["heatingSetPoint"] = value
                end
+               
+            # House specifications inputs
+            # ADW 24-May-2018: Original development of option
+            # Notes: 
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Specifications/ )
+               locationText = "HouseFile/House/Specifications/"
+               if ( tag =~ /Opt-H2K-ThermalMass/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3" && value != "4")
+                    fatalerror("In Opt-Specifications: Invalid thermal mass input #{value}\n")
+                  end
+                  h2kElements[locationText + "ThermalMass"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-WallColour/ &&  value != "NA" )
+                  if((value.to_f > 1) || (value.to_f < 0))
+                    fatalerror("In Opt-Specifications: Invalid wall colour input #{value}\n")
+                  end
+                  h2kElements[locationText + "WallColour"].attributes["code"] = "1"
+                  h2kElements[locationText + "WallColour"].attributes["value"] = value
+               elsif ( tag =~ /Opt-H2K-SoilCondition/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3")
+                    fatalerror("In Opt-Specifications: Invalid soil conductivity input #{value}\n")
+                  end
+                  h2kElements[locationText + "SoilCondition"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-RoofColour/ &&  value != "NA" )
+                  if((value.to_f > 1) || (value.to_f < 0))
+                    fatalerror("In Opt-Specifications: Invalid roof colour input #{value}\n")
+                  end
+                  h2kElements[locationText + "RoofColour"].attributes["code"] = "1"
+                  h2kElements[locationText + "RoofColour"].attributes["value"] = value
+               elsif ( tag =~ /Opt-H2K-WaterLevel/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3")
+                    fatalerror("In Opt-Specifications: Invalid water level input #{value}\n")
+                  end
+                  h2kElements[locationText + "WaterLevel"].attributes["code"] = value
+               end
 
             # Roof Pitch - change slope of all ext. ceilings (i.e., roofs)
             #--------------------------------------------------------------------------
@@ -6830,6 +6865,11 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    $ruleSetChoices["Opt-Baseloads"] = "NBC-Baseloads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
    $ruleSetChoices["Opt-Temperatures"] = "NBC_Temps"
+   if ($PermafrostHash[cityName] == "continuous")
+      $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Perma"
+   else
+      $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Normal"
+   end
    
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
