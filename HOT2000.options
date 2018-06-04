@@ -4039,6 +4039,68 @@ Whitehorse Wall Options (Code is R28)
 *attribute:end
 
 !-----------------------------------------------------------------------
+!   Generic floor header insulation thickness settings: - one layer
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name = Opt-FloorHeader
+*attribute:tag:1  = <Opt-GenInsulLayerInboard-a>
+*attribute:tag:2  = Opt-H2K-EffRValue
+*attribute:default = NA
+ 
+*option:NA:value:1 = NA 
+*option:NA:value:2 = NA    ! For H2K - no change
+*option:NA:cost    = 0
+
+!-----------------------------------------------------------------------
+!   NBC 9.36 Baseline
+!-----------------------------------------------------------------------
+*option:NBC_Wall_zone4:value:1 =  NBC_Wall_zone4
+*option:NBC_Wall_zone4:value:2 =  15.79
+*option:NBC_Wall_zone4:cost:total    =  0
+
+*option:NBC_Wall_zone5_noHRV:value:1 =  NBC_Wall_zone5_noHRV
+*option:NBC_Wall_zone5_noHRV:value:2 =  17.49
+*option:NBC_Wall_zone5_noHRV:cost:total    =  0
+
+*option:NBC_Wall_zone5_HRV:value:1 =  NBC_Wall_zone5_HRV
+*option:NBC_Wall_zone5_HRV:value:2 =  16.86
+*option:NBC_Wall_zone5_HRV:cost:total    =  0
+
+*option:NBC_Wall_zone6_noHRV:value:1 =  NBC_Wall_zone6_noHRV
+*option:NBC_Wall_zone6_noHRV:value:2 =  17.49
+*option:NBC_Wall_zone6_noHRV:cost:total    =  0
+
+*option:NBC_Wall_zone6_HRV:value:1 =  NBC_Wall_zone6_HRV
+*option:NBC_Wall_zone6_HRV:value:2 =  16.86
+*option:NBC_Wall_zone6_HRV:cost:total    =  0
+
+*option:NBC_Wall_zone7A_noHRV:value:1 =  NBC_Wall_zone7A_noHRV
+*option:NBC_Wall_zone7A_noHRV:value:2 =  17.49
+*option:NBC_Wall_zone7A_noHRV:cost:total    =  0
+                     
+*option:NBC_Wall_zone7A_HRV:value:1 =  NBC_Wall_zone7A_HRV
+*option:NBC_Wall_zone7A_HRV:value:2 =  16.52
+*option:NBC_Wall_zone7A_HRV:cost:total    =  0
+
+*option:NBC_Wall_zone7B_noHRV:value:1 =  NBC_Wall_zone7B_noHRV
+*option:NBC_Wall_zone7B_noHRV:value:2 =  21.86
+*option:NBC_Wall_zone7B_noHRV:cost:total    =  0
+                     
+*option:NBC_Wall_zone7B_HRV:value:1 =  NBC_Wall_zone7B_HRV
+*option:NBC_Wall_zone7B_HRV:value:2 =  17.49
+*option:NBC_Wall_zone7B_HRV:cost:total    =  0
+
+*option:NBC_Wall_zone8_noHRV:value:1 =  NBC_Wall_zone8_noHRV
+*option:NBC_Wall_zone8_noHRV:value:2 =  21.86
+*option:NBC_Wall_zone8_noHRV:cost:total    =  0
+                     
+*option:NBC_Wall_zone8_HRV:value:1 =  NBC_Wall_zone8_HRV
+*option:NBC_Wall_zone8_HRV:value:2 =  17.49
+*option:NBC_Wall_zone8_HRV:cost:total    =  0
+
+*attribute:end
+
+!-----------------------------------------------------------------------
 ! H2K Specifications
 !
 ! Used to update the H2K model specifications
