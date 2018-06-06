@@ -4417,23 +4417,25 @@ def getF326FlowRates( elements )
       if(roommName == "living" || roommName == "bathrooms" || roommName == "utility" || roommName == "otherHabitable")
         numRooms = elements[locationText].attributes[roommName].to_i
         ventRequired += (numRooms*5)
+        #print "Room is ",roommName, " and number is ",numRooms, ". Total vent required is ", ventRequired, "\n"
       elsif(roommName == "bedrooms")
         numRooms = elements[locationText].attributes[roommName].to_i
         if(numRooms >= 1)
             ventRequired += 10
             if(numRooms > 1)
-                numRooms--
-                ventRequired += (numRooms*5)
+                ventRequired += ((numRooms-1)*5)
             end
         end
+        #print "Room is ",roommName, " and number is ",numRooms, ". Total vent required is ", ventRequired, "\n"
       end   
    end
    
    # If there is a basement, add another 10 L/s
    if(elements["HouseFile/House/Components/Basement"] != nil)
         ventRequired += 10
+        #print "Room is basement. Total vent required is ", ventRequired, "\n"
    end
-
+   #print "Final total vent required is ", ventRequired, "\n"
    return ventRequired
 end
 
