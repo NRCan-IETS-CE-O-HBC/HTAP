@@ -1050,7 +1050,7 @@
 *attribute:tag:6 = <Opt-win-SW-CON>     ! H2K SW windows lib code name
 *attribute:tag:7 = <Opt-win-NE-CON>     ! H2K NE windows lib code name
 *attribute:tag:8 = <Opt-win-NW-CON>     ! H2K NW windows lib code name
-*attribute:default = DoubleLowEHardCoatArgFill
+*attribute:default = NA
 
 *option:NA:value:1 = NA   
 *option:NA:value:2 = NA
@@ -1482,7 +1482,7 @@
 *attribute:tag:6 = <Opt-win-SW-CON>    ! H2K SW windows lib code name
 *attribute:tag:7 = <Opt-win-NE-CON>    ! H2K NE windows lib code name
 *attribute:tag:8 = <Opt-win-NW-CON>    ! H2K NW windows lib code name
-*attribute:default = DoorWinDef
+*attribute:default = NA
 
 *option:NA:value:1 = NA   
 *option:NA:value:2 = NA
@@ -1579,7 +1579,7 @@
 *attribute:start 
 *attribute:name  = Opt-Doors
 *attribute:tag:1 = <Opt-R-value>     ! User specified R-value (Imperial) of door
-*attribute:default = SolidWood
+*attribute:default = NA
 
 *option:NA:value:1 = NA   
 *option:NA:cost:total = 0.0
@@ -1638,7 +1638,7 @@
 *attribute:name = Opt-Ceilings
 *attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
 *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
-*attribute:default = CeilR50
+*attribute:default = NA
 
 *option:NA:value:1 = NA     ! No change
 *option:NA:value:2 = NA
@@ -1734,7 +1734,7 @@
 *attribute:name = Opt-AtticCeilings
 *attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
 *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
-*attribute:default = CeilR40
+*attribute:default = NA
 
 *option:NA:value:1 = NA     ! No change
 *option:NA:value:2 = NA
@@ -1791,7 +1791,7 @@
 *attribute:name = Opt-CathCeilings
 *attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
 *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
-*attribute:default = CeilR40
+*attribute:default = NA
 
 *option:NA:value:1 = NA     ! No change
 *option:NA:value:2 = NA
@@ -1839,7 +1839,7 @@
 *attribute:name = Opt-FlatCeilings
 *attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
 *attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
-*attribute:default = CeilR40
+*attribute:default = NA
 
 *option:NA:value:1 = NA                ! No change
 *option:NA:value:2 = NA
@@ -3551,7 +3551,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:tag:6   = OPT-H2K-HRVSupply    ! 
 *attribute:tag:7   = OPT-H2K-Rating1
 *attribute:tag:8   = OPT-H2K-Rating2
-*attribute:default = CEF_SPEC
+*attribute:default = NA
 
 *option:NA:value:1 = 
 *option:NA:value:2 = 
@@ -3677,21 +3677,21 @@ Whitehorse Wall Options (Code is R28)
 
 *attribute:end 
 
-*attribute:start 
-*attribute:name    = Opt-HRVduct 
-*attribute:tag:1   = <Opt-HRVDucting>
-*attribute:tag:2   = <Opt-FanVentACH>
-*attribute:default = interlock
-
-*option:interlock:value:1         = *fan-ctl-loop
-*option:interlock:value:2         = 0.8   ! ACH/hr associated with 100CFM bathoom fan in 
-*option:interlock:cost:total      = 0
-
-*option:directduct:value:1           = #No *fan-ctl-loop
-*option:directduct:value:2         = 0.0   ! ACH/hr --- hrv replaces bathroom fan. 
-*option:directduct:cost:total = 0
-
-*attribute:end 
+!*attribute:start 
+!*attribute:name    = Opt-HRVduct 
+!*attribute:tag:1   = <Opt-HRVDucting>
+!*attribute:tag:2   = <Opt-FanVentACH>
+!*attribute:default = interlock
+!
+!*option:interlock:value:1         = *fan-ctl-loop
+!*option:interlock:value:2         = 0.8   ! ACH/hr associated with 100CFM bathoom fan in 
+!*option:interlock:cost:total      = 0
+!
+!*option:directduct:value:1           = #No *fan-ctl-loop
+!*option:directduct:value:2         = 0.0   ! ACH/hr --- hrv replaces bathroom fan. 
+!*option:directduct:cost:total = 0
+!
+!*attribute:end 
 
 
 !-----------------------------------------------------------------------
@@ -4146,7 +4146,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:start
 *attribute:name     = Opt-RoofPitch
 *attribute:tag:1    = Opt-H2K-RoofSlope
-*attribute:default  = 8-12 
+*attribute:default  = NA 
 
 *option:NA:value:1 = NA
 *option:NA:cost:total  = 0
