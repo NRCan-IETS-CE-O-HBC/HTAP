@@ -1226,62 +1226,6 @@
             </Favorite>
         </FloorHeader>
     </Codes>
-    <EnergyUpgrades>
-        <Settings>
-            <Foundation cost="0" priority="0" />
-            <AirTightness cost="0" priority="0" />
-        </Settings>
-        <Components>
-            <NaturalAirInfiltration id="6">
-                <Label>Natural Air Infiltration</Label>
-                <Specifications>
-                    <House volume="596.3">
-                        <AirTightnessTest code="x">
-                            <English>Blower door test values</English>
-                            <French>Valeurs d'essai de dépressurisation</French>
-                        </AirTightnessTest>
-                    </House>
-                    <BlowerTest airChangeRate="8.419" leakageArea="1743.59" isCgsbTest="true" isCalculated="false">
-                        <Pressure code="1">
-                            <English>10 Pa</English>
-                            <French>10 Pa</French>
-                        </Pressure>
-                    </BlowerTest>
-                    <BuildingSite highestCeiling="6.2">
-                        <Terrain code="7">
-                            <English>Suburban, forest</English>
-                            <French>Banlieue, forêt</French>
-                        </Terrain>
-                    </BuildingSite>
-                    <LocalShielding>
-                        <Walls code="3">
-                            <English>Heavy</English>
-                            <French>Assez d'abri</French>
-                        </Walls>
-                        <Flue code="2">
-                            <English>Light</English>
-                            <French>Un peu d'abri</French>
-                        </Flue>
-                    </LocalShielding>
-                    <ExhaustDevicesTest>
-                        <TestStatus code="1">
-                            <English>Not applicable</English>
-                            <French>Non applicable</French>
-                        </TestStatus>
-                    </ExhaustDevicesTest>
-                </Specifications>
-                <OtherFactors>
-                    <WeatherStation anemometerHeight="10">
-                        <Terrain code="3">
-                            <English>Open flat terrain, grass</English>
-                            <French>Prairie à l'herbe</French>
-                        </Terrain>
-                    </WeatherStation>
-                    <LeakageFractions useDefaults="true" />
-                </OtherFactors>
-            </NaturalAirInfiltration>
-        </Components>
-    </EnergyUpgrades>
     <FuelCosts includeCostCalculations="true" library="FuelLib.FLC">
         <Electricity>
             <Fuel id="1">
