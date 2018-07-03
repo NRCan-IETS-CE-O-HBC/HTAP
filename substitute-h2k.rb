@@ -134,6 +134,9 @@ $gAvgPropCons_l      = 0
 $gAvgPelletCons_t    = 0 
 $gDirection = ""
 
+# Flag for reporting general information
+$FlagHouseInfo = TRUE
+
 # Flag for reporting choices in inputs
 $gReportChoices      = false
 
@@ -675,6 +678,7 @@ def processFile(h2kElements)
                   # Set the blower door test value in airChangeRate field
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
                   h2kElements[locationText].attributes["airChangeRate"] = value
+                  h2kElements[locationText].attributes["isCgsbTest"] = "true"
                   h2kElements[locationText].attributes["isCalculated"] = "true"
                else
                   if ( value == "NA" ) # Don't change anything
@@ -4414,8 +4418,13 @@ def postprocess( scaleData )
          fatalerror("Could not read Browse.Rpt.\n")
       end
    end
-   
-  # ===================== Get envelope characteristics from the XML file
+
+   # ===================== Get house information from the XML file
+   if ($FlagHouseInfo)
+     getHouseInfo(h2kPostElements)
+   end
+
+   # ===================== Get envelope characteristics from the XML file
    getEnvelopeSpecs(h2kPostElements)
 
    # ==================== Get electricity rate structure for external PV model use
@@ -4928,6 +4937,92 @@ def postprocess( scaleData )
 end  # End of postprocess
 
 # =========================================================================================
+# Get the general information about the house
+# =========================================================================================
+def getHouseInfo (elements)
+
+  $BuilderName = elements["HouseFile/ProgramInformation/File/BuilderName"].text
+  if $BuilderName !=nil
+    $BuilderName.gsub!(/\s*/, '')    # Removes mid-line white space
+    $BuilderName.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+  end
+
+  $HouseType = elements["HouseFile/House/Specifications/HouseType/English"].text
+  if $HouseType !=nil
+    $HouseType.gsub!(/\s*/, '')    # Removes mid-line white space
+    $HouseType.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+  end
+
+  $HouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
+  if $HouseStoreys!= nil
+    $HouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
+    $HouseStoreys.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+  end
+
+  locationText = "HouseFile/House/Components/Ceiling"
+  areaCeiling_temp = 0.0
+  elements.each(locationText) do |ceiling|
+     if ceiling.elements["Measurements"].attributes["area"].to_f > areaCeiling_temp
+        $Ceilingtype = ceiling.elements["Construction"].elements["Type"].elements["English"].text
+        $Ceilingtype.gsub!(/\s*/, '')    # Removes mid-line white space
+        $Ceilingtype.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+
+        areaCeiling_temp = ceiling.elements["Measurements"].attributes["area"].to_f
+     end
+  end
+
+  $FoundationArea = Hash.new(0)
+  locationText = "HouseFile/House/Components/Floor"
+  areaFloor_temp = 0.0
+  elements.each(locationText) do |floor|
+     areaFloor_temp = floor.elements["Measurements"].attributes["area"].to_f
+     $FoundationArea["Floor"] += areaFloor_temp
+  end
+
+  locationText = "HouseFile/House/Components/Basement"
+  areaBasement_temp = 0.0
+  elements.each(locationText) do |basement|
+     if basement.elements["Floor"].elements["Measurements"].attributes["isRectangular"] == "true"
+        areaBasement_temp = basement.elements["Floor"].elements["Measurements"].attributes["width"].to_f*basement.elements["Floor"].elements["Measurements"].attributes["length"].to_f
+     else
+        areaBasement_temp = basement.elements["Floor"].elements["Measurements"].attributes["area"].to_f
+     end
+     $FoundationArea["Basement"] += areaBasement_temp
+  end
+
+  locationText = "HouseFile/House/Components/Crawlspace"
+  areaCrawl_temp = 0.0
+  elements.each(locationText) do |crawl|
+     if crawl.attributes["isRectangular"] == "true"
+        areaCrawl_temp = crawl.elements["Floor"].elements["Measurements"].attributes["width"].to_f*crawl.elements["Floor"].elements["Measurements"].attributes["length"].to_f
+     else
+        areaCrawl_temp = crawl.elements["Floor"].elements["Measurements"].attributes["area"].to_f
+     end
+     $FoundationArea["Crawl"] += areaCrawl_temp
+  end
+
+  locationText = "HouseFile/House/Components/Slab"
+  areaSlab_temp = 0.0
+  elements.each(locationText) do |slab|
+     if slab.attributes["isRectangular"] == "true"
+        areaSlab_temp = slab.elements["Floor"].elements["Measurements"].attributes["width"].to_f*slab.elements["Floor"].elements["Measurements"].attributes["length"].to_f
+     else
+        areaSlab_temp = slab.elements["Floor"].elements["Measurements"].attributes["area"].to_f
+     end
+     $FoundationArea["Slab"] += areaSlab_temp
+  end
+
+  locationText = "HouseFile/House/Components/Walkout"
+  areaWalkout_temp = 0.0
+  elements.each(locationText) do |walkout|
+     areaWalkout_temp = walkout.elements["Measurements"].attributes["l1"].to_f*walkout.elements["Measurements"].attributes["l2"].to_f
+     $FoundationArea["Walkout"] += areaWalkout_temp
+  end
+
+
+end  # End of getHouseInfo
+
+# =========================================================================================
 # Get the average characteristics of building facade by orientation
 # =========================================================================================
 def getEnvelopeSpecs(elements)
@@ -4948,14 +5043,6 @@ def getEnvelopeSpecs(elements)
    $UAValue = Hash.new(0)
    $RSI = Hash.new(0)
    $AreaComp = Hash.new(0)
-
-   $HouseType = elements["HouseFile/House/Specifications/HouseType/English"].text
-   $HouseType.gsub!(/\s*/, '')    # Removes mid-line white space
-   $HouseType.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
-
-   $HouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
-   $HouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
-   $HouseStoreys.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
 
    locationText = "HouseFile/House/Components/*/Components/Window"
 
@@ -5089,7 +5176,7 @@ def getEnvelopeSpecs(elements)
       end
    end
    $RSI["house"] = $AreaComp["house"] / $UAValue["house"]
-   $R_ValueHouse = ($RSI["house"] * 5.67826).round(1)
+   $R_ValueHouse = ($RSI["house"] * R_PER_RSI).round(1)
 
 end # End of getEnvelopeSpecs
 
@@ -5371,7 +5458,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
          if isBasement 
@@ -5393,7 +5480,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5415,7 +5502,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5437,7 +5524,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
@@ -5458,7 +5545,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5480,7 +5567,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5509,7 +5596,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
          if isBasement 
@@ -5530,7 +5617,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5552,7 +5639,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5574,7 +5661,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5596,7 +5683,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
          if isBasement 
@@ -5619,7 +5706,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
-         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-window"
+         $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
          if isBasement 
@@ -6673,9 +6760,18 @@ else
 end
 
 fSUMMARY.write( "Recovered-results =  #{$outputHCode}\n")
-fSUMMARY.write( "House-Type        =  #{$HouseType}\n" )
-fSUMMARY.write( "House-Storeys     =  #{$HouseStoreys}\n" )
-fSUMMARY.write( "Weather-Locale    =  #{$Locale_model}\n" )
+if ($FlagHouseInfo)
+  fSUMMARY.write( "House-Builder     =  #{$BuilderName}\n" )
+  fSUMMARY.write( "House-Type        =  #{$HouseType}\n" )
+  fSUMMARY.write( "House-Storeys     =  #{$HouseStoreys}\n" )
+  fSUMMARY.write( "Weather-Locale    =  #{$Locale_model}\n" )
+  fSUMMARY.write( "Ceiling-Type    =  #{$Ceilingtype}\n" )
+  fSUMMARY.write( "Area-Slab-m2    =  #{$FoundationArea["Slab"].round(2)}\n" )
+  fSUMMARY.write( "Area-Basement-m2    =  #{$FoundationArea["Basement"].round(2)}\n" )
+  fSUMMARY.write( "Area-ExposedFloor-m2    =  #{$FoundationArea["Floor"].round(2)}\n" )
+  fSUMMARY.write( "Area-Walkout-m2    =  #{$FoundationArea["Walkout"].round(2)}\n" )
+  fSUMMARY.write( "Area-Crawl-m2    =  #{$FoundationArea["Crawl"].round(2)}\n" )
+end
 fSUMMARY.write( "HDDs              =  #{$HDDs}\n" )
 fSUMMARY.write( "Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
 fSUMMARY.write( "Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
@@ -6763,7 +6859,7 @@ fSUMMARY.write( "Area-Windows-m2   =  #{$AreaComp['win'].round(3)}\n" )
 fSUMMARY.write( "Area-Wall-m2      =  #{$AreaComp['wall'].round(3)}\n" )
 fSUMMARY.write( "Area-Header-m2    =  #{$AreaComp['header'].round(3)}\n" )
 fSUMMARY.write( "Area-Ceiling-m2   =  #{$AreaComp['ceiling'].round(3)}\n" )
-fSUMMARY.write( "Area-ExposedFloor-m2     =  #{$AreaComp['floor'].round(3)}\n" )
+#fSUMMARY.write( "Area-ExposedFloor-m2     =  #{$AreaComp['floor'].round(3)}\n" )
 fSUMMARY.write( "Area-House-m2     =  #{$AreaComp['house'].round(3)}\n" )
 # House R-Value
 fSUMMARY.write( "House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
