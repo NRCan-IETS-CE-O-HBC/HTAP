@@ -1444,67 +1444,67 @@
 !-----------------------------------------------------------------------
 !   NBC 9.36 Baseline
 !-----------------------------------------------------------------------
-*option:NBC-zone4-window:value:1 = NBC-zone4-window
-*option:NBC-zone4-window:value:2 = NBC-zone4-window
-*option:NBC-zone4-window:value:3 = NBC-zone4-window
-*option:NBC-zone4-window:value:4 = NBC-zone4-window
-*option:NBC-zone4-window:value:5 = NBC-zone4-window
-*option:NBC-zone4-window:value:6 = NBC-zone4-window
-*option:NBC-zone4-window:value:7 = NBC-zone4-window
-*option:NBC-zone4-window:value:8 = NBC-zone4-window
-*option:NBC-zone4-window:cost:total   = 0
+*option:NBC-zone4-Doorwindow:value:1 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:2 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:3 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:4 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:5 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:6 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:7 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:8 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:cost:total   = 0
 
 
-*option:NBC-zone5-window:value:1 = NBC-zone5-window
-*option:NBC-zone5-window:value:2 = NBC-zone5-window
-*option:NBC-zone5-window:value:3 = NBC-zone5-window
-*option:NBC-zone5-window:value:4 = NBC-zone5-window
-*option:NBC-zone5-window:value:5 = NBC-zone5-window
-*option:NBC-zone5-window:value:6 = NBC-zone5-window
-*option:NBC-zone5-window:value:7 = NBC-zone5-window
-*option:NBC-zone5-window:value:8 = NBC-zone5-window
-*option:NBC-zone5-window:cost:total   = 0
+*option:NBC-zone5-Doorwindow:value:1 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:2 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:3 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:4 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:5 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:6 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:7 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:8 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:cost:total   = 0
 
-*option:NBC-zone6-window:value:1 = NBC-zone6-window
-*option:NBC-zone6-window:value:2 = NBC-zone6-window
-*option:NBC-zone6-window:value:3 = NBC-zone6-window
-*option:NBC-zone6-window:value:4 = NBC-zone6-window
-*option:NBC-zone6-window:value:5 = NBC-zone6-window
-*option:NBC-zone6-window:value:6 = NBC-zone6-window
-*option:NBC-zone6-window:value:7 = NBC-zone6-window
-*option:NBC-zone6-window:value:8 = NBC-zone6-window
-*option:NBC-zone6-window:cost:total   = 0
+*option:NBC-zone6-Doorwindow:value:1 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:2 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:3 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:4 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:5 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:6 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:7 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:8 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:cost:total   = 0
 
 
-*option:NBC-zone7A-window:value:1 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:2 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:3 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:4 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:5 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:6 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:7 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:8 = NBC-zone7A-window
-*option:NBC-zone7A-window:cost:total   = 0
+*option:NBC-zone7A-Doorwindow:value:1 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:2 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:3 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:4 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:5 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:6 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:7 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:8 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:cost:total   = 0
 
-*option:NBC-zone7B-window:value:1 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:2 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:3 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:4 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:5 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:6 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:7 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:8 = NBC-zone7B-window
-*option:NBC-zone7B-window:cost:total   = 0
+*option:NBC-zone7B-Doorwindow:value:1 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:2 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:3 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:4 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:5 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:6 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:7 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:8 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:cost:total   = 0
 
-*option:NBC-zone8-window:value:1 = NBC-zone8-window
-*option:NBC-zone8-window:value:2 = NBC-zone8-window
-*option:NBC-zone8-window:value:3 = NBC-zone8-window
-*option:NBC-zone8-window:value:4 = NBC-zone8-window
-*option:NBC-zone8-window:value:5 = NBC-zone8-window
-*option:NBC-zone8-window:value:6 = NBC-zone8-window
-*option:NBC-zone8-window:value:7 = NBC-zone8-window
-*option:NBC-zone8-window:value:8 = NBC-zone8-window
-*option:NBC-zone8-window:cost:total   = 0
+*option:NBC-zone8-Doorwindow:value:1 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:2 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:3 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:4 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:5 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:6 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:7 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:8 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:cost:total   = 0
 
 *attribute:end
 
