@@ -2381,12 +2381,25 @@ def processFile(h2kElements)
                   
                   roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
                   numRooms = 0
+                  $FanFlow = 0
                   locationText = "HouseFile/House/Ventilation/Rooms"
                   roomLabels.each do |roommName|
                      numRooms += h2kElements[locationText].attributes[roommName].to_i
+                     $FanFlow += h2kElements[locationText].attributes[roommName].to_i
+                     if roommName =~ /bedrooms/
+                        $FanFlow += h2kElements[locationText].attributes[roommName].to_i
+                     end
                   end
-                  if ( value == 1 && numRooms == 0 )
+                  if ( value == "1" && numRooms == 0 )
                      debug_out("Choice: #{choiceEntry} Tag: #{tag} \n  No rooms entered for F326 Ventilation requirement!")
+                  end
+
+                  if (value == "1" && h2kElements[locationText].attributes["living"].to_i < 3)
+                     h2kElements[locationText].attributes["living"] = 3
+                  elsif (value == "1" && h2kElements[locationText].attributes["bedrooms"].to_i < 1)
+                     h2kElements[locationText].attributes["bedrooms"] = 1
+                  elsif (value == "1" && h2kElements[locationText].attributes["bathrooms"].to_i < 1)
+                     h2kElements[locationText].attributes["bathrooms"] = 1
                   end
                   
                   # If F326 specified && basement exists, set vent-rate for other basement areas to 10/Ls. Otherwise, 0. 
@@ -2425,8 +2438,9 @@ def processFile(h2kElements)
                   if ( h2kElements[locationText] == nil )
                      createHRV(h2kElements)
                   end
-                  h2kElements[locationText].attributes["supplyFlowrate"] = value    # L/s supply
-                  h2kElements[locationText].attributes["exhaustFlowrate"] = value   # Exhaust = Supply 
+                  h2kElements[locationText].attributes["supplyFlowrate"] = "#{($FanFlow * 10.6 / 1.5).round(0)}" #value    # L/s supply
+                  h2kElements[locationText].attributes["exhaustFlowrate"] = "#{($FanFlow * 10.6 / 1.5).round(0)}" #value   # Exhaust = Supply
+                  h2kElements[locationText].attributes["isDefaultFanpower"] = "true"
                   
                elsif ( tag =~ /OPT-H2K-Rating1/ &&  value != "NA" )
                   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
