@@ -1583,77 +1583,77 @@
 *option:NBC_BCIN_zone8_HRV:value:5 = 21.24       ! 
 *option:NBC_BCIN_zone8_HRV:cost:total = 0
 
-*option:NBC_SCB_zone4:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone4:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone4:value:2 = NA           
 *option:NBC_SCB_zone4:value:3 = NA           
 *option:NBC_SCB_zone4:value:4 = NA        
 *option:NBC_SCB_zone4:value:5 = 11.13        
 *option:NBC_SCB_zone4:cost:total = 0
 
-*option:NBC_SCB_zone5_noHRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone5_noHRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone5_noHRV:value:2 = NA           
 *option:NBC_SCB_zone5_noHRV:value:3 = NA           
 *option:NBC_SCB_zone5_noHRV:value:4 = NA        
 *option:NBC_SCB_zone5_noHRV:value:5 = 11.30        
 *option:NBC_SCB_zone5_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone5_HRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone5_HRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone5_HRV:value:2 = NA           
 *option:NBC_SCB_zone5_HRV:value:3 = NA           
 *option:NBC_SCB_zone5_HRV:value:4 = NA        
 *option:NBC_SCB_zone5_HRV:value:5 = 11.13        
 *option:NBC_SCB_zone5_HRV:cost:total = 0
 
-*option:NBC_SCB_zone6_noHRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone6_noHRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone6_noHRV:value:2 = NA           
 *option:NBC_SCB_zone6_noHRV:value:3 = NA           
 *option:NBC_SCB_zone6_noHRV:value:4 = NA        
 *option:NBC_SCB_zone6_noHRV:value:5 = 11.30        
 *option:NBC_SCB_zone6_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone6_HRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone6_HRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone6_HRV:value:2 = NA           
 *option:NBC_SCB_zone6_HRV:value:3 = NA           
 *option:NBC_SCB_zone6_HRV:value:4 = NA        
 *option:NBC_SCB_zone6_HRV:value:5 = 11.13        
 *option:NBC_SCB_zone6_HRV:cost:total = 0
 
-*option:NBC_SCB_zone7A_noHRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone7A_noHRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone7A_noHRV:value:2 = NA           
 *option:NBC_SCB_zone7A_noHRV:value:3 = NA           
 *option:NBC_SCB_zone7A_noHRV:value:4 = NA        
 *option:NBC_SCB_zone7A_noHRV:value:5 = 21.12       
 *option:NBC_SCB_zone7A_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone7A_HRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone7A_HRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone7A_HRV:value:2 = NA           
 *option:NBC_SCB_zone7A_HRV:value:3 = NA           
 *option:NBC_SCB_zone7A_HRV:value:4 = NA        
 *option:NBC_SCB_zone7A_HRV:value:5 = 16.13        
 *option:NBC_SCB_zone7A_HRV:cost:total = 0
 
-*option:NBC_SCB_zone7B_noHRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone7B_noHRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone7B_noHRV:value:2 = NA           
 *option:NBC_SCB_zone7B_noHRV:value:3 = NA           
 *option:NBC_SCB_zone7B_noHRV:value:4 = NA        
 *option:NBC_SCB_zone7B_noHRV:value:5 = 21.12       
 *option:NBC_SCB_zone7B_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone7B_HRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone7B_HRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone7B_HRV:value:2 = NA           
 *option:NBC_SCB_zone7B_HRV:value:3 = NA           
 *option:NBC_SCB_zone7B_HRV:value:4 = NA        
 *option:NBC_SCB_zone7B_HRV:value:5 = 16.13        
 *option:NBC_SCB_zone7B_HRV:cost:total = 0
 
-*option:NBC_SCB_zone8_noHRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone8_noHRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone8_noHRV:value:2 = NA           
 *option:NBC_SCB_zone8_noHRV:value:3 = NA           
 *option:NBC_SCB_zone8_noHRV:value:4 = NA        
 *option:NBC_SCB_zone8_noHRV:value:5 = 26.06       
 *option:NBC_SCB_zone8_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone8_HRV:value:1 = SCB_1_ALL    ! Change all Basements in model
+*option:NBC_SCB_zone8_HRV:value:1 = SCB_35_ALL    ! Change all Basements in model
 *option:NBC_SCB_zone8_HRV:value:2 = NA           
 *option:NBC_SCB_zone8_HRV:value:3 = NA           
 *option:NBC_SCB_zone8_HRV:value:4 = NA        
@@ -1683,121 +1683,121 @@
 *option:NA:value:4 = NA
 *option:NA:cost:total = 0
 
-*option:NBC_SCB_zone4:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone4:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone4:value:2 = NA           
 *option:NBC_SCB_zone4:value:3 = 15.79           
 *option:NBC_SCB_zone4:value:4 = 11.13        
 *option:NBC_SCB_zone4:cost:total = 0
 
-*option:NBC_SOnly_zone4:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone4:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone4:value:2 = NA           
 *option:NBC_SOnly_zone4:value:3 = NA           
 *option:NBC_SOnly_zone4:value:4 = 11.13        
 *option:NBC_SOnly_zone4:cost:total = 0
 
-*option:NBC_SCB_zone5_noHRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone5_noHRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone5_noHRV:value:2 = NA           
 *option:NBC_SCB_zone5_noHRV:value:3 = 17.49          
 *option:NBC_SCB_zone5_noHRV:value:4 = 11.13        
 *option:NBC_SCB_zone5_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone5_HRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone5_HRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone5_HRV:value:2 = NA           
 *option:NBC_SCB_zone5_HRV:value:3 = 16.87          
 *option:NBC_SCB_zone5_HRV:value:4 = 11.13        
 *option:NBC_SCB_zone5_HRV:cost:total = 0
 
-*option:NBC_SOnly_zone5:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone5:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone5:value:2 = NA           
 *option:NBC_SOnly_zone5:value:3 = NA           
 *option:NBC_SOnly_zone5:value:4 = 11.13        
 *option:NBC_SOnly_zone5:cost:total = 0
 
-*option:NBC_SCB_zone6_noHRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone6_noHRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone6_noHRV:value:2 = NA           
 *option:NBC_SCB_zone6_noHRV:value:3 = 17.49          
 *option:NBC_SCB_zone6_noHRV:value:4 = 11.13        
 *option:NBC_SCB_zone6_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone6_HRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone6_HRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone6_HRV:value:2 = NA           
 *option:NBC_SCB_zone6_HRV:value:3 = 16.87          
 *option:NBC_SCB_zone6_HRV:value:4 = 11.13        
 *option:NBC_SCB_zone6_HRV:cost:total = 0
 
-*option:NBC_SOnly_zone6:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone6:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone6:value:2 = NA           
 *option:NBC_SOnly_zone6:value:3 = NA           
 *option:NBC_SOnly_zone6:value:4 = 11.13        
 *option:NBC_SOnly_zone6:cost:total = 0
 
-*option:NBC_SCB_zone7A_noHRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone7A_noHRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone7A_noHRV:value:2 = NA           
 *option:NBC_SCB_zone7A_noHRV:value:3 = 17.49          
 *option:NBC_SCB_zone7A_noHRV:value:4 = 21.12    
 *option:NBC_SCB_zone7A_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone7A_HRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone7A_HRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone7A_HRV:value:2 = NA           
 *option:NBC_SCB_zone7A_HRV:value:3 = 16.87          
 *option:NBC_SCB_zone7A_HRV:value:4 = 16.13  
 *option:NBC_SCB_zone7A_HRV:cost:total = 0
 
-*option:NBC_SOnly_zone7A_noHRV:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone7A_noHRV:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone7A_noHRV:value:2 = NA           
 *option:NBC_SOnly_zone7A_noHRV:value:3 = NA           
 *option:NBC_SOnly_zone7A_noHRV:value:4 = 21.12         
 *option:NBC_SOnly_zone7A_noHRV:cost:total = 0
 
-*option:NBC_SOnly_zone7A_HRV:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone7A_HRV:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone7A_HRV:value:2 = NA           
 *option:NBC_SOnly_zone7A_HRV:value:3 = NA           
 *option:NBC_SOnly_zone7A_HRV:value:4 = 16.13        
 *option:NBC_SOnly_zone7A_HRV:cost:total = 0
 
-*option:NBC_SCB_zone7B_noHRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone7B_noHRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone7B_noHRV:value:2 = NA           
 *option:NBC_SCB_zone7B_noHRV:value:3 = 21.86          
 *option:NBC_SCB_zone7B_noHRV:value:4 = 21.12       
 *option:NBC_SCB_zone7B_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone7B_HRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone7B_HRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone7B_HRV:value:2 = NA           
 *option:NBC_SCB_zone7B_HRV:value:3 = 17.49          
 *option:NBC_SCB_zone7B_HRV:value:4 = 16.13       
 *option:NBC_SCB_zone7B_HRV:cost:total = 0
 
-*option:NBC_SOnly_zone7B_noHRV:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone7B_noHRV:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone7B_noHRV:value:2 = NA           
 *option:NBC_SOnly_zone7B_noHRV:value:3 = NA           
 *option:NBC_SOnly_zone7B_noHRV:value:4 = 21.12         
 *option:NBC_SOnly_zone7B_noHRV:cost:total = 0
 
-*option:NBC_SOnly_zone7B_HRV:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone7B_HRV:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone7B_HRV:value:2 = NA           
 *option:NBC_SOnly_zone7B_HRV:value:3 = NA           
 *option:NBC_SOnly_zone7B_HRV:value:4 = 16.13        
 *option:NBC_SOnly_zone7B_HRV:cost:total = 0
 
-*option:NBC_SCB_zone8_noHRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone8_noHRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone8_noHRV:value:2 = NA           
 *option:NBC_SCB_zone8_noHRV:value:3 = 21.86          
 *option:NBC_SCB_zone8_noHRV:value:4 = 26.06      
 *option:NBC_SCB_zone8_noHRV:cost:total = 0
 
-*option:NBC_SCB_zone8_HRV:value:1 = SCB_1_ALL       ! Change all in model (Slabs/Crawls)
+*option:NBC_SCB_zone8_HRV:value:1 = SCB_35_ALL       ! Change all in model (Slabs/Crawls)
 *option:NBC_SCB_zone8_HRV:value:2 = NA           
 *option:NBC_SCB_zone8_HRV:value:3 = 17.49          
 *option:NBC_SCB_zone8_HRV:value:4 = 21.12     
 *option:NBC_SCB_zone8_HRV:cost:total = 0
 
-*option:NBC_SOnly_zone8_noHRV:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone8_noHRV:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone8_noHRV:value:2 = NA           
 *option:NBC_SOnly_zone8_noHRV:value:3 = NA           
 *option:NBC_SOnly_zone8_noHRV:value:4 = 26.06         
 *option:NBC_SOnly_zone8_noHRV:cost:total = 0
 
-*option:NBC_SOnly_zone8_HRV:value:1 = SCB_1_S         ! Change only the slabs
+*option:NBC_SOnly_zone8_HRV:value:1 = SCB_35_S         ! Change only the slabs
 *option:NBC_SOnly_zone8_HRV:value:2 = NA           
 *option:NBC_SOnly_zone8_HRV:value:3 = NA           
 *option:NBC_SOnly_zone8_HRV:value:4 = 21.12        
