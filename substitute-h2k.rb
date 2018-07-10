@@ -3566,8 +3566,7 @@ def getF326FlowRates( elements )
         if(numRooms >= 1)
             ventRequired += 10
             if(numRooms > 1)
-                numRooms--
-                ventRequired += (numRooms*5)
+                ventRequired += ((numRooms-1)*5)
             end
         end
       end   
