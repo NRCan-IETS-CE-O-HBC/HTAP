@@ -744,7 +744,7 @@ def run_these_cases(current_task_files)
                 
               else   
                 $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_s.gsub(/\s*/, '') 
-                
+
               end
              
             end 
@@ -769,14 +769,12 @@ def run_these_cases(current_task_files)
 
       # Standard output - flat .csv file with results written to disk and flushed 
       # after each batch to minimze memory footprint.
-      while row < $RunResults["RunNumber"].length
+      
+      row = 0
+      while row < $RunResults["c.RunNumber"].length
 
-        stream_out(">> CSV: #{row} \n")
-        
         $RunResults.each do |column, data| 
-      
-         
-      
+       
           if ( ! $outputHeaderPrinted ) 
             
             $outputlines.concat(column.to_s)
@@ -989,8 +987,16 @@ stream_out(" ======================================================\n\n")
 
 
 # Generate working directories 
-stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
+#stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
+stream_out(" - HTAP-prm: initalizing ---------------------------\n\n")
+
+stream_out("    - Deleting prior HTAP-work directories... ")
 FileUtils.rm_rf Dir.glob("HTAP-work-*") 
+stream_out (" done.\n")
+stream_out("    - Deleting prior HTAP-sim directories... ")
+FileUtils.rm_rf Dir.glob("HTAP-sim-*") 
+stream_out (" done.\n")
+
 
 for prethread in 0..$gNumberOfThreads-1 
 
@@ -998,8 +1004,6 @@ for prethread in 0..$gNumberOfThreads-1
     $RunDirs[prethread] = $RunDirName
 
 end 
-stream_out(" - Deleting prior HTAP-sim directories  \n\n")
-FileUtils.rm_rf Dir.glob("HTAP-sim-*") 
 
 $output = File.open($gOutputFile, 'w')
 $failures = File.open($gFailFile, 'w')
@@ -1017,7 +1021,7 @@ if ( ! $gRunDefinitionsProvided )
     if ( choicefile =~ /.*choices$/ )
       $RunTheseFiles.push choicefile
     else 
-      stream_out " ! Skipping: #{choicefile} ( not a '.choice' file? ) \n"
+      stream_out "    ! Skipping: #{choicefile} ( not a '.choice' file? ) \n"
     end
   end               
  
@@ -1028,22 +1032,22 @@ else
   # Smarter mode - embark on run according to definitions in the .run file (mesh supported for now) 
   #  - First parse the *.run file 
   
-  stream_out (" - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
+  stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
   
   parse_def_file($gRunDefinitionsFile) 
     
-  stream_out (" done.\n\n")
+  stream_out (" done.\n")
 
   
   if ( $gRunDefMode == "mesh" ) 
   
-    stream_out (" - Creating mesh run combinations from run definitions... ") 
+    stream_out ("    - Creating mesh run combinations from run definitions... ") 
       
     create_mesh_cartisian_combos(-3) 
 
     $RunTheseFiles = $gGenChoiceFileList
 
-    stream_out (" done. (created #{$gGenChoiceFileNum} .choice files)\n\n") 
+    stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
   end 
   
   fileorgin = "generated"
@@ -1057,14 +1061,14 @@ $batchCount = 0
 
 
 
-stream_out(" - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
+stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 
 run_these_cases($RunTheseFiles) 
 
 
-stream_out (" - HTAP-prm: Run complete -----------------------\n")
-stream_out ("   + #{$CompletedRunCount} files were evaluated successfully.\n\n")
-stream_out ("   + #{$FailedRunCount} files failed to run \n")
+stream_out (" - HTAP-prm: Run complete -----------------------\n\n")
+stream_out ("    + #{$CompletedRunCount} files were evaluated successfully.\n\n")
+stream_out ("    + #{$FailedRunCount} files failed to run \n")
 
 if ( $FailedRunCount > 0 ) 
   stream_out ("   ! The following files failed to run ! \n")
