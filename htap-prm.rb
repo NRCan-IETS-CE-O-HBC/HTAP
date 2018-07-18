@@ -10,6 +10,7 @@ require 'ostruct'
 require 'timeout'
 require 'fileutils'
 require 'pp'
+require 'json'
 
 $gRunUpgrades         = Hash.new
 $gOptionList          = Array.new
@@ -26,7 +27,7 @@ $gArchetypeDir = "C:/HTAP/archetypes"
 $gArchetypeHash = Hash.new
 $gRulesetHash   = Hash.new
 $gLocationHash  = Hash.new 
-
+$gExtendedOutputFlag = ""
 
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
@@ -36,6 +37,13 @@ $gGenChoiceFileList = Array.new
 #default (and only supported mode)
 $gRunDefMode   = "mesh"
 $RunScopeOpen = false
+
+#Params for JSON output
+$gJSONize = false
+$gJSONAllData = Array.new
+$gHashLoc = 0
+
+
 
 =begin rdoc
 =========================================================================================
@@ -184,8 +192,8 @@ def parse_def_file(filepath)
              
             # archetypes -  
             $gArchetypes = $token_values[1].to_s.split(",")
-			
-			          
+            
+                      
           end 
           
           if ( $RunScopeOpen && $token_values[0] =~ /locations/i ) 
@@ -262,21 +270,21 @@ def create_mesh_cartisian_combos(optIndex)
     
       $gArchetypes.each do |archentry|
       
-	  
-	    $Folder = $gArchetypeDir 
-	    # Allow wildcards; expand list! 
-	    
-		$ArchetypeFiles = Dir["#{$Folder}/#{archentry}"] 
-	 
+      
+        $Folder = $gArchetypeDir 
+        # Allow wildcards; expand list! 
+        
+        $ArchetypeFiles = Dir["#{$Folder}/#{archentry}"] 
+     
         $ArchetypeFiles.each do |h2kpath|
-	  
-		  $h2kfile = File.basename(h2kpath)
-	  
+      
+          $h2kfile = File.basename(h2kpath)
+      
           $gChoiceFileSet["Opt-Archetype"] = $h2kfile 
         
           create_mesh_cartisian_combos(optIndex+1) 
-		
-		end 
+        
+        end 
         
       end      
     
@@ -488,9 +496,11 @@ def run_these_cases(current_task_files)
           if ( $gDebug ) 
             FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p1")
           end 
-          
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm "
-
+        
+       
+        
+          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm #{$gExtendedOutputFlag} "
+        
           # Save command for invoking substitute [ useful in debugging ]         
           $cmdtxt = File.open("cmd.txt", 'w') 
           $cmdtxt.write cmdscript
@@ -559,10 +569,11 @@ def run_these_cases(current_task_files)
         
            contents = File.open($RunResultFilename, 'r') 
            
-           $RunResults["RunNumber"] << $RunNumbers[thread3]
-           $RunResults["RunDir"] << $RunDirs[thread3]
-           $RunResults["input.ChoiceFile"]<< $choicefiles[thread3]
+           $RunResults["c.RunNumber"] << $RunNumbers[thread3]
+           $RunResults["c.RunDirectory"] << $RunDirs[thread3]
+           $RunResults["c.ChoiceFile"]<< $choicefiles[thread3]
            
+                      
            lineCount = 0
            contents.each do |line|
              lineCount = lineCount + 1
@@ -573,6 +584,7 @@ def run_these_cases(current_task_files)
              $RunResults[token] <<  value
            
            end
+           
            contents.close
            $CompletedRunCount = $CompletedRunCount + 1 
            stream_out (" done.\n")
@@ -636,10 +648,130 @@ def run_these_cases(current_task_files)
 
       $outputlines = ""
       
-      row = 1 
+      row = 0 
       
-      while row <= $RunResults["RunNumber"].length
+      
+      # Alternative output in JSON format. Can be memory-intensive
+      if ( $gJSONize ) 
+    
+        while row < $RunResults["c.RunNumber"].length
+          
+                 
+          $RunID = "run-#{$gHashLoc.to_s}"
+          # initiate hash to hold row data. 
+          $gJSONAllData[$gHashLoc] = Hash.new
+          $gJSONAllData[$gHashLoc] = { "result-number" =>  $gHashLoc+1, 
+                                       "archetype"     => Hash.new, 
+                                       "input"         => Hash.new, 
+                                       "output"        => Hash.new, 
+                                       "configuration" => Hash.new,
+                                       "miscellaneous_info"     => Hash.new   }
 
+                                                 
+          
+          if ( $gExtendedOutputFlag =~ /-e/ ) 
+            $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => Hash.new  } 
+            $gJSONAllData[$gHashLoc]["output"]["BinnedData"] = Array.new 
+            for counter in 0..31
+              $gJSONAllData[$gHashLoc]["output"]["BinnedData"][counter] = Hash.new 
+              $gJSONAllData[$gHashLoc]["output"]["BinnedData"][counter]["bin"] = counter+1
+            end
+          else 
+            $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => "No data to report. Run htap-prm with '-e' to enable"  } 
+          end 
+          
+          $RunResults.each do |column, data|           
+        
+
+            $col_tmp = column.to_s.gsub(/\s*/, '') 
+            
+            
+            case $col_tmp
+            when  /^input\./ , /^i\./ 
+              $col_type = "input"
+            when /^output\./ , /^o\./ 
+              $col_type = "output"
+            when /^arch\./ , /^a\./ 
+              $col_type = "archetype" 
+            when /^config\./ , /^c\./ 
+              $col_type = "configuration"                  
+            else 
+              $col_type = "miscellaneous_info"
+            end 
+            
+            $col_txt = $col_tmp.to_s.gsub(/^[^\.]+\./,'')
+            
+            
+            # For BIN-data, process as array, otherise, as token/value
+            case $col_txt        
+            when /BIN-data/
+              # format is 'BIN-data-TYPE-##'; Split out TYPE and ##
+              $bin_type = Array.new
+              $bin_type = $col_txt.gsub(/BIN-data-/, '').split("-")     
+              $bin_row = $bin_type[1].to_i - 1 
+              # Store data in array, based on type.
+              
+              case $bin_type[0].to_s
+              when /HRS/ 
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["CumulativeHrs"] = data[row].to_f
+              
+              when /TMP/ 
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Temperature_oC"] = data[row].to_f
+                
+              when /HLR/ 
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["HeatLossRateW"] = data[row].to_f
+              
+              when /T2cap/ 
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type2Capacity"] = data[row].to_f
+              
+              when /T2PLR/ 
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type2PartLoadRatio"] = data[row].to_f                
+        
+              when /T1PLR/ 
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type1PartLoadRatio"] = data[row].to_f                
+              end               
+            
+            else 
+            
+                          
+              # format according to data type 
+              case data[row].to_s.gsub(/\s*/, '') 
+              when /^[0-9\-]+$/      
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_i
+                
+              when /^[0-9\.\-E]+$/             
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_f
+                
+              else   
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_s.gsub(/\s*/, '') 
+                
+              end
+             
+            end 
+        
+          
+          end #
+          
+          # and append this result onto master all-run-array
+
+   
+
+           row = row + 1 
+        
+           $gHashLoc = $gHashLoc + 1 
+        
+        
+        end 
+        
+                
+      end   # if ($json)
+       
+
+      # Standard output - flat .csv file with results written to disk and flushed 
+      # after each batch to minimze memory footprint.
+      while row < $RunResults["RunNumber"].length
+
+        stream_out(">> CSV: #{row} \n")
         
         $RunResults.each do |column, data| 
       
@@ -651,7 +783,7 @@ def run_these_cases(current_task_files)
       
           else 
         
-            $outputlines.concat(data[row-1].to_s)
+            $outputlines.concat(data[row].to_s)
 
           end 
         
@@ -691,14 +823,25 @@ def run_these_cases(current_task_files)
   end 
   
   
+
   
   
   stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
   
   
+    if ($gJSONize )
+    stream_out(" - Writing JSON output to HTAP-prm-output.json... ")
+    $JSONoutput  = File.open($gOutputJSON, 'w') 
+    $JSONoutput.write(JSON.pretty_generate($gJSONAllData))
+    $JSONoutput.close 
+    stream_out("done.\n\n")
+  end 
+  
+  
   if ( ! $gDebug ) then 
-     stream_out (" - Deleting working directories\n\n")  
+     stream_out (" - Deleting working directories... ")  
      FileUtils.rm_rf Dir.glob("HTAP-work-*") 
+     stream_out("done.\n\n")
   end
   
 end 
@@ -729,6 +872,7 @@ $gOptionFile = ""
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
+$gOutputJSON = "HTAP-prm-output.json"
 $gFailFile = "HTAP-prm-failures.txt"
 $gSaveAllRuns = false 
 
@@ -761,6 +905,11 @@ optparse = OptionParser.new do |opts|
       $gDebug = true
    end
 
+   opts.on("-e", "--extra-output", "Report data on archetype, part-loads") do
+      $cmdlineopts["extra-output"] = true
+      $gExtendedOutputFlag = "-e"
+   end   
+   
    
    #opts.on("-w", "--warnings", "Report warning messages") do 
    #   $gWarn = true
@@ -770,7 +919,11 @@ optparse = OptionParser.new do |opts|
       $gSaveAllRuns = true
    end
    
-
+   opts.on("-j", "--json", "Provide output in JSON format") do 
+      $gJSONize = true
+   end
+   
+   
    opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
       $cmdlineopts["substitute"] = o
       $gSubstitutePath = o
@@ -785,6 +938,7 @@ optparse = OptionParser.new do |opts|
         $gNumberOfThreads = 1 
       end 
    end
+   
    
    
    
@@ -920,8 +1074,8 @@ if ( $FailedRunCount > 0 )
   end
   
 end 
-  
-# Close output files
+   
+# Close output files (JSON output dumped in a single write - already closed at this point. 
 $output.close 
 $failures.close   
   
