@@ -157,7 +157,7 @@ $gAvgPelletCons_t    = 0
 $gDirection = ""
 
 # Flag for reporting general information
-$FlagHouseInfo = TRUE
+$FlagHouseInfo = true
 
 # Flag for reporting choices in inputs
 $gReportChoices      = false
@@ -179,7 +179,7 @@ $gAvgEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
 $Locale = ""      # Weather location for current run
 $gWarn = false 
-# Data from Hanscomb 2011 NBC analysis
+# Data from Hanscomb 2011 NBC analysiscd 
 $RegionalCostFactors = Hash.new
 $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
                            "Edmonton"     =>  1.12 ,
@@ -330,6 +330,10 @@ $HDDHash =  {
             "XXXXX" => 1
             }
 
+#Index of provinces, used by HOT2000 for region            
+$ProvArr = [ "BRITISH COLUMBIA", "ALBERTA", "SASKATCHEWAN", "MANITOBA", "ONTARIO", "QUEBEC", "NEW BRUNSWICK", "NOVA SCOTIA", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "YUKON", "NORTHWEST TERRITORY", "NUNAVUT", "OTHER" ]            
+            
+            
 # Setting hash for permafrost locations
 $PermafrostHash =  {
             "YELLOWKNIFE"  => "discontinuous" ,
@@ -345,6 +349,8 @@ $PermafrostHash =  {
             "HALLBEACH"    => "continuous"
             }
 
+             
+            
             
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
@@ -369,18 +375,76 @@ $HDDs = ""
 =end
 def fatalerror( err_msg )
 # Display a fatal error and quit. -----------------------------------
-   if ($gTest_params["logfile"])
-      $fLOG.write("\nsubstitute-h2k.rb -> Fatal error: \n")
-      $fLOG.write("#{err_msg}\n")
-   end
-   print "\n=========================================================\n"
-   print "substitute-h2k.rb -> Fatal error: \n\n"
-   print "     #{err_msg}\n"
-   print "\n\n"
-   print "substitute-h2k.rb -> Other Error or warning messages:\n\n"
-   print "#{$ErrorBuffer}\n"
+  
+   
+   
+   # See if error string is not empty: if not, call err-out to log it 
+   if ( err_msg.gsub(/\s*/,'') != "") then 
+     err_out(err_msg) 
+   end 
+   
+   ReportMsgs()
+   
+   
+   # On error - attempt to save inputs . 
+   $gChoices.sort.to_h
+   $fSUMMARY.write "\n"
+   for attribute in $gChoices.keys()
+      choice = $gChoices[attribute]
+
+      $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
+   end 
+
+   
+  
+   stream_out "substitute-h2k.rb: FATAL ERROR: \n\n"
+   stream_out err_msg
+   stream_out "\n=========================================================\n"   
+	  
+   $fSUMMARY.close 
+   $fLOG.close    
+	  
    exit() # Run stopped
 end
+
+def ReportMsgs()
+
+   $ErrorBuffer = ""
+   $WarningBuffer = "" 
+   $gErrors.each  do |msg|
+     
+	  $fSUMMARY.write "s.error    = \"#{msg}\" \n"
+      $ErrorBuffer += " ERROR: #{msg} \n\n"
+	  
+   end 
+      
+
+   $gWarnings.each  do |msg|
+     
+	  $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
+      $WarningBuffer += " WARNING: #{msg} \n\n"
+	  
+   end 
+
+   if $allok then 
+     status = "Run completed successfully"
+	 $fSUMMARY.write "s.success    = true"
+   else 
+     status = "Run failed."
+	 $fSUMMARY.write "s.success    = false"
+   end 
+   
+   stream_out "\n=========================================================\n"
+   stream_out "substitute-h2k.rb STATUS: #{status} \n\n"
+   stream_out "\n\n"
+   stream_out "substitute-h2k.rb -> Other warning messages:\n\n"
+   stream_out "#{$WarningBuffer}\n"
+   stream_out "\n\n"
+   stream_out "substitute-h2k.rb -> Other error messages:\n\n"
+   stream_out "#{$ErrorBuffer}\n"   
+   stream_out "\n=========================================================\n"
+
+end 
 
 # =========================================================================================
 # Optionally write text to buffer -----------------------------------
@@ -409,14 +473,30 @@ end
 # =========================================================================================
 # Write warning output ------------------------------------------------
 # =========================================================================================
-def warn_out(debmsg)
+def warn_out(msg)
    if $gWarn 
-      puts debmsg
+      puts "\n\n WARNING: #{msg}\n\n"
    end
    if ($gTest_params["logfile"])
-      $fLOG.write(debmsg)
+      $fLOG.write("\n\n WARNING: #{msg}\n\n")
    end
+   
+   $gWarnings << msg.gsub(/\n/,'')
+   
 end
+
+def err_out(msg)
+   
+   puts "\n\n ERROR: #{msg}\n\n"
+   
+   if ($fLOG != nil )
+      $fLOG.write("\n\n ERROR: #{msg}\n\n")
+   end
+   $gErrors << msg.gsub(/\n/,'') 
+   $allok = false
+end
+
+
 
 
 # =========================================================================================
@@ -609,7 +689,7 @@ def processFile(h2kElements)
             #--------------------------------------------------------------------------
             if ( choiceEntry =~ /Opt-Location/ )
                $Locale = $gChoices["Opt-Location"] 
-
+               $gRunLocale = $Locale
                # changing the soil condition to permafrost if the location is within 
                # continuous permafrost zone
                set_permafrost_by_location(h2kElements,$Locale)
@@ -630,8 +710,9 @@ def processFile(h2kElements)
                   h2kElements[locationText].attributes["code"] = value
                   # Match Client Information Region with this Region to avoid H2K PreCheck dialog!
                   locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-                  provArr = [ "BRITISH COLUMBIA", "ALBERTA", "SASKATCHEWAN", "MANITOBA", "ONTARIO", "QUEBEC", "NEW BRUNSWICK", "NOVA SCOTIA", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "YUKON TERRITORY", "NORTHWEST TERRITORY", "NUNAVUT", "OTHER" ]
-                  h2kElements[locationText].text = provArr[value.to_i - 1]
+                  
+                  h2kElements[locationText].text = $ProvArr[value.to_i - 1]
+                  $gRunRegion = $ProvArr[value.to_i - 1]
                elsif ( tag =~ /OPT-H2K-Location/ && value != "NA" )
                   # Weather location to use for HOT2000 run
                   locationText = "HouseFile/ProgramInformation/Weather/Location"
@@ -2549,7 +2630,7 @@ def processFile(h2kElements)
                       h2kElements[locationText + "AdvancedUserSpecified/GasStove/French"].add_text("Propane")
                       h2kElements[locationText + "AdvancedUserSpecified/GasStove"].add_attribute("value",valHash["15"])
                    else
-                      fatalerror("WARNING: For Opt-Baseloads, unknown stove fuel type #{valHash["14"]}!\n")
+                      fatalerror("For Opt-Baseloads, unknown stove fuel type #{valHash["14"]}!\n")
                    end
                 end
 
@@ -2728,6 +2809,10 @@ def processFile(h2kElements)
          end
       end
    end
+   
+   
+   #Delete results section 
+   h2kElements["HouseFile"].delete_element("AllResults")
    
    # Save changes to the XML doc in existing working H2K file (overwrite original)
    stream_out (" Overwriting: #{$gWorkingModelFile} \n")
@@ -3129,7 +3214,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
    else
       # Code name not found in the code library
       # Since no User Specified option for windows this must be an error!
-      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+      fatalerror("Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
    end
 
 end
@@ -3229,7 +3314,7 @@ def ChangeSkylightCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFile
    else
       # Code name not found in the code library
       # Since no User Specified option for windows this must be an error!
-      fatalerror(" INFO: Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+      fatalerror("Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
    end
 
 end
@@ -4111,7 +4196,7 @@ def runsims( direction )
    #   Need to determine how to do this in HOT2000. The OnRotate() function in HOT2000 *interface*
    #   is not accessible from the CLI version of HOT2000 and hasn't been well tested.
    
-   runThis = "HOT2000.exe"
+   runThis = "HOT2000.exe -inp ..\\#{$h2kFileName}"
    optionSwitch = "-inp"
    fileToLoad = "..\\" + $h2kFileName
    
@@ -4120,7 +4205,7 @@ def runsims( direction )
    # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
    #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
    #      re-trying a run)! 
-   maxRunTime = 300  # seconds
+   maxRunTime = 30 # seconds
    maxTries = 10     # JTB 05-10-2016: Also setting maximum retries within timeout period
    startRun = Time.now
    endRun = 0 
@@ -4133,7 +4218,8 @@ def runsims( direction )
       Timeout.timeout(maxRunTime) do        # time out after maxRunTime seconds!
          while keepTrying do                # within that loop, keep trying
             # Run HOT2000! 
-            pid = Process.spawn( runThis, optionSwitch, fileToLoad ) 
+            #pid = Process.spawn( runThis, optionSwitch, fileToLoad, :new_pgroup => true ) 
+			pid = Process.spawn( runThis, :new_pgroup => true ) 
             stream_out ("\n Invoking HOT2000 (PID #{pid})...")
             Process.waitpid(pid, 0)
             status = $?.exitstatus      
@@ -4148,13 +4234,13 @@ def runsims( direction )
             elsif status == 3    # Pre-check message(s)
                endRun = Time.now
                $runH2KTime = endRun - startRun  
-               stream_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+               warn_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
                keepTrying = false       # Successful run - don't try agian 
             
             elsif status == nil  
                # Get nil status when can't load an h2k file.
-               stream_out( " Got a nil return code! (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-               fatalerror( " Fatal Error! HOT2000 message box or couldn't load file!\n" )
+               
+               fatalerror( "When spawning H2K, process returned nil return code after #{$runH2KTime.round(2).to_s} seconds; HOT2000 message box or couldn't load file!\n" )
                keepTrying = false   # Give up.
             
             elsif tries < maxTries      # Unsuccessful run - try again for up to maxTries     
@@ -4163,13 +4249,14 @@ def runsims( direction )
             
             else
                # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
-               fatalerror( " Fatal Error! HOT2000 return code: #{$?}\n" )
+               fatalerror( "HOT2000 return code: #{$?}\n" )
                keepTrying = false   # Give up.
             
             end
            
             # Force kill process, if needed
             begin
+			   #Process.kill('TERM', pid) 
                Process.kill('KILL', pid)
             rescue
                # Do nothing, the normal case - PID already ended.
@@ -4177,10 +4264,11 @@ def runsims( direction )
             sleep(1)
          end 
       end
-   rescue
+   rescue Timeout::Error
+      Process.kill('KILL', pid)
       endRun = Time.now
       $runH2KTime = endRun - startRun  
-      stream_out( "\n\n Timeout on H2K call after #{maxRunTime} seconds.\n" )
+      fatalerror( "\n\n Timeout on H2K call after #{maxRunTime} seconds.\n" )
       sleep(1)
    end
 
@@ -4193,12 +4281,12 @@ def runsims( direction )
    $OutputFolder = "sim-output"
    if ( ! Dir.exist?($OutputFolder) )
       if ( ! system("mkdir #{$OutputFolder}") )
-         fatalerror( " Fatal Error! Could not create #{$OutputFolder} below #{$gMasterPath}!\n MKDir Return code: #{$?}\n" )
+         fatalerror( "Could not create #{$OutputFolder} below #{$gMasterPath}! MKDir Return code: #{$?}\n" )
       end
    else
       if ( File.exist?("#{$OutputFolder}\\Browse.rpt") )
          if ( ! system("del #{$OutputFolder}\\Browse.rpt") )    # Delete existing Browse.Rpt
-            fatalerror(" Fatal Error! Could not delete existing Browse.rpt file in #{$OutputFolder}!\n Del Return code: #{$?}\n" )
+            fatalerror("Could not delete existing Browse.rpt file in #{$OutputFolder}! Del Return code: #{$?}\n" )
          end
       end
    end
@@ -4214,7 +4302,7 @@ def runsims( direction )
             FileUtils.cp("#{$run_path}\\ROutStr.txt", ".\\sim-output\\") 
 			debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
 	     else 
-            fatalerror("\n Fatal Error! Could not copy Routstr.txt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
+            fatalerror("Could not copy Routstr.txt to #{$OutputFolder}! Copy return code: #{$?}\n" )
          end      
       end        
       
@@ -4663,9 +4751,8 @@ def postprocess( scaleData )
       
    end 
    
-   if ( ! $HCRequestedfound )
-   
-     warn_out (" HOT2000 didn't generate \"#{$outputHCode}\" result set. \n")
+   if ( ! $HCRequestedfound && $outputHCode != "General" )
+     $ThisMsg = "HOT2000 didn't generate \"#{$outputHCode}\" result set. "
    
      if ( $HCSOCFound ) 
        $outputHCode = "SOC"
@@ -4673,8 +4760,8 @@ def postprocess( scaleData )
        $outputHCode = "General"
      end 
      
-     warn_out (" Reporting result set \"#{$outputHCode}\" result instead. \n")
-     
+	 $ThisMsg +=" Reporting result set \"#{$outputHCode}\" result instead. \n" 
+     warn_out($ThisMsg)
    end 
   
    h2kPostElements["HouseFile/AllResults"].elements.each do |element|
@@ -5490,6 +5577,20 @@ def getWeatherCity(elements)
 end
 
 # =========================================================================================
+# Get the name of the base file weather city
+# =========================================================================================
+def getRegion(elements)
+   
+     
+   regionCode = elements["HouseFile/ProgramInformation/Weather/Region"].attributes["code"].to_i
+
+   regionName = $ProvArr[regionCode-1] 
+      
+   return regionName   
+end
+
+
+# =========================================================================================
 # Get primary heating system type and fuel
 # =========================================================================================
 def getPrimaryHeatSys(elements)
@@ -5923,17 +6024,30 @@ end
   END OF ALL METHODS 
 =========================================================================================
 =end
+$allok = true
 
 $gChoiceOrder = Array.new
 
 $gTest_params["verbosity"] = "quiet"
 $gTest_params["logfile"]   = $gMasterPath + "\\SubstitutePL-log.txt"
 
+# Open output file here so we can log errors too! 
+sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
+
+$fSUMMARY = File.new(sumFileSpec, "w")
+
+if $fSUMMARY == nil then
+  fatalerror("Could not open #{sumFileSpec}. \n")
+end 
+
 $fLOG = File.new($gTest_params["logfile"], "w") 
 if $fLOG == nil then
    fatalerror("Could not open #{$gTest_params["logfile"]}.\n")
 end
-                     
+     
+$gErrors = Array.new
+$gWarnings = Array.new 
+	 
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
@@ -6331,8 +6445,11 @@ stream_out ("  done.\n")
 stream_out("\n\n Reading user-defined choices (#{$gChoiceFile})...\n")
 fCHOICES = File.new($gChoiceFile, "r") 
 if fCHOICES == nil then
-   fatalerror("Could not read #{$gChoiceFile}.\n")
+   err_out("Could not read #{$gChoiceFile}.\n")
+   fatalerror(" ")
 end
+
+
 
 $linecount = 0
 
@@ -6441,7 +6558,7 @@ end
 
 # Load all XML elements from HOT2000 file
 h2kElements = get_elements_from_filename($gWorkingModelFile)
-stream_out(" READING to edit: #{$gWorkingModelFile} \n")
+debug_out(" READING to edit: #{$gWorkingModelFile} \n")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
 # rule set name specified in the choice file
@@ -6452,9 +6569,16 @@ $ruleSetName = $gChoices["Opt-Ruleset"]
 $Locale = $gChoices["Opt-Location"] 
 
 # Weather city name
+
+# Base location from original H2K file. 
+$gBaseLocale = getWeatherCity( h2kElements )
+$gBaseRegion = getRegion( h2kElements )
+
 if $Locale.empty? || $Locale == "NA"
    # from base model file
-   locale = getWeatherCity( h2kElements )
+   locale = $gBaseLocale
+   $gRunLocale = $gBaseLocale
+   $gRunRegion = $gBaseRegion 
 else
    # from Opt-Location
    locale = $Locale
@@ -6544,48 +6668,48 @@ stream_out("\n Validating choices and options...\n");
 $gOptions.each do |option, ignore|
     debug_out ("> option : #{option} ?\n"); 
     if ( !$gChoices.has_key?(option)  )
-      $ThisError = "\n WARNING: Option #{option} found in options file (#{$gOptionFile}) \n"
-      $ThisError += "          was not specified in Choices file (#{$gChoiceFile}) OR rule set (#{$ruleSetName})\n"
-      $ErrorBuffer += $ThisError
-      warn_out ( $ThisError )
-   
+	  $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
+      
+         
       if ( ! $gOptions[option]["default"]["defined"]  )
-         $ThisError = "\n ERROR: No default value for option #{option} defined in \n"
-         $ThisError += "        Options file (#{$gOptionFile})\n"
-         $ErrorBuffer += $ThisError
-         fatalerror ( $ThisError )
+         $ThisMsg += "No default value defined in options file."
+         err_out ($ThisMsg)
+		 $allok = false 
       else
          # Add default value. 
          $gChoices[option] = $gOptions[option]["default"]["value"]
          # Apply them at the end. 
          $gChoiceOrder.push(option)
          
-         $ThisError = "\n          Using default value (#{$gChoices[option]}) \n"
-         $ErrorBuffer += $ThisError
-         warn_out ( $ThisError )
+         $ThisMsg +=  " Using default value (#{$gChoices[option]})"
+         warn_out ( $ThisMsg )
+		 
+
+		 
       end
     end
-    $ThisError = ""
+    $ThisMsg = ""
 end
 
-$allok = true
+if (! $allok ) 
+  fatalerror ("Could not parse options") 
+end 
 
 
 
 # Search through choices and determine if they match options in the Options file (error if not). 
-$gChoices.each do |attrib, choice|
 
+$gChoices.each do |attrib, choice|
+   $parseOK = true
    stream_out( " ->>>>> #{attrib} | #{choice} \n")
    debug_out ( "\n ======================== #{attrib} ============================\n")
    debug_out ( "Choosing #{attrib} -> #{choice} \n")
     
    # Is attribute used in choices file defined in options ?
    if ( !$gOptions.has_key?(attrib) )
-      $ThisError  = "\n ERROR: Attribute #{attrib} appears in choice file (#{$gChoiceFile}) OR rule set (#{$ruleSetName}), \n"
-      $ThisError +=  "        but can't be found in options file (#{$gOptionFile})\n"
-      $ErrorBuffer += $ThisError
-      stream_out( $ThisError )
-      $allok = false
+      $ThisMsg = "Attribute #{attrib} in choice file OR rule set can't be found in options file."
+      err_out( $ThisMsg )
+      $parseOK = false
    else
       debug_out ( "   - found $gOptions[\"#{attrib}\"] \n")
    end
@@ -6593,26 +6717,25 @@ $gChoices.each do |attrib, choice|
    # Is choice in options?
    if ( ! $gOptions[attrib]["options"].has_key?(choice) ) 
       if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
-         $allok = false
+         $parseOK = false
       else 
          $gOptions[attrib]["options"][choice]["cost"] = 0
       end 
      
-      if ( !$allok )
-         $ThisError  = "\n ERROR: Choice #{choice} (for attribute #{attrib}, defined \n"
-         $ThisError +=   "        in choice file #{$gChoiceFile}) OR rule set (#{$ruleSetName}), is not defined \n"
-         $ThisError +=   "        in options file (#{$gOptionFile})\n"
-         $ErrorBuffer += $ThisError
-         stream_out( $ThisError )
+      if ( !$parseOK )
+         $ThisMsg = "Choice #{choice} for attribute #{attrib} is not defined in options file."
+         err_out( $ThisMsg )
 
       else
          debug_out ( "   - found $gOptions[\"#{attribute}\"][\"options\"][\"#{choice}\"} \n")
       end
    end
    
-   if ( !$allok )
-      fatalerror ( "" )
-   end
+
+end
+
+if ( !$allok )
+   fatalerror ( "" )
 end
 
 =begin rdoc
@@ -6681,19 +6804,12 @@ $gChoices.each do |attrib1, choice|
          end
          
          if ( $ValidConditionFound == 0 )
-            $ThisError  = "\nERROR: No valid conditions were defined for #{attrib1} \n"
-            $ThisError +=   "       in options file (#{$gOptionFile}). Choices must match one \n"
-            $ThisError +=   "       of the following:\n"
+		    $ThisMsg = "No valid conditions were defined for #{attrib1} in options file (#{$gOptionFile}). Choices must match one of the following: "
             for conditions in condHash.keys()
-               $ThisError +=   "            -> #{conditions} \n"
+               $ThisMsg +=   "#{conditions} ; "
             end
-            
-            $ErrorBuffer += $ThisError
-            stream_out( $ThisError )
-            
-            $allok = false
-         else
-            $allok = true
+            err_out($ThisMsg) 
+
          end
       end
    end
@@ -6756,19 +6872,11 @@ $gChoices.each do |attrib1, choice|
          end
         
          if ( $ValidConditionFound == 0 )
-            $ThisError  = "\n ERROR: No valid conditions were defined for #{attrib1} \n"
-            $ThisError +=   "        in options file (#{$gOptionFile}). Choices must match one \n"
-            $ThisError +=   "        of the following:\n"
+            $ThisMsg = "No valid conditions were defined for #{attrib1} in options file (#{$gOptionFile}). Choices must match one of the following: "
             for conditions in condHash.keys()
-               $ThisError +=  "            -> #{conditions} \n"
+               $ThisMsg +=  "#{conditions};"
             end
-            
-            $ErrorBuffer += $ThisError
-            stream_out( $ThisError )
-            
-            $allok = false
-         else
-            $allok = true
+            err_out($ThisMsg) 
          end
       end
    end
@@ -6845,9 +6953,6 @@ end   #end of do each gChoices loop
 # Seems like we've found everything!
 
 if ( !$allok )
-   stream_out("\n--------------------------------------------------------------\n")
-   stream_out("\nSubstitute-h2k.rb encountered the following errors:\n")
-   stream_out($ErrorBuffer)
    fatalerror(" Choices in #{$gChoiceFile} do not match options in #{$gOptionFile}!")
 else
    stream_out (" ... done.\n\n")
@@ -6857,6 +6962,8 @@ end
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
 processFile( h2kElements )
+
+
 
 
 # Orientation changes. For now, we assume the arrays must always point south.
@@ -6907,6 +7014,10 @@ $gEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
 $FloorArea = 0
 
+
+
+
+
 orientations.each do |direction|
 
    $gDirection = direction
@@ -6940,9 +7051,10 @@ $gAvgUtilCostNet = $gAvgCost_Total - $gAvgPVRevenue
 $optCOProxy = $gAvgUtilCostNet + ($gTotalCost-$gIncBaseCosts)/25.0
 
 
-sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
-fSUMMARY = File.new(sumFileSpec, "w")
-if fSUMMARY == nil then
+
+
+
+if $fSUMMARY == nil then
    fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
 end
 if ( $gResults['Reference'].empty? ) then
@@ -6951,58 +7063,61 @@ else
    $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
 
-fSUMMARY.write( "#{$AliasConfig}.Recovered-results =  #{$outputHCode}\n")
+
+$fSUMMARY.write( "#{$AliasConfig}.Recovered-results =  #{$outputHCode}\n")
 if ($FlagHouseInfo)
-  fSUMMARY.write( "#{$AliasArch}.House-Builder     =  #{$BuilderName}\n" )
-  fSUMMARY.write( "#{$AliasArch}.House-Type        =  #{$HouseType}\n" )
-  fSUMMARY.write( "#{$AliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Ceiling-Type    =  #{$Ceilingtype}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Area-Slab-m2    =  #{$FoundationArea["Slab"].round(2)}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Area-Basement-m2    =  #{$FoundationArea["Basement"].round(2)}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Area-ExposedFloor-m2    =  #{$FoundationArea["Floor"].round(2)}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Area-Walkout-m2    =  #{$FoundationArea["Walkout"].round(2)}\n" )
-  fSUMMARY.write( "#{$AliasArch}.Area-Crawl-m2    =  #{$FoundationArea["Crawl"].round(2)}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.House-Builder     =  #{$BuilderName}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.House-Type        =  #{$HouseType}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Base-Locale       =  #{$gBaseLocale}\n" ) 
+  $fSUMMARY.write( "#{$AliasArch}.Ceiling-Type    =  #{$Ceilingtype}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Area-Slab-m2    =  #{$FoundationArea["Slab"].round(2)}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Area-Basement-m2    =  #{$FoundationArea["Basement"].round(2)}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Area-ExposedFloor-m2    =  #{$FoundationArea["Floor"].round(2)}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Area-Walkout-m2    =  #{$FoundationArea["Walkout"].round(2)}\n" )
+  $fSUMMARY.write( "#{$AliasArch}.Area-Crawl-m2    =  #{$FoundationArea["Crawl"].round(2)}\n" )
 end
-fSUMMARY.write( "#{$AliasOutput}.HDDs              =  #{$HDDs}\n" )
-fSUMMARY.write( "#{$AliasOutput}.Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Elec    =  #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)}  \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
-#fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
+$fSUMMARY.write( "#{$AliasOutput}.HDDs              =  #{$HDDs}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Elec    =  #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)}  \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
+#$fSUMMARY.write( "#{$AliasOutput}.Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
-fSUMMARY.write( "#{$AliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
-#fSUMMARY.write( "#{$AliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
+#$fSUMMARY.write( "#{$AliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
-fSUMMARY.write( "#{$AliasOutput}.AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.TotalAirConditioning-LoadGJ = #{$TotalAirConditioningLoad.round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.AvgAirConditioning-COP = #{$AvgACCOP.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.TotalAirConditioning-LoadGJ = #{$TotalAirConditioningLoad.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.AvgAirConditioning-COP = #{$AvgACCOP.round(1)} \n" )
 
-fSUMMARY.write( "#{$AliasOutput}.Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Energy-DHWGJ      =  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.Energy-PlugGJ     =  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.EnergyEleckWh     =  #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(1)}  \n" )
-fSUMMARY.write( "#{$AliasOutput}.EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
-fSUMMARY.write( "#{$AliasOutput}.EnergyProp_L      =  #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(1)}    \n" )
-fSUMMARY.write( "#{$AliasOutput}.EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )   # includes pellets
-fSUMMARY.write( "#{$AliasOutput}.Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
-fSUMMARY.write( "#{$AliasOutput}.SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-DHWGJ      =  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.Energy-PlugGJ     =  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.EnergyEleckWh     =  #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(1)}  \n" )
+$fSUMMARY.write( "#{$AliasOutput}.EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
+$fSUMMARY.write( "#{$AliasOutput}.EnergyProp_L      =  #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(1)}    \n" )
+$fSUMMARY.write( "#{$AliasOutput}.EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )   # includes pellets
+$fSUMMARY.write( "#{$AliasOutput}.Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
 
 # These #s are not yet averaged for orientations!
-fSUMMARY.write( "#{$AliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
-fSUMMARY.write( "#{$AliasOutput}.PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
 
-fSUMMARY.write( "#{$AliasInput}.PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
+$fSUMMARY.write( "#{$AliasInput}.PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
 
 $TEDI_kWh_m2 = ( $gAuxEnergyHeatingGJ * 277.78 / $FloorArea )
 
@@ -7011,87 +7126,89 @@ $MEUI_kWh_m2 =  ( $gResults[$outputHCode]['avgEnergyHeatingGJ'] +
                   $gResults[$outputHCode]['avgEnergyVentilationGJ'] + 
                   $gResults[$outputHCode]['avgEnergyWaterHeatingGJ']  ) * 277.78 / $FloorArea
 
-fSUMMARY.write( "#{$AliasArch}.Floor-Area-m2     =  #{$FloorArea.round(1)} \n" )
-fSUMMARY.write( "#{$AliasArch}.House-Volume-m3   =  #{$HouseVolume.round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
-fSUMMARY.write( "#{$AliasOutput}.MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasArch}.Floor-Area-m2     =  #{$FloorArea.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasArch}.House-Volume-m3   =  #{$HouseVolume.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
+$fSUMMARY.write( "#{$AliasOutput}.MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
 
-fSUMMARY.write( "#{$AliasOutput}.ERS-Value         =  #{$gERSNum.round(1)}\n" )
-fSUMMARY.write( "#{$AliasOutput}.NumTries          =  #{$NumTries.round(1)}\n" )
-fSUMMARY.write( "#{$AliasOutput}.LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.ERS-Value         =  #{$gERSNum.round(1)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.NumTries          =  #{$NumTries.round(1)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.LapsedTime        =  #{$runH2KTime.round(2)}\n" )
 # Windows characteristics
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-S        =  #{$SHGCWin[1].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-S     =  #{$rValueWin[1].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-S     =  #{$AreaWin_sum[1].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-SE       =  #{$SHGCWin[2].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-SE    =  #{$rValueWin[2].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-SE    =  #{$AreaWin_sum[2].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-E        =  #{$SHGCWin[3].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-E     =  #{$rValueWin[3].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-E     =  #{$AreaWin_sum[3].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-NE       =  #{$SHGCWin[4].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-NE    =  #{$rValueWin[4].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-NE    =  #{$AreaWin_sum[4].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-N        =  #{$SHGCWin[5].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-N     =  #{$rValueWin[5].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-N     =  #{$AreaWin_sum[5].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-NW       =  #{$SHGCWin[6].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-NW    =  #{$rValueWin[6].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-NW    =  #{$AreaWin_sum[6].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-W        =  #{$SHGCWin[7].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-W     =  #{$rValueWin[7].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-W     =  #{$AreaWin_sum[7].round(1)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-SHGC-SW       =  #{$SHGCWin[8].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-R-value-SW    =  #{$rValueWin[8].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-SW    =  #{$AreaWin_sum[8].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-S        =  #{$SHGCWin[1].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-S     =  #{$rValueWin[1].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-S     =  #{$AreaWin_sum[1].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-SE       =  #{$SHGCWin[2].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-SE    =  #{$rValueWin[2].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-SE    =  #{$AreaWin_sum[2].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-E        =  #{$SHGCWin[3].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-E     =  #{$rValueWin[3].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-E     =  #{$AreaWin_sum[3].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-NE       =  #{$SHGCWin[4].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-NE    =  #{$rValueWin[4].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-NE    =  #{$AreaWin_sum[4].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-N        =  #{$SHGCWin[5].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-N     =  #{$rValueWin[5].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-N     =  #{$AreaWin_sum[5].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-NW       =  #{$SHGCWin[6].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-NW    =  #{$rValueWin[6].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-NW    =  #{$AreaWin_sum[6].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-W        =  #{$SHGCWin[7].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-W     =  #{$rValueWin[7].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-W     =  #{$AreaWin_sum[7].round(1)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-SHGC-SW       =  #{$SHGCWin[8].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-R-value-SW    =  #{$rValueWin[8].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Win-Area-m2-SW    =  #{$AreaWin_sum[8].round(1)}\n" )
 # House components
-fSUMMARY.write( "#{$AliasArch}.Area-Door-m2      =  #{$AreaComp['door'].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Area-DoorWin-m2   =  #{$AreaComp['doorwin'].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Area-Windows-m2   =  #{$AreaComp['win'].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Area-Wall-m2      =  #{$AreaComp['wall'].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Area-Header-m2    =  #{$AreaComp['header'].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Area-Ceiling-m2   =  #{$AreaComp['ceiling'].round(3)}\n" )
-#fSUMMARY.write( "#{$AliasArch}.Area-ExposedFloor-m2     =  #{$AreaComp['floor'].round(3)}\n" )
-fSUMMARY.write( "#{$AliasArch}.Area-House-m2     =  #{$AreaComp['house'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-Door-m2      =  #{$AreaComp['door'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-DoorWin-m2   =  #{$AreaComp['doorwin'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-Windows-m2   =  #{$AreaComp['win'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-Wall-m2      =  #{$AreaComp['wall'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-Header-m2    =  #{$AreaComp['header'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-Ceiling-m2   =  #{$AreaComp['ceiling'].round(3)}\n" )
+#$fSUMMARY.write( "#{$AliasArch}.Area-ExposedFloor-m2     =  #{$AreaComp['floor'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasArch}.Area-House-m2     =  #{$AreaComp['house'].round(3)}\n" )
 # House R-Value
-fSUMMARY.write( "#{$AliasOutput}.House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
+$fSUMMARY.write( "#{$AliasOutput}.House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
 
 if $ExtraOutput1 then
-   fSUMMARY.write( "#{$AliasOutput}.EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvCeilHL-GJ      =  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvWallHL-GJ      =  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvWinHL-GJ       =  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvDoorHL-GJ      =  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvFloorHL-GJ     =  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvCrawlHL-GJ     =  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvSlabHL-GJ      =  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvBGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvAGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvBsemntFHHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvPonyWallHL-GJ  =  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvFABsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.EnvAirLkVntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.AnnDHWLoad-GJ     =  #{$gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvCeilHL-GJ      =  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvWallHL-GJ      =  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvWinHL-GJ       =  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvDoorHL-GJ      =  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvFloorHL-GJ     =  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvCrawlHL-GJ     =  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvSlabHL-GJ      =  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvBGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvAGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvBsemntFHHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvPonyWallHL-GJ  =  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvFABsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.EnvAirLkVntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.AnnDHWLoad-GJ     =  #{$gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)}\n")
    
-   fSUMMARY.write( "#{$AliasOutput}.SpcHeatElec-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)}\n")
-   fSUMMARY.write( "#{$AliasOutput}.SpcHeatGas-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.SpcHeatOil-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.SpcHeatProp-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.SpcHeatWood-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.HotWaterElec-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.HotWaterGas-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.HotWaterOil-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
-   fSUMMARY.write( "#{$AliasOutput}.HotWaterWood-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.SpcHeatElec-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)}\n")
+   $fSUMMARY.write( "#{$AliasOutput}.SpcHeatGas-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.SpcHeatOil-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.SpcHeatProp-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.SpcHeatWood-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.HotWaterElec-GJ c  =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.HotWaterGas-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.HotWaterOil-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
+   $fSUMMARY.write( "#{$AliasOutput}.HotWaterWood-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)} \n")
 end
 
 if $gReportChoices then 
-   #stream_out (" REPORTING CHOICES !!! \n")
+  $fSUMMARY.write( "#{$AliasInput}.Run-Region       =  #{$gRunRegion}\n" )
+  $fSUMMARY.write( "#{$AliasInput}.Run-Locale       =  #{$gRunLocale}\n" )
+
    $gChoices.sort.to_h
    for attribute in $gChoices.keys()
       choice = $gChoices[attribute]
-      #stream_out("   > #{attribute}     = #{choice}\n")
-      fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
+
+      $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
    end 
 end
 
@@ -7109,7 +7226,7 @@ if ($gReadROutStrTxt) then
      
    binstr = "#{pad}#{bin.to_i}"  
      
-   fSUMMARY.write("#{$AliasOutput}.BIN-data-HRS-#{binstr}   =  #{$binDatHrs[bin].round(4)}\n")
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-HRS-#{binstr}   =  #{$binDatHrs[bin].round(4)}\n")
           
    end 
 
@@ -7125,7 +7242,7 @@ if ($gReadROutStrTxt) then
    binstr = "#{pad}#{bin.to_i}"  
      
 
-   fSUMMARY.write("#{$AliasOutput}.BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")       
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")       
 
           
    end 
@@ -7141,7 +7258,7 @@ if ($gReadROutStrTxt) then
    binstr = "#{pad}#{bin.to_i}"  
      
          
-   fSUMMARY.write("#{$AliasOutput}.BIN-data-HLR-#{binstr}   =  #{$binDatHLR[bin].round(4)}\n")       
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-HLR-#{binstr}   =  #{$binDatHLR[bin].round(4)}\n")       
 
 
           
@@ -7157,7 +7274,7 @@ if ($gReadROutStrTxt) then
      
    binstr = "#{pad}#{bin.to_i}"  
           
-   fSUMMARY.write("#{$AliasOutput}.BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")       
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")       
 
           
    end 
@@ -7173,7 +7290,7 @@ if ($gReadROutStrTxt) then
    binstr = "#{pad}#{bin.to_i}"  
      
     
-   fSUMMARY.write("#{$AliasOutput}.BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")   
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")   
 
 
           
@@ -7190,7 +7307,7 @@ if ($gReadROutStrTxt) then
      
    binstr = "#{pad}#{bin.to_i}"  
          
-   #fSUMMARY.write("BIN-data-T1cap-#{binstr} = #{$binDatT1cap[bin].round(4)}\n")  
+   #$fSUMMARY.write("BIN-data-T1cap-#{binstr} = #{$binDatT1cap[bin].round(4)}\n")  
 
           
    end 
@@ -7205,7 +7322,7 @@ if ($gReadROutStrTxt) then
      
    binstr = "#{pad}#{bin.to_i}"  
       
-   fSUMMARY.write("#{$AliasOutput}.BIN-data-T1PLR-#{binstr} =  #{$binDatT1PLR[bin].round(4)}\n")   
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-T1PLR-#{binstr} =  #{$binDatT1PLR[bin].round(4)}\n")   
 
           
    end 
@@ -7214,7 +7331,7 @@ end
 
 
 
-fSUMMARY.close() 
+
 
 if ( ! $PRMcall ) 
    if !$keepH2KFolder
@@ -7226,4 +7343,7 @@ endProcessTime = Time.now
 totalDiff = endProcessTime - $startProcessTime
 stream_out( "\n Total processing time: #{totalDiff.round(2)} seconds (H2K run: #{$runH2KTime.round(2)} seconds)\n\n" )
 
+ReportMsgs()
+
+$fSUMMARY.close() 
 $fLOG.close()

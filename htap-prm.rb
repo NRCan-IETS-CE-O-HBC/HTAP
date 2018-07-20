@@ -367,8 +367,8 @@ end
 
 def run_these_cases(current_task_files)
 
-
-         
+  
+  $RunResults         = Hash.new         
   $choicefiles        = Array.new
   $PIDS               = Array.new
   $FinishedTheseFiles = Hash.new 
@@ -379,7 +379,7 @@ def run_these_cases(current_task_files)
   
   ## Create working directories 
   
-  
+  $headerline = "" 
   $outputHeaderPrinted = false 
   
   
@@ -396,8 +396,8 @@ def run_these_cases(current_task_files)
   $choicefileIndex = 0 
   $RunsDone = false 
   
-  
-  
+  $csvColumns = Array.new 
+   
   # Loop until all files have been processed. 
   while  ! $RunsDone 
 
@@ -444,7 +444,7 @@ def run_these_cases(current_task_files)
           
           $SaveDirectory = "#{$SaveDirectoryRoot}-#{$RunNumber}"
           
-          # Store run number and directory fro this thread        
+          # Store run number and directory for this thread        
           $RunNumbers[thread] = $RunNumber
           $SaveDirs[thread]   = $SaveDirectory 
 
@@ -557,55 +557,83 @@ def run_these_cases(current_task_files)
       #=====================================================================================
       # Multi-threaded runs - Step 3: Post-process and clean up. 
         
+        
+        
       for thread3 in 0..$ThreadsNeeded-1 
         count = thread3 + 1 
-        stream_out ("     - Post-processing results from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded} #{$choicefiles[thread3]} )...")
+        stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded} #{$choicefiles[thread3]} )...")
         
         Dir.chdir($RunDirs[thread3])
         
-        $runFailed = false 
+         
         
+        $RunResults["run-#{thread3}"] = Hash.new 
+        $RunResults["run-#{thread3}"]["c.RunNumber"]      = "#{$RunNumbers[thread3].to_s}"
+        $RunResults["run-#{thread3}"]["c.RunDirectory"]   = "#{$RunDirs[thread3].to_s}"
+        $RunResults["run-#{thread3}"]["c.SaveDirectory"]  = "#{$SaveDirs[thread3].to_s}"
+        $RunResults["run-#{thread3}"]["c.ChoiceFile"]     = "#{$choicefiles[thread3].to_s}"
+		
+		$runFailed = false
+		
         if ( File.exist?($RunResultFilename) ) 
         
            contents = File.open($RunResultFilename, 'r') 
            
-           $RunResults["c.RunNumber"] << $RunNumbers[thread3]
-           $RunResults["c.RunDirectory"] << $RunDirs[thread3]
-           $RunResults["c.ChoiceFile"]<< $choicefiles[thread3]
            
-                      
+           ec=0
+           wc=0           
+           
+           
+           
            lineCount = 0
            contents.each do |line|
              lineCount = lineCount + 1
              line_clean = line.gsub(/ /, '')
              line_clean = line.gsub(/\n/, '')
-             token, value = line_clean.split('=')
+             $contents = Array.new 
+             $contents = line_clean.split('=')
+             token = $contents[0].gsub(/\s*/,'') 
+             value = $contents[1].gsub(/^\s*/,'') 
+             value = $contents[1].gsub(/^ /,'')
+             value = $contents[1].gsub(/ +$/,'')
              
-             $RunResults[token] <<  value
+             
+             # add prefix to 
+             case token 
+             when /s.error/ 
+               token.concat("@#{ec}")
+               ec = ec + 1
+             when /s.warning/
+               token.concat("@#{wc}")
+               wc=wc+1 
+             end 
+             $RunResults["run-#{thread3}"][token] = value
            
            end
-           
+
            contents.close
-           $CompletedRunCount = $CompletedRunCount + 1 
            stream_out (" done.\n")
            
 
            
         else 
         
-            stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
-            $failures.write "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]})\n"
-            $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]})"
+            stream_out (" Output couldn't be found! \n")
+            $runFailed = true 
+  
+            #stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
+            $failures.write "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb\n"
+            $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb"
             $FailedRunCount = $FailedRunCount + 1
             
-
-            
+			$RunResults["run-#{thread3}"]["s.success"] = "false"
+			$RunResults["run-#{thread3}"]["s.errors"].push = " Run failed - no outut generated"
+  
             $LocalChoiceFile = File.basename $gOptionFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
               warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
             end           
-            
-            $runFailed = true       
+                  
             
         end 
         
@@ -626,25 +654,16 @@ def run_these_cases(current_task_files)
           
           FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
           
-          #if ( ! Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0].nil? ) 
-          #  if ( File.file?(Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0]) )
-          #    FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt")[0] ,  "#{$SaveDirs[thread3]}/h2k-core-msgs.txt" )
-          #    FileUtils.rm_rf Dir.glob("#{$RunDirs[thread3]}/H2K/WMB_*.txt") 
-          #  end
-          #end 
-          #if ( File.file?("#{$RunDirs[thread3]}/H2K/ROutStr.Txt") ) 
-          #  FileUtils.cp( "#{$RunDirs[thread3]}/H2K/ROutStr.Txt",  "#{$SaveDirs[thread3]}/h2k-diagnostics.txt" )
-          #  FileUtils.rm_rf( "#{$RunDirs[thread3]}/H2K/ROutStr.Txt" )
-          #end 
-        
+       
         end 
-
+        
         #Update status of this thread. 
         $FinishedTheseFiles[$choicefiles[thread3]] = true        
      
       end 
       
-      stream_out ("     - Writing results to disk... ") 
+      errs = "" 
+      stream_out ("     - Post-processing results... ") 
 
       $outputlines = ""
       
@@ -653,22 +672,23 @@ def run_these_cases(current_task_files)
       
       # Alternative output in JSON format. Can be memory-intensive
       if ( $gJSONize ) 
-    
-        while row < $RunResults["c.RunNumber"].length
+      
+        
+        $RunResults.each do |run,data|
           
-                 
-          $RunID = "run-#{$gHashLoc.to_s}"
-          # initiate hash to hold row data. 
           $gJSONAllData[$gHashLoc] = Hash.new
-          $gJSONAllData[$gHashLoc] = { "result-number" =>  $gHashLoc+1, 
-                                       "archetype"     => Hash.new, 
-                                       "input"         => Hash.new, 
-                                       "output"        => Hash.new, 
-                                       "configuration" => Hash.new,
-                                       "miscellaneous_info"     => Hash.new   }
-
-                                                 
+          $gJSONAllData[$gHashLoc] = { "result-number"  =>  $gHashLoc+1, 
+                                        "status"        => Hash.new,
+                                        "archetype"     => Hash.new, 
+                                        "input"         => Hash.new, 
+                                        "output"        => Hash.new, 
+                                        "configuration" => Hash.new,
+                                        "miscellaneous_info"     => Hash.new   } 
+                                    
+          # Storage for arrays. 
+          $gJSONAllData[$gHashLoc]["status"] = { "warnings" => Array.new, "errors" => Array.new } 
           
+          # Storage for binned data
           if ( $gExtendedOutputFlag =~ /-e/ ) 
             $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => Hash.new  } 
             $gJSONAllData[$gHashLoc]["output"]["BinnedData"] = Array.new 
@@ -677,15 +697,15 @@ def run_these_cases(current_task_files)
               $gJSONAllData[$gHashLoc]["output"]["BinnedData"][counter]["bin"] = counter+1
             end
           else 
-            $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => "No data to report. Run htap-prm with '-e' to enable"  } 
-          end 
-          
-          $RunResults.each do |column, data|           
-        
+            $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => "No data to report for #{$gHashLoc}. Run htap-prm with '-e' to enable"  } 
+          end             
 
-            $col_tmp = column.to_s.gsub(/\s*/, '') 
+          data.each do |token,value|
+           
             
-            
+            #Detect the type of this token from prefix
+            $col_tmp = token.to_s.gsub(/\s*/, '') 
+                        
             case $col_tmp
             when  /^input\./ , /^i\./ 
               $col_type = "input"
@@ -694,16 +714,26 @@ def run_these_cases(current_task_files)
             when /^arch\./ , /^a\./ 
               $col_type = "archetype" 
             when /^config\./ , /^c\./ 
-              $col_type = "configuration"                  
+              $col_type = "configuration"    
+            when /^status\./ , /^s\./ 
+              $col_type = "status"                  
             else 
               $col_type = "miscellaneous_info"
             end 
             
+            # And get remaining text after the '.'
             $col_txt = $col_tmp.to_s.gsub(/^[^\.]+\./,'')
             
+            # Then store data in the appropriate location 
+            case $col_txt     
+            when /error/ 
+              
+              $gJSONAllData[$gHashLoc]["status"]["errors"].push( value.to_s.gsub(/"/,'') )
+              
+            when /warning/ 
             
-            # For BIN-data, process as array, otherise, as token/value
-            case $col_txt        
+              $gJSONAllData[$gHashLoc]["status"]["warnings"].push( value.to_s.gsub(/"/,'') )              
+            
             when /BIN-data/
               # format is 'BIN-data-TYPE-##'; Split out TYPE and ##
               $bin_type = Array.new
@@ -713,109 +743,128 @@ def run_these_cases(current_task_files)
               
               case $bin_type[0].to_s
               when /HRS/ 
-                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["CumulativeHrs"] = data[row].to_f
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["CumulativeHrs"] = value.to_f
               
               when /TMP/ 
-                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Temperature_oC"] = data[row].to_f
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Temperature_oC"] = value.to_f
                 
               when /HLR/ 
-                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["HeatLossRateW"] = data[row].to_f
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["HeatLossRateW"] = value.to_f
               
               when /T2cap/ 
-                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type2Capacity"] = data[row].to_f
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type2Capacity"] = value.to_f
               
               when /T2PLR/ 
-                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type2PartLoadRatio"] = data[row].to_f                
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type2PartLoadRatio"] = value.to_f                
         
               when /T1PLR/ 
-                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type1PartLoadRatio"] = data[row].to_f                
+                 $gJSONAllData[$gHashLoc]["output"]["BinnedData"][$bin_row]["Type1PartLoadRatio"] = value.to_f                
               end               
             
             else 
             
                           
               # format according to data type 
-              case data[row].to_s.gsub(/\s*/, '') 
+              case value.to_s.gsub(/\s*/, '') 
               when /^[0-9\-]+$/      
-                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_i
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = value.to_i
                 
               when /^[0-9\.\-E]+$/             
-                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_f
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = value.to_f
                 
               else   
-                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = data[row].to_s.gsub(/\s*/, '') 
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = value.to_s.gsub(/\s*/, '') 
 
               end
-             
+              
+              
+              
             end 
         
           
-          end #
+          end # ends data.each do         
           
-          # and append this result onto master all-run-array
-
-   
-
-           row = row + 1 
-        
-           $gHashLoc = $gHashLoc + 1 
-        
-        
-        end 
-        
-                
-      end   # if ($json)
-       
-
-      # Standard output - flat .csv file with results written to disk and flushed 
-      # after each batch to minimze memory footprint.
-      
-      row = 0
-      while row < $RunResults["c.RunNumber"].length
-
-        $RunResults.each do |column, data| 
-       
-          if ( ! $outputHeaderPrinted ) 
-            
-            $outputlines.concat(column.to_s)
-      
-          else 
-        
-            $outputlines.concat(data[row].to_s)
-
-          end 
-        
-          $outputlines.concat( ", " )
-        
-        end
-
-        if ( ! $outputHeaderPrinted ) 
-          $outputHeaderPrinted = true 
-        else 
-          row = row + 1
-        end 
-      
-        $outputlines.concat( "\n " )
-      
+          # Test to see if the run was successful. Flag if not, otherwise increment completed counter. 
          
+          if ( $gJSONAllData[$gHashLoc]["status"]["success"] == "false" ) then 
+              
+            $runFailed = true 
+            errs=" *** simulation errors found ***"
+            $msg = "#{$gJSONAllData[$gHashLoc]["configuration"]["ChoiceFile"]} (dir: #{$gJSONAllData[$gHashLoc]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
+            $failures.write "$msg\n"
+            $FailedRuns.push $msg 
+            $FailedRunCount = $FailedRunCount + 1
 
-      end 
-      
-      $output.write($outputlines) 
-      $output.flush
-      $failures.flush 
-      
-      $RunResults.clear
-      
-      stream_out (" done.\n\n")
-      
-      # Set Flag for file loop 
-        
-      if ( ! $FinishedTheseFiles.has_value?(false) ) 
-      
-        $RunsDone = true 
+          else 
+            
+            $CompletedRunCount = $CompletedRunCount + 1 
+          end 
+
           
-      end 
+          # Increment hash increment too. 
+          $gHashLoc = $gHashLoc + 1 
+          
+                                          
+                                         
+                                          
+                                       
+         end # ends $RunResults.each do
+      
+      
+      end # Ends if JSON.
+  
+      
+     $RunResults.each do |run,data|
+       
+       # Only write out data from successful runs - this helps prevent corrupted dat 
+       
+             
+       if ( data['s.success'] =~ /true/ ) then
+         
+         if ( ! $outputHeaderPrinted ) then 
+           # Deal with header first 
+           data.sort.to_h          
+           data.each do |column,value|
+           
+             case column 
+             when /s\.error/, /s.warning/, /BIN-data/
+               # Do nothing 
+             else 
+              
+               $csvColumns.push column
+               $headerline.concat("#{column.to_s},")
+             end 
+           end 
+           $outputHeaderPrinted = true 
+           $headerline.concat("\n")
+           $outputCSV.write($headerline)  
+         end 
+         
+         $csvColumns.each do |key|
+            
+            $outputlines.concat("#{data[key]},")
+                         
+         end
+         
+         $outputlines.concat("\n")
+         
+       end 
+       
+    end 
+     
+     $outputCSV.write($outputlines) 
+     $outputCSV.flush
+     $failures.flush 
+     
+     $RunResults.clear
+     
+     stream_out ("done.#{errs}\n\n")
+
+     if ( ! $FinishedTheseFiles.has_value?(false) ) 
+     
+       $RunsDone = true 
+         
+     end 
         
 
   end 
@@ -827,7 +876,7 @@ def run_these_cases(current_task_files)
   stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
   
   
-    if ($gJSONize )
+  if ($gJSONize )
     stream_out(" - Writing JSON output to HTAP-prm-output.json... ")
     $JSONoutput  = File.open($gOutputJSON, 'w') 
     $JSONoutput.write(JSON.pretty_generate($gJSONAllData))
@@ -972,7 +1021,8 @@ $FailedRuns  = Array.new
 $RunDirectoryRoot  = "HTAP-work"
 $SaveDirectoryRoot = "HTAP-sim"
 $RunResultFilename = "SubstitutePL-output.txt"
-$RunResults = Hash.new {|h,k| h[k] = Array.new }
+
+
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
               
 
@@ -998,6 +1048,7 @@ FileUtils.rm_rf Dir.glob("HTAP-sim-*")
 stream_out (" done.\n")
 
 
+
 for prethread in 0..$gNumberOfThreads-1 
 
     $RunDirName = "#{$RunDirectoryRoot}-#{prethread}"
@@ -1005,7 +1056,8 @@ for prethread in 0..$gNumberOfThreads-1
 
 end 
 
-$output = File.open($gOutputFile, 'w')
+$outputCSV = File.open($gOutputFile, 'w')
+
 $failures = File.open($gFailFile, 'w')
 
 $gMeshRunDefs = Hash.new
@@ -1071,7 +1123,7 @@ stream_out ("    + #{$CompletedRunCount} files were evaluated successfully.\n\n"
 stream_out ("    + #{$FailedRunCount} files failed to run \n")
 
 if ( $FailedRunCount > 0 ) 
-  stream_out ("   ! The following files failed to run ! \n")
+  stream_out ("\n !! The following files failed to run: !! \n")
 
   $FailedRuns.each do |errorfile|
     stream_out ("     + #{errorfile} \n")
@@ -1080,7 +1132,7 @@ if ( $FailedRunCount > 0 )
 end 
    
 # Close output files (JSON output dumped in a single write - already closed at this point. 
-$output.close 
+$outputCSV.close 
 $failures.close   
   
   
