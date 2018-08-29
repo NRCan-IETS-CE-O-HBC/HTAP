@@ -43,7 +43,11 @@ $gJSONize = false
 $gJSONAllData = Array.new
 $gHashLoc = 0
 
+$snailStart = false 
+$snailStartWait = 1
 
+$choicesInMemory = true
+$ChoiceFileContents = Hash.new
 
 =begin rdoc
 =========================================================================================
@@ -329,7 +333,7 @@ end
 def gen_choice_file(choices) 
 
   # create empty directory to hold choice files 
-  if ( ! Dir.exist?($gGenChoiceFileDir) )
+  if ( ! Dir.exist?($gGenChoiceFileDir) && ! $choicesInMemory )
     if ( ! Dir.mkdir($gGenChoiceFileDir) )
       fatalerror( " Fatal Error! Could not create #{$gGenChoiceFileDir} below #{$gMasterPath}!\n MKDir Return code: #{$?}\n" )
     end 
@@ -339,19 +343,37 @@ def gen_choice_file(choices)
   $gGenChoiceFileNum = $gGenChoiceFileNum + 1
   
   choicefilename = $gGenChoiceFileBaseName.gsub(/X/,"#{$gGenChoiceFileNum}") 
-  choicefilepath = "#{$gGenChoiceFileDir}#{choicefilename}"
+  
  
   
+  if ( $choicesInMemory ) then 
   
-  choicefile = File.open(choicefilepath, 'w')
+    choicefilepath = "#{choicefilename}"
+    
+    $ChoiceFileContents[choicefilepath] = "! Choice file for run $gGenChoiceFileNum\n" 
   
-  choices.each do | attribute, choice | 
+    choices.each do | attribute, choice | 
   
-    choicefile.write(" #{attribute} : #{choice} \n")   
+      $ChoiceFileContents[choicefilepath].concat("#{attribute} : #{choice} \n")   
   
-  end 
+    end     
   
-  choicefile.close 
+  
+  else 
+  
+  
+    choicefilepath = "#{$gGenChoiceFileDir}#{choicefilename}"
+    choicefile = File.open(choicefilepath, 'w')
+  
+    choices.each do | attribute, choice | 
+  
+      choicefile.write(" #{attribute} : #{choice} \n")   
+  
+    end 
+  
+    choicefile.close
+
+  end   
 
   return choicefilepath
 
@@ -389,7 +411,7 @@ def run_these_cases(current_task_files)
   
   $choicefileIndex = 0 
   numberOfFiles = $FinishedTheseFiles.count {|k| k.include?(false)}
-  
+
   
   stream_out (" - HTAP-prm: begin runs ----------------------------\n\n")
   
@@ -403,7 +425,14 @@ def run_these_cases(current_task_files)
 
       $batchCount = $batchCount + 1 
 
+       
       stream_out ("   + Batch #{$batchCount} ( #{$choicefileIndex}/#{numberOfFiles} files processed so far...) \n" )
+      if ( $batchCount == 1 && $snailStart ) then 
+      
+        stream_out ("   |\n") 
+        stream_out ("   +-> NOTE: \"SnailStart\" is active. Waiting for #{$snailStartWait} seconds between threads (on first batch ONLY!) \n\n")
+      
+      end 
 
       # Empty arrays for current batch. 
       $choicefiles.clear
@@ -427,7 +456,8 @@ def run_these_cases(current_task_files)
         $Location = $gLocationHash[$choicefiles[thread]]
       
         count = thread + 1 
-        stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
+        #stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
+        stream_out ("     - Starting thread #{count}/#{$ThreadsNeeded} for sim ##{$choicefileIndex+1} ")
         
         
         # For this thread: Get the next choice file in the batch. 
@@ -463,7 +493,15 @@ def run_these_cases(current_task_files)
           
           
           # Copy choice and options file into intended run directory...
-          FileUtils.cp($choicefiles[thread],$RunDirectory)
+          if $choicesInMemory
+            choicefile = File.open("#{$RunDirectory}/#{$choicefiles[thread]}", 'w')
+            choicefile.write ($ChoiceFileContents[$choicefiles[thread]])
+            choicefile.close
+          else 
+            FileUtils.cp($choicefiles[thread],$RunDirectory)
+          end 
+          
+          
           FileUtils.cp($gOptionFile,$RunDirectory)      
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
           
@@ -507,8 +545,12 @@ def run_these_cases(current_task_files)
           $cmdtxt.close
           
           #debug_out(" ( cmd: #{cmdscript} |  \n")  
-             
-          pid = Process.spawn( cmdscript, :out => File::NULL, :err => File::NULL ) 
+          
+  
+          pid = Process.spawn( cmdscript, :out => File::NULL, :err => "substitute-h2k-errors.txt" ) 
+          
+
+          
 
           $PIDS[thread] = pid 
           
@@ -522,8 +564,41 @@ def run_these_cases(current_task_files)
           
         end 
 
+          # Snail-Start: 
+          # This patch is a workaround for instability observed with highly-thread (20+) runs on machines with slow I/O. 
+          # On the first batch, the substitute script copies the contents of the h2k folder into the working directories (HTAP-work-X),
+          # and these folders are subsequently re-used on the following batches. I suspect that windows struggles when 40+ threads are all 
+          # trying to copy 80+ MB simultaneously to a slow disk; some folders are not created correctly, some files are missing. The 
+          # result is a bunch of failed runs. 
+          #
+          # Specifying command line option '--snailStart X' causes prm to pause for X seconds after spawning a thread - * on the first batch only *
+          # It seems to give a magnetic disk a fighting chance of keeping up with the copy requests. It doesn't appear to slow the simulation 
+          # down too much, because it only affects the first batch, the H2K folder copy operation appears to be the most expensive part of that first run.
+
+          # In tests with 40 threads writing to a magnetic disk, `-- snailStart 6` produces stable runs. 
+          # A future improvement might modify substitute-h2k.rb to take a hash of the h2k directory content, and verify its integrity before proceeding. 
+          
+          if ( $batchCount == 1 && $snailStart ) then 
+          
+            stream_out ("  *SS-Wait")
+            for wait in 1..5
+          
+              stream_out (".")
+          
+              sleep($snailStartWait/5)
+              
+            end 
+            
+            stream_out( "*")
+            
+          end       
+        
+        
         stream_out (" done. \n")
         $choicefileIndex = $choicefileIndex + 1
+        
+        # Create hash to hold results 
+        $RunResults["run-#{thread}"] = Hash.new 
         
       end 
       
@@ -539,7 +614,8 @@ def run_these_cases(current_task_files)
          
          stream_out ("     - Waiting on PID: #{$PIDS[thread2]} (#{count}/#{$ThreadsNeeded})...")
           
-          Process.wait $PIDS[thread2], 0
+          Process.wait($PIDS[thread2], 0)
+          
           status = $?.exitstatus   
           
           if ( status == 0 ) 
@@ -548,7 +624,10 @@ def run_these_cases(current_task_files)
             
           else 
           
-            stream_out (" FAILED!.\n")
+            stream_out (" FAILED! (Exit status: #{status})\n")
+        
+            $RunResults["run-#{thread2}"]["s.success"] = "false"
+            $RunResults["run-#{thread2}"]["s.errors@99"]  = " Run failed - substitute-h2k.rb returned status #{status}"
           
           end 
           
@@ -561,20 +640,32 @@ def run_these_cases(current_task_files)
         
       for thread3 in 0..$ThreadsNeeded-1 
         count = thread3 + 1 
-        stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded} #{$choicefiles[thread3]} )...")
+        stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
         
         Dir.chdir($RunDirs[thread3])
         
-         
-        
-        $RunResults["run-#{thread3}"] = Hash.new 
+
         $RunResults["run-#{thread3}"]["c.RunNumber"]      = "#{$RunNumbers[thread3].to_s}"
         $RunResults["run-#{thread3}"]["c.RunDirectory"]   = "#{$RunDirs[thread3].to_s}"
         $RunResults["run-#{thread3}"]["c.SaveDirectory"]  = "#{$SaveDirs[thread3].to_s}"
         $RunResults["run-#{thread3}"]["c.ChoiceFile"]     = "#{$choicefiles[thread3].to_s}"
-		
-		$runFailed = false
-		
+        
+        $runFailed = false
+        
+        # Parse contents of substitute-h2k-errors.txt, which may contain ruby errors if substitute-h2k.rb did 
+        # not execute correctly. 
+        $RunResults["run-#{thread3}"]["s.substitute-h2k-err-msgs"] = "nil"
+        
+        if ( File.exist?("substitute-h2k-errors.txt") )
+            $errmsgs= File.read("substitute-h2k-errors.txt")
+            $errmsgs_chk = $errmsgs
+            if ( ! $errmsgs_chk.gsub(/\n*/,"").gsub( / */, "").empty? ) 
+              $RunResults["run-#{thread3}"]["s.substitute-h2k-err-msgs"] = $errmsgs         
+            end 
+            
+        end 
+        
+        
         if ( File.exist?($RunResultFilename) ) 
         
            contents = File.open($RunResultFilename, 'r') 
@@ -590,29 +681,39 @@ def run_these_cases(current_task_files)
              lineCount = lineCount + 1
              line_clean = line.gsub(/ /, '')
              line_clean = line.gsub(/\n/, '')
-             $contents = Array.new 
-             $contents = line_clean.split('=')
-             token = $contents[0].gsub(/\s*/,'') 
-             value = $contents[1].gsub(/^\s*/,'') 
-             value = $contents[1].gsub(/^ /,'')
-             value = $contents[1].gsub(/ +$/,'')
-             
-             
-             # add prefix to 
-             case token 
-             when /s.error/ 
-               token.concat("@#{ec}")
-               ec = ec + 1
-             when /s.warning/
-               token.concat("@#{wc}")
-               wc=wc+1 
+             if ( ! line_clean.to_s.empty? ) 
+               $contents = Array.new 
+               $contents = line_clean.split('=')
+               token = $contents[0].gsub(/\s*/,'') 
+               value = $contents[1].gsub(/^\s*/,'') 
+               value = $contents[1].gsub(/^ /,'')
+               value = $contents[1].gsub(/ +$/,'')
+               
+               
+               # add prefix to 
+               case token 
+               when /s.error/ 
+                 token.concat("@#{ec}")
+                 ec = ec + 1
+               when /s.warning/
+                 token.concat("@#{wc}")
+                 wc=wc+1 
+               end 
+               $RunResults["run-#{thread3}"][token] = value
              end 
-             $RunResults["run-#{thread3}"][token] = value
            
-           end
-
+           end 
            contents.close
-           stream_out (" done.\n")
+
+           if $RunResults["run-#{thread3}"]["s.success"] =~ /false/ then 
+             $runFailed = true
+             stream_out (" done (with errors).\n")
+           else
+             stream_out (" done.\n")
+           end 
+           
+          
+           
            
 
            
@@ -626,8 +727,8 @@ def run_these_cases(current_task_files)
             $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb"
             $FailedRunCount = $FailedRunCount + 1
             
-			$RunResults["run-#{thread3}"]["s.success"] = "false"
-			$RunResults["run-#{thread3}"]["s.errors"].push = " Run failed - no outut generated"
+            $RunResults["run-#{thread3}"]["s.success"] = "false"
+            $RunResults["run-#{thread3}"]["s.errors@99"] = " Run failed - no output generated"
   
             $LocalChoiceFile = File.basename $gOptionFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
@@ -652,9 +753,8 @@ def run_these_cases(current_task_files)
             
           end 
           
-          FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
-          
-       
+          FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
+          FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
         end 
         
         #Update status of this thread. 
@@ -697,7 +797,7 @@ def run_these_cases(current_task_files)
               $gJSONAllData[$gHashLoc]["output"]["BinnedData"][counter]["bin"] = counter+1
             end
           else 
-            $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => "No data to report for #{$gHashLoc}. Run htap-prm with '-e' to enable"  } 
+            $gJSONAllData[$gHashLoc]["output"] = { "BinnedData" => "No binned data to report for run ##{$gHashLoc}. Run htap-prm with '-e' to enable"  } 
           end             
 
           data.each do |token,value|
@@ -773,7 +873,7 @@ def run_these_cases(current_task_files)
                 $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = value.to_f
                 
               else   
-                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = value.to_s.gsub(/\s*/, '') 
+                $gJSONAllData[$gHashLoc]["#{$col_type}"]["#{$col_txt}"] = value.to_s.gsub(/^\s*/, '').gsub( /\s*$/,'')
 
               end
               
@@ -783,6 +883,21 @@ def run_these_cases(current_task_files)
         
           
           end # ends data.each do         
+          
+          # Arr err/warn empty? if so, put 'nil'
+          if ( $gJSONAllData[$gHashLoc]["status"]["errors"].empty? ) 
+           
+           $gJSONAllData[$gHashLoc]["status"]["errors"].push "nil"
+          
+          end 
+          
+          if ( $gJSONAllData[$gHashLoc]["status"]["warnings"].empty? ) 
+           
+           $gJSONAllData[$gHashLoc]["status"]["warnings"].push "nil"
+          
+          end 
+          
+          
           
           # Test to see if the run was successful. Flag if not, otherwise increment completed counter. 
          
@@ -798,15 +913,14 @@ def run_these_cases(current_task_files)
           else 
             
             $CompletedRunCount = $CompletedRunCount + 1 
+            
           end 
 
           
           # Increment hash increment too. 
           $gHashLoc = $gHashLoc + 1 
           
-                                          
-                                         
-                                          
+                                   
                                        
          end # ends $RunResults.each do
       
@@ -827,7 +941,7 @@ def run_these_cases(current_task_files)
            data.each do |column,value|
            
              case column 
-             when /s\.error/, /s.warning/, /BIN-data/
+             when /s\.error/, /s\.warning/, /BIN-data/
                # Do nothing 
              else 
               
@@ -971,13 +1085,13 @@ optparse = OptionParser.new do |opts|
    end
    
    
-   opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
-      $cmdlineopts["substitute"] = o
-      $gSubstitutePath = o
-      if ( !File.exist?($gSubstitutePath) )
-         fatalerror("Valid path to substitute-h2k,rb script must be specified with --substitute-h2k-path (or -s) option!")
-      end
-   end
+   #opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
+   #   $cmdlineopts["substitute"] = o
+   #   $gSubstitutePath = o
+   #   if ( !File.exist?($gSubstitutePath) )
+   #      fatalerror("Valid path to substitute-h2k,rb script must be specified with --substitute-h2k-path (or -s) option!")
+   #   end
+   #end
 
    opts.on("-t", "--threads X", "Number of threads to use") do |o|
       $gNumberOfThreads = o.to_i
@@ -986,6 +1100,12 @@ optparse = OptionParser.new do |opts|
       end 
    end
    
+   opts.on("-ss", "--snailStart X", "Optional delay (X sec) between spawning threads on the first batch (and ignored on subsequent batches). May improve stability on highly parallel machines with slow disk I/O.") do |o|
+      $snailStart = true 
+      $snailStartWait = o.to_f
+   end
+
+
    
    
    
@@ -1098,8 +1218,13 @@ else
     create_mesh_cartisian_combos(-3) 
 
     $RunTheseFiles = $gGenChoiceFileList
-
-    stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
+    
+    if ($choicesInMemory )
+      stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n") 
+    else 
+      stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
+    end 
+    
   end 
   
   fileorgin = "generated"
@@ -1112,8 +1237,11 @@ end
 $batchCount = 0 
 
 
-
-stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
+if ( $choicesInMemory ) 
+  stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} combinations using #{$gNumberOfThreads} threads \n\n")
+else 
+  stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
+end 
 
 run_these_cases($RunTheseFiles) 
 
