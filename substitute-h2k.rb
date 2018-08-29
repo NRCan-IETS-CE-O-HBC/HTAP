@@ -191,7 +191,7 @@ $gAvgEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
 $Locale = ""      # Weather location for current run
 $gWarn = false 
-# Data from Hanscomb 2011 NBC analysiscd 
+# Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
 $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
                            "Edmonton"     =>  1.12 ,
@@ -606,8 +606,8 @@ end
 # =========================================================================================
 def write_h2k_magic_files(filepath) 
 
-  $WinMBFile = "#{filepath}/H2K/WINMB.H2k" 
-  $ROutFile  = "#{filepath}/H2K/ROutStr.H2k" 
+  $WinMBFile = "#{filepath}\\H2K\\WINMB.H2k"
+  $ROutFile  = "#{filepath}\\H2K\\ROutstr.H2k"
 
   if ( ! File.file?( $WinMBFile )  )
   
@@ -697,12 +697,13 @@ def processFile(h2kElements)
    # Initialized here outside of Opt-Locations check to make scope broader
    h2kFuelElements = nil
 
-   # H2K version numbers can be used to determine availability of data in the H2K file.
-   # Made global so available outide of this subroutine definition
+   # H2K version numbers can be used to determine availability of data in the H2K input file.
+   # Made global so available outide of this subroutine definition. Note that processed output
+   # file will have the version number of the H2K CLI version used in the run!
    locationText = "HouseFile/Application/Version"
-   $versionMajor_H2K = h2kElements[locationText].attributes["major"]
-   $versionMinor_H2K = h2kElements[locationText].attributes["minor"]
-   $versionBuild_H2K = h2kElements[locationText].attributes["build"]
+   $versionMajor_H2K_input = h2kElements[locationText].attributes["major"]
+   $versionMinor_H2K_input = h2kElements[locationText].attributes["minor"]
+   $versionBuild_H2K_input = h2kElements[locationText].attributes["build"]
 
    locationText = "HouseFile/House/Generation/PhotovoltaicSystems"
    if ( h2kElements[locationText] != nil )
@@ -4717,7 +4718,7 @@ def postprocess( scaleData )
      #  fatalerror("Could not read ROutStr.txt\n")
        
      #end 
-   end 
+   end #of reading ROUTSTR file
    
    
    
@@ -5555,10 +5556,26 @@ def getHeatedFloorArea( elements )
    areaRatio = 0
    heatedFloorArea = 0
    
-   areaAboveGradeInput = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
-   areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
-   areaInputTotal = areaAboveGradeInput + areaBelowGradeInput
-   
+   # Get XML file version that "elements" came from. The version can be from the original file (pre-processed inputs)
+   # or from the post-processed outputs (which will match the version of the H2K CLI used), depending on the "elements"
+   # passed to this function.
+   versionMajor = elements["HouseFile/Application/Version"].attributes["major"].to_i
+   versionMinor = elements["HouseFile/Application/Version"].attributes["minor"].to_i
+   versionBuild = elements["HouseFile/Application/Version"].attributes["build"].to_i
+
+   if (versionMajor == 11 && versionMinor >= 5 && versionBuild >= 8) || versionMajor > 11 then
+      # "House", "Multi-unit: one unit", or "Multi-unit: whole building"
+      buildingType =  elements["HouseFile/House/Specifications"].attributes["buildingType"]
+      areaAboveGradeInput = elements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["aboveGrade"].to_f
+      areaBelowGradeInput = elements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["belowGrade"].to_f
+   else
+      buildingType = "House"
+      areaAboveGradeInput = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
+      areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
+   end
+
+   areaUserInputTotal = areaAboveGradeInput + areaBelowGradeInput
+
    case elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
    when 1
       numStoreysInput = 1
@@ -5577,6 +5594,7 @@ def getHeatedFloorArea( elements )
    # Get house area estimates from the first XML <results> section - these are totals of multiple surfaces
    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
    slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
+   basementSlabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
    if numStoreysInput == 1
       # Single storey house -- avoid counting a basement heated area 
       areaEstimateTotal = ceilingAreaOut
@@ -5585,27 +5603,30 @@ def getHeatedFloorArea( elements )
       loc = "HouseFile/House/Temperatures/Basement"
       loc2 = "HouseFile/House/Temperatures/Crawlspace"
       if elements[loc].attributes["heated"] == "true" || elements[loc].attributes["heatingSetPoint"] == "true" || elements[loc2].attributes["heated"] == "true"
-         areaEstimateTotal = ceilingAreaOut * numStoreysInput + slabAreaOut
+         areaEstimateTotal = ceilingAreaOut * numStoreysInput + basementSlabAreaOut
       else
          areaEstimateTotal = ceilingAreaOut * numStoreysInput
       end
    end
    
    if areaEstimateTotal > 0
-      areaRatio = areaInputTotal / areaEstimateTotal
+      areaRatio = areaUserInputTotal / areaEstimateTotal
    else
       stream_out("\nNote: House area estimate from results section is zero.\n")
    end
    
-   # Accept user input area if it's between 50% and 200% of the estimated area!
-   if areaRatio > 0.50 && areaRatio < 2.0 then
-      heatedFloorArea = areaInputTotal
+   if buildingType.include? "Multi-unit" then
+      # For multis using the "new" MURB method assume that heated area comes from a valid user input (not an estimate form ceiling/basement areas)
+      heatedFloorArea = areaUserInputTotal
+   elsif areaRatio > 0.50 && areaRatio < 2.0 then
+      # Accept user input area if it's between 50% and 200% of the estimated area!
+      heatedFloorArea = areaUserInputTotal
    else
-      # Use user input area if a row house (end:6 or middle:8) regardless of area ratio (but non-zero)
-      # Also applicable to Triplexes (type 4) and Apartments (type 5)
+      # Use user input area for Triplexes (type 4), Apartments (type 5), or
+      # row house (end:6 or middle:8) regardless of area ratio (but non-zero)
       houseType = elements["HouseFile/House/Specifications/HouseType"].attributes["code"].to_i
-      if (houseType == 4 || houseType == 5 || houseType == 6 || houseType == 8) && areaInputTotal > 0
-         heatedFloorArea = areaInputTotal
+      if (houseType == 4 || houseType == 5 || houseType == 6 || houseType == 8) && areaUserInputTotal > 0
+         heatedFloorArea = areaUserInputTotal
       else
          heatedFloorArea = areaEstimateTotal
       end
@@ -6685,10 +6706,12 @@ if ( ! $DirVerified )
 else 
   fix_H2K_INI()
   write_h2k_magic_files("#{$gMasterPath}")
+  # Remove existing RoutStr file! It can grow very large, if present.
+  rOut_file  = "#{$gMasterPath}\\H2K\\ROutstr.H2k"
+  if File.exist?(rOut_file)
+    system ("del #{rOut_file}")
+  end
 end 
-
-
-
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
 # (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
@@ -6708,7 +6731,7 @@ end
 
 # Load all XML elements from HOT2000 file
 h2kElements = get_elements_from_filename($gWorkingModelFile)
-debug_out(" READING to edit: #{$gWorkingModelFile} \n")
+stream_out(" READING to edit: #{$gWorkingModelFile} \n")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
 # rule set name specified in the choice file
