@@ -15,6 +15,8 @@ require 'rexml/document'
 require 'optparse'
 require 'timeout'
 require 'fileutils'
+require 'digest'
+
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
@@ -22,6 +24,16 @@ include REXML   # This allows for no "REXML::" prefix to REXML methods
 R_PER_RSI = 5.678263
 KWH_PER_GJ = 277.778
 W_PER_KW = 1000.0
+
+# Parameters controlling timeout and re-try limits for HOT2000 
+# maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
+# JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
+#      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
+#      re-trying a run)! 
+$maxRunTime = 10 # seconds - could be longer on slow machines. 
+$maxTries   = 10 # JTB 05-10-2016: Also setting maximum retries within timeout period
+
+
 
 # HOT2000 output data sets depend on the run mode set in the HOT2000 inputs. In General mode 
 # just one run is done and one set of outputs is generated, In ERS mode, multiple (7) runs of the 
@@ -181,23 +193,23 @@ $Locale = ""      # Weather location for current run
 $gWarn = false 
 # Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
-$RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
-                           "Edmonton"     =>  1.12 ,
-                           "Calgary"      =>  1.12 ,  # Assume same as Edmonton?
-                           "Ottawa"       =>  1.00 ,
-                           "Toronto"      =>  1.00 ,
-                           "Quebec"       =>  1.00 ,  # Assume same as Montreal?
-                           "Montreal"     =>  1.00 ,
-                           "Vancouver"    =>  1.10 ,
-                           "PrinceGeorge" =>  1.10 ,
-                           "Kamloops"     =>  1.10 ,
-                           "Regina"       =>  1.08 ,  # Same as Winnipeg?
-                           "Winnipeg"     =>  1.08 ,
-                           "Fredricton"   =>  1.00 ,  # Same as Quebec?
-                           "Whitehorse"   =>  1.00 ,
-                           "Yellowknife"  =>  1.38 ,
-                           "Inuvik"       =>  1.38 , 
-                           "Alert"        =>  1.38   }
+$RegionalCostFactors  = {  "HALIFAX"      =>  0.95 ,
+                           "EDMONTON"     =>  1.12 ,
+                           "CALGARY"      =>  1.12 ,  # Assume same as Edmonton?
+                           "OTTAWA"       =>  1.00 ,
+                           "TORONTO"      =>  1.00 ,
+                           "QUEBEC"       =>  1.00 ,  # Assume same as Montreal?
+                           "MONTREAL"     =>  1.00 ,
+                           "VANCOUVER"    =>  1.10 ,
+                           "PRINCEGEORGE" =>  1.10 ,
+                           "KAMLOOPS"     =>  1.10 ,
+                           "REGINA"       =>  1.08 ,  # Same as Winnipeg?
+                           "WINNIPEG"     =>  1.08 ,
+                           "FREDRICTON"   =>  1.00 ,  # Same as Quebec?
+                           "WHITEHORSE"   =>  1.00 ,
+                           "YELLOWKNIFE"  =>  1.38 ,
+                           "INUVIK"       =>  1.38 , 
+                           "ALERT"        =>  1.38   }
 
 $PVInt = "NA"
 $PVIntModel = false
@@ -331,7 +343,20 @@ $HDDHash =  {
             }
 
 #Index of provinces, used by HOT2000 for region            
-$ProvArr = [ "BRITISH COLUMBIA", "ALBERTA", "SASKATCHEWAN", "MANITOBA", "ONTARIO", "QUEBEC", "NEW BRUNSWICK", "NOVA SCOTIA", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "YUKON", "NORTHWEST TERRITORY", "NUNAVUT", "OTHER" ]            
+$ProvArr = [ "BRITISH COLUMBIA", 
+             "ALBERTA", 
+             "SASKATCHEWAN", 
+             "MANITOBA", 
+             "ONTARIO", 
+             "QUEBEC", 
+             "NEW BRUNSWICK", 
+             "NOVA SCOTIA", 
+             "PRINCE EDWARD ISLAND", 
+             "NEWFOUNDLAND AND LABRADOR", 
+             "YUKON TERRITORY", 
+             "NORTHWEST TERRITORY", 
+             "NUNAVUT", 
+             "OTHER" ]            
             
             
 # Setting hash for permafrost locations
@@ -362,7 +387,25 @@ $HDDs = ""
 
 
 
-
+def self.checksum(dir)
+  md5 = Digest::MD5.new
+  searchLoc = dir.gsub(/\\/, "/") 
+  
+  files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||  
+                                               f =~ /Browse\.Rpt/i || 
+                                               f =~ /WINMB\.H2k/i  || 
+                                               f =~ /ROutStr\.H2k/i ||
+                                               f =~ /ROutStr\.Txt/i ||
+                                               f =~ /WMB_.*\.Txt/i ||
+                                               f =~ /HOT2000\.ini/i ||      
+                                               f =~ /wizdefs.h2k/i                                                 
+                                         }    
+  content = files.map{|f| File.read(f)}.join
+  md5result = md5.update content
+  content.clear
+  return md5.update content
+ 
+end
 
 
 
@@ -384,26 +427,29 @@ def fatalerror( err_msg )
    end 
    
    ReportMsgs()
-   
+
    
    # On error - attempt to save inputs . 
    $gChoices.sort.to_h
    $fSUMMARY.write "\n"
    for attribute in $gChoices.keys()
       choice = $gChoices[attribute]
-
       $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
    end 
 
-   
+   for status_type in $gStatus.keys()
+     $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
+     
+   end 
+   $fSUMMARY.write( "s.success = false\n")
   
-   stream_out "substitute-h2k.rb: FATAL ERROR: \n\n"
-   stream_out err_msg
-   stream_out "\n=========================================================\n"   
-	  
+   #stream_out "\n substitute-h2k.rb: FATAL ERROR: \n\n"
+   #stream_out "   + ERROR: #{err_msg}\n"
+   #stream_out "\n=========================================================\n"   
+      
    $fSUMMARY.close 
    $fLOG.close    
-	  
+      
    exit() # Run stopped
 end
 
@@ -413,36 +459,52 @@ def ReportMsgs()
    $WarningBuffer = "" 
    $gErrors.each  do |msg|
      
-	  $fSUMMARY.write "s.error    = \"#{msg}\" \n"
-      $ErrorBuffer += " ERROR: #{msg} \n\n"
-	  
+      $fSUMMARY.write "s.error    = \"#{msg}\" \n"
+      $ErrorBuffer += "   + ERROR: #{msg} \n\n"
+      
    end 
       
 
    $gWarnings.each  do |msg|
      
-	  $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
-      $WarningBuffer += " WARNING: #{msg} \n\n"
-	  
+      $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
+      $WarningBuffer += "   + WARNING: #{msg} \n\n"
+      
    end 
 
    if $allok then 
      status = "Run completed successfully"
-	 $fSUMMARY.write "s.success    = true"
+     $fSUMMARY.write "s.success    = true\n"
    else 
      status = "Run failed."
-	 $fSUMMARY.write "s.success    = false"
+     $fSUMMARY.write "s.success    = false\n"
    end 
    
-   stream_out "\n=========================================================\n"
-   stream_out "substitute-h2k.rb STATUS: #{status} \n\n"
-   stream_out "\n\n"
-   stream_out "substitute-h2k.rb -> Other warning messages:\n\n"
+   
+   
+   if ($ErrorBuffer.to_s.gsub(/\s*/, "" ).empty?) 
+     $ErrorBuffer = "   (nil)\n"
+   end 
+   
+   endProcessTime = Time.now
+   $totalDiff = endProcessTime - $startProcessTime
+   $fSUMMARY.write "s.processingtime  = #{$totalDiff}\n"
+   
+   
+   stream_out " =========================================================\n"
+   stream_out " substitute-h2k.rb run summary : \n" 
+   stream_out " =========================================================\n"
+   stream_out "\n" 
+   stream_out( " Total processing time: #{$totalDiff.to_f.round(2)} seconds\n" )
+   stream_out( " Total H2K execution time : #{$runH2KTime.to_f.round(2)} seconds\n" )
+   stream_out( " H2K evaluation attempts: #{$gStatus["H2KExecutionAttempts"]} \n\n" ) 
+   stream_out " substitute-h2k.rb -> Warning messages:\n\n"
    stream_out "#{$WarningBuffer}\n"
-   stream_out "\n\n"
-   stream_out "substitute-h2k.rb -> Other error messages:\n\n"
+   stream_out ""
+   stream_out " substitute-h2k.rb -> Error messages:\n\n"
    stream_out "#{$ErrorBuffer}\n"   
-   stream_out "\n=========================================================\n"
+   stream_out " substitute-h2k.rb STATUS: #{status} \n"
+   stream_out " =========================================================\n"
 
 end 
 
@@ -914,7 +976,15 @@ def processFile(h2kElements)
                         end
                      end
                   end
-               else
+               elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
+					   locationText = "HouseFile/House/Components/Ceiling/Measurements"
+						#h2kElements.each(locationText) do |element| 
+						   # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+                     #if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+							   h2kElements[locationText].attributes["heelHeight"] = value
+							#end
+						#end
+					else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
@@ -1853,7 +1923,7 @@ def processFile(h2kElements)
                         h2kElements[locationText].delete_attribute("pilotEnergy")
                      end
                   end
-				  
+                  
                   locationText = "HouseFile/House/Components/HotWater/Primary/EnergySource"
                   h2kElements[locationText].attributes["code"] = value
                   
@@ -1885,12 +1955,12 @@ def processFile(h2kElements)
                   # This attribute only exists for an *Integrated* Heat Pump
                   h2kElements[locationText].attributes["heatPumpCoefficient"] = value  # COP of integrated HP
                end
-				
+                
             # DWHR System (includes DWHR options for internal H2K model. Don't use
             #              both external (explicit) method AND this one!)
             # DWHR inputs in the DHW section are available for change ONLY if the Base Loads input 
             # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
-            # changes made here will be overwritten by the Base Loads user inputs for Water Usage.		
+            # changes made here will be overwritten by the Base Loads user inputs for Water Usage.      
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
                if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
@@ -1939,7 +2009,7 @@ def processFile(h2kElements)
                elsif ( tag =~ /Opt-H2K-DWHR-Effectiveness9p5/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
                   h2kElements[locationText].attributes["effectivenessAt9.5"] = value  # P.55 test result (0->100)
-				  
+                  
                elsif ( tag =~ /Opt-H2K-DWHR-ShowerTemperature_code/ &&  value != "NA" )
                   locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerTemperature"
                   h2kElements[locationText].attributes["code"] = value  # DWHR Shower temperature code (1:Cool, 2:Warm or 3:Hot)
@@ -1954,7 +2024,7 @@ def processFile(h2kElements)
             # Heating & Cooling Systems (Type 1 & 2)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HVACSystem/ )
-			
+            
                if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
                   locationText = "HouseFile/House/HeatingCooling/Type1"
                   
@@ -2292,14 +2362,14 @@ def processFile(h2kElements)
               
                   
                # ASF 06-Oct-2016 - Tags for P.9 performance start here. 
-			
+            
                elsif ( tag =~ /Opt-H2K-P9-manufacturer/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Manufacturer"
                         h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
                      end
-                  end			
+                  end           
 
                elsif ( tag =~ /Opt-H2K-P9-model/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2307,7 +2377,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/EquipmentInformation/Model"
                         h2kElements[locationText].text = value if ( h2kElements[locationText] != nil )
                      end
-                  end							  
+                  end                             
 
                elsif ( tag =~ /Opt-H2K-P9-TPF/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2315,7 +2385,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
                         h2kElements[locationText].attributes["thermalPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
+                  end       
 
                elsif ( tag =~ /Opt-H2K-P9-AnnualElec/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2323,7 +2393,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
                         h2kElements[locationText].attributes["annualElectricity"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end	
+                  end   
 
 
                elsif ( tag =~ /Opt-H2K-P9-WHPF/ &&  value != "NA" )
@@ -2332,7 +2402,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
                         h2kElements[locationText].attributes["waterHeatingPerformanceFactor"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
+                  end       
 
                elsif ( tag =~ /Opt-H2K-P9-burnerInput/ )    # 06-Feb-2017 JTB: Removed "NA" check to allow for "Calculated" option
                   sysType1.each do |sysType1Name|
@@ -2348,23 +2418,23 @@ def processFile(h2kElements)
                            h2kElements[locationText].attributes["burnerInput"] = value if ( h2kElements[locationText] != nil )
                         end
                      end
-                  end					  
-				  
+                  end                     
+                  
                elsif ( tag =~ /Opt-H2K-P9-recEff/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}"
                         h2kElements[locationText].attributes["recoveryEfficiency"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
-				  
+                  end       
+                  
                elsif ( tag =~ /Opt-H2K-P9-ctlsPower/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["controlsPower"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
+                  end       
 
                elsif ( tag =~ /Opt-H2K-P9-circPower/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2372,15 +2442,15 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["circulationPower"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end					  
-				  
+                  end                     
+                  
                elsif ( tag =~ /Opt-H2K-P9-dailyUse/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["dailyUse"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
+                  end       
 
                elsif ( tag =~ /Opt-H2K-P9-stbyLossNoFan/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2388,7 +2458,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["standbyLossWithoutFan"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end	
+                  end   
 
                elsif ( tag =~ /Opt-H2K-P9-stbyLossWFan/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2396,8 +2466,8 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["standbyLossWithFan"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end					  
-				  
+                  end                     
+                  
 
                elsif ( tag =~ /Opt-H2K-P9-oneHrHotWater/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2405,7 +2475,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["oneHourRatingHotWater"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
+                  end       
 
                elsif ( tag =~ /Opt-H2K-P9-oneHourConc/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2413,15 +2483,15 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
                         h2kElements[locationText].attributes["oneHourConc"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end	
-				  
+                  end   
+                  
                elsif ( tag =~ /Opt-H2K-P9-netEff15/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
                         h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end	
+                  end   
 
                elsif ( tag =~ /Opt-H2K-P9-netEff40/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2430,22 +2500,22 @@ def processFile(h2kElements)
                         h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
-				  
+                  
                elsif ( tag =~ /Opt-H2K-P9-netEff100/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
                         h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end				  
-			
+                  end                 
+            
                elsif ( tag =~ /Opt-H2K-P9-elecUse15/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
                         h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end	
+                  end   
 
                elsif ( tag =~ /Opt-H2K-P9-elecUse40/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2454,14 +2524,14 @@ def processFile(h2kElements)
                         h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
-				  
+                  
                elsif ( tag =~ /Opt-H2K-P9-elecUse100/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/ElectricalUse"
                         h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end		
+                  end       
 
                elsif ( tag =~ /Opt-H2K-P9-blowPower15/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2469,7 +2539,7 @@ def processFile(h2kElements)
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
                         h2kElements[locationText].attributes["loadPerformance15"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end	
+                  end   
 
                elsif ( tag =~ /Opt-H2K-P9-blowPower40/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
@@ -2478,18 +2548,18 @@ def processFile(h2kElements)
                         h2kElements[locationText].attributes["loadPerformance40"] = value if ( h2kElements[locationText] != nil )
                      end
                   end
-				  
+                  
                elsif ( tag =~ /Opt-H2K-P9-blowPower100/ &&  value != "NA" )
                   sysType1.each do |sysType1Name|
                      if ( sysType1Name == "P9" )
                         locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/BlowerPower"
                         h2kElements[locationText].attributes["loadPerformance100"] = value if ( h2kElements[locationText] != nil )
                      end
-                  end				  
-				  
+                  end                 
+                  
                end # END of elsif under HVACSystem section
 
-			  
+              
             # HRV System
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-HRVspec/ )
@@ -2514,9 +2584,11 @@ def processFile(h2kElements)
 
                   if (value == "1" && h2kElements[locationText].attributes["living"].to_i < 3)
                      h2kElements[locationText].attributes["living"] = 3
-                  elsif (value == "1" && h2kElements[locationText].attributes["bedrooms"].to_i < 1)
+                  end
+                  if (value == "1" && h2kElements[locationText].attributes["bedrooms"].to_i < 1)
                      h2kElements[locationText].attributes["bedrooms"] = 1
-                  elsif (value == "1" && h2kElements[locationText].attributes["bathrooms"].to_i < 1)
+                  end
+                  if (value == "1" && h2kElements[locationText].attributes["bathrooms"].to_i < 1)
                      h2kElements[locationText].attributes["bathrooms"] = 1
                   end
                   
@@ -2556,8 +2628,8 @@ def processFile(h2kElements)
                   if ( h2kElements[locationText] == nil )
                      createHRV(h2kElements)
                   end
-                  h2kElements[locationText].attributes["supplyFlowrate"] = "#{($FanFlow * 10.6 / 1.5).round(0)}" #value    # L/s supply
-                  h2kElements[locationText].attributes["exhaustFlowrate"] = "#{($FanFlow * 10.6 / 1.5).round(0)}" #value   # Exhaust = Supply
+                  h2kElements[locationText].attributes["supplyFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}" #value    # L/s supply
+                  h2kElements[locationText].attributes["exhaustFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}" #value   # Exhaust = Supply
                   h2kElements[locationText].attributes["isDefaultFanpower"] = "true"
                   
                elsif ( tag =~ /OPT-H2K-Rating1/ &&  value != "NA" )
@@ -2684,7 +2756,7 @@ def processFile(h2kElements)
                       h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_attribute("code", "6")
                       h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_text("Foundation - 1")
                    elsif (valHash["18"] == "NA") # There is a dryer, but the user has not specified a location. Assume main floor
-                      warn_out("In Opt-Baseloads: Unknown dryer location #{valHash["18"]}! Setting to main floor\n")
+                      warn_out("In Opt-Baseloads: Unknown dryer location #{valHash["18"]}! Setting to main floor.")
                       h2kElements[locationText + "AdvancedUserSpecified/DryerLocation"].add_attribute("code", "1")
                       h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/English"].add_text("Main Floor")
                       h2kElements[locationText + "AdvancedUserSpecified/DryerLocation/French"].add_text("Plancher Principal")
@@ -2738,7 +2810,7 @@ def processFile(h2kElements)
             #                  annual electrical energy to zero (regardless of monthly values).
             #                  The excess energy is ignored in H2K (i.e., no util credit calc'd)
             #----------------------------------------------------------------------------
-						
+                        
             elsif ( choiceEntry =~ /Opt-H2K-PV/ )
                if ( tag =~ /Opt-H2K-Area/ &&  value != "NA" )
                   # Check if specified area is possible for this house file
@@ -3215,7 +3287,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             element[3][1].text = newValue
          end
       end
-	  
+      
    else
       # Code name not found in the code library
       # Since no User Specified option for windows this must be an error!
@@ -4201,83 +4273,126 @@ def runsims( direction )
    #   Need to determine how to do this in HOT2000. The OnRotate() function in HOT2000 *interface*
    #   is not accessible from the CLI version of HOT2000 and hasn't been well tested.
    
+   
+   # make a back-up copy, in case HOT2000 crashses mid-run and empties the runfille
+   
+   
+   # Command to execute H2k. 
    runThis = "HOT2000.exe -inp ..\\#{$h2kFileName}"
-   optionSwitch = "-inp"
-   fileToLoad = "..\\" + $h2kFileName
    
+
    
-   # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
-   # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
-   #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
-   #      re-trying a run)! 
-   maxRunTime = 30 # seconds
-   maxTries = 10     # JTB 05-10-2016: Also setting maximum retries within timeout period
-   startRun = Time.now
-   endRun = 0 
+
    # JB TODO: What does this comment mean? --> AF: Extra counters to count ls tmpval how many times we've tried HOT2000.
    keepTrying = true 
-   tries = 0
+   tries = 1
    # This loop actually calls hot2000!
    pid = 0 
-   begin      
-      Timeout.timeout(maxRunTime) do        # time out after maxRunTime seconds!
-         while keepTrying do                # within that loop, keep trying
-            # Run HOT2000! 
-            #pid = Process.spawn( runThis, optionSwitch, fileToLoad, :new_pgroup => true ) 
-			pid = Process.spawn( runThis, :new_pgroup => true ) 
-            stream_out ("\n Invoking HOT2000 (PID #{pid})...")
-            Process.waitpid(pid, 0)
-            status = $?.exitstatus      
-            stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+ 
+   $runH2KTime = Time.now - Time.now  
+   
+   
+   while keepTrying do 
 
-            if status == 0 
-               endRun = Time.now
-               $runH2KTime = endRun - startRun  
-               stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-               keepTrying = false       # Successful run - don't try agian 
-            
-            elsif status == 3    # Pre-check message(s)
-               endRun = Time.now
-               $runH2KTime = endRun - startRun  
-               warn_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-               keepTrying = false       # Successful run - don't try agian 
-            
-            elsif status == nil  
-               # Get nil status when can't load an h2k file.
-               
-               fatalerror( "When spawning H2K, process returned nil return code after #{$runH2KTime.round(2).to_s} seconds; HOT2000 message box or couldn't load file!\n" )
-               keepTrying = false   # Give up.
-            
-            elsif tries < maxTries      # Unsuccessful run - try again for up to maxTries     
-               tries = tries + 1
-               keepTrying = true
-            
-            else
-               # GenOpt picks up "Fatal Error!" via an entry in the *.GO-config file.
-               fatalerror( "HOT2000 return code: #{$?}\n" )
-               keepTrying = false   # Give up.
-            
-            end
-           
-            # Force kill process, if needed
-            begin
-			   #Process.kill('TERM', pid) 
-               Process.kill('KILL', pid)
-            rescue
-               # Do nothing, the normal case - PID already ended.
-            end
-            sleep(1)
-         end 
-      end
-   rescue Timeout::Error
-      Process.kill('KILL', pid)
-      endRun = Time.now
-      $runH2KTime = endRun - startRun  
-      fatalerror( "\n\n Timeout on H2K call after #{maxRunTime} seconds.\n" )
-      sleep(1)
-   end
+     startH2Krun = Time.now 
+     
+     $gStatus["H2KExecutionAttempts"] = tries
+     
+     FileUtils.cp("..\\#{$h2kFileName}", "..\\run_file_file_#{tries}.h2k")   
+     runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
+     
+     begin
+       
+       pid = Process.spawn( runThis, :new_pgroup => true )
+       stream_out ("\n Attempt ##{tries}:  Invoking HOT2000 (PID #{pid}) ...")
+       runStatus = Timeout::timeout($maxRunTime){
+         Process.waitpid(pid, 0)
+       }
+       status = $?.exitstatus  
+     rescue Timeout::Error
+       
+       begin 
+         Process.kill('KILL', pid)
+       rescue 
+         # do nothing - process may have died on its own?
+       end 
 
-   $NumTries = tries + 1 
+       
+       status = -1 
+       
+       sleep(2)
+     end
+
+     
+     endH2Krun = Time.now 
+ 
+     stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+    
+     if status == -1 
+        warn_out("\n\n Attempt ##{tries}: Timeout on H2K call after #{$maxRunTime} seconds." )
+        keepTrying = true       # Successful run - don't try agian  
+    
+     elsif status == 0 
+      
+  
+        stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+        keepTrying = false       # Successful run - don't try agian 
+        
+        FileUtils.cp("..\\run_file_file_#{tries}.h2k", "..\\#{$h2kFileName}")
+         
+     elsif status == 3 ||  status == nil  # Pre-check message(s)
+ 
+
+        warn_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!" )
+        keepTrying = false       # Successful run - don't try agian 
+        
+        FileUtils.cp("..\\run_file_file_#{tries}.h2k", "..\\#{$h2kFileName}")
+
+     #elsif status == nil  
+     #   # Get nil status when can't load an h2k file.
+     #   
+     #   fatalerror( "When spawning H2K, process returned nil return code after #{$runH2KTime.round(2).to_s} seconds; HOT2000 message box or couldn't load file!\n" )
+     #   keepTrying = false   # Give up.
+     
+     end 
+     
+         
+     if ( keepTrying && tries < $maxTries )  # Unsuccessful run - try again for up to maxTries     
+        tries = tries + 1
+        keepTrying = true
+        
+        # if run failed, overwrite the h2k file with the backup. Needed because if H2k times out, or crashes mid-run, 
+        # the h2k file may be corrupted. 
+    
+       
+       # Try to kill the process again to make sure there are no zombies holding write access to h2k files. 
+     
+     elsif ( keepTrying && tries == $maxTries ) 
+
+        warn_out("Max number of execution attempts (#{$maxTries}) reached. Giving up.")
+        fatalerror("Hot2000 evaluation could not be completed successfully") 
+        keepTrying = false   # Give up.
+     
+     end     
+     
+     begin 
+         Process.kill('KILL', pid)
+         sleep(2)
+     rescue 
+         # do nothing - process may have died on its own?
+     end 
+     
+     
+     $runH2KTime = $runH2KTime + ( endH2Krun - startH2Krun ) 
+
+     
+   end 
+   
+    $gStatus["H2KExecutionTime"] = $runH2KTime
+
+   $NumTries = tries
+   
+   
    
    Dir.chdir( $gMasterPath )
    debug_out ("\n Moved to path: #{Dir.getwd()}\n") 
@@ -4303,10 +4418,10 @@ def runsims( direction )
       FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
       
       if ( $gReadROutStrTxt )
-	     if ( File.file?("#{$run_path}\\ROutStr.txt")  ) 
+         if ( File.file?("#{$run_path}\\ROutStr.txt")  ) 
             FileUtils.cp("#{$run_path}\\ROutStr.txt", ".\\sim-output\\") 
-			debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
-	     else 
+            debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
+         else 
             fatalerror("Could not copy Routstr.txt to #{$OutputFolder}! Copy return code: #{$?}\n" )
          end      
       end        
@@ -4396,10 +4511,10 @@ def postprocess( scaleData )
         
          
         #Report binned data in general or SOC modes. 
-		# (This still calls for a more robust approach that can set the evaluation 
-		#  type from the choice file or cmd line.) 
+        # (This still calls for a more robust approach that can set the evaluation 
+        #  type from the choice file or cmd line.) 
         if ($lineIn =~ /Starting Run: House with standard operating conditions/ || 
-		    $lineIn =~ /Starting Run: House\s*$/ )
+            $lineIn =~ /Starting Run: House\s*$/ )
           debug_out("ROUTSTR ? SOC open #{$lineNo} | #{$lineIn} \n")
           $SOCparse = true 
         elsif ($lineIn =~ /Starting Run: / &&  $SOCparse)
@@ -4622,7 +4737,7 @@ def postprocess( scaleData )
    
    
    
-   stream_out("Diagnostics block done ...\n") 
+
    debug_out(" bin data: #{'%4s' "bin"} #{'%12s' % "$binDatHrs"} #{'%12s' % "$binDatTmp"}  #{'%12s' % "$binDatTsfB"} #{'%12s' % "$binDatHLR"} #{'%12s' % "$binDatT1PLR"} #{'%12s' % "$binDatT2PLR"} #{'%12s' % "$binDatT2cap"}\n" )
    32.times do |n|
    
@@ -4669,12 +4784,12 @@ def postprocess( scaleData )
                   end
                elsif ( (bReadAirConditioningLoad && lineIn =~ /AIR CONDITIONING SYSTEM PERFORMANCE/) || bUseNextACLine)
                   bUseNextACLine = true                  
-                  if ( lineIn =~ /^Ann/ )												# Look for the annual results
-                     valuesArr = lineIn.split()   									# Uses spaces by default to split-up line
-                     $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f 	#Annual AirConditioning Sensible Load (MJ)
-                     $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f 		#Annual AirConditioning Latent Load (MJ)
-                     $AvgACCOP = valuesArr[8].to_f									#Average COP of AirConditioning
-                     $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0	# Divided by 1000 to convert unit to GJ
+                  if ( lineIn =~ /^Ann/ )                                               # Look for the annual results
+                     valuesArr = lineIn.split()                                     # Uses spaces by default to split-up line
+                     $annACSensibleLoadFromBrowseRpt = valuesArr[1].to_f    #Annual AirConditioning Sensible Load (MJ)
+                     $annACLatentLoadFromBrowseRpt = valuesArr[2].to_f      #Annual AirConditioning Latent Load (MJ)
+                     $AvgACCOP = valuesArr[8].to_f                                  #Average COP of AirConditioning
+                     $TotalAirConditioningLoad = ($annACSensibleLoadFromBrowseRpt + $annACLatentLoadFromBrowseRpt) / 1000.0 # Divided by 1000 to convert unit to GJ
                      bUseNextACLine = false
                      break if !$PVIntModel # Stop parsing Browse.rpt if noting else required!
                   end
@@ -4765,7 +4880,7 @@ def postprocess( scaleData )
        $outputHCode = "General"
      end 
      
-	 $ThisMsg +=" Reporting result set \"#{$outputHCode}\" result instead. \n" 
+     $ThisMsg +=" Reporting result set \"#{$outputHCode}\" result instead. \n" 
      warn_out($ThisMsg)
    end 
   
@@ -4815,7 +4930,7 @@ def postprocess( scaleData )
          # Design loads, other data 
          $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
          $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
-	
+    
          $gResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
          $gResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
          $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
@@ -4860,8 +4975,8 @@ def postprocess( scaleData )
          $gResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
          $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData	  
-	  
+         $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData    
+      
          $gResults[houseCode]["avgFueluseEleckWh"]  = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
          $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
          $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 25.9576
@@ -4877,13 +4992,13 @@ def postprocess( scaleData )
          # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
          # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
          # avgEnergyTotalGJ does when there is an internal H2K PV model.
-         $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f + 									 
-                                                      $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f + 									 
-                                                      $gResults[houseCode]['avgEnergyVentilationGJ'].to_f + 									 
-                                                      $gResults[houseCode]['avgEnergyCoolingGJ'].to_f + 									 
-                                                      $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f 									 
-									 
-	   
+         $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f +                                   
+                                                      $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f +                                     
+                                                      $gResults[houseCode]['avgEnergyVentilationGJ'].to_f +                                      
+                                                      $gResults[houseCode]['avgEnergyCoolingGJ'].to_f +                                      
+                                                      $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f                                      
+                                     
+       
        
          monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
          # Picking up  AUX energy requirement from each result set.
@@ -4930,12 +5045,12 @@ def postprocess( scaleData )
             $gResults[houseCode]["avgElecPVUsedkWh"] = 0.0
             $gResults[houseCode]["avgPVRevenue"] =  0.0
          end  
-	   
+       
          # This is used for debugging only. 
          diff =  ( $gResults[houseCode]["avgFueluseElecGJ"].to_f + 
                    $gResults[houseCode]["avgFueluseNatGasGJ"].to_f -
                    $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
-         $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData	  
+         $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData    
          
          break    # break out of the element loop to avoid further processing
 
@@ -5064,7 +5179,7 @@ def postprocess( scaleData )
       end
    end
    
-	stream_out( " done \n")
+    stream_out( " done \n")
   
    stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
 
@@ -5086,10 +5201,10 @@ def postprocess( scaleData )
                $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
                $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
                $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
-		stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
-		stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
+        stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
+        stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
    end 
-	
+    
    if $ExtraOutput1 then
       stream_out("\n Components of envelope heat loss: \n\n")
       stream_out ( "  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)} ( Envelope Ceiling Heat Loss (all zones), GJ ) \n")
@@ -5164,7 +5279,7 @@ def postprocess( scaleData )
    
    stream_out("\n\n Total Energy Use by Fuel (in fuel units, not including credit for PV, direction #{$gRotationAngle} ): \n\n")
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Total Electricity, kWh)\n")         
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Total Natural Gas, m3)\n")                	
+   stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Total Natural Gas, m3)\n")                    
    stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Total Oil, l)\n")
    stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Total Propane, l)\n")
 
@@ -5296,11 +5411,11 @@ def getEnvelopeSpecs(elements)
    # ====================================================================================
    # Parameter      Location
    # ====================================================================================
-   # Orientation		HouseFile/House/Components/*/Components/Window/FacingDirection[code]
-   # SHGC				HouseFile/House/Components/*/Components/Window[SHGC]
-   # r-value			HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
-   # Height				HouseFile/House/Components/*/Components/Window/Measurements/[height]
-   # Width				HouseFile/House/Components/*/Components/Window/Measurements/[width]
+   # Orientation        HouseFile/House/Components/*/Components/Window/FacingDirection[code]
+   # SHGC               HouseFile/House/Components/*/Components/Window[SHGC]
+   # r-value            HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
+   # Height             HouseFile/House/Components/*/Components/Window/Measurements/[height]
+   # Width              HouseFile/House/Components/*/Components/Window/Measurements/[width]
 
    $SHGCWin_sum = Hash.new(0)
    $uAValueWin_sum = Hash.new(0)
@@ -5758,7 +5873,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
                   
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
       
-      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))   
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
@@ -5772,7 +5887,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"]    = "NBC_Wall_zone5_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                     = "NBC_Ceiling_zone5_noHRV"
          $ruleSetChoices["Opt-CathCeilings"]                      = "NBC_FlatCeiling_zone5"
@@ -5780,12 +5895,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
          $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_exposed_zone5"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"  
          elsif isSlab
@@ -5794,7 +5909,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
@@ -5802,12 +5917,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
          elsif isSlab
@@ -5816,7 +5931,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_noHRV"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
@@ -5824,11 +5939,11 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
            
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
          elsif isSlab
@@ -5837,7 +5952,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
       # Zone 7B ( 6000 < HDD < 6999) without an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
@@ -5845,12 +5960,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
          elsif isSlab
@@ -5859,7 +5974,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
       # Zone 8 (HDD <= 7000) without an HRV
       elsif locale_HDD >= 7000 
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
@@ -5867,12 +5982,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
                                                                  
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
          elsif isSlab
@@ -5883,8 +5998,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    #-------------------------------------------------------------------------
    elsif ruleType =~ /NBC9_36_HRV/
 
-      # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3) 	
-  		$ruleSetChoices["Opt-HRVspec"]                        =  "NBC_HRV"		
+      # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3)     
+        $ruleSetChoices["Opt-HRVspec"]                        =  "NBC_HRV"      
 
      # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000 
@@ -5896,7 +6011,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
                   
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
       
-      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+      # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))   
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
@@ -5909,7 +6024,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          end         
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone5_HRV"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone5"
@@ -5917,12 +6032,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
                   
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone5"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_HRV"
          elsif isSlab
@@ -5939,12 +6054,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_HRV"
          elsif isSlab
@@ -5953,7 +6068,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_HRV"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
@@ -5961,12 +6076,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_HRV"
          elsif isSlab
@@ -5983,12 +6098,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
          
-         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1)) 	
+         # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))    
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
          
-         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 	
+         # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
          if isBasement 
             $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_HRV"
          elsif isSlab
@@ -5997,7 +6112,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
       # Zone 8 (HDD <= 7000) with an HRV
       elsif locale_HDD >= 7000 
-         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B) 	
+         # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
@@ -6029,18 +6144,18 @@ def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
    if ruleType =~ /R2000_NZE_Pilot_Env/
 
       # R-2000 Standard Mechanical Conditions. (Table 2)
-	  $ruleSetChoices["Opt-HVACSystem"] = "R2000-elec-baseboard" 
-	  $ruleSetChoices["Opt-DHWSystem"] = "R2000-HotWater-elec" 
-	  $ruleSetChoices["Opt-HRVspec"] = "R2000_HRV"
-	  
-	  # No renewable generation for envelope test
-	  $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
-		
+      $ruleSetChoices["Opt-HVACSystem"] = "R2000-elec-baseboard" 
+      $ruleSetChoices["Opt-DHWSystem"] = "R2000-HotWater-elec" 
+      $ruleSetChoices["Opt-HRVspec"] = "R2000_HRV"
+      
+      # No renewable generation for envelope test
+      $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
+        
    elsif ruleType =~ /R2000_NZE_Pilot_Mech/
    
-	  # No renewable generation for mechanical systems test
-	  $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
-	  
+      # No renewable generation for mechanical systems test
+      $ruleSetChoices["Opt-H2K-PV"] = "R2000_test"
+      
    end
 end
 #===============================================================================
@@ -6083,7 +6198,9 @@ end
      
 $gErrors = Array.new
 $gWarnings = Array.new 
-	 
+$gStatus = Hash.new 
+
+     
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
@@ -6196,7 +6313,7 @@ optparse = OptionParser.new do |opts|
 
    opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
       $cmdlineopts["extra_output1"] = true
-	  $gReadROutStrTxt = true 
+      $gReadROutStrTxt = true 
       $ExtraOutput1 = true
    end
 
@@ -6564,23 +6681,62 @@ if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    stream_out ("            HOT2000 run folder: #{$run_path} \n")
 end
 
-if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
-   if ( ! system("mkdir #{$gMasterPath}\\H2K") )
-      fatalerror ("\nFatal Error! Could not create H2K folder below #{$gMasterPath}!\n Return error code #{$?}\n")
-   end
-   FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
-   fix_H2K_INI()
+# Variables for doing a md5 test on the integrety of the run. 
+$DirVerified = false
+$CopyTries = 0 
+
+while ( ! $DirVerified && $CopyTries < 3 ) do 
+
+  if ( ! Dir.exist?("#{$gMasterPath}\\H2K") )
+    if ( ! system("mkdir #{$gMasterPath}\\H2K") )
+        warn_out (" Could not create H2K folder below #{$gMasterPath} on attempt #{$CopyTries+1}. Return error code #{$?}.")
+    end
+    stream_out (" Copying H2K folder to source\n")
+    FileUtils.cp_r("#{$h2k_src_path}/.", "#{$gMasterPath}\\H2K")
+  end 
+
+  stream_out (" Checking integrity of H2K installation\n")
+  stream_out (" + Attempt ##{$CopyTries+1}:\n")
+  $masterMD5  = self.checksum("#{$h2k_src_path}").to_s
+  $workingMD5 = self.checksum("#{$gMasterPath}\\H2K").to_s
+
+  stream_out ("   - master:        #{$masterMD5}\n")
+  stream_out ("   - working copy:  #{$workingMD5}")
+ 
+ 
+  if ($masterMD5.eql? $workingMD5) then 
+    $DirVerified = true 
+    stream_out(" (checksum match)\n") 
+  else 
+
+    #FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+    stream_out(" (CHECKSUM MISMATCH!!!)\n") 
+    warn_out ("Working H2K installation dir (#{$gMasterPath}) differs from source #{$gMasterPath}. Attempting to re-create (#{$CopyTries+1}). Return error code #{$?}.")
+  end 
+  
+  $CopyTries  = $CopyTries  + 1 
+    
 end 
 
-if $gReadROutStrTxt
+
+
+
+$gStatus["MD5master"] = $masterMD5.to_s
+$gStatus["MD5workingcopy"] = $workingMD5.to_s
+$gStatus["H2KDirCopyAttempts"] = $CopyTries.to_s
+$gStatus["H2KDirCheckSumMatch"] = $DirVerified
+
+if ( ! $DirVerified ) 
+  fatalerror ("\nFatal Error! Integrity of H2K folder at #{$gMasterPath} is compromised!\n Return error code #{$?}\n")
+else 
+  fix_H2K_INI()
   write_h2k_magic_files("#{$gMasterPath}")
-else
   # Remove existing RoutStr file! It can grow very large, if present.
   rOut_file  = "#{$gMasterPath}\\H2K\\ROutstr.H2k"
   if File.exist?(rOut_file)
     system ("del #{rOut_file}")
   end
-end
+end 
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
 # (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
@@ -6632,33 +6788,33 @@ $Locale_model = locale
 
 if !$ruleSetName.empty? && $ruleSetName != "NA"
 
-   stream_out("\n Getting #{$ruleSetName} rule set choices.\n")
+   stream_out("\n\n Applying #{$ruleSetName} rule set:\n")
    
    if ( $ruleSetName =~ /as-found/ ) 
      # Do nothing! 
-     stream_out ("  (a) ")
+     stream_out ("  (a) AS FOUND: no changes made to model\n")
    
    elsif ( $ruleSetName =~ /NBC9_36_noHRV/ ||  $ruleSetName =~ /NBC9_36_HRV/ ) 
-      stream_out ("  (b) ")
+      stream_out ("  (b) NBC 936 pathway \n")
       NBC_936_2010_RuleSet( $ruleSetName, h2kElements, $HDDs,locale )
 
    elsif ( $ruleSetName =~ /936_2015_AW_HRV/ ||  $ruleSetName =~ /936_2015_AW_noHRV / )
-      stream_out ("  (c) ")
+      stream_out ("  (c) Protorype NBC Ruleset by Adam Wills.\n")
       # Do nothing - this is the AW rule set. 
       
    elsif ( $ruleSetName =~ /R2000_NZE_Pilot_Env/ ||  $ruleSetName =~ /R2000_NZE_Pilot_Mech/ )
-      stream_out ("  (d) ")
-	  R2000_NZE_Pilot_RuleSet( $ruleSetName, h2kElements, locale )
+      stream_out ("  (d) R2000 NZE Pilot envelope set\n")
+      R2000_NZE_Pilot_RuleSet( $ruleSetName, h2kElements, locale )
    
    elsif ( $ruleSetName =~ /R2000_NZE_Pilot_Base/)
-      stream_out ("  (e) ")
-	  NBC_936_2010_RuleSet( "NBC9_36_HRV", h2kElements, $HDDs,locale )
-	  R2000_NZE_Pilot_RuleSet( "R2000_NZE_Pilot_Env", h2kElements, locale )
-	  
+      stream_out ("  (e) Base case from R2000 NZE pilot \n")
+      NBC_936_2010_RuleSet( "NBC9_36_HRV", h2kElements, $HDDs,locale )
+      R2000_NZE_Pilot_RuleSet( "R2000_NZE_Pilot_Env", h2kElements, locale )
+      
    end 
    
    # Replace choices in $gChoices with rule set choices in $ruleSetChoices
-   stream_out(" Replacing user-defined choices with rule set choices where appropriate...\n")
+   stream_out("\n Replacing user-defined choices with rule set choices where appropriate...\n")
    $ruleSetChoices.each do |attrib, choice|
       if choice.empty?
          warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
@@ -6704,19 +6860,19 @@ end
 =begin rdoc
  Validate choices and options. 
 =end
-stream_out("\n Validating choices and options...\n");  
+stream_out("\n Validating choices and options... ");  
 
 # Search through options and determine if they are used in Choices file (warn if not). 
 $gOptions.each do |option, ignore|
     debug_out ("> option : #{option} ?\n"); 
     if ( !$gChoices.has_key?(option)  )
-	  $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
+      $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
       
          
       if ( ! $gOptions[option]["default"]["defined"]  )
          $ThisMsg += "No default value defined in options file."
          err_out ($ThisMsg)
-		 $allok = false 
+         $allok = false 
       else
          # Add default value. 
          $gChoices[option] = $gOptions[option]["default"]["value"]
@@ -6725,9 +6881,7 @@ $gOptions.each do |option, ignore|
          
          $ThisMsg +=  " Using default value (#{$gChoices[option]})"
          warn_out ( $ThisMsg )
-		 
-
-		 
+         
       end
     end
     $ThisMsg = ""
@@ -6743,7 +6897,7 @@ end
 
 $gChoices.each do |attrib, choice|
    $parseOK = true
-   stream_out( " ->>>>> #{attrib} | #{choice} \n")
+   
    debug_out ( "\n ======================== #{attrib} ============================\n")
    debug_out ( "Choosing #{attrib} -> #{choice} \n")
     
@@ -6846,7 +7000,7 @@ $gChoices.each do |attrib1, choice|
          end
          
          if ( $ValidConditionFound == 0 )
-		    $ThisMsg = "No valid conditions were defined for #{attrib1} in options file (#{$gOptionFile}). Choices must match one of the following: "
+            $ThisMsg = "No valid conditions were defined for #{attrib1} in options file (#{$gOptionFile}). Choices must match one of the following: "
             for conditions in condHash.keys()
                $ThisMsg +=   "#{conditions} ; "
             end
@@ -7213,6 +7367,10 @@ $fSUMMARY.write( "#{$AliasArch}.Area-House-m2     =  #{$AreaComp['house'].round(
 # House R-Value
 $fSUMMARY.write( "#{$AliasOutput}.House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
 
+for status_type in $gStatus.keys()
+  $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
+end 
+
 if $ExtraOutput1 then
    $fSUMMARY.write( "#{$AliasOutput}.EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
    $fSUMMARY.write( "#{$AliasOutput}.EnvCeilHL-GJ      =  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)}\n")
@@ -7241,6 +7399,9 @@ if $ExtraOutput1 then
    $fSUMMARY.write( "#{$AliasOutput}.HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
    $fSUMMARY.write( "#{$AliasOutput}.HotWaterWood-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)} \n")
 end
+
+
+
 
 if $gReportChoices then 
   $fSUMMARY.write( "#{$AliasInput}.Run-Region       =  #{$gRunRegion}\n" )
@@ -7381,9 +7542,7 @@ if ( ! $PRMcall )
    end
 end 
 
-endProcessTime = Time.now
-totalDiff = endProcessTime - $startProcessTime
-stream_out( "\n Total processing time: #{totalDiff.round(2)} seconds (H2K run: #{$runH2KTime.round(2)} seconds)\n\n" )
+
 
 ReportMsgs()
 
