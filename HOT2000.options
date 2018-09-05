@@ -2004,6 +2004,10 @@
 *option:NBC_Wall_zone8_HRV:value:2 =  17.49
 *option:NBC_Wall_zone8_HRV:cost:total    =  0
 
+*option:Main_Wall_R30:value:1 =  Main_Wall_R30
+*option:Main_Wall_R30:value:2 =  30
+*option:Main_Wall_R30:cost:total    =  0
+
 *attribute:end
 
 !-----------------------------------------------------------------------

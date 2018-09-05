@@ -159,23 +159,23 @@ $Locale = ""      # Weather location for current run
 $gWarn = false 
 # Data from Hanscomb 2011 NBC analysis
 $RegionalCostFactors = Hash.new
-$RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
-                           "Edmonton"     =>  1.12 ,
-                           "Calgary"      =>  1.12 ,  # Assume same as Edmonton?
-                           "Ottawa"       =>  1.00 ,
-                           "Toronto"      =>  1.00 ,
-                           "Quebec"       =>  1.00 ,  # Assume same as Montreal?
-                           "Montreal"     =>  1.00 ,
-                           "Vancouver"    =>  1.10 ,
-                           "PrinceGeorge" =>  1.10 ,
-                           "Kamloops"     =>  1.10 ,
-                           "Regina"       =>  1.08 ,  # Same as Winnipeg?
-                           "Winnipeg"     =>  1.08 ,
-                           "Fredricton"   =>  1.00 ,  # Same as Quebec?
-                           "Whitehorse"   =>  1.00 ,
-                           "Yellowknife"  =>  1.38 ,
-                           "Inuvik"       =>  1.38 , 
-                           "Alert"        =>  1.38   }
+$RegionalCostFactors  = {  "HALIFAX"      =>  0.95 ,
+                           "EDMONTON"     =>  1.12 ,
+                           "CALGARY"      =>  1.12 ,  # Assume same as Edmonton?
+                           "OTTAWA"       =>  1.00 ,
+                           "TORONTO"      =>  1.00 ,
+                           "QUEBEC"       =>  1.00 ,  # Assume same as Montreal?
+                           "MONTREAL"     =>  1.00 ,
+                           "VANCOUVER"    =>  1.10 ,
+                           "PRINCEGEORGE" =>  1.10 ,
+                           "KAMLOOPS"     =>  1.10 ,
+                           "REGINA"       =>  1.08 ,  # Same as Winnipeg?
+                           "WINNIPEG"     =>  1.08 ,
+                           "FREDRICTON"   =>  1.00 ,  # Same as Quebec?
+                           "WHITEHORSE"   =>  1.00 ,
+                           "YELLOWKNIFE"  =>  1.38 ,
+                           "INUVIK"       =>  1.38 , 
+                           "ALERT"        =>  1.38   }
 
 $PVInt = "NA"
 $PVIntModel = false
@@ -796,7 +796,15 @@ def processFile(h2kElements)
                         end
                      end
                   end
-               else
+               elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
+					   locationText = "HouseFile/House/Components/Ceiling/Measurements"
+						#h2kElements.each(locationText) do |element| 
+						   # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+                     #if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+							   h2kElements[locationText].attributes["heelHeight"] = value
+							#end
+						#end
+					else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
@@ -2396,9 +2404,11 @@ def processFile(h2kElements)
 
                   if (value == "1" && h2kElements[locationText].attributes["living"].to_i < 3)
                      h2kElements[locationText].attributes["living"] = 3
-                  elsif (value == "1" && h2kElements[locationText].attributes["bedrooms"].to_i < 1)
+                  end
+                  if (value == "1" && h2kElements[locationText].attributes["bedrooms"].to_i < 1)
                      h2kElements[locationText].attributes["bedrooms"] = 1
-                  elsif (value == "1" && h2kElements[locationText].attributes["bathrooms"].to_i < 1)
+                  end
+                  if (value == "1" && h2kElements[locationText].attributes["bathrooms"].to_i < 1)
                      h2kElements[locationText].attributes["bathrooms"] = 1
                   end
                   
@@ -2438,8 +2448,8 @@ def processFile(h2kElements)
                   if ( h2kElements[locationText] == nil )
                      createHRV(h2kElements)
                   end
-                  h2kElements[locationText].attributes["supplyFlowrate"] = "#{($FanFlow * 10.6 / 1.5).round(0)}" #value    # L/s supply
-                  h2kElements[locationText].attributes["exhaustFlowrate"] = "#{($FanFlow * 10.6 / 1.5).round(0)}" #value   # Exhaust = Supply
+                  h2kElements[locationText].attributes["supplyFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}" #value    # L/s supply
+                  h2kElements[locationText].attributes["exhaustFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}" #value   # Exhaust = Supply
                   h2kElements[locationText].attributes["isDefaultFanpower"] = "true"
                   
                elsif ( tag =~ /OPT-H2K-Rating1/ &&  value != "NA" )
