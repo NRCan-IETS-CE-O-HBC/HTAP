@@ -794,6 +794,10 @@ def processFile(h2kElements)
                   h2kElements[locationText].attributes["airChangeRate"] = value
                   h2kElements[locationText].attributes["isCgsbTest"] = "true"
                   h2kElements[locationText].attributes["isCalculated"] = "true"
+
+                  # Calculate ACH cost for this option and house file
+                  # Costing spreadsheet shows cost based on floor area only but need to use $/ACH/ft2!
+                  getOptionCost(choiceEntry, value)
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
@@ -809,7 +813,7 @@ def processFile(h2kElements)
                if ( tag =~ /Opt-Ceiling/ && value != "NA" )
                   # If this surface code name exists in the code library, use the code 
                   # (either Favourite or UsrDef) for ceiling and ceiling_flat groupings. 
-                  # Code names in library are unique and slit into two groups: "Ceiling Codes"
+                  # Code names in library are unique and split into two groups: "Ceiling Codes"
                   # and "Flat or Cathedral Ceiling Codes" so the code name specified CAN ONLY EXIST
                   # in one of these groups!
                   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
@@ -6040,6 +6044,17 @@ def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
    end
 end
 #===============================================================================
+
+
+#===============================================================================
+# Get the unit cost value for the specified option and apply to the value set to
+# calculate the overall cost.
+#===============================================================================
+def getOptionCost( choiceEntry, value )
+
+
+end
+
 =begin rdoc
 =========================================================================================
   END OF ALL METHODS 
