@@ -5,7 +5,7 @@
 # Created Nov 2015
 # Master maintained in GitHub
 #
-# This is a Ruby version of the substitute-h2k.pl script originall written by Alex 
+# This is a Ruby version of the substitute-h2k.pl script originally written by Alex
 # Ferguson. This version is customized for HOT2000 runs. This script can be used
 # stand-alone, with GenOpt or HTAP-PRM.rb for parametric runs or optimizations of 
 # HOT2000 inputs.
@@ -16,7 +16,7 @@ require 'optparse'
 require 'timeout'
 require 'fileutils'
 require 'digest'
-
+require 'json'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
@@ -139,18 +139,14 @@ $AliasLongArch    = "arch"
 $AliasInput   = $AliasShortInput  
 $AliasOutput  = $AliasShortOutput 
 $AliasConfig  = $AliasShortConfig 
-$AliasArch    = $AliasShortArch   
-
-
-
-
-
+$AliasArch    = $AliasShortArch
 
 
 # Path where this script was started and considered master
 # When running GenOpt, it will be a Tmp folder!
 $gMasterPath = Dir.getwd()
 $gMasterPath.gsub!(/\//, '\\')
+$unitCostFileName = $gMasterPath+"/HTAPUnitCosts.json"
 
 #Variables that store the average utility costs, energy amounts.  
 $gAvgEnergy_Total   = 0  
@@ -382,10 +378,7 @@ $ruleSetName = ""
 
 $HDDs = ""
 
-
-
-
-
+$optionCost = 0.00   # Total cost of all options used in this run
 
 def self.checksum(dir)
   md5 = Digest::MD5.new
@@ -727,7 +720,11 @@ def processFile(h2kElements)
    # For use when setting the P9 heating capacity and burner input when "Calculated" option specified 
    # in options file even though it's not available in H2K GUI!
    baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
-   
+
+   # Open the unit cost file for reading below
+   $unitCostFile = File.read($unitCostFileName)
+   unitCostDataHash = JSON.parse($unitCostFile)
+
    $gChoiceOrder.each do |choiceEntry|
    
       #stream_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} \n")
@@ -859,7 +856,7 @@ def processFile(h2kElements)
 
                   # Calculate ACH cost for this option and house file
                   # Costing spreadsheet shows cost based on floor area only but need to use $/ACH/ft2!
-                  getOptionCost(choiceEntry, value)
+                  $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
@@ -2888,7 +2885,7 @@ def processFile(h2kElements)
    end
    
    
-   #Delete results section 
+   # Delete results section
    h2kElements["HouseFile"].delete_element("AllResults")
    
    # Save changes to the XML doc in existing working H2K file (overwrite original)
@@ -2896,6 +2893,8 @@ def processFile(h2kElements)
    newXMLFile = File.open($gWorkingModelFile, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
+
+   $unitCostFile.close
 
 end
 
@@ -6162,12 +6161,49 @@ end
 
 
 #===============================================================================
-# Get the unit cost value for the specified option and apply to the value set to
+# Get the unit cost value for the specified option and apply to the value to
 # calculate the overall cost.
+#
+# Search unit cost(s) from unitCostData hash already read from JSON file. This
+# may involve multiple materials that need to be summed. Get appropriate
+# multiplication factors from H2K file (e.g., floor area, wall area, each, etc.).
+# Calculate the total cost for the option passed.
 #===============================================================================
-def getOptionCost( choiceEntry, value )
+def getOptionCost( unitCostData, optName, optTag, optValue, elements )
 
+   unitCost = 0
+   cost = 0
 
+   # Switch on Option type (optName and optTag)
+   case optName
+
+   when "Opt-ACH"
+      if ( optValue.to_f == 1.0 )
+         unitCostData.select do |theOne|
+            if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="AirTightness" &&
+                theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/1.0/
+               unitCost = theOne["TotUnCost"]
+            end
+         end
+      elsif ( optValue.to_f == 1.75 )
+         unitCostData.select do |theOne|
+            if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="AirTightness" &&
+                theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/1.75/
+               unitCost = theOne["TotUnCost"]
+            end
+         end
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-"
+      cost = 0
+
+   when ""
+      cost = 0
+
+   end
+
+   return cost
 end
 
 =begin rdoc
