@@ -401,8 +401,6 @@ def self.checksum(dir)
 end
 
 
-
-
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
@@ -853,10 +851,6 @@ def processFile(h2kElements)
                   h2kElements[locationText].attributes["airChangeRate"] = value
                   h2kElements[locationText].attributes["isCgsbTest"] = "true"
                   h2kElements[locationText].attributes["isCalculated"] = "true"
-
-                  # Calculate ACH cost for this option and house file
-                  # Costing spreadsheet shows cost based on floor area only but need to use $/ACH/ft2!
-                  $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
@@ -973,15 +967,16 @@ def processFile(h2kElements)
                         end
                      end
                   end
+
                elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
-					   locationText = "HouseFile/House/Components/Ceiling/Measurements"
-						#h2kElements.each(locationText) do |element| 
-						   # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+					        locationText = "HouseFile/House/Components/Ceiling/Measurements"
+						      #h2kElements.each(locationText) do |element|
+						         # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
                      #if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
-							   h2kElements[locationText].attributes["heelHeight"] = value
-							#end
-						#end
-					else
+							       h2kElements[locationText].attributes["heelHeight"] = value
+							    #end
+						   #end
+					     else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
@@ -2877,10 +2872,13 @@ def processFile(h2kElements)
             else
                # Do nothing -- we're ignoring all other tags!
                debug_out("Tag #{tag} ignored!\n")
-            end
-           
-                        
-         end
+
+            end   # of if block for this option choice
+
+            # Calculate cost for the choice just parsed
+            $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
+
+         end   # end of tag loop
       end
    end
    
@@ -2893,8 +2891,6 @@ def processFile(h2kElements)
    newXMLFile = File.open($gWorkingModelFile, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
-
-   $unitCostFile.close
 
 end
 
@@ -4466,7 +4462,7 @@ def postprocess( scaleData )
    bUseNextACLine = false
    bReadAirConditioningLoad = true  # Always get Air Conditioning Load (not available in XML)
    
-      #Open diagnostics file and possibly read in interesting info  !?!
+   # Open diagnostics file and possibly read in interesting info  !?!
    $lineNo = 0
    if ( $gReadROutStrTxt  ) 
      #begin
@@ -4483,7 +4479,6 @@ def postprocess( scaleData )
        $GOPparse     = false 
        # Zero arrays
        32.times do |n|       
-       
         $binDatHrs[n+1]=0
         $binDatTmp[n+1]=0
         $binDatTsfB[n+1]=0
@@ -4492,11 +4487,8 @@ def postprocess( scaleData )
         #$binDatT1cap[n+1]=0
         $binDatT2PLR[n+1]=0
         $binDatT1PLR[n+1]=0
-       
-       end 
-       
-       
-       
+       end
+
        while !fRoutStr.eof? do 
        
         $lineNo = $lineNo + 1
@@ -4508,8 +4500,7 @@ def postprocess( scaleData )
           next # Skip empty line. 
         end   
         
-         
-        #Report binned data in general or SOC modes. 
+        #Report binned data in general or SOC modes.
         # (This still calls for a more robust approach that can set the evaluation 
         #  type from the choice file or cmd line.) 
         if ($lineIn =~ /Starting Run: House with standard operating conditions/ || 
@@ -4531,9 +4522,7 @@ def postprocess( scaleData )
           $bHeatingDone = true 
           next 
         end         
-        
-        
-        
+
         # Set flags for sections in the file 
         if ($lineIn =~ /SpaceHTini/ )
           debug_out("ROUTSTR ? SpaceHTini open #{$lineNo} | #{$lineIn} \n")
@@ -4551,8 +4540,7 @@ def postprocess( scaleData )
           debug_out("ROUTSTR ? FossilFurnaceBC close  #{$lineNo} | #{$lineIn}  \n")
           $FFBCparse = false 
         end            
-        
-        
+
         if ($lineIn =~ /GOPBackup: Gas\/Oil\/Propane backup../ )
           debug_out("ROUTSTR ? Gas/Oil/Propoane backup open #{$lineNo} | #{$lineIn} \n")
           $GOPparse = true 
@@ -4561,8 +4549,7 @@ def postprocess( scaleData )
           debug_out("ROUTSTR ? Gas/Oil/Propoane backup close  #{$lineNo} | #{$lineIn}  \n")
           $GOPparse = false 
         end            
-        
-        
+
         if ($lineIn =~ /ElectricFurnaceBC/  )
           debug_out("ROUTSTR ? ElectricFurnaceBC open #{$lineNo} | #{$lineIn} \n")
           $EFBCparse = true 
@@ -4580,8 +4567,7 @@ def postprocess( scaleData )
           debug_out("ROUTSTR ? ElectricBack close  #{$lineNo} | #{$lineIn}  \n")
           $EBakparse = false 
         end  
-        
-        
+
         if ($lineIn =~ /AboveHPBP @160/ )
           debug_out("ROUTSTR ? HP open #{$lineNo} | #{$lineIn} \n")
           $HPparse = true 
@@ -4590,8 +4576,7 @@ def postprocess( scaleData )
           debug_out("ROUTSTR ? HP close  #{$lineNo} | #{$lineIn}  \n")
           $HPparse = false 
         end             
-           
-     
+
         # ==== Parse Data =====   
          
         # Read fan power 
@@ -4623,28 +4608,20 @@ def postprocess( scaleData )
             $binDatTmp[binNo]  = valuesArr[2].to_f
             $binDatTsfB[binNo] = valuesArr[5].to_f
           end               
-                      
-        end 
-         
-         
-         
-         
-         
-        # Get furnace performace data 
+        end
+
+        # Get furnace performace data
         if ( $FFBCparse ) 
           debug_out("ROUTSTR ? FossilFurnace : #{$lineIn} \n")
           if ($lineIn =~ /FossilFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
             # Header - ignore 
           else 
-          
             debug_out(">>>FOSIL Furnace  Parsing #{$lineIn} \n")
             valuesArr = $lineIn.split() 
             binNo = valuesArr[0].to_i 
             $binDatHLR[binNo]  = valuesArr[3].to_f
             $binDatT1PLR[binNo]  = valuesArr[6].to_f
-        
-                   
-          end 
+          end
         end 
         
         # Get Heat pump w/ electric back-up data 
@@ -4653,19 +4630,15 @@ def postprocess( scaleData )
           if ($lineIn =~ /ElectricFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
             # Header - ignore 
           else 
-
-            valuesArr = $lineIn.split() 
+            valuesArr = $lineIn.split()
             binNo = valuesArr[0].to_i 
             $binDatHLR[binNo]  = valuesArr[1].to_f
             $binDatT2cap[binNo]  = valuesArr[3].to_f
             $binDatT2PLR[binNo]  = 1.0
             $binDatT1PLR[binNo]  = valuesArr[5].to_f
-         
-                   
-          end 
+          end
         end              
-         
-         
+
         #Get heat pump w/gas back up data. 
         if ( $GOPparse ) 
 
@@ -4679,32 +4652,22 @@ def postprocess( scaleData )
             $binDatT2cap[binNo]  = valuesArr[3].to_f
             $binDatT2PLR[binNo]  = 1.0
             $binDatT1PLR[binNo]  = valuesArr[6].to_f
-         
-                   
-          end         
-        
-        
-        
+          end
+
         end 
-            
-            
-            
+
         # Get Electric furnace data 
         if ( $EFBCparse ) 
         debug_out("ROUTSTR ? Electric Furnace :  #{$lineIn} \n")
           if ($lineIn =~ /ElectricFurnaceBC:/ || $lineIn !~ /^\s*[0-9]/) 
             # Header - ignore 
           else 
-
-            valuesArr = $lineIn.split() 
+            valuesArr = $lineIn.split()
             binNo = valuesArr[0].to_i 
             $binDatHLR[binNo]  = valuesArr[1].to_f
             $binDatT1PLR[binNo]  = valuesArr[3].to_f
-        
-                   
-          end 
+          end
         end             
-        
 
         # Get heat pump data 
         if ( $HPparse ) 
@@ -4717,13 +4680,10 @@ def postprocess( scaleData )
             $binDatHLR[binNo]    = valuesArr[2].to_f
             $binDatT2cap[binNo]  = valuesArr[4].to_f
             $binDatT2PLR[binNo]  = valuesArr[5].to_f
-        
-                   
-          end 
+          end
         end  
             
-                 
-       end 
+       end # end of while loop
        
        stream_out("done.\n")
        fRoutStr.close()
@@ -4733,33 +4693,17 @@ def postprocess( scaleData )
      #end 
    end #of reading ROUTSTR file
    
-   
-   
-   
-
    debug_out(" bin data: #{'%4s' "bin"} #{'%12s' % "$binDatHrs"} #{'%12s' % "$binDatTmp"}  #{'%12s' % "$binDatTsfB"} #{'%12s' % "$binDatHLR"} #{'%12s' % "$binDatT1PLR"} #{'%12s' % "$binDatT2PLR"} #{'%12s' % "$binDatT2cap"}\n" )
    32.times do |n|
-   
-    bin = n + 1 
-    debug_out(" bin data: #{'%4s' % bin} #{'%12s' % $binDatHrs[bin]} #{'%12s' % $binDatTmp[bin]}  #{'%12s' % $binDatTsfB[bin]} #{'%12s' % $binDatHLR[bin]} #{'%12s' % $binDatT1PLR[bin]} #{'%12s' % $binDatT2PLR[bin]}  #{'%12s' % $binDatT2cap[bin]}\n" )
-   
-   end 
-   
-   
-
-   
-   
-   
-   
-   
-   
+      bin = n + 1
+      debug_out(" bin data: #{'%4s' % bin} #{'%12s' % $binDatHrs[bin]} #{'%12s' % $binDatTmp[bin]}  #{'%12s' % $binDatTsfB[bin]} #{'%12s' % $binDatHLR[bin]} #{'%12s' % $binDatT1PLR[bin]} #{'%12s' % $binDatT2PLR[bin]}  #{'%12s' % $binDatT2cap[bin]}\n" )
+   end
    
    # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
    end
-   
-   
+
    # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
    if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
       begin
@@ -6136,7 +6080,6 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    end   # Check on NBC rule set type
 end
 
-#===============================================================================
 def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
  
    # R-2000 standard test requirements
@@ -6157,7 +6100,6 @@ def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
       
    end
 end
-#===============================================================================
 
 
 #===============================================================================
@@ -6165,41 +6107,269 @@ end
 # calculate the overall cost.
 #
 # Search unit cost(s) from unitCostData hash already read from JSON file. This
-# may involve multiple materials that need to be summed. Get appropriate
-# multiplication factors from H2K file (e.g., floor area, wall area, each, etc.).
-# Calculate the total cost for the option passed.
+# may involve multiple materials that need to be summed. TotUnCost is the sum of
+# material and labour modified unit costs (i.e., includes multiplier).
+# Get appropriate multiplication factors from H2K file (e.g., floor area,
+# wall area, each, etc.). Calculate the total cost for the option passed.
 #===============================================================================
 def getOptionCost( unitCostData, optName, optTag, optValue, elements )
 
    unitCost = 0
    cost = 0
 
-   # Switch on Option type (optName and optTag)
+   # Switch on Option type
    case optName
 
-   when "Opt-ACH"
-      if ( optValue.to_f == 1.0 )
+   when "Opt-ACH" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      else
+         # Don't care about value of optTag since not used for air sealing
          unitCostData.select do |theOne|
             if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="AirTightness" &&
-                theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/1.0/
+                theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/#{optValue}/
                unitCost = theOne["TotUnCost"]
             end
          end
-      elsif ( optValue.to_f == 1.75 )
-         unitCostData.select do |theOne|
-            if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="AirTightness" &&
-                theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/1.75/
-               unitCost = theOne["TotUnCost"]
+         if unitCost == 0
+            # All other cases of air selaing upgrades: Use logarithmic fit equation from
+            # data points in cost dB (Cost = -0.988 * ln(ACH) + 1.3216, R-squared = 0.9987).
+            # This assumes that all air sealing upgrades start from an average house
+            # air sealing rate of 3.57 ACH!
+            if optValue.to_f >= 3.5 || optValue.to_f <= 0
+               unitCost = 0
+            else
+               unitCost = -0.988 * ln(optValue.to_f) + 1.3216
             end
          end
       end
       cost = unitCost * getHeatedFloorArea(elements)
 
-   when "Opt-"
-      cost = 0
+   when "Opt-Ceilings" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif ( optTag =~ /Opt-Ceiling/)
+         # User-defined ceiling code from code library!
+         nominalR = 0
+         locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+         elements.each(locationText) do |element|
+            if element[3].text == optValue
+               nominalR = element.attributes["nominalInsulation"]
+            end
+         end
+         unitCostData.select do |theOne|
+            if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+                theOne["Description"]=~/R#{nominalR}/
+               unitCost = theOne["TotUnCost"]
+            end
+         end
+         if unitCost == 0
+            # The nominal R-value for this ceiling code doesn't have an associated unit cost data item.
+            # Use regression fit (R-squared = 0.9987)
+            unitCost = 0.038 * nominalR.to_f + 0.0253
+         end
+      elsif ( optTag =~ /OPT-H2K-EffRValue/ && optValue != "NA" )
+         unitCostData.select do |theOne|
+            if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+                theOne["Description"]=~/R#{optValue}/
+               unitCost = theOne["TotUnCost"]
+            end
+         end
+         if unitCost == 0
+            # The R-value used in options file doesn't have an associated unit cost data item. Use
+            # regression fit (R-squared = 0.9987)
+            unitCost = 0.038 * optValue.to_f + 0.0253
+         end
+      end
+      # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
+      ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+      cost = unitCost * ceilingAreaOut
 
-   when ""
-      cost = 0
+   when "Opt-AtticCeilings" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
+      ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+      cost = unitCost * ceilingAreaOut
+
+   when "Opt-CathCeilings" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
+      ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+      cost = unitCost * ceilingAreaOut
+
+   when "Opt-FlatCeilings" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
+      ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+      cost = unitCost * ceilingAreaOut
+
+   when "Opt-Mainwall"
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      # Get house main wall area from the first XML <results> section - these are totals of multiple surfaces
+      wallAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
+      cost = unitCost * wallAreaOut
+
+   when "Opt-GenericWall_1Layer_definitions" #.................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      # Get house main wall area from the first XML <results> section - these are totals of multiple surfaces
+      wallAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
+      cost = unitCost * wallAreaOut
+
+   when "Opt-FloorHeader" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-ExposedFloor" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-CasementWindows" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-Skylights" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-DoorWindows" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-Doors" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-H2KFoundation" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-H2KFoundationSlabCrawl" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-DHWSystem" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-DWHRSystem" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-HVACSystem" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-HRVspec" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-Baseloads" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-RoofPitch" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-StandoffPV" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-H2K-PV" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
+
+   when "Opt-ResultHouseCode" #.................................................................................
+      if optValue == "NA"
+         unitCost = 0
+      elsif optValue == ""
+         unitCost = 0
+      end
+      cost = unitCost * getHeatedFloorArea(elements)
 
    end
 
@@ -7403,6 +7573,8 @@ $fSUMMARY.write( "#{$AliasArch}.Area-House-m2     =  #{$AreaComp['house'].round(
 # House R-Value
 $fSUMMARY.write( "#{$AliasOutput}.House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
 
+$fSUMMARY.write( "#{$AliasOutput}.Cost of options using unit costs = #{$optionCost.round(2)}\n")
+
 for status_type in $gStatus.keys()
   $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
 end 
@@ -7436,10 +7608,7 @@ if $ExtraOutput1 then
    $fSUMMARY.write( "#{$AliasOutput}.HotWaterWood-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)} \n")
 end
 
-
-
-
-if $gReportChoices then 
+if $gReportChoices then
   $fSUMMARY.write( "#{$AliasInput}.Run-Region       =  #{$gRunRegion}\n" )
   $fSUMMARY.write( "#{$AliasInput}.Run-Locale       =  #{$gRunLocale}\n" )
 
@@ -7480,10 +7649,8 @@ if ($gReadROutStrTxt) then
      
    binstr = "#{pad}#{bin.to_i}"  
      
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")
 
-   $fSUMMARY.write("#{$AliasOutput}.BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")       
-
-          
    end 
 
    32.times do |n|       
@@ -7495,12 +7662,9 @@ if ($gReadROutStrTxt) then
    end 
      
    binstr = "#{pad}#{bin.to_i}"  
-     
-         
+
    $fSUMMARY.write("#{$AliasOutput}.BIN-data-HLR-#{binstr}   =  #{$binDatHLR[bin].round(4)}\n")       
 
-
-          
    end 
 
    32.times do |n|       
@@ -7515,7 +7679,6 @@ if ($gReadROutStrTxt) then
           
    $fSUMMARY.write("#{$AliasOutput}.BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")       
 
-          
    end 
 
    32.times do |n|       
@@ -7527,14 +7690,10 @@ if ($gReadROutStrTxt) then
    end 
      
    binstr = "#{pad}#{bin.to_i}"  
-     
-    
-   $fSUMMARY.write("#{$AliasOutput}.BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")   
 
+   $fSUMMARY.write("#{$AliasOutput}.BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")
 
-          
-   end 
-
+   end
 
    32.times do |n|       
    bin =n+1       
@@ -7548,7 +7707,6 @@ if ($gReadROutStrTxt) then
          
    #$fSUMMARY.write("BIN-data-T1cap-#{binstr} = #{$binDatT1cap[bin].round(4)}\n")  
 
-          
    end 
 
    32.times do |n|       
@@ -7563,13 +7721,9 @@ if ($gReadROutStrTxt) then
       
    $fSUMMARY.write("#{$AliasOutput}.BIN-data-T1PLR-#{binstr} =  #{$binDatT1PLR[bin].round(4)}\n")   
 
-          
-   end 
+   end
 
 end 
-
-
-
 
 
 if ( ! $PRMcall ) 
@@ -7577,7 +7731,6 @@ if ( ! $PRMcall )
       FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
    end
 end 
-
 
 
 ReportMsgs()
