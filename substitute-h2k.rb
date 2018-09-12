@@ -67,6 +67,7 @@ $gOptionFile  = ""
 $PRMcall      = false
 $ExtraOutput1 = false
 $keepH2KFolder = false
+$autoCostOptions = false
 $gTotalCost          = 0
 $gIncBaseCosts       = 12000 # Note: This is dependent on model!
 $cost_type           = 0
@@ -355,7 +356,6 @@ $ProvArr = [ "BRITISH COLUMBIA",
              "NUNAVUT",
              "OTHER" ]
 
-
 # Setting hash for permafrost locations
 $PermafrostHash = {
     "YELLOWKNIFE"  => "discontinuous" ,
@@ -371,15 +371,19 @@ $PermafrostHash = {
     "HALLBEACH"    => "continuous"
 }
 
-
-
-
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
 
 $HDDs = ""
 
 $optionCost = 0.00 # Total cost of all options used in this run
+
+=begin rdoc
+=========================================================================================
+ METHODS: Routines called in this file must be defined before use in Ruby
+          (can't put at bottom of listing).
+=========================================================================================
+=end
 
 def self.checksum(dir)
   md5 = Digest::MD5.new
@@ -398,16 +402,8 @@ def self.checksum(dir)
   md5result = md5.update content
   content.clear
   return md5.update content
-
 end
 
-
-=begin rdoc
-=========================================================================================
- METHODS: Routines called in this file must be defined before use in Ruby
-          (can't put at bottom of listing).
-=========================================================================================
-=end
 def fatalerror( err_msg )
 # Display a fatal error and quit. -----------------------------------
 
@@ -2856,7 +2852,9 @@ def processFile(h2kElements)
         end # of if block for this option choice
 
         # Calculate cost for the choice just parsed
-        $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
+        if $autoCostOptions
+          $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
+        end
 
       end # end of tag loop
     end
@@ -6112,15 +6110,13 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
           unitCost = theOne["TotUnCost"]
         end
       end
-      if unitCost == 0
+      if unitCost <= 0
         # All other cases of air selaing upgrades: Use logarithmic fit equation from
         # data points in cost dB (Cost = -0.988 * ln(ACH) + 1.3216, R-squared = 0.9987).
         # This assumes that all air sealing upgrades start from an average house
         # air sealing rate of 3.57 ACH!
-        if optValue.to_f >= 3.5 || optValue.to_f <= 0
-          unitCost = 0
-        else
-          unitCost = -0.988 * ln(optValue.to_f) + 1.3216
+        if optValue.to_f < 3.5 && optValue.to_f > 0
+          unitCost = -0.988 * Math.log(optValue.to_f, Math::E) + 1.3216
         end
       end
     end
@@ -6362,6 +6358,7 @@ end
   END OF ALL METHODS
 =========================================================================================
 =end
+
 $allok = true
 
 $gChoiceOrder = Array.new
@@ -6387,7 +6384,6 @@ $gErrors = Array.new
 $gWarnings = Array.new
 $gStatus = Hash.new
 
-
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
@@ -6407,18 +6403,19 @@ $help_msg = "
   ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
 
  Command line options:
-   -h  This help message
-   -c  Name of choice file (mandatory but optionally with full path)
-   -o  Name of options file (mandatory but optionally with full path)
-   -b  Full path of model house file (mandatory)
-   -v  Verbose console output
-   -d  Debug output
-   -r  Report choice file input as part of output
-   -p  Run as a slave to htap-prm
-   -w  Report warning messages
-   -e  Produce and save extended output (v1)
-   -s  Name of the rule set
-   -k  Keep H2K folder after run
+  -h  This help message
+  -c  Name of choice file (mandatory but optionally with full path)
+  -o  Name of options file (mandatory but optionally with full path)
+  -b  Full path of model house file (mandatory)
+  -v  Verbose console output
+  -d  Debug output
+  -r  Report choice file input as part of output
+  -p  Run as a slave to htap-prm
+  -w  Report warning messages
+  -e  Produce and save extended output (v1)
+  -s  Name of the rule set
+  -k  Keep H2K folder after run
+  -t  Cost this run automatically using unit cost JSON file
 
 "
 
@@ -6510,16 +6507,16 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
-
     $AliasInput   = $AliasLongInput
     $AliasOutput  = $AliasLongOutput
     $AliasConfig  = $AliasLongConfig
     $AliasArch    = $AliasLongArch
-
   end
 
-
-
+  opts.on("-t", "--auto_cost_options", "Automatically cost the option(s) set for this run.") do
+    $cmdlineopts["auto_cost_options"] = true
+    $autoCostOptions = true
+  end
 
 end
 
