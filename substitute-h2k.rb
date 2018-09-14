@@ -701,6 +701,8 @@ def processFile(h2kElements)
   $unitCostFile = File.read($unitCostFileName)
   unitCostDataHash = JSON.parse($unitCostFile)
 
+  baseOptionCost = 0
+
   $gChoiceOrder.each do |choiceEntry|
 
     #stream_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} \n")
@@ -717,6 +719,10 @@ def processFile(h2kElements)
         if ( value == "" )
           debug_out (">>>ERR on #{tag}\n")
           value = ""
+        end
+
+        if $autoCostOptions
+          baseOptionCost = getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
         end
 
         # Replace existing values in H2K file ....................................
@@ -810,6 +816,14 @@ def processFile(h2kElements)
         #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-ACH/ )
           if ( tag =~ /Opt-ACH/ && value != "NA" )
+            if $autoCostOptions
+              # Override the base option cost (baseOptionCost) set above.
+              # Upgrade air sealing costs based on baseline of ACH 3.57.
+              # Do we have data to "adjust" for different base ACH values?
+              #   If existing ACH > 3.57 then set base cost negative by "some amount", and
+              #   If existing ACH < 3.57 then set base cost positive by "some amount".
+              baseOptionCost = 0
+            end
             # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
             h2kElements[locationText].attributes["code"] = "x"
@@ -835,9 +849,9 @@ def processFile(h2kElements)
 
 
         # Ceilings - All ceiling constructions
-        # Note: UsrSpec R-values will change all ceilings regardless of construction type but code library entries
-        #       must match the code names that appear in code lib "Ceiling Codes" group or the
-        #       "Flat or Cathedral Ceiling Codes" group.
+        # Note: UsrSpec R-values will change all ceilings regardless of construction type but code library
+        # entries must match the code names that appear in code lib "Ceiling Codes" group or the
+        # "Flat or Cathedral Ceiling Codes" group.
         #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-Ceilings/ )
           if ( tag =~ /Opt-Ceiling/ && value != "NA" )
@@ -947,12 +961,7 @@ def processFile(h2kElements)
 
           elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
             locationText = "HouseFile/House/Components/Ceiling/Measurements"
-            #h2kElements.each(locationText) do |element|
-            # Check if construction type (element 1) is Attic/gable (2), Attic/hip (3) or Scissor (6)
-            #if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
             h2kElements[locationText].attributes["heelHeight"] = value
-            #end
-            #end
           else
             if ( value == "NA" ) # Don't change anything
             else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
@@ -2849,17 +2858,19 @@ def processFile(h2kElements)
           # Do nothing -- we're ignoring all other tags!
           debug_out("Tag #{tag} ignored!\n")
 
-        end # of if block for this option choice
+        end # of if block for this option choice (choiceEntry)
 
-        # Calculate cost for the choice just parsed
-        if $autoCostOptions
-          $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
+        # Calculate cost difference (Upg - Base) for the choiceEntry just parsed
+        # Note:
+        #   - Base cost below is for NEW HOUSING COST ANALYSIS. We are comparing the
+        #     baseline new house cost to an upgrade cost for specific upgrade option(s).
+        if $autoCostOptions && value != "NA"
+          $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements) - baseOptionCost
         end
 
       end # end of tag loop
     end
   end
-
 
   # Delete results section
   h2kElements["HouseFile"].delete_element("AllResults")
@@ -5571,6 +5582,65 @@ def getHeatedFloorArea( elements )
 end
 
 # =========================================================================================
+# Get the total ceiling area, in square mtres, for the type specified and ceiling code name
+# from the passed elements. The ceiling type is one of:
+#   All = All ceilings regardless of type
+#   Attics = Ceilings of type Attic/Gable (2), Attic/Hip (3) or Scissor (6)
+#   Flat = Ceilings of type Flat (5)
+#   Cathedral = Ceilings of type Cathedral (4)
+# The ceiling code name is "NA" for user specified code options
+# =========================================================================================
+def getCeilingArea( elements, ceilingType, ceilingCodeName )
+  area = 0.0
+  locationText = "HouseFile/House/Components/Ceiling"
+  elements.each(locationText) do |element|
+    if ceilingType == "Attics"
+      # Check if construction type (element 3) is Attic/gable (2), Attic/hip (3) or Scissor (6)
+      if element[3][1].attributes["code"] == "2" || element[3][1].attributes["code"] == "3" || element[3][1].attributes["code"] == "6"
+        if ceilingCodeName == "NA"
+          area += element[5].attributes["area"].to_f
+        else
+          if element[3][3].text == ceilingCodeName
+            area += element[5].attributes["area"].to_f
+          end
+        end
+      end
+    elsif ceilingType == "Flat"
+      # Check if construction type (element 3) is Flat (5)
+      if element[3][1].attributes["code"] == "5"
+        if ceilingCodeName == "NA"
+          area += element[5].attributes["area"].to_f
+        else
+          if element[3][3].text == ceilingCodeName
+            area += element[5].attributes["area"].to_f
+          end
+        end
+      end
+    elsif ceilingType == "Cathedral"
+      # Check if construction type (element 3) is Cathedral (4)
+      if element[3][1].attributes["code"] == "4"
+        if ceilingCodeName == "NA"
+          area += element[5].attributes["area"].to_f
+        else
+          if element[3][3].text == ceilingCodeName
+            area += element[5].attributes["area"].to_f
+          end
+        end
+      end
+    elsif ceilingType == "All"
+      if ceilingCodeName == "NA"
+        area += element[5].attributes["area"].to_f
+      else
+        if element[3][3].text == ceilingCodeName
+          area += element[5].attributes["area"].to_f
+        end
+      end
+    end
+  end
+
+  return area
+end
+# =========================================================================================
 # Calculate electricity cost using global results array and electricity cost rate structure
 # This routine is only called when the PV external model is used!
 # =========================================================================================
@@ -6080,16 +6150,18 @@ def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
 
 end
 
-
 #===============================================================================
-# Get the unit cost value for the specified option and apply to the value to
-# calculate the overall cost.
+# Get the unit cost value for the specified option and apply to the unit value
+# (e.g., ft2, linear ft, each, etc.) to calculate the extended cost.
 #
 # Search unit cost(s) from unitCostData hash already read from JSON file. This
 # may involve multiple materials that need to be summed. TotUnCost is the sum of
 # material and labour modified unit costs (i.e., includes multiplier).
 # Get appropriate multiplication factors from H2K file (e.g., floor area,
 # wall area, each, etc.). Calculate the total cost for the option passed.
+#
+# Note: This function called for base costs as well as upgrade cost. The
+#       difference is calculated and reported in SubstitutePL-output.txt
 #===============================================================================
 def getOptionCost( unitCostData, optName, optTag, optValue, elements )
 
@@ -6100,99 +6172,217 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
   case optName
 
   when "Opt-ACH" #.................................................................................
-    if optValue == "NA"
-      unitCost = 0
-    else
-      # Don't care about value of optTag since not used for air sealing
-      unitCostData.select do |theOne|
-        if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="AirTightness" &&
-            theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/#{optValue}/
-          unitCost = theOne["TotUnCost"]
-        end
+    # Don't care about value of optTag since not used for air sealing
+    unitCostData.select do |theOne|
+      if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="AirTightness" &&
+          theOne["Description"]=~/Upgrading/ && theOne["Description"]=~/#{optValue}/
+        unitCost = theOne["TotUnCost"]
       end
-      if unitCost <= 0
-        # All other cases of air selaing upgrades: Use logarithmic fit equation from
-        # data points in cost dB (Cost = -0.988 * ln(ACH) + 1.3216, R-squared = 0.9987).
-        # This assumes that all air sealing upgrades start from an average house
-        # air sealing rate of 3.57 ACH!
-        if optValue.to_f < 3.5 && optValue.to_f > 0
-          unitCost = -0.988 * Math.log(optValue.to_f, Math::E) + 1.3216
-        end
+    end
+    if unitCost == 0
+      # All other cases of air selaing upgrades: Use logarithmic fit equation from
+      # data points in cost dB (Cost = -0.988 * ln(ACH) + 1.3216, R-squared = 0.9987).
+      # This assumes that all air sealing upgrades start from an average house
+      # air sealing rate of 3.57 ACH!
+      if optValue.to_f < 3.5 && optValue.to_f > 0
+        unitCost = -0.988 * Math.log(optValue.to_f, Math::E) + 1.3216
       end
     end
     cost = unitCost * getHeatedFloorArea(elements)  * SF_PER_SM
 
   when "Opt-Ceilings" #.................................................................................
-    if optValue == "NA"
-      unitCost = 0
-    elsif ( optTag =~ /Opt-Ceiling/)
-      # User-defined ceiling code name from code library!
+    if ( optTag =~ /Opt-Ceiling/ )
       nominalR = 0
+      ceilingArea = getCeilingArea( elements, "All", optValue) * SF_PER_SM
+
+      # User-defined ceiling code name from code library!
       locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
       elements.each(locationText) do |element|
-        if element.text == optValue
-          nominalR = element.attributes["nominalInsulation"].to_f * R_PER_RSI
+        unitCost = 0
+        next if element.text != optValue
+        nominalR = element.attributes["nominalInsulation"].to_f * R_PER_RSI
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{nominalR.round(0)}/
+            unitCost = theOne["TotUnCost"]
+          end
         end
-      end
-      unitCostData.select do |theOne|
-        if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
-            theOne["Description"]=~/R#{nominalR.round(0)}/
-          unitCost = theOne["TotUnCost"]
+        if unitCost == 0
+          # The nominal R-value for this ceiling code doesn't have an associated unit cost data item.
+          # Use regression fit (R-squared = 0.9987) to estimate cost.
+          unitCost = 0.038 * nominalR + 0.0253
         end
+        cost += unitCost * ceilingArea
       end
-      if unitCost == 0
-        # The nominal R-value for this ceiling code doesn't have an associated unit cost data item.
-        # Use regression fit (R-squared = 0.9987) to estimate cost.
-        unitCost = 0.038 * nominalR + 0.0253
-      end
-    elsif ( optTag =~ /OPT-H2K-EffRValue/ && optValue != "NA" )
-      unitCostData.select do |theOne|
-        if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
-            theOne["Description"]=~/R#{optValue}/
-          unitCost = theOne["TotUnCost"]
+    elsif ( optTag =~ /OPT-H2K-EffRValue/ )
+      ceilingArea = getCeilingArea( elements, "All", "NA") * SF_PER_SM
+      locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{optValue}/
+            unitCost = theOne["TotUnCost"]
+          end
         end
-      end
-      if unitCost == 0
-        # The R-value used in options file doesn't have an associated unit cost data item. Use
-        # regression fit (R-squared = 0.9987)
-        unitCost = 0.038 * optValue.to_f + 0.0253
+        if unitCost == 0
+          # The R-value used in options file doesn't have an associated unit cost data item. Use
+          # regression fit (R-squared = 0.9987)
+          unitCost = 0.038 * optValue.to_f + 0.0253
+        end
+        cost += unitCost * ceilingArea
       end
     end
-    # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
-    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
-    cost = unitCost * ceilingAreaOut * SF_PER_SM
 
   when "Opt-AtticCeilings" #.................................................................................
-    if optValue == "NA"
-      unitCost = 0
-    elsif optValue == ""
-      unitCost = 0
+    if ( optTag =~ /Opt-Ceiling/ )
+      # User-defined ceiling code name from code library!
+      nominalR = 0
+      # Get house ceiling area for attics only (Attic/Gable, Attic/Hip, Scissor)
+      ceilingArea = getCeilingArea( elements,"Attics", optValue ) * SF_PER_SM
+
+      locationText = "HouseFile/House/Components/Ceiling/Construction"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        next if element[1].attributes["code"] != "2" && element[1].attributes["code"] != "3" &&
+            element[1].attributes["code"] != "6"
+        next if element[3].text != optValue
+        nominalR = element[3].attributes["nominalInsulation"].to_f * R_PER_RSI
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{nominalR.round(0)}/
+            unitCost = theOne["TotUnCost"]
+          end
+        end
+        if unitCost == 0
+          # The nominal R-value for this ceiling code doesn't have an associated unit cost data item.
+          # Use regression fit (R-squared = 0.9987) to estimate cost.
+          unitCost = 0.038 * nominalR + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
+    elsif ( optTag =~ /OPT-H2K-EffRValue/ )
+      # Get house ceiling area for attics only (Attic/Gable, Attic/Hip, Scissor)
+      ceilingArea = getCeilingArea( elements,"Attics", "NA" ) * SF_PER_SM
+      locationText = "HouseFile/House/Components/Ceiling/Construction"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        next if element[1].attributes["code"] != "2" && element[1].attributes["code"] != "3" &&
+            element[1].attributes["code"] != "6"
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+            theOne["Description"]=~/R#{optValue}/
+            unitCost = theOne["TotUnCost"]
+          end
+        end
+        if unitCost == 0
+          # The R-value used in options file doesn't have an associated unit cost data item. Use
+          # regression fit (R-squared = 0.9987)
+          unitCost = 0.038 * optValue.to_f + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
+    elsif ( optTag =~ /OPT-H2K-HeelHeight/)
+      # Do nothing -- raised-heel truss included in ceiling unit cost above
     end
-    # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
-    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
-    cost = unitCost * ceilingAreaOut
 
   when "Opt-CathCeilings" #.................................................................................
-    if optValue == "NA"
-      unitCost = 0
-    elsif optValue == ""
-      unitCost = 0
+    if ( optTag =~ /Opt-Ceiling/ )
+      # User-defined ceiling code name from code library!
+      nominalR = 0
+      # Get house ceiling area for cathedral ceilings only
+      ceilingArea = getCeilingArea( elements,"Cathedral", optValue ) * SF_PER_SM
+
+      locationText = "HouseFile/House/Components/Ceiling/Construction"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        next if element[1].attributes["code"] != "4"
+        next if element[3].text != optValue
+        nominalR = element[3].attributes["nominalInsulation"].to_f * R_PER_RSI
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{nominalR.round(0)}/
+            unitCost = theOne["TotUnCost"]
+          end
+        end
+        if unitCost == 0
+          # The nominal R-value for this ceiling code doesn't have an associated unit cost data item.
+          # Use regression fit (R-squared = 0.9987) to estimate cost.
+          unitCost = 0.038 * nominalR + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
+    elsif ( optTag =~ /OPT-H2K-EffRValue/ )
+      # Get house ceiling area for cathedral ceilings only
+      ceilingArea = getCeilingArea( elements,"Cathedral", "NA" ) * SF_PER_SM
+      locationText = "HouseFile/House/Components/Ceiling/Construction"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        next if element[1].attributes["code"] != "4"
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{optValue}/
+            unitCost = theOne["TotUnCost"]
+          end
+        end
+        if unitCost == 0
+          # The R-value used in options file doesn't have an associated unit cost data item. Use
+          # regression fit (R-squared = 0.9987)
+          unitCost = 0.038 * optValue.to_f + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
     end
-    # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
-    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
-    cost = unitCost * ceilingAreaOut
 
   when "Opt-FlatCeilings" #.................................................................................
-    if optValue == "NA"
-      unitCost = 0
-    elsif optValue == ""
-      unitCost = 0
-    end
-    # Get house ceiling area from the first XML <results> section - these are totals of multiple surfaces
-    ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
-    cost = unitCost * ceilingAreaOut
+    if ( optTag =~ /Opt-Ceiling/ )
+      # User-defined ceiling code name from code library!
+      nominalR = 0
+      # Get house ceiling area for flat ceilings only
+      ceilingArea = getCeilingArea( elements,"Flat", optValue ) * SF_PER_SM
 
-  when "Opt-Mainwall"
+      locationText = "HouseFile/House/Components/Ceiling/Construction"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        next if element[1].attributes["code"] != "5"
+        next if element[3].text != optValue
+        nominalR = element[3].attributes["nominalInsulation"].to_f * R_PER_RSI
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{nominalR.round(0)}/
+            unitCost = theOne["TotUnCost"]
+          end
+        end
+        if unitCost == 0
+          # The nominal R-value for this ceiling code doesn't have an associated unit cost data item.
+          # Use regression fit (R-squared = 0.9987) to estimate cost.
+          unitCost = 0.038 * nominalR + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
+    elsif ( optTag =~ /OPT-H2K-EffRValue/ )
+      # Get house ceiling area for cathedral ceilings only
+      ceilingArea = getCeilingArea( elements,"Flat", "NA" ) * SF_PER_SM
+      locationText = "HouseFile/House/Components/Ceiling/Construction"
+      elements.each(locationText) do |element|
+        unitCost = 0
+        next if element[1].attributes["code"] != "5"
+        unitCostData.select do |theOne|
+          if theOne["MatCat1"]=="Envelope" && theOne["MatCat2"]=="CeilingInsulation" &&
+              theOne["Description"]=~/R#{optValue}/
+            unitCost = theOne["TotUnCost"]
+          end
+        end
+        if unitCost == 0
+          # The R-value used in options file doesn't have an associated unit cost data item. Use
+          # regression fit (R-squared = 0.9987)
+          unitCost = 0.038 * optValue.to_f + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
+    end
+
+  when "Opt-Mainwall"  #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
@@ -6333,14 +6523,6 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     cost = unitCost * getHeatedFloorArea(elements)
 
   when "Opt-H2K-PV" #.................................................................................
-    if optValue == "NA"
-      unitCost = 0
-    elsif optValue == ""
-      unitCost = 0
-    end
-    cost = unitCost * getHeatedFloorArea(elements)
-
-  when "Opt-ResultHouseCode" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
