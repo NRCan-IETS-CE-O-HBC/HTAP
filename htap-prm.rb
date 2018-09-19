@@ -504,7 +504,7 @@ def run_these_cases(current_task_files)
           
           FileUtils.cp($gOptionFile,$RunDirectory)      
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
-          
+          FileUtils.cp($gCostingFile,$RunDirectory)
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]    
           $LocalOptionsFile = File.basename $gOptionFile
@@ -1125,9 +1125,9 @@ optparse = OptionParser.new do |opts|
          fatalerror("Valid path to run definitions (.run) file must be specified with --run-def (or -r) option!")
       end
    end
-  
-   
- 
+
+   $gCostingFile = "C:/HTAP/HTAPUnitCosts.json"
+
 end
 
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
