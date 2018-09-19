@@ -6408,6 +6408,12 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elsif optValue == ""
       unitCost = 0
     end
+    # Get house floor header area from the first XML <results> section - these are totals of multiple surfaces
+    locationText = "HouseFile/AllResults/Results/Other/GrossArea/*" # Basement, Crawl space
+    headerAreaout = 0
+    elements.each(locationText) do |element|
+      headerAreaout +=  element.attributes["floorHeader"].to_f
+    end
     cost = unitCost * getHeatedFloorArea(elements)
 
   when "Opt-ExposedFloor" #.................................................................................
@@ -6432,6 +6438,12 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elsif optValue == ""
       unitCost = 0
     end
+    # Get house skylight area from the house components - skylight is the only allowable component for the ceiling
+    locationText = "HouseFile/House/Components/Ceiling/Components/*/Measurements"
+    skylightAreaout = 0
+    elements.each(locationText) do |element|
+      skylightAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
+    end
     cost = unitCost * getHeatedFloorArea(elements)
 
   when "Opt-DoorWindows" #.................................................................................
@@ -6440,6 +6452,12 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elsif optValue == ""
       unitCost = 0
     end
+    # Get door  area from the house components - skylight is the only allowable component for the ceiling
+    locationText = "HouseFile/House/Components/*/Components/Door/Components/Window/Measurements"
+    doorwindowAreaout = 0
+    elements.each(locationText) do |element|
+      doorwindowAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
+    end
     cost = unitCost * getHeatedFloorArea(elements)
 
   when "Opt-Doors" #.................................................................................
@@ -6447,6 +6465,11 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
+    end
+    locationText = "HouseFile/House/Components/*/Components/Door/Measurements"
+    doorAreaout = 0
+    elements.each(locationText) do |element|
+      doorAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)
     end
     cost = unitCost * getHeatedFloorArea(elements)
 
