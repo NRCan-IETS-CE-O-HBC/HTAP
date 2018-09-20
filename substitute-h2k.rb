@@ -712,8 +712,10 @@ def processFile(h2kElements)
    baseHeatSysCap = getBaseSystemCapacity(h2kElements, sysType1)
    
   # Open the unit cost file for reading below
-  $unitCostFile = File.read($unitCostFileName)
-  unitCostDataHash = JSON.parse($unitCostFile)
+  if ( $autoCostOptions ) 
+    $unitCostFile = File.read($unitCostFileName)
+    unitCostDataHash = JSON.parse($unitCostFile)
+  end 
   
   baseOptionCost = 0
    $gChoiceOrder.each do |choiceEntry|

@@ -43,6 +43,8 @@ $gJSONize = false
 $gJSONAllData = Array.new
 $gHashLoc = 0
 
+$gComputeCosts = false 
+
 $snailStart = false 
 $snailStartWait = 1
 
@@ -504,7 +506,11 @@ def run_these_cases(current_task_files)
           
           FileUtils.cp($gOptionFile,$RunDirectory)      
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
-          FileUtils.cp($gCostingFile,$RunDirectory)
+          
+          if ( $gComputeCosts ) then 
+            # Think about error handling. 
+            FileUtils.cp($gCostingFile,$RunDirectory)
+          end 
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]    
           $LocalOptionsFile = File.basename $gOptionFile
@@ -535,9 +541,11 @@ def run_these_cases(current_task_files)
             FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p1")
           end 
         
-       
-        
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm #{$gExtendedOutputFlag} "
+          $SubCostFlag = ""
+          if ($gComputeCosts ) then 
+            $SubCostFlag = "--auto_cost_options"
+          end 
+          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm #{$gExtendedOutputFlag} $SubCostFlag"
         
           # Save command for invoking substitute [ useful in debugging ]         
           $cmdtxt = File.open("cmd.txt", 'w') 
@@ -1117,7 +1125,12 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-
+   opts.on("-a", "--cost-assemblies", "Estimate costs for assemblies using costing database.") do 
+      $gComputeCosts = true
+      $gOptionFile = o
+   end
+   
+   
    opts.on("-r", "--run-def FILE", "Specified run definitions file (.run)") do |o|
       $gRunDefinitionsProvided = true 
       $gRunDefinitionsFile = o 
