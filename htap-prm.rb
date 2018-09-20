@@ -545,7 +545,7 @@ def run_these_cases(current_task_files)
           if ($gComputeCosts ) then 
             $SubCostFlag = "--auto_cost_options"
           end 
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm #{$gExtendedOutputFlag} $SubCostFlag"
+          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm #{$gExtendedOutputFlag} #{$SubCostFlag}"
         
           # Save command for invoking substitute [ useful in debugging ]         
           $cmdtxt = File.open("cmd.txt", 'w') 
