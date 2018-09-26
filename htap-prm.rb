@@ -255,7 +255,10 @@ def create_mesh_cartisian_combos(optIndex)
     
     # Save the name of the archetype that matches this choice file for invoking 
     # with substitute.h2k.
-    $gArchetypeHash[generated_file] = $gChoiceFileSet["Opt-Archetype"] 
+    
+    # "! Opt-Archetype" - choice disabled because prm copies the h2k file into the run directory.
+    $gArchetypeHash[generated_file] = $gChoiceFileSet["!Opt-Archetype"] 
+    
     $gLocationHash[generated_file]  = $gChoiceFileSet["Opt-Location"] 
     $gRulesetHash[generated_file]   = $gChoiceFileSet["Opt-Ruleset"] 
     
@@ -286,7 +289,7 @@ def create_mesh_cartisian_combos(optIndex)
       
           $h2kfile = File.basename(h2kpath)
       
-          $gChoiceFileSet["Opt-Archetype"] = $h2kfile 
+          $gChoiceFileSet["!Opt-Archetype"] = $h2kfile 
         
           create_mesh_cartisian_combos(optIndex+1) 
         
