@@ -17,6 +17,7 @@ require 'timeout'
 require 'fileutils'
 require 'digest'
 require 'json'
+require 'set'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
@@ -34,7 +35,8 @@ SF_PER_SM = 10.7639
 $maxRunTime = 10 # seconds - could be longer on slow machines. 
 $maxTries   = 10 # JTB 05-10-2016: Also setting maximum retries within timeout period
 
-
+$gJasonExport = false 
+$gJasonTest = false 
 
 # HOT2000 output data sets depend on the run mode set in the HOT2000 inputs. In General mode 
 # just one run is done and one set of outputs is generated, In ERS mode, multiple (7) runs of the 
@@ -80,6 +82,8 @@ $gReadROutStrTxt = false
 # Use lambda function to avoid the extra lines of creating each hash nesting
 $blk = lambda { |h,k| h[k] = Hash.new(&$blk) }
 $gOptions = Hash.new(&$blk)
+$gOptions2 = Hash.new
+$gOptionsOld = Hash.new
 $gChoices = Hash.new(&$blk)
 $gResults = Hash.new(&$blk)
 $gElecRate = Hash.new(&$blk)
@@ -144,11 +148,7 @@ $AliasOutput  = $AliasShortOutput
 $AliasConfig  = $AliasShortConfig 
 $AliasArch    = $AliasShortArch   
 
-
-
-
-
-
+$LegacyOptionsToIgnore = Set.new [ "Opt-RoofPitch", "Opt-StandoffPV", "Opt-DHWLoadScale", "Opt-HRVduct" ] 
 
 # Path where this script was started and considered master
 # When running GenOpt, it will be a Tmp folder!
@@ -395,6 +395,197 @@ $optionCost = 0.00 # Total cost of all options used in this run
 =========================================================================================
 =end
 
+
+# ----------------------------------------------------------------------------------------------------- 
+  
+def exportOptionsToJson()
+
+
+  $gExportFormat = Hash.new 
+  $gOptions.each do |attribute, defs| 
+    # Ignore legacy tags that aren't supported anymore. 
+    if ( $LegacyOptionsToIgnore.include? attribute ) 
+      stream_out "    - skipping : #{attribute} (legacy variable no longer supported)\n"
+      next 
+    else 
+      stream_out "    - exporting > #{attribute}\n"
+      
+    end 
+    
+    # Are relationships 1->1 (flat) or 1->[1,2,3..] (tree)?
+    if (  attribute =~ /GOconfig_rotate/      ||
+          attribute =~ /Opt-DBFiles/          ||
+          attribute =~ /Opt-ResultHouseCode/  ||
+          attribute =~ /Opt-Archetype/        ||
+          attribute =~ /Ruleset/                  ) then 
+    
+      treeStructure = false 
+      structure = "flat"
+    else 
+    
+      treeStructure = true 
+      structure = "tree"
+      
+    end 
+    
+    # is cost data required? 
+    if (  ! treeStructure || 
+          attribute =~ /GOconfig_rotate/     ||
+          attribute =~ /Opt-FuelCost/        ||
+          attribute =~ /Opt-Location/        ||
+          attribute =~ /Opt-FuelCost/        ||
+          attribute =~ /Opt-DBFiles/         ||
+          attribute =~ /Opt-ResultHouseCode/ ||
+          attribute =~ /Opt-FuelCost/          ) then 
+    
+      costingincluded = false 
+      costtext = "not applicable"
+    else 
+    
+      costingincluded = true 
+      costtext = "included"
+      
+    end     
+    
+    # Create entry 
+    $gExportFormat[attribute] = Hash.new 
+    
+    $gExportFormat[attribute] = { #"type" => "internal"
+                                  "structure"  => structure ,
+                                  "costed"  => costingincluded , 
+                                  "options" => Hash.new ,
+                                  "default" => nil , 
+                                  "stop-on-error" => false
+                             }    
+    
+    
+    if ( treeStructure ) then   
+      $gExportFormat[attribute]["h2kSchema"]  = Array.new 
+                             
+    end
+    
+    stopOnError = $gOptions[attribute]["stop-on-error"]   
+
+    if ( stopOnError == 1 ) then  
+
+      $gExportFormat[attribute]["stop-on-error"] = true
+      
+    end 
+     
+                             
+    if ($gOptions[attribute].has_key?("default"))then 
+      $gExportFormat[attribute]["default"] =  $gOptions[attribute]["default"]["value"]
+    end 
+    
+                             
+    if ( treeStructure ) then                              
+      $gOptions[attribute]["tags"].each do | index, tagname |
+        
+        # Listing of all supported tags 
+        $gExportFormat[attribute]["h2kSchema"].push(tagname)
+    
+      end     
+    end 
+                             
+    $gOptions[attribute]["options"].each do | option, defs2 |
+    
+ 
+      $gExportFormat[attribute]["options"][option] = Hash.new 
+      if ( treeStructure ) then 
+        $gExportFormat[attribute]["options"][option]["h2kMap"] = Hash.new 
+        $gExportFormat[attribute]["options"][option]["h2kMap"]["base"] = Hash.new 
+
+        # one day consider: 
+        #$gExportFormat[attribute]["options"][option]["values"]["variant"]
+        $gExportFormat[attribute]["options"][option]["costs"] = Hash.new
+        if ( costingincluded ) 
+          
+          $gExportFormat[attribute]["options"][option]["costs"]["components"] = Array.new 
+          # This field doesn't exist in the HOT2000 file. Let's create an empty example
+          $gExportFormat[attribute]["options"][option]["costs"]["components"] = [ "Example Key-phrase: Layer1", "Example Key-phrase: Layer2", "Example Key-phrase: Layer3" ]
+          # This field doesn't exist in the HOT2000 file. Let's create an empty example
+          $gExportFormat[attribute]["options"][option]["costs"]["custom-costs"] = Hash.new
+          $gExportFormat[attribute]["options"][option]["costs"]["custom-costs"] = { "ExampleScenarioA" => { "Units" => "sf floor area", 
+                                                                                                            "TotUnitCost"  => 1.50, 
+                                                                                                            "Comment" => "eg: Alex's original estimate"
+                                                                                                          },
+                                                                                     "ExampleScenarioB" => { "Units" => "sf floor area", 
+                                                                                                            "TotUnitCost"  => 1.70, 
+                                                                                                            "Comment" => "eg: Real numbers from ACME builder."
+                                                                                                          }
+                                                                                   }                                                                                                          
+                                                                                                          
+          
+        end 
+        
+        
+        # Code for testing purposes : Allows direct comparison between .json and .options generated data maps. 
+        if ( $gDebug ) then 
+           $gExportFormat[attribute]["options"][option]["costs"]["legacy"] = Hash.new  
+           costType = $gOptions[attribute]["options"][option]["cost-type"] 
+           costVal =  $gOptions[attribute]["options"][option]["cost"] 
+           $gExportFormat[attribute]["options"][option]["costs"]["legacy"] = { "cost-type" => costType, "cost" => costVal }
+        end 
+      end 
+      
+      $gOptions[attribute]["options"][option]["values"].each do | valnum, val | 
+        result = val["conditions"]["all"]
+        if ( treeStructure ) 
+          schematag = $gExportFormat[attribute]["h2kSchema"][valnum.to_i - 1]
+
+          $gExportFormat[attribute]["options"][option]["h2kMap"]["base"][schematag] = result
+        else 
+          $gExportFormat[attribute]["options"][option] = result
+       
+        end 
+         
+      end 
+          
+      
+    
+      
+
+    end 
+    
+    
+    
+  end 
+
+ 
+
+  stream_out ("Writing out options in json format (HTAP-options.json)...") 
+  $JSONoutput  = File.open("HTAP-options.json", 'w') 
+  $JSONoutput.write(JSON.pretty_generate($gExportFormat))
+  $JSONoutput.close 
+  stream_out("done.")
+  
+  
+  if ( $gDebug ) then 
+  
+    $JSONoutput  = File.open("HTAPLegacyOptionsStructure.json", 'w') 
+    $JSONoutput.write(JSON.pretty_generate($gOptions))
+    $JSONoutput.close 
+    
+    parse_json_options_file("HTAP-options.json")
+    
+    $JSONoutput  = File.open("HTAPJSONOptionsStructure.json", 'w') 
+    $JSONoutput.write(JSON.pretty_generate($gOptions2))
+    $JSONoutput.close 
+    
+    debug_out ("Wrote old and new data formats to:\n")
+    debug_out ("   - HTAPLegacyOptionsStructure.json \n") 
+    debug_out ("   - HTAPJSONOptionsStructure.json \n") 
+    debug_out ("   ( diff these files to compare data models ) \n")
+    
+  end 
+  
+
+
+end   
+  
+
+
+
 def self.checksum(dir)
   md5 = Digest::MD5.new
   searchLoc = dir.gsub(/\\/, "/") 
@@ -414,6 +605,334 @@ def self.checksum(dir)
   return md5.update content
  
 end
+
+def parse_json_options_file(filename)
+  # New parsing method for json format 
+  stream_out("\n\n Reading available options (#{filename})...")
+  debug_out(" --------------JSON options parsing ------------ ")
+  fOPTIONS = File.new(filename, "r") 
+  if fOPTIONS == nil then
+     fatalerror(" Could not read #{filename}.\n")
+  end
+  
+  
+  $OptionsContents = fOPTIONS.read
+  fOPTIONS.close 
+  $JSONRawOptions = JSON.parse($OptionsContents)
+
+  
+  
+  
+  for attribute in $JSONRawOptions.keys()
+
+
+    
+    structure = $JSONRawOptions[attribute]["structure"]
+    schema = $JSONRawOptions[attribute]["schema"].to_s
+    
+    debug_out "\n ====================================="
+    debug_out " Attribute: #{attribute} "    
+    debug_out " structure: #{structure} " 
+    
+    $StopOnError = $JSONRawOptions[attribute]["stop-on-error"]
+    if ( $StopOnError ) then 
+      errFlag = 1
+    else 
+      errFlag = 0 
+    end   
+    
+    
+    #puts "> #{attribute} (#{structure}) \n" 
+    $gOptions2[attribute] = Hash.new
+    $gOptions2[attribute] = { "type" => "internal" ,
+                              "default" => Hash.new , 
+                              "stop-on-error" => errFlag  , 
+                              "tags" => Hash.new   ,
+                              "options" => Hash.new      } 
+                              
+
+                  
+                  
+    if ( structure.to_s =~ /tree/) 
+      tagindex = 0  
+      debug_out " SCHEMA : " 
+      for schemaEntry in $JSONRawOptions[attribute]["h2kSchema"]                          
+        tagindex = tagindex + 1
+        $gOptions2[attribute]["tags"][tagindex] = schemaEntry
+        
+        debug_out "          #{tagindex} - #{schemaEntry}   "
+        
+      end 
+      
+    else 
+      $gOptions2[attribute]["tags"][1] = "<NotARealTag>"
+    end 
+    
+    if ( ! $JSONRawOptions[attribute]["default"].nil? ) then 
+       default = $JSONRawOptions[attribute]["default"]
+
+      $gOptions2[attribute]["default"] = { "defined" => 1, 
+                                           "value"   => default } 
+    
+    end 
+    
+    for optionEntry in $JSONRawOptions[attribute]["options"].keys
+      debug_out " "
+      debug_out " ........... OPTION: #{optionEntry} ............ "       
+        
+      $gOptions2[attribute]["options"][optionEntry] = Hash.new
+      
+      # Import legacy costs (to be replaced.)
+      
+
+      
+      if ( $JSONRawOptions[attribute]["costed"]  &&
+             ! $JSONRawOptions[attribute]["options"][optionEntry]["costs"].nil? &&
+             ! $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"].nil?  &&
+             ! $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost-type"].nil?    ) 
+        
+        costType = $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost-type"]
+        costVal  = $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost"]
+      else 
+        costType = "total"
+        costVal  = 0 
+      end 
+     
+      $gOptions2[attribute]["options"][optionEntry] = { "values" => Hash.new,
+                                                        "cost-type" => costType, # legacy compatability - to be removed 
+                                                        "cost"   => "#{costVal.to_s}"        }   # legacy compatability - to be removed 
+        
+        
+        
+      # Currently only base supported. 
+      if ( structure.to_s =~ /tree/) 
+        $values = $JSONRawOptions[attribute]["options"][optionEntry]["h2kMap"] 
+        debug_out" has h2kMap entries - " 
+        debug_out"      #{$values["base"]} \n\n"
+        
+
+        valuesWithConditions = Hash.new
+        
+        for tagname,value in $values["base"]
+          
+          tagindex = $JSONRawOptions[attribute]["h2kSchema"].index(tagname) + 1
+          if ( ! tagindex.nil? ) 
+            valuesWithConditions[tagindex.to_s] = Hash.new
+            valuesWithConditions[tagindex.to_s] = { "conditions" => Hash.new } 
+            valuesWithConditions[tagindex.to_s]["conditions"] = { "all" => value } 
+          else 
+            fatalerror("For #{attribute}: tag #{tagname} does not match schema.\n")
+          end 
+        end 
+          
+        $gOptions2[attribute]["options"][optionEntry]["values"] = valuesWithConditions
+                      
+      else  
+        $values = $JSONRawOptions[attribute]["options"][optionEntry]
+        debug_out " has value - #{$values}" 
+        $gOptions2[attribute]["options"][optionEntry]["values"][1.to_s] = { "conditions" => 
+                                                                               { "all" => $values }
+                                                                          }
+        
+      end 
+      
+    end   
+     
+
+  end 
+  
+  stream_out("done.\n\n") 
+  
+  
+end 
+
+def parse_legacy_options_file(filename) 
+
+  $currentAttributeName =""
+  $AttributeOpen = 0
+  $ExternalAttributeOpen = 0
+  $ParametersOpen = 0 
+
+
+  # Parse the option file. 
+  stream_out("\n\n Reading available options (#{filename})...")
+  fOPTIONS = File.new(filename, "r") 
+  if fOPTIONS == nil then
+     fatalerror(" Could not read #{filename}.\n")
+  end
+  
+  while !fOPTIONS.eof? do
+  
+     $line = fOPTIONS.readline
+     $line.strip!              # Removes leading and trailing whitespace
+     $line.gsub!(/\!.*$/, '')  # Removes comments
+     $line.gsub!(/\s*/, '')    # Removes mid-line white space
+     $line.gsub!(/\^/, ' ')    # JTB Added Jun 30/16: Replace '^' with space (used in some option tags to indicate space between words)
+     $linecount += 1
+  
+     if ( $line !~ /^\s*$/ )   # Not an empty line!
+        lineTokenValue = $line.split('=')
+        $token = lineTokenValue[0]
+        $value = lineTokenValue[1]
+  
+        # Allow value to contain spaces when "~" character used in options file 
+        #(e.g. *option:retro_GSHP:value:2 = *gshp~../hvac/heatx_v1.gshp)
+        if ($value) 
+           $value.gsub!(/~/, ' ')
+        end
+  
+        # The file contains 'attributes that are either internal (evaluated by HOT2000)
+        # or external (computed elsewhere and post-processed). 
+        
+        # Open up a new attribute    
+        if ( $token =~ /^\*attribute:start/ )
+           $AttributeOpen = 1
+        end
+  
+        # Open up a new external attribute    
+        if ( $token =~ /^\*ext-attribute:start/ )
+           $ExternalAttributeOpen = 1
+        end
+  
+        # Open up parameter block
+        if ( $token =~ /^\*ext-parameters:start/ )
+           $ParametersOpen = 1
+        end
+  
+        # Parse parameters. 
+        if ( $ParametersOpen == 1 )
+           # Read parameters. Format: 
+           #  *param:NAME = VALUE 
+           if ( $token =~ /^\*param/ )
+              $token.gsub!(/\*param:/, '')
+              $gParameters[$token] = $value
+           end
+        end
+      
+        # Parse attribute contents Name/Tag/Option(s)
+        if ( $AttributeOpen || $ExternalAttributeOpen ) 
+           
+           if ( $token =~ /^\*attribute:name/ )
+           
+              $currentAttributeName = $value
+              if ( $ExternalAttributeOpen == 1 ) then
+                 $gOptions[$currentAttributeName]["type"] = "external"
+              else
+                 $gOptions[$currentAttributeName]["type"] = "internal"
+              end
+           
+              $gOptions[$currentAttributeName]["default"]["defined"] = 0
+              
+              $gOptions[$currentAttributeName]["stop-on-error"] = 1 
+              
+              if ( $currentAttributeName =~ /Opt-Archetype/ && $gLookForArchetype == 0 ) 
+                $gOptions[$currentAttributeName]["stop-on-error"] = 0
+              end 
+          
+           elsif ( $token =~ /^\*attribute:on-error/ ) 
+             
+             if ($value =~ /ignore/ ) 
+               $gOptions[$currentAttributeName]["stop-on-error"] = 0 
+             end 
+          
+           elsif ( $token =~ /^\*attribute:tag/ )
+              
+              arrResult = $token.split(':')
+              $TagIndex = arrResult[2]
+              $gOptions[$currentAttributeName]["tags"][$TagIndex] = $value
+              
+           elsif ( $token =~ /^\*attribute:default/ )   # Possibly define default value. 
+           
+              $gOptions[$currentAttributeName]["default"]["defined"] = 1
+              $gOptions[$currentAttributeName]["default"]["value"] = $value
+  
+           elsif ( $token =~ /^\*option/ )
+              # Format: 
+              #  *Option:NAME:MetaType:Index or 
+              #  *Option[CONDITIONS]:NAME:MetaType:Index or    
+              # MetaType is:
+              #  - cost
+              #  - value 
+              #  - alias (for Dakota)
+              #  - production-elec
+              #  - production-sh
+              #  - production-dhw
+              #  - WindowParams   
+              
+              $breakToken = $token.split(':')
+              $condition_string = ""
+              
+              # Check option keyword to see if it has specific conditions
+              # format is *option[condition1>value1;condition2>value2 ...] 
+              
+              if ( $breakToken[0] =~ /\[.+\]/ )
+                 $condition_string = $breakToken[0]
+                 $condition_string.gsub!(/\*option\[/, '')
+                 $condition_string.gsub!(/\]/, '') 
+                 $condition_string.gsub!(/>/, '=') 
+              else
+                 $condition_string = "all"
+              end
+  
+              $OptionName = $breakToken[1]
+              $DataType   = $breakToken[2]
+              
+              $ValueIndex = ""
+              $CostType = ""
+              
+              # Assign values 
+              
+              if ( $DataType =~ /value/ )
+                 $ValueIndex = $breakToken[3]
+                 $gOptions[$currentAttributeName]["options"][$OptionName]["values"][$ValueIndex]["conditions"][$condition_string] = $value
+              end
+              
+              if ( $DataType =~ /cost/ )
+                 $CostType = $breakToken[3]
+                 $gOptions[$currentAttributeName]["options"][$OptionName]["cost-type"] = $CostType
+                 $gOptions[$currentAttributeName]["options"][$OptionName]["cost"] = $value
+              end
+              
+              # Window data processing for generic window definitions:
+              if ( $DataType =~ /WindowParams/ )
+                 debug_out ("\nProcessing window data for #{$currentAttributeName} / #{$OptionName}  \n")
+                 $Param = $breakToken[3]
+                 $GenericWindowParams[$OptionName][$Param] = $value
+                 $GenericWindowParamsDefined = 1
+              end
+              
+              # External entities...
+              if ( $DataType =~ /production/ )
+                 if ( $DataType =~ /cost/ )
+                    $CostType = $breakToken[3]
+                 end
+                 $gOptions[$currentAttributeName]["options"][$OptionName][$DataType]["conditions"][$condition_string] = $value
+              end
+              
+           end   # end processing all attribute types (if-elsif block)
+        
+        end  #end of processing attributes
+      
+        # Close attribute and append contents to global options array
+        if ( $token =~ /^\*attribute:end/ || $token =~ /^\*ext-attribute:end/)
+           
+           $AttributeOpen = 0
+ 
+        end
+        
+        if ( $token =~ /\*ext-parameters:end/ )
+           $ParametersOpen = 0
+        end
+        
+     end   # Empty line check
+        
+  end   #read next line
+  
+  fOPTIONS.close
+  stream_out ("  done.\n")
+
+end 
+
 
 
 
@@ -563,6 +1082,9 @@ def get_elements_from_filename(fileSpec)
   # Determine file extension
   tempExt = File.extname(var[2])
 
+  debug_out "Testing file read location, #{fileSpec}... "
+  
+  
   # Open file...
   fFileHANDLE = File.new(fileSpec, "r")
   if fFileHANDLE == nil then
@@ -669,7 +1191,10 @@ def processFile(h2kElements)
   # Load all XML elements from HOT2000 code library file. This file is specified
   # in option Opt-DBFiles
   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
+  
+ 
   h2kCodeFile = $run_path + "\\StdLibs" + "\\" + codeLibName
+  
   if ( !File.exist?(h2kCodeFile) )
     fatalerror("Code library file #{codeLibName} not found in #{$run_path + "\\StdLibs" + "\\"}!")
   else
@@ -720,19 +1245,22 @@ def processFile(h2kElements)
   baseOptionCost = 0
    $gChoiceOrder.each do |choiceEntry|
    
-      #stream_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} \n")
+      debug_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} \n")
       
+
       if ( $gOptions[choiceEntry]["type"] == "internal" )
          choiceVal =  $gChoices[choiceEntry]
+           
          tagHash = $gOptions[choiceEntry]["tags"]
          valHash = $gOptions[choiceEntry]["options"][choiceVal]["result"]
+                 
          
          for tagIndex in tagHash.keys()
             tag = tagHash[tagIndex]
-            value = valHash[tagIndex]
+            value = valHash[tagIndex.to_s]
             
-            if ( value == "" )
-               debug_out (">>>ERR on #{tag}\n")
+            if ( value == "" || value.nil? )
+               debug_out (">>ERR #{choiceEntry} / #{choiceVal} / #{tag} - empty value \n")
                value = ""
             end
             
@@ -799,10 +1327,11 @@ def processFile(h2kElements)
                      fatalerror("Fuel cost file #{value} not found in #{$run_path + "\\StdLibs" + "\\"}!")
                   else
                      h2kElements[locationText].attributes["library"] = value
-                     #print "> FILE: "+ value + "\n"
+
 
                      # Open fuel file and read elements to use below. This assumes that this tag
                      # always comes before the remainder of the weather location tags below!!
+                     
                      h2kFuelElements = get_elements_from_filename(h2kFuelFile)
                   end
 
@@ -4298,8 +4827,9 @@ def runsims( direction )
      $gStatus["H2KExecutionAttempts"] = tries
      
      FileUtils.cp("..\\#{$h2kFileName}", "..\\run_file_file_#{tries}.h2k")   
-     runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
      
+     runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
+
      begin
        
        pid = Process.spawn( runThis, :new_pgroup => true )
@@ -4453,7 +4983,8 @@ def postprocess( scaleData )
       $gRegionalCostAdj = $RegionalCostFactors[$Locale]
    end
    
-   $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
+   # PVSise Depreciated. To be removed in later versions. 
+   # $PVsize = $gChoices["Opt-StandoffPV"]  # Input examples: "SizedPV", "SizedPV|3kW", or "NoPV"
    $PVInt = $gChoices["Opt-H2K-PV"]       # Input examples: "MonoSi-50m2", "NA"
    if ( $PVInt != "NA" )
       $PVIntModel = true
@@ -5080,6 +5611,8 @@ def postprocess( scaleData )
    # PV Data cost...
    $PVArrayCost = 0.0
    $PVArraySized = 0.0
+   # Stand-off PV code depriciated. Need to figure out how to get PV size from H2k results. 
+   $PVsize = "NoPV"
    $PVcapacity = $PVsize
    $PVcapacity.gsub(/[a-zA-Z:\s'\|]/, '')
    if ( !$PVIntModel && ( $PVcapacity == "" || $PVcapacity == "NoPV" ) ) 
@@ -5096,8 +5629,10 @@ def postprocess( scaleData )
          $PVUnitOutput = 0.0
       end
    elsif ( $PVsize != "NoPV" )
-      $PVUnitCost = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["cost"].to_f
-      $PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f  # GJ/kW
+   
+      # Depreciated - to be removed. 
+      #$PVUnitCost = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["cost"].to_f
+      #$PVUnitOutput = $gOptions["Opt-StandoffPV"]["options"]["SizedPV"]["ext-result"]["production-elec-perKW"].to_f  # GJ/kW
    end
    
    if ( $PVsize =~ /NoPV/ )
@@ -5135,8 +5670,10 @@ def postprocess( scaleData )
          debug_out ("\n PV array is #{$PVsize}  ...\n")
       end
    end
-   $gChoices["Opt-StandoffPV"] = $PVsize
-   $gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
+   
+   # Depreciated. To be deleted. 
+   #$gChoices["Opt-StandoffPV"] = $PVsize
+   #$gOptions["Opt-StandoffPV"]["options"][$PVsize]["cost"] = $PVArrayCost
 
    
    # PV energy from HOT2000 model run (GJ) or estimate from option file PV data
@@ -5301,6 +5838,9 @@ def postprocess( scaleData )
 
    $gChoices.sort.to_h
    for attribute in $gChoices.keys()
+   
+      debug_out "Costing for #{attribute}: " 
+   
       choice = $gChoices[attribute]
       cost = $gOptions[attribute]["options"][choice]["cost"].to_f
       $gTotalCost += cost
@@ -5910,7 +6450,7 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    end
    
    # Choices that do NOT depend on ruleType!
-   $ruleSetChoices["Opt-StandoffPV"] = "NoPV"
+
    $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
    $ruleSetChoices["Opt-Baseloads"] = "NBC-BaseLoads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
@@ -6658,19 +7198,6 @@ $help_msg = "
   ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
   
  Command line options:
-   -h  This help message
-   -c  Name of choice file (mandatory but optionally with full path)
-   -o  Name of options file (mandatory but optionally with full path)
-   -b  Full path of model house file (mandatory)
-   -v  Verbose console output
-   -d  Debug output
-   -r  Report choice file input as part of output
-   -p  Run as a slave to htap-prm
-   -w  Report warning messages
-   -e  Produce and save extended output (v1)
-   -s  Name of the rule set
-   -k  Keep H2K folder after run
-  -t  Cost this run automatically using unit cost JSON file
    
 "
 
@@ -6770,10 +7297,24 @@ optparse = OptionParser.new do |opts|
          
    end   
    
-  opts.on("-t", "--auto_cost_options", "Automatically cost the option(s) set for this run.") do
+   opts.on("-a", "--auto-cost-options", "Automatically cost the option(s) set for this run.") do
     $cmdlineopts["auto_cost_options"] = true
     $autoCostOptions = true
-  end
+   end
+   
+   opts.on("-j", "--export-options-to-json", "Export the .options file into JSON format and quit.") do
+
+     $gJasonExport = true
+         
+   end  
+   
+   opts.on("-t", "--test-json-export", "(debugging) Export the .options file as .json, and then re-import it (debugging)") do
+
+     $gJasonTest = true
+         
+   end     
+   
+   
    
 end
 
@@ -6811,230 +7352,110 @@ stream_out ("         HOT2000 run folder: #{$run_path} \n")
  that substitute-h2k.rb can pick from 
 =end
 
-stream_out("\n\n Reading available options (#{$gOptionFile})...")
-fOPTIONS = File.new($gOptionFile, "r") 
-if fOPTIONS == nil then
-   fatalerror(" Could not read #{$gOptionFile}.\n")
-end
-
 $linecount = 0
-$currentAttributeName =""
-$AttributeOpen = 0
-$ExternalAttributeOpen = 0
-$ParametersOpen = 0 
-
 $gParameters = Hash.new
 
-# Parse the option file. 
 
-while !fOPTIONS.eof? do
+if ( $gOptionFile =~ /\.json/ ) then 
 
-   $line = fOPTIONS.readline
-   $line.strip!              # Removes leading and trailing whitespace
-   $line.gsub!(/\!.*$/, '')  # Removes comments
-   $line.gsub!(/\s*/, '')    # Removes mid-line white space
-   $line.gsub!(/\^/, ' ')    # JTB Added Jun 30/16: Replace '^' with space (used in some option tags to indicate space between words)
-   $linecount += 1
+  warn_out ("Parsing experiential JSON file ! \n") 
+ 
+  parse_json_options_file($gOptionFile)
+  
+  $gOptions = $gOptions2
+  
+else 
 
-   if ( $line !~ /^\s*$/ )   # Not an empty line!
-      lineTokenValue = $line.split('=')
-      $token = lineTokenValue[0]
-      $value = lineTokenValue[1]
+  parse_legacy_options_file($gOptionFile) 
+  
+    # Code used to test round-tripping 
+  if ( $gJasonTest ) 
+    stream_out (" Debugging option --test-json-export specified. \n")
+    stream_out (" Writing options to json format (HTAP-options.json) and re-importing... \n")
+    exportOptionsToJson()
+    $gOptionsOld = $gOptions 
+    $gOptions = nil 
+    parse_json_options_file("HTAP-options.json")
+    $gOptions = $gOptions2
+    
+  end 
+  
+  
+  
+  
+  if ( $gJasonExport ) then 
+    stream_out (" \n\n")
+    stream_out (" ............ EXPORT .OPTIONS FILE AS .JSON ............\n\n") 
+    stream_out (" Option --export-options-to-json specified. \n")
+    stream_out (" Writing HTAP-options.json and quitting. \n\n")
+    exportOptionsToJson()
+    stream_out ("\n ............                               .............\n") 
+    stream_out ("                      Complete.  \n\n") 
+  
+    exit 
 
-      # Allow value to contain spaces when "~" character used in options file 
-      #(e.g. *option:retro_GSHP:value:2 = *gshp~../hvac/heatx_v1.gshp)
-      if ($value) 
-         $value.gsub!(/~/, ' ')
-      end
+  end 
 
-      # The file contains 'attributes that are either internal (evaluated by HOT2000)
-      # or external (computed elsewhere and post-processed). 
+
+  
+
+end 
+
+
+for $currentAttributeName in $gOptions.keys()
+          
+# Store options 
+debug_out ( "========== #{$currentAttributeName} ===========\n");
+debug_out ( "Storing data for #{$currentAttributeName}: \n" );
+
+$OptHash = $gOptions[$currentAttributeName]["options"] 
+
+   for $optionIndex in $OptHash.keys()
+      debug_out( "    -> #{$optionIndex} \n" )
+      $cost_type = $gOptions[$currentAttributeName]["options"][$optionIndex]["cost-type"]
+      $cost = $gOptions[$currentAttributeName]["options"][$optionIndex]["cost"]
+      $ValHash = $gOptions[$currentAttributeName]["options"][$optionIndex]["values"]
       
-      # Open up a new attribute    
-      if ( $token =~ /^\*attribute:start/ )
-         $AttributeOpen = 1
-      end
-
-      # Open up a new external attribute    
-      if ( $token =~ /^\*ext-attribute:start/ )
-         $ExternalAttributeOpen = 1
-      end
-
-      # Open up parameter block
-      if ( $token =~ /^\*ext-parameters:start/ )
-         $ParametersOpen = 1
-      end
-
-      # Parse parameters. 
-      if ( $ParametersOpen == 1 )
-         # Read parameters. Format: 
-         #  *param:NAME = VALUE 
-         if ( $token =~ /^\*param/ )
-            $token.gsub!(/\*param:/, '')
-            $gParameters[$token] = $value
+      for $valueIndex in $ValHash.keys()
+         $CondHash = $gOptions[$currentAttributeName]["options"][$optionIndex]["values"][$valueIndex]["conditions"]
+         
+         for $conditions in $CondHash.keys()
+            $tag = $gOptions[$currentAttributeName]["tags"][$valueIndex]
+            $value = $gOptions[$currentAttributeName]["options"][$optionIndex]["values"][$valueIndex]["conditions"][$conditions]
+            debug_out( "           - #{$tag} -> #{$value} [valid: #{$conditions} ]   \n")
          end
+         
       end
-    
-      # Parse attribute contents Name/Tag/Option(s)
-      if ( $AttributeOpen || $ExternalAttributeOpen ) 
-         
-         if ( $token =~ /^\*attribute:name/ )
-         
-            $currentAttributeName = $value
-            if ( $ExternalAttributeOpen == 1 ) then
-               $gOptions[$currentAttributeName]["type"] = "external"
-            else
-               $gOptions[$currentAttributeName]["type"] = "internal"
-            end
-         
-            $gOptions[$currentAttributeName]["default"]["defined"] = 0
-            
-            $gOptions[$currentAttributeName]["stop-on-error"] = 1 
-            
-            if ( $currentAttributeName =~ /Opt-Archetype/ && $gLookForArchetype == 0 ) 
-              $gOptions[$currentAttributeName]["stop-on-error"] = 0
-            end 
-        
-         elsif ( $token =~ /^\*attribute:on-error/ ) 
-           
-           if ($value =~ /ignore/ ) 
-             $gOptions[$currentAttributeName]["stop-on-error"] = 0 
-           end 
-        
-         elsif ( $token =~ /^\*attribute:tag/ )
-            
-            arrResult = $token.split(':')
-            $TagIndex = arrResult[2]
-            $gOptions[$currentAttributeName]["tags"][$TagIndex] = $value
-            
-         elsif ( $token =~ /^\*attribute:default/ )   # Possibly define default value. 
-         
-            $gOptions[$currentAttributeName]["default"]["defined"] = 1
-            $gOptions[$currentAttributeName]["default"]["value"] = $value
-
-         elsif ( $token =~ /^\*option/ )
-            # Format: 
-            #  *Option:NAME:MetaType:Index or 
-            #  *Option[CONDITIONS]:NAME:MetaType:Index or    
-            # MetaType is:
-            #  - cost
-            #  - value 
-            #  - alias (for Dakota)
-            #  - production-elec
-            #  - production-sh
-            #  - production-dhw
-            #  - WindowParams   
-            
-            $breakToken = $token.split(':')
-            $condition_string = ""
-            
-            # Check option keyword to see if it has specific conditions
-            # format is *option[condition1>value1;condition2>value2 ...] 
-            
-            if ( $breakToken[0] =~ /\[.+\]/ )
-               $condition_string = $breakToken[0]
-               $condition_string.gsub!(/\*option\[/, '')
-               $condition_string.gsub!(/\]/, '') 
-               $condition_string.gsub!(/>/, '=') 
-            else
-               $condition_string = "all"
-            end
-
-            $OptionName = $breakToken[1]
-            $DataType   = $breakToken[2]
-            
-            $ValueIndex = ""
-            $CostType = ""
-            
-            # Assign values 
-            
-            if ( $DataType =~ /value/ )
-               $ValueIndex = $breakToken[3]
-               $gOptions[$currentAttributeName]["options"][$OptionName]["values"][$ValueIndex]["conditions"][$condition_string] = $value
-            end
-            
-            if ( $DataType =~ /cost/ )
-               $CostType = $breakToken[3]
-               $gOptions[$currentAttributeName]["options"][$OptionName]["cost-type"] = $CostType
-               $gOptions[$currentAttributeName]["options"][$OptionName]["cost"] = $value
-            end
-            
-            # Window data processing for generic window definitions:
-            if ( $DataType =~ /WindowParams/ )
-               debug_out ("\nProcessing window data for #{$currentAttributeName} / #{$OptionName}  \n")
-               $Param = $breakToken[3]
-               $GenericWindowParams[$OptionName][$Param] = $value
-               $GenericWindowParamsDefined = 1
-            end
-            
-            # External entities...
-            if ( $DataType =~ /production/ )
-               if ( $DataType =~ /cost/ )
-                  $CostType = $breakToken[3]
-               end
-               $gOptions[$currentAttributeName]["options"][$OptionName][$DataType]["conditions"][$condition_string] = $value
-            end
-            
-         end   # end processing all attribute types (if-elsif block)
-      
-      end  #end of processing attributes
-    
-      # Close attribute and append contents to global options array
-      if ( $token =~ /^\*attribute:end/ || $token =~ /^\*ext-attribute:end/)
-         
-         $AttributeOpen = 0
-         
-         # Store options 
-         debug_out ( "========== #{$currentAttributeName} ===========\n");
-         debug_out ( "Storing data for #{$currentAttributeName}: \n" );
-         
-         $OptHash = $gOptions[$currentAttributeName]["options"] 
-         
-         for $optionIndex in $OptHash.keys()
-            debug_out( "    -> #{$optionIndex} \n" )
-            $cost_type = $gOptions[$currentAttributeName]["options"][$optionIndex]["cost-type"]
-            $cost = $gOptions[$currentAttributeName]["options"][$optionIndex]["cost"]
-            $ValHash = $gOptions[$currentAttributeName]["options"][$optionIndex]["values"]
-            
-            for $valueIndex in $ValHash.keys()
-               $CondHash = $gOptions[$currentAttributeName]["options"][$optionIndex]["values"][$valueIndex]["conditions"]
-               
-               for $conditions in $CondHash.keys()
-                  $tag = $gOptions[$currentAttributeName]["tags"][$valueIndex]
-                  $value = $gOptions[$currentAttributeName]["options"][$optionIndex]["values"][$valueIndex]["conditions"][$conditions]
-                  debug_out( "           - #{$tag} -> #{$value} [valid: #{$conditions} ]   \n")
-               end
-               
-            end
-
-            $ExtEnergyHash = $gOptions[$currentAttributeName]["options"][$optionIndex] 
-            for $ExtEnergyType in $ExtEnergyHash.keys()
-               if ( $ExtEnergyType =~ /production/ )
-                  $CondHash = $gOptions[$currentAttributeName]["options"][$optionIndex][$ExtEnergyType]["conditions"]
-                  for $conditions in $CondHash.keys()
-                     $ExtEnergyCredit = $gOptions[$currentAttributeName]["options"][$optionIndex][$ExtEnergyType]["conditions"][$conditions] 
-                     debug_out ("              - credit:(#{$ExtEnergyType}) #{$ExtEnergyCredit} [valid: #{$conditions} ] \n")
-                  end
-               end
+   
+      $ExtEnergyHash = $gOptions[$currentAttributeName]["options"][$optionIndex] 
+      for $ExtEnergyType in $ExtEnergyHash.keys()
+         if ( $ExtEnergyType =~ /production/ )
+            $CondHash = $gOptions[$currentAttributeName]["options"][$optionIndex][$ExtEnergyType]["conditions"]
+            for $conditions in $CondHash.keys()
+               $ExtEnergyCredit = $gOptions[$currentAttributeName]["options"][$optionIndex][$ExtEnergyType]["conditions"][$conditions] 
+               debug_out ("              - credit:(#{$ExtEnergyType}) #{$ExtEnergyCredit} [valid: #{$conditions} ] \n")
             end
          end
       end
-      
-      if ( $token =~ /\*ext-parameters:end/ )
-         $ParametersOpen = 0
-      end
-      
-   end   # Empty line check
-      
-end   #read next line
+   end
 
-fOPTIONS.close
-stream_out ("  done.\n")
+end 
+
+
+
+ 
+
+
+
+
+
 
 
 =begin rdoc
  Parse configuration (choice) file. 
 =end
+
+
 
 stream_out("\n\n Reading user-defined choices (#{$gChoiceFile})...\n")
 fCHOICES = File.new($gChoiceFile, "r") 
@@ -7062,6 +7483,11 @@ while !fCHOICES.eof? do
       lineTokenValue = $line.split(':')
       attribute = lineTokenValue[0]
       value = lineTokenValue[1]
+    
+      if ( $LegacyOptionsToIgnore.include? attribute ) then 
+        warn_out ("Choice file includes legacy choice (#{attribute}), which is no longer supported. Input ignored.")
+        next 
+      end 
     
       # Parse config commands
       if ( attribute =~ /^GOconfig_/ )
@@ -7122,6 +7548,7 @@ if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    stream_out ("            HOT2000 run folder: #{$run_path} \n")
 end
 
+
 # Variables for doing a md5 test on the integrety of the run. 
 $DirVerified = false
 $CopyTries = 0 
@@ -7181,10 +7608,11 @@ end
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
 # (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file) 
-stream_out("\n Creating a copy of HOT2000 model file for optimization work... ")
+
 $gWorkingModelFile = $gMasterPath + "\\"+ $h2kFileName
 
 if ( ! $PRMcall ) 
+   stream_out("\n Creating a a copy of HOT2000 model (#{$gBaseModelFile} for optimization work... \n")
    # Remove any existing file first!  
    if ( File.exist?($gWorkingModelFile) )
       if ( ! system ("del #{$gWorkingModelFile}") )
@@ -7196,8 +7624,9 @@ if ( ! $PRMcall )
 end 
 
 # Load all XML elements from HOT2000 file
+stream_out("\n Parsing a copy of HOT2000 model (#{$gWorkingModelFile}) for optimization work...")
 h2kElements = get_elements_from_filename($gWorkingModelFile)
-stream_out(" READING to edit: #{$gWorkingModelFile} \n")
+stream_out("done.")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
 # rule set name specified in the choice file
@@ -7305,8 +7734,17 @@ stream_out("\n Validating choices and options... ");
 
 # Search through options and determine if they are used in Choices file (warn if not). 
 $gOptions.each do |option, ignore|
-    debug_out ("> option : #{option} ?\n"); 
+
+    if ( $LegacyOptionsToIgnore.include? option ) then 
+    
+      warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
+      next 
+      
+    end 
+
+    debug_out ("> option : #{option} ? = #{$gChoices.has_key?(option)}\n"); 
     if ( !$gChoices.has_key?(option)  )
+      
       $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
       
          
@@ -7314,7 +7752,15 @@ $gOptions.each do |option, ignore|
          $ThisMsg += "No default value defined in options file."
          err_out ($ThisMsg)
          $allok = false 
-      else
+         
+      elsif ( option =~ /Opt-Archetype/ ) 
+      
+         if ( ! $gBaseModelFile ) 
+           $gChoices["Opt-Archetype"] = $gBaseModelFile
+         end 
+      
+      else 
+         
          # Add default value. 
          $gChoices[option] = $gOptions[option]["default"]["value"]
          # Apply them at the end. 
@@ -7334,16 +7780,28 @@ end
 
 
 
+
+
+
 # Search through choices and determine if they match options in the Options file (error if not). 
 
 $gChoices.each do |attrib, choice|
    $parseOK = true
    
-   debug_out ( "\n ======================== #{attrib} ============================\n")
-   debug_out ( "Choosing #{attrib} -> #{choice} \n")
+    if ( $LegacyOptionsToIgnore.include? attrib ) then 
+    
+      warn_out ("Choice file includes legacy option (#{attrib}), which is no longer supported.")
+      next 
+      
+    end 
+   
+   
+   debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
+   
     
    # Is attribute used in choices file defined in options ?
    if ( !$gOptions.has_key?(attrib) )
+    
       $ThisMsg = "Attribute #{attrib} in choice file OR rule set can't be found in options file."
       err_out( $ThisMsg )
       $parseOK = false
@@ -7356,7 +7814,8 @@ $gChoices.each do |attrib, choice|
       if (  $gOptions[attrib]["stop-on-error"] == 1 ) 
          $parseOK = false
       else 
-         $gOptions[attrib]["options"][choice]["cost"] = 0
+         $gOptions[attrib]["options"][choice] = { "cost" => 0}
+         #$gOptions[attrib]["options"][choice]["cost"] = 0
       end 
      
       if ( !$parseOK )
@@ -7379,11 +7838,31 @@ end
  Process conditions. 
 =end
 
+debug_out " ========================== CONDITIONS ==========================================" 
+
 $gChoices.each do |attrib1, choice|
 
-   valHash = $gOptions[attrib1]["options"][choice]["values"] 
+   debug_out " = Processing conditions for #{attrib1}-> #{choice} ..."
+      
+   $gOptions[attrib1]["options"][choice]["result"] = Hash.new
+  
+
    
-   if ( !valHash.empty? )
+   if ( $gOptions[attrib1]["options"][choice].empty? ) then 
+     debug_out "Skipped! "
+     next 
+   end
+   
+ 
+
+   
+   if ( $gOptions[attrib1]["options"][choice]["values"].nil? )then 
+    debug_out "Skipped! "
+     next 
+   end 
+   
+   valHash = $gOptions[attrib1]["options"][choice]["values"]
+   if ( !valHash.empty?  )
      
       for valueIndex in valHash.keys()
          condHash = $gOptions[attrib1]["options"][choice]["values"][valueIndex]["conditions"] 
@@ -7393,6 +7872,7 @@ $gChoices.each do |attrib1, choice|
         
          if ( condHash.has_key?("all") ) 
             debug_out ("   - VALINDEX: #{valueIndex} : found valid condition: \"all\" !\n")
+            $gOptions[attrib1]["options"][choice]["result"][valueIndex] = Hash.new 
             $gOptions[attrib1]["options"][choice]["result"][valueIndex] = condHash["all"]
             $ValidConditionFound = 1
          else
@@ -7451,6 +7931,7 @@ $gChoices.each do |attrib1, choice|
       end
    end
    
+   # This block can probably be removed. 
    # Check conditions on external entities that are not 'value' or 'cost' ...
    extHash = $gOptions[attrib1]["options"][choice]
    
@@ -7571,11 +8052,11 @@ $gChoices.each do |attrib1, choice|
       end
    
       #cost should be rounded in debug statement
-      debug_out ( "\n\nMAPPING for #{attrib1} = #{choice} (@ \$#{cost} inc. cost [#{cost_type}] ): \n")
+      debug_out ( "\nMAPPING for #{attrib1} = #{choice} (@ \$#{cost} inc. cost [#{cost_type}] ): \n\n")
       
       if ( scaleCost == 1 )
          #baseCost should be rounded in debug statement
-         debug_out (     "  (cost computed as $ScaleFactor *  #{baseCost} [cost of #{baseChoice}])\n")
+         debug_out (     "  (cost computed as $ScaleFactor *  #{baseCost} [cost of #{baseChoice}])\n\n")
       end
       
    end
@@ -7598,9 +8079,12 @@ end
 
 # Process the working file by replacing all existing values with the values 
 # specified in the attributes $gChoices and corresponding $gOptions
+
+stream_out (" Performing substitutions on H2K file...")
+
 processFile( h2kElements )
 
-
+stream_out( "done.")
 
 
 # Orientation changes. For now, we assume the arrays must always point south.
@@ -7700,8 +8184,9 @@ else
    $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
 end
 
-
+$fSUMMARY.write( "#{$AliasConfig}.OptionsFile       =  #{$gOptionFile}\n")
 $fSUMMARY.write( "#{$AliasConfig}.Recovered-results =  #{$outputHCode}\n")
+
 if ($FlagHouseInfo)
   $fSUMMARY.write( "#{$AliasArch}.House-Builder     =  #{$BuilderName}\n" )
   $fSUMMARY.write( "#{$AliasArch}.House-Type        =  #{$HouseType}\n" )
@@ -7843,7 +8328,11 @@ if $ExtraOutput1 then
 end
 
 
+if ( $gChoices["Opt-Archetype"].nil? || $gChoices["Opt-Archetype"].empty? ) then 
 
+  $gChoices["Opt-Archetype"] = $gBaseModelFile
+
+end
 
 if $gReportChoices then 
   $fSUMMARY.write( "#{$AliasInput}.Run-Region       =  #{$gRunRegion}\n" )
@@ -7855,7 +8344,11 @@ if $gReportChoices then
 
       $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
    end 
+   
+   
 end
+
+
 
 
 # Possibly report Binned data from diagnostics file 
