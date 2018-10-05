@@ -6509,21 +6509,19 @@
         },
         "costs": {
           "components": [
-            "Example Key-phrase: Layer1",
-            "Example Key-phrase: Layer2",
-            "Example Key-phrase: Layer3"
+            "framing:conventional:38x140mm_o.c.",
+            "insulation:xps_type_3:rigid:25mm",
+            "osb:12mm",
+            "insulation:r22_batt",
+            "1/2in_gypsum_board",
+            "strapping:1inx3in_vertical"
           ],
           "custom-costs": {
-            "ExampleScenarioA": {
-              "Units": "sf floor area",
-              "TotUnitCost": 1.5,
+            "EffectiveLeepCosts-PPB-estimate ": {
+              "Units": "sf Wall",
+              "TotUnitCost": 1.40,
               "Comment": "eg: Alex's original estimate"
             },
-            "ExampleScenarioB": {
-              "Units": "sf floor area",
-              "TotUnitCost": 1.7,
-              "Comment": "eg: Real numbers from ACME builder."
-            }
           }
         }
       }
