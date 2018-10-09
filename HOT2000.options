@@ -1444,67 +1444,67 @@
 !-----------------------------------------------------------------------
 !   NBC 9.36 Baseline
 !-----------------------------------------------------------------------
-*option:NBC-zone4-window:value:1 = NBC-zone4-window
-*option:NBC-zone4-window:value:2 = NBC-zone4-window
-*option:NBC-zone4-window:value:3 = NBC-zone4-window
-*option:NBC-zone4-window:value:4 = NBC-zone4-window
-*option:NBC-zone4-window:value:5 = NBC-zone4-window
-*option:NBC-zone4-window:value:6 = NBC-zone4-window
-*option:NBC-zone4-window:value:7 = NBC-zone4-window
-*option:NBC-zone4-window:value:8 = NBC-zone4-window
-*option:NBC-zone4-window:cost:total   = 0
+*option:NBC-zone4-Doorwindow:value:1 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:2 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:3 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:4 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:5 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:6 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:7 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:value:8 = NBC-zone4-Doorwindow
+*option:NBC-zone4-Doorwindow:cost:total   = 0
 
 
-*option:NBC-zone5-window:value:1 = NBC-zone5-window
-*option:NBC-zone5-window:value:2 = NBC-zone5-window
-*option:NBC-zone5-window:value:3 = NBC-zone5-window
-*option:NBC-zone5-window:value:4 = NBC-zone5-window
-*option:NBC-zone5-window:value:5 = NBC-zone5-window
-*option:NBC-zone5-window:value:6 = NBC-zone5-window
-*option:NBC-zone5-window:value:7 = NBC-zone5-window
-*option:NBC-zone5-window:value:8 = NBC-zone5-window
-*option:NBC-zone5-window:cost:total   = 0
+*option:NBC-zone5-Doorwindow:value:1 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:2 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:3 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:4 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:5 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:6 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:7 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:value:8 = NBC-zone5-Doorwindow
+*option:NBC-zone5-Doorwindow:cost:total   = 0
 
-*option:NBC-zone6-window:value:1 = NBC-zone6-window
-*option:NBC-zone6-window:value:2 = NBC-zone6-window
-*option:NBC-zone6-window:value:3 = NBC-zone6-window
-*option:NBC-zone6-window:value:4 = NBC-zone6-window
-*option:NBC-zone6-window:value:5 = NBC-zone6-window
-*option:NBC-zone6-window:value:6 = NBC-zone6-window
-*option:NBC-zone6-window:value:7 = NBC-zone6-window
-*option:NBC-zone6-window:value:8 = NBC-zone6-window
-*option:NBC-zone6-window:cost:total   = 0
+*option:NBC-zone6-Doorwindow:value:1 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:2 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:3 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:4 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:5 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:6 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:7 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:value:8 = NBC-zone6-Doorwindow
+*option:NBC-zone6-Doorwindow:cost:total   = 0
 
 
-*option:NBC-zone7A-window:value:1 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:2 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:3 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:4 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:5 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:6 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:7 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:8 = NBC-zone7A-window
-*option:NBC-zone7A-window:cost:total   = 0
+*option:NBC-zone7A-Doorwindow:value:1 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:2 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:3 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:4 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:5 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:6 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:7 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:value:8 = NBC-zone7A-Doorwindow
+*option:NBC-zone7A-Doorwindow:cost:total   = 0
 
-*option:NBC-zone7B-window:value:1 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:2 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:3 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:4 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:5 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:6 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:7 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:8 = NBC-zone7B-window
-*option:NBC-zone7B-window:cost:total   = 0
+*option:NBC-zone7B-Doorwindow:value:1 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:2 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:3 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:4 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:5 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:6 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:7 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:value:8 = NBC-zone7B-Doorwindow
+*option:NBC-zone7B-Doorwindow:cost:total   = 0
 
-*option:NBC-zone8-window:value:1 = NBC-zone8-window
-*option:NBC-zone8-window:value:2 = NBC-zone8-window
-*option:NBC-zone8-window:value:3 = NBC-zone8-window
-*option:NBC-zone8-window:value:4 = NBC-zone8-window
-*option:NBC-zone8-window:value:5 = NBC-zone8-window
-*option:NBC-zone8-window:value:6 = NBC-zone8-window
-*option:NBC-zone8-window:value:7 = NBC-zone8-window
-*option:NBC-zone8-window:value:8 = NBC-zone8-window
-*option:NBC-zone8-window:cost:total   = 0
+*option:NBC-zone8-Doorwindow:value:1 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:2 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:3 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:4 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:5 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:6 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:7 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:value:8 = NBC-zone8-Doorwindow
+*option:NBC-zone8-Doorwindow:cost:total   = 0
 
 *attribute:end
 
@@ -2003,6 +2003,10 @@
 *option:NBC_Wall_zone8_HRV:value:1 =  NBC_Wall_zone8_HRV
 *option:NBC_Wall_zone8_HRV:value:2 =  17.49
 *option:NBC_Wall_zone8_HRV:cost:total    =  0
+
+*option:Main_Wall_R30:value:1 =  Main_Wall_R30
+*option:Main_Wall_R30:value:2 =  30
+*option:Main_Wall_R30:cost:total    =  0
 
 *attribute:end
 
@@ -3115,8 +3119,8 @@ Whitehorse Wall Options (Code is R28)
 *option:CCASHP:value:2 = AirHeatPump           ! H2K: None, AirHeatPump, WaterHeatPump, GroundHeatPump, AirConditioning    
 *option:CCASHP:value:3 =  NA                   ! H2K: 1:Elect, 2:NGas, 3:Oil, 4:Prop, 5:Mixed Wood, 6:Hardwood, 7:Softwood, 8: Pellets      
 *option:CCASHP:value:4 =  NA                   ! H2K: Heating system equipment type --> depends on fuel and SysType1    
-*option:CCASHP:value:5 =  1                    ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
-*option:CCASHP:value:6 =  12                   ! H2K: Capacity value.     
+*option:CCASHP:value:5 =  2                   ! H2K: Type 1 capacity 1:UserSpec, 2:Calculated    
+*option:CCASHP:value:6 =  NA                   ! H2K: Capacity value.     
 *option:CCASHP:value:7 =  true                 ! H2K: true=SS, false=AFUE    
 *option:CCASHP:value:8 =  100                  ! H2K: Efficiency value (0->100)    
 *option:CCASHP:value:9 = 1                     ! H2K: 1:Auto, 2:Continuous    
@@ -3626,6 +3630,78 @@ Whitehorse Wall Options (Code is R28)
 *option:DWHR-eff-55:value:9   = 4.53          ! Shower lenght (minutes)
 *option:DWHR-eff-55:value:10  = 3             ! number of daily showers
 *option:DWHR-eff-55:cost:total = 820            !$820 assumed cost for LEEP Prince George & Kelowna
+
+
+*attribute:end
+
+!---------------------------------------------------------------------------------------------
+! Baseloads 
+! Note:
+!   If this option is included in the choice file, any existing model baseload inputs WILL
+!   BE OVER-WRITTEN. Only attributes 14 to 18 may have "NA" as an input.
+!
+!---------------------------------------------------------------------------------------------
+*attribute:start
+*attribute:name  = Opt-Baseloads
+*attribute:tag:1 = Opt-H2K-NumAdults                    ! Number of adults occupying the dwelling [Integer]
+*attribute:tag:2 = Opt-H2K-FracAdultsHome               ! Fraction of time adults are home [Real,%]
+*attribute:tag:3 = Opt-H2K-NumChilds                    ! Number of children occupying the dwelling [Integer]
+*attribute:tag:4 = Opt-H2K-FracChildsHome               ! Fraction of time children are home [Real,%]
+*attribute:tag:5 = Opt-H2K-NumInfants                   ! Number of infants occupying the dwelling [Integer]
+*attribute:tag:6 = Opt-H2K-FracInfantsHome              ! Fraction of time infants are home [Real,%]
+*attribute:tag:7 = Opt-H2K-FracToBasement               ! Fraction of internal gains to basement [Real, decimal]
+*attribute:tag:8 = Opt-H2K-Appliances                   ! Electrical appliance consumption [Real, kWh/day]
+*attribute:tag:9 = Opt-H2K-Lighting                     ! Lighting consumption [Real, kWh/day]
+*attribute:tag:10 = Opt-H2K-Other                       ! Other electric consumption [Real, kWh/day]
+*attribute:tag:11 = Opt-H2K-Exterior                    ! Exterior electric consumption [Real, kWh/day]
+*attribute:tag:12 = Opt-H2K-DHWLoad                     ! Hot water load [Real, L/day]
+*attribute:tag:13 = Opt-H2K-DHWTemp                     ! Hot water delivery temperature [Real, degC]
+*attribute:tag:14 = Opt-H2K-FuelStove                   ! Gas stove fuel code. Either "NA", "2" (natural gas), or "4" (propane)
+*attribute:tag:15 = Opt-H2K-StoveUse                    ! Gas stove daily use [Real, kWh/day]
+*attribute:tag:16 = Opt-H2K-FuelDryer                   ! Gas dryer fuel code. Either "NA", "2" (natural gas), or "4" (propane)
+*attribute:tag:17 = Opt-H2K-DryerUse                    ! Gas dryer daily use [Real, kWh/day]
+*attribute:tag:18 = Opt-H2K-DryerLoc                    ! Gas dryer location. Either "NA", "1" (main floor), or "2" (foundation)
+*attribute:default = NA
+
+*option:NA:value:1   = NA
+*option:NA:value:2   = NA
+*option:NA:value:3   = NA
+*option:NA:value:4   = NA
+*option:NA:value:5   = NA
+*option:NA:value:6   = NA
+*option:NA:value:7   = NA
+*option:NA:value:8   = NA
+*option:NA:value:9   = NA
+*option:NA:value:10  = NA
+*option:NA:value:11  = NA
+*option:NA:value:12  = NA
+*option:NA:value:13  = NA
+*option:NA:value:14  = NA
+*option:NA:value:15  = NA
+*option:NA:value:16  = NA
+*option:NA:value:17  = NA
+*option:NA:value:18  = NA
+*option:NA:cost:total = 0
+
+*option:NBC-BaseLoads:value:1   = 2
+*option:NBC-BaseLoads:value:2   = 50
+*option:NBC-BaseLoads:value:3   = 2
+*option:NBC-BaseLoads:value:4   = 50
+*option:NBC-BaseLoads:value:5   = 0
+*option:NBC-BaseLoads:value:6   = 0
+*option:NBC-BaseLoads:value:7   = 0.15
+*option:NBC-BaseLoads:value:8   = 14
+*option:NBC-BaseLoads:value:9   = 3
+*option:NBC-BaseLoads:value:10  = 3
+*option:NBC-BaseLoads:value:11  = 0
+*option:NBC-BaseLoads:value:12  = 225
+*option:NBC-BaseLoads:value:13  = 55
+*option:NBC-BaseLoads:value:14  = NA
+*option:NBC-BaseLoads:value:15  = NA
+*option:NBC-BaseLoads:value:16  = NA
+*option:NBC-BaseLoads:value:17  = NA
+*option:NBC-BaseLoads:value:18  = NA
+*option:NBC-BaseLoads:cost:total = 0
 
 
 *attribute:end
