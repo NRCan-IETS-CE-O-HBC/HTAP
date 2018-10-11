@@ -4,11 +4,11 @@ Input and Output in HTAP
 
 Contents
 ------------------
-1. [File formats](#IOmodel)
+1. [File formats](#fileformats)
     1. [The options file (`HTAP-options.json`)](#options-definition)
     1. [The choice file (`my_evaluaton.choices`)](#choice-definition)
     1. [The run file (`my_batch.run`)](#run-definition)
-    1. [The unit cost database (`HTAPUnitCosts.json`)] (#cost-definition)
+    1. [The unit cost database (`HTAPUnitCosts.json`)](#cost-definition)
 1. [Attributes that can be modified by HTAP](#attributes)
     1. [`Opt-Location`](#opt-location)
     1. [`Opt-Archetype`](#opt-archetype)
@@ -33,19 +33,19 @@ Contents
     1. [`Opt-FuelCost`](#opt-fuelcost)
     1. [`Opt-RoofPitch`](#opt-roofpitch)
     1. [`Opt-Ruleset`](#opt-ruleset)
-1. [Legacy parameters not currently supported](#opt-skipped)    
 1. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
     2. [`H2K-outputs`](#h2k-outputs)
     3. [`input.data`](#input.data)
-1. [Legacy files and features]    
+1. [Legacy files and formats](#opt-skipped)  
 
    
     
     
-<a name="IOmodel"></a>
-File formats 
-------------
+
+File formats <a name="fileformats"></a>
+---------------------
+
 <a name="options-definition"></a>
 ### The options file (`HTAP-options.json`)
 HTAP supports data input via JSON formatted options files.[^1] This file is formatted as a list of hashes - each of which defines attributes that can be set changed within the model, or that affect how the evaluations should be performed. 
@@ -160,7 +160,7 @@ Members common to both `tree` and `flat` structures:
 - `"structure": ["flat"|"tree"]`: string keyword describing which structure should be used 
 - `"costed": [true|false]`: specifies whether cost data is associated with this attribute. If `"costed": true`, the costs section must be supplied.<mark>Note that </mark>**`"costed": true`**<mark> is currently only supported in the tree structure.</mark>
 - `"options": { ... }`: Hash defining the valid options that an attribute can be set to. Contents depend on whether `tree` or `flat` structure is used. 
-- `"default": "keyword_X"`: specifies the default value that should be used if the user opts not to provide an option. 
+- `"default": "keyword_X"` - specifies the default value that should be used if the user opts not to provide an option. 
 - `"stop-on-error": [true|false]`: Flag indicating if the run should be terminated when an option is not provided, or if HTAP should attempt to continue. 
 
 Members specific to the `tree` structure:
@@ -172,9 +172,9 @@ for a specific analysis.</mark>
 - `"costs": { ... }`: a hash describing how costs should be evaluated for this option. Required if `"costed": true`. 
 - `"components": [ ... ]`: A list of components that a) are required to implement this option, and b) match entries in the unit costs database. 
 - `"custom-costs": { ... }`: A hash describing customized costs that can be applied in place of data from the unit cost database. 
-- `"Units": "unit key word"`: String describing how custom costs should be applied (e.g. `"Units": "sf floor area"|"sf applied"|"ea"|...`
+- `"Units": "unit key word"` - String describing how custom costs should be applied (e.g. `"Units": "sf floor area"|"sf applied"|"ea"|...`
 - `"TotUnitCost": ##.##`: Float data quantifying the unit cost in canadian dollars 
-- `"comment": "comment string"`: Optional string that can describe where the data came from.
+- `"comment": "comment string"` - Optional string that can describe where the data came from.
 
 
 
@@ -291,8 +291,8 @@ for a specific analysis.</mark>
     } 
 
 <a name="choice-definition"></a>
-### The HOT2000.choice file 
-The .choice file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (!).  Entries in the choice file must obey the following rules:
+### The choices file (`my_evaluaton.choices`)
+The `.choices` file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (`!`).  Entries in the choice file must obey the following rules:
 - Each token must match one of the attributes in the .options file
 - Each value must match on of the options given for that attribute in the .options file
 - `NA` values instruct the substiture-h2k.rb script to leave the associated data in the .h2k file alone – that is, whatever inputs were provided when the file was created in HOT2000 will be used in the HTAP simulation.
@@ -349,13 +349,12 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         ! HRV spec 
         Opt-HRVspec : NA
         
-        Opt-RoofPitch : NA   !6-12
         
         Opt-H2K-PV : NA 
-          <snip>
+
 
 <a name="run-definition"></a>
-### The .run file 
+### The run file (`my_batch.run`)
 The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
 * **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
 * **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
@@ -417,8 +416,8 @@ HTAP includes a unit cost database with estimates on the costs of various energy
        "data": { ... }
      }
 
-#### Source entries 
-The source entries within the database describe where cost data was obtained from. They have the following format:
+#### `sources` entries 
+The sources entries within the database describe where cost data was obtained from. They have the following format:
 
     "sources": { 
        "cost-source-b": {
@@ -452,11 +451,11 @@ The source entries within the database describe where cost data was obtained fro
      
 Each source entry has the following members:    
 
-- `"filename":  "source-file-b.csv"`: filename used to generate entries within the cost database - typically a LEEP unit-cost sheet exported in csv format. 
-- `"date_collated": "YYYY-MM-DD"`: Approximate date when data sheet was compiled.
-- `"date_imported": "YYYY-MM-DD HH:MM:SS"`: Exact date/time when data was imported.
-- `"schema_used": "schema name"`: Keyword describing which schema was used to intrepret the imported csv data. 
-- `"origin": "Comment on data source b"`: Comment on data source
+- `"filename":  "source-file-b.csv"` - filename used to generate entries within the cost database - typically a LEEP unit-cost sheet exported in csv format. 
+- `"date_collated": "YYYY-MM-DD"` - Approximate date when data sheet was compiled.
+- `"date_imported": "YYYY-MM-DD HH:MM:SS"` - Exact date/time when data was imported.
+- `"schema_used": "schema name"` - Keyword describing which schema was used to intrepret the imported csv data. 
+- `"origin": "Comment on data source b"` - Comment on data source
 - `"inherits": { ... }` : Hash describing which entries merely duplicate data from other databases.
 
 
@@ -494,7 +493,7 @@ Each source entry has the following members:
     
 #### Data entries  
 The data entries within the database contain the actual unit costs. They have the following format:    
-    
+
     "data": {
       "unit-cost-component-1": {
         "cost-source-a": {
@@ -524,13 +523,13 @@ The data entries within the database contain the actual unit costs. They have th
     }
      
 Each data entry contains the following: 
-- `"category": "category-name"`: Descriptive category for data (could be `"INSULATION"` or `"DRYWALL"`). HTAP presently ignores this data. 
-- `"description": "cost description"`: Expanded descriptor for this entry
-- `"units": "unit keyword"`:  String describing how custom costs should be applied (e.g. "units": "sf floor area"|"sf applied"|"ea"|...)
+- `"category": "category-name-string"` - Descriptive category for data (examples include `"INSULATION"`, `"WINDOWS"` and `"DRYWALL"`). HTAP presently ignores this data. 
+- `"description": "cost description"` - Expanded descriptor for this entry
+- `"units": "unit keyword"` -  String describing how custom costs should be applied (e.g. "units": "sf floor area"|"sf applied"|"ea"|...)
 - `"UnitCostMaterials": ##.##`: Materials cost estimate ($/unit)
 - `"UnitCostLabour": ##.##`: Labour cost estimate ($/unit)
-- `"note": "information about cost data"`: Additional info about source of data (e.g. reference)
-- `"date": "YYYY-MM-DD"`: Date data collected/reported. 
+- `"note": "information about cost data"` - Additional info about source of data (e.g. reference)
+- `"date": "YYYY-MM-DD"` - Date data collected/reported. 
 
 
 ##### Example data entry 
@@ -574,8 +573,8 @@ Each data entry contains the following:
       },
     }
      
-<a name="attributes"></a> 
-Attributes that can be modified by HTAP 
+
+Attributes that HTAP can modify<a name="attributes"></a> 
 ------
 
 <a name="opt-location"></a>
@@ -597,7 +596,7 @@ Attributes that can be modified by HTAP
   
 #### Sample `.choice` definition for  `Opt-Location`  
          Opt-Location = Toronto 
-         
+
 #### Sample `.options` definition for  `Opt-Location`
 
          *attribute:start 
@@ -622,17 +621,19 @@ Attributes that can be modified by HTAP
          *option:Toronto:value:3 = 42
          *option:Toronto:cost:total    = 0
          
-         <snip>
+         <--snip-->
+         
+         *attribute:end
 
 <a name="opt-archetype"></a>         
 ### `Opt-Archetype` 
 
-* **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
-* **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
-* **HOT2000 bindings**:  The __substitute-h2k.rb__ script will make a copy of the 
+- **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
+- **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
+- **HOT2000 bindings**:  The __substitute-h2k.rb__ script will make a copy of the 
     specified .h2k file, and will alter it according to your specified choices. __substitute-h2k.rb__
     will then invoke HOT2000 to evaluate the .h2k file, and recover the results from that file
-* **Other things you should know**: 
+- **Other things you should know**: 
   - __substitute-h2k.rb__ will make a copy of the specified archetype file for its operations --- the original will not 
     be modified. 
   - Earlier versions of HTAP required the archetypes to be located in the `C:\H2K-CLI-Min\User\` directory; more recently, HTAP 
