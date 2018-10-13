@@ -6415,6 +6415,221 @@ def set_permafrost_by_location(elements,cityName)
 end
 
 
+
+
+# =========================================================================================
+# Rule Set: OEE Equipment Windows Roadmapping modelling
+# =========================================================================================
+def ArchetypeRoadmapping_RuleSet( ruleType, elements )
+   if ruleType =~ /roadmapping_gas/
+
+    if $gChoices["Opt-Archetype"] =~ /pre-1946/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-07-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR20"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-Pre-1946-Gas"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-1-RSI_0.66"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_10"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-1-Gas-AC"#"ghg-hvac-1-Gas"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "Pre-1946-Gas-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
+      elsif  $gChoices["Opt-Archetype"] =~ /1946-1983/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-11-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1946-1983-Gas"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-4-RSI_0.83"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_6_2"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-4-Gas-AC" #"ghg-hvac-4-Gas"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1946-1983-Gas-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
+      elsif  $gChoices["Opt-Archetype"] =~ /1984-1995/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-14-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1984-1995-Gas"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-7-RSI_1.66"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_4_4"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-7-Gas-AC" #"ghg-hvac-7-Gas"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1984-1995-Gas-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"     
+      elsif  $gChoices["Opt-Archetype"] =~ /1996-2005/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-15-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1996-2005-Gas"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-10-RSI_1.72"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_3_2"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-10-Gas-AC" #"ghg-hvac-10-Gas"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1996-2005-Gas-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"     
+      elsif  $gChoices["Opt-Archetype"] =~ /2006-2011/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-15-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2006-2011-Gas"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-13-RSI_1.75"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_2_6"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-13-Gas-AC" #"ghg-hvac-13-Gas"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "2006-2011-Gas-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      elsif  $gChoices["Opt-Archetype"] =~ /2012-2019/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-17-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR50"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2012-2019-Gas"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-16-RSI_2.95"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-16-Gas-AC" #"ghg-hvac-16-Gas"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Gas-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      end
+      
+   elsif ruleType =~ /roadmapping_elec/
+    if $gChoices["Opt-Archetype"] =~ /pre-1946/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-09-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR20"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-Pre-1946-Elect"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-2-RSI_0.68"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_10_3"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-2-Elect-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "Pre-1946-Elect-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
+    elsif  $gChoices["Opt-Archetype"] =~ /1946-1983/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-12-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1946-1983-Elect"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-5-RSI_0.86"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_6_1"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-5-Elect-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1946-1983-Elect-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
+    elsif  $gChoices["Opt-Archetype"] =~ /1984-1995/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-15-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1984-1995-Elect"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-8-RSI_1.66"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_4_1"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-8-Elect-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1984-1995-Elect-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"     
+      elsif  $gChoices["Opt-Archetype"] =~ /1996-2005/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-16-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1996-2005-Elect"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-11-RSI_1.67"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_3_1"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-11-Elect-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1996-2005-Elect-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      elsif  $gChoices["Opt-Archetype"] =~ /2006-2011/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-16-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2006-2011-Elect"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-14-RSI_1.8"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_2_5"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-14-Elect-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "2006-2011-Elect-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      elsif  $gChoices["Opt-Archetype"] =~ /2012-2019/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-17-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR50"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2012-2019-Elect"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-17-RSI_2.95"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-17-Elect-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Elect-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      end 
+
+   elsif ruleType =~ /roadmapping_oil/
+    if $gChoices["Opt-Archetype"] =~ /pre-1946/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-08-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR20"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-Pre-1946-Oil"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-3-RSI_0.58"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_10"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-3-Oil-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "Pre-1946-Oil-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
+     elsif  $gChoices["Opt-Archetype"] =~ /1946-1983/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-11-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1946-1983-Oil"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-6-RSI_0.77"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_6_3"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-6-Oil-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1946-1983-Oil-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
+     elsif  $gChoices["Opt-Archetype"] =~ /1984-1995/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-14-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1984-1995-Oil"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-9-RSI_1.53"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_4_9"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-9-Oil-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1984-1995-Oil-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"     
+     elsif  $gChoices["Opt-Archetype"] =~ /1996-2005/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-16-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1996-2005-Oil"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-12-RSI_1.69"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_3_4"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-12-Oil-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "1996-2005-Oil-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      elsif  $gChoices["Opt-Archetype"] =~ /2006-2011/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-16-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2006-2011-Oil"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-15-RSI_1.98"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-15-Oil-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "2006-2011-Oil-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      elsif  $gChoices["Opt-Archetype"] =~ /2012-2019/
+         $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-17-eff"
+         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR50"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
+         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2012-2019-Oil"
+         $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-18-RSI_2.95"
+         $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
+         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-18-Oil-AC"
+         $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Oil-dhw" 
+         $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"     
+      end 		
+   end
+
+    
+end
+
+def NorthTesting_RuleSet( ruleType, elements )
+      if ruleType =~ /north_testing/
+   
+        $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "Generic_Wall_R-30-eff"
+        $ruleSetChoices["Opt-Ceilings"]                       = "CeilR80"
+        $ruleSetChoices["Opt-CasementWindows"]                = "ghg-ER-34"
+        $ruleSetChoices["Opt-H2KFoundation"]                  = "north-test-fnd"
+        $ruleSetChoices["Opt-ACH"]                            = "ACH_0_6"
+        $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-5-Elect"
+        $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Elect-dhw" 
+        $ruleSetChoices["Opt-HRVspec"]                        = "HRV_81"
+     end 
+end
+
+
 # =========================================================================================
 # Rule Set: NBC-9.36-2010 Creates global rule set hash $ruleSetChoices
 # =========================================================================================
@@ -6458,6 +6673,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
       $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
+   elsif (primHeatFuelName =~ /Oil/) != nil   # value is Oil
+      $ruleSetChoices["Opt-HVACSystem"] = "NBC-oil-heat"
    elsif (primHeatFuelName =~ /Elect/) != nil   # value is "Electricity
       if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
@@ -6471,6 +6688,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas" 
    elsif (primDHWFuelName =~ /Elect/) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
+   elsif (primDHWFuelName =~ /Oil/) != nil
+      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
    end
 
    # Thermal zones and HDD by rule type
@@ -6731,7 +6950,6 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
                   
@@ -7680,7 +7898,12 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
       stream_out ("  (e) Base case from R2000 NZE pilot \n")
       NBC_936_2010_RuleSet( "NBC9_36_HRV", h2kElements, $HDDs,locale )
       R2000_NZE_Pilot_RuleSet( "R2000_NZE_Pilot_Env", h2kElements, locale )
-      
+
+
+   elsif ( $ruleSetName =~ /ArchetypeRoadmapping/) 
+      stream_out ("  (f) Vintage archetypes based on EGH database analysis ")
+      ArchetypeRoadmapping_RuleSet( $ruleSetName, h2kElements )	
+
    end 
    
    # Replace choices in $gChoices with rule set choices in $ruleSetChoices

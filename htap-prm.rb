@@ -12,6 +12,7 @@ require 'fileutils'
 require 'pp'
 require 'json'
 
+
 $gRunUpgrades         = Hash.new
 $gOptionList          = Array.new
 $gOptionListLimit     = Hash.new
@@ -134,6 +135,8 @@ def parse_def_file(filepath)
   $runScopeOpen  = false; 
   $UpgradesOpen  = false;   
    
+  $WildCardsInUse = false; 
+   
   rundefs = File.open(filepath, 'r') 
   
   rundefs.each do | line |
@@ -185,7 +188,11 @@ def parse_def_file(filepath)
                       
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i ) 
             # This does nothing only 'mesh' supported for now!!!
-            $gRunDefMode = "mesh"
+            $gRunDefMode = $token_values[1] 
+            
+            if ( ! ( $gRunDefMode =~ /mesh/ || $gRunDefMode =~ /parametric/ ) ) then 
+              fatalerror (" Run mode #{$gRunDefMode} is not supported!") 
+            end 
              
           end 
           
@@ -204,7 +211,7 @@ def parse_def_file(filepath)
           
           if ( $RunScopeOpen && $token_values[0] =~ /locations/i ) 
              
-            # archetypes -  
+            # locations -  
             $gLocations = $token_values[1].to_s.split(",")
           
           end           
@@ -213,7 +220,17 @@ def parse_def_file(filepath)
           
             option  = $token_values[0]
             choices = $token_values[1].to_s.split(",")
-            $gRunUpgrades[option] = choices 
+            
+            debug_out " #{option} len = #{choices.grep(/\*/).length} \n" 
+            
+            if ( choices.grep(/\*/).length > 0  ) then 
+            
+              $WildCardsInUse = true 
+              
+            end 
+            
+            $gRunUpgrades[option] = choices
+
             $gOptionList.push option             
             
             
@@ -225,6 +242,66 @@ def parse_def_file(filepath)
     end # if ( $defline !~ /^\s*$/ ) 
     
   end # rundefs.each do | line |
+
+  
+  # Check to see if run options contians wildcards 
+  
+  
+  if ( $WildCardsInUse ) then 
+  
+    if ( ! $gOptionFile =~ /\.json/i ) then 
+      fatalerror ("Wildcard matching is only supported with .json option files") 
+    end 
+  
+    fOPTIONS = File.new($gOptionFile, "r") 
+    if fOPTIONS == nil then
+       fatalerror(" Could not read #{filename}.\n")
+    end
+  
+    $OptionsContents = fOPTIONS.read
+    fOPTIONS.close 
+    
+    $JSONRawOptions = JSON.parse($OptionsContents)
+    $OptionsContents = nil
+    
+    $gRunUpgrades.keys.each do |key| 
+      debug_out( " Wildcard search for #{key} => \n" )
+      
+      
+      
+      
+      $gRunUpgrades[key].clone.each do |choice| 
+      
+        debug_out (" ? #{choice} \n") 
+      
+        if ( choice =~ /\*/ ) then 
+        
+          $pattern = choice.gsub(/\*/, ".*") 
+         
+          debug_out "              Wildcard matching on #{key}=#{$pattern}\n" 
+          
+          # Matching 
+          
+          $SuperSet = $JSONRawOptions[key]["options"].keys
+          
+          $gRunUpgrades[key].delete(choice) 
+
+          $gRunUpgrades[key].concat $SuperSet.grep(/#{$pattern}/)
+          
+        
+        end 
+      
+      end 
+      
+      
+    end 
+    
+      $JSONRawOptions = nil 
+    
+  end 
+
+  
+  
   
   # What if archetypes are defined using a wildcard? 
   
@@ -307,7 +384,7 @@ def create_mesh_cartisian_combos(optIndex)
         create_mesh_cartisian_combos(optIndex+1) 
          
         
-      end # $gRulesets.each do |ruleset|
+      end #$gOptionList $gRulesets.each do |ruleset|
           
  
     else 
@@ -327,6 +404,97 @@ def create_mesh_cartisian_combos(optIndex)
   end 
   
 end 
+
+
+def create_parametric_combos() 
+  
+   
+  $Folder = $gArchetypeDir
+
+
+  $StartSet = Hash.new 
+
+  $gParameterSpace = Hash.new 
+  
+  $gParameterSpace = $gRunUpgrades.clone 
+  
+  $gParameterSpace["Opt-Ruleset"] = Array.new 
+  
+  $gParameterSpace["Opt-Ruleset"] = $gRulesets 
+  
+  $gParameterSpace["Opt-Location"] = Array.new
+  $gParameterSpace["Opt-Location"] = $gLocations
+  
+  $gParameterSpace["!Opt-Archetype"] = Array.new 
+  
+  $gArchetypes.each do |archetype|
+  
+    $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"] 
+    
+    $ArchetypeFiles.each do |h2kpath|
+            
+      $gParameterSpace["!Opt-Archetype"].push File.basename(h2kpath)
+   
+    end 
+  
+  end 
+  
+  
+  
+  $gParameterSpace.keys.each do |attribute|
+  
+    $StartSet[attribute] =  $gParameterSpace[attribute][0] 
+  
+  end 
+  
+  # Base point - 
+  
+  generated_file = gen_choice_file($StartSet) 
+  $gGenChoiceFileList.push generated_file
+  
+  $gArchetypeHash[generated_file] = $StartSet["!Opt-Archetype"] 
+  $gLocationHash[generated_file]  = $StartSet["Opt-Location"] 
+  $gRulesetHash[generated_file]   = $StartSet["Opt-Ruleset"]   
+  
+  $gParameterSpace.keys.each do |attribute| 
+  
+    debug_out ("PARAMETRIC: #{attribute} has #{$gParameterSpace[attribute].length} entries\n")
+    
+      $gParameterSpace[attribute][1..-1].each do | choice |   
+      
+        debug_out ("      + #{choice} \n")
+        
+        $gChoiceFileSet = $StartSet.clone 
+        $gChoiceFileSet[attribute] = choice 
+        
+        generated_file = gen_choice_file($gChoiceFileSet) 
+        $gGenChoiceFileList.push generated_file
+      
+        # Save the name of the archetype that matches this choice file for invoking 
+        # with substitute.h2k.
+        
+        # "! Opt-Archetype" - choice disabled because prm copies the h2k file into the run directory.
+        $gArchetypeHash[generated_file] = $gChoiceFileSet["!Opt-Archetype"] 
+        
+        $gLocationHash[generated_file]  = $gChoiceFileSet["Opt-Location"] 
+        $gRulesetHash[generated_file]   = $gChoiceFileSet["Opt-Ruleset"] 
+           
+      end 
+
+    
+  end 
+
+  if ( $gDebug ) then 
+  
+    debug_out (" ----- PARAMETRIC RUN: PARAMETER SPACE ----  \n ") 
+    pp $gParameterSpace
+    
+  end 
+  
+end 
+
+    
+    
 
 =begin rdoc
 # ----------------------------------------------------------------------------
@@ -426,6 +594,8 @@ def run_these_cases(current_task_files)
   $csvColumns = Array.new 
    
   # Loop until all files have been processed. 
+  $GiveUp = false 
+  
   while  ! $RunsDone 
 
       $batchCount = $batchCount + 1 
@@ -767,9 +937,10 @@ def run_these_cases(current_task_files)
           FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" ) 
           FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
         end 
-        
+               
         #Update status of this thread. 
         $FinishedTheseFiles[$choicefiles[thread3]] = true        
+        
      
       end 
       
@@ -930,8 +1101,14 @@ def run_these_cases(current_task_files)
           
           # Increment hash increment too. 
           $gHashLoc = $gHashLoc + 1 
+
+          if ( $runFailed && $StopOnError ) then 
+            $RunsDone = true 
+            $GiveUp = true 
+          end 
+
+
           
-                                   
                                        
          end # ends $RunResults.each do
       
@@ -941,7 +1118,7 @@ def run_these_cases(current_task_files)
       
      $RunResults.each do |run,data|
        
-       # Only write out data from successful runs - this helps prevent corrupted dat 
+       # Only write out data from successful runs - this helps prevent corrupted databae  
        
              
        if ( data['s.success'] =~ /true/ ) then
@@ -994,12 +1171,12 @@ def run_these_cases(current_task_files)
 
   end 
   
-  
-
-  
-  
-  stream_out (" - HTAP-prm: runs finished -------------------------\n\n")
-  
+    
+  if ( $GiveUp ) then 
+    stream_out(" - HTAP-prm: runs terminated due to error ----------\n\n")
+  else 
+    stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
+  end 
   
   if ($gJSONize )
     stream_out(" - Writing JSON output to HTAP-prm-output.json... ")
@@ -1053,6 +1230,7 @@ $gRunDefinitionsFile = ""
 
 $gNumberOfThreads = 3 
 
+$StopOnError = false 
 
 #=====================================================================================
 # Parse command-line switches.
@@ -1061,39 +1239,90 @@ optparse = OptionParser.new do |opts|
   
    opts.banner = $help_msg
 
-   opts.on("-h", "--help", "Show help message") do
-      puts opts
-      exit()
+   opts.separator " USAGE: htap-prm.rb -o path\\to\\htap-options.json -r path\\to\\runfile.run -v "
+   opts.separator " "
+   opts.separator " Required inputs:"
+  
+   opts.on("-o", "--options FILE", "Specified options file (mandatory).") do |o|
+      $cmdlineopts["options"] = o
+      $gOptionFile = o
+      if ( !File.exist?($gOptionFile) )
+         fatalerror("Valid path to option file must be specified with --options (or -o) option!")
+      end
    end
   
-   opts.on("-v", "--verbose", "Run verbosely") do 
+   opts.on("-r", "--run-def FILE", "Specified run definitions file (.run)") do |o|
+      $gRunDefinitionsProvided = true 
+      $gRunDefinitionsFile = o 
+      if ( !File.exist?($gRunDefinitionsFile) )
+         fatalerror("Valid path to run definitions (.run) file must be specified with --run-def (or -r) option!")
+      end
+   end
+   
+   opts.separator "\n Configuration options: "
+  
+   opts.on("-t", "--threads X", "Number of threads to use") do |o|
+      $gNumberOfThreads = o.to_i
+      if ( $gNumberOfThreads < 1 ) 
+        $gNumberOfThreads = 1 
+      end 
+   end
+  
+   opts.on("-a", "--cost-assemblies FILE", "Estimate costs for assemblies using costing database.") do |o| 
+      $gComputeCosts = true
+      $gCostingFile = o
+      if ( ! File.exist?($gRunDefinitionsFile) ) then 
+        fatalerror("Costing file #{$gCostingFile} could not be found!")
+      end
+      
+   end
+   
+
+   
+   opts.on("-e", "--extra-output", "Report additional data on archetype and part-load characteristics") do
+      $cmdlineopts["extra-output"] = true
+      $gExtendedOutputFlag = "-e"
+   end   
+   
+   opts.on("-k", "--keep-all-files", "Preserve all files, including modified .h2k files, in HTAP-sim-X", 
+                                     "directories. (otherwise, only files that generate errors will be
+                                      saved).") do 
+      $gSaveAllRuns = true
+   end
+  
+   opts.on("-j", "--json", "Provide output in JSON format (htap-prm-output.json),","in additon to .csv.") do 
+      $gJSONize = true
+   end
+  
+  
+   opts.on("-v", "--verbose", "Output progress to console.") do 
       $cmdlineopts["verbose"] = true
       $gTest_params["verbosity"] = "verbose"
    end
+   
+   opts.separator "\n Debugging options: "   
 
-   opts.on("-d", "--debug", "Run in debug mode") do
+   opts.on("--debug", "Run in debug mode. Prints extra output to screen.") do
       $cmdlineopts["verbose"] = true
       $gTest_params["verbosity"] = "verbose"
       $gDebug = true
    end
 
-   opts.on("-e", "--extra-output", "Report data on archetype, part-loads") do
-      $cmdlineopts["extra-output"] = true
-      $gExtendedOutputFlag = "-e"
-   end   
+   opts.on("--stop-on-error", "Terminate run upon first error encountered.") do
+      
+      $StopOnError = true 
+
+   end
+   
    
    
    #opts.on("-w", "--warnings", "Report warning messages") do 
    #   $gWarn = true
    #end
    
-   opts.on("-k", "--keep-all-files", "Keep all .h2k files and output") do 
-      $gSaveAllRuns = true
-   end
+
    
-   opts.on("-j", "--json", "Provide output in JSON format") do 
-      $gJSONize = true
-   end
+
    
    
    #opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
@@ -1104,45 +1333,33 @@ optparse = OptionParser.new do |opts|
    #   end
    #end
 
-   opts.on("-t", "--threads X", "Number of threads to use") do |o|
-      $gNumberOfThreads = o.to_i
-      if ( $gNumberOfThreads < 1 ) 
-        $gNumberOfThreads = 1 
-      end 
-   end
-   
-   opts.on("-ss", "--snailStart X", "Optional delay (X sec) between spawning threads on the first batch (and ignored on subsequent batches). May improve stability on highly parallel machines with slow disk I/O.") do |o|
-      $snailStart = true 
-      $snailStartWait = o.to_f
-   end
-
 
    
-   
-   
-   opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
-      $cmdlineopts["options"] = o
-      $gOptionFile = o
-      if ( !File.exist?($gOptionFile) )
-         fatalerror("Valid path to option file must be specified with --options (or -o) option!")
-      end
-   end
+   #opts.on("-ss", "--snailStart X", "Optional delay (X sec) between spawning threads on the ",
+   #                                 "first batch (and ignored on subsequent batches). May improve",
+   #                                 "stability on highly parallel machines with slow disk I/O." ) do |o|
+   #   $snailStart = true 
+   #   $snailStartWait = o.to_f
+   #end
 
-   opts.on("-a", "--cost-assemblies", "Estimate costs for assemblies using costing database.") do 
-      $gComputeCosts = true
-      $gOptionFile = o
-   end
+ 
    
    
-   opts.on("-r", "--run-def FILE", "Specified run definitions file (.run)") do |o|
-      $gRunDefinitionsProvided = true 
-      $gRunDefinitionsFile = o 
-      if ( !File.exist?($gRunDefinitionsFile) )
-         fatalerror("Valid path to run definitions (.run) file must be specified with --run-def (or -r) option!")
-      end
-   end
+   
 
-   $gCostingFile = "C:/HTAP/HTAPUnitCosts.json"
+
+
+   
+      
+   opts.separator ""
+   
+   opts.on("-h", "--help", "Show help message") do
+      puts opts
+      exit()
+   end
+   
+      
+   opts.separator ""
 
 end
 
@@ -1226,22 +1443,32 @@ else
     
   stream_out (" done.\n")
 
-  
-  if ( $gRunDefMode == "mesh" ) 
+  case $gRunDefMode 
+  when  "mesh" 
   
     stream_out ("    - Creating mesh run combinations from run definitions... ") 
       
     create_mesh_cartisian_combos(-3) 
 
-    $RunTheseFiles = $gGenChoiceFileList
+ 
     
-    if ($choicesInMemory )
-      stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n") 
-    else 
-      stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
-    end 
+  when "parametric"   
+  
+    stream_out ("    - Creating parametric run combinations from run definitions... ") 
     
+    create_parametric_combos() 
+
   end 
+  
+  $RunTheseFiles = $gGenChoiceFileList  
+
+  if ($choicesInMemory )
+    stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n") 
+  else 
+    stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
+  end 
+
+  
   
   fileorgin = "generated"
   
@@ -1262,12 +1489,16 @@ end
 run_these_cases($RunTheseFiles) 
 
 
-stream_out (" - HTAP-prm: Run complete -----------------------\n\n")
+if ( ! $GiveUp ) then 
+  stream_out (" - HTAP-prm: Run complete -----------------------\n\n")
+else 
+  stream_out (" - HTAP-prm: Error encountered, run terminated --\n\n")
+end 
 stream_out ("    + #{$CompletedRunCount} files were evaluated successfully.\n\n")
 stream_out ("    + #{$FailedRunCount} files failed to run \n")
 
 if ( $FailedRunCount > 0 ) 
-  stream_out ("\n !! The following files failed to run: !! \n")
+  stream_out ("\n ** The following files failed to run: ** \n")
 
   $FailedRuns.each do |errorfile|
     stream_out ("     + #{errorfile} \n")

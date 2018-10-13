@@ -4,11 +4,12 @@ Input and Output in HTAP
 
 Contents
 ------------------
-1. [Input/output model](#IOmodel)
-    1. [The `.options` file](#options-definition)
-    1. [The `.choice` file](#choice-definition)
-    1. [The `.run` file](#run-definition)
-1. [Inputs](#inputs)
+1. [File formats](#fileformats)
+    1. [The options file (`HTAP-options.json`)](#options-definition)
+    1. [The choice file (`my_evaluaton.choices`)](#choice-definition)
+    1. [The run file (`my_batch.run`)](#run-definition)
+    1. [The unit cost database (`HTAPUnitCosts.json`)](#cost-definition)
+1. [Attributes that can be modified by HTAP](#attributes)
     1. [`Opt-Location`](#opt-location)
     1. [`Opt-Archetype`](#opt-archetype)
     1. [`Opt-ACH`](#opt-ach)
@@ -32,82 +33,266 @@ Contents
     1. [`Opt-FuelCost`](#opt-fuelcost)
     1. [`Opt-RoofPitch`](#opt-roofpitch)
     1. [`Opt-Ruleset`](#opt-ruleset)
-1. [Legacy parameters not currently supported](#opt-skipped)    
 1. [Outputs](#outputs)
     1. [`RunNumber`](#runnumber)
     2. [`H2K-outputs`](#h2k-outputs)
     3. [`input.data`](#input.data)
+1. [Legacy files and formats](#opt-skipped)  
+
+   
     
     
-<a name="IOmodel"></a>
-Input/Output model 
-------------------
+
+File formats <a name="fileformats"></a>
+---------------------
 
 <a name="options-definition"></a>
-### The HOT2000.options file 
-Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) files. The HOT2000 input files are XML format files. An excerpt from the HOT2000.options file follows:
+### The options file (`HTAP-options.json`)
+HTAP supports data input via JSON formatted options files.[^1] This file is formatted as a list of hashes - each of which defines attributes that can be set changed within the model, or that affect how the evaluations should be performed. 
 
-         !-----------------------------------------------------------------------
-         ! Photovoltaics 
-         ! Use internal HOT2000 PV Generation model
-         ! Choice file used to specify Internal PV OR External PV but not both!
-         !-----------------------------------------------------------------------
-         *attribute:start
-         *attribute:name  = Opt-H2K-PV
-         *attribute:tag:1 = Opt-H2K-Area           ! m2
-         *attribute:tag:2 = Opt-H2K-Slope          ! degrees from horizontal
-         *attribute:tag:3 = Opt-H2K-Azimuth        ! degrees from S
-         *attribute:tag:4 = Opt-H2K-PVModuleType   ! 1:Mono-Si, 2:Poly-Si, 3:a-Si, 4:CdTe, 5:CIS, 
-                                                   ! 6:UsrSpec
-         *attribute:tag:5 = Opt-H2K-GridAbsRate    ! %
-         *attribute:tag:6 = Opt-H2K-InvEff         ! %
-         *attribute:default = NA
-         
-         *option:NA:value:1 = NA
-         *option:NA:value:2 = NA
-         *option:NA:value:3 = NA
-         *option:NA:value:4 = NA
-         *option:NA:value:5 = NA
-         *option:NA:value:6 = NA
-         *option:NA:cost:total  = 0
-         
-         *option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
-         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George
-         *option:MonoSi-5kW:value:3 = 0
-         *option:MonoSi-5kW:value:4 = 1
-         *option:MonoSi-5kW:value:5 = 90
-         *option:MonoSi-5kW:value:6 = 90
-         *option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system 
-         
-         *option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
-         *option:MonoSi-10kW:value:2 = 18.4         !22.6 for 5-12 roof in Prince George 
-         *option:MonoSi-10kW:value:3 = 0
-         *option:MonoSi-10kW:value:4 = 1
-         *option:MonoSi-10kW:value:5 = 90
-         *option:MonoSi-10kW:value:6 = 90
-         *option:MonoSi-10kW:cost:total = 33395     !$33395 assumed cost for 10 kW PV system for ! 
-                                                    !Prince George & Kelowna LEEP
 
-          *attribute:end
-         <snip>
+[^1]: Available since commit 2b29e5f5539219c1260ddc2fe3dfa7a2947fd373 
+
+
+The  HTAP-options.json file looks like this: 
+
+    {
+       "Attribute_1": {   },
+       "Attribute_2": {   },
+       "Attribute_3": {   }
+       
+       <--snip-->
+
+       "Attribute_X": {   }       
+    }   
+
+Each attribute can be defined in one of two ways - using the simple, or `flat` structure, or the nested, `tree` structure. 
+
+- The `flat` structure should be used for _one-to-one relationships_  when changing attributes causes HTAP to affect a single part of the HOT2000 data model - such as setting 
+a fuel library, or specifying the code library.  
+- The `tree` structure should be used for _one-to-many relationships_  when changing attributes causes HTAP to affect a multiple parts of the HOT2000 data model - such as setting 
+changing the mechanical system from a furnace a heat pump or combo. 
+
+#### Attribute specification - `tree` structure 
+
+    "Tree-Attribute_X": {
+      "structure": "tree",
+      "costed": [true|false],
+      "options": {
+        "keyword_a":{
+          "h2kMap": {
+            "base": { 
+              "<h2k-tag-1>": "Option-A-Value-to-be-set-1",
+              "<h2k-tag-2>": "Option-A-Value-to-be-set-2",
+              "<h2k-tag-3>": "Option-A-Value-to-be-set-3",
+              "<h2k-tag-4>": "Option-A-Value-to-be-set-4",
+              "<h2k-tag-5>": "Option-A-Value-to-be-set-5",
+              "<h2k-tag-6>": "Option-A-Value-to-be-set-6",
+              "<h2k-tag-7>": "Option-A-Value-to-be-set-7",
+              "<h2k-tag-8>": "Option-A-Value-to-be-set-8"
+            },
+            "variants": {
+               "scenario_name" : { 
+                  "<h2k-tag-4>": "Value-to-be-modified",
+               }
+            }   
+          },
+          "costs": {
+            "components": [
+              "unit-cost-component-1",
+              "unit-cost-component-2",
+              "unit-cost-component-3"
+            ],
+            "custom-costs": {
+              "ExampleScenarioA": {
+                "Units": "unit key word",
+                "TotUnitCost": ##.##,
+                "Comment": "name of component"
+              },
+            }
+          }
+        },
+        "keyword_b": { ... }
+        
+        <--snip-->
+        
+        "keyword_z": { ... }
+      }
+      "default": "keyword_a",
+      "stop-on-error": true,
+      "h2kSchema": [
+        "<h2k-tag-1>",
+        "<h2k-tag-2>",
+        "<h2k-tag-3>",
+        "<h2k-tag-4>",
+        "<h2k-tag-5>",
+        "<h2k-tag-6>",
+        "<h2k-tag-7>",
+        "<h2k-tag-8>"
+      ]
+    }
+
+    
+#### Attribute specification - `flat` structure
+The flat definitions for attributes are relatively simple. They can be used when an objective evaluation requires changing the HOT2000 data model in one place - for instance by setting the .h2k input file. or 
+
+    "Flat_Attribute_Y": {
+        "structure": "flat",
+        "costed": false,
+        "options": {
+          "keyword_a": "option-a-value",
+          "keyword_b": "option-b-value",
+          "keyword_c": "option-c-value",
+          
+           <-- snip -->    
+
+          "keyword_z": "value_z",      
+          
+        },
+        "default": "keyword_a",
+        "stop-on-error": [true|false]
+        "
+    }
+    
+#### Members belonging to an attribute:
+    
+Members common to both `tree` and `flat` structures:
+- `"structure": ["flat"|"tree"]`: string keyword describing which structure should be used 
+- `"costed": [true|false]`: specifies whether cost data is associated with this attribute. If `"costed": true`, the costs section must be supplied.<mark>Note that </mark>**`"costed": true`**<mark> is currently only supported in the tree structure.</mark>
+- `"options": { ... }`: Hash defining the valid options that an attribute can be set to. Contents depend on whether `tree` or `flat` structure is used. 
+- `"default": "keyword_X"` - specifies the default value that should be used if the user opts not to provide an option. 
+- `"stop-on-error": [true|false]`: Flag indicating if the run should be terminated when an option is not provided, or if HTAP should attempt to continue. 
+
+Members specific to the `tree` structure:
+- `"h2kSchema": [ ... ]`: list of keyword tags that HTAP supports for this attribute - each of which refers to a part of the .h2k file that HTAP can modify. Each option must map one or more of these tags to a value. The schema is only defined once per attribute. 
+- `"h2kMap": { ... }`: a hash that maps the `"h2kSchema"` tags to the values for a specific option `"h2kMap"` supports a standard base definition that will be used for all applications. <mark>Future versions will include support `"variants"` that users to modify a one or more tags 
+for a specific analysis.</mark>
+- `"base": { ... }`: a hash that maps the `"h2kSchema"` tags to the values for a specific option. 
+- `"variants": { ... }`: a set of hashes that overwrite definitions in the base h2k map for specific scenario requirements. This section is intended to allow users to customize their configurations without duplicating options files or options definitions. <mark>This feature is not yet implemented.</mark>
+- `"costs": { ... }`: a hash describing how costs should be evaluated for this option. Required if `"costed": true`. 
+- `"components": [ ... ]`: A list of components that a) are required to implement this option, and b) match entries in the unit costs database. 
+- `"custom-costs": { ... }`: A hash describing customized costs that can be applied in place of data from the unit cost database. 
+- `"Units": "unit key word"` - String describing how custom costs should be applied (e.g. `"Units": "sf floor area"|"sf applied"|"ea"|...`
+- `"TotUnitCost": ##.##`: Float data quantifying the unit cost in canadian dollars 
+- `"comment": "comment string"` - Optional string that can describe where the data came from.
+
+
+
+
+#### Example `flat` attribute: Mapping archetype to required .h2k file 
+
+    "Opt-Archetype": {
+      "structure": "flat",
+      "costed": false,
+      "options": {
+        "NA": "NA",
+        "SmallSFD": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-SmallSFD.h2k",
+        "MediumSFD": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-MediumSFD.h2k",
+        "LargeSFD": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-LargeSFD.h2k",
+        "Rowhouse": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-Row.h2k",
+        
+        <-- snip --> 
+        
+        "Quadplex": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-Quad.h2k",
+        
+      },
+      "default": "SmallSFD",
+      "stop-on-error": true
+    },
     
 
-This section defines data for the `Opt-H2K-PV` attribute.  Three options are available: `NA`, 
-`MonoSi-5kW`, and `MonoSi-10kW`.  __substitute-h2k.rb__ interprets the 
-`NA` specification as instructions to leave the existing .h2k file 
-unaltered – that is, the values for those inputs that were provided when the file
-was saved in HOT2000 will be preserved when the file is run in HTAP. 
-The remainder of the data for each attribute describe tags, values, 
-and costs. Each tag identifies a key word that substitute-h2k.rb 
-associates with part of the HOT2000 data model. For instance, `Opt-H2K-InvEff` 
-refers to the inverter efficiency of PV modules. Each value 
-provides the alphanumeric input that must be substituted within the 
-.h2k file. For example, the inverter efficiency will be set to 
-90% for the `MonoSI-10kW` case in the snippet above. 
+#### Example `tree` attribute: Casement windows definition 
+
+     "Opt-CasementWindows": {
+     "structure": "tree",
+     "costed": true,
+     "options": {
+       "NA": {
+         "h2kMap": {
+           "base": {
+             "<Opt-win-S-CON>": "NA",
+             "<Opt-win-E-CON>": "NA",
+             "<Opt-win-N-CON>": "NA",
+             "<Opt-win-W-CON>": "NA",
+             "<Opt-win-SE-CON>": "NA",
+             "<Opt-win-SW-CON>": "NA",
+             "<Opt-win-NE-CON>": "NA",
+             "<Opt-win-NW-CON>": "NA"
+           }
+         },
+         "costs": {
+           "components": [
+             "Example Key-phrase: Layer1",
+             "Example Key-phrase: Layer2",
+             "Example Key-phrase: Layer3"
+           ],
+           "custom-costs": {
+             "ExampleScenarioA": {
+               "Units": "sf floor area",
+               "TotUnitCost": 1.5,
+               "Comment": "eg: Alex's original estimate"
+             },
+             "ExampleScenarioB": {
+               "Units": "sf floor area",
+               "TotUnitCost": 1.7,
+               "Comment": "eg: Real numbers from ACME builder."
+             }
+           }
+         }
+       },
+       "DoubleLowEHardCoatAirFill": {
+         "h2kMap": {
+           "base": {
+             "<Opt-win-S-CON>": "DblLeHcAir",
+             "<Opt-win-E-CON>": "DblLeHcAir",
+             "<Opt-win-N-CON>": "DblLeHcAir",
+             "<Opt-win-W-CON>": "DblLeHcAir",
+             "<Opt-win-SE-CON>": "DblLeHcAir",
+             "<Opt-win-SW-CON>": "DblLeHcAir",
+             "<Opt-win-NE-CON>": "DblLeHcAir",
+             "<Opt-win-NW-CON>": "DblLeHcAir"
+           }
+         },
+         "costs": {
+           "components": [
+             "Example Key-phrase: Layer1",
+             "Example Key-phrase: Layer2",
+             "Example Key-phrase: Layer3"
+           ],
+           "custom-costs": {
+             "ExampleScenarioA": {
+               "Units": "sf floor area",
+               "TotUnitCost": 1.5,
+               "Comment": "eg: Alex's original estimate"
+             },
+             "ExampleScenarioB": {
+               "Units": "sf floor area",
+               "TotUnitCost": 1.7,
+               "Comment": "eg: Real numbers from ACME builder."
+             }
+           }
+         }
+       }, 
+       TripleLowESoftCoatKryFill": { ... }
+     }
+     "default": "DoubleLowEHardCoatArgFill",
+     "stop-on-error": true,
+     "h2kSchema": [
+       "<Opt-win-S-CON>",
+       "<Opt-win-E-CON>",
+       "<Opt-win-N-CON>",
+       "<Opt-win-W-CON>",
+       "<Opt-win-SE-CON>",
+       "<Opt-win-SW-CON>",
+       "<Opt-win-NE-CON>",
+       "<Opt-win-NW-CON>"
+     ]      
+    
+    } 
 
 <a name="choice-definition"></a>
-### The HOT2000.choice file 
-The .choice file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (!).  Entries in the choice file must obey the following rules:
+### The choices file (`my_evaluaton.choices`)
+The `.choices` file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (`!`).  Entries in the choice file must obey the following rules:
 - Each token must match one of the attributes in the .options file
 - Each value must match on of the options given for that attribute in the .options file
 - `NA` values instruct the substiture-h2k.rb script to leave the associated data in the .h2k file alone – that is, whatever inputs were provided when the file was created in HOT2000 will be used in the HTAP simulation.
@@ -164,13 +349,12 @@ An example .choice file follows. In this example, the .choice file instructs HTA
         ! HRV spec 
         Opt-HRVspec : NA
         
-        Opt-RoofPitch : NA   !6-12
         
         Opt-H2K-PV : NA 
-          <snip>
+
 
 <a name="run-definition"></a>
-### The .run file 
+### The run file (`my_batch.run`)
 The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
 * **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
 * **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
@@ -223,9 +407,174 @@ Upgrades_END
 ```
 
 
+<a name="cost-definition"></a>
+### The unit cost database (`HTAPUnitCosts.json`) 
+HTAP includes a unit cost database with estimates on the costs of various energy related upgrades. The database is organized in two sets of hashes - `"sources"` and `"data"`:
 
-<a name="inputs"></a> 
-Inputs 
+     {
+       "sources": { ... },
+       "data": { ... }
+     }
+
+#### `sources` entries 
+The sources entries within the database describe where cost data was obtained from. They have the following format:
+
+    "sources": { 
+       "cost-source-b": {
+         "filename": "source-file-b.csv",
+         "date_collated": "YYYY-MM-DD",
+         "date_imported": "YYYY-MM-DD HH:MM:SS",
+         "schema_used": "schema name",
+         "origin": "Comment on data source b",
+         "inherits": {
+           "cost-source-a": [
+              "entry-name-a", 
+              "entry-name-b", 
+              "entry-name-c",
+              
+              <--snip-->
+              
+              "entry-name-d"
+           ]
+         }
+       },
+       "cost-source-a": {
+         "filename": "source-file-a.csv",
+         "date_collated": "YYYY-MM-DD",
+         "date_imported": "YYYY-MM-DD HH:MM:SS",
+         "schema_used": "schema name",
+         "origin": "Comment on data source a",
+         "inherits": {
+         }
+       }
+    } 
+     
+Each source entry has the following members:    
+
+- `"filename":  "source-file-b.csv"` - filename used to generate entries within the cost database - typically a LEEP unit-cost sheet exported in csv format. 
+- `"date_collated": "YYYY-MM-DD"` - Approximate date when data sheet was compiled.
+- `"date_imported": "YYYY-MM-DD HH:MM:SS"` - Exact date/time when data was imported.
+- `"schema_used": "schema name"` - Keyword describing which schema was used to intrepret the imported csv data. 
+- `"origin": "Comment on data source b"` - Comment on data source
+- `"inherits": { ... }` : Hash describing which entries merely duplicate data from other databases.
+
+
+##### Example source entry 
+    "sources":{
+        "LEEP-MB-Winnipeg": {
+          "filename": "LEEP_Costing_MB_winnipeg.csv",
+          "date_collated": "2014-09-01",
+          "date_imported": "2018-10-02 11:32:54",
+          "schema_used": "oldLeep",
+          "origin": "Costs used in MB LEEP 2014",
+          "inherits": {
+            "LEEP-ON-Ottawa": [
+              "upgrading_from_3.57ach_to_1.75",
+              "upgrading_from_3.57ach_to_1.25",
+              "upgrading_from_3.57_to_1.0",
+              "upgrading_from_3.57_to_0.6",
+
+              <--snip--> 
+              
+              "solar_light_tube_kit:including_roof_unit:flashing:ceiling_fixture_&_3m"
+            ]
+          }
+        },
+        "LEEP-ON-Ottawa": {
+          "filename": "LEEP_COSTING_ottawa_V1.4.csv",
+          "date_collated": "2013-09-01",
+          "date_imported": "2018-10-02 11:32:53",
+          "schema_used": "oldLeep",
+          "origin": "Costs used in Ottawa LEEP 2013",
+          "inherits": {
+          }
+        }
+    }
+    
+#### Data entries  
+The data entries within the database contain the actual unit costs. They have the following format:    
+
+    "data": {
+      "unit-cost-component-1": {
+        "cost-source-a": {
+          "category": "category-name",
+          "description": "cost description",
+          "units": "unit keyword",
+          "UnitCostMaterials": ##.##,
+          "UnitCostLabour": ##.##,
+          "note": "information about cost data",
+          "date": "YYYY-MM-DD"
+        },
+        "cost-source-b": { ... }
+        "cost-source-c": { ... }
+        
+        <--snip-->  
+        
+        "cost-source-d": { ... }
+      
+      },
+      "unit-cost-component-2": { ... },        
+      "unit-cost-component-3": { ... },
+      
+      <--snip--> 
+      
+      "unit-cost-component-3": { ... },
+      
+    }
+     
+Each data entry contains the following: 
+- `"category": "category-name-string"` - Descriptive category for data (examples include `"INSULATION"`, `"WINDOWS"` and `"DRYWALL"`). HTAP presently ignores this data. 
+- `"description": "cost description"` - Expanded descriptor for this entry
+- `"units": "unit keyword"` -  String describing how custom costs should be applied (e.g. "units": "sf floor area"|"sf applied"|"ea"|...)
+- `"UnitCostMaterials": ##.##`: Materials cost estimate ($/unit)
+- `"UnitCostLabour": ##.##`: Labour cost estimate ($/unit)
+- `"note": "information about cost data"` - Additional info about source of data (e.g. reference)
+- `"date": "YYYY-MM-DD"` - Date data collected/reported. 
+
+
+##### Example data entry 
+
+    "data": {
+      "1/2in_gypsum_board": {
+        "LEEP-ON-Ottawa": {
+          "category": "DRYWALL",
+          "description": "1/2in Gypsum board",
+          "units": "sf wall",
+          "UnitCostMaterials": 0.35,
+          "UnitCostLabour": 0.41,
+          "note": "Hanscomb - aggregated average of material and labour for base case walls",
+          "date": "n.d.",
+          "source": "LEEP-ON-Ottawa"
+        }
+      },
+      "1/2in_plywood": {
+        "LEEP-BC-Vancouver": {
+          "category": "SHEATHING",
+          "description": "1/2in plywood",
+          "units": "sf applied",
+          "UnitCostMaterials": 0.57,
+          "UnitCostLabour": 0.0,
+          "note": "Griff Building Supplies",
+          "date": "n.d.",
+          "source": "LEEP-BC-Vancouver"
+        }
+      },
+      "2x12_engineered_i-joists-_hanscomb": {
+        "LEEP-MB-Winnipeg": {
+          "category": "FRAMING",
+          "description": "2x12 engineered i-joists- Hanscomb",
+          "units": "LF",
+          "UnitCostMaterials": 1.9,
+          "UnitCostLabour": 0.0,
+          "note": "",
+          "date": "n.d.",
+          "source": "LEEP-MB-Winnipeg"
+        }
+      },
+    }
+     
+
+Attributes that HTAP can modify<a name="attributes"></a> 
 ------
 
 <a name="opt-location"></a>
@@ -247,7 +596,7 @@ Inputs
   
 #### Sample `.choice` definition for  `Opt-Location`  
          Opt-Location = Toronto 
-         
+
 #### Sample `.options` definition for  `Opt-Location`
 
          *attribute:start 
@@ -272,17 +621,19 @@ Inputs
          *option:Toronto:value:3 = 42
          *option:Toronto:cost:total    = 0
          
-         <snip>
+         <--snip-->
+         
+         *attribute:end
 
 <a name="opt-archetype"></a>         
 ### `Opt-Archetype` 
 
-* **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
-* **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
-* **HOT2000 bindings**:  The __substitute-h2k.rb__ script will make a copy of the 
+- **Description** : Defines the .h2k file that will be used for the basis of a HTAP run 
+- **Typical values**: Keyword that maps to a .h2k file path (e.g. `SmallSFD`) 
+- **HOT2000 bindings**:  The __substitute-h2k.rb__ script will make a copy of the 
     specified .h2k file, and will alter it according to your specified choices. __substitute-h2k.rb__
     will then invoke HOT2000 to evaluate the .h2k file, and recover the results from that file
-* **Other things you should know**: 
+- **Other things you should know**: 
   - __substitute-h2k.rb__ will make a copy of the specified archetype file for its operations --- the original will not 
     be modified. 
   - Earlier versions of HTAP required the archetypes to be located in the `C:\H2K-CLI-Min\User\` directory; more recently, HTAP 
@@ -1619,7 +1970,72 @@ The following 5 output report the consumption of each fuel, in the units used fo
   - `ERS-Value`: the Energy Rating System Value is only available if the file is run in ERS mode.
   - `NumTries` and `LapsedTime`: are for information purposes only.
 
-
 <a name="#input.data"></a>
 ### `input.data`
 All of the inputs (#inputs) defined above are repeated for each HTAP run to help identify. These inputs are identified by the tag `input.Opt-__`.
+
+
+<a name="#legacy"></a>
+## Legacy files and inputs
+### The HOT2000.options file (depreciated) 
+<mark>This section refers to a file format that may not be supported in future versions</mark>
+
+Most of HTAP’s data are stored in the .options file.  The option file contains a list of attributes that HTAP can edit within HOT2000 input (.h2k) files. The HOT2000 input files are XML format files. An excerpt from the HOT2000.options file follows:
+
+         !-----------------------------------------------------------------------
+         ! Photovoltaics 
+         ! Use internal HOT2000 PV Generation model
+         ! Choice file used to specify Internal PV OR External PV but not both!
+         !-----------------------------------------------------------------------
+         *attribute:start
+         *attribute:name  = Opt-H2K-PV
+         *attribute:tag:1 = Opt-H2K-Area           ! m2
+         *attribute:tag:2 = Opt-H2K-Slope          ! degrees from horizontal
+         *attribute:tag:3 = Opt-H2K-Azimuth        ! degrees from S
+         *attribute:tag:4 = Opt-H2K-PVModuleType   ! 1:Mono-Si, 2:Poly-Si, 3:a-Si, 4:CdTe, 5:CIS, 
+                                                   ! 6:UsrSpec
+         *attribute:tag:5 = Opt-H2K-GridAbsRate    ! %
+         *attribute:tag:6 = Opt-H2K-InvEff         ! %
+         *attribute:default = NA
+         
+         *option:NA:value:1 = NA
+         *option:NA:value:2 = NA
+         *option:NA:value:3 = NA
+         *option:NA:value:4 = NA
+         *option:NA:value:5 = NA
+         *option:NA:value:6 = NA
+         *option:NA:cost:total  = 0
+         
+         *option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
+         *option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George
+         *option:MonoSi-5kW:value:3 = 0
+         *option:MonoSi-5kW:value:4 = 1
+         *option:MonoSi-5kW:value:5 = 90
+         *option:MonoSi-5kW:value:6 = 90
+         *option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system 
+         
+         *option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
+         *option:MonoSi-10kW:value:2 = 18.4         !22.6 for 5-12 roof in Prince George 
+         *option:MonoSi-10kW:value:3 = 0
+         *option:MonoSi-10kW:value:4 = 1
+         *option:MonoSi-10kW:value:5 = 90
+         *option:MonoSi-10kW:value:6 = 90
+         *option:MonoSi-10kW:cost:total = 33395     !$33395 assumed cost for 10 kW PV system for ! 
+                                                    !Prince George & Kelowna LEEP
+
+          *attribute:end
+         <snip>
+    
+
+This section defines data for the `Opt-H2K-PV` attribute.  Three options are available: `NA`, 
+`MonoSi-5kW`, and `MonoSi-10kW`.  __substitute-h2k.rb__ interprets the 
+`NA` specification as instructions to leave the existing .h2k file 
+unaltered – that is, the values for those inputs that were provided when the file
+was saved in HOT2000 will be preserved when the file is run in HTAP. 
+The remainder of the data for each attribute describe tags, values, 
+and costs. Each tag identifies a key word that substitute-h2k.rb 
+associates with part of the HOT2000 data model. For instance, `Opt-H2K-InvEff` 
+refers to the inverter efficiency of PV modules. Each value 
+provides the alphanumeric input that must be substituted within the 
+.h2k file. For example, the inverter efficiency will be set to 
+90% for the `MonoSI-10kW` case in the snippet above. 
