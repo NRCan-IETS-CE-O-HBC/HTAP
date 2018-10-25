@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Codes readOnly="false">
-    <Version major="1" minor="2">
+    <Version major="1" minor="3">
         <Labels>
-            <English>v1.2</English>
-            <French>v1.2</French>
+            <English>v1.3</English>
+            <French>v1.3</French>
         </Labels>
     </Version>
     <Wall>
@@ -657,7 +657,37 @@
     </Wall>
     <Ceiling>
         <Favorite>
-            <Code id="Code 13" value="2403802000" nominalRValue="9.006">
+            <Code id="Code 13" value="2403d01000" nominalRValue="10.5702">
+                <Label>NBC-zone7A-attic_HRV</Label>
+                <Description>RSI 8.67</Description>
+                <Layers>
+                    <StructureType code="4">
+                        <English>Truss</English>
+                        <French>Ferme</French>
+                    </StructureType>
+                    <ComponentTypeSize code="0">
+                        <English>38x89 mm (2x4 in) Attic truss</English>
+                        <French>38x89 (2x4) Ferme de grenier</French>
+                    </ComponentTypeSize>
+                    <Spacing code="3">
+                        <English>600 mm (24 in)</English>
+                        <French>600 mm (24 po)</French>
+                    </Spacing>
+                    <InsulationLayer1 code="d">
+                        <English>RSI 10.57 (R 60) Blown cellulose</English>
+                        <French>RSI 10.57 (R 60) cell. injecté</French>
+                    </InsulationLayer1>
+                    <InsulationLayer2 code="0">
+                        <English>None</English>
+                        <French>Aucun</French>
+                    </InsulationLayer2>
+                    <Interior code="1">
+                        <English>12 mm (0.5 in) gypsum board</English>
+                        <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+                    </Interior>
+                </Layers>
+            </Code>
+            <Code id="Code 14" value="2403802000" nominalRValue="9.006">
                 <Label>2x4Trs@24"OC,R51cel,Gy+Non In St</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -687,7 +717,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 14" value="2231c90000" nominalRValue="12.3199">
+            <Code id="Code 15" value="2231c90000" nominalRValue="12.3199">
                 <Label>CeilR60</Label>
                 <Description>Effective R60</Description>
                 <Layers>
@@ -717,7 +747,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 15" value="2221a90000" nominalRValue="9.8601">
+            <Code id="Code 16" value="2221a90000" nominalRValue="9.8601">
                 <Label>CeilR50</Label>
                 <Description>Effective R50</Description>
                 <Layers>
@@ -747,7 +777,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 16" value="2201C09000" nominalRValue="4.9688">
+            <Code id="Code 17" value="2201C09000" nominalRValue="4.9688">
                 <Label>Attic28</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -777,7 +807,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 17" value="2403J01000" nominalRValue="7.0652">
+            <Code id="Code 18" value="2403J01000" nominalRValue="7.0652">
                 <Label>NBC-zone4-attic</Label>
                 <Description>RSI 6.91</Description>
                 <Layers>
@@ -807,7 +837,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 18" value="2231490000" nominalRValue="7.74">
+            <Code id="Code 19" value="2231490000" nominalRValue="7.74">
                 <Label>CeilR40</Label>
                 <Description>R40 effective insulation</Description>
                 <Layers>
@@ -837,7 +867,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 19" value="2403801000" nominalRValue="9.006">
+            <Code id="Code 20" value="2403801000" nominalRValue="9.006">
                 <Label>NBC-zone5-attic</Label>
                 <Description>RSI 8.69</Description>
                 <Layers>
@@ -867,7 +897,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 20" value="2403d01000" nominalRValue="10.5702">
+            <Code id="Code 21" value="2403d01000" nominalRValue="10.5702">
                 <Label>NBC-zone8-attic</Label>
                 <Description>RSI 10.43</Description>
                 <Layers>
@@ -897,7 +927,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 21" value="2243J90000" nominalRValue="14.1305">
+            <Code id="Code 22" value="2243J90000" nominalRValue="14.1305">
                 <Label>CeilR70</Label>
                 <Description>Effective R70</Description>
                 <Layers>
@@ -927,7 +957,7 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 22" value="2403d01000" nominalRValue="10.5702">
+            <Code id="Code 23" value="2403d01000" nominalRValue="10.5702">
                 <Label>NBC-zone7A-attic_noHRV</Label>
                 <Description>RSI 10.43</Description>
                 <Layers>
@@ -957,37 +987,6 @@
                     </Interior>
                 </Layers>
             </Code>
-            <Code id="Code 23" value="2403d01000" nominalRValue="8.67">
-                <Label>NBC-zone7A-attic_HRV</Label>
-                <Description>RSI 8.67</Description>
-                <Layers>
-                    <StructureType code="4">
-                        <English>Truss</English>
-                        <French>Ferme</French>
-                    </StructureType>
-                    <ComponentTypeSize code="0">
-                        <English>38x89 mm (2x4 in) Attic truss</English>
-                        <French>38x89 (2x4) Ferme de grenier</French>
-                    </ComponentTypeSize>
-                    <Spacing code="3">
-                        <English>600 mm (24 in)</English>
-                        <French>600 mm (24 po)</French>
-                    </Spacing>
-                    <InsulationLayer1 code="8">
-                        <English>RSI 9.0  (R 51) Blown cellulose</English>
-                        <French>RSI 9.0  (R 51) Cell. injecté</French>
-                    </InsulationLayer1>
-                    <InsulationLayer2 code="0">
-                        <English>None</English>
-                        <French>Aucun</French>
-                    </InsulationLayer2>
-                    <Interior code="1">
-                        <English>12 mm (0.5 in) gypsum board</English>
-                        <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
-                    </Interior>
-                </Layers>
-            </Code>
-
             <Code id="Code 24" value="2403d01000" nominalRValue="10.5702">
                 <Label>NBC-zone7B-attic</Label>
                 <Description>RSI 10.43</Description>
@@ -1900,7 +1899,37 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 48" value="301014" nominalRValue="0">
+            <Code id="Code 48" value="223205" nominalRValue="0">
+                <Label>DoorWinDef</Label>
+                <Description>Def Door Win - Dbl, LowE, Ar</Description>
+                <Layers>
+                    <GlazingTypes code="2">
+                        <English>Double/double with 1 coat</English>
+                        <French>Double/double, 1 couche</French>
+                    </GlazingTypes>
+                    <CoatingsTints code="2">
+                        <English>Low-E .10 (soft)</English>
+                        <French>Faible E .10 (Doux)</French>
+                    </CoatingsTints>
+                    <FillType code="3">
+                        <English>13 mm Argon</English>
+                        <French>13 mm d'argon</French>
+                    </FillType>
+                    <SpacerType code="2">
+                        <English>Insulating</English>
+                        <French>Isolant</French>
+                    </SpacerType>
+                    <Type code="0">
+                        <English>Picture</English>
+                        <French>Fixe</French>
+                    </Type>
+                    <FrameMaterial code="5">
+                        <English>Reinforced vinyl</English>
+                        <French>Vinyle renforcé</French>
+                    </FrameMaterial>
+                </Layers>
+            </Code>
+            <Code id="Code 49" value="301014" nominalRValue="0">
                 <Label>Wind1_trp_CL</Label>
                 <Description>North Wnd1 - Triple clear</Description>
                 <Layers>
@@ -1930,7 +1959,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 49" value="223204" nominalRValue="0">
+            <Code id="Code 50" value="223204" nominalRValue="0">
                 <Label>picture</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -1960,7 +1989,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 50" value="231214" nominalRValue="0">
+            <Code id="Code 51" value="231214" nominalRValue="0">
                 <Label>DblLeHcAir</Label>
                 <Description>DoubleLowEHardCoatAirFill</Description>
                 <Layers>
@@ -1990,7 +2019,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 51" value="233204" nominalRValue="0">
+            <Code id="Code 52" value="233204" nominalRValue="0">
                 <Label>Vinyl Picture low E -20</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -2020,7 +2049,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 52" value="223204" nominalRValue="0">
+            <Code id="Code 53" value="223204" nominalRValue="0">
                 <Label>330204</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -2050,7 +2079,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 53" value="321214" nominalRValue="0">
+            <Code id="Code 54" value="321214" nominalRValue="0">
                 <Label>Win3hcLE1_tr</Label>
                 <Description>North Wnd3 - Trp, LE1 Hc</Description>
                 <Layers>
@@ -2080,7 +2109,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 54" value="223214" nominalRValue="0">
+            <Code id="Code 55" value="223214" nominalRValue="0">
                 <Label>casement</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -2110,11 +2139,41 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 55">
+            <Code id="Code 56" value="273255" nominalRValue="0">
+                <Label>SkylightDef</Label>
+                <Description>Default skylight-Dbl,LowE,Ar</Description>
+                <Layers>
+                    <GlazingTypes code="2">
+                        <English>Double/double with 1 coat</English>
+                        <French>Double/double, 1 couche</French>
+                    </GlazingTypes>
+                    <CoatingsTints code="7">
+                        <English>Tint + Low-E .10</English>
+                        <French>Teinté + faible E .10</French>
+                    </CoatingsTints>
+                    <FillType code="3">
+                        <English>13 mm Argon</English>
+                        <French>13 mm d'argon</French>
+                    </FillType>
+                    <SpacerType code="2">
+                        <English>Insulating</English>
+                        <French>Isolant</French>
+                    </SpacerType>
+                    <Type code="5">
+                        <English>Skylight</English>
+                        <French>Puits de lumière</French>
+                    </Type>
+                    <FrameMaterial code="5">
+                        <English>Reinforced vinyl</English>
+                        <French>Vinyle renforcé</French>
+                    </FrameMaterial>
+                </Layers>
+            </Code>
+            <Code id="Code 57">
                 <Label>NewCode-1</Label>
                 <Description></Description>
             </Code>
-            <Code id="Code 56" value="436214" nominalRValue="0">
+            <Code id="Code 58" value="436214" nominalRValue="0">
                 <Label>TplLeHcKry</Label>
                 <Description>TripleLowEHardCoatKryFill</Description>
                 <Layers>
@@ -2144,7 +2203,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 57" value="426214" nominalRValue="0">
+            <Code id="Code 59" value="426214" nominalRValue="0">
                 <Label>TplLeScKry</Label>
                 <Description>TripleLowESoftCoatKryFill</Description>
                 <Layers>
@@ -2174,7 +2233,7 @@
                     </FrameMaterial>
                 </Layers>
             </Code>
-            <Code id="Code 58" value="421214" nominalRValue="0">
+            <Code id="Code 60" value="421214" nominalRValue="0">
                 <Label>Win5hcLE2_tr</Label>
                 <Description>North Wnd5 - Trp, LE2 Hc</Description>
                 <Layers>
@@ -2206,7 +2265,7 @@
             </Code>
         </Favorite>
         <UserDefined>
-            <Code id="Code 59" nominalRValue="0">
+            <Code id="Code 61" nominalRValue="0">
                 <Label>WorkingWindow</Label>
                 <Description></Description>
                 <Layers>
@@ -2234,7 +2293,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 60" nominalRValue="0">
+            <Code id="Code 62" nominalRValue="0">
                 <Label>HG-i89-Triple-A</Label>
                 <Description>Leep window - Innotech LEEP window</Description>
                 <Layers>
@@ -2262,7 +2321,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 61" nominalRValue="0">
+            <Code id="Code 63" nominalRValue="0">
                 <Label>MG-i89-Double</Label>
                 <Description>Leep i89 double - All weather</Description>
                 <Layers>
@@ -2290,7 +2349,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 62" nominalRValue="0">
+            <Code id="Code 64" nominalRValue="0">
                 <Label>HG-HP-Triple</Label>
                 <Description>LEEP cascadia</Description>
                 <Layers>
@@ -2318,7 +2377,175 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 63" nominalRValue="0">
+            <Code id="Code 65" nominalRValue="0">
+                <Label>YHC-W3</Label>
+                <Description>Average performance triple-glazed, high SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.45" rank="1">
+                        <GlazingType code="3">
+                            <English>Triple/triple with 1 coat</English>
+                            <French>Triple/triple avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.2">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 66" nominalRValue="0">
+                <Label>YHC-W11</Label>
+                <Description>triple</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.2" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.96">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 67" nominalRValue="0">
+                <Label>YHC-W2</Label>
+                <Description>Average performance triple-glazed, mid SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.37" rank="1">
+                        <GlazingType code="3">
+                            <English>Triple/triple with 1 coat</English>
+                            <French>Triple/triple avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.2">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 68" nominalRValue="0">
+                <Label>YHC-W12</Label>
+                <Description>triple-glazed, high SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.28" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.17">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 69" nominalRValue="0">
+                <Label>YHC-W5</Label>
+                <Description>High performance triple-glazed, mid SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.37" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.9">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 70" nominalRValue="0">
+                <Label>YHC-W13</Label>
+                <Description>quad-glazed, high SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.2" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 71" nominalRValue="0">
                 <Label>MG-HP-Double</Label>
                 <Description>BC LEEP - star-line</Description>
                 <Layers>
@@ -2346,7 +2573,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 64" nominalRValue="0">
+            <Code id="Code 72" nominalRValue="0">
                 <Label>HG-avg-Double</Label>
                 <Description>North-Star window</Description>
                 <Layers>
@@ -2374,7 +2601,35 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 65" nominalRValue="0">
+            <Code id="Code 73" nominalRValue="0">
+                <Label>YHC-W4</Label>
+                <Description>High performance triple-glazed, low SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.17" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.9">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 74" nominalRValue="0">
                 <Label>HG-VHG-Double</Label>
                 <Description>very high gain double (All weather)</Description>
                 <Layers>
@@ -2402,7 +2657,35 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 66" nominalRValue="0">
+            <Code id="Code 75" nominalRValue="0">
+                <Label>YHC-W7</Label>
+                <Description>Quad-glazed, low SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.17" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.68">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 76" nominalRValue="0">
                 <Label>NBC-zone7A-window</Label>
                 <Description></Description>
                 <Layers>
@@ -2430,7 +2713,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 67" nominalRValue="0">
+            <Code id="Code 77" nominalRValue="0">
                 <Label>NBC-zone7B-window</Label>
                 <Description></Description>
                 <Layers>
@@ -2458,7 +2741,35 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 68" nominalRValue="0">
+            <Code id="Code 78" nominalRValue="0">
+                <Label>YHC-W6</Label>
+                <Description>High performance triple-glazed, high SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.45" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.9">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 79" nominalRValue="0">
                 <Label>NBC-zone4-window</Label>
                 <Description></Description>
                 <Layers>
@@ -2486,7 +2797,35 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 69" nominalRValue="0">
+            <Code id="Code 80" nominalRValue="0">
+                <Label>YHC-W9</Label>
+                <Description>Quad-glazed, high SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.45" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.68">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 81" nominalRValue="0">
                 <Label>LG-HP-Double</Label>
                 <Description>BC LEEP - Westeck Double </Description>
                 <Layers>
@@ -2514,7 +2853,147 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 70" nominalRValue="0">
+            <Code id="Code 82" nominalRValue="0">
+                <Label>YHC-W8</Label>
+                <Description>Quad-glazed, mid SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.37" rank="1">
+                        <GlazingType code="4">
+                            <English>TG with 2 coatings</English>
+                            <French>Triple vitrage (TV) avec 2 enduits</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="0.68">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="3">
+                            <English>Hard Coat</English>
+                            <French>Traitement dur</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 83" nominalRValue="0">
+                <Label>NBC-zone8-Doorwindow</Label>
+                <Description></Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.26" rank="1">
+                        <GlazingType code="2">
+                            <English>Double/double with 1 coat</English>
+                            <French>Double/double avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.4">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="3">
+                            <English>Picture</English>
+                            <French>fixe</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 84" nominalRValue="0">
+                <Label>NBC-zone6-Doorwindow</Label>
+                <Description></Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.26" rank="1">
+                        <GlazingType code="2">
+                            <English>Double/double with 1 coat</English>
+                            <French>Double/double avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.6">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="3">
+                            <English>Picture</English>
+                            <French>fixe</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 85" nominalRValue="0">
+                <Label>NBC-zone5-Doorwindow</Label>
+                <Description></Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.26" rank="1">
+                        <GlazingType code="2">
+                            <English>Double/double with 1 coat</English>
+                            <French>Double/double avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.8">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="3">
+                            <English>Picture</English>
+                            <French>fixe</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 86" nominalRValue="0">
+                <Label>NBC-zone4-Doorwindow</Label>
+                <Description></Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.26" rank="1">
+                        <GlazingType code="2">
+                            <English>Double/double with 1 coat</English>
+                            <French>Double/double avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.8">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="3">
+                            <English>Picture</English>
+                            <French>fixe</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 87" nominalRValue="0">
                 <Label>HG-avg-Triple</Label>
                 <Description>Reference triple from NWTHC work</Description>
                 <Layers>
@@ -2542,7 +3021,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 71" nominalRValue="0">
+            <Code id="Code 88" nominalRValue="0">
                 <Label>LG-i89-Triple-B</Label>
                 <Description>Innotech window</Description>
                 <Layers>
@@ -2570,7 +3049,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 72" nominalRValue="0">
+            <Code id="Code 89" nominalRValue="0">
                 <Label>LG-i89-Triple-A</Label>
                 <Description>Westeck - LEEP data </Description>
                 <Layers>
@@ -2598,7 +3077,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 73" nominalRValue="0">
+            <Code id="Code 90" nominalRValue="0">
                 <Label>LG-HP-Triple</Label>
                 <Description>Sampe High-performance triple  (innotech)</Description>
                 <Layers>
@@ -2626,7 +3105,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 74" nominalRValue="0">
+            <Code id="Code 91" nominalRValue="0">
                 <Label>NBC-zone6-window</Label>
                 <Description></Description>
                 <Layers>
@@ -2654,7 +3133,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 75" nominalRValue="0">
+            <Code id="Code 92" nominalRValue="0">
                 <Label>LG-avg-Triple</Label>
                 <Description>Typical triple (from NWTHC retrofit work)</Description>
                 <Layers>
@@ -2682,7 +3161,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 76" nominalRValue="0">
+            <Code id="Code 93" nominalRValue="0">
                 <Label>HG-i89-Triple-B</Label>
                 <Description>LEEP bc window  - all weather</Description>
                 <Layers>
@@ -2710,7 +3189,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 77" nominalRValue="0">
+            <Code id="Code 94" nominalRValue="0">
                 <Label>NBC-zone5-window</Label>
                 <Description></Description>
                 <Layers>
@@ -2738,7 +3217,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 78" nominalRValue="0">
+            <Code id="Code 95" nominalRValue="0">
                 <Label>LG-avg-Double</Label>
                 <Description></Description>
                 <Layers>
@@ -2766,7 +3245,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 79" nominalRValue="0">
+            <Code id="Code 96" nominalRValue="0">
                 <Label>NBC-zone8-window</Label>
                 <Description></Description>
                 <Layers>
@@ -2794,7 +3273,91 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 80" nominalRValue="0">
+            <Code id="Code 97" nominalRValue="0">
+                <Label>YHC-W1</Label>
+                <Description>Average performance triple-glazed, low SHGC</Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.17" rank="1">
+                        <GlazingType code="3">
+                            <English>Triple/triple with 1 coat</English>
+                            <French>Triple/triple avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.2">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="2">
+                            <English>Casement</English>
+                            <French>à battant</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 98" nominalRValue="0">
+                <Label>NBC-zone7B-Doorwindow</Label>
+                <Description></Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.26" rank="1">
+                        <GlazingType code="2">
+                            <English>Double/double with 1 coat</English>
+                            <French>Double/double avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.4">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="3">
+                            <English>Picture</English>
+                            <French>fixe</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 99" nominalRValue="0">
+                <Label>NBC-zone7A-Doorwindow</Label>
+                <Description></Description>
+                <Layers>
+                    <Window frameHeight="0" shgc="0.26" rank="1">
+                        <GlazingType code="2">
+                            <English>Double/double with 1 coat</English>
+                            <French>Double/double avec un enduit</French>
+                        </GlazingType>
+                        <OverallThermalResistance code="2" value="1.6">
+                            <English>U-Value</English>
+                            <French>Valeur-U</French>
+                        </OverallThermalResistance>
+                        <WindowStyle code="3">
+                            <English>Picture</English>
+                            <French>fixe</French>
+                        </WindowStyle>
+                        <FillGas code="2">
+                            <English>Argon</English>
+                            <French>Argon</French>
+                        </FillGas>
+                        <LowECoating code="2">
+                            <English>Soft Coat</English>
+                            <French>Traitement doux</French>
+                        </LowECoating>
+                    </Window>
+                </Layers>
+            </Code>
+            <Code id="Code 100" nominalRValue="0">
                 <Label>MagicWindow</Label>
                 <Description></Description>
                 <Layers>
@@ -2822,259 +3385,7 @@
                     </Window>
                 </Layers>
             </Code>
-            <Code id="Code 81" nominalRValue="0">
-                <Label>YHC-W1</Label>
-                <Description>Average performance triple-glazed, low SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.17" rank="1">
-                        <GlazingType code="3">
-                             <English>Triple/triple with 1 coat</English>
-                             <French>Triple/triple, 1 couche</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="1.2">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="2">
-                            <English>Soft Coat</English>
-                            <French>Traitement doux</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>
-			<Code id="Code 82" nominalRValue="0">
-                <Label>YHC-W2</Label>
-                <Description>Average performance triple-glazed, mid SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.37" rank="1">
-                        <GlazingType code="3">
-                             <English>Triple/triple with 1 coat</English>
-                             <French>Triple/triple, 1 couche</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="1.2">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>
-            <Code id="Code 83" nominalRValue="0">
-                <Label>YHC-W3</Label>
-                <Description>Average performance triple-glazed, high SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.45" rank="1">
-                        <GlazingType code="3">
-                             <English>Triple/triple with 1 coat</English>
-                             <French>Triple/triple, 1 couche</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="1.2">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>			
-            <Code id="Code 84" nominalRValue="0">
-                <Label>YHC-W4</Label>
-                <Description>High performance triple-glazed, low SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.17" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="0.9">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="2">
-                            <English>Soft Coat</English>
-                            <French>Traitement doux</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>
-			<Code id="Code 85" nominalRValue="0">
-                <Label>YHC-W5</Label>
-                <Description>High performance triple-glazed, mid SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.37" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="0.9">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>
-            <Code id="Code 86" nominalRValue="0">
-                <Label>YHC-W6</Label>
-                <Description>High performance triple-glazed, high SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.45" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-                        </GlazingType>
-                        <OverallThermalResistance code="2" value="0.9">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>		
-            <Code id="Code 87" nominalRValue="0">
-                <Label>YHC-W7</Label>
-                <Description>Quad-glazed, low SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.17" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="0.68">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="2">
-                            <English>Soft Coat</English>
-                            <French>Traitement doux</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>
-			<Code id="Code 88" nominalRValue="0">
-                <Label>YHC-W8</Label>
-                <Description>Quad-glazed, mid SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.37" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-						</GlazingType>
-                        <OverallThermalResistance code="2" value="0.68">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>
-            <Code id="Code 89" nominalRValue="0">
-                <Label>YHC-W9</Label>
-                <Description>Quad-glazed, high SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.45" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-                        </GlazingType>
-                        <OverallThermalResistance code="2" value="0.68">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>					
-            <Code id="Code 90" nominalRValue="0">
+            <Code id="Code 101" nominalRValue="0">
                 <Label>YHC-W10</Label>
                 <Description>Quad-glazed, high SHGC</Description>
                 <Layers>
@@ -3101,96 +3412,12 @@
                         </LowECoating>
                     </Window>
                 </Layers>
-            </Code>					
-            <Code id="Code 91" nominalRValue="0">
-                <Label>YHC-W11</Label>
-                <Description>triple</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.20" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-                        </GlazingType>
-                        <OverallThermalResistance code="2" value="0.96">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>					
-            <Code id="Code 92" nominalRValue="0">
-                <Label>YHC-W12</Label>
-                <Description>triple-glazed, high SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.28" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-                        </GlazingType>
-                        <OverallThermalResistance code="2" value="1.17">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>					
-            <Code id="Code 93" nominalRValue="0">
-                <Label>YHC-W13</Label>
-                <Description>quad-glazed, high SHGC</Description>
-                <Layers>
-                    <Window frameHeight="0" shgc="0.2" rank="1">
-                        <GlazingType code="4">
-                            <English>TG with 2 coatings</English>
-                            <French>Triple vitrage (TV) avec 2 enduits</French>
-                        </GlazingType>
-                        <OverallThermalResistance code="2" value="1.0">
-                            <English>U-Value</English>
-                            <French>Valeur-U</French>
-                        </OverallThermalResistance>
-                        <WindowStyle code="2">
-                            <English>Casement</English>
-                            <French>à battant</French>
-                        </WindowStyle>
-                        <FillGas code="2">
-                            <English>Argon</English>
-                            <French>Argon</French>
-                        </FillGas>
-                        <LowECoating code="3">
-                            <English>Hard Coat</English>
-                            <French>Traitement dur</French>
-                        </LowECoating>
-                    </Window>
-                </Layers>
-            </Code>							
-			</UserDefined>
+            </Code>
+        </UserDefined>
     </Window>
     <FloorsAbove>
         <Favorite>
-            <Code id="Code 94" value="4511001660" nominalRValue="0">
+            <Code id="Code 102" value="4511001660" nominalRValue="0">
                 <Label>I Joist2x11@16"OC,5/8OSB</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3236,7 +3463,7 @@
     </FloorsAbove>
     <FloorsAdded>
         <Favorite>
-            <Code id="Code 95" value="21T44" nominalRValue="3.87">
+            <Code id="Code 103" value="21T44" nominalRValue="3.87">
                 <Label>SlabRaisedFlr</Label>
                 <Description></Description>
                 <Layers>
@@ -3266,7 +3493,7 @@
     </FloorsAdded>
     <BasementWall>
         <Favorite>
-            <Code id="Code 96" value="210201" nominalRValue="2.11">
+            <Code id="Code 104" value="210201" nominalRValue="2.11">
                 <Label>BsmWllR12</Label>
                 <Description>R12 Basement Wall (OBC min)</Description>
                 <Layers>
@@ -3296,7 +3523,7 @@
                     </InteriorFinish>
                 </Layers>
             </Code>
-            <Code id="Code 97" value="210K01" nominalRValue="1.6992">
+            <Code id="Code 105" value="210K01" nominalRValue="1.6992">
                 <Label>BWall</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3326,7 +3553,7 @@
                     </InteriorFinish>
                 </Layers>
             </Code>
-            <Code id="Code 98" value="200400" nominalRValue="2.4602">
+            <Code id="Code 106" value="200400" nominalRValue="2.4602">
                 <Label>favbsm</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3356,7 +3583,7 @@
                     </InteriorFinish>
                 </Layers>
             </Code>
-            <Code id="Code 99" value="330301" nominalRValue="3.2421">
+            <Code id="Code 107" value="330301" nominalRValue="3.2421">
                 <Label>2x6 w. R20 batt</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3388,7 +3615,7 @@
             </Code>
         </Favorite>
         <UserDefined>
-            <Code id="Code 100" nominalRValue="3.2421">
+            <Code id="Code 108" nominalRValue="3.2421">
                 <Label>2x6BIW</Label>
                 <Description></Description>
                 <Layers>
@@ -3442,7 +3669,7 @@
     </BasementWall>
     <CrawlspaceWall>
         <Favorite>
-            <Code id="Code 101" value="1200201000" nominalRValue="2.11">
+            <Code id="Code 109" value="1200201000" nominalRValue="2.11">
                 <Label>Crwl1</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3484,7 +3711,7 @@
                     </StudsCornerIntersection>
                 </Layers>
             </Code>
-            <Code id="Code 102" value="1211311110" nominalRValue="4.5477">
+            <Code id="Code 110" value="1211311110" nominalRValue="4.5477">
                 <Label>PW1</Label>
                 <Description>Pony Wall</Description>
                 <Layers>
@@ -3528,7 +3755,7 @@
             </Code>
         </Favorite>
         <UserDefined>
-            <Code id="Code 103" nominalRValue="1.5">
+            <Code id="Code 111" nominalRValue="1.5">
                 <Label>RSI1.5</Label>
                 <Description></Description>
                 <Layers>
@@ -3562,7 +3789,7 @@
     </CrawlspaceWall>
     <FloorHeader>
         <Favorite>
-            <Code id="Code 104" value="1800310140" nominalRValue="4.8256">
+            <Code id="Code 112" value="1800310140" nominalRValue="4.8256">
                 <Label>HdrR20</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3588,7 +3815,7 @@
                     </Exterior>
                 </Layers>
             </Code>
-            <Code id="Code 105" value="18003B0240" nominalRValue="4.4014">
+            <Code id="Code 113" value="18003B0240" nominalRValue="4.4014">
                 <Label>R20 Batt +1" XPS + Brick</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3614,7 +3841,7 @@
                     </Exterior>
                 </Layers>
             </Code>
-            <Code id="Code 106" value="18003B0200" nominalRValue="4.4014">
+            <Code id="Code 114" value="18003B0200" nominalRValue="4.4014">
                 <Label>R20 batt + 1"XPS (no brick)</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3640,7 +3867,7 @@
                     </Exterior>
                 </Layers>
             </Code>
-            <Code id="Code 107" value="18003A0440" nominalRValue="4.9272">
+            <Code id="Code 115" value="18003A0440" nominalRValue="4.9272">
                 <Label>R20 batt+2"EPSII (R27)</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3666,7 +3893,7 @@
                     </Exterior>
                 </Layers>
             </Code>
-            <Code id="Code 108" value="1800K00020" nominalRValue="1.76">
+            <Code id="Code 116" value="1800K00020" nominalRValue="1.76">
                 <Label>BH1</Label>
                 <Description>Your comment here</Description>
                 <Layers>
@@ -3692,7 +3919,7 @@
                     </Exterior>
                 </Layers>
             </Code>
-            <Code id="Code 109" value="1800100520" nominalRValue="1.41">
+            <Code id="Code 117" value="1800100520" nominalRValue="1.41">
                 <Label>WHdr</Label>
                 <Description>Your comment here</Description>
                 <Layers>
