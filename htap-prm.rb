@@ -1125,8 +1125,8 @@ def run_these_cases(current_task_files)
          
          if ( ! $outputHeaderPrinted ) then 
            # Deal with header first 
-           data.sort.to_h          
-           data.each do |column,value|
+                     
+           data.sort.to_h.each do |column,value|
            
              case column 
              when /s\.error/, /s\.warning/, /BIN-data/
