@@ -411,10 +411,15 @@ Upgrades_END
 
 #### Run file inputs
 
-* `run-mode = [parametric|mesh|optimize]`: Single string denoting the method that *htap-prm.rb* should use to explore the solution 
-  spaces. 
+* `run-mode = [parametric|mesh|sample{}|optimize]`: Single string denoting the method that *htap-prm.rb* should use to explore the solution space. 
     - If set to `parametric`, **htap-prm.rb** will undertake a parametric analysis where each `RunScope` and `Upgrades` option is initialized to the first value in their list, and each evaluation will be a variant of the initial model with only one of the options changed to a member in the list. This run mode is useful for sensitivity studies.
     - If set to `mesh`, **htap-prm.rb** will undertake a batch analysis examining all combinations of `RunScope` and `Upgrades` options. Depending on the number of options examined for each attribute, the time required to complete a mesh run may be very large. 
+    - If set to `sample`, **htap-prm.rb** will undertake a mesh run, but only process 100 randomly selected combinations. The random seed and sample size 
+      can be controlled by passing parameters along with `sample`:
+      ```      
+      run-mode  = sample{n:###; seed:###} 
+      ```
+      where `n` (integer) is the desired sample size; `seed` (integer) is the seed that should be used in the random selection. 
     - `optimize` denotes a **yet-to-be-implemented** optimization method, based on a particle swarm or other genetic algorithm. <mark>This feature is not currently supported.</mark>
 * `archetype-dir = C:/Path/To/H2Kfiles/`: File location where **htap-prm.rb** will expect to find .h2k files.
 * `archetypes = [file1.h2k, file2.h2k, file3.h2k ... ]`: <a name="runscopearchetype"></a>List of .h2k files to be included in the batch run. Each filename must correspond to a .h2k file located in archetype directory (that is, the path specified by `archetype-dir`). *htap-prm.rb* supports simple wildcard matching — `archetypes = builder*.h2k` will run `builder_1.h2k`, `builder_2.h2k` and `builder_3.h2k`; `archetypes = *.h2k` will run all HOT2000 files in the given path. This input has the same affect as specifying `Opt-Archetype` within a .choice file.
@@ -424,8 +429,6 @@ Upgrades_END
     - `NBC9_36_HRV`: This ruleset causes the model's parameters to be changed to minimum perscribed values under the 2015 NBC (part 9.36), with a heat recovery ventilation system.
     - `NBC9_36_noHRV`: This ruleset causes the model's parameters to be changed to minimum perscribed values under the 2015 NBC (part 9.36), with a exhaust fan ventilation. 
 * `Opt-XXXXXXX = [ option_a, option b, option_c ... ]` : List of upgrade options (for attribute `Opt-XXXXXXX`) to be investigated during the HTAP run. These options are applied after a given ruleset has been imposed. The attributes and their options are listed [below](#attributes).
-
-
 
 <a name="cost-definition"></a>
 ### The unit cost database (`HTAPUnitCosts.json`) 
