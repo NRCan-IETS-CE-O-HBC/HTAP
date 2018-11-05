@@ -1,0 +1,3829 @@
+{
+  "sources": {
+    "LEEP-BC-KamloopsChesnut": {
+      "filename": "LEEP_COSTING_Sept_2016_Chesnut.csv",
+      "date_collated": "2016-09-01",
+      "date_imported": "2018-10-02 11:32:56",
+      "schema_used": "oldLeep",
+      "origin": "Costs used in Kamloops LEEP 2016",
+      "inherits": {
+        "LEEP-ON-Ottawa": [
+          "electricity_generated:microfit:rooftop_solar",
+          "electricity_generated:microfit:rooftop_wind",
+          "upgrading_from_3.57ach_to_1.75",
+          "upgrading_from_3.57ach_to_1.25",
+          "upgrading_from_3.57_to_1.0",
+          "upgrading_from_3.57_to_0.6",
+          "air_sealing_credit_1.0",
+          "air_sealing_credit_1.75",
+          "air_sealing_credit_1.25",
+          "framing:conventional:38x140mm_o.c.",
+          "framing:advanced:38x140mm_o.c",
+          "framing:double_stud_wall:305mm",
+          "framing:double_stud:vip_wall",
+          "framing:interior_basement:38x89mm_o.c.",
+          "framing:conventional:38x89mm_o.c.",
+          "framing:interior_basement:38x140mm_o.c.",
+          "1/2in_gypsum_board",
+          "osb:12mm",
+          "air_barrier_membrane",
+          "insulation:spray_foam:38mm:r6/inch",
+          "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+          "insulation:spray_foam:2pound_urethane:7.5in_thickness",
+          "insulation:r12_batt",
+          "insulation:r14_batt",
+          "insulation:r20_batt",
+          "insulation:r22_batt",
+          "insulation:r24_batt",
+          "insulation:r31_batt",
+          "insulation:r40_dense-pack_cellulose",
+          "insulation:vacuum_insulated_panel:15mm:installed_within_stud_cavities_only",
+          "insulation:vacuum_insulated_panel:20mm:installed_within_stud_cavities_only",
+          "insulation:vacuum_insulated_panel:10mm:installed_within_stud_cavities_only",
+          "vapour_barrier:6_mil",
+          "selective_vapour_membrain",
+          "structural_insulated_panels:r26:including_splines:foam:&_caulking",
+          "structural_insulated_panels:r38:including_splines:foam:&_caulking",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:casement",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:picture",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:fixed",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:slider",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:casement",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:picture",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:fixed",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:slider",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:picture",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:fixed",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:slider",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:casement",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:picture",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:fixed",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:slider",
+          "concrete_cast-in-place_foundation_wall:203mm:excluding_footings",
+          "exterior_dampproofing",
+          "floor_slab:76mm",
+          "insulation:basement_slab:xps_type_4:38mm",
+          "brick",
+          "general_roofing",
+          "additional_framing:interior_basement:38x89mm_o.c.",
+          "additional_foundation_wall",
+          "floor_construction",
+          "add_1in_thickness_to_foundation",
+          "add_2in_thickness_to_foundation",
+          "furnace_94%_afue:14kw_output:psc_motor",
+          "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+          "furnace:96%_afue_ecm_motor:30_mbtuh_input:8.75_kw_max_output",
+          "ducting:central_forced_air",
+          "ducting:zoned_forced_air",
+          "hrv:conventional_sre_70%_@_0:61%_@_-25",
+          "hrv:conventional_sre_60%_@_0:55%_@_-25",
+          "hrv:high_performer:78%_@_0:72%_@_-25_with_ecm",
+          "dhw_tank:ng:246_litres:power_vented:ef_0.60",
+          "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.62",
+          "dhw_heater:gas_fuelled:on-demand:ef_0.94",
+          "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67",
+          "dhw_tank:electric:246_l:ef_0.89",
+          "dhw_heater:gas_fuelled:on-demand:ef_0.95",
+          "ac_2.5_ton:13_seer",
+          "ac_2.5_ton:14_seer",
+          "gshp:4_ton:11_kw:incl._pump_ass.:drillin_&_piping:ethanol:aux._heaters_&_collateral_costs.",
+          "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
+          "ccashp:ductless_mini-splits:mitsubishi_msz-fe12na",
+          "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor:circ._pump:and_electrical",
+          "micro-chp_system:backup_furnace_incl._vent_kit:indirect_dhw_tank_&_hrv_interlock",
+          "integrated_mechanical_system:csa_p.10:otfp_0.91:incl._space_heating:dhw:and_hrv",
+          "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat",
+          "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats",
+          "incandescent_bulb",
+          "cfl",
+          "led",
+          "standard_manual_switches",
+          "automated_switches",
+          "additional_plug_in_garage:240v:40a:excluding_charging_station",
+          "base_case_wiring:includes_all_switches:receptacles:cable_and_labour",
+          "structured_wiring:includes_all_switches:receptacles:cable_and_labour",
+          "copper_pipe_to_and_from_dwhr_and_dhw_systems",
+          "pvc_drain_stack",
+          "passive_solar_design",
+          "solar_photovoltaic_system:installed_on_roof:1_kw",
+          "solar_photovoltaic_system:installed_on_roof:5_kw",
+          "no_renewable_energy_system_installed",
+          "solar_dhw_system:two_1.2mx2.4m_collectors:solar_boiler:270_litre_tank:controls_and_pumps",
+          "solar_ready_conduit_supply_and_install",
+          "solar_ready_roof_truss_design_and_install",
+          "no_accomodation_for_solar",
+          "solar_light_tube_kit:including_roof_unit:flashing:ceiling_fixture_&_3m",
+          "roof-mounted_wind_turbine:3.5_kw_@_12.5_m/s"
+        ],
+        "LEEP-BC-Vancouver": [
+          "1/2in_plywood",
+          "insulation:r36_dense-pack_cellulose",
+          "insulation:rigid:25mm",
+          "insulation:rigid:51mm",
+          "insulation:rigid:102mm",
+          "insulation:polyisocyanurate_51mm",
+          "insulation:xps_type_4:rigid:25mm",
+          "insulation:xps_type_4:rigid:38mm",
+          "insulation:xps_type_4:rigid:51mm",
+          "insulation:xps_type_4:rigid:51mm:hanscomb",
+          "insulation:xps_type_4:rigid:64mm",
+          "insulation:eps_type_1:rigid:25mm",
+          "insulation:eps_type_1:rigid:38mm",
+          "insulation:eps_type_1:rigid:51mm",
+          "insulation:eps_type_2:rigid:25mm",
+          "insulation:eps_type_2:rigid:38mm",
+          "insulation:eps_type_2:rigid:51mm",
+          "insulation:eps_type_2:rigid:76mm",
+          "insulation:eps_type_2:rigid_4in",
+          "insulation:xps_type_3:rigid:25mm",
+          "r40:cost_including_materials:labour:mark-up_and_taxes",
+          "add_3in_thickness_to_foundation",
+          "add_4in_thickness_to_foundation",
+          "generic_addition_for_thick_walls",
+          "dwhr_unit:91cm_supply",
+          "dwhr_unit:152cm_supply"
+        ],
+        "LEEP-MB-Winnipeg": [
+          "r50:cost_including_materials:labour:mark-up_and_taxes",
+          "r60:cost_including_materials:labour:mark-up_and_taxes",
+          "r70:cost_including_materials:labour:mark-up_and_taxes",
+          "r80:cost_including_materials:labour:mark-up_and_taxes",
+          "r90:cost_including_materials:labour:mark-up_and_taxes",
+          "r100:cost_including_materials:labour:mark-up_and_taxes",
+          "dhw_heat_pump_water_heater:50_gal:ef_2.3",
+          "dhw_heat_pump_water_heater:50_gal:ef_2.35",
+          "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+          "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+          "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
+        ]
+      }
+    },
+    "LEEP-BC-Vancouver": {
+      "filename": "LEEP_COSTING_BC-vancouver_V1.0.csv",
+      "date_collated": "2016-09-01",
+      "date_imported": "2018-10-02 11:32:55",
+      "schema_used": "oldLeep",
+      "origin": "Costs used in Vancouver LEEP 2016",
+      "inherits": {
+        "LEEP-ON-Ottawa": [
+          "natural_gas_savings",
+          "electricity_use_savings",
+          "electricity_generated:microfit:rooftop_solar",
+          "electricity_generated:microfit:rooftop_wind",
+          "upgrading_from_3.57ach_to_1.75",
+          "upgrading_from_3.57ach_to_1.25",
+          "upgrading_from_3.57_to_1.0",
+          "upgrading_from_3.57_to_0.6",
+          "air_sealing_credit_1.0",
+          "air_sealing_credit_1.75",
+          "air_sealing_credit_1.25",
+          "framing:conventional:38x140mm_o.c.",
+          "framing:advanced:38x140mm_o.c",
+          "framing:double_stud_wall:305mm",
+          "framing:double_stud:vip_wall",
+          "framing:interior_basement:38x89mm_o.c.",
+          "framing:conventional:38x89mm_o.c.",
+          "framing:interior_basement:38x140mm_o.c.",
+          "1/2in_gypsum_board",
+          "osb:12mm",
+          "air_barrier_membrane",
+          "insulation:spray_foam:38mm:r6/inch",
+          "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+          "insulation:spray_foam:2pound_urethane:7.5in_thickness",
+          "insulation:r12_batt",
+          "insulation:r14_batt",
+          "insulation:r20_batt",
+          "insulation:r22_batt",
+          "insulation:r24_batt",
+          "insulation:r31_batt",
+          "insulation:r40_dense-pack_cellulose",
+          "insulation:vacuum_insulated_panel:15mm:installed_within_stud_cavities_only",
+          "insulation:vacuum_insulated_panel:20mm:installed_within_stud_cavities_only",
+          "insulation:vacuum_insulated_panel:10mm:installed_within_stud_cavities_only",
+          "vapour_barrier:6_mil",
+          "selective_vapour_membrain",
+          "icf_wall:152mm_includes:damproofing_and_drywall",
+          "structural_insulated_panels:r26:including_splines:foam:&_caulking",
+          "structural_insulated_panels:r38:including_splines:foam:&_caulking",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:casement",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:picture",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:fixed",
+          "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:slider",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:casement",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:picture",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:fixed",
+          "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:slider",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:casement",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:picture",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:fixed",
+          "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:slider",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:casement",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:picture",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:fixed",
+          "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:slider",
+          "concrete_cast-in-place_foundation_wall:203mm:excluding_footings",
+          "exterior_dampproofing",
+          "floor_slab:76mm",
+          "insulation:basement_slab:xps_type_4:38mm",
+          "brick",
+          "general_roofing",
+          "additional_framing:interior_basement:38x89mm_o.c.",
+          "additional_foundation_wall",
+          "floor_construction",
+          "window_jamb_extensions",
+          "add_1in_thickness_to_foundation",
+          "add_2in_thickness_to_foundation",
+          "furnace_94%_afue:14kw_output:psc_motor",
+          "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+          "furnace:96%_afue_ecm_motor:30_mbtuh_input:8.75_kw_max_output",
+          "ducting:central_forced_air",
+          "ducting:zoned_forced_air",
+          "hrv:conventional_sre_70%_@_0:61%_@_-25",
+          "hrv:conventional_sre_60%_@_0:55%_@_-25",
+          "hrv:high_performer:78%_@_0:72%_@_-25_with_ecm",
+          "dhw_tank:ng:246_litres:power_vented:ef_0.60",
+          "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.62",
+          "dhw_heater:gas_fuelled:on-demand:ef_0.94",
+          "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67",
+          "dhw_tank:electric:246_l:ef_0.89",
+          "dhw_heater:gas_fuelled:on-demand:ef_0.95",
+          "ac_2.5_ton:13_seer",
+          "ac_2.5_ton:14_seer",
+          "gshp:4_ton:11_kw:incl._pump_ass.:drillin_&_piping:ethanol:aux._heaters_&_collateral_costs.",
+          "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
+          "ccashp:ductless_mini-splits:mitsubishi_msz-fe12na",
+          "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor:circ._pump:and_electrical",
+          "air_handler:1-zone:ecm_motor:circ._pump:and_electrical",
+          "micro-chp_system:backup_furnace_incl._vent_kit:indirect_dhw_tank_&_hrv_interlock",
+          "integrated_mechanical_system:csa_p.10:otfp_0.91:incl._space_heating:dhw:and_hrv",
+          "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat",
+          "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats",
+          "incandescent_bulb",
+          "cfl",
+          "led",
+          "standard_manual_switches",
+          "automated_switches",
+          "additional_plug_in_garage:240v:40a:excluding_charging_station",
+          "base_case_wiring:includes_all_switches:receptacles:cable_and_labour",
+          "structured_wiring:includes_all_switches:receptacles:cable_and_labour",
+          "copper_pipe_to_and_from_dwhr_and_dhw_systems",
+          "pvc_drain_stack",
+          "passive_solar_design",
+          "solar_photovoltaic_system:installed_on_roof:1_kw",
+          "solar_photovoltaic_system:installed_on_roof:5_kw",
+          "no_renewable_energy_system_installed",
+          "solar_dhw_system:two_1.2mx2.4m_collectors:solar_boiler:270_litre_tank:controls_and_pumps",
+          "solar_ready_conduit_supply_and_install",
+          "solar_ready_roof_truss_design_and_install",
+          "no_accomodation_for_solar",
+          "solar_light_tube_kit:including_roof_unit:flashing:ceiling_fixture_&_3m",
+          "roof-mounted_wind_turbine:3.5_kw_@_12.5_m/s"
+        ],
+        "LEEP-MB-Winnipeg": [
+          "r50:cost_including_materials:labour:mark-up_and_taxes",
+          "r60:cost_including_materials:labour:mark-up_and_taxes",
+          "r70:cost_including_materials:labour:mark-up_and_taxes",
+          "r80:cost_including_materials:labour:mark-up_and_taxes",
+          "r90:cost_including_materials:labour:mark-up_and_taxes",
+          "r100:cost_including_materials:labour:mark-up_and_taxes",
+          "dhw_heat_pump_water_heater:50_gal:ef_2.3",
+          "dhw_heat_pump_water_heater:50_gal:ef_2.35",
+          "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+          "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+          "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
+        ]
+      }
+    },
+    "LEEP-MB-Winnipeg": {
+      "filename": "LEEP_Costing_MB_winnipeg.csv",
+      "date_collated": "2014-09-01",
+      "date_imported": "2018-10-02 11:32:54",
+      "schema_used": "oldLeep",
+      "origin": "Costs used in MB LEEP 2014",
+      "inherits": {
+        "LEEP-ON-Ottawa": [
+          "upgrading_from_3.57ach_to_1.75",
+          "upgrading_from_3.57ach_to_1.25",
+          "upgrading_from_3.57_to_1.0",
+          "upgrading_from_3.57_to_0.6",
+          "air_sealing_credit_1.0",
+          "air_sealing_credit_1.75",
+          "air_sealing_credit_1.25",
+          "air_barrier_membrane",
+          "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+          "insulation:spray_foam:2pound_urethane:7.5in_thickness",
+          "insulation:polyisocyanurate_51mm",
+          "insulation:xps_type_4:rigid:25mm",
+          "insulation:xps_type_4:rigid:38mm",
+          "insulation:xps_type_4:rigid:51mm",
+          "insulation:xps_type_4:rigid:51mm:hanscomb",
+          "insulation:xps_type_4:rigid:64mm",
+          "insulation:eps_type_1:rigid:25mm",
+          "insulation:eps_type_1:rigid:38mm",
+          "insulation:eps_type_1:rigid:51mm",
+          "insulation:eps_type_2:rigid:25mm",
+          "insulation:eps_type_2:rigid:38mm",
+          "insulation:eps_type_2:rigid:51mm",
+          "insulation:eps_type_2:rigid:76mm",
+          "insulation:eps_type_2:rigid_4in",
+          "insulation_mineral_wool_board_8_lb._150mm_vertical_pt_strapping_&_screws",
+          "dhw_tank:electric:246_l:ef_0.89",
+          "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
+          "micro-chp_system:backup_furnace_incl._vent_kit:indirect_dhw_tank_&_hrv_interlock",
+          "standard_manual_switches",
+          "automated_switches",
+          "additional_plug_in_garage:240v:40a:excluding_charging_station",
+          "passive_solar_design",
+          "solar_light_tube_kit:including_roof_unit:flashing:ceiling_fixture_&_3m"
+        ]
+      }
+    },
+    "LEEP-ON-Ottawa": {
+      "filename": "LEEP_COSTING_ottawa_V1.4.csv",
+      "date_collated": "2013-09-01",
+      "date_imported": "2018-10-02 11:32:53",
+      "schema_used": "oldLeep",
+      "origin": "Costs used in Ottawa LEEP 2013",
+      "inherits": {
+      }
+    }
+  },
+  "data": {
+    "1/2in_gypsum_board": {
+      "LEEP-ON-Ottawa": {
+        "category": "DRYWALL",
+        "description": "1/2in Gypsum board",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.35,
+        "UnitCostLabour": 0.41,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "1/2in_plywood": {
+      "LEEP-BC-Vancouver": {
+        "category": "SHEATHING",
+        "description": "1/2in plywood",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.57,
+        "UnitCostLabour": 0.0,
+        "note": "Griff Building Supplies",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "2x12_engineered_i-joists-_hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "2x12 engineered i-joists- Hanscomb",
+        "units": "LF",
+        "UnitCostMaterials": 1.9,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "2x16_engineered_i-joists:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "2x16 engineered i-joists - Hanscomb",
+        "units": "LF",
+        "UnitCostMaterials": 2.83,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "ac_2.5_ton:13_seer": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIRCONDITIONING",
+        "description": "AC 2.5 ton, 13 SEER (2.5 ton)",
+        "units": "ea",
+        "UnitCostMaterials": 2550.0,
+        "UnitCostLabour": 340.4,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "ac_2.5_ton:14_seer": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIRCONDITIONING",
+        "description": "AC 2.5 ton, 14 SEER (2 ton)",
+        "units": "ea",
+        "UnitCostMaterials": 2125.0,
+        "UnitCostLabour": 340.4,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "ac_4_ton:14.5_seer": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "AIRCONDITIONING",
+        "description": "AC 4 ton, 14.5 SEER ",
+        "units": "ea",
+        "UnitCostMaterials": 2535.0,
+        "UnitCostLabour": 340.4,
+        "note": "Odessa Homes base AC Vancouver",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "ac_unit:2_ton_13_seer_r410a_c/w_a_coil:disconnect:50_ft_line:pad:insulation:whip_&_tstat": {
+      "LEEP-MB-Winnipeg": {
+        "category": "AIRCONDITIONING",
+        "description": "AC unit, 2 ton 13 SEER R410A c/w A coil, disconnect, 50 ft line, pad, insulation, whip & Tstat",
+        "units": "ea",
+        "UnitCostMaterials": 1430.0,
+        "UnitCostLabour": 500.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "add_1in_thickness_to_foundation": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Add 1in thickness to foundation",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.17,
+        "UnitCostLabour": 0.0,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "add_2in_thickness_to_foundation": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Add 2in thickness to foundation",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.34,
+        "UnitCostLabour": 0.0,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "add_3in_thickness_to_foundation": {
+      "LEEP-BC-Vancouver": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Add 3in thickness to foundation",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.51,
+        "UnitCostLabour": 0.0,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "add_4in_thickness_to_foundation": {
+      "LEEP-BC-Vancouver": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Add 4in thickness to foundation",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.68,
+        "UnitCostLabour": 0.0,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "additional_foundation_wall": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Additional foundation wall ",
+        "units": "sf applied",
+        "UnitCostMaterials": 7.36,
+        "UnitCostLabour": 1.46,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "additional_framing:interior_basement:38x89mm_o.c.": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Additional Framing, interior basement, 38x89mm (2inx4in) @ 610mm (24in) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.24,
+        "UnitCostLabour": 0.51,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "additional_plug_in_garage:240v:40a:excluding_charging_station": {
+      "LEEP-ON-Ottawa": {
+        "category": "OTHER",
+        "description": "Additional plug in garage, 240V, 40A, excluding charging station (ME20)",
+        "units": "ea",
+        "UnitCostMaterials": 200.0,
+        "UnitCostLabour": 140.0,
+        "note": "In-house estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_barrier_membrane": {
+      "LEEP-ON-Ottawa": {
+        "category": "SHEATHING",
+        "description": "Air barrier membrane (includes taping seams)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.12,
+        "UnitCostLabour": 0.26,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor:circ._pump:and_electrical": {
+      "LEEP-ON-Ottawa": {
+        "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
+        "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor, circ. Pump, and electrical",
+        "units": "ea",
+        "UnitCostMaterials": 1410.0,
+        "UnitCostLabour": 474.97,
+        "note": "Ottawa LEEP builders - July 2014",
+        "date": "July 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat": {
+      "LEEP-ON-Ottawa": {
+        "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
+        "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 1 thermostat",
+        "units": "ea",
+        "UnitCostMaterials": 1567.93,
+        "UnitCostLabour": 474.97,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
+        "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 1 thermostat (ME27)",
+        "units": "ea",
+        "UnitCostMaterials": 1846.0,
+        "UnitCostLabour": 500.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "air_handler:1-zone:ecm_motor:circ._pump:and_electrical": {
+      "LEEP-ON-Ottawa": {
+        "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
+        "description": "Air handler, 1-zone, ECM motor, circ. Pump, and electrical (P9 Rated System, TPF 95)",
+        "units": "ea",
+        "UnitCostMaterials": 1161.6,
+        "UnitCostLabour": 474.97,
+        "note": "Tempco Heating & Sheet Metal, May 13th 2014",
+        "date": "May 13 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
+        "description": "Air handler, 1-zone, ECM motor, circ. Pump, and electrical (P9 Rated System, TPF 92)",
+        "units": "ea",
+        "UnitCostMaterials": 1500.0,
+        "UnitCostLabour": 474.97,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats": {
+      "LEEP-ON-Ottawa": {
+        "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
+        "description": "Air handler, 3-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 3 thermostats",
+        "units": "ea",
+        "UnitCostMaterials": 1959.6,
+        "UnitCostLabour": 474.97,
+        "note": "Hanscomb final report - unit +pumps+electrical",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
+        "description": "Air handler, 3-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 3 thermostats (ME27)",
+        "units": "ea",
+        "UnitCostMaterials": 3406.0,
+        "UnitCostLabour": 600.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "air_sealing_credit_1.0": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Air Sealing Credit 1.0 (flashing joist cavities with spray foam) (assumes 2 floors - divide by 2 if bungalow)",
+        "units": "sf floor area",
+        "UnitCostMaterials": -1.27,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_sealing_credit_1.25": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Air Sealing Credit 1.25 (using sealed rim joist product) (assumes 2 floors - divide by 2 if bungalow)",
+        "units": "sf floor area",
+        "UnitCostMaterials": -1.03,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_sealing_credit_1.75": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Air Sealing Credit 1.75 (caulking framing, airtight boxes and sealing penetrations) (assumes 2 floors - divide by 2 if bungalow)",
+        "units": "sf floor area",
+        "UnitCostMaterials": -0.75,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_sealing_vancouver_row_5.0_ach_to_1.5_ach": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "AIR TIGHTNESS",
+        "description": "Air Sealing Vancouver Row 5.0 ACH to 1.5 ACH",
+        "units": " each",
+        "UnitCostMaterials": 588.0,
+        "UnitCostLabour": 0.0,
+        "note": "E3 ECO Group Report",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "ashphalt_shingles": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ROOF",
+        "description": "Ashphalt shingles",
+        "units": "sf applied",
+        "UnitCostMaterials": 3.3,
+        "UnitCostLabour": 1.2,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "automated_switches": {
+      "LEEP-ON-Ottawa": {
+        "category": "SWITCHING",
+        "description": "Automated switches",
+        "units": "ea",
+        "UnitCostMaterials": 20.0,
+        "UnitCostLabour": 0.0,
+        "note": "In-house estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "base_case_wiring:includes_all_switches:receptacles:cable_and_labour": {
+      "LEEP-ON-Ottawa": {
+        "category": "WIRING",
+        "description": "Base case wiring, includes all switches, receptacles, cable and labour",
+        "units": "ea",
+        "UnitCostMaterials": 2361.99,
+        "UnitCostLabour": 2063.09,
+        "note": "Terry Strack Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "boiler:condensing:90%_afue": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
+        "description": "Boiler, condensing, 90% AFUE (ME27)",
+        "units": "ea",
+        "UnitCostMaterials": 3399.5,
+        "UnitCostLabour": 1500.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "brick": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Brick",
+        "units": "sf applied",
+        "UnitCostMaterials": 7.0,
+        "UnitCostLabour": 8.78,
+        "note": "Hanscomb - Double stud wall analysis",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat": {
+      "LEEP-ON-Ottawa": {
+        "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
+        "description": "CCASHP, 11.7 kW incl. ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
+        "units": "ea",
+        "UnitCostMaterials": 7556.63,
+        "UnitCostLabour": 512.43,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat": {
+      "LEEP-MB-Winnipeg": {
+        "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
+        "description": "CCASHP, 3 ton, 13.5 kW @ -25oC,  incl. ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
+        "units": "ea",
+        "UnitCostMaterials": 12675.0,
+        "UnitCostLabour": 2000.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "ccashp:40:000_bth_cooling:ecm_air_handler:electrical_work": {
+      "LEEP-MB-Winnipeg": {
+        "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
+        "description": "CCASHP, 40,000 BTH (11.7kW) heating and 34000BTU (10kW) cooling, ECM air handler, electrical work",
+        "units": "ea",
+        "UnitCostMaterials": 8157.0,
+        "UnitCostLabour": 935.27,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "ccashp:ductless_mini-splits:mitsubishi_msz-fe12na": {
+      "LEEP-ON-Ottawa": {
+        "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
+        "description": "CCASHP, Ductless Mini-splits, Mitsubishi MSZ-FE12NA ",
+        "units": "ea",
+        "UnitCostMaterials": 2676.48,
+        "UnitCostLabour": 417.37,
+        "note": "Hanscomb Final Report - 6.14",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "cfl": {
+      "LEEP-ON-Ottawa": {
+        "category": "LIGHTING",
+        "description": "CFL",
+        "units": "ea",
+        "UnitCostMaterials": 4.08,
+        "UnitCostLabour": 0.0,
+        "note": "Terry Strack report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "compact_fluorescent_lighting": {
+      "LEEP-MB-Winnipeg": {
+        "category": "LIGHTING",
+        "description": "Compact fluorescent lighting",
+        "units": "ea",
+        "UnitCostMaterials": 3.2,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "concrete_cast-in-place_foundation_wall:203mm:excluding_footings": {
+      "LEEP-ON-Ottawa": {
+        "category": "FOUNDATION WALLS",
+        "description": "Concrete cast-in-place foundation wall, 203mm (8in), excluding footings",
+        "units": "sf wall",
+        "UnitCostMaterials": 7.63,
+        "UnitCostLabour": 1.46,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FOUNDATION WALLS",
+        "description": "Concrete cast-in-place foundation wall, 203mm (8in), excluding footings",
+        "units": "sf wall",
+        "UnitCostMaterials": 2.63,
+        "UnitCostLabour": 3.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "copper_pipe_to_and_from_dwhr_and_dhw_systems": {
+      "LEEP-ON-Ottawa": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "Copper pipe to and from DWHR and DHW systems",
+        "units": "linear feet",
+        "UnitCostMaterials": 33.65,
+        "UnitCostLabour": 5.02,
+        "note": "Hanscomb final report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "dhw_electric_tank": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW electric tank",
+        "units": "ea",
+        "UnitCostMaterials": 500.0,
+        "UnitCostLabour": 175.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_electric_tankless": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW electric tankless",
+        "units": "ea",
+        "UnitCostMaterials": 860.0,
+        "UnitCostLabour": 175.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_heat_pump_water_heater": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW heat pump water heater",
+        "units": "ea",
+        "UnitCostMaterials": 2600.0,
+        "UnitCostLabour": 175.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_heat_pump_water_heater:50_gal:ef_2.3": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW heat pump water heater, 50 gal, EF 2.3",
+        "units": "ea",
+        "UnitCostMaterials": 2130.86,
+        "UnitCostLabour": 319.22,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_heat_pump_water_heater:50_gal:ef_2.35": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW heat pump water heater, 50 gal, EF 2.35 (Rheem)",
+        "units": "ea",
+        "UnitCostMaterials": 1999.0,
+        "UnitCostLabour": 319.22,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_heater:gas_fuelled:on-demand:ef_0.94": {
+      "LEEP-ON-Ottawa": {
+        "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
+        "description": "DHW heater, gas fuelled, on-demand, EF 0.94",
+        "units": "ea",
+        "UnitCostMaterials": 1492.07,
+        "UnitCostLabour": 251.02,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "dhw_heater:gas_fuelled:on-demand:ef_0.95": {
+      "LEEP-ON-Ottawa": {
+        "category": "DHW",
+        "description": "DHW heater, gas fuelled, on-demand, EF 0.95 (P9 Rated System, TPF 95)",
+        "units": "ea",
+        "UnitCostMaterials": 2037.6,
+        "UnitCostLabour": 251.02,
+        "note": "Tempco Heating & Sheet Metal, May 13th 2014",
+        "date": "May 13 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "dhw_heater:gas_fuelled:on-demand:ef_0.96:225_l/day_@_55oc:me19": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW heater, gas fuelled, on-demand, EF 0.96, 225 L/day @ 55oC - ME19",
+        "units": "ea",
+        "UnitCostMaterials": 1775.0,
+        "UnitCostLabour": 500.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_tank:electric:246_l:ef_0.89": {
+      "LEEP-ON-Ottawa": {
+        "category": "DHW",
+        "description": "DHW tank, electric, 246 L (65 USG),EF 0.89",
+        "units": "ea",
+        "UnitCostMaterials": 490.0,
+        "UnitCostLabour": 170.39,
+        "note": "Hanscomb - Received Quotes and Cost Analysis",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.60:225_l/day_@_55oc:incl_vent_kit": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DHW",
+        "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.60, 225 L/day @ 55oC, incl vent kit",
+        "units": "ea",
+        "UnitCostMaterials": 1030.0,
+        "UnitCostLabour": 250.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.62": {
+      "LEEP-ON-Ottawa": {
+        "category": "DHW",
+        "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.62",
+        "units": "ea",
+        "UnitCostMaterials": 893.67,
+        "UnitCostLabour": 323.82,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67": {
+      "LEEP-ON-Ottawa": {
+        "category": "SOLAR DOMESTIC HOT WATER",
+        "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.67",
+        "units": "ea",
+        "UnitCostMaterials": 916.77,
+        "UnitCostLabour": 323.82,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "dhw_tank:ng:246_litres:power_vented:ef_0.60": {
+      "LEEP-ON-Ottawa": {
+        "category": "DHW",
+        "description": "DHW tank, NG, 246 litres (65 USG), power vented, EF 0.60",
+        "units": "ea",
+        "UnitCostMaterials": 914.91,
+        "UnitCostLabour": 323.82,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "drywall:13mm:mudding:taping:priming_&_painting": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DRYWALL",
+        "description": "Drywall, 13mm (1/2in), mudding, taping, priming & painting",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.47,
+        "UnitCostLabour": 2.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "ducting:central_forced_air": {
+      "LEEP-ON-Ottawa": {
+        "category": "DUCTING",
+        "description": "Ducting, central forced air",
+        "units": "sq.ft. floor ",
+        "UnitCostMaterials": 0.86,
+        "UnitCostLabour": 0.44,
+        "note": "Ottawa LEEP builders - July 2014",
+        "date": "July 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "DUCTING",
+        "description": "Ducting, central forced air",
+        "units": "ea",
+        "UnitCostMaterials": 2730.0,
+        "UnitCostLabour": 800.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "ducting:direct-duct_hrv": {
+      "LEEP-BC-Vancouver": {
+        "category": "DUCTING",
+        "description": "Ducting - direct-duct HRV",
+        "units": "ea",
+        "UnitCostMaterials": 1000.0,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "ducting:exhaust_fan_vent": {
+      "LEEP-BC-Vancouver": {
+        "category": "DUCTING",
+        "description": "Ducting - Exhaust fan vent",
+        "units": "ea",
+        "UnitCostMaterials": 500.0,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "ducting:zoned_forced_air": {
+      "LEEP-ON-Ottawa": {
+        "category": "DUCTING",
+        "description": "Ducting, zoned forced air",
+        "units": "sq.ft. floor ",
+        "UnitCostMaterials": 0.9,
+        "UnitCostLabour": 0.48,
+        "note": "Ottawa LEEP builders - July 2014",
+        "date": "July 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "ductless_mini_split:13600_btu_heating:12000_btu_colling:seer_23.0:hspf_10.6_w/_backup": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "Ductless Mini Split, 13600 BTU heating, 12000 BTU colling, SEER 23.0, HSPF 10.6 (cond&evap) w/ backup",
+        "units": "ea",
+        "UnitCostMaterials": 5636.04,
+        "UnitCostLabour": 1598.7,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "dwhr_unit:152cm_supply": {
+      "LEEP-MB-Winnipeg": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DWHR unit, 152cm (60in), 76mm (3in) drain, 13mm (1/2in) supply",
+        "units": "ea",
+        "UnitCostMaterials": 717.2,
+        "UnitCostLabour": 175.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DWHR unit, 152cm (60in), 76mm (3in) drain, 13mm (1/2in) supply",
+        "units": "ea",
+        "UnitCostMaterials": 717.2,
+        "UnitCostLabour": 37.65,
+        "note": "Manitoba LEEP - Watercycles pricing",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "dwhr_unit:91cm_supply": {
+      "LEEP-ON-Ottawa": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DWHR unit, 91cm (36in), 102mm (4in) drain, 13mm (1/2in) supply",
+        "units": "ea",
+        "UnitCostMaterials": 700.0,
+        "UnitCostLabour": 37.65,
+        "note": "Hanscomb final report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DWHR unit, 91cm (36in), 76mm (3in) drain, 13mm (1/2in) supply",
+        "units": "ea",
+        "UnitCostMaterials": 531.0,
+        "UnitCostLabour": 175.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DWHR unit, 91cm (36in), 76mm (3in) drain, 13mm (1/2in) supply",
+        "units": "ea",
+        "UnitCostMaterials": 531.0,
+        "UnitCostLabour": 37.65,
+        "note": "Manitoba LEEP - Watercycles pricing",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "electricity_generated:microfit:rooftop_solar": {
+      "LEEP-ON-Ottawa": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity generated, microFIT, rooftop solar",
+        "units": "kWh",
+        "UnitCostMaterials": -0.394,
+        "UnitCostLabour": 0.0,
+        "note": "MicroFIT updated rate as per March 2012",
+        "date": "March 2012",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity generated, microFIT, rooftop solar",
+        "units": "kWh",
+        "UnitCostMaterials": -0.802,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "electricity_generated:microfit:rooftop_wind": {
+      "LEEP-ON-Ottawa": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity generated, microFIT, rooftop wind",
+        "units": "kWh",
+        "UnitCostMaterials": -0.072,
+        "UnitCostLabour": 0.0,
+        "note": "MicroFIT updated rate as per March 2012",
+        "date": "March 2012",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity generated, microFIT, rooftop wind",
+        "units": "kWh",
+        "UnitCostMaterials": -0.135,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "electricity_use": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity use",
+        "units": "kWh",
+        "UnitCostMaterials": 0.125,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "electricity_use_savings": {
+      "LEEP-ON-Ottawa": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity use savings",
+        "units": "kWh",
+        "UnitCostMaterials": 0.072,
+        "UnitCostLabour": 0.0,
+        "note": "LEEP energy rates based on OEB published rates for Winter 2011/2012",
+        "date": "2012",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "ENERGY PRICING",
+        "description": "Electricity use savings",
+        "units": "kWh",
+        "UnitCostMaterials": 0.08,
+        "UnitCostLabour": 0.0,
+        "note": "LEEP energy rates based on OEB published rates for Winter 2011/2012",
+        "date": "2012",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "engineered_tji_walls_with_eps:12in:including_plating": {
+      "LEEP-MB-Winnipeg": {
+        "category": "PANELIZED WALLS",
+        "description": "Engineered TJI Walls with EPS, 12in, including plating",
+        "units": "sf wall",
+        "UnitCostMaterials": 8.0,
+        "UnitCostLabour": 1.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "engineered_tji_walls_with_eps:6in:including_plating": {
+      "LEEP-MB-Winnipeg": {
+        "category": "PANELIZED WALLS",
+        "description": "Engineered TJI Walls with EPS, 6in, including plating",
+        "units": "sf wall",
+        "UnitCostMaterials": 6.0,
+        "UnitCostLabour": 1.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "engineered_tji_walls_with_eps:8in:including_plating": {
+      "LEEP-MB-Winnipeg": {
+        "category": "PANELIZED WALLS",
+        "description": "Engineered TJI Walls with EPS, 8in, including plating",
+        "units": "sf wall",
+        "UnitCostMaterials": 7.0,
+        "UnitCostLabour": 1.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "exhaust_fans_and_controls": {
+      "LEEP-BC-Vancouver": {
+        "category": "HRV",
+        "description": "Exhaust fans and controls",
+        "units": "ea",
+        "UnitCostMaterials": 500.0,
+        "UnitCostLabour": 280.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "exterior_dampproofing": {
+      "LEEP-ON-Ottawa": {
+        "category": "FOUNDATION WALLS",
+        "description": "Exterior dampproofing",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.5,
+        "UnitCostLabour": 0.18,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "exterior_waterproofing_&_drainage": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FOUNDATION WALLS",
+        "description": "Exterior waterproofing & drainage",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.08,
+        "UnitCostLabour": 0.18,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "fasteners_for_1in_thick_exterior_insulation": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Fasteners for 1in thick exterior insulation (4-1/2in)",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.12,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "fasteners_for_2in_thick_exterior_insulation": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Fasteners for 2in thick exterior insulation (5-1/2in)",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.14,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "fasteners_for_4in_thick_exterior_insulation": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Fasteners for 4in thick exterior insulation (7-1/2in)",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.23,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "floor_construction": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Floor construction (TJI+subfloor+gypsum+strapping)",
+        "units": "sf applied",
+        "UnitCostMaterials": 4.57,
+        "UnitCostLabour": 2.57,
+        "note": "Hanscomb - Double stud wall analysis",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "floor_slab:102mm:cast-in-place": {
+      "LEEP-MB-Winnipeg": {
+        "category": "BASEMENT FLOOR",
+        "description": "Floor slab, 102mm (4in), cast-in-place",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.32,
+        "UnitCostLabour": 0.65,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "floor_slab:76mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Floor slab, 76mm (3in), cast-in-place (Includes VB)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.65,
+        "UnitCostLabour": 1.26,
+        "note": "Hanscomb Final Report - aggregated average of material and labour (slab + granular fill)",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "floor_slab:76mm:cast-in-place": {
+      "LEEP-MB-Winnipeg": {
+        "category": "BASEMENT FLOOR",
+        "description": "Floor slab, 76mm (3in), cast-in-place",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.99,
+        "UnitCostLabour": 0.65,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:advanced:38x140mm_o.c": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, advanced, 38x140mm (2inx6in) @ 610mm (24in.) o.c",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.6,
+        "UnitCostLabour": 0.75,
+        "note": "Hanscomb - aggregated average of material and labour for advanced framed walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, advanced, 38x140mm (2inx6in) @ 610mm (24in.) o.c",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.59,
+        "UnitCostLabour": 0.75,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:conventional:38x140mm_o.c.": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, conventional, 38x140mm (2inx6in) @ 406mm (16in.) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.63,
+        "UnitCostLabour": 0.81,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, conventional, 38x140mm (2inx6in) @ 406mm (16in.) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.55,
+        "UnitCostLabour": 0.81,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:conventional:38x89mm_o.c.": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, conventional, 38x89mm (2inx4in) @ 406mm (16in.) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.46,
+        "UnitCostLabour": 0.81,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, conventional, 38x89mm (2inx4in) @ 406mm (16in.) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 0.81,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:double_stud:vip_wall": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, double stud, VIP wall",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.49,
+        "UnitCostLabour": 1.1,
+        "note": "Hanscomb - aggregated average of material and labour for VIP walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "framing:double_stud_wall:305mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, double stud wall, 305mm (12in) (Maintian existing footprint)",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.64,
+        "UnitCostLabour": 1.19,
+        "note": "Hanscomb - aggregated average of material and labour for double stud walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, double stud wall, 305mm (16in)",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.7,
+        "UnitCostLabour": 1.6,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:exterior:vip_wall_assembly_#1": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, exterior, VIP wall assembly #1 ",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.33,
+        "UnitCostLabour": 4.01,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:exterior:vip_wall_assembly_#2": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, exterior, VIP wall assembly #2",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 5.61,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:interior_basement:38x140mm_o.c.": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, interior basement, 38x140mm (2inx6in) @ 610mm (24in) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 0.51,
+        "note": "Estimate based on material cost only",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "framing:interior_basement:38x89mm_o.c.": {
+      "LEEP-ON-Ottawa": {
+        "category": "FRAMING",
+        "description": "Framing, interior basement, 38x89mm (2inx4in) @ 610mm (24in) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.24,
+        "UnitCostLabour": 0.51,
+        "note": "Hanscomb - aggregated average of material and labour for basement framing",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, interior basement, 38x89mm (2inx4in) @ 610mm (24in) o.c.",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.65,
+        "UnitCostLabour": 0.94,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:truss_wall:302mm_i-joists_[enermodal_estimate]": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, truss wall, 302mm i-joists (11-7/8in) [Enermodal estimate]",
+        "units": "sf wall",
+        "UnitCostMaterials": 4.4,
+        "UnitCostLabour": 0.89,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:truss_wall:302mm_i-joists_[hanscomb_estimate]": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, truss wall, 302mm i-joists (11-7/8in) [Hanscomb estimate]",
+        "units": "sf wall",
+        "UnitCostMaterials": 2.02,
+        "UnitCostLabour": 1.23,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "framing:truss_wall:406mm_i-joists:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Framing, truss wall, 406mm i-joists (16in) - Hanscomb",
+        "units": "sf wall",
+        "UnitCostMaterials": 3.61,
+        "UnitCostLabour": 1.23,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock": {
+      "LEEP-ON-Ottawa": {
+        "category": "FURNACES",
+        "description": "Furnace, 94% AFUE VS 2 stage, 70 Mbtuh input, 19.5 kW max output, incl. vent kit & HRV interlock",
+        "units": "ea",
+        "UnitCostMaterials": 2149.33,
+        "UnitCostLabour": 191.45,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "FURNACES",
+        "description": "Furnace, 94% AFUE VS 2 stage, 70 Mbtuh input, 19.5 kW max output, incl. vent kit & HRV interlock",
+        "units": "ea",
+        "UnitCostMaterials": 2149.33,
+        "UnitCostLabour": 1000.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "furnace:95%_afue_ecm_single_stage_motor:90_mbtuh:13_kw_min_output": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "FURNACES",
+        "description": "Furnace, 95% AFUE ECM single stage motor, 90 Mbtuh, 13 kW min output",
+        "units": "ea",
+        "UnitCostMaterials": 1825.0,
+        "UnitCostLabour": 191.45,
+        "note": "Odessa Homes base furnace Vancouver",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "furnace:96%_afue_ecm_motor:30_mbtuh_input:8.75_kw_max_output": {
+      "LEEP-ON-Ottawa": {
+        "category": "FURNACES",
+        "description": "Furnace, 96% AFUE ECM motor, 30 Mbtuh input, 8.75 kW max output",
+        "units": "ea",
+        "UnitCostMaterials": 1980.0,
+        "UnitCostLabour": 191.45,
+        "note": "Doug Tarry Homes May 13th, Dettson Industries presentation to LEEP builders",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "furnace_94%_afue:14kw_output:psc_motor": {
+      "LEEP-ON-Ottawa": {
+        "category": "FURNACES",
+        "description": "Furnace 94% AFUE, 14kW output, PSC motor",
+        "units": "ea",
+        "UnitCostMaterials": 750.0,
+        "UnitCostLabour": 191.45,
+        "note": "Ottawa LEEP builders - July 2014",
+        "date": "July 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "general_roofing": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "General roofing",
+        "units": "sf applied",
+        "UnitCostMaterials": 9.36,
+        "UnitCostLabour": 6.67,
+        "note": "Hanscomb - Double stud wall analysis",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "generic_addition_for_thick_walls": {
+      "LEEP-BC-Vancouver": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Generic addition for thick walls",
+        "units": "sf applied",
+        "UnitCostMaterials": 22.16,
+        "UnitCostLabour": 17.07,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters": {
+      "LEEP-MB-Winnipeg": {
+        "category": "GROUND SOURCE HEAT PUMP",
+        "description": "GSHP, 3 ton, 8.5 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
+        "units": "ea",
+        "UnitCostMaterials": 17108.0,
+        "UnitCostLabour": 3000.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "gshp:4_ton:11_kw:incl._pump_ass.:drillin_&_piping:ethanol:aux._heaters_&_collateral_costs.": {
+      "LEEP-ON-Ottawa": {
+        "category": "GROUND SOURCE HEAT PUMP",
+        "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., drillin & piping, ethanol, aux. heaters & collateral costs.",
+        "units": "ea",
+        "UnitCostMaterials": 18469.67,
+        "UnitCostLabour": 15085.45,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters": {
+      "LEEP-MB-Winnipeg": {
+        "category": "GROUND SOURCE HEAT PUMP",
+        "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
+        "units": "ea",
+        "UnitCostMaterials": 20637.5,
+        "UnitCostLabour": 3000.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters": {
+      "LEEP-MB-Winnipeg": {
+        "category": "GROUND SOURCE HEAT PUMP",
+        "description": "GSHP, 5 ton, 14 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
+        "units": "ea",
+        "UnitCostMaterials": 23777.0,
+        "UnitCostLabour": 3000.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "hrv:conventional_sre_60%_@_0:55%_@_-25": {
+      "LEEP-ON-Ottawa": {
+        "category": "HRV",
+        "description": "HRV, conventional SRE 60% @ 0, 55% @ -25",
+        "units": "ea",
+        "UnitCostMaterials": 1079.0,
+        "UnitCostLabour": 280.98,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "hrv:conventional_sre_70%_@_0:61%_@_-25": {
+      "LEEP-ON-Ottawa": {
+        "category": "HRV",
+        "description": "HRV, conventional SRE 70% @ 0, 61% @ -25",
+        "units": "ea",
+        "UnitCostMaterials": 979.0,
+        "UnitCostLabour": 280.98,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "hrv:energy_star:incl._ducting": {
+      "LEEP-MB-Winnipeg": {
+        "category": "HRV",
+        "description": "HRV, Energy Star, incl. ducting",
+        "units": "ea",
+        "UnitCostMaterials": 1235.0,
+        "UnitCostLabour": 1500.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "hrv:high_performer:78%_@_0:72%_@_-25_with_ecm": {
+      "LEEP-ON-Ottawa": {
+        "category": "HRV",
+        "description": "HRV, high performer, 78% @ 0, 72% @ -25 with ECM",
+        "units": "ea",
+        "UnitCostMaterials": 1823.0,
+        "UnitCostLabour": 280.98,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "hrv_/_erv:high_performance:incl._ducting": {
+      "LEEP-MB-Winnipeg": {
+        "category": "HRV",
+        "description": "HRV / ERV, high performance, incl. ducting",
+        "units": "ea",
+        "UnitCostMaterials": 1852.5,
+        "UnitCostLabour": 1800.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "icf_wall:152mm": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "ICF WALLS",
+        "description": "ICF wall, 152mm (6in) core, 165mm (2-1/4in, 4-1/4in) EPS includes: damproofing and drywall (Hanscomb)",
+        "units": "sf wall",
+        "UnitCostMaterials": 8.49,
+        "UnitCostLabour": 8.97,
+        "note": "Hanscomb Report + material cost of additional EPS",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "icf_wall:152mm_eps_insulation_both_sides:excluding_footings": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ICF WALLS",
+        "description": "ICF wall, 152mm (6in) core, 57mm (2-1/4in) EPS insulation both sides, excluding footings",
+        "units": "sf wall",
+        "UnitCostMaterials": 14.43,
+        "UnitCostLabour": 3.01,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "icf_wall:152mm_eps_insulation_includes:damproofing_and_drywall": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "ICF WALLS",
+        "description": "ICF wall, 152mm (6in) core, 178mm (7in) EPS insulation includes: damproofing and drywall",
+        "units": "sf wall",
+        "UnitCostMaterials": 8.4,
+        "UnitCostLabour": 4.2,
+        "note": "Experienced Builder",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "icf_wall:152mm_includes:damproofing_and_drywall": {
+      "LEEP-ON-Ottawa": {
+        "category": "ICF WALLS",
+        "description": "ICF wall, 152mm (6in) core, 57mm (2-1/4in) includes: damproofing and drywall",
+        "units": "sf wall",
+        "UnitCostMaterials": 8.4,
+        "UnitCostLabour": 4.2,
+        "note": "Teixeira Construction",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "icf_wall:203mm_eps_insulation_both_sides:excluding_footings": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ICF WALLS",
+        "description": "ICF wall, 203mm (8in) core, 57mm (2-1/4in) EPS insulation both sides, excluding footings",
+        "units": "sf wall",
+        "UnitCostMaterials": 19.83,
+        "UnitCostLabour": 3.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "icf_wall:6in_core:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ICF WALLS",
+        "description": "ICF wall, 6in core - Hanscomb",
+        "units": "sf wall",
+        "UnitCostMaterials": 8.77,
+        "UnitCostLabour": 9.35,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "incandescent_bulb": {
+      "LEEP-ON-Ottawa": {
+        "category": "LIGHTING",
+        "description": "Incandescent bulb",
+        "units": "ea",
+        "UnitCostMaterials": 1.12,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "incandescent_lighting": {
+      "LEEP-MB-Winnipeg": {
+        "category": "LIGHTING",
+        "description": "Incandescent lighting",
+        "units": "ea",
+        "UnitCostMaterials": 1.12,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "incremental_fastener_cost_to_go_to_4in_thick_ext_insulation": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Incremental fastener cost to go to 4in thick ext insulation",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.09,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:basement_slab:xps:38mm": {
+      "LEEP-MB-Winnipeg": {
+        "category": "BASEMENT FLOOR",
+        "description": "Insulation, basement slab, XPS, 38mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.16,
+        "UnitCostLabour": 0.33,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:basement_slab:xps_type_4:38mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "BASEMENT FLOOR",
+        "description": "Insulation, basement slab, XPS type 4, 38mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.82,
+        "UnitCostLabour": 0.68,
+        "note": "Minto - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:cellulose": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, cellulose (dense pack, 16in deep,3.5lbs/ft3 density)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.82,
+        "UnitCostLabour": 1.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:cellulose_$8.07_/_9ft2": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, cellulose (dense pack wall application (3lbs/ft3) , material only) $8.07 / 9ft2",
+        "units": "cu. Ft",
+        "UnitCostMaterials": 0.9,
+        "UnitCostLabour": 0.99,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:cellulose_dense-pack:12in_deep:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, cellulose dense-pack, 12in deep - Hanscomb",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.75,
+        "UnitCostLabour": 1.72,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:cellulose_dense-pack:16in_deep:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, cellulose dense-pack, 16in deep - Hanscomb (extrapolated)",
+        "units": "sf applied",
+        "UnitCostMaterials": 3.66,
+        "UnitCostLabour": 2.29,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:cellulose_dense-pack:1ft3:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, cellulose dense-pack, 1ft3 - Hanscomb",
+        "units": "cu.ft.",
+        "UnitCostMaterials": 3.94,
+        "UnitCostLabour": 0.99,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:eps_type_1:rigid:25mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 1, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 1, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_1:rigid:38mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 1, rigid, 38mm (1-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.5,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 1, rigid, 38mm (1-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.5,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_1:rigid:51mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 1, rigid, 51mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.68,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 1, rigid, 51mm (4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.44,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_2:rigid:25mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.44,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.44,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_2:rigid:38mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 38mm (1-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.66,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 38mm (1-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.66,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_2:rigid:51mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 51mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.87,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 51mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.87,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_2:rigid:76mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 76mm (3in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.31,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid, 76mm (3in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.31,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:eps_type_2:rigid_4in": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid 4in",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.02,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, EPS Type 2, rigid 4in",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.02,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:polyisocyanurate:19mm": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, polyisocyanurate, 19mm (3/4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.9,
+        "UnitCostLabour": 0.36,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:polyisocyanurate:foil-faced:25mm": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, polyisocyanurate, foil-faced, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.7,
+        "UnitCostLabour": 0.36,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:polyisocyanurate_51mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, Polyisocyanurate 51mm (4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.53,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, Polyisocyanurate 51mm (4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.85,
+        "UnitCostLabour": 0.68,
+        "note": "Northern Building Supply Vancouver",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:r10_batt": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R10 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.39,
+        "UnitCostLabour": 0.23,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r12_batt": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R12 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 0.14,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls, Minto labour (June 2014)",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R12 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.46,
+        "UnitCostLabour": 0.23,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r12_batt:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R12 batt - Hanscomb (need to update labour) ",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.36,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r14_batt": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R14 batt (mineral wool for 2x4 walls)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.63,
+        "UnitCostLabour": 0.23,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R14 batt (mineral wool for 2x4 walls)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.64,
+        "UnitCostLabour": 0.23,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r20_batt": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R20 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.41,
+        "UnitCostLabour": 0.14,
+        "note": "Minto - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R20 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.62,
+        "UnitCostLabour": 0.22,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r22_batt": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R22 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.71,
+        "UnitCostLabour": 0.14,
+        "note": "Minto - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R22 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.17,
+        "UnitCostLabour": 0.43,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r24_batt": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R24 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.12,
+        "UnitCostLabour": 0.28,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:r28_batt": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R28 batt (fmineral wool, for 2x8 stud walls 16inOC)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.13,
+        "UnitCostLabour": 0.43,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r31_batt": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R31 batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.1,
+        "UnitCostLabour": 0.28,
+        "note": "NRCan Estimate - 02/05/2012",
+        "date": "02/05/2012",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:r36_dense-pack_cellulose": {
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, R36 dense-pack cellulose (10in double stud wall only)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.29,
+        "UnitCostLabour": 1.7,
+        "note": "Scaled estimate based on Hanscomb report.",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:r40_batt": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R40 batt (11in depp) ",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.86,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:r40_dense-pack_cellulose": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, R40 dense-pack cellulose (double stud wall only)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.75,
+        "UnitCostLabour": 1.7,
+        "note": "Hanscomb - agergated average",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, R40 dense-pack cellulose (double stud wall only)",
+        "units": "cu.ft.",
+        "UnitCostMaterials": 2.86,
+        "UnitCostLabour": 0.56,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:rigid:102mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, rigid, 102mm (4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.84,
+        "UnitCostLabour": 0.51,
+        "note": "Hanscomb Cost report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, rigid, 102mm (4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.84,
+        "UnitCostLabour": 0.68,
+        "note": "Hanscomb Cost report/Ottawa LEEP Builders",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:rigid:25mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.96,
+        "UnitCostLabour": 0.51,
+        "note": "Hanscomb Cost report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.96,
+        "UnitCostLabour": 0.68,
+        "note": "Hanscomb Cost report/Ottawa LEEP Builders",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:rigid:51mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, rigid, 51mm (2 1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.02,
+        "UnitCostLabour": 0.51,
+        "note": "Hanscomb Cost report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, rigid, 51mm (2 1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.02,
+        "UnitCostLabour": 0.68,
+        "note": "Hanscomb Cost report/Ottawa LEEP Builders",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:spray_foam:2pound_urethane:7.5in_thickness": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, spray foam, 2pound urethane, 7.5in thickness (R-45)",
+        "units": "sf applied",
+        "UnitCostMaterials": 4.95,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:spray_foam:38mm:r6/inch": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, spray foam, 38mm (2in), R6/inch",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.64,
+        "UnitCostLabour": 0.86,
+        "note": "Minto - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, spray foam, 38mm (2in), R6/inch",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.53,
+        "UnitCostLabour": 0.86,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:spray_foam_2pd_urethane:5.5in_thickness": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, spray foam 2pd urethane, 5.5in thickness (R-33)",
+        "units": "sf applied",
+        "UnitCostMaterials": 3.65,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:vacuum_insulated_panel:10mm:installed_within_stud_cavities_only": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, Vacuum Insulated Panel, 10mm, installed within stud cavities only",
+        "units": "sf applied",
+        "UnitCostMaterials": 11.74,
+        "UnitCostLabour": 0.48,
+        "note": "NRC cost data",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:vacuum_insulated_panel:15mm:installed_over_studs": {
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, Vacuum Insulated Panel, 15mm, installed over studs",
+        "units": "sf applied",
+        "UnitCostMaterials": 10.25,
+        "UnitCostLabour": 0.13,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:vacuum_insulated_panel:15mm:installed_within_stud_cavities_only": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, Vacuum Insulated Panel, 15mm, installed within stud cavities only",
+        "units": "sf applied",
+        "UnitCostMaterials": 6.5,
+        "UnitCostLabour": 0.48,
+        "note": "Chris Mattock IVIS Presentation 2011",
+        "date": "2011",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, Vacuum Insulated Panel, 15mm, installed within stud cavities only",
+        "units": "sf applied",
+        "UnitCostMaterials": 10.25,
+        "UnitCostLabour": 0.27,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "insulation:vacuum_insulated_panel:20mm:installed_within_stud_cavities_only": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, Vacuum Insulated Panel, 20mm, installed within stud cavities only",
+        "units": "sf applied",
+        "UnitCostMaterials": 14.64,
+        "UnitCostLabour": 0.48,
+        "note": "NRC cost data",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "insulation:xps_type_3:rigid:25mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 3, rigid, 25mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.96,
+        "UnitCostLabour": 0.68,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 3, rigid, 25mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.2,
+        "UnitCostLabour": 0.51,
+        "note": "Owens Corning Canada",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 3, rigid, 25mm (4in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.92,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:xps_type_4:rigid:25mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.84,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 25mm (1in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.84,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:xps_type_4:rigid:38mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 38mm (1-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.3,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 38mm (1-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.3,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:xps_type_4:rigid:51mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 51mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.67,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 51mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.67,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:xps_type_4:rigid:51mm:hanscomb": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 51mm (2in) - Hanscomb",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.86,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 51mm (2in) - Hanscomb",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.86,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation:xps_type_4:rigid:64mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 64mm (2-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.67,
+        "UnitCostLabour": 0.51,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation, XPS Type 4, rigid, 64mm (2-1/2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.67,
+        "UnitCostLabour": 0.68,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._100mm": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 100mm (2in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.68,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._100mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 100mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.51,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 100mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.75,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 100mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.68,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._150mm": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 150mm (6in) ",
+        "units": "sf applied",
+        "UnitCostMaterials": 5.08,
+        "UnitCostLabour": 0.68,
+        "note": "Northern Building Supply Vancouver",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._150mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 150mm (6in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 5.08,
+        "UnitCostLabour": 0.51,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 150mm (6in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 5.08,
+        "UnitCostLabour": 0.68,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._89mm": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) ",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.35,
+        "UnitCostLabour": 0.68,
+        "note": "Proskiw + IN Network Database",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._89mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.35,
+        "UnitCostLabour": 0.51,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.35,
+        "UnitCostLabour": 0.75,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.35,
+        "UnitCostLabour": 0.68,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "integrated_mechanical_system:csa_p.10:otfp_0.91:incl._space_heating:dhw:and_hrv": {
+      "LEEP-ON-Ottawa": {
+        "category": "INTEGRATED MECHANICAL SYSTEMS",
+        "description": "Integrated mechanical system, CSA P.10, OTFP 0.91, incl. space heating, DHW, and HRV",
+        "units": "ea",
+        "UnitCostMaterials": 7393.53,
+        "UnitCostLabour": 675.47,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INTEGRATED MECHANICAL SYSTEMS",
+        "description": "Integrated mechanical system, CSA P.10, OTFP 0.91, incl. space heating, DHW, and HRV",
+        "units": "ea",
+        "UnitCostMaterials": 7995.0,
+        "UnitCostLabour": 1750.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "led": {
+      "LEEP-ON-Ottawa": {
+        "category": "LIGHTING",
+        "description": "LED",
+        "units": "ea",
+        "UnitCostMaterials": 18.97,
+        "UnitCostLabour": 0.0,
+        "note": "Terry Strack report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "low_profile:designer_electric_resistance_wall_heaters": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ELECTRIC RESISTANCE BASEBOARDS",
+        "description": "Low profile, designer electric resistance wall heaters",
+        "units": "kW",
+        "UnitCostMaterials": 175.0,
+        "UnitCostLabour": 150.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "micro-chp_system:backup_furnace_incl._vent_kit:indirect_dhw_tank_&_hrv_interlock": {
+      "LEEP-ON-Ottawa": {
+        "category": "MICRO-COMBINED HEAT AND POWER TECHNOLOGY",
+        "description": "Micro-CHP system, backup furnace (95% AFUE) incl. vent kit, indirect DHW tank & HRV interlock",
+        "units": "ea",
+        "UnitCostMaterials": 22620.0,
+        "UnitCostLabour": 2250.0,
+        "note": "In-house estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "natural_gas_savings": {
+      "LEEP-ON-Ottawa": {
+        "category": "ENERGY PRICING",
+        "description": "Natural gas savings",
+        "units": "m3",
+        "UnitCostMaterials": 0.208959,
+        "UnitCostLabour": 0.0,
+        "note": "LEEP energy rates based on OEB published rates for Winter 2011/2012",
+        "date": "2012",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "ENERGY PRICING",
+        "description": "Natural gas savings",
+        "units": "m3",
+        "UnitCostMaterials": 0.3494,
+        "UnitCostLabour": 0.0,
+        "note": "LEEP energy rates based on OEB published rates for Winter 2011/2012",
+        "date": "2012",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "natural_gas_use": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ENERGY PRICING",
+        "description": "Natural gas use",
+        "units": "m3",
+        "UnitCostMaterials": 0.51,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "no_accomodation_for_solar": {
+      "LEEP-ON-Ottawa": {
+        "category": "SOLAR READY",
+        "description": "No accomodation for solar",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "no_renewable_energy_system_installed": {
+      "LEEP-ON-Ottawa": {
+        "category": "PHOTOVOLTAIC SYSTEMS",
+        "description": "No renewable energy system installed",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.0,
+        "note": "0.00",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "osb:12.5mm:hanscomb": {
+      "LEEP-MB-Winnipeg": {
+        "category": "SHEATHING",
+        "description": "OSB, 12.5mm (1/2in) - Hanscomb",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.22,
+        "UnitCostLabour": 0.36,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "osb:12mm": {
+      "LEEP-ON-Ottawa": {
+        "category": "SHEATHING",
+        "description": "OSB, 12mm (7/16in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.26,
+        "UnitCostLabour": 0.0,
+        "note": "Minto and Cardel Homes - Installation cost usually included with framing (June 2014)",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "SHEATHING",
+        "description": "OSB, 12mm (7/16in)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.21,
+        "UnitCostLabour": 0.36,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "passive_solar_design": {
+      "LEEP-ON-Ottawa": {
+        "category": "PASSIVE SOLAR DESIGN",
+        "description": "Passive solar design (RC03)",
+        "units": "ea",
+        "UnitCostMaterials": 22660.0,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "pv_complete_system": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "PV complete system (235W Conergy modules, racking, cabling, connectors, inverters, power box)",
+        "units": "kW DCp",
+        "UnitCostMaterials": 4754.0,
+        "UnitCostLabour": 1149.41,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "pvc_drain_stack": {
+      "LEEP-ON-Ottawa": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "PVC drain stack",
+        "units": "linear feet",
+        "UnitCostMaterials": 5.0,
+        "UnitCostLabour": 5.02,
+        "note": "Hanscomb final report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "r100:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CEILING",
+        "description": "R100 - cost including materials (insulation and 21in raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 3.49,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "r40:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-BC-Vancouver": {
+        "category": "CEILING INSULATION",
+        "description": "R40 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 1.42,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "r50:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CEILING",
+        "description": "R50 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 1.78,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "r60:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CEILING",
+        "description": "R60 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 2.04,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "r70:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CEILING",
+        "description": "R70 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 2.44,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "r80:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CEILING",
+        "description": "R80 - cost including materials (insulation and 21in raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 2.79,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "r90:cost_including_materials:labour:mark-up_and_taxes": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CEILING",
+        "description": "R90 - cost including materials (insulation and 21in raised-heel truss), labour, mark-up and taxes",
+        "units": "sf attic",
+        "UnitCostMaterials": 3.14,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "roof-mounted_wind_turbine:3.5_kw_@_12.5_m/s": {
+      "LEEP-ON-Ottawa": {
+        "category": "OTHER",
+        "description": "Roof-mounted wind turbine, 3.5 kW @ 12.5 m/s (RC10)",
+        "units": "ea",
+        "UnitCostMaterials": 29362.1,
+        "UnitCostLabour": 2867.37,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Roof-mounted wind turbine, 3.5 kW @ 12.5 m/s (RC10)",
+        "units": "ea",
+        "UnitCostMaterials": 20000.0,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "selective_vapour_membrain": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Selective vapour membrain",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.22,
+        "UnitCostLabour": 0.28,
+        "note": "Estimate based on online pricing - builder markup need to confirm going forward.",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "self_sealing_vapour_permeable_air_barrier_membrane": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "SHEATHING",
+        "description": "Self sealing vapour permeable air barrier membrane (includes taping seams)",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.18,
+        "UnitCostLabour": 0.26,
+        "note": "RDC Fine Homes",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "solar_dhw:1_flat_plate_colelctor:270l_tank:electric_water_heater": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar DHW, 1 flat plate colelctor, 270L tank, electric water heater",
+        "units": "ea",
+        "UnitCostMaterials": 4846.0,
+        "UnitCostLabour": 1658.84,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_dhw:2_flat_plate_colelctors:270l_tank:electric_water_heater": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar DHW, 2 flat plate colelctors, 270L tank, electric water heater",
+        "units": "ea",
+        "UnitCostMaterials": 5840.0,
+        "UnitCostLabour": 1951.58,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_dhw:2_flat_plate_colelctors:270l_tank:gas_fired_water_heater": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar DHW, 2 flat plate colelctors, 270L tank, gas fired water heater",
+        "units": "ea",
+        "UnitCostMaterials": 6617.61,
+        "UnitCostLabour": 2020.72,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_dhw:one_4'x8'_collector:solar_boiler_w._pump:mounting_kit:no_install:no_solar_storage_tank": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar DHW, one 4'x8' collector, solar boiler w. pump, mounting kit, no install, no solar storage tank",
+        "units": "ea",
+        "UnitCostMaterials": 3935.0,
+        "UnitCostLabour": 816.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_dhw:two_4'x8'_collector:solar_boiler_w._pump:mounting_kit:no_install:no_solar_storage_tank": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar DHW, two 4'x8' collector, solar boiler w. pump, mounting kit, no install, no solar storage tank",
+        "units": "ea",
+        "UnitCostMaterials": 4929.0,
+        "UnitCostLabour": 960.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_dhw_system:two_1.2mx2.4m_collectors:solar_boiler:270_litre_tank:controls_and_pumps": {
+      "LEEP-ON-Ottawa": {
+        "category": "SOLAR DOMESTIC HOT WATER",
+        "description": "Solar DHW system, two 1.2mx2.4m collectors, solar boiler, 270 litre tank, controls and pumps",
+        "units": "ea",
+        "UnitCostMaterials": 5464.45,
+        "UnitCostLabour": 2035.89,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "solar_domestic_hot_water_system:two_1.2mx2.4m": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar domestic hot water system, two 1.2mx2.4m (4'x8') collectors (RC06)",
+        "units": "ea",
+        "UnitCostMaterials": 6831.5,
+        "UnitCostLabour": 960.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_light_tube_kit:including_roof_unit:flashing:ceiling_fixture_&_3m": {
+      "LEEP-ON-Ottawa": {
+        "category": "OTHER",
+        "description": "Solar light tube kit, including roof unit, flashing, ceiling fixture & 3m (10') of tubing (RC07)",
+        "units": "ea",
+        "UnitCostMaterials": 1000.0,
+        "UnitCostLabour": 0.0,
+        "note": "Missing labour and any framing costs.",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "solar_photovoltaic_system:installed_on_roof:1_kw": {
+      "LEEP-ON-Ottawa": {
+        "category": "PHOTOVOLTAIC SYSTEMS",
+        "description": "Solar photovoltaic system, installed on roof, 1 kW ",
+        "units": "ea",
+        "UnitCostMaterials": 11749.0,
+        "UnitCostLabour": 2710.9,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar photovoltaic system, installed on roof, 1 kW (RC04)",
+        "units": "ea",
+        "UnitCostMaterials": 6000.0,
+        "UnitCostLabour": 2500.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_photovoltaic_system:installed_on_roof:5_kw": {
+      "LEEP-ON-Ottawa": {
+        "category": "PHOTOVOLTAIC SYSTEMS",
+        "description": "Solar photovoltaic system, installed on roof, 5 kW ",
+        "units": "ea",
+        "UnitCostMaterials": 14950.0,
+        "UnitCostLabour": 6550.0,
+        "note": "Langevin recent estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "solar_photovoltaic_system:installed_on_roof:9.88_kw": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "PHOTOVOLTAIC SYSTEMS",
+        "description": "Solar photovoltaic system, installed on roof, 9.88 kW ",
+        "units": "ea",
+        "UnitCostMaterials": 21373.0,
+        "UnitCostLabour": 12021.0,
+        "note": "Vancounver LEEP session Spring 2015 (Riverside Energy and SolarMax)",
+        "date": "2015",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "solar_ready_conduit_supply_and_install": {
+      "LEEP-ON-Ottawa": {
+        "category": "SOLAR READY",
+        "description": "Solar Ready conduit supply and install",
+        "units": "ea",
+        "UnitCostMaterials": 215.0,
+        "UnitCostLabour": 225.0,
+        "note": "In-house estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "solar_ready_home_design": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar Ready home design (RC08)",
+        "units": "ea",
+        "UnitCostMaterials": 227.5,
+        "UnitCostLabour": 135.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "solar_ready_roof_truss_design_and_install": {
+      "LEEP-ON-Ottawa": {
+        "category": "SOLAR READY",
+        "description": "Solar Ready roof truss design and install",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.6,
+        "UnitCostLabour": 1.0,
+        "note": "In-house estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "solar_storage_tank:270l": {
+      "LEEP-MB-Winnipeg": {
+        "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
+        "description": "Solar storage tank, 270L",
+        "units": "ea",
+        "UnitCostMaterials": 270.0,
+        "UnitCostLabour": 150.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "standard_manual_switches": {
+      "LEEP-ON-Ottawa": {
+        "category": "SWITCHING",
+        "description": "Standard manual switches",
+        "units": "ea",
+        "UnitCostMaterials": 2.0,
+        "UnitCostLabour": 0.0,
+        "note": "In-house estimate",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "steel_shingles": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ROOF",
+        "description": "Steel shingles",
+        "units": "sf applied",
+        "UnitCostMaterials": 7.4,
+        "UnitCostLabour": 1.6,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "strapping:1inx3in_vertical": {
+      "LEEP-MB-Winnipeg": {
+        "category": "FRAMING",
+        "description": "Strapping, 1inx3in vertical",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.17,
+        "UnitCostLabour": 0.13,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "structural_insulated_panels:r21.9:including_splines:foam:&_caulking": {
+      "LEEP-MB-Winnipeg": {
+        "category": "STRUCTURAL INSULATED PANELS",
+        "description": "Structural insulated panels (SIP), 165mm (6-1/2in), R21.9, including splines, foam, & caulking",
+        "units": "sf wall",
+        "UnitCostMaterials": 4.78,
+        "UnitCostLabour": 1.06,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "structural_insulated_panels:r26:including_splines:foam:&_caulking": {
+      "LEEP-ON-Ottawa": {
+        "category": "STRUCTURAL INSULATED PANELS",
+        "description": "Structural insulated panels (SIP), 165mm (6-1/2in), R26, including splines, foam, & caulking",
+        "units": "sf wall",
+        "UnitCostMaterials": 5.62,
+        "UnitCostLabour": 1.0,
+        "note": "Hanscomb report 21/06/2011, revised 12/09/2011. Ottawa costs - need to convert to GTA.",
+        "date": "12/09/2011",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "structural_insulated_panels:r28.5:including_splines:foam_and_caulking": {
+      "LEEP-MB-Winnipeg": {
+        "category": "STRUCTURAL INSULATED PANELS",
+        "description": "Structural insulated panels (SIP), (8-1/4in), R28.5, including splines, foam and caulking",
+        "units": "sf wall",
+        "UnitCostMaterials": 5.26,
+        "UnitCostLabour": 1.11,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "structural_insulated_panels:r30:including_splines:foam:&_caulking": {
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "STRUCTURAL INSULATED PANELS",
+        "description": "Structural insulated panels (SIP), 260mm 8-1/4in), R30, including splines, foam, & caulking",
+        "units": "sf wall",
+        "UnitCostMaterials": 6.27,
+        "UnitCostLabour": 1.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "structural_insulated_panels:r35.5:including_splines:foam:&_caulking": {
+      "LEEP-MB-Winnipeg": {
+        "category": "STRUCTURAL INSULATED PANELS",
+        "description": "Structural insulated panels (SIP), 260mm (10-1/4in), R35.5, including splines, foam, & caulking",
+        "units": "sf wall",
+        "UnitCostMaterials": 5.74,
+        "UnitCostLabour": 1.17,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "structural_insulated_panels:r38:including_splines:foam:&_caulking": {
+      "LEEP-ON-Ottawa": {
+        "category": "STRUCTURAL INSULATED PANELS",
+        "description": "Structural insulated panels (SIP), 260mm (10-1/4in), R38, including splines, foam, & caulking",
+        "units": "sf wall",
+        "UnitCostMaterials": 6.77,
+        "UnitCostLabour": 1.1,
+        "note": "Hanscomb report 21/06/2011, revised 12/09/2011. Ottawa costs - need to convert to GTA.",
+        "date": "12/09/2011",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "structured_wiring:includes_all_switches:receptacles:cable_and_labour": {
+      "LEEP-ON-Ottawa": {
+        "category": "WIRING",
+        "description": "Structured Wiring, includes all switches, receptacles, cable and labour",
+        "units": "ea",
+        "UnitCostMaterials": 2541.99,
+        "UnitCostLabour": 2153.09,
+        "note": "Tartan Homes July 2014",
+        "date": "July 2014",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "tank:storage_no_specs_available": {
+      "LEEP-MB-Winnipeg": {
+        "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
+        "description": "Tank, storage NO SPECS AVAILABLE (ME27)",
+        "units": "ea",
+        "UnitCostMaterials": 955.5,
+        "UnitCostLabour": 250.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "traditional_electric_resistance_baseboard_heaters": {
+      "LEEP-MB-Winnipeg": {
+        "category": "ELECTRIC RESISTANCE BASEBOARDS",
+        "description": "Traditional electric resistance baseboard heaters",
+        "units": "kW",
+        "UnitCostMaterials": 75.0,
+        "UnitCostLabour": 150.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "upgrading_from_3.57_to_0.6": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Upgrading from 3.57 to 0.6 (flashing joist cavities with spray foam)",
+        "units": "sf floor area",
+        "UnitCostMaterials": 1.58,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "upgrading_from_3.57_to_1.0": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Upgrading from 3.57 to 1.0 (flashing joist cavities with spray foam)",
+        "units": "sf floor area",
+        "UnitCostMaterials": 1.27,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "upgrading_from_3.57ach_to_1.25": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Upgrading from 3.57ACH to 1.25 (using sealed rim joist product)",
+        "units": "sf floor area",
+        "UnitCostMaterials": 1.03,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "upgrading_from_3.57ach_to_1.75": {
+      "LEEP-ON-Ottawa": {
+        "category": "AIR TIGHTNESS",
+        "description": "Upgrading from 3.57ACH to 1.75 (caulking framing, airtight boxes and sealing penetrations)",
+        "units": "sf floor area",
+        "UnitCostMaterials": 0.75,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "vapour_barrier:6_mil": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Vapour barrier, 6 mil",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.11,
+        "UnitCostLabour": 0.28,
+        "note": "Hanscomb - aggregated average of material and labour for base case walls",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Vapour barrier, 6 mil",
+        "units": "sf wall",
+        "UnitCostMaterials": 0.11,
+        "UnitCostLabour": 0.11,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:double_glaze:vinyl:glass:double_lof_lowe:insulating_spacers:air_fill:shgc_0.5:u-value_1.82": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Window (A), double glaze, vinyl, glass, double LOF lowE, Insulating spacers, air fill, SHGC 0.5, U-value 1.82",
+        "units": "sf applied",
+        "UnitCostMaterials": 24.68,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:shgc_0.17:u-value_1.14": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Window (E), SHGC 0.17, U-value 1.14",
+        "units": "sf applied",
+        "UnitCostMaterials": 30.82,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:shgc_0.19:u-value_1.65": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Window (D), SHGC 0.19, U-value 1.65",
+        "units": "sf applied",
+        "UnitCostMaterials": 25.68,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:shgc_0.44:u-value_1.08": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Window (C), SHGC 0.44, U-value 1.08",
+        "units": "sf applied",
+        "UnitCostMaterials": 33.22,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:shgc_0.51:u-value_1.65": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Window (B), SHGC 0.51, U-value 1.65",
+        "units": "sf applied",
+        "UnitCostMaterials": 27.68,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window_jamb_extensions": {
+      "LEEP-ON-Ottawa": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Window Jamb Extensions",
+        "units": "Lump sum",
+        "UnitCostMaterials": 325.0,
+        "UnitCostLabour": 0.0,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
+        "description": "Window Jamb Extensions (Per 2in Jamb extension)",
+        "units": "lin. Ft. applied",
+        "UnitCostMaterials": 3.3,
+        "UnitCostLabour": 0.0,
+        "note": "Minto, Cardel homes aggregated - June 2014",
+        "date": "June 2014",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:casement": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e hard, argon, Insulating spacers - casement",
+        "units": "sf applied",
+        "UnitCostMaterials": 22.98,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:fixed": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e hard, argon, Insulating spacers - fixed",
+        "units": "sf applied",
+        "UnitCostMaterials": 21.05,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:picture": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e hard, argon, Insulating spacers - picture",
+        "units": "sf applied",
+        "UnitCostMaterials": 34.76,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_hard:argon:insulating_spacers:slider": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e hard, argon, Insulating spacers - slider",
+        "units": "sf applied",
+        "UnitCostMaterials": 27.24,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:casement": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e soft, argon, Insulating spacers - casement",
+        "units": "sf applied",
+        "UnitCostMaterials": 23.04,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:fixed": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e soft, argon, Insulating spacers - fixed",
+        "units": "sf applied",
+        "UnitCostMaterials": 21.05,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:picture": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e soft, argon, Insulating spacers - picture",
+        "units": "sf applied",
+        "UnitCostMaterials": 35.3,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:dg:vinyl:low-e_soft:argon:insulating_spacers:slider": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, DG, vinyl, low-e soft, argon, Insulating spacers - slider",
+        "units": "sf applied",
+        "UnitCostMaterials": 27.74,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:double_glaze:vinyl_frame:regular_glass:low-e_soft_coating:insulating_spacers:argon_fill": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Windows, double glaze, vinyl frame, regular glass, low-e soft coating,Insulating spacers, argon fill",
+        "units": "sf applied",
+        "UnitCostMaterials": 39.13,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:casement": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e hard, argon, Insulating spacers - casement",
+        "units": "sf applied",
+        "UnitCostMaterials": 23.04,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-KamloopsChesnut": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e hard, argon, Insulating spacers - casement",
+        "units": "sf applied",
+        "UnitCostMaterials": 24.98,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-BC-KamloopsChesnut"
+      }
+    },
+    "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:fixed": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e hard, argon, Insulating spacers - fixed",
+        "units": "sf applied",
+        "UnitCostMaterials": 21.05,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:picture": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e hard, argon, Insulating spacers - picture",
+        "units": "sf applied",
+        "UnitCostMaterials": 35.3,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:slider": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e hard, argon, Insulating spacers - slider",
+        "units": "sf applied",
+        "UnitCostMaterials": 27.74,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:casement": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e soft, argon, Insulating spacers - casement",
+        "units": "sf applied",
+        "UnitCostMaterials": 22.98,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:fixed": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e soft, argon, Insulating spacers - fixed",
+        "units": "sf applied",
+        "UnitCostMaterials": 21.05,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:picture": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e soft, argon, Insulating spacers - picture",
+        "units": "sf applied",
+        "UnitCostMaterials": 34.76,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:tg:vinyl:low-e_soft:argon:insulating_spacers:slider": {
+      "LEEP-ON-Ottawa": {
+        "category": "WINDOWS",
+        "description": "Windows, TG, vinyl, low-e soft, argon, Insulating spacers - slider",
+        "units": "sf applied",
+        "UnitCostMaterials": 27.24,
+        "UnitCostLabour": 0.0,
+        "note": "Hanscomb - Final Report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "windows:triple_glaze:fibreglass_frame:low-iron_glass:insulating_spacer": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Windows, triple glaze, fibreglass frame, low-iron glass, insulating spacer (not in use)",
+        "units": "sf applied",
+        "UnitCostMaterials": 94.81,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "windows:triple_glaze:vinyl_frame:regular_glass:low-e_soft_coating:insulating_spacers:argon_fill": {
+      "LEEP-MB-Winnipeg": {
+        "category": "WINDOWS",
+        "description": "Windows, triple glaze, vinyl frame, regular glass, low-e soft coating,Insulating spacers, argon fill",
+        "units": "sf applied",
+        "UnitCostMaterials": 41.57,
+        "UnitCostLabour": 3.1,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      }
+    }
+  }
+}
