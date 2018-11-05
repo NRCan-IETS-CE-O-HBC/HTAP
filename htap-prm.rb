@@ -35,9 +35,21 @@ $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
 $gGenChoiceFileList = Array.new
 
-#default (and only supported mode)
+
+$LastWriteCall = "" 
+
+#Default: Mesh
 $gRunDefMode   = "mesh"
+
+#Sample method = default flags 
+$sample_method    = "random" # Doesn't do anything yet
+$sample_size      = 100
+$sample_seeded    = false
+
+#Parsing flag
 $RunScopeOpen = false
+
+
 
 #Params for JSON output
 $gJSONize = false
@@ -77,36 +89,62 @@ end
 # Optionally write text to buffer -----------------------------------
 # =========================================================================================
 def stream_out(msg)
+   $msg_out = msg 
+   if ( $LastWriteCall !~ /StreamOut/ )
+     $msg_out = "\n#{$msg_out}" 
+   end 
+   
    if ($gTest_params["verbosity"] != "quiet")
-      print msg
+      print $msg_out
    end
    if ($gTest_params["logfile"])
-      $fLOG.write(msg)
+      $fLOG.write($msg_out)
    end
+   $LastWriteCall = "StreamOut"
 end
 
 # =========================================================================================
 # Write debug output ------------------------------------------------
 # =========================================================================================
 def debug_out(debmsg)
+   $msg_out = "    -D. #{debmsg}"
+   $msg_out.gsub!(/\n([^\n]+)/, "\n      . \\1")
+   if ( $LastWriteCall !~ /DebugOut/ )
+     $msg_out = "\n\n    -DEBUGGING OUTPUT BELOW...  \n#{$msg_out}" 
+   end 
+   
    if $gDebug 
-      puts debmsg
+      puts $msg_out
+      $LastWriteCall = "DebugOut"
+      
+     if ($gTest_params["logfile"])
+        $fLOG.write($msg_out)
+     end      
+        
+      
    end
-   if ($gTest_params["logfile"])
-      $fLOG.write(debmsg)
-   end
+   
+
+   
 end
 
 # =========================================================================================
 # Write warning output ------------------------------------------------
 # =========================================================================================
 def warn_out(debmsg)
+   $msg_out = " **WARNING** #{debmsg}"
+   if ( $LastWriteCall !~ /WarnOut/ )
+     $msg_out = "\n\n#{$msg_out}" 
+   end 
+
+
    if $gWarn 
-      puts debmsg
+      puts $msg_out 
    end
    if ($gTest_params["logfile"])
-      $fLOG.write(debmsg)
+      $fLOG.write($msg_out )
    end
+   $LastWriteCall = "WarnOut"
 end
 
 
@@ -187,11 +225,41 @@ def parse_def_file(filepath)
                      
                       
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i ) 
-            # This does nothing only 'mesh' supported for now!!!
+
+          
+          
             $gRunDefMode = $token_values[1] 
             
-            if ( ! ( $gRunDefMode =~ /mesh/ || $gRunDefMode =~ /parametric/ ) ) then 
+            if ( ! ( $gRunDefMode =~ /mesh/ || 
+                     $gRunDefMode =~ /parametric/ ||
+                     $gRunDefMode =~ /sample/         ) ) then 
               fatalerror (" Run mode #{$gRunDefMode} is not supported!") 
+            end 
+            
+            # Sample run mode: Additional arguments may be provided. 
+            if ( $gRunDefMode =~ /sample/ ) then 
+               # parse parameters `n`, `seed` from `sample{ n=###; seed =###}`
+               $sample_args = $gRunDefMode.clone
+               $sample_args.gsub!(/.+\{/,'') 
+               $sample_args.gsub!(/\}/,'') 
+               $sample_arg_array = $sample_args.split(";") 
+               
+               $sample_arg_array.each do |arg|
+               
+                 $sample_arg_vals = arg.split(":")
+                 
+                 case $sample_arg_vals[0] 
+                 when "n"
+                   $sample_size = $sample_arg_vals[1] 
+                 when "seed"
+                   $sample_seed_val = $sample_arg_vals[1] 
+                   $sample_seeded = true 
+                 end 
+               
+               end 
+               
+               $gRunDefMode.gsub!(/\{.*$/,"")
+               
             end 
              
           end 
@@ -913,7 +981,7 @@ def run_these_cases(current_task_files)
   
             $LocalChoiceFile = File.basename $gOptionFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
-              warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
+              warn_out("Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
             end           
                   
             
@@ -1457,13 +1525,55 @@ else
     stream_out ("    - Creating parametric run combinations from run definitions... ") 
     
     create_parametric_combos() 
+    
+    $RunTheseFiles = $gGenChoiceFileList 
 
-  end 
+
+  when "sample"    
   
-  $RunTheseFiles = $gGenChoiceFileList  
+    stream_out ("    - Sampling combinations from parameter space... ")
+    
+    
+    create_mesh_cartisian_combos(-3) 
+    
+    # Get size of mesh 
+    
+    $pop_size= $gGenChoiceFileList.count 
+    
+    debug_out "SAMPLE PARAMETERS: \n"
+    debug_out " - population       : #{$pop_size} \n"
+    debug_out " - requested sample : #{$sample_size} \n"
+    debug_out " - Seeded?          : #{$sample_seeded} \n"
+    debug_out " - Seedval?         : #{$sample_seed_val} \n"
+    
+    if ( $pop_size.to_i < $sample_size.to_i ) then 
+    
+      warn_out("Sample run method - requested sample size (#{$sample_size}) exceeds size of parameter space (#{$pop_size}).\n") 
+      warn_out("Run will only return #{$pop_size} results.\n\n") 
+      
+      $sample_size = $pop_size
+    
+    end 
+    
+    
+    if ( $sample_seeded ) then 
+    
+      $RunTheseFiles = $gGenChoiceFileList.shuffle(random: Random.new($sample_seed_val.to_i)).first($sample_size.to_i)
+    
+    else 
+      $RunTheseFiles = $gGenChoiceFileList.shuffle.first($sample_size.to_i)
+    end 
+    
+    debug_out ($RunTheseFiles.pretty_inspect)
+    
+    $sample_size_msg = "; sampled #{$sample_size.to_i} for run"
+    
+  end 
+
+ 
 
   if ($choicesInMemory )
-    stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n") 
+    stream_out (" done. (created #{$gGenChoiceFileNum} combinations#{$sample_size_msg})\n") 
   else 
     stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
   end 
