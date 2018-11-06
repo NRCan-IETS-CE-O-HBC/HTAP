@@ -5075,6 +5075,9 @@ def runsims( direction )
 
      begin
        
+       debug_out ("running #{runThis} ... \n") 
+       debug_out ("timeout limit  #{$maxRunTime} ... \n") 
+       
        pid = Process.spawn( runThis, :new_pgroup => true )
        stream_out ("\n Attempt ##{tries}:  Invoking HOT2000 (PID #{pid}) ...")
        runStatus = Timeout::timeout($maxRunTime){
@@ -8188,9 +8191,19 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
    # Replace choices in $gChoices with rule set choices in $ruleSetChoices
    stream_out("\n Replacing user-defined choices with rule set choices where appropriate...\n")
    $ruleSetChoices.each do |attrib, choice|
+   
+      debug_out ("COMPARE: RULESET: #{attrib} -> `#{choice}` \n")
+      debug_out ("         CHOICES: #{attrib} -> `#{$gChoices[attrib]}`\n")
+      
       if choice.empty?
+         #Pretty-sure this will never happen. 
          warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
          next  # skip setting this empty choice!
+      elsif $gChoices[attrib].empty? 
+
+         # User hasn't provided input on this parameter. Reset to ruleset requirement.
+         $gChoices[attrib] = choice 
+         stream_out ("   - #{attrib} -> #{choice}\n")
       elsif $gChoices[attrib] =~ /NA/
          # Change choice to rule set value for all choices that are "NA"
          $gChoices[attrib] = choice
