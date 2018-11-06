@@ -1117,7 +1117,7 @@
 !---------------------------------------------------------------------
 *option:DoubleArgon_HighGainOnSouth:value:1 = DblLeHcArg
 *option:DoubleArgon_HighGainOnSouth:value:2 = DblLeScArg
-*option:DoubleArgon_HighGainOnSouth:value:2 = DblLeScArg
+*option:DoubleArgon_HighGainOnSouth:value:3 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:4 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:5 = DblLeScArg
 *option:DoubleArgon_HighGainOnSouth:value:6 = DblLeScArg
