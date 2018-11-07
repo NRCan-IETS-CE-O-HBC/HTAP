@@ -74,7 +74,7 @@ $autoCostOptions = false
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
-$gRotate             = "S"
+$gRotate             = "N"
 $gGOStep             = 0
 $gArchGOChoiceFile   = 0
 $gReadROutStrTxt = false
@@ -224,6 +224,9 @@ $annACSensibleLoadFromBrowseRpt = 0.0
 $annACLatentLoadFromBrowseRpt = 0.0
 $TotalAirConditioningLoad = 0.0
 $AvgACCOP = 0.0
+
+# Flag for indicating model is to be rotated
+$gRotateModel = false
 
 # Setting Heating Degree Days
 $HDDHash =  {
@@ -4788,28 +4791,26 @@ end
 # Procedure to run HOT2000
 # =========================================================================================
 def runsims( direction )
-
-   $RotationAngle = $angles[direction]
-
-   # Save rotation angle for reporting
-   $gRotationAngle = $RotationAngle
-  
-   Dir.chdir( $run_path )
-   debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n") 
-   
+      $RotationAngle = $angles[direction]
+      
+      # Save rotation angle for reporting
+      $gRotationAngle = $RotationAngle
+      
+      Dir.chdir( $run_path )
+      debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n") 
+      
    # Rotate the model, if necessary:
-   #   Need to determine how to do this in HOT2000. The OnRotate() function in HOT2000 *interface*
-   #   is not accessible from the CLI version of HOT2000 and hasn't been well tested.
-   
-   
+   if ( $gRotateModel )
+      h2kElements = get_elements_from_filename($gWorkingModelFile) # Reload the file 
+      setRotateModel( h2kElements, $RotationAngle )
+      newXMLFile = File.open($gWorkingModelFile, "w")
+      $XMLdoc.write(newXMLFile)
+      newXMLFile.close
+   end
    # make a back-up copy, in case HOT2000 crashses mid-run and empties the runfille
-   
-   
+
    # Command to execute H2k. 
    runThis = "HOT2000.exe -inp ..\\#{$h2kFileName}"
-   
-
-   
 
    # JB TODO: What does this comment mean? --> AF: Extra counters to count ls tmpval how many times we've tried HOT2000.
    keepTrying = true 
@@ -7366,6 +7367,53 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
   end
   return cost
 end
+
+#===============================================================================
+# setRotateModel: takes in the h2k file and desired 
+#===============================================================================
+def setRotateModel( elements, direction )
+    # TODO: Check validity of direction input
+    # Update the whole-building
+    locationText = "HouseFile/House/Specifications/FacingDirection"
+    iDirCode = elements[locationText].attributes["code"].to_i
+    iDirCode = iDirCode + direction
+    if ( iDirCode > 8 )
+        iDirCode = iDirCode - 8
+    end
+    elements[locationText].attributes["code"] = iDirCode.to_s
+    # Check wall directions 
+    locationText = "HouseFile/House/Components/Wall/FacingDirection"
+    elements.each(locationText) do |element|
+        if ( element.attributes["code"].to_i != 1 )
+            iDirCode = element.attributes["code"].to_i
+            iDirCode = iDirCode + direction
+            if ( iDirCode > 9 )
+                iDirCode = iDirCode - 8
+            end
+            element.attributes["code"] = iDirCode.to_s
+        end
+    end
+    # Check the windows in walls directions
+    locationText = "HouseFile/House/Components/Wall/Components/Window/FacingDirection"
+    elements.each(locationText) do |element|
+        iDirCode = element.attributes["code"].to_i
+        iDirCode = iDirCode + direction
+        if ( iDirCode > 8 )
+            iDirCode = iDirCode - 8
+        end
+        element.attributes["code"] = iDirCode.to_s
+    end
+    # Check the windows in the basement
+    locationText = "HouseFile/House/Components/Basement/Components/Window/FacingDirection"
+    elements.each(locationText) do |element|
+        iDirCode = element.attributes["code"].to_i
+        iDirCode = iDirCode + direction
+        if ( iDirCode > 8 )
+            iDirCode = iDirCode - 8
+        end
+        element.attributes["code"] = iDirCode.to_s
+    end
+end
 =begin rdoc
 =========================================================================================
   END OF ALL METHODS 
@@ -7532,7 +7580,10 @@ optparse = OptionParser.new do |opts|
          
    end     
    
-   
+   opts.on("-z", "--rotate-model", "Run model in 4 orientations and average output") do
+      $cmdlineopts["rotate-model"] = true
+      $gRotateModel = true
+   end
    
 end
 
@@ -8312,12 +8363,12 @@ stream_out( "done.")
 
 # Orientation changes. For now, we assume the arrays must always point south.
 $angles = Hash.new()
-$angles[ "S" => 0 , "E" => 90, "N" => 180, "W" => 270 ]
+$angles = { "S" => 0 , "E" => 2, "N" => 4, "W" => 6 }
 
 # Orientations is an array we populate with a single member if the orientation 
 # is specified, or with all of the orientations to be run if 'AVG' is spec'd.               
 orientations = Array.new()
-if ( $gRotate =~ /AVG/ ) 
+if ( $gRotate =~ /AVG/ || $gRotateModel) 
    orientations = [ 'S', 'N', 'E', 'W' ]
 else 
    orientations = [ $gRotate ] 
