@@ -5217,7 +5217,7 @@ end   # runsims
 # =========================================================================================
 # Post-process results
 # =========================================================================================
-def postprocess( scaleData )
+def postprocess( scaleData, bIsLastCall)
    
    stream_out( "\n Loading XML elements from #{$gWorkingModelFile} ...")
   
@@ -5274,9 +5274,7 @@ def postprocess( scaleData )
         $binDatT1PLR[n+1]=0
        
        end 
-       
-       
-       
+
        while !fRoutStr.eof? do 
        
         $lineNo = $lineNo + 1
@@ -5287,8 +5285,7 @@ def postprocess( scaleData )
         if ( $lineIn =~ /^\s*$/ ||  $bHeatingDone ) then
           next # Skip empty line. 
         end   
-        
-         
+
         #Report binned data in general or SOC modes. 
         # (This still calls for a more robust approach that can set the evaluation 
         #  type from the choice file or cmd line.) 
@@ -5311,9 +5308,7 @@ def postprocess( scaleData )
           $bHeatingDone = true 
           next 
         end         
-        
-        
-        
+
         # Set flags for sections in the file 
         if ($lineIn =~ /SpaceHTini/ )
           debug_out("ROUTSTR ? SpaceHTini open #{$lineNo} | #{$lineIn} \n")
@@ -5405,11 +5400,7 @@ def postprocess( scaleData )
           end               
                       
         end 
-         
-         
-         
-         
-         
+
         # Get furnace performace data 
         if ( $FFBCparse ) 
           debug_out("ROUTSTR ? FossilFurnace : #{$lineIn} \n")
@@ -5524,16 +5515,7 @@ def postprocess( scaleData )
     debug_out(" bin data: #{'%4s' % bin} #{'%12s' % $binDatHrs[bin]} #{'%12s' % $binDatTmp[bin]}  #{'%12s' % $binDatTsfB[bin]} #{'%12s' % $binDatHLR[bin]} #{'%12s' % $binDatT1PLR[bin]} #{'%12s' % $binDatT2PLR[bin]}  #{'%12s' % $binDatT2cap[bin]}\n" )
    
    end 
-   
-   
 
-   
-   
-   
-   
-   
-   
-   
    # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
    if File.exist?("#{$run_path}\\Set_EGH.h2k") then
       bReadOldERSValue = true
@@ -5675,73 +5657,77 @@ def postprocess( scaleData )
       if (houseCode =~ /#{$outputHCode}/)
          
          stream_out( "\n Parsing results from set: #{$outputHCode} ...")
-         
+         # Initialize the output to zero if it hasn't been
+         if (! $gResults[houseCode].has_key? "avgEnergyTotalGJ")
+            initizeOutput(houseCode)
+         end
+
          # Energy Consumption (Annual GJ)
-         $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
-         $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyTotalGJ"]        += element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyHeatingGJ"]      += element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgGrossHeatLossGJ"]      += element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyCoolingGJ"]      += element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyVentilationGJ"]  += element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyEquipmentGJ"]    += element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
+         $gResults[houseCode]["avgEnergyWaterHeatingGJ"] += element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f * scaleData
 
          if $ExtraOutput1 then
             # Total Heat Loss of all zones by component (GJ)
-            $gResults[houseCode]["EnvHLTotalGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
-            $gResults[houseCode]["EnvHLCeilingGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ceiling"].to_f * scaleData
-            $gResults[houseCode]["EnvHLMainWallsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["mainWalls"].to_f * scaleData
-            $gResults[houseCode]["EnvHLWindowsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["windows"].to_f * scaleData
-            $gResults[houseCode]["EnvHLDoorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["doors"].to_f * scaleData
-            $gResults[houseCode]["EnvHLExpFloorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["exposedFloors"].to_f * scaleData
-            $gResults[houseCode]["EnvHLCrawlspaceGJ"] = element.elements[".//Annual/HeatLoss"].attributes["crawlspace"].to_f * scaleData
-            $gResults[houseCode]["EnvHLSlabGJ"] = element.elements[".//Annual/HeatLoss"].attributes["slab"].to_f * scaleData
-            $gResults[houseCode]["EnvHLBasementBGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementBelowGradeWall"].to_f * scaleData
-            $gResults[houseCode]["EnvHLBasementAGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementAboveGradeWall"].to_f * scaleData
-            $gResults[houseCode]["EnvHLBasementFlrHdrsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementFloorHeaders"].to_f * scaleData
-            $gResults[houseCode]["EnvHLPonyWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ponyWall"].to_f * scaleData
-            $gResults[houseCode]["EnvHLFlrsAbvBasementGJ"] = element.elements[".//Annual/HeatLoss"].attributes["floorsAboveBasement"].to_f * scaleData
-            $gResults[houseCode]["EnvHLAirLkVentGJ"] = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f * scaleData
+            $gResults[houseCode]["EnvHLTotalGJ"] += element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
+            $gResults[houseCode]["EnvHLCeilingGJ"] += element.elements[".//Annual/HeatLoss"].attributes["ceiling"].to_f * scaleData
+            $gResults[houseCode]["EnvHLMainWallsGJ"] += element.elements[".//Annual/HeatLoss"].attributes["mainWalls"].to_f * scaleData
+            $gResults[houseCode]["EnvHLWindowsGJ"] += element.elements[".//Annual/HeatLoss"].attributes["windows"].to_f * scaleData
+            $gResults[houseCode]["EnvHLDoorsGJ"] += element.elements[".//Annual/HeatLoss"].attributes["doors"].to_f * scaleData
+            $gResults[houseCode]["EnvHLExpFloorsGJ"] += element.elements[".//Annual/HeatLoss"].attributes["exposedFloors"].to_f * scaleData
+            $gResults[houseCode]["EnvHLCrawlspaceGJ"] += element.elements[".//Annual/HeatLoss"].attributes["crawlspace"].to_f * scaleData
+            $gResults[houseCode]["EnvHLSlabGJ"] += element.elements[".//Annual/HeatLoss"].attributes["slab"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementBGWallGJ"] += element.elements[".//Annual/HeatLoss"].attributes["basementBelowGradeWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementAGWallGJ"] += element.elements[".//Annual/HeatLoss"].attributes["basementAboveGradeWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLBasementFlrHdrsGJ"] += element.elements[".//Annual/HeatLoss"].attributes["basementFloorHeaders"].to_f * scaleData
+            $gResults[houseCode]["EnvHLPonyWallGJ"] += element.elements[".//Annual/HeatLoss"].attributes["ponyWall"].to_f * scaleData
+            $gResults[houseCode]["EnvHLFlrsAbvBasementGJ"] += element.elements[".//Annual/HeatLoss"].attributes["floorsAboveBasement"].to_f * scaleData
+            $gResults[houseCode]["EnvHLAirLkVentGJ"] += element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f * scaleData
             
             # Annual DHW heating load [GJ] -- heating load (or demand) on DHW system (before efficiency applied)
-            $gResults[houseCode]["AnnHotWaterLoadGJ"] = element.elements[".//Annual/HotWaterDemand"].attributes["base"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterLoadGJ"] += element.elements[".//Annual/HotWaterDemand"].attributes["base"].to_f * scaleData
          end
          
          # Design loads, other data 
-         $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
-         $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
+         $gResults[houseCode]["avgOthPeakHeatingLoadW"] += element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
+         $gResults[houseCode]["avgOthPeakCoolingLoadW"] += element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
     
-         $gResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
-         $gResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
-         $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f * scaleData
-         $gResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f * scaleData
+         $gResults[houseCode]["avgOthSeasonalHeatEff"] += element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f * scaleData
+         $gResults[houseCode]["avgVntAirChangeRateNatural"] += element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f * scaleData
+         $gResults[houseCode]["avgVntAirChangeRateTotal"] += element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgSolarGainsUtilized"] += element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f * scaleData
+         $gResults[houseCode]["avgVntMinAirChangeRate"] += element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f * scaleData
 
-         $gResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f * scaleData
-         $gResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f * scaleData
-         $gResults[houseCode]["avgFuelCostsOil$"]     = element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f * scaleData
-         $gResults[houseCode]["avgFuelCostsPropane$"] = element.elements[".//Annual/ActualFuelCosts"].attributes["propane"].to_f * scaleData
-         $gResults[houseCode]["avgFuelCostsWood$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["wood"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsElec$"]    += element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsNatGas$"]  += element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsOil$"]     += element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsPropane$"] += element.elements[".//Annual/ActualFuelCosts"].attributes["propane"].to_f * scaleData
+         $gResults[houseCode]["avgFuelCostsWood$"]    += element.elements[".//Annual/ActualFuelCosts"].attributes["wood"].to_f * scaleData
 
          if $ExtraOutput1 then
             # Annual SpaceHeating and HotWater energy by fuel type [GJ]
-            $gResults[houseCode]["AnnSpcHeatElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData
-            $gResults[houseCode]["AnnSpcHeatGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["spaceHeating"].to_f * scaleData
-            $gResults[houseCode]["AnnSpcHeatOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f * scaleData
-            $gResults[houseCode]["AnnSpcHeatPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f * scaleData
-            $gResults[houseCode]["AnnSpcHeatWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["spaceHeating"].to_f * scaleData
-            $gResults[houseCode]["AnnHotWaterElecGJ"] = element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
-            $gResults[houseCode]["AnnHotWaterGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["hotWater"].to_f * scaleData
-            $gResults[houseCode]["AnnHotWaterOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["hotWater"].to_f * scaleData
-            $gResults[houseCode]["AnnHotWaterPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["hotWater"].to_f * scaleData
-            $gResults[houseCode]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatElecGJ"] += element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatGasGJ"] += element.elements[".//Annual/Consumption/NaturalGas"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatOilGJ"] += element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatPropGJ"] += element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnSpcHeatWoodGJ"] += element.elements[".//Annual/Consumption/Wood"].attributes["spaceHeating"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterElecGJ"] += element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterGasGJ"] += element.elements[".//Annual/Consumption/NaturalGas"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterOilGJ"] += element.elements[".//Annual/Consumption/Oil"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterPropGJ"] += element.elements[".//Annual/Consumption/Propane"].attributes["hotWater"].to_f * scaleData
+            $gResults[houseCode]["AnnHotWaterWoodGJ"] += element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f * scaleData
          end
          
-         $gResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFueluseElecGJ"]    += element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f * scaleData
 
          # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
          # 07-APR-2018 JTB: This should only be checked when there is NO internal PV model in use!
          if !$PVIntModel && $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
-            $gResults[houseCode]["avgFueluseElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData +
+            $gResults[houseCode]["avgFueluseElecGJ"] += element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["appliance"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["lighting"].to_f * scaleData +
@@ -5751,41 +5737,42 @@ def postprocess( scaleData )
                                                        element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData +
                                                        element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f * scaleData
          end
-         $gResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
-         $gResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData    
-      
-         $gResults[houseCode]["avgFueluseEleckWh"]  = $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
-         $gResults[houseCode]["avgFueluseNatGasM3"] = $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
-         $gResults[houseCode]["avgFueluseOilL"]     = $gResults[houseCode]["avgFueluseOilGJ"]  * 25.9576
-         $gResults[houseCode]["avgFuelusePropaneL"] = $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
-         $gResults[houseCode]["avgFueluseWoodcord"] = $gResults[houseCode]["avgFueluseWoodGJ"] / 18.30  # estimated GJ/cord for wood/pellet burning from YHC Fuel Cost Comparison.xls
-
-         $gResults[houseCode]["avgFuelCostsTotal$"] = $gResults[houseCode]["avgFuelCostsElec$"] +
-                                                      $gResults[houseCode]["avgFuelCostsNatGas$"] +
-                                                      $gResults[houseCode]["avgFuelCostsOil$"] +
-                                                      $gResults[houseCode]["avgFuelCostsPropane$"] +
-                                                      $gResults[houseCode]["avgFuelCostsWood$"] 
-
-         # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
-         # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
-         # avgEnergyTotalGJ does when there is an internal H2K PV model.
-         $gResults[houseCode]["avgEnergyGrossGJ"]  = $gResults[houseCode]['avgEnergyHeatingGJ'].to_f +                                   
-                                                      $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f +                                     
-                                                      $gResults[houseCode]['avgEnergyVentilationGJ'].to_f +                                      
-                                                      $gResults[houseCode]['avgEnergyCoolingGJ'].to_f +                                      
-                                                      $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f                                      
-                                     
+         $gResults[houseCode]["avgFueluseNatGasGJ"]  += element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFueluseOilGJ"]     += element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFuelusePropaneGJ"] += element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f * scaleData
+         $gResults[houseCode]["avgFueluseWoodGJ"]    += element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f * scaleData    
+         if( bIsLastCall )
+            $gResults[houseCode]["avgFueluseEleckWh"]  += $gResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
+            $gResults[houseCode]["avgFueluseNatGasM3"] += $gResults[houseCode]["avgFueluseNatGasGJ"] * 26.853 
+            $gResults[houseCode]["avgFueluseOilL"]     += $gResults[houseCode]["avgFueluseOilGJ"]  * 25.9576
+            $gResults[houseCode]["avgFuelusePropaneL"] += $gResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000 
+            $gResults[houseCode]["avgFueluseWoodcord"] += $gResults[houseCode]["avgFueluseWoodGJ"] / 18.30  # estimated GJ/cord for wood/pellet burning from YHC Fuel Cost Comparison.xls
+            
+            $gResults[houseCode]["avgFuelCostsTotal$"] += $gResults[houseCode]["avgFuelCostsElec$"] +
+                                                         $gResults[houseCode]["avgFuelCostsNatGas$"] +
+                                                         $gResults[houseCode]["avgFuelCostsOil$"] +
+                                                         $gResults[houseCode]["avgFuelCostsPropane$"] +
+                                                         $gResults[houseCode]["avgFuelCostsWood$"] 
+            
+            # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
+            # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
+            # avgEnergyTotalGJ does when there is an internal H2K PV model.
+            $gResults[houseCode]["avgEnergyGrossGJ"]  += $gResults[houseCode]['avgEnergyHeatingGJ'].to_f +                                   
+                                                         $gResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f +                                     
+                                                         $gResults[houseCode]['avgEnergyVentilationGJ'].to_f +                                      
+                                                         $gResults[houseCode]['avgEnergyCoolingGJ'].to_f +                                      
+                                                         $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f                                      
+         end                         
        
        
          monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
          # Picking up  AUX energy requirement from each result set.
          
-         $gAuxEnergyHeatingGJ = 0
-         $MonthlyAuxHeatingMJ = 0
+         #$gAuxEnergyHeatingGJ = 0 # Move to initialization
+         # MonthlyAuxHeatingMJ doesn't seem to be used for anything
+         # $MonthlyAuxHeatingMJ = 0
          monthArr.each do |mth|
-            $gAuxEnergyHeatingGJ += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
+            $gAuxEnergyHeatingGJ += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000 * scaleData
          end 
          
          # ASF 03-Oct-2016 - picking up PV generation from each individual result set. 
@@ -5802,9 +5789,9 @@ def postprocess( scaleData )
             end
             # 10-Nov-2016 JTB: Use annual PV values only! HOT2000 redistributes the monthly excesses, if available!
             $gResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable # GJ
-            $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized  # GJ
-            $gResults[houseCode]["avgElecPVGenkWh"] = $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 # kWh
-            $gResults[houseCode]["avgElecPVUsedkWh"] = $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778 # kWh
+            $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  += pvUtilized  # GJ
+            $gResults[houseCode]["avgElecPVGenkWh"] += $gResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778 # kWh
+            $gResults[houseCode]["avgElecPVUsedkWh"] += $gResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778 # kWh
             
             # ***** Calculation of NET PV Revenue using HOT2000 model *****
             # 10-Nov-2016 JTB: Assumes that all annual PV energy available is used to reduce house electricity
@@ -5812,7 +5799,7 @@ def postprocess( scaleData )
             # which is specified in the options file (defaulted at top if not in Options file!).
             netAnnualPV = $gResults[houseCode]["avgElecPVGenkWh"] - $gResults[houseCode]["avgElecPVUsedkWh"]
             if ( netAnnualPV > 0 )
-               $gResults[houseCode]["avgPVRevenue"] = netAnnualPV  * $PVTarrifDollarsPerkWh
+               $gResults[houseCode]["avgPVRevenue"] += netAnnualPV  * $PVTarrifDollarsPerkWh
             else
                $gResults[houseCode]["avgPVRevenue"] = 0
             end
@@ -5849,9 +5836,11 @@ def postprocess( scaleData )
    $gAvgCost_Pellet = 0    # H2K doesn't identify pellets in output (only inputs)!
 
    # Total of all fuels in GJ
-   $gAvgEnergy_Total = $gResults[$outputHCode]["avgFueluseElecGJ"] + $gResults[$outputHCode]["avgFueluseNatGasGJ"] +
-                       $gResults[$outputHCode]["avgFueluseOilGJ"] + $gResults[$outputHCode]["avgFuelusePropaneGJ"] +
-                       $gResults[$outputHCode]["avgFueluseWoodGJ"]   
+   if ( bIsLastCall ) 
+      $gAvgEnergy_Total += $gResults[$outputHCode]["avgFueluseElecGJ"] + $gResults[$outputHCode]["avgFueluseNatGasGJ"] +
+                          $gResults[$outputHCode]["avgFueluseOilGJ"] + $gResults[$outputHCode]["avgFuelusePropaneGJ"] +
+                          $gResults[$outputHCode]["avgFueluseWoodGJ"]
+   end
    
    # JTB 12-Nov-2016 : Updated and still valid. Sets cost of PV based on model type 
    #                   and estimates PV kW size.
@@ -5964,147 +5953,242 @@ def postprocess( scaleData )
       end
    end
    
-    stream_out( " done \n")
-  
-   stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
-
-   stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
-   stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
-
-   stream_out("\n Energy Consumption: \n\n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} ( Hot Water, GJ ) \n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} ( Ventilator Electrical, GJ ) \n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} ( Space Cooling, GJ ) \n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} ( Appliances + Lights + Plugs + outdoor, GJ ) \n")
-   stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "  #{$gResults[$outputHCode]['avgEnergyGrossGJ'].round(1)} ( H2K Gross energy use GJ ) \n")
-
-   if ( parseDebug )
-      $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
-               $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
-               $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
-               $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
-               $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
-        stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
-        stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
-   end 
-    
-   if $ExtraOutput1 then
-      stream_out("\n Components of envelope heat loss: \n\n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)} ( Envelope Ceiling Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)} ( Envelope Main Wall Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)} ( Envelope Window Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)} ( Envelope Door Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)} ( Envelope Exp Floor Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)} ( Envelope Crawlspace Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)} ( Envelope Slab Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)} ( Envelope BG Basement Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)} ( Envelope AG Basement Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)} ( Envelope Basement Floor Hdr Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)} ( Envelope Pony Wall Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)} ( Envelope Floors Above Basement Heat Loss (all zones), GJ ) \n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)} ( Envelope Air Leakage & Ventilation Heat Loss (all zones), GJ ) \n")
+   stream_out( " done \n")
+   # If this is the last call, stream out the data
+   if ( bIsLastCall )
+      stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
+      
+      stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
+      stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
+      
+      stream_out("\n Energy Consumption: \n\n")
+      stream_out ( "  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} ( Space Heating, GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} ( Hot Water, GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} ( Ventilator Electrical, GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} ( Space Cooling, GJ ) \n")
+      stream_out ( "  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} ( Appliances + Lights + Plugs + outdoor, GJ ) \n")
       stream_out ( " --------------------------------------------------------\n")
-      stream_out ( "  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)} ( Envelope Total Heat Loss (as reported in file), GJ ) \n")
-
+      stream_out ( "  #{$gResults[$outputHCode]['avgEnergyGrossGJ'].round(1)} ( H2K Gross energy use GJ ) \n")
+      
       if ( parseDebug )
-         $check = $gResults[$outputHCode]['EnvHLCeilingGJ'].to_f + 
-                  $gResults[$outputHCode]['EnvHLMainWallsGJ'].to_f + 
-                  $gResults[$outputHCode]['EnvHLWindowsGJ'].to_f + 
-                  $gResults[$outputHCode]['EnvHLDoorsGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLExpFloorsGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLCrawlspaceGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLSlabGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLBasementBGWallGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLBasementAGWallGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLPonyWallGJ'].to_f +
-                  $gResults[$outputHCode]['EnvHLAirLkVentGJ'].to_f 
-         stream_out ("       ( Note: sum above without basement floor above HL = #{$check.round(1)} )") 
+          $check = $gResults[$outputHCode]['avgEnergyHeatingGJ'].to_f + 
+                  $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].to_f + 
+                  $gResults[$outputHCode]['avgEnergyVentilationGJ'].to_f + 
+                  $gResults[$outputHCode]['avgEnergyCoolingGJ'].to_f + 
+                  $gResults[$outputHCode]['avgEnergyEquipmentGJ'].to_f 
+              stream_out ("       ( Check1: should = #{$check.round(1)}, ") 
+              stream_out ("Check2: avgEnergyTotalGJ = #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} ) \n ") 
+      end 
+          
+      if $ExtraOutput1 then
+          stream_out("\n Components of envelope heat loss: \n\n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)} ( Envelope Ceiling Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)} ( Envelope Main Wall Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)} ( Envelope Window Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)} ( Envelope Door Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)} ( Envelope Exp Floor Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)} ( Envelope Crawlspace Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)} ( Envelope Slab Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)} ( Envelope BG Basement Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)} ( Envelope AG Basement Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)} ( Envelope Basement Floor Hdr Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)} ( Envelope Pony Wall Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)} ( Envelope Floors Above Basement Heat Loss (all zones), GJ ) \n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)} ( Envelope Air Leakage & Ventilation Heat Loss (all zones), GJ ) \n")
+          stream_out ( " --------------------------------------------------------\n")
+          stream_out ( "  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)} ( Envelope Total Heat Loss (as reported in file), GJ ) \n")
+      
+          if ( parseDebug )
+              $check = $gResults[$outputHCode]['EnvHLCeilingGJ'].to_f + 
+                      $gResults[$outputHCode]['EnvHLMainWallsGJ'].to_f + 
+                      $gResults[$outputHCode]['EnvHLWindowsGJ'].to_f + 
+                      $gResults[$outputHCode]['EnvHLDoorsGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLExpFloorsGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLCrawlspaceGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLSlabGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLBasementBGWallGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLBasementAGWallGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLPonyWallGJ'].to_f +
+                      $gResults[$outputHCode]['EnvHLAirLkVentGJ'].to_f 
+              stream_out ("       ( Note: sum above without basement floor above HL = #{$check.round(1)} )") 
+          end
+          
+          stream_out ( "\n\n  #{$gResults[$outputHCode]["AnnHotWaterLoadGJ"].round(1)} ( Annual DHW heating load, GJ ) \n")
+      end
+          
+      stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
+      stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
+      stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
+      stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)}  (Oil)\n")
+      stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)}  (Propane)\n")
+      stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)}  (Wood) \n")
+#      stream_out("  + \$ #{$gResults[$outputHCode][''].round(2)}  #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
+      stream_out ( " --------------------------------------------------------\n")
+      stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}  (All utilities).\n")
+      stream_out ( "\n")
+      
+      netAnnualPV = $gResults[$outputHCode]['avgElecPVGenkWh'] - $gResults[$outputHCode]['avgElecPVUsedkWh']
+      
+      stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPVRevenue'].round(2)} (**Net PV revenue for #{$PVcapacity.round(0)} kW unit: #{netAnnualPV.round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
+      stream_out ( " --------------------------------------------------------\n")
+      
+      netUtilityCost = $gResults[$outputHCode]['avgFuelCostsTotal$'] - $gResults[$outputHCode]['avgPVRevenue']
+      
+      stream_out ( "    \$ #{netUtilityCost.round(2)} (Net utility costs).\n")
+      stream_out ( "\n")
+      
+      if $ExtraOutput1 then
+          stream_out("\n Space Heating Energy Use by Fuel (GJ): \n\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatElecGJ"].round(1)} (Space Heating Electricity, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatGasGJ"].round(1)} (Space Heating Natural Gas, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatOilGJ"].round(1)} (Space Heating Oil, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatPropGJ"].round(1)} (Space Heating Propane, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatWoodGJ"].round(1)} (Space Heating Wood, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterElecGJ"].round(1)} (Hot Water Heating Electricity, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterGasGJ"].round(1)} (Hot Water Heating Natural Gas, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterOilGJ"].round(1)} (Hot Water Heating Oil, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterPropGJ"].round(1)} (Hot Water Heating Propane, GJ)\n")
+          stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterWoodGJ"].round(1)} (Hot Water Heating Wood, GJ)\n")
       end
       
-      stream_out ( "\n\n  #{$gResults[$outputHCode]["AnnHotWaterLoadGJ"].round(1)} ( Annual DHW heating load, GJ ) \n")
-   end
+      stream_out("\n\n Total Energy Use by Fuel (in fuel units, not including credit for PV, direction #{$gRotationAngle} ): \n\n")
+      stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Total Electricity, kWh)\n")         
+      stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Total Natural Gas, m3)\n")                    
+      stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Total Oil, l)\n")
+      stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Total Propane, l)\n")
       
-   stream_out("\n\n Energy Cost (not including credit for PV, direction #{$gRotationAngle} ): \n\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  (Electricity)\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)} (Natural Gas)\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)}  (Oil)\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)}  (Propane)\n")
-   stream_out("  + \$ #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)}  (Wood) \n")
-#   stream_out("  + \$ #{$gResults[$outputHCode][''].round(2)}  #{$gAvgCost_Pellet.round(2)} (Pellet)\n")
-   stream_out ( " --------------------------------------------------------\n")
-   stream_out ( "    \$ #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}  (All utilities).\n")
-   stream_out ( "\n")
-   
-   netAnnualPV = $gResults[$outputHCode]['avgElecPVGenkWh'] - $gResults[$outputHCode]['avgElecPVUsedkWh']
-   
-   stream_out ( "  - \$ #{$gResults[$outputHCode]['avgPVRevenue'].round(2)} (**Net PV revenue for #{$PVcapacity.round(0)} kW unit: #{netAnnualPV.round(0)} kWh at \$ #{$PVTarrifDollarsPerkWh} / kWh)\n")
-   stream_out ( " --------------------------------------------------------\n")
-   
-   netUtilityCost = $gResults[$outputHCode]['avgFuelCostsTotal$'] - $gResults[$outputHCode]['avgPVRevenue']
-   
-   stream_out ( "    \$ #{netUtilityCost.round(2)} (Net utility costs).\n")
-   stream_out ( "\n")
-   
-   if $ExtraOutput1 then
-      stream_out("\n Space Heating Energy Use by Fuel (GJ): \n\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatElecGJ"].round(1)} (Space Heating Electricity, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatGasGJ"].round(1)} (Space Heating Natural Gas, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatOilGJ"].round(1)} (Space Heating Oil, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatPropGJ"].round(1)} (Space Heating Propane, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnSpcHeatWoodGJ"].round(1)} (Space Heating Wood, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterElecGJ"].round(1)} (Hot Water Heating Electricity, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterGasGJ"].round(1)} (Hot Water Heating Natural Gas, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterOilGJ"].round(1)} (Hot Water Heating Oil, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterPropGJ"].round(1)} (Hot Water Heating Propane, GJ)\n")
-      stream_out("  - #{$gResults[$outputHCode]["AnnHotWaterWoodGJ"].round(1)} (Hot Water Heating Wood, GJ)\n")
+      # ASF 03-Oct-2016: 
+      # Wood/Pellets    
+      stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Total Wood, cord)\n")                       
+      # stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
+      # stream_out ("> SCALE #{scaleData} \n"); 
+      # Estimate total cost of upgrades
+      $gTotalCost = 0
+      
+      if ( $Locale == "NA" ) 
+          thisLocale = "Basehouse location"
+      else
+          thisLocale = $Locale
+      end
+      stream_out ("\n\n Estimated costs in #{thisLocale} (x #{$gRegionalCostAdj} Ottawa costs) : \n\n")
+      
+      $gChoices.sort.to_h
+      for attribute in $gChoices.keys()
+      
+          debug_out "Costing for #{attribute}: " 
+      
+          choice = $gChoices[attribute]
+          cost = $gOptions[attribute]["options"][choice]["cost"].to_f
+          $gTotalCost += cost
+          stream_out( " +  #{cost.round()} ( #{attribute} : #{choice} ) \n")
+      end
+      stream_out ( " - #{($gIncBaseCosts * $gRegionalCostAdj).round} (Base costs for windows)  \n")
+      stream_out ( " --------------------------------------------------------\n")
+      stream_out ( " =   #{($gTotalCost-$gIncBaseCosts * $gRegionalCostAdj).round} ( Total incremental cost ) \n\n")
+      $gRegionalCostAdj != 0 ? val = $gTotalCost / $gRegionalCostAdj : val = 0
+      stream_out ( " ( Unadjusted upgrade costs: \$ #{val} )\n\n")
+      
+      if ( $gERSNum > 0 )
+          $tmpval = $gERSNum.round(1)
+          stream_out(" ERS value: #{$tmpval}\n")
+      end
    end
-   
-   stream_out("\n\n Total Energy Use by Fuel (in fuel units, not including credit for PV, direction #{$gRotationAngle} ): \n\n")
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(0)} (Total Electricity, kWh)\n")         
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(0)} (Total Natural Gas, m3)\n")                    
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseOilL'].round(0)} (Total Oil, l)\n")
-   stream_out("  - #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(0)} (Total Propane, l)\n")
-
-   # ASF 03-Oct-2016: 
-   # Wood/Pellets    
-   stream_out("  - #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(0)} (Total Wood, cord)\n")                       
-   # stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")                  
-   # stream_out ("> SCALE #{scaleData} \n"); 
-   # Estimate total cost of upgrades
-   $gTotalCost = 0
-  
-   if ( $Locale == "NA" ) 
-      thisLocale = "Basehouse location"
-   else
-      thisLocale = $Locale
-   end
-   stream_out ("\n\n Estimated costs in #{thisLocale} (x #{$gRegionalCostAdj} Ottawa costs) : \n\n")
-
-   $gChoices.sort.to_h
-   for attribute in $gChoices.keys()
-   
-      debug_out "Costing for #{attribute}: " 
-   
-      choice = $gChoices[attribute]
-      cost = $gOptions[attribute]["options"][choice]["cost"].to_f
-      $gTotalCost += cost
-      stream_out( " +  #{cost.round()} ( #{attribute} : #{choice} ) \n")
-   end
-   stream_out ( " - #{($gIncBaseCosts * $gRegionalCostAdj).round} (Base costs for windows)  \n")
-   stream_out ( " --------------------------------------------------------\n")
-   stream_out ( " =   #{($gTotalCost-$gIncBaseCosts * $gRegionalCostAdj).round} ( Total incremental cost ) \n\n")
-   $gRegionalCostAdj != 0 ? val = $gTotalCost / $gRegionalCostAdj : val = 0
-   stream_out ( " ( Unadjusted upgrade costs: \$ #{val} )\n\n")
-   
-   if ( $gERSNum > 0 )
-      $tmpval = $gERSNum.round(1)
-      stream_out(" ERS value: #{$tmpval}\n")
-   end
-
 end  # End of postprocess
+
+# =========================================================================================
+# Initialize the output hash
+# =========================================================================================
+def initizeOutput (houseCode)
+    # Energy Consumption (Annual GJ)
+    $gResults[houseCode]["avgEnergyTotalGJ"]        = 0.0
+    $gResults[houseCode]["avgEnergyHeatingGJ"]      = 0.0
+    $gResults[houseCode]["avgGrossHeatLossGJ"]      = 0.0
+    $gResults[houseCode]["avgEnergyCoolingGJ"]      = 0.0
+    $gResults[houseCode]["avgEnergyVentilationGJ"]  = 0.0
+    $gResults[houseCode]["avgEnergyEquipmentGJ"]    = 0.0
+    $gResults[houseCode]["avgEnergyWaterHeatingGJ"] = 0.0
+
+    if $ExtraOutput1 then
+       # Total Heat Loss of all zones by component (GJ)
+       $gResults[houseCode]["EnvHLTotalGJ"] = 0.0
+       $gResults[houseCode]["EnvHLCeilingGJ"] = 0.0
+       $gResults[houseCode]["EnvHLMainWallsGJ"] = 0.0
+       $gResults[houseCode]["EnvHLWindowsGJ"] = 0.0
+       $gResults[houseCode]["EnvHLDoorsGJ"] = 0.0
+       $gResults[houseCode]["EnvHLExpFloorsGJ"] = 0.0
+       $gResults[houseCode]["EnvHLCrawlspaceGJ"] = 0.0
+       $gResults[houseCode]["EnvHLSlabGJ"] = 0.0
+       $gResults[houseCode]["EnvHLBasementBGWallGJ"] = 0.0
+       $gResults[houseCode]["EnvHLBasementAGWallGJ"] = 0.0
+       $gResults[houseCode]["EnvHLBasementFlrHdrsGJ"] = 0.0
+       $gResults[houseCode]["EnvHLPonyWallGJ"] = 0.0
+       $gResults[houseCode]["EnvHLFlrsAbvBasementGJ"] = 0.0
+       $gResults[houseCode]["EnvHLAirLkVentGJ"] = 0.0
+       
+       # Annual DHW heating load [GJ] -- heating load (or demand) on DHW system (before efficiency applied)
+       $gResults[houseCode]["AnnHotWaterLoadGJ"] = 0.0
+    end
+    
+    # Design loads, other data 
+    $gResults[houseCode]["avgOthPeakHeatingLoadW"] = 0.0
+    $gResults[houseCode]["avgOthPeakCoolingLoadW"] = 0.0
+    
+    $gResults[houseCode]["avgOthSeasonalHeatEff"] = 0.0
+    $gResults[houseCode]["avgVntAirChangeRateNatural"] = 0.0
+    $gResults[houseCode]["avgVntAirChangeRateTotal"] = 0.0
+    $gResults[houseCode]["avgSolarGainsUtilized"] = 0.0
+    $gResults[houseCode]["avgVntMinAirChangeRate"] = 0.0
+
+    $gResults[houseCode]["avgFuelCostsElec$"]    = 0.0
+    $gResults[houseCode]["avgFuelCostsNatGas$"]  = 0.0
+    $gResults[houseCode]["avgFuelCostsOil$"]     = 0.0
+    $gResults[houseCode]["avgFuelCostsPropane$"] = 0.0
+    $gResults[houseCode]["avgFuelCostsWood$"]    = 0.0
+
+    if $ExtraOutput1 then
+       # Annual SpaceHeating and HotWater energy by fuel type [GJ]
+       $gResults[houseCode]["AnnSpcHeatElecGJ"] = 0.0
+       $gResults[houseCode]["AnnSpcHeatGasGJ"] = 0.0
+       $gResults[houseCode]["AnnSpcHeatOilGJ"] = 0.0
+       $gResults[houseCode]["AnnSpcHeatPropGJ"] = 0.0
+       $gResults[houseCode]["AnnSpcHeatWoodGJ"] = 0.0
+       $gResults[houseCode]["AnnHotWaterElecGJ"] = 0.0
+       $gResults[houseCode]["AnnHotWaterGasGJ"] = 0.0
+       $gResults[houseCode]["AnnHotWaterOilGJ"] = 0.0
+       $gResults[houseCode]["AnnHotWaterPropGJ"] = 0.0
+       $gResults[houseCode]["AnnHotWaterWoodGJ"] = 0.0
+    end
+    
+    $gResults[houseCode]["avgFueluseElecGJ"]    = 0.0
+
+    if !$PVIntModel && $gResults[houseCode]["avgFueluseElecGJ"] == 0 then
+       $gResults[houseCode]["avgFueluseElecGJ"] = 0.0
+    end
+    $gResults[houseCode]["avgFueluseNatGasGJ"]  = 0.0
+    $gResults[houseCode]["avgFueluseOilGJ"]     = 0.0
+    $gResults[houseCode]["avgFuelusePropaneGJ"] = 0.0
+    $gResults[houseCode]["avgFueluseWoodGJ"]    = 0.0
+    
+    $gResults[houseCode]["avgFueluseEleckWh"]   = 0.0
+    $gResults[houseCode]["avgFueluseNatGasM3"]  = 0.0
+    $gResults[houseCode]["avgFueluseOilL"]      = 0.0
+    $gResults[houseCode]["avgFuelusePropaneL"]  = 0.0
+    $gResults[houseCode]["avgFueluseWoodcord"]  = 0.0
+
+    $gResults[houseCode]["avgFuelCostsTotal$"]  = 0.0
+    $gResults[houseCode]["avgEnergyGrossGJ"]    = 0.0
+    
+    if ( $PVIntModel )
+        $gResults[houseCode]["avgEnergyPVUtilizedGJ"]  = 0.0
+        $gResults[houseCode]["avgElecPVGenkWh"] = 0.0
+        $gResults[houseCode]["avgElecPVUsedkWh"] = 0.0
+        $gResults[houseCode]["avgPVRevenue"] = 0.0
+    end
+    
+    $gAuxEnergyHeatingGJ = 0
+
+end # End of initizeOutput
 
 # =========================================================================================
 # Get the general information about the house
@@ -8704,7 +8788,8 @@ $FloorArea = 0
 
 
 
-
+iGenCount = 1
+bIsLastCall = false
 orientations.each do |direction|
 
    $gDirection = direction
@@ -8717,8 +8802,11 @@ orientations.each do |direction|
    # The output data are contained in two places:
    # 1) HOT2000 run file in XML -> HouseFile/AllResults
    # 2) Browse.rpt file for the ERS number (ASCII, at "Energuide Rating (not rounded) =")
-   postprocess( $ScaleResults )
-   
+   if( orientations.size() == iGenCount) 
+      bIsLastCall = true
+   end
+   postprocess( $ScaleResults, bIsLastCall )
+   iGenCount += 1
 end
 
 $gAvgCost_Total = $gResults[$outputHCode]['avgFuelCostsTotal$']
