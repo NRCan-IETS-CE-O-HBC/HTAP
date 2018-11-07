@@ -648,6 +648,7 @@ def run_these_cases(current_task_files)
   
   current_task_files.each do |choicefile|
     $FinishedTheseFiles[choicefile] = false 
+    debug_out(" Mark - #{choicefile}\n")
   end 
   
   $choicefileIndex = 0 
@@ -685,7 +686,7 @@ def run_these_cases(current_task_files)
       
       # Compute the number of threads we will start: lesser of a) files remaining, or b) threads allowed.
       $ThreadsNeeded = [$FinishedTheseFiles.count {|k| k.include?(false)}, $gNumberOfThreads].min 
-      
+      debug_out (" Number of threads: #{$ThreadsNeeded} \n")
       #=====================================================================================
       # Multi-threaded runs - Step 1: Spawn threads. 
       for thread in 0..$ThreadsNeeded-1  
@@ -1518,7 +1519,7 @@ else
       
     create_mesh_cartisian_combos(-3) 
 
- 
+    $RunTheseFiles = $gGenChoiceFileList 
     
   when "parametric"   
   
