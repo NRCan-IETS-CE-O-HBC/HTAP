@@ -1487,7 +1487,39 @@
       "NA": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "NA"
+            "<Opt-ACH>": "NA",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "ACH_NBC": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "2.5",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
           }
         },
         "costs": {
@@ -1513,7 +1545,10 @@
       "ACH_7": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "7.0"
+            "<Opt-ACH>": "7.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1539,7 +1574,10 @@
       "ACH_6_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "6.5"
+            "<Opt-ACH>": "6.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1565,7 +1603,10 @@
       "ACH_6": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "6.0"
+            "<Opt-ACH>": "6.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1591,7 +1632,10 @@
       "ACH_5_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "5.5"
+            "<Opt-ACH>": "5.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1617,7 +1661,10 @@
       "ACH_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "5.0"
+            "<Opt-ACH>": "5.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1643,7 +1690,10 @@
       "ACH_4_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "4.5"
+            "<Opt-ACH>": "4.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1669,7 +1719,10 @@
       "ACH_4": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "4.0"
+            "<Opt-ACH>": "4.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1695,7 +1748,10 @@
       "ACH_3_75": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "3.75"
+            "<Opt-ACH>": "3.75",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1721,7 +1777,10 @@
       "ACH_3_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "3.5"
+            "<Opt-ACH>": "3.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1747,7 +1806,10 @@
       "ACH_3": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "3.0"
+            "<Opt-ACH>": "3.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1773,7 +1835,10 @@
       "ACH_2_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "2.5"
+            "<Opt-ACH>": "2.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1799,7 +1864,10 @@
       "ACH_2_0": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "2.0"
+            "<Opt-ACH>": "2.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1825,7 +1893,10 @@
       "ACH_1_75": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.75"
+            "<Opt-ACH>": "1.75",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1851,7 +1922,10 @@
       "ACH_1_5": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.5"
+            "<Opt-ACH>": "1.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1877,7 +1951,10 @@
       "ACH_1_25": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.25"
+            "<Opt-ACH>": "1.25",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1903,7 +1980,10 @@
       "ACH_1_0": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.00"
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1929,7 +2009,10 @@
       "ACH_0_6": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "0.6"
+            "<Opt-ACH>": "0.6",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1955,7 +2038,10 @@
       "ACH_0_1": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "0.1"
+            "<Opt-ACH>": "0.1",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
           }
         },
         "costs": {
@@ -1982,7 +2068,10 @@
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
-      "<Opt-ACH>"
+      "<Opt-ACH>",
+      "Opt-BuildingSite",
+      "Opt-WallShield",
+      "Opt-FlueShield"
     ]
   },
   "Opt-CasementWindows": {
@@ -2192,6 +2281,7 @@
           "base": {
             "<Opt-win-S-CON>": "DblLeHcArg",
             "<Opt-win-E-CON>": "DblLeScArg",
+            "<Opt-win-N-CON>": "DblLeScArg",            
             "<Opt-win-W-CON>": "DblLeScArg",
             "<Opt-win-SE-CON>": "DblLeScArg",
             "<Opt-win-SW-CON>": "DblLeScArg",
@@ -3210,7 +3300,7 @@
         }
       }
     },
-    "default": "DoubleLowEHardCoatArgFill",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-win-S-CON>",
@@ -3576,7 +3666,7 @@
         }
       }
     },
-    "default": "DoorWinDef",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-win-S-CON>",
@@ -3958,7 +4048,7 @@
         }
       }
     },
-    "default": "SolidWood",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-R-value>"
@@ -4509,7 +4599,7 @@
         }
       }
     },
-    "default": "CeilR50",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
@@ -4818,7 +4908,7 @@
         }
       }
     },
-    "default": "CeilR40",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
@@ -5073,7 +5163,7 @@
         }
       }
     },
-    "default": "CeilR40",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
@@ -5328,7 +5418,7 @@
         }
       }
     },
-    "default": "CeilR40",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
@@ -6509,18 +6599,20 @@
         },
         "costs": {
           "components": [
-            "framing:conventional:38x140mm_o.c.",
-            "insulation:xps_type_3:rigid:25mm",
-            "osb:12mm",
-            "insulation:r22_batt",
-            "1/2in_gypsum_board",
-            "strapping:1inx3in_vertical"
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
           ],
           "custom-costs": {
-            "EffectiveLeepCosts-PPB-estimate ": {
-              "Units": "sf Wall",
-              "TotUnitCost": 1.40,
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
               "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
             }
           }
         }
@@ -7389,7 +7481,6 @@
       "NA": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-CodeName": "NA",
             "Opt-H2K-EffRValue": "NA"
           }
         },
@@ -7416,7 +7507,6 @@
       "Header_R20": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-CodeName": "NA",
             "Opt-H2K-EffRValue": "20"
           }
         },
@@ -7443,7 +7533,6 @@
       "Header_R30": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-CodeName": "NA",
             "Opt-H2K-EffRValue": "30"
           }
         },
@@ -7470,7 +7559,6 @@
       "Header_R40": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-CodeName": "NA",
             "Opt-H2K-EffRValue": "40"
           }
         },
@@ -7497,7 +7585,6 @@
       "Header_R50": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-CodeName": "NA",
             "Opt-H2K-EffRValue": "50"
           }
         },
@@ -7524,8 +7611,293 @@
       "Header_R60": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-CodeName": "NA",
             "Opt-H2K-EffRValue": "60"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone4": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "15.79"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone5_noHRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "17.49"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone5_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "16.86"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone6_noHRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "17.49"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone6_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "16.86"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone7A_noHRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "17.49"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone7A_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "16.52"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone7B_noHRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "21.86"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone7B_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "17.49"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone8_noHRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "21.86"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Wall_zone8_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -7552,7 +7924,6 @@
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
-      "OPT-H2K-CodeName",
       "Opt-H2K-EffRValue"
     ]
   },
@@ -9798,8 +10169,559 @@
           "base": {
             "OPT-H2K-ConfigType": "SCB_1_ALL",
             "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "15.79",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone4": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
             "OPT-H2K-CrawlWall-RValue": "NA",
             "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone5_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17.49",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone5_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone5": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone6_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17.49",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone6_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone6": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone7A_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17.49",
+            "OPT-H2K-BelowSlab-RVal": "21.12"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone7A_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "16.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone7A_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "21.12"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone7A_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "16.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone7B_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "21.86",
+            "OPT-H2K-BelowSlab-RVal": "21.12"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone7B_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17.49",
+            "OPT-H2K-BelowSlab-RVal": "16.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone7B_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "21.12"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone7B_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "16.13"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone8_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "21.86",
+            "OPT-H2K-BelowSlab-RVal": "26.06"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SCB_zone8_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17.49",
+            "OPT-H2K-BelowSlab-RVal": "21.12"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone8_noHRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "26.06"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_SOnly_zone8_HRV": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_1_S",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "NA",
+            "OPT-H2K-BelowSlab-RVal": "21.12"
           }
         },
         "costs": {
@@ -10165,6 +11087,199 @@
     "stop-on-error": true,
     "h2kSchema": [
       "OPT-H2K-CodeName",
+      "OPT-H2K-EffRValue"
+    ]
+  },
+  "Opt-FloorAboveCrawl": {
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_crawlceiling_zone4": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "26.52"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_crawlceiling_zone5": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "26.52"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_crawlceiling_zone6": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "26.52"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_crawlceiling_zone7A": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "28.50"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_crawlceiling_zone7B": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "28.50"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_crawlceiling_zone8": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "28.50"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      }
+    },
+    "default": "NA",
+    "stop-on-error": true,
+    "h2kSchema": [
       "OPT-H2K-EffRValue"
     ]
   },
@@ -11224,7 +12339,7 @@
         }
       }
     },
-    "default": "CEF_SPEC",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-HRVInputFile>",
@@ -11235,6 +12350,135 @@
       "OPT-H2K-HRVSupply",
       "OPT-H2K-Rating1",
       "OPT-H2K-Rating2"
+    ]
+  },
+  "Opt-HRVonly": {
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "false",
+            "OPT-H2K-AirDistType": "NA",
+            "OPT-H2K-OpSched": "NA",
+            "OPT-FlowCalc": "NA",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "NA",
+            "OPT-H2K-Rating2": "NA",
+            "OPT-H2K-Rating3": "NA",
+            "OPT-H2K-FanPowerCalc": "NA",
+            "OPT-H2K-FanPower1": "NA",
+            "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "true",
+            "OPT-H2K-AirDistType": "1",
+            "OPT-H2K-OpSched": "480",
+            "OPT-FlowCalc": "1",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "60",
+            "OPT-H2K-Rating2": "55",
+            "OPT-H2K-Rating3": "0",
+            "OPT-H2K-FanPowerCalc": "NBC",
+            "OPT-H2K-FanPower1": "NA",
+            "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_noHRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "true",
+            "OPT-H2K-AirDistType": "1",
+            "OPT-H2K-OpSched": "480",
+            "OPT-FlowCalc": "1",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "0",
+            "OPT-H2K-Rating2": "0",
+            "OPT-H2K-Rating3": "0",
+            "OPT-H2K-FanPowerCalc": "NBC",
+            "OPT-H2K-FanPower1": "NA",
+            "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      }
+    },
+    "default": "NA",
+    "stop-on-error": true,
+    "h2kSchema": [
+      "Opt-IsActive",
+      "OPT-H2K-AirDistType",
+      "OPT-H2K-OpSched",
+      "OPT-FlowCalc",
+      "OPT-H2K-HRVSupply",
+      "OPT-H2K-Rating1",
+      "OPT-H2K-Rating2",
+      "OPT-H2K-Rating3",
+      "OPT-H2K-FanPowerCalc",
+      "OPT-H2K-FanPower1",
+      "OPT-H2K-FanPower2"
     ]
   },
   "Opt-DHWSystem": {
@@ -11836,7 +13080,7 @@
           }
         }
       },
-      "NBC-BaseLoads": {
+      "NBC-Baseloads": {
         "h2kMap": {
           "base": {
             "Opt-H2K-NumAdults": "2",
@@ -11901,6 +13145,219 @@
       "Opt-H2K-FuelDryer",
       "Opt-H2K-DryerUse",
       "Opt-H2K-DryerLoc"
+    ]
+  },
+  "Opt-Temperatures": {
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-DayHeatSet": "NA",
+            "Opt-H2K-NightHeatSet": "NA",
+            "Opt-H2K-SetbackDur": "NA",
+            "Opt-H2K-CoolSet": "NA",
+            "Opt-H2K-AllowRise": "NA",
+            "Opt-H2K-BsmtIsHeat": "NA",
+            "Opt-H2K-BsmtIsCool": "NA",
+            "Opt-H2K-BsmtHeatSet": "NA",
+            "Opt-H2K-BsmtSepTherm": "NA",
+            "Opt-H2K-EqipHeat": "NA",
+            "Opt-H2K-EqipCool": "NA",
+            "Opt-H2K-CrawlIsHeat": "NA",
+            "Opt-H2K-CrawlHeatSet": "NA",
+            "Opt-H2K-CoolSeasStart": "NA",
+            "Opt-H2K-CoolSeasEnd": "NA",
+            "Opt-H2K-CoolSeasDes": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Temps": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-DayHeatSet": "21",
+            "Opt-H2K-NightHeatSet": "21",
+            "Opt-H2K-SetbackDur": "8",
+            "Opt-H2K-CoolSet": "25",
+            "Opt-H2K-AllowRise": "3",
+            "Opt-H2K-BsmtIsHeat": "true",
+            "Opt-H2K-BsmtIsCool": "false",
+            "Opt-H2K-BsmtHeatSet": "19",
+            "Opt-H2K-BsmtSepTherm": "true",
+            "Opt-H2K-EqipHeat": "22",
+            "Opt-H2K-EqipCool": "24",
+            "Opt-H2K-CrawlIsHeat": "NA",
+            "Opt-H2K-CrawlHeatSet": "15",
+            "Opt-H2K-CoolSeasStart": "5",
+            "Opt-H2K-CoolSeasEnd": "10",
+            "Opt-H2K-CoolSeasDes": "7"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      }
+    },
+    "default": "NA",
+    "stop-on-error": true,
+    "h2kSchema": [
+      "Opt-H2K-DayHeatSet",
+      "Opt-H2K-NightHeatSet",
+      "Opt-H2K-SetbackDur",
+      "Opt-H2K-CoolSet",
+      "Opt-H2K-AllowRise",
+      "Opt-H2K-BsmtIsHeat",
+      "Opt-H2K-BsmtIsCool",
+      "Opt-H2K-BsmtHeatSet",
+      "Opt-H2K-BsmtSepTherm",
+      "Opt-H2K-EqipHeat",
+      "Opt-H2K-EqipCool",
+      "Opt-H2K-CrawlIsHeat",
+      "Opt-H2K-CrawlHeatSet",
+      "Opt-H2K-CoolSeasStart",
+      "Opt-H2K-CoolSeasEnd",
+      "Opt-H2K-CoolSeasDes"
+    ]
+  },
+  "Opt-Specifications": {
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-ThermalMass": "NA",
+            "Opt-H2K-WallColour": "NA",
+            "Opt-H2K-SoilCondition": "NA",
+            "Opt-H2K-RoofColour": "NA",
+            "Opt-H2K-WaterLevel": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Specs_Normal": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-ThermalMass": "1",
+            "Opt-H2K-WallColour": "0.4",
+            "Opt-H2K-SoilCondition": "1",
+            "Opt-H2K-RoofColour": "0.4",
+            "Opt-H2K-WaterLevel": "2"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NBC_Specs_Perma": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-ThermalMass": "1",
+            "Opt-H2K-WallColour": "0.4",
+            "Opt-H2K-SoilCondition": "3",
+            "Opt-H2K-RoofColour": "0.4",
+            "Opt-H2K-WaterLevel": "2"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      }
+    },
+    "default": "NA",
+    "stop-on-error": true,
+    "h2kSchema": [
+      "Opt-H2K-ThermalMass",
+      "Opt-H2K-WallColour",
+      "Opt-H2K-SoilCondition",
+      "Opt-H2K-RoofColour",
+      "Opt-H2K-WaterLevel"
     ]
   },
   "Opt-H2K-PV": {

@@ -1389,9 +1389,27 @@ def processFile(h2kElements)
                   h2kElements[locationText].attributes["airChangeRate"] = value
                   h2kElements[locationText].attributes["isCgsbTest"] = "true"
                   h2kElements[locationText].attributes["isCalculated"] = "true"
-               else
-                  if ( value == "NA" ) # Don't change anything
-                  else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+               elsif( tag =~ /Opt-BuildingSite/ && value != "NA" )
+                   if(value.to_f < 1 || value.to_f > 8)
+                      fatalerror("In #{choiceEntry}, invalid building site input #{value}")
+                   end
+                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BuildingSite/Terrain"
+                   h2kElements[locationText].attributes["code"] = value
+               elsif( tag =~ /Opt-WallShield/ && value != "NA" )
+                   if(value.to_f < 1 || value.to_f > 5)
+                      fatalerror("In #{choiceEntry}, invalid wall shielding input #{value}")
+                   end
+                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/LocalShielding/Walls"
+                   h2kElements[locationText].attributes["code"] = value
+               elsif( tag =~ /Opt-FlueShield/ && value != "NA" )
+                   if(value.to_f < 1 || value.to_f > 5)
+                      fatalerror("In #{choiceEntry}, invalid wall shielding input #{value}")
+                   end
+                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/LocalShielding/Flue"
+                   h2kElements[locationText].attributes["code"] = value
+               #else
+               #   if ( value == "NA" ) # Don't change anything
+               #   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
             
             
@@ -2431,7 +2449,22 @@ def processFile(h2kElements)
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
                end
-               
+            
+            # Floor above crawlspace
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-FloorAboveCrawl/ )
+               # If there is a crawlspace and an R-value has been specified for the floor above the crawlspace, update
+               if ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" && h2kElements["HouseFile/House/Components/Crawlspace"] != nil)
+                  locationText = "HouseFile/House/Components/Crawlspace/Floor/Construction/FloorsAbove"
+                  h2kElements.each(locationText) do |element|
+                     element.text = "User specified"     # Description tag
+                     element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                     if element.attributes["idref"] != nil then
+                        # Must delete attribute for User Specified!
+                        element.delete_attribute("idref")
+                     end
+                  end
+               end            
                
             # DHW System 
             #--------------------------------------------------------------------------
@@ -3082,7 +3115,83 @@ def processFile(h2kElements)
                   end                 
                   
                end # END of elsif under HVACSystem section
+          
+            # HRV Ventilation System
+            # Note: This option will remove all other ventilation systems
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-HRVonly/ )
+                if(valHash["1"] == "false") # Option not active, skip
+                    break
+                elsif(valHash["1"] == "true") # Option is active
+                    # Delete all existing systems
+                    locationText = "HouseFile/House/Ventilation/"
+                    h2kElements[locationText].delete_element("WholeHouseVentilatorList")
+                    h2kElements[locationText].delete_element("SupplementalVentilatorList")
+                    
+                    # Make fresh elements
+                    h2kElements[locationText].add_element("WholeHouseVentilatorList")
+                    h2kElements[locationText].add_element("SupplementalVentilatorList")
 
+                    # Construct the HRV input framework
+                    createHRV(h2kElements)
+                    
+                    # Set the ventilation code requirement to 4 (Not applicable)
+                    h2kElements[locationText + "Requirements/Use"].attributes["code"] = "4"
+                    
+                    # Set the air distribution type
+                    h2kElements[locationText + "WholeHouse/AirDistributionType"].attributes["code"] = valHash["2"]
+                    
+                    # Set the operation schedule
+                    h2kElements[locationText + "WholeHouse/OperationSchedule"].attributes["code"] = "0"    # User Specified
+                    h2kElements[locationText + "WholeHouse/OperationSchedule"].attributes["value"] = valHash["3"]
+                    
+                    # Determine flow calculation
+                    calcFlow = 0
+                    if(valHash["4"] == "2") # The flow rate is supplied
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = valHash["5"]    # L/s supply
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = valHash["5"]   # Exhaust = Supply
+                        calcFlow = valHash["5"].to_f
+                    elsif(valHash["4"] == "1") # The flow rate is calculated using F326
+                        calcFlow = getF326FlowRates(h2kElements)
+                        if(calcFlow < 1)
+                            fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 flow rates!\n")
+                        else
+                            h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = calcFlow.to_s    # L/s supply
+                            h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = calcFlow.to_s   # Exhaust = Supply
+                        end
+                    else
+                        fatalerror("ERROR: For Opt-HRVonly, invalid flow calculation input  #{valHash["4"]}!\n")
+                    end
+                    
+                    # Update the HRV efficiency
+                    h2kElements[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency1"] = valHash["6"]    # Rating 1 Efficiency
+                    h2kElements[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency2"] = valHash["7"]    # Rating 2 Efficiency
+                    h2kElements[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["coolingEfficiency"] = valHash["8"]    # Rating 3 Efficiency
+                    
+                    # Determine fan power calculation
+                    if(valHash["9"] == "default")
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "true"    # Let HOT2000 calculate the fan power
+                    elsif(valHash["9"] == "specified")
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "false"    # Specify the fan power
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  valHash["10"]  # Supply the fan power at operating point 1 [W]
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  valHash["11"]  # Supply the fan power at operating point 2 [W]
+                    elsif(valHash["9"] == "NBC")
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "false"    # Specify the fan power
+                        # Determine fan power from flow rate as stated in 9.36.5.11(14a)
+                        fanPower = calcFlow*2.32
+                        fanPower = sprintf("%0.2f", fanPower) # Format to two decimal places
+                        
+                        # Assume same fan power for all temperatures
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  fanPower  # Supply the fan power at operating point 1 [W]
+                        h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  fanPower  # Supply the fan power at operating point 2 [W]
+                    else
+                       fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
+                    end
+                else
+                    fatalerror("ERROR: For Opt-HRVonly, unknown active input  #{valHash["1"]}!\n")
+                end
+                
+                break
               
             # HRV System
             #--------------------------------------------------------------------------
@@ -3297,6 +3406,107 @@ def processFile(h2kElements)
                 # Move to the next choiceEntry with a break
                 break
 
+            # Temperature inputs
+            # ADW 23-May-2018: Original development of option
+            # Notes: 
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Temperatures/ )
+               locationText = "HouseFile/House/Temperatures/"
+               if ( tag =~ /Opt-H2K-DayHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["daytimeHeatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-NightHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["nighttimeHeatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-SetbackDur/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["nighttimeSetbackDuration"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSet/ &&  value != "NA" )
+                  h2kElements[locationText + "MainFloors"].attributes["coolingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-AllowRise/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3")
+                     fatalerror("In Opt-Temperatures: Invalid allowable rise option #{value}! Must be NA, 1, 2, or 3 \n")
+                  end
+                  h2kElements[locationText + "MainFloors/AllowableRise"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtIsHeat/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is basement heated must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Basement"].attributes["heated"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtIsCool/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is basement cooled must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Basement"].attributes["cooled"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtSepTherm/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is basement separate thermostat must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Basement"].attributes["separateThermostat"] = value
+               elsif ( tag =~ /Opt-H2K-BsmtHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "Basement"].attributes["heatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-EqipHeat/ &&  value != "NA" )
+                  h2kElements[locationText + "Equipment"].attributes["heatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-EqipCool/ &&  value != "NA" )
+                  h2kElements[locationText + "Equipment"].attributes["coolingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-CrawlIsHeat/ &&  value != "NA" )
+                  if(value != "true" && value != "false")
+                    fatalerror("In Opt-Temperatures: Is crawlspace must be true or false, not #{value}\n")
+                  end
+                  h2kElements[locationText + "Crawlspace"].attributes["heated"] = value
+               elsif ( tag =~ /Opt-H2K-CrawlHeatSet/ &&  value != "NA" )
+                  h2kElements[locationText + "Crawlspace"].attributes["heatingSetPoint"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSeasStart/ &&  value != "NA" )
+                  if(value.to_i < 1 || value.to_i > 12)
+                     fatalerror("In #{choiceEntry}: Invalid cooling season start #{value}")
+                  end
+                  locationText = "HouseFile/House/HeatingCooling/CoolingSeason/"
+                  h2kElements[locationText + "Start"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSeasEnd/ &&  value != "NA" )
+                  if(value.to_i < 1 || value.to_i > 12)
+                     fatalerror("In #{choiceEntry}: Invalid cooling season end #{value}")
+                  end
+                  locationText = "HouseFile/House/HeatingCooling/CoolingSeason/"
+                  h2kElements[locationText + "End"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-CoolSeasDes/ &&  value != "NA" )
+                  if(value.to_i < 1 || value.to_i > 12)
+                     fatalerror("In #{choiceEntry}: Invalid cooling season design month #{value}")
+                  end
+                  locationText = "HouseFile/House/HeatingCooling/CoolingSeason/"
+                  h2kElements[locationText + "Design"].attributes["code"] = value
+               end
+               
+            # House specifications inputs
+            # ADW 24-May-2018: Original development of option
+            # Notes: 
+            #--------------------------------------------------------------------------
+            elsif ( choiceEntry =~ /Opt-Specifications/ )
+               locationText = "HouseFile/House/Specifications/"
+               if ( tag =~ /Opt-H2K-ThermalMass/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3" && value != "4")
+                    fatalerror("In Opt-Specifications: Invalid thermal mass input #{value}\n")
+                  end
+                  h2kElements[locationText + "ThermalMass"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-WallColour/ &&  value != "NA" )
+                  if((value.to_f > 1) || (value.to_f < 0))
+                    fatalerror("In Opt-Specifications: Invalid wall colour input #{value}\n")
+                  end
+                  h2kElements[locationText + "WallColour"].attributes["code"] = "1"
+                  h2kElements[locationText + "WallColour"].attributes["value"] = value
+               elsif ( tag =~ /Opt-H2K-SoilCondition/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3")
+                    fatalerror("In Opt-Specifications: Invalid soil conductivity input #{value}\n")
+                  end
+                  h2kElements[locationText + "SoilCondition"].attributes["code"] = value
+               elsif ( tag =~ /Opt-H2K-RoofColour/ &&  value != "NA" )
+                  if((value.to_f > 1) || (value.to_f < 0))
+                    fatalerror("In Opt-Specifications: Invalid roof colour input #{value}\n")
+                  end
+                  h2kElements[locationText + "RoofColour"].attributes["code"] = "1"
+                  h2kElements[locationText + "RoofColour"].attributes["value"] = value
+               elsif ( tag =~ /Opt-H2K-WaterLevel/ &&  value != "NA" )
+                  if(value != "1" && value != "2" && value != "3")
+                    fatalerror("In Opt-Specifications: Invalid water level input #{value}\n")
+                  end
+                  h2kElements[locationText + "WaterLevel"].attributes["code"] = value
+               end
 
             # Roof Pitch - change slope of all ext. ceilings (i.e., roofs)
             #--------------------------------------------------------------------------
@@ -4200,6 +4410,39 @@ def createHRV( elements )
 end
 
 # =========================================================================================
+# Determine the F326 flow rate for a house
+# =========================================================================================
+def getF326FlowRates( elements )
+   locationText = "HouseFile/House/Ventilation/Rooms"
+   roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
+   ventRequired = 0
+   roomLabels.each do |roommName|
+      if(roommName == "living" || roommName == "bathrooms" || roommName == "utility" || roommName == "otherHabitable")
+        numRooms = elements[locationText].attributes[roommName].to_i
+        ventRequired += (numRooms*5)
+        #print "Room is ",roommName, " and number is ",numRooms, ". Total vent required is ", ventRequired, "\n"
+      elsif(roommName == "bedrooms")
+        numRooms = elements[locationText].attributes[roommName].to_i
+        if(numRooms >= 1)
+            ventRequired += 10
+            if(numRooms > 1)
+                ventRequired += ((numRooms-1)*5)
+            end
+        end
+        #print "Room is ",roommName, " and number is ",numRooms, ". Total vent required is ", ventRequired, "\n"
+      end   
+   end
+   
+   # If there is a basement, add another 10 L/s
+   if(elements["HouseFile/House/Components/Basement"] != nil)
+        ventRequired += 10
+        #print "Room is basement. Total vent required is ", ventRequired, "\n"
+   end
+   #print "Final total vent required is ", ventRequired, "\n"
+   return ventRequired
+end
+
+# =========================================================================================
 # Get and return primary (type 1) system space heating capacity in Watts
 # =========================================================================================
 def getBaseSystemCapacity( elements, sysType1Arr )
@@ -4832,6 +5075,9 @@ def runsims( direction )
      runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
 
      begin
+       
+       debug_out ("running #{runThis} ... \n") 
+       debug_out ("timeout limit  #{$maxRunTime} ... \n") 
        
        pid = Process.spawn( runThis, :new_pgroup => true )
        stream_out ("\n Attempt ##{tries}:  Invoking HOT2000 (PID #{pid}) ...")
@@ -6644,32 +6890,28 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
    # Basement, slab, or both in model file?
    # Decide which to use for compliance based on count!
-   # TODO: Provide new options for Basements and Slabs so can change each!
-   isBasement = false
-   isSlab = false
-   numOfBasements = 0
-   numOfSlabs = 0
-   elements.each("HouseFile/House/Components") do |component|     
-      # TODO: Should this also include crawlspace?
-      if component =~ /Basement/ || component =~ /Walkout/
-         numOfBasements += 1
-      elsif component =~ /Slab/
-         numOfSlabs += 1
-      end 
-   end 
-   if numOfBasements >= numOfSlabs
-      isBasement = true
-      isSlab = false
-   else
-      isBasement = false
-      isSlab = true
+   # ADW May 17 2018: Basements are modified through Opt-H2KFoundation, slabs and crawlspaces through Opt-H2KFoundationSlabCrawl
+   # Determine if a crawlspace is present, and if it is, if the crawlspace is heated
+   numOfCrawl = 0
+   isCrawlHeated = false
+   if elements["HouseFile/House/Components/Crawlspace"] != nil
+      numOfCrawl += 1
+      if elements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
+         isCrawlHeated = true
+      end
    end
    
    # Choices that do NOT depend on ruleType!
 
-   $ruleSetChoices["Opt-ACH"] = "ACH_2_5"
-   $ruleSetChoices["Opt-Baseloads"] = "NBC-BaseLoads"
+   $ruleSetChoices["Opt-ACH"] = "ACH_NBC"
+   $ruleSetChoices["Opt-Baseloads"] = "NBC-Baseloads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
+   $ruleSetChoices["Opt-Temperatures"] = "NBC_Temps"
+   if ($PermafrostHash[cityName] == "continuous")
+      $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Perma"
+   else
+      $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Normal"
+   end
    
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/) != nil        # value is "Natural gas"
@@ -6696,6 +6938,9 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    # Thermal zones and HDD by rule type
    #-------------------------------------------------------------------------
    if ruleType =~ /NBC9_36_noHRV/
+   
+      # Implement reference ventilation system (HRV with 0% recovery efficiency)
+      $ruleSetChoices["Opt-HRVonly"]                        =  "NBC_noHRV"		 
       
       # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000 
@@ -6712,17 +6957,20 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
       
-      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
+      # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
          end
       
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"]    = "NBC_Wall_zone5_noHRV"
+         $ruleSetChoices["Opt-FloorHeader"]    = "NBC_Wall_zone5_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                     = "NBC_Ceiling_zone5_noHRV"
          $ruleSetChoices["Opt-CathCeilings"]                      = "NBC_FlatCeiling_zone5"
          $ruleSetChoices["Opt-FlatCeilings"]                      = "NBC_FlatCeiling_zone5"
@@ -6735,16 +6983,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"  
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_SCB_zone5_noHRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone5_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
          end
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_noHRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone6_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
@@ -6757,16 +7008,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_noHRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone6_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone6_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone6" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
          end
 
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_noHRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone7A_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_noHRV"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
@@ -6778,16 +7032,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_noHRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7A_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7A_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_noHRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
+         end         
 
       # Zone 7B ( 6000 < HDD < 6999) without an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_noHRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone7B_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
@@ -6800,16 +7057,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_noHRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7B_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7B_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7B_noHRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
+         end 
 
       # Zone 8 (HDD <= 7000) without an HRV
       elsif locale_HDD >= 7000 
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_noHRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone8_noHRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
@@ -6822,23 +7082,27 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_noHRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_noHRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone8_noHRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone8_noHRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_noHRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
+         end 
+
       end
 
    #-------------------------------------------------------------------------
    elsif ruleType =~ /NBC9_36_HRV/
 
       # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3)     
-        $ruleSetChoices["Opt-HRVspec"]                        =  "NBC_HRV"      
+  		$ruleSetChoices["Opt-HRVonly"]                        =  "NBC_HRV"		
 
      # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000 
       # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone4"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
@@ -6851,15 +7115,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
       
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B) 
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone4"
-         end         
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
+         end 
+         
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_HRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone5_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone5_HRV"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone5"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone5"
@@ -6872,16 +7140,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone5_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone5_HRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone5_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone5_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
+         end 
          
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_HRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone6_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
@@ -6894,16 +7165,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone6_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone6_HRV"
-         end
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone6_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone6_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone6" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
+         end 
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_HRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone7A_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_HRV"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
@@ -6916,16 +7190,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7A_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7A_HRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7A_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7A_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_HRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
          end
 
       # Zone 7B ( 6000 < HDD < 6999) with an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_HRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone7B_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
@@ -6938,16 +7215,19 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)    
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone7B_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone7B_HRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone7B_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7B_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7B_HRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
          end
 
       # Zone 8 (HDD <= 7000) with an HRV
       elsif locale_HDD >= 7000 
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)  
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_HRV"
+         $ruleSetChoices["Opt-FloorHeader"] = "NBC_Wall_zone8_HRV"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
@@ -6960,10 +7240,12 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
          
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
-         if isBasement 
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_BCIN_zone8_HRV"
-         elsif isSlab
-            $ruleSetChoices["Opt-H2KFoundation"] =  "NBC_SCB_zone8_HRV"
+         $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone8_HRV"
+         if isCrawlHeated
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone8_HRV"
+         else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
+            $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_HRV" # If there are any slabs, insulate them
+            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
          end
 
       end
@@ -7960,9 +8242,19 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
    # Replace choices in $gChoices with rule set choices in $ruleSetChoices
    stream_out("\n Replacing user-defined choices with rule set choices where appropriate...\n")
    $ruleSetChoices.each do |attrib, choice|
+   
+      debug_out ("COMPARE: RULESET: #{attrib} -> `#{choice}` \n")
+      debug_out ("         CHOICES: #{attrib} -> `#{$gChoices[attrib]}`\n")
+      
       if choice.empty?
+         #Pretty-sure this will never happen. 
          warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
          next  # skip setting this empty choice!
+      elsif $gChoices[attrib].empty? 
+
+         # User hasn't provided input on this parameter. Reset to ruleset requirement.
+         $gChoices[attrib] = choice 
+         stream_out ("   - #{attrib} -> #{choice}\n")
       elsif $gChoices[attrib] =~ /NA/
          # Change choice to rule set value for all choices that are "NA"
          $gChoices[attrib] = choice

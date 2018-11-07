@@ -48,10 +48,12 @@ File formats <a name="fileformats"></a>
 
 <a name="options-definition"></a>
 ### The options file (`HTAP-options.json`)
-HTAP supports data input via JSON formatted options files.[^1] This file is formatted as a list of hashes - each of which defines attributes that can be set changed within the model, or that affect how the evaluations should be performed. 
-
+HTAP supports data input via JSON formatted 'options' files.[^1] The options file defines the attributes of a HOT2000 house model that can be changed within HTAP, the options that they can be changed to, and the data values that will be changed within the target .h2k file.  
 
 [^1]: Available since commit 2b29e5f5539219c1260ddc2fe3dfa7a2947fd373 
+
+
+This file is formatted as a list of hashes - each of which defines attributes that can be set changed within the model, or that affect how the evaluations should be performed. 
 
 
 The  HTAP-options.json file looks like this: 
@@ -74,6 +76,8 @@ a fuel library, or specifying the code library.
 changing the mechanical system from a furnace a heat pump or combo. 
 
 #### Attribute specification - `tree` structure 
+The tree definition scheme for attributes is the more complicated of the two approaches. It offers the most flexibility in defining 
+data inputs, and should be used when an attribute maps to multiple parts of a .h2k file. 
 
     "Tree-Attribute_X": {
       "structure": "tree",
@@ -154,19 +158,18 @@ The flat definitions for attributes are relatively simple. They can be used when
         "
     }
     
-#### Members belonging to an attribute:
+#### Members belonging to an attribute
     
 Members common to both `tree` and `flat` structures:
 - `"structure": ["flat"|"tree"]`: string keyword describing which structure should be used 
-- `"costed": [true|false]`: specifies whether cost data is associated with this attribute. If `"costed": true`, the costs section must be supplied.<mark>Note that </mark>**`"costed": true`**<mark> is currently only supported in the tree structure.</mark>
+- `"costed": [true|false]`: specifies whether cost data is associated with this attribute. If `"costed": true`, the costs section must be supplied.<mark>Note that **`"costed": true`** is currently only supported in the tree structure.</mark>
 - `"options": { ... }`: Hash defining the valid options that an attribute can be set to. Contents depend on whether `tree` or `flat` structure is used. 
 - `"default": "keyword_X"` - specifies the default value that should be used if the user opts not to provide an option. 
 - `"stop-on-error": [true|false]`: Flag indicating if the run should be terminated when an option is not provided, or if HTAP should attempt to continue. 
 
 Members specific to the `tree` structure:
 - `"h2kSchema": [ ... ]`: list of keyword tags that HTAP supports for this attribute - each of which refers to a part of the .h2k file that HTAP can modify. Each option must map one or more of these tags to a value. The schema is only defined once per attribute. 
-- `"h2kMap": { ... }`: a hash that maps the `"h2kSchema"` tags to the values for a specific option `"h2kMap"` supports a standard base definition that will be used for all applications. <mark>Future versions will include support `"variants"` that users to modify a one or more tags 
-for a specific analysis.</mark>
+- `"h2kMap": { ... }`: a hash that maps the `"h2kSchema"` tags to the values for a specific option `"h2kMap"` supports a standard base definition that will be used for all applications. <mark>Future versions will include support `"variants"` that allow users to modify a one or more tags for  specific analysis tasks.</mark>
 - `"base": { ... }`: a hash that maps the `"h2kSchema"` tags to the values for a specific option. 
 - `"variants": { ... }`: a set of hashes that overwrite definitions in the base h2k map for specific scenario requirements. This section is intended to allow users to customize their configurations without duplicating options files or options definitions. <mark>This feature is not yet implemented.</mark>
 - `"costs": { ... }`: a hash describing how costs should be evaluated for this option. Required if `"costed": true`. 
@@ -292,80 +295,80 @@ for a specific analysis.</mark>
 
 <a name="choice-definition"></a>
 ### The choices file (`my_evaluaton.choices`)
-The `.choices` file contains a token-value list that defines the option that HTAP should use for each attribute.  The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (`!`).  Entries in the choice file must obey the following rules:
+The `.choices` file contains a token-value list that defines the option that HTAP should use for each attribute.  
+The syntax for each is TOKEN : VALUE, and comments are denoted with a exclamation mark (`!`).  Entries in the 
+choice file must obey the following rules:
 - Each token must match one of the attributes in the .options file
 - Each value must match on of the options given for that attribute in the .options file
 - `NA` values instruct the substiture-h2k.rb script to leave the associated data in the .h2k file alone – that is, whatever inputs were provided when the file was created in HOT2000 will be used in the HTAP simulation.
 
+#### Example choice file
 An example .choice file follows. In this example, the .choice file instructs HTAP to replace the heating system with a cold-climate air source heat pump, the DHW system with a heat pump water heater, and to add a drain-water heat recovery device. All other inputs are left unchanged. 
 
-        !-----------------------------------------------------------------------
-        ! Choice file for use in exercising HOT2000
-        !
-        ! The H2K model file used is a valid model and nothing needs to be 
-        ! changed for it to run!  Using "NA" on any of the options below
-        ! leaves the model unchanged for that option.
-        !-----------------------------------------------------------------------  
-        
-        ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
-        Opt-DBFiles  : H2KCodeLibFile
-        
-        ! Weather location
-        Opt-Location : NA 
-        
-        ! Archetype file: 
-        Opt-Archetype: NZEH-Arch-1
-        
-        ! Fuel costs 
-        Opt-FuelCost : rates2016
-        
-        ! Air tightness 
-        Opt-ACH : NA
-                
-        ! Ceiling R-value
-        Opt-Ceilings : NA
-        
-        ! Main wall definitions 
-        Opt-GenericWall_1Layer_definitions : NA   
-        
-        ! Exposed floor
-        Opt-ExposedFloor : NA
-        
-        ! Optical and thermal characteristics of casement windows (all)
-        Opt-CasementWindows  : NA   
-        
-        ! Foundation definitions
-        Opt-H2KFoundation : NA  
-        
-        ! Hot water system.
-        Opt-DHWSystem :  HPHotWater
-                
-        ! Drain-water heat recovery 
-        Opt-DWHRsystem:  DWHR-eff-30 
-        
-        ! HVAC system 
-        Opt-HVACSystem  : CCASHP
-        
-        ! HRV spec 
-        Opt-HRVspec : NA
-        
-        
-        Opt-H2K-PV : NA 
+```
+!-----------------------------------------------------------------------
+! Choice file for use in exercising HOT2000
+!
+! The H2K model file used is a valid model and nothing needs to be 
+! changed for it to run!  Using "NA" on any of the options below
+! leaves the model unchanged for that option.
+!-----------------------------------------------------------------------  
 
+! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
+Opt-DBFiles  : H2KCodeLibFile
+
+! Weather location
+Opt-Location : NA 
+
+! Archetype file: 
+Opt-Archetype: NZEH-Arch-1
+
+! Fuel costs 
+Opt-FuelCost : rates2016
+
+! Air tightness 
+Opt-ACH : NA
+        
+! Ceiling R-value
+Opt-Ceilings : NA
+
+! Main wall definitions 
+Opt-GenericWall_1Layer_definitions : NA   
+
+! Exposed floor
+Opt-ExposedFloor : NA
+
+! Optical and thermal characteristics of casement windows (all)
+Opt-CasementWindows  : NA   
+
+! Foundation definitions
+Opt-H2KFoundation : NA  
+
+! Hot water system.
+Opt-DHWSystem :  HPHotWater
+        
+! Drain-water heat recovery 
+Opt-DWHRsystem:  DWHR-eff-30 
+
+! HVAC system 
+Opt-HVACSystem  : CCASHP
+
+! HRV spec 
+Opt-HRVspec : NA
+
+
+Opt-H2K-PV : NA 
+```
 
 <a name="run-definition"></a>
 ### The run file (`my_batch.run`)
-The .run file contains a token-value list that defines the runs for `htap-prm.rb`. The .run file contains 3 sections:
-* **RunParameters** : Defines the `run-mode` and the `archetype-dir`. The `run-mode` is set to mesh; the only mode currently available. The `archetype-dir` is the local directory that contains the archetypes used in the HTAP runs.
-* **RunScope** : Defines the `archetypes`, `locations`, and `rulesets`. 
-  - Multiple `archetypes` can be defined for the HTAP runs, and each `*.h2K` file is separated by a comma (,). Each `archetypes` file must be located in the `archetype-dir`. These archetypes are not the same as `Opt-Archetype` tags, these are the HOT2000 files, `*.h2k`. 
-  - The `locations` parameter defines the weather location used for each HTAP run. These `locations` correspond to the municipal location defined in HOT2000 weather file, and are the same values as `Opt-Location`. Multiple locations can be defined, and each is comma-separated in the list.
-  - Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` archetype file. 
-  - The `rulesets` parameter `as-found` will cause HTAP to run the `archetypes` for `locations` with no other upgrades. `rulesets` are defined as a set of upgrades to satisfy and a particular performance target: national building code energy requirements, EnergyStar targets, etc. `rulesets` are a functionality that is currently under develepment, and should be used with caution. Multiple rulesets can be defined, and each is comma-separated in the list.
-  
-* **Upgrades** : Defines options to be investigated in mesh mode during the HTAP run. 
-   - If the `rulesets` tag is set to `as-found`, then  __substitute-h2k.rb__ will apply each combination of inputs as defined in the sections below.
-   - If the `rulesets` tag is set to a specific ruleset, then  __substitute-h2k.rb__ will apply each combination of inputs using the ruleset as the _new_ base case archetype.
+The .run file contains a token-value list that defines different combinations of options for a batch HTAP run. It has three sections:
+
+* **RunParameters**: This section defines how the run should be processed (`run-mode`), and where *htap-prm.rb* should look for HOT2000 model files (`archetype-dir`). 
+* **RunScope**: Defines the scope of the batch run - including the `.h2k` files that should be processed (`archetypes`), the locations (`locations`) that they should be run in, and any rulesets (`rulesets`) that should be applied to the base models.. 
+* **Upgrades**: Defines attributes within the model that should be changed; and the parameter spaces that should be explored. 
+
+#### Example .run file 
 
 ```
 ! Run-Mode: Parameters that affect how htap-prm is configured. 
@@ -406,6 +409,26 @@ Upgrades_START
 Upgrades_END
 ```
 
+#### Run file inputs
+
+* `run-mode = [parametric|mesh|sample{}|optimize]`: Single string denoting the method that *htap-prm.rb* should use to explore the solution space. 
+    - If set to `parametric`, **htap-prm.rb** will undertake a parametric analysis where each `RunScope` and `Upgrades` option is initialized to the first value in their list, and each evaluation will be a variant of the initial model with only one of the options changed to a member in the list. This run mode is useful for sensitivity studies.
+    - If set to `mesh`, **htap-prm.rb** will undertake a batch analysis examining all combinations of `RunScope` and `Upgrades` options. Depending on the number of options examined for each attribute, the time required to complete a mesh run may be very large. 
+    - If set to `sample`, **htap-prm.rb** will undertake a mesh run, but only process 100 randomly selected combinations. The random seed and sample size 
+      can be controlled by passing parameters along with `sample`:
+      ```      
+      run-mode  = sample{n:###; seed:###} 
+      ```
+      where `n` (integer) is the desired sample size; `seed` (integer) is the seed that should be used in the random selection. 
+    - `optimize` denotes a **yet-to-be-implemented** optimization method, based on a particle swarm or other genetic algorithm. <mark>This feature is not currently supported.</mark>
+* `archetype-dir = C:/Path/To/H2Kfiles/`: File location where **htap-prm.rb** will expect to find .h2k files.
+* `archetypes = [file1.h2k, file2.h2k, file3.h2k ... ]`: <a name="runscopearchetype"></a>List of .h2k files to be included in the batch run. Each filename must correspond to a .h2k file located in archetype directory (that is, the path specified by `archetype-dir`). *htap-prm.rb* supports simple wildcard matching — `archetypes = builder*.h2k` will run `builder_1.h2k`, `builder_2.h2k` and `builder_3.h2k`; `archetypes = *.h2k` will run all HOT2000 files in the given path. This input has the same affect as specifying `Opt-Archetype` within a .choice file.
+* `locations = [ city_1, city_2, city_3 ...]`: List of locations where the evaluations should be performed. `locations = *` instructs htap-prm.rb to run all locations specified within the options file. This input has the same affect as specifying `Opt-Location` within a .choice file. Setting `locations = NA` will cause the archetype to be run with whatever weather location was defined in the original `*.h2k` archetype file. 
+* `*rulesets* = [ ruleset1, ruleset2, ruleset3 ...]`: List of rulesets that should be applied to the model. Each ruleset will use different criteria to change various parameters in the model. If a ruleset is specified, it will be applied **before** the changes specified in the upgrades section are applied. Multiple rulesets can be supplied for a single run; each ruleset will be evaluated separately. Rulesets enable to HTAP to alter a HOT2000 file to meet the National building code energy requirements, EnergyStar targets, etc. <mark>`rulesets` are a functionality that is currently under develepment, and should be used with caution.</mark> Commonly used rulesets include: 
+    - `as-found`: This ruleset makes no changes to the model, and runs it "as-is" it has the same affect of setting `rulesets = NA`. 
+    - `NBC9_36_HRV`: This ruleset causes the model's parameters to be changed to minimum perscribed values under the 2015 NBC (part 9.36), with a heat recovery ventilation system.
+    - `NBC9_36_noHRV`: This ruleset causes the model's parameters to be changed to minimum perscribed values under the 2015 NBC (part 9.36), with a exhaust fan ventilation. 
+* `Opt-XXXXXXX = [ option_a, option b, option_c ... ]` : List of upgrade options (for attribute `Opt-XXXXXXX`) to be investigated during the HTAP run. These options are applied after a given ruleset has been imposed. The attributes and their options are listed [below](#attributes).
 
 <a name="cost-definition"></a>
 ### The unit cost database (`HTAPUnitCosts.json`) 
@@ -573,8 +596,9 @@ Each data entry contains the following:
       },
     }
      
+<a name="attributes"></a>
 
-Attributes that HTAP can modify<a name="attributes"></a> 
+Attributes that HTAP can modify 
 ------
 
 <a name="opt-location"></a>
@@ -598,33 +622,52 @@ Attributes that HTAP can modify<a name="attributes"></a>
          Opt-Location = Toronto 
 
 #### Sample `.options` definition for  `Opt-Location`
+```
+  "Opt-Location": {
+    "structure": "tree",
+    "costed": false,
+    "options": {
+    
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "NA",
+            "OPT-H2K-Region": "NA",
+            "OPT-H2K-Location": "NA"
+          }
+        },
+        "costs": {
+        }
+      },
+      
+      "TORONTO": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth110.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "42"
+          }
+        },
+        "costs": {
+        }
+      },
 
-         *attribute:start 
-         *attribute:name  = Opt-Location
-         *attribute:tag:1 = OPT-H2K-WTH-FILE
-         *attribute:tag:2 = OPT-H2K-Region
-         *attribute:tag:3 = OPT-H2K-Location
-         *attribute:default = Ottawa 
-         
-         *option:NA:value:1 = NA
-         *option:NA:value:2 = NA
-         *option:NA:value:3 = NA
-         *option:NA:cost:total    = 0
-         
-         *option:Whitehorse:value:1 = Wth110.dir
-         *option:Whitehorse:value:2 = 11
-         *option:Whitehorse:value:3 = 69
-         *option:Whitehorse:cost:total    = 0
-           
-         *option:Toronto:value:1 = Wth110.dir
-         *option:Toronto:value:2 = 5
-         *option:Toronto:value:3 = 42
-         *option:Toronto:cost:total    = 0
-         
-         <--snip-->
-         
-         *attribute:end
-
+      <--snip-->
+     
+      "WHITEHORSE": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth110.dir",
+            "OPT-H2K-Region": "11",
+            "OPT-H2K-Location": "69"
+          }
+        },
+        "costs": {
+        }
+      }
+    }
+  }
+```
 <a name="opt-archetype"></a>         
 ### `Opt-Archetype` 
 
@@ -638,33 +681,34 @@ Attributes that HTAP can modify<a name="attributes"></a>
     be modified. 
   - Earlier versions of HTAP required the archetypes to be located in the `C:\H2K-CLI-Min\User\` directory; more recently, HTAP 
     can work with archetypes in arbitrary locations
-  - Alternatively, the archetype file can be passed to __substitute-h2k.rb__ via a command line, as below. In this 
-    usage, the `Opt-Archetype` definition should be omitted from the choice file.
+  - Alternatively, the archetype file can be passed to __substitute-h2k.rb__ via a command line, using the `-b FILE.h2k` option. In this usage, the `Opt-Archetype` definition should be omitted from the choice file.
+  - When creating .run files for use in **htap-prm.rb**, the archetypes should be specified in the `RunScope` section ([See .run file inputs above](#runscopearchetype)), and `Opt-Archetype` should be omitted from the `Upgrades` section. 
   
 #### Sample `.choice` definition for  `Opt-Archetype`  
          Opt-Archetype = MediumSFD
          
 #### Sample `.options` definition for  `Opt-Archetype`
-
-         *attribute:start 
-         *attribute:name = Opt-Archetype
-         *attribute:tag:1 = <NotARealTag>
-         *attribute:default = NZEH-Arch-1
-         
-         *option:NA:value:1 = NA
-         *option:NA:cost:total = 0
-                  
-         *option:SmallSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-SmallSFD.h2k
-         *option:SmallSFD:cost:total = 0
-         
-         *option:MediumSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-MediumSFD.h2k
-         *option:MediumSFD:cost:total = 0
-         
-         *option:LargeSFD:value:1 = C:\H2K-CLI-Min\User\BC-Step-rev-LargeSFD.h2k
-         *option:LargeSFD:cost:total = 0      
-         <snip>
-         
-
+```
+  "Opt-Archetype": {
+    "structure": "flat",
+    "costed": false,
+    "options": {
+      "NA": "NA",
+      "SmallSFD": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-SmallSFD.h2k",
+      "MediumSFD": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-MediumSFD.h2k",
+      "LargeSFD": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-LargeSFD.h2k",
+      "Rowhouse": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-Row.h2k",
+      "Quadplex": "C:\\H2K-CLI-Min\\User\\BC-Step-rev-Quad.h2k",
+      "BC-NZEH-ex-1": "C:\\H2K-CLI-Min\\User\\BC-Step-NZEH-1-example.h2k",
+      
+      <-- snip -->
+      
+      "NBC-arch11_fullBsmt": "C:\\H2K-CLI-Min\\User\\NRCan-A11_1500sf_2storey_rowMid_fullBsmt.h2k"
+    },
+    "default": "NZEH-Arch-1",
+    "stop-on-error": true
+  },
+```
 <a name="opt-ach"></a>
 ### `Opt-ACH` 
 

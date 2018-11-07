@@ -1,0 +1,66 @@
+! Definitions file for HTAP-PRM RUN 
+
+! Run-Mode: Parameters that affect how htap-prm is configured. 
+RunParameters_START
+  run-mode                           = parametric
+  archetype-dir                      = C:/HTAP/Archetypes
+RunParameters_END 
+
+
+! Parameters controlling archetypes, locations, reference rulests. (these will always be
+! run in mesh, even if an optimization mode is added in the future. 
+RunScope_START
+
+  archetypes                        = *.h2k
+  locations                         = NA
+  rulesets                          = as-found
+  
+  
+RunScope_END
+
+! Parameters controlling the design of the building 
+Upgrades_START
+
+   Opt-FuelCost         = NA
+   Opt-DBFiles          = NA
+   Opt-ResultHouseCode  = NA
+ 
+   Opt-Specifications   = NA
+
+   Opt-Baseloads        = NA   
+   Opt-Temperatures     = NA
+   
+   Opt-ACH              = NA 
+   
+   Opt-CasementWindows  = NA
+   Opt-Skylights        = NA
+   Opt-DoorWindows      = NA 
+   Opt-Doors            = NA     
+  
+   Opt-MainWall         = NA 
+   Opt-GenericWall_1Layer_definitions = NA 
+   Opt-FloorHeader      = NA   
+  
+   Opt-H2KFoundation    = NA
+  
+   Opt-H2KFoundationSlabCrawl = NA 
+  
+   Opt-ExposedFloor     = NA
+   Opt-ExposedFloor      = NA
+  
+   Opt-FloorAboveCrawl  = NA 
+
+   Opt-Ceilings         = NA
+   Opt-AtticCeilings    = NA
+   Opt-CathCeilings     = NA
+   Opt-FlatCeilings     = NA
+   
+   Opt-HRVonly          = NA
+   Opt-HRVspec          = NA
+   Opt-DHWSystem        = NA
+   Opt-HVACSystem       = NA 
+   Opt-DWHRSystem       = NA
+   Opt-H2K-PV           = NA
+    
+    
+Upgrades_END
