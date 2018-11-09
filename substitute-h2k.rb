@@ -7015,6 +7015,8 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
    elsif (primDHWFuelName =~ /Oil/) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
    end
+   # Remove any secondary fuel systems
+   elements["HouseFile/House/Components/HotWater"].delete_element("Secondary")
 
    # Thermal zones and HDD by rule type
    #-------------------------------------------------------------------------
