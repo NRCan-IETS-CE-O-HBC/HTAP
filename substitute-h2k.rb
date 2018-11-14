@@ -1752,7 +1752,7 @@ def processFile(h2kElements)
             # Generic wall insulation thickness settings: - one layer
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
-               if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+               if ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
                   # Change ALL existing wall codes to User Specified R-value
                   locationText = "HouseFile/House/Components/Wall/Construction/Type"
                   h2kElements.each(locationText) do |element| 
@@ -1768,7 +1768,7 @@ def processFile(h2kElements)
             # Floor header User-Specified R-values
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FloorHeader/ )
-               if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+               if ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
                   # Change ALL existing floor headers codes to User Specified R-value
                   # Should it be different for the main floors and basement??
                   locationText = "HouseFile/House/Components/*/Components/FloorHeader/Construction/Type"

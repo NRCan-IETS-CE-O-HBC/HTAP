@@ -1773,7 +1773,7 @@
 *attribute:start 
 *attribute:name = Opt-GenericWall_1Layer_definitions
 *attribute:tag:1  = <Opt-GenInsulLayerInboard-a>
-*attribute:tag:2  = Opt-H2K-EffRValue
+*attribute:tag:2  = OPT-H2K-EffRValue
 *attribute:default = Stud_2x6_R20
  
 *option:NA:value:1 = NA 
