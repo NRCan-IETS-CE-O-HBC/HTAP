@@ -32,8 +32,8 @@ SF_PER_SM = 10.7639
 # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
 #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
 #      re-trying a run)! 
-$maxRunTime = 10 # seconds - could be longer on slow machines. 
-$maxTries   = 10 # JTB 05-10-2016: Also setting maximum retries within timeout period
+$maxRunTime = 25 # seconds - could be longer on slow machines. 
+$maxTries   = 3 # JTB 05-10-2016: Also setting maximum retries within timeout period
 
 $gJasonExport = false 
 $gJasonTest = false 
