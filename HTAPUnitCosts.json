@@ -377,7 +377,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "FRAMING",
         "description": "2x12 engineered i-joists- Hanscomb",
-        "units": "LF",
+        "units": "linear feet",
         "UnitCostMaterials": 1.9,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -389,7 +389,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "FRAMING",
         "description": "2x16 engineered i-joists - Hanscomb",
-        "units": "LF",
+        "units": "linear feet",
         "UnitCostMaterials": 2.83,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -401,7 +401,7 @@
       "LEEP-ON-Ottawa": {
         "category": "AIRCONDITIONING",
         "description": "AC 2.5 ton, 13 SEER (2.5 ton)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2550.0,
         "UnitCostLabour": 340.4,
         "note": "Hanscomb - Final Report",
@@ -413,7 +413,7 @@
       "LEEP-ON-Ottawa": {
         "category": "AIRCONDITIONING",
         "description": "AC 2.5 ton, 14 SEER (2 ton)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2125.0,
         "UnitCostLabour": 340.4,
         "note": "Hanscomb - Final Report",
@@ -425,7 +425,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "AIRCONDITIONING",
         "description": "AC 4 ton, 14.5 SEER ",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2535.0,
         "UnitCostLabour": 340.4,
         "note": "Odessa Homes base AC Vancouver",
@@ -437,7 +437,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "AIRCONDITIONING",
         "description": "AC unit, 2 ton 13 SEER R410A c/w A coil, disconnect, 50 ft line, pad, insulation, whip & Tstat",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1430.0,
         "UnitCostLabour": 500.0,
         "note": "",
@@ -521,7 +521,7 @@
       "LEEP-ON-Ottawa": {
         "category": "OTHER",
         "description": "Additional plug in garage, 240V, 40A, excluding charging station (ME20)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 200.0,
         "UnitCostLabour": 140.0,
         "note": "In-house estimate",
@@ -545,7 +545,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor, circ. Pump, and electrical",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1410.0,
         "UnitCostLabour": 474.97,
         "note": "Ottawa LEEP builders - July 2014",
@@ -557,7 +557,7 @@
       "LEEP-ON-Ottawa": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 1 thermostat",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1567.93,
         "UnitCostLabour": 474.97,
         "note": "Hanscomb - Final Report",
@@ -567,7 +567,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 1 thermostat (ME27)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1846.0,
         "UnitCostLabour": 500.0,
         "note": "",
@@ -579,7 +579,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "Air handler, 1-zone, ECM motor, circ. Pump, and electrical (P9 Rated System, TPF 95)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1161.6,
         "UnitCostLabour": 474.97,
         "note": "Tempco Heating & Sheet Metal, May 13th 2014",
@@ -589,7 +589,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "Air handler, 1-zone, ECM motor, circ. Pump, and electrical (P9 Rated System, TPF 92)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1500.0,
         "UnitCostLabour": 474.97,
         "note": "",
@@ -601,7 +601,7 @@
       "LEEP-ON-Ottawa": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 3-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 3 thermostats",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1959.6,
         "UnitCostLabour": 474.97,
         "note": "Hanscomb final report - unit +pumps+electrical",
@@ -611,7 +611,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 3-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 3 thermostats (ME27)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 3406.0,
         "UnitCostLabour": 600.0,
         "note": "",
@@ -683,7 +683,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SWITCHING",
         "description": "Automated switches",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 20.0,
         "UnitCostLabour": 0.0,
         "note": "In-house estimate",
@@ -695,7 +695,7 @@
       "LEEP-ON-Ottawa": {
         "category": "WIRING",
         "description": "Base case wiring, includes all switches, receptacles, cable and labour",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2361.99,
         "UnitCostLabour": 2063.09,
         "note": "Terry Strack Report",
@@ -707,7 +707,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Boiler, condensing, 90% AFUE (ME27)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 3399.5,
         "UnitCostLabour": 1500.0,
         "note": "",
@@ -731,7 +731,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, 11.7 kW incl. ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 7556.63,
         "UnitCostLabour": 512.43,
         "note": "Hanscomb - Final Report",
@@ -743,7 +743,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, 3 ton, 13.5 kW @ -25oC,  incl. ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 12675.0,
         "UnitCostLabour": 2000.0,
         "note": "",
@@ -755,7 +755,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, 40,000 BTH (11.7kW) heating and 34000BTU (10kW) cooling, ECM air handler, electrical work",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 8157.0,
         "UnitCostLabour": 935.27,
         "note": "",
@@ -767,7 +767,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, Ductless Mini-splits, Mitsubishi MSZ-FE12NA ",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2676.48,
         "UnitCostLabour": 417.37,
         "note": "Hanscomb Final Report - 6.14",
@@ -779,7 +779,7 @@
       "LEEP-ON-Ottawa": {
         "category": "LIGHTING",
         "description": "CFL",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 4.08,
         "UnitCostLabour": 0.0,
         "note": "Terry Strack report",
@@ -791,7 +791,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "LIGHTING",
         "description": "Compact fluorescent lighting",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 3.2,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -837,7 +837,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW electric tank",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 500.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -849,7 +849,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW electric tankless",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 860.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -861,7 +861,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heat pump water heater",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2600.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -873,7 +873,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heat pump water heater, 50 gal, EF 2.3",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2130.86,
         "UnitCostLabour": 319.22,
         "note": "",
@@ -885,7 +885,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heat pump water heater, 50 gal, EF 2.35 (Rheem)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1999.0,
         "UnitCostLabour": 319.22,
         "note": "",
@@ -897,7 +897,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "DHW heater, gas fuelled, on-demand, EF 0.94",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1492.07,
         "UnitCostLabour": 251.02,
         "note": "Hanscomb - Final Report",
@@ -909,7 +909,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW heater, gas fuelled, on-demand, EF 0.95 (P9 Rated System, TPF 95)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2037.6,
         "UnitCostLabour": 251.02,
         "note": "Tempco Heating & Sheet Metal, May 13th 2014",
@@ -921,7 +921,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heater, gas fuelled, on-demand, EF 0.96, 225 L/day @ 55oC - ME19",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1775.0,
         "UnitCostLabour": 500.0,
         "note": "",
@@ -933,7 +933,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW tank, electric, 246 L (65 USG),EF 0.89",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 490.0,
         "UnitCostLabour": 170.39,
         "note": "Hanscomb - Received Quotes and Cost Analysis",
@@ -945,7 +945,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.60, 225 L/day @ 55oC, incl vent kit",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1030.0,
         "UnitCostLabour": 250.0,
         "note": "",
@@ -957,7 +957,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.62",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 893.67,
         "UnitCostLabour": 323.82,
         "note": "Hanscomb - Final Report",
@@ -969,7 +969,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR DOMESTIC HOT WATER",
         "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.67",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 916.77,
         "UnitCostLabour": 323.82,
         "note": "Hanscomb - Final Report",
@@ -981,7 +981,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW tank, NG, 246 litres (65 USG), power vented, EF 0.60",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 914.91,
         "UnitCostLabour": 323.82,
         "note": "Hanscomb - Final Report",
@@ -1005,7 +1005,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DUCTING",
         "description": "Ducting, central forced air",
-        "units": "sq.ft. floor ",
+        "units": "sf floor area",
         "UnitCostMaterials": 0.86,
         "UnitCostLabour": 0.44,
         "note": "Ottawa LEEP builders - July 2014",
@@ -1015,7 +1015,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DUCTING",
         "description": "Ducting, central forced air",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2730.0,
         "UnitCostLabour": 800.0,
         "note": "",
@@ -1027,7 +1027,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DUCTING",
         "description": "Ducting - direct-duct HRV",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1000.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -1039,7 +1039,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DUCTING",
         "description": "Ducting - Exhaust fan vent",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 500.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -1051,7 +1051,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DUCTING",
         "description": "Ducting, zoned forced air",
-        "units": "sq.ft. floor ",
+        "units": "sf floor area",
         "UnitCostMaterials": 0.9,
         "UnitCostLabour": 0.48,
         "note": "Ottawa LEEP builders - July 2014",
@@ -1063,7 +1063,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DUCTLESS MINISPLIT",
         "description": "Ductless Mini Split, 13600 BTU heating, 12000 BTU colling, SEER 23.0, HSPF 10.6 (cond&evap) w/ backup",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 5636.04,
         "UnitCostLabour": 1598.7,
         "note": "",
@@ -1075,7 +1075,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 152cm (60in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 717.2,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -1085,7 +1085,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 152cm (60in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 717.2,
         "UnitCostLabour": 37.65,
         "note": "Manitoba LEEP - Watercycles pricing",
@@ -1097,7 +1097,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 91cm (36in), 102mm (4in) drain, 13mm (1/2in) supply",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 700.0,
         "UnitCostLabour": 37.65,
         "note": "Hanscomb final report",
@@ -1107,7 +1107,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 91cm (36in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 531.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -1117,7 +1117,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 91cm (36in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 531.0,
         "UnitCostLabour": 37.65,
         "note": "Manitoba LEEP - Watercycles pricing",
@@ -1243,7 +1243,7 @@
       "LEEP-BC-Vancouver": {
         "category": "HRV",
         "description": "Exhaust fans and controls",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 500.0,
         "UnitCostLabour": 280.0,
         "note": "",
@@ -1557,7 +1557,7 @@
       "LEEP-ON-Ottawa": {
         "category": "FURNACES",
         "description": "Furnace, 94% AFUE VS 2 stage, 70 Mbtuh input, 19.5 kW max output, incl. vent kit & HRV interlock",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2149.33,
         "UnitCostLabour": 191.45,
         "note": "",
@@ -1567,7 +1567,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "FURNACES",
         "description": "Furnace, 94% AFUE VS 2 stage, 70 Mbtuh input, 19.5 kW max output, incl. vent kit & HRV interlock",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2149.33,
         "UnitCostLabour": 1000.0,
         "note": "",
@@ -1579,7 +1579,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "FURNACES",
         "description": "Furnace, 95% AFUE ECM single stage motor, 90 Mbtuh, 13 kW min output",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1825.0,
         "UnitCostLabour": 191.45,
         "note": "Odessa Homes base furnace Vancouver",
@@ -1591,7 +1591,7 @@
       "LEEP-ON-Ottawa": {
         "category": "FURNACES",
         "description": "Furnace, 96% AFUE ECM motor, 30 Mbtuh input, 8.75 kW max output",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1980.0,
         "UnitCostLabour": 191.45,
         "note": "Doug Tarry Homes May 13th, Dettson Industries presentation to LEEP builders",
@@ -1603,7 +1603,7 @@
       "LEEP-ON-Ottawa": {
         "category": "FURNACES",
         "description": "Furnace 94% AFUE, 14kW output, PSC motor",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 750.0,
         "UnitCostLabour": 191.45,
         "note": "Ottawa LEEP builders - July 2014",
@@ -1639,7 +1639,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 3 ton, 8.5 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 17108.0,
         "UnitCostLabour": 3000.0,
         "note": "",
@@ -1651,7 +1651,7 @@
       "LEEP-ON-Ottawa": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., drillin & piping, ethanol, aux. heaters & collateral costs.",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 18469.67,
         "UnitCostLabour": 15085.45,
         "note": "Hanscomb - Final Report",
@@ -1663,7 +1663,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 20637.5,
         "UnitCostLabour": 3000.0,
         "note": "",
@@ -1675,7 +1675,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 5 ton, 14 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 23777.0,
         "UnitCostLabour": 3000.0,
         "note": "",
@@ -1687,7 +1687,7 @@
       "LEEP-ON-Ottawa": {
         "category": "HRV",
         "description": "HRV, conventional SRE 60% @ 0, 55% @ -25",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1079.0,
         "UnitCostLabour": 280.98,
         "note": "Hanscomb - Final Report",
@@ -1699,7 +1699,7 @@
       "LEEP-ON-Ottawa": {
         "category": "HRV",
         "description": "HRV, conventional SRE 70% @ 0, 61% @ -25",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 979.0,
         "UnitCostLabour": 280.98,
         "note": "Hanscomb - Final Report",
@@ -1711,7 +1711,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "HRV",
         "description": "HRV, Energy Star, incl. ducting",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1235.0,
         "UnitCostLabour": 1500.0,
         "note": "",
@@ -1723,7 +1723,7 @@
       "LEEP-ON-Ottawa": {
         "category": "HRV",
         "description": "HRV, high performer, 78% @ 0, 72% @ -25 with ECM",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1823.0,
         "UnitCostLabour": 280.98,
         "note": "Hanscomb - Final Report",
@@ -1735,7 +1735,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "HRV",
         "description": "HRV / ERV, high performance, incl. ducting",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1852.5,
         "UnitCostLabour": 1800.0,
         "note": "",
@@ -1819,7 +1819,7 @@
       "LEEP-ON-Ottawa": {
         "category": "LIGHTING",
         "description": "Incandescent bulb",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1.12,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -1831,7 +1831,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "LIGHTING",
         "description": "Incandescent lighting",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1.12,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -1891,7 +1891,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
         "description": "Insulation, cellulose (dense pack wall application (3lbs/ft3) , material only) $8.07 / 9ft2",
-        "units": "cu. Ft",
+        "units": "cubic feet",
         "UnitCostMaterials": 0.9,
         "UnitCostLabour": 0.99,
         "note": "",
@@ -1927,7 +1927,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
         "description": "Insulation, cellulose dense-pack, 1ft3 - Hanscomb",
-        "units": "cu.ft.",
+        "units": "cubic feet",
         "UnitCostMaterials": 3.94,
         "UnitCostLabour": 0.99,
         "note": "",
@@ -2789,7 +2789,7 @@
       "LEEP-ON-Ottawa": {
         "category": "INTEGRATED MECHANICAL SYSTEMS",
         "description": "Integrated mechanical system, CSA P.10, OTFP 0.91, incl. space heating, DHW, and HRV",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 7393.53,
         "UnitCostLabour": 675.47,
         "note": "Hanscomb - Final Report",
@@ -2799,7 +2799,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "INTEGRATED MECHANICAL SYSTEMS",
         "description": "Integrated mechanical system, CSA P.10, OTFP 0.91, incl. space heating, DHW, and HRV",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 7995.0,
         "UnitCostLabour": 1750.0,
         "note": "",
@@ -2811,7 +2811,7 @@
       "LEEP-ON-Ottawa": {
         "category": "LIGHTING",
         "description": "LED",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 18.97,
         "UnitCostLabour": 0.0,
         "note": "Terry Strack report",
@@ -2835,7 +2835,7 @@
       "LEEP-ON-Ottawa": {
         "category": "MICRO-COMBINED HEAT AND POWER TECHNOLOGY",
         "description": "Micro-CHP system, backup furnace (95% AFUE) incl. vent kit, indirect DHW tank & HRV interlock",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 22620.0,
         "UnitCostLabour": 2250.0,
         "note": "In-house estimate",
@@ -2881,7 +2881,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR READY",
         "description": "No accomodation for solar",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -2893,7 +2893,7 @@
       "LEEP-ON-Ottawa": {
         "category": "PHOTOVOLTAIC SYSTEMS",
         "description": "No renewable energy system installed",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0,
         "note": "0.00",
@@ -2939,7 +2939,7 @@
       "LEEP-ON-Ottawa": {
         "category": "PASSIVE SOLAR DESIGN",
         "description": "Passive solar design (RC03)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 22660.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -3059,7 +3059,7 @@
       "LEEP-ON-Ottawa": {
         "category": "OTHER",
         "description": "Roof-mounted wind turbine, 3.5 kW @ 12.5 m/s (RC10)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 29362.1,
         "UnitCostLabour": 2867.37,
         "note": "Hanscomb - Final Report",
@@ -3069,7 +3069,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Roof-mounted wind turbine, 3.5 kW @ 12.5 m/s (RC10)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 20000.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -3105,7 +3105,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, 1 flat plate colelctor, 270L tank, electric water heater",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 4846.0,
         "UnitCostLabour": 1658.84,
         "note": "",
@@ -3117,7 +3117,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, 2 flat plate colelctors, 270L tank, electric water heater",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 5840.0,
         "UnitCostLabour": 1951.58,
         "note": "",
@@ -3129,7 +3129,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, 2 flat plate colelctors, 270L tank, gas fired water heater",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 6617.61,
         "UnitCostLabour": 2020.72,
         "note": "",
@@ -3141,7 +3141,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, one 4'x8' collector, solar boiler w. pump, mounting kit, no install, no solar storage tank",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 3935.0,
         "UnitCostLabour": 816.0,
         "note": "",
@@ -3153,7 +3153,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, two 4'x8' collector, solar boiler w. pump, mounting kit, no install, no solar storage tank",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 4929.0,
         "UnitCostLabour": 960.0,
         "note": "",
@@ -3165,7 +3165,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR DOMESTIC HOT WATER",
         "description": "Solar DHW system, two 1.2mx2.4m collectors, solar boiler, 270 litre tank, controls and pumps",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 5464.45,
         "UnitCostLabour": 2035.89,
         "note": "",
@@ -3177,7 +3177,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar domestic hot water system, two 1.2mx2.4m (4'x8') collectors (RC06)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 6831.5,
         "UnitCostLabour": 960.0,
         "note": "",
@@ -3189,7 +3189,7 @@
       "LEEP-ON-Ottawa": {
         "category": "OTHER",
         "description": "Solar light tube kit, including roof unit, flashing, ceiling fixture & 3m (10') of tubing (RC07)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 1000.0,
         "UnitCostLabour": 0.0,
         "note": "Missing labour and any framing costs.",
@@ -3201,7 +3201,7 @@
       "LEEP-ON-Ottawa": {
         "category": "PHOTOVOLTAIC SYSTEMS",
         "description": "Solar photovoltaic system, installed on roof, 1 kW ",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 11749.0,
         "UnitCostLabour": 2710.9,
         "note": "Hanscomb - Final Report",
@@ -3211,7 +3211,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar photovoltaic system, installed on roof, 1 kW (RC04)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 6000.0,
         "UnitCostLabour": 2500.0,
         "note": "",
@@ -3223,7 +3223,7 @@
       "LEEP-ON-Ottawa": {
         "category": "PHOTOVOLTAIC SYSTEMS",
         "description": "Solar photovoltaic system, installed on roof, 5 kW ",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 14950.0,
         "UnitCostLabour": 6550.0,
         "note": "Langevin recent estimate",
@@ -3235,7 +3235,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "PHOTOVOLTAIC SYSTEMS",
         "description": "Solar photovoltaic system, installed on roof, 9.88 kW ",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 21373.0,
         "UnitCostLabour": 12021.0,
         "note": "Vancounver LEEP session Spring 2015 (Riverside Energy and SolarMax)",
@@ -3247,7 +3247,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR READY",
         "description": "Solar Ready conduit supply and install",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 215.0,
         "UnitCostLabour": 225.0,
         "note": "In-house estimate",
@@ -3259,7 +3259,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar Ready home design (RC08)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 227.5,
         "UnitCostLabour": 135.0,
         "note": "",
@@ -3283,7 +3283,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar storage tank, 270L",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 270.0,
         "UnitCostLabour": 150.0,
         "note": "",
@@ -3295,7 +3295,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SWITCHING",
         "description": "Standard manual switches",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2.0,
         "UnitCostLabour": 0.0,
         "note": "In-house estimate",
@@ -3403,7 +3403,7 @@
       "LEEP-ON-Ottawa": {
         "category": "WIRING",
         "description": "Structured Wiring, includes all switches, receptacles, cable and labour",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 2541.99,
         "UnitCostLabour": 2153.09,
         "note": "Tartan Homes July 2014",
@@ -3415,7 +3415,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Tank, storage NO SPECS AVAILABLE (ME27)",
-        "units": "ea",
+        "units": "each",
         "UnitCostMaterials": 955.5,
         "UnitCostLabour": 250.0,
         "note": "",
