@@ -68,6 +68,7 @@ $gChoiceFile  = ""
 $gOptionFile  = ""
 $PRMcall      = false 
 $ExtraOutput1 = false
+$TsvOutput = false
 $keepH2KFolder = false
 $autoCostOptions = false
 
@@ -5835,7 +5836,16 @@ def postprocess( scaleData )
       end
       
    end # h2kPostElements |element| loop (and scope of local variable houseCode!)
-   
+  
+	# TSV output
+	locationText = "HouseFile/Program/Results/Tsv"
+	if h2kPostElements["HouseFile/Program"] != nil
+		$TsvOutput = true
+		$gResults["TSV"]["ERSRating"] = h2kPostElements[locationText].elements["ERSRating"].attributes["value"].to_f 	
+		$gResults["TSV"]["ERSRefHouseRating"] = h2kPostElements[locationText].elements["ERSRefHouseRating"].attributes["value"].to_f 	
+		$gResults["TSV"]["ERSGHG"] = h2kPostElements[locationText].elements["ERSGHG"].attributes["value"].to_f 	
+	end
+  
    if ( $gDebug ) 
       $gResults.each do |houseCode, data|
          debug_out (">Results for " << houseCode.to_s)
@@ -8749,6 +8759,12 @@ $fSUMMARY.write( "#{$AliasOutput}.EnergyProp_L      =  #{$gResults[$outputHCode]
 $fSUMMARY.write( "#{$AliasOutput}.EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )   # includes pellets
 $fSUMMARY.write( "#{$AliasOutput}.Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
 $fSUMMARY.write( "#{$AliasOutput}.SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
+
+if ($TsvOutput)
+	$fSUMMARY.write( "#{$AliasOutput}.ERS-RatingGJ/a  =  #{$gResults['TSV']['ERSRating']} \n" )
+	$fSUMMARY.write( "#{$AliasOutput}.ERS-RefHouseRatingGJ/a  =  #{$gResults['TSV']['ERSRefHouseRating']} \n" )
+	$fSUMMARY.write( "#{$AliasOutput}.ERS-GHGt/a  =  #{$gResults['TSV']['ERSGHG']} \n" )
+end
 
 # These #s are not yet averaged for orientations!
 $fSUMMARY.write( "#{$AliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
