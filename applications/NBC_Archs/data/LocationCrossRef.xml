@@ -1,0 +1,28 @@
+<opt>
+	<SAINTJOHNS Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-elec-heat" Arch-Set="AT"/> <!--NL-->
+	<CHARLOTTETOWN Opt-DHWSystem="NBC-HotWater_oil4" Opt-HVACSystem="NBC-oil-heat" Arch-Set="AT"/>
+	<HALIFAX Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-oil-heat" Arch-Set="AT"/>
+	<MONCTON Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-elec-heat" Arch-Set="AT"/>
+	<MONTREAL Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-elec-heat" Arch-Set="QC"/>
+	<TORONTO Opt-DHWSystem="NBC-HotWater_gas" Opt-HVACSystem="NBC-gas-furnace" Arch-Set="GTA"/>
+	<WINNIPEG Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-gas-furnace" Arch-Set="PR"/>
+	<SASKATOON Opt-DHWSystem="NBC-HotWater_gas" Opt-HVACSystem="NBC-gas-furnace" Arch-Set="PR"/>
+	<CALGARY Opt-DHWSystem="NBC-HotWater_gas" Opt-HVACSystem="NBC-gas-furnace" Arch-Set="PR"/>
+	<VANCOUVER Opt-DHWSystem="NBC-HotWater_gas" Opt-HVACSystem="NBC-gas-furnace" Arch-Set="BC-LM"/>
+	<WHITEHORSE Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-oil-heat" Arch-Set="North"/>
+	<YELLOWKNIFE Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-oil-heat" Arch-Set="North"/>
+	<IQALUIT Opt-DHWSystem="NBC-HotWater_elec" Opt-HVACSystem="NBC-oil-heat" Arch-Set="North"/>
+	<!--GREENWOOD Opt-DHWSystem="" Opt-HVACSystem="" />
+	<TRURO Opt-DHWSystem="" Opt-HVACSystem="" />
+	<SYDNEY Opt-DHWSystem="" Opt-HVACSystem="" />
+	<FREDERICTON Opt-DHWSystem="" Opt-HVACSystem="" />
+	<LONDON Opt-DHWSystem="" Opt-HVACSystem="" />
+	<OTTAWA Opt-DHWSystem="" Opt-HVACSystem="" />
+	<EDMONTON Opt-DHWSystem="" Opt-HVACSystem="" />
+	<KAMLOOPS Opt-DHWSystem="" Opt-HVACSystem="" />
+	<CRANBROOK Opt-DHWSystem="" Opt-HVACSystem="" />
+	<SUMMERLAND Opt-DHWSystem="" Opt-HVACSystem="" />
+	<COMOX Opt-DHWSystem="" Opt-HVACSystem="" />
+	<WHISTLER Opt-DHWSystem="" Opt-HVACSystem="" />
+	<VICTORIA Opt-DHWSystem="" Opt-HVACSystem="" /-->
+</opt>

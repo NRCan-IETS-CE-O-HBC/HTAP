@@ -1,6 +1,31 @@
 ! HOT2000.options: Optimization substitutions file
 
 !-----------------------------------------------------------------------
+! Orientations
+!-----------------------------------------------------------------------
+*attribute:start 
+*attribute:name    = GOconfig_rotate 
+*attribute:tag:1   = <NotARealTag>
+*attribute:default = S
+
+*option:S:value:1  = S
+*option:S:cost:    = 0
+
+*option:E:value:1  = E
+*option:E:cost:    = 0
+
+*option:N:value:1  = N
+*option:N:cost:    = 0
+
+*option:W:value:1  = W
+*option:W:cost:    = 0
+
+*option:AVG:value:1  = AVG
+*option:AVG:cost:    = 0
+
+*attribute:end 
+
+!-----------------------------------------------------------------------
 ! HOT2000 Fuel Costs
 !-----------------------------------------------------------------------
 *attribute:start
@@ -1130,67 +1155,67 @@
 !-----------------------------------------------------------------------
 !   NBC 9.36 Baseline
 !-----------------------------------------------------------------------
-*option:NBC-zone4-window:value:1 = NBC-zone4-window
-*option:NBC-zone4-window:value:2 = NBC-zone4-window
-*option:NBC-zone4-window:value:3 = NBC-zone4-window
-*option:NBC-zone4-window:value:4 = NBC-zone4-window
-*option:NBC-zone4-window:value:5 = NBC-zone4-window
-*option:NBC-zone4-window:value:6 = NBC-zone4-window
-*option:NBC-zone4-window:value:7 = NBC-zone4-window
-*option:NBC-zone4-window:value:8 = NBC-zone4-window
-*option:NBC-zone4-window:cost:total   = 0
+*option:NBC-zone4-Doorwindow:value:1 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:2 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:3 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:4 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:5 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:6 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:7 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:value:8 = NBC-zone4-window
+*option:NBC-zone4-Doorwindow:cost:total   = 0
 
 
-*option:NBC-zone5-window:value:1 = NBC-zone5-window
-*option:NBC-zone5-window:value:2 = NBC-zone5-window
-*option:NBC-zone5-window:value:3 = NBC-zone5-window
-*option:NBC-zone5-window:value:4 = NBC-zone5-window
-*option:NBC-zone5-window:value:5 = NBC-zone5-window
-*option:NBC-zone5-window:value:6 = NBC-zone5-window
-*option:NBC-zone5-window:value:7 = NBC-zone5-window
-*option:NBC-zone5-window:value:8 = NBC-zone5-window
-*option:NBC-zone5-window:cost:total   = 0
+*option:NBC-zone5-Doorwindow:value:1 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:2 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:3 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:4 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:5 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:6 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:7 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:value:8 = NBC-zone5-window
+*option:NBC-zone5-Doorwindow:cost:total   = 0
 
-*option:NBC-zone6-window:value:1 = NBC-zone6-window
-*option:NBC-zone6-window:value:2 = NBC-zone6-window
-*option:NBC-zone6-window:value:3 = NBC-zone6-window
-*option:NBC-zone6-window:value:4 = NBC-zone6-window
-*option:NBC-zone6-window:value:5 = NBC-zone6-window
-*option:NBC-zone6-window:value:6 = NBC-zone6-window
-*option:NBC-zone6-window:value:7 = NBC-zone6-window
-*option:NBC-zone6-window:value:8 = NBC-zone6-window
-*option:NBC-zone6-window:cost:total   = 0
+*option:NBC-zone6-Doorwindow:value:1 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:2 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:3 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:4 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:5 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:6 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:7 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:value:8 = NBC-zone6-window
+*option:NBC-zone6-Doorwindow:cost:total   = 0
 
 
-*option:NBC-zone7A-window:value:1 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:2 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:3 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:4 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:5 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:6 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:7 = NBC-zone7A-window
-*option:NBC-zone7A-window:value:8 = NBC-zone7A-window
-*option:NBC-zone7A-window:cost:total   = 0
+*option:NBC-zone7A-Doorwindow:value:1 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:2 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:3 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:4 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:5 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:6 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:7 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:value:8 = NBC-zone7A-window
+*option:NBC-zone7A-Doorwindow:cost:total   = 0
 
-*option:NBC-zone7B-window:value:1 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:2 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:3 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:4 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:5 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:6 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:7 = NBC-zone7B-window
-*option:NBC-zone7B-window:value:8 = NBC-zone7B-window
-*option:NBC-zone7B-window:cost:total   = 0
+*option:NBC-zone7B-Doorwindow:value:1 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:2 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:3 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:4 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:5 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:6 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:7 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:value:8 = NBC-zone7B-window
+*option:NBC-zone7B-Doorwindow:cost:total   = 0
 
-*option:NBC-zone8-window:value:1 = NBC-zone8-window
-*option:NBC-zone8-window:value:2 = NBC-zone8-window
-*option:NBC-zone8-window:value:3 = NBC-zone8-window
-*option:NBC-zone8-window:value:4 = NBC-zone8-window
-*option:NBC-zone8-window:value:5 = NBC-zone8-window
-*option:NBC-zone8-window:value:6 = NBC-zone8-window
-*option:NBC-zone8-window:value:7 = NBC-zone8-window
-*option:NBC-zone8-window:value:8 = NBC-zone8-window
-*option:NBC-zone8-window:cost:total   = 0
+*option:NBC-zone8-Doorwindow:value:1 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:2 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:3 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:4 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:5 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:6 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:7 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:value:8 = NBC-zone8-window
+*option:NBC-zone8-Doorwindow:cost:total   = 0
 
 *attribute:end
 
@@ -1230,62 +1255,6 @@
 
 *attribute:end
 
-!-----------------------------------------------------------------------
-!   Ceiling : Change all ceilings regardless of construction type
-! Costs updated by JP 2014-08-21
-! These values calculated based on the Vancouver retrofit geometry
-!-----------------------------------------------------------------------
-*attribute:start 
-   
-*attribute:name = Opt-Ceilings
-*attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
-*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
-*attribute:default = NA
-
-*option:NA:value:1 = NA     ! No change
-*option:NA:value:2 = NA
-*option:NA:cost:total = 0
-
-!-----------------------------------------------------------------------
-!   NBC 9.36 Baseline
-!-----------------------------------------------------------------------
-*option:NBC_Ceiling_zone4:value:1 =  NA
-*option:NBC_Ceiling_zone4:value:2 =  39.24
-*option:NBC_Ceiling_zone4:cost:total    =  0
-
-*option:NBC_Ceiling_zone5_noHRV:value:1 =  NA
-*option:NBC_Ceiling_zone5_noHRV:value:2 =  49.23
-*option:NBC_Ceiling_zone5_noHRV:cost:total    =  0
-
-*option:NBC_Ceiling_zone5_HRV:value:1 =  NA
-*option:NBC_Ceiling_zone5_HRV:value:2 =  39.24
-*option:NBC_Ceiling_zone5_HRV:cost:total    =  0
-
-*option:NBC_Ceiling_zone6_noHRV:value:1 =  NA
-*option:NBC_Ceiling_zone6_noHRV:value:2 =  49.23
-*option:NBC_Ceiling_zone6_noHRV:cost:total    =  0
-
-*option:NBC_Ceiling_zone6_HRV:value:1 =  NA
-*option:NBC_Ceiling_zone6_HRV:value:2 =  49.23
-*option:NBC_Ceiling_zone6_HRV:cost:total    =  0
-
-*option:NBC_Ceiling_zone7A_noHRV:value:1 = NA
-*option:NBC_Ceiling_zone7A_noHRV:value:2 =  59.22
-*option:NBC_Ceiling_zone7A_noHRV:cost:total    =  0
-                        
-*option:NBC_Ceiling_zone7A_HRV:value:1 =  NA
-*option:NBC_Ceiling_zone7A_HRV:value:2 =  49.23
-*option:NBC_Ceiling_zone7A_HRV:cost:total    =  0
-
-*option:NBC_Ceiling_zone7B:value:1 =  NA
-*option:NBC_Ceiling_zone7B:value:2 =  59.22
-*option:NBC_Ceiling_zone7B:cost:total    =  0
-
-*option:NBC_Ceiling_zone8:value:1 =  NA
-*option:NBC_Ceiling_zone8:value:2 =  59.22
-*option:NBC_Ceiling_zone8:cost:total    =  0
-
-*attribute:end
 
 !-----------------------------------------------------------------------
 !   AtticCeiling : Change all ceilings of construction type Attic/gable,
@@ -2706,5 +2675,30 @@
 *option:NBC_Specs_Perma:value:4   = 0.4
 *option:NBC_Specs_Perma:value:5   = 2
 *option:NBC_Specs_Perma:cost:total = 0
+
+*attribute:end
+
+!-----------------------------------------------------------------------
+! Photovoltaics 
+! Use internal HOT2000 PV Generation model
+! Choice file used to specify Internal PV OR External PV but not both!
+!-----------------------------------------------------------------------
+*attribute:start
+*attribute:name  = Opt-H2K-PV
+*attribute:tag:1 = Opt-H2K-Area           ! m2
+*attribute:tag:2 = Opt-H2K-Slope          ! degrees from horizontal
+*attribute:tag:3 = Opt-H2K-Azimuth        ! degrees from S
+*attribute:tag:4 = Opt-H2K-PVModuleType   ! 1:Mono-Si, 2:Poly-Si, 3:a-Si, 4:CdTe, 5:CIS, 6:UsrSpec
+*attribute:tag:5 = Opt-H2K-GridAbsRate    ! %
+*attribute:tag:6 = Opt-H2K-InvEff         ! %
+*attribute:default = NA
+
+*option:NA:value:1 = NA
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA
+*option:NA:value:6 = NA
+*option:NA:cost:total  = 0
 
 *attribute:end
