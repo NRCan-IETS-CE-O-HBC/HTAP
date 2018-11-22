@@ -19,9 +19,9 @@ my @sRuleSets = qw( NBC9_36_HRV NBC9_36_noHRV);
 my $sOutputFolder = "E:/EGH_ARCH_ACH_0_6";
 # Intialize all relevant choices to "NA" OR choose changes to building envelope
 my $hChoices = { 
-				 # "Opt-FuelCost" => 'rates2016', # COMMENT OUT IF DEFAULTS ARE TO BE USED
+				 "Opt-FuelCost" => 'rates2016', 
 				 # "Opt-DHWSystem" => 'NBC-HotWater_gas', # COMMENT OUT IF DEFAULTS ARE TO BE USED
-				 "Opt-HVACSystem" => 'NBC-elec-heat',
+				 # "Opt-HVACSystem" => 'NBC-elec-heat', # COMMENT OUT IF DEFAULTS ARE TO BE USED
 				 "Opt-ACH" => 'ACH_0_6',                      
 				 "Opt-GenericWall_1Layer_definitions" => 'NA',
 				 "Opt-H2KFoundation" => 'NA',
