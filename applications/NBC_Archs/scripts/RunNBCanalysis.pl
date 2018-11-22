@@ -18,14 +18,15 @@ my @sLocations = qw( SAINTJOHNS CHARLOTTETOWN  HALIFAX MONCTON MONTREAL TORONTO 
 my @sRuleSets = qw( NBC9_36_HRV NBC9_36_noHRV);
 my $sOutputFolder = "E:/EGH_ARCH_ACH_0_6";
 # Intialize all relevant choices to "NA" OR choose changes to building envelope
-my $hChoices = { "Opt-FuelCost" => 'rates2016',           
+my $hChoices = { 
+				 # "Opt-FuelCost" => 'rates2016', # COMMENT OUT IF DEFAULTS ARE TO BE USED
+				 # "Opt-DHWSystem" => 'NBC-HotWater_gas', # COMMENT OUT IF DEFAULTS ARE TO BE USED
+				 "Opt-HVACSystem" => 'NBC-elec-heat',
 				 "Opt-ACH" => 'ACH_0_6',                      
 				 "Opt-GenericWall_1Layer_definitions" => 'NA',
-				 # "Opt-Ceilings" => 'NA',
 				 "Opt-H2KFoundation" => 'NA',
 				 "Opt-ExposedFloor" => 'NA',
 				 "Opt-CasementWindows" => 'NA',
-				 # "Opt-DWHRSystem" => 'NA',
 				 "Opt-Doors" => 'NA',
 				 "Opt-DoorWindows" => 'NA',
 				 "Opt-H2KFoundationSlabCrawl " => 'NA',
@@ -54,9 +55,13 @@ my $hArchInfo = XMLin($sArchInfo);
 foreach my $sLoc (@sLocations) { # This loop represents one call to htap parallel run manager
 	my $hThisChoice = dclone($hChoices); # Clone the Hash
 
-	# Add location-specific data
-	$hThisChoice->{"Opt-DHWSystem"} = $hCrossRef->{"$sLoc"}->{"Opt-DHWSystem"};
-	$hThisChoice->{"Opt-HVACSystem"} = $hCrossRef->{"$sLoc"}->{"Opt-HVACSystem"};
+	# Add location-specific data (if not manually over-ridden)
+	if(not exists $hThisChoice->{"Opt-DHWSystem"}) {
+		$hThisChoice->{"Opt-DHWSystem"} = $hCrossRef->{"$sLoc"}->{"Opt-DHWSystem"};
+	};
+	if(not exists $hThisChoice->{"Opt-HVACSystem"}) {
+		$hThisChoice->{"Opt-HVACSystem"} = $hCrossRef->{"$sLoc"}->{"Opt-HVACSystem"};
+	};
 
 	# Determine the archetypes to be run for this location
 	my $sGroupKey = $hCrossRef->{"$sLoc"}->{"Arch-Set"}; # Identify what housing market to use for this location
