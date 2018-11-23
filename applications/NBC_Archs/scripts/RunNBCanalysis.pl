@@ -13,16 +13,16 @@ my $sLocCrossRefFile = "../data/LocationCrossRef.xml"; # Path to location cross-
 my $sArchInfo = "../../../Archetypes/EGH-ARCH/ArchInfo.xml"; # Path to database holding archetype info
 
 # INPUTS
-my $iThreads=2; # Must be integer greater than 0
+my $iThreads=1; # Must be integer greater than 0
 my @sLocations = qw( SAINTJOHNS CHARLOTTETOWN  HALIFAX MONCTON MONTREAL TORONTO WINNIPEG SASKATOON CALGARY VANCOUVER WHITEHORSE YELLOWKNIFE IQALUIT); # MUST correpsond to loactions in $sLocCrossRefFile
 my @sRuleSets = qw( NBC9_36_HRV NBC9_36_noHRV);
-my $sOutputFolder = "E:/EGH_ARCH_ACH_0_6";
+my $sOutputFolder = "E:/Arch4_wHRV";
 # Intialize all relevant choices to "NA" OR choose changes to building envelope
 my $hChoices = { 
 				 "Opt-FuelCost" => 'rates2016', 
 				 # "Opt-DHWSystem" => 'NBC-HotWater_gas', # COMMENT OUT IF DEFAULTS ARE TO BE USED
 				 # "Opt-HVACSystem" => 'NBC-elec-heat', # COMMENT OUT IF DEFAULTS ARE TO BE USED
-				 "Opt-ACH" => 'ACH_0_6',                      
+				 "Opt-ACH" => 'NA',                      
 				 "Opt-GenericWall_1Layer_definitions" => 'NA',
 				 "Opt-H2KFoundation" => 'NA',
 				 "Opt-ExposedFloor" => 'NA',
@@ -83,10 +83,10 @@ foreach my $sLoc (@sLocations) { # This loop represents one call to htap paralle
 	
 	# Run clean-up
 	my @folders = glob "HTAP-sim-*/";
-	mkdir("E:/EGH_ARCH_SIM1/$sLoc");
+	mkdir("$sOutputFolder/$sLoc");
 	foreach my $folder (@folders) {
 		$folder =~ s/\/$//;
-		rmove($folder, "E:/EGH_ARCH_SIM1/$sLoc/$folder");
+		rmove($folder, "$sOutputFolder/$sLoc/$folder");
 	};
 	unlink "$sLoc.run";
 	rmove("HTAP-prm-failures.txt","$sOutputFolder/$sLoc/HTAP-prm-failures.txt");
