@@ -2333,6 +2333,19 @@
 *option:NBC_noHRV:value:11 = NA
 *option:NBC_noHRV:cost:total = 0
 
+*option:NBC_noHRVexh:value:1 = utility
+*option:NBC_noHRVexh:value:2 = 1
+*option:NBC_noHRVexh:value:3 = 480     
+*option:NBC_noHRVexh:value:4 = 1     
+*option:NBC_noHRVexh:value:5 = NA   
+*option:NBC_noHRVexh:value:6 = NA
+*option:NBC_noHRVexh:value:7 = NA
+*option:NBC_noHRVexh:value:8 = NA
+*option:NBC_noHRVexh:value:9 = NBC
+*option:NBC_noHRVexh:value:10 = NA
+*option:NBC_noHRVexh:value:11 = NA
+*option:NBC_noHRVexh:cost:total = 0
+
 *attribute:end 
 
 

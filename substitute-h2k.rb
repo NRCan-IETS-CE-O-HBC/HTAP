@@ -3184,6 +3184,61 @@ def processFile(h2kElements)
                     else
                        fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
                     end
+				elsif(valHash["1"] == "utility") # Option is active, and instead of HRV, an exhaust-side only utility fan is used (TODO: refactor. This isn't elegant)
+					# Delete all existing systems
+                    locationText = "HouseFile/House/Ventilation/"
+                    h2kElements[locationText].delete_element("WholeHouseVentilatorList")
+                    h2kElements[locationText].delete_element("SupplementalVentilatorList")
+                    
+                    # Make fresh elements
+                    h2kElements[locationText].add_element("WholeHouseVentilatorList")
+                    h2kElements[locationText].add_element("SupplementalVentilatorList")
+
+                    # Construct the HRV input framework
+                    addWholeHouseUtilityVent(h2kElements)
+					
+					# Set the air distribution type
+                    h2kElements[locationText + "WholeHouse/AirDistributionType"].attributes["code"] = valHash["2"]
+                    
+                    # Set the operation schedule
+                    h2kElements[locationText + "WholeHouse/OperationSchedule"].attributes["code"] = "0"    # User Specified
+                    h2kElements[locationText + "WholeHouse/OperationSchedule"].attributes["value"] = valHash["3"]
+					
+					# Determine flow calculation
+                    calcFlow = 0
+                    if(valHash["4"] == "2") # The flow rate is supplied
+                        h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["supplyFlowrate"] = "0"    # L/s supply
+                        h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["exhaustFlowrate"] = valHash["5"]   # Exhaust 
+                        calcFlow = valHash["5"].to_f
+                    elsif(valHash["4"] == "1") # The flow rate is calculated using F326
+                        calcFlow = getF326FlowRates(h2kElements)
+                        if(calcFlow < 1)
+                            fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 flow rates!\n")
+                        else
+                            h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["supplyFlowrate"] = "0"   # L/s supply
+                            h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["exhaustFlowrate"] = calcFlow.to_s   # Exhaust
+                        end
+                    else
+                        fatalerror("ERROR: For Opt-HRVonly, invalid flow calculation input  #{valHash["4"]}!\n")
+                    end
+					
+					# Determine fan power calculation
+                    if(valHash["9"] == "default")
+                        h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["isDefaultFanpower"] = "true"    # Let HOT2000 calculate the fan power
+                    elsif(valHash["9"] == "specified")
+                        h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["isDefaultFanpower"] = "false"    # Specify the fan power
+						h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["fanPower1"] =  valHash["10"]  # Supply the fan power at operating point 1 [W]
+					elsif(valHash["9"] == "NBC")
+                        h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["isDefaultFanpower"] = "false"    # Specify the fan power
+                        # Determine fan power from flow rate as stated in 9.36.5.11(14a)
+                        fanPower = calcFlow*2.32
+                        fanPower = sprintf("%0.2f", fanPower) # Format to two decimal places
+                        
+                        # Assume same fan power for all temperatures
+                        h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["fanPower1"] =  fanPower  # Supply the fan power at operating point 1 [W]
+                    else
+                       fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
+                    end
                 else
                     fatalerror("ERROR: For Opt-HRVonly, unknown active input  #{valHash["1"]}!\n")
                 end
@@ -4404,6 +4459,28 @@ def createHRV( elements )
    elements[locationText].attributes["code"] = "2" # Sealed
    elements[locationText].add_element("English")
    elements[locationText].add_element("French")
+end
+
+# =========================================================================================
+# Add a whole-house utility ventilation system
+# =========================================================================================
+def addWholeHouseUtilityVent( elements )
+   locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+   elements[locationText].add_element("BaseVentilator")
+   elements[locationText + "/BaseVentilator"].attributes["supplyFlowrate"] = "0"
+   elements[locationText + "/BaseVentilator"].attributes["exhaustFlowrate"] = "60"
+   elements[locationText + "/BaseVentilator"].attributes["fanPower1"] = "53.2"
+   elements[locationText + "/BaseVentilator"].attributes["isDefaultFanpower"] = "true"
+   elements[locationText + "/BaseVentilator"].attributes["isEnergyStar"] = "false"
+   elements[locationText + "/BaseVentilator"].attributes["isHomeVentilatingInstituteCertified"] = "false"
+   elements[locationText + "/BaseVentilator"].attributes["isSupplemental"] = "false"
+   elements[locationText + "/BaseVentilator"].add_element("EquipmentInformation")
+   elements[locationText + "/BaseVentilator"].add_element("VentilatorType")
+
+   elements[locationText + "/BaseVentilator/VentilatorType"].attributes["code"] = "4"
+   elements[locationText + "/BaseVentilator/VentilatorType"].add_element("English")
+   elements[locationText + "/BaseVentilator/VentilatorType"].add_element("French")
+   
 end
 
 # =========================================================================================

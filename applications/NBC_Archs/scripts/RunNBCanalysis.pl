@@ -8,18 +8,19 @@ use Storable  qw(dclone);
 use File::Copy::Recursive qw(rmove);
 
 # GLOBALS
-my $sArchDir = "C:/HTAP/Archetypes/EGH-ARCH"; # Path to archetypes
 my $sLocCrossRefFile = "../data/LocationCrossRef.xml"; # Path to location cross-ref (holds what HVAC and DHW system is used for each location, and what archetypes)
 my $sArchInfo = "../../../Archetypes/EGH-ARCH/ArchInfo.xml"; # Path to database holding archetype info
 
 # INPUTS
 my $iThreads=1; # Must be integer greater than 0
+my $sArchDir = "C:/HTAP/Archetypes/EGH-ARCH"; # Path to archetypes
 my @sLocations = qw( SAINTJOHNS CHARLOTTETOWN  HALIFAX MONCTON MONTREAL TORONTO WINNIPEG SASKATOON CALGARY VANCOUVER WHITEHORSE YELLOWKNIFE IQALUIT); # MUST correpsond to loactions in $sLocCrossRefFile
 my @sRuleSets = qw( NBC9_36_HRV NBC9_36_noHRV);
-my $sOutputFolder = "E:/Arch4_wHRV";
+my $sOutputFolder = "E:/Arch4_exhaust";
 # Intialize all relevant choices to "NA" OR choose changes to building envelope
 my $hChoices = { 
-				 "Opt-FuelCost" => 'rates2016', 
+				 "Opt-FuelCost" => 'rates2016',
+				 "Opt-HRVonly" => 'NA', # EITHER 'NA' or 'NBC_noHRVexh'. If 'NBC_noHRVexh', exhaust-side only ventilation will be invoked, and only the NBC9_36_noHRV may be used
 				 # "Opt-DHWSystem" => 'NBC-HotWater_gas', # COMMENT OUT IF DEFAULTS ARE TO BE USED
 				 # "Opt-HVACSystem" => 'NBC-elec-heat', # COMMENT OUT IF DEFAULTS ARE TO BE USED
 				 "Opt-ACH" => 'NA',                      
@@ -35,7 +36,6 @@ my $hChoices = {
 				 "Opt-CathCeilings" => 'NA',
 				 "Opt-FlatCeilings" => 'NA',
 				 "Opt-FloorAboveCrawl" => 'NA',
-				 "Opt-HRVonly" => 'NA',
 				 "Opt-Baseloads" => 'NA',
 				 "Opt-ResultHouseCode" => 'General',
 				 "Opt-Temperatures" => 'NA',
@@ -51,6 +51,10 @@ my $sOutputXML="Summary.xml";
 # Load the external databases
 my $hCrossRef = XMLin($sLocCrossRefFile);
 my $hArchInfo = XMLin($sArchInfo);
+
+# Create the output folder
+mkdir($sOutputFolder) or print "Warning: Folder $sOutputFolder already exists\n";
+if (-d $sOutputFolder) {sleep 2;}
 
 foreach my $sLoc (@sLocations) { # This loop represents one call to htap parallel run manager
 	my $hThisChoice = dclone($hChoices); # Clone the Hash
@@ -70,13 +74,21 @@ foreach my $sLoc (@sLocations) { # This loop represents one call to htap paralle
 		if($hArchInfo->{$sFile}->{"Housing-Market"} =~ m/$sGroupKey/) {push(@sArchs,$sFile);}
 	};
 	
+	# Check the ruleset selection for conflicts
+	if($hChoices->{'Opt-HRVonly'} !~ m/^NA/) {
+		# Ventilation options are being overridden. This is only valid for the NBC9_36_noHRV ruleset
+		foreach my $sSet (@sRuleSets) {
+			if($sSet =~ m/NBC9_36_HRV/) {die "Cannot run ruleset $sSet with Opt-HRVonly override\n";}
+		};
+	};
+	
 	# Print the RUN file
 	setRunFile("../$sLoc.run",$sLoc,\@sRuleSets,$hThisChoice,\@sArchs,$sArchDir);
 	
 	# Launch HTAP-prm
 	chdir("../");
-	system("ruby C:\\HTAP\\htap-prm.rb -r .\\$sLoc.run -o C:\\HTAP\\HOT2000.options -v -k --threads $iThreads");
-	
+	system("ruby C:\\HTAP\\htap-prm.rb -r .\\$sLoc.run -o C:\\HTAP\\applications\\NBC_Archs\\NBC936.options -v -k --threads $iThreads");
+
 	# Collect the output
 	$hOutputs->{"$sLoc"} = {};
 	getOutputData($hOutputs->{"$sLoc"},$sLoc);
