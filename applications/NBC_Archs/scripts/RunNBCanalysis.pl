@@ -5,19 +5,63 @@ use warnings;
 use XML::Simple;	# to parse the XML databases
 use Data::Dumper;	# to dump info to the terminal for debugging purposes
 use Storable  qw(dclone);
+use File::Copy;
 use File::Copy::Recursive qw(rmove);
+use Getopt::Long qw(GetOptions);
 
 # GLOBALS
 my $sLocCrossRefFile = "../data/LocationCrossRef.xml"; # Path to location cross-ref (holds what HVAC and DHW system is used for each location, and what archetypes)
-my $sArchInfo;
+my $sArchInfo; # Path to archetype info database
 my $sArchDir; # Path to archetypes
 
-# INPUTS
-my $iThreads=22; # Must be integer greater than 0
-my $iMode = 1; # MUST BE EITHER 1 (use old 11 archetypes), or 2 (use new archetypes)
-my @sLocations = qw( SAINTJOHNS CHARLOTTETOWN  HALIFAX MONCTON MONTREAL TORONTO WINNIPEG SASKATOON CALGARY VANCOUVER WHITEHORSE YELLOWKNIFE IQALUIT); # MUST correpsond to loactions in $sLocCrossRefFile
-my @sRuleSets = qw( NBC9_36_HRV NBC9_36_noHRV);
-my $sOutputFolder = "E:/Classic_Archs_Base";
+# INPUTS (DEFAULTS)
+my $iThreads=1; # Must be integer greater than 0
+my $iMode; # MUST BE EITHER 1 (use old 11 archetypes), or 2 (use new archetypes)
+my $bDispHelp=0;
+my @sRuleSets; # NBC9_36_HRV and/or NBC9_36_noHRV
+my $sOutputFolder;
+my $sInputFile;
+my @sLocations;
+
+# OUTPUTS
+my $hOutputs;
+my $sOutputXML="Summary.xml";
+
+# Parse input
+GetOptions(
+    'threads=i' => \$iThreads,
+	'input=s' => \$sInputFile,
+	'output-folder=s' => \$sOutputFolder,
+	'help' => \$bDispHelp,
+);
+
+if($bDispHelp) {
+	displayHelp();
+	exit 0;
+};
+
+# Check command line input validity
+my $iCPUlimit = $ENV{NUMBER_OF_PROCESSORS}-1; # ONLY WORKS FOR WINDOWS
+if($iThreads > $iCPUlimit) {die "ERROR: $iThreads is too many threads to run on this machine! Max is $iCPUlimit\n";}
+if(not defined $sInputFile) {die "ERROR: --input not provided\n";}
+if(not defined $sOutputFolder) {die "ERROR: --output-folder not provided\n";}
+
+# Load the inputs from file
+my $hInputs = XMLin($sInputFile, KeyAttr => {}, ForceArray => [ 'location', 'rulesets' ]);
+
+# Gather the data from the file
+@sRuleSets=@{$hInputs->{'rulesets'}};
+@sLocations=@{$hInputs->{'location'}};
+$iMode=$hInputs->{'mode'};
+$sOutputFolder =~ s/\\$|\/$//; # Remove a trailing slash
+my $hChoices = dclone($hInputs->{'choices'});
+undef $hInputs;
+
+# Check input file validity
+if(not defined $iMode) {die "ERROR: input 'Mode' not provided. Valid inputs are 1 (use old archs) and 2 (New)\n";}
+if($iMode != 1 && $iMode != 2) {die "ERROR: Mode $iMode is not a valid entry. Valid entries are 1 and 2 (see --help for more info)\n";}
+if(!@sRuleSets) {die "ERROR: input option --rulesets not provided. Must provide NBC9_36_HRV and/or NBC9_36_noHRV\n";}
+if(!@sLocations) {die "ERROR: No location inputs provided\n;"}
 
 # Determine which archetype set is to be simulated
 if($iMode == 1) {
@@ -29,37 +73,6 @@ if($iMode == 1) {
 } else {
 	die "ERROR: Invalid mode number $iMode! Must be 1 (classic 11 archetypes), or 2 (new archetypes)\n";
 };
-
-# Intialize all relevant choices to "NA" OR choose changes to building envelope
-my $hChoices = { 
-				 "Opt-FuelCost" => 'rates2016',
-				 "Opt-HRVonly" => 'NA', # EITHER 'NA' or 'NBC_noHRVexh'. If 'NBC_noHRVexh', exhaust-side only ventilation will be invoked, and only the NBC9_36_noHRV may be used
-				 # "Opt-DHWSystem" => 'NBC-HotWater_gas', # COMMENT OUT IF DEFAULTS ARE TO BE USED
-				 # "Opt-HVACSystem" => 'NBC-elec-heat', # COMMENT OUT IF DEFAULTS ARE TO BE USED
-				 "Opt-ACH" => 'NA',                      
-				 "Opt-GenericWall_1Layer_definitions" => 'NA',
-				 "Opt-H2KFoundation" => 'NA',
-				 "Opt-ExposedFloor" => 'NA',
-				 "Opt-CasementWindows" => 'NA',
-				 "Opt-Doors" => 'NA',
-				 "Opt-DoorWindows" => 'NA',
-				 "Opt-H2KFoundationSlabCrawl " => 'NA',
-				 "Opt-H2K-PV " => 'NA',
-				 "Opt-AtticCeilings" => 'NA',
-				 "Opt-CathCeilings" => 'NA',
-				 "Opt-FlatCeilings" => 'NA',
-				 "Opt-FloorAboveCrawl" => 'NA',
-				 "Opt-Baseloads" => 'NA',
-				 "Opt-ResultHouseCode" => 'General',
-				 "Opt-Temperatures" => 'NA',
-				 "Opt-Specifications" => 'NA',
-				 "GOconfig_rotate" => 'AVG',
-				 "Opt-DBFiles" => 'H2KCodeLibFile'
-				};
-
-# OUTPUTS
-my $hOutputs;
-my $sOutputXML="Summary.xml";
 
 # Load the external databases
 my $hCrossRef = XMLin($sLocCrossRefFile);
@@ -99,9 +112,12 @@ foreach my $sLoc (@sLocations) { # This loop represents one call to htap paralle
 	# Print the RUN file
 	setRunFile("../$sLoc.run",$sLoc,\@sRuleSets,$hThisChoice,\@sArchs,$sArchDir);
 	
+	# Copy the options file in the application (TODO: ANY MANIPULATIONS TO OPTIONS FILE DONE HERE)
+	copy("../NBC936.options","../$sLoc.options") or die "Copy failed: $!";
+
 	# Launch HTAP-prm
 	chdir("../");
-	system("ruby C:\\HTAP\\htap-prm.rb -r .\\$sLoc.run -o C:\\HTAP\\applications\\NBC_Archs\\NBC936.options -v -k --threads $iThreads");
+	system("ruby C:\\HTAP\\htap-prm.rb -r .\\$sLoc.run -o C:\\HTAP\\applications\\NBC_Archs\\$sLoc.options -v -k --threads $iThreads");
 
 	# Collect the output
 	$hOutputs->{"$sLoc"} = {};
@@ -117,6 +133,7 @@ foreach my $sLoc (@sLocations) { # This loop represents one call to htap paralle
 	unlink "$sLoc.run";
 	rmove("HTAP-prm-failures.txt","$sOutputFolder/$sLoc/HTAP-prm-failures.txt");
 	rmove("HTAP-prm-output.csv","$sOutputFolder/$sLoc/HTAP-prm-output.csv");
+	rmove("$sLoc.options","$sOutputFolder/$sLoc/$sLoc.options");
 	
 	# Back to where we started from
 	chdir("scripts");
@@ -232,5 +249,52 @@ sub getOutputData {
 			};
 		};
 	};
+	return 0;
+};
+
+sub displayHelp {
+	print "\n";
+	print " The following input is required:\n\n";
+	print "		--input file.txt\n";
+	print "	Optional input is: \n";
+	print "		--threads 2 (default 1)\n\n";
+	print "	Input files are XML with the following format:\n\n";
+	print "		<opt>\n";
+	print "			<!-- Run mode: Valid inputs are 1 (use old archs) and 2 (New) -->\n";
+	print "			<mode>1</mode>\n";
+	print "			<!-- Rulesets: Two valid entries:  NBC9_36_HRV and NBC9_36_noHRV -->\n";
+	print "			<rulesets>NBC9_36_HRV</rulesets>\n";
+	print "			<rulesets>NBC9_36_noHRV</rulesets>\n";
+	print "			<!-- Output folder -->\n";
+	print "			<output_folder>E:/Default</output_folder>\n";
+	print "			<!-- Locations: MUST correpsond to loactions in CrossRefFile-->\n";
+	print "			<location>SAINTJOHNS</location>\n";
+	print "			<location>YELLOWKNIFE</location>\n";
+	print "			<!-- Choices to be possibly overridden -->\n";
+	print "			<!-- Opt-DHWSystem and Opt-HVACSystem may be sepcificed here. Else the fuel type is determined by LocationCrossRef.xml -->\n";
+	print "			<choices Opt-FuelCost=\"rates2016\" \n";
+	print "					 Opt-HRVonly=\"NA\"\n";
+	print "					 Opt-ACH=\"NA\"\n";
+	print "					 Opt-GenericWall_1Layer_definitions=\"NA\"\n";
+	print "			         Opt-H2KFoundation=\"NA\"\n";
+	print "					 Opt-ExposedFloor=\"NA\"\n";
+	print "					 Opt-CasementWindows=\"NA\"\n";
+	print "					 Opt-Doors=\"NA\"\n";
+	print "					 Opt-DoorWindows=\"NA\"\n";
+	print "					 Opt-H2KFoundationSlabCrawl=\"NA\"\n";
+	print "					 Opt-H2K-PV=\"NA\"\n";
+	print "					 Opt-AtticCeilings=\"NA\"\n";
+	print "					 Opt-CathCeilings=\"NA\"\n";
+	print "					 Opt-FlatCeilings=\"NA\"\n";
+	print "					 Opt-FloorAboveCrawl=\"NA\"\n";
+	print "					 Opt-Baseloads=\"NA\"\n";
+	print "					 Opt-ResultHouseCode=\"NA\"\n";
+	print "					 Opt-Temperatures=\"NA\"\n";
+	print "					 Opt-Specifications=\"NA\"\n";
+	print "					 GOconfig_rotate=\"AVG\"\n";
+	print "					 Opt-DBFiles=\"H2KCodeLibFile\"\n"; 
+	print "			/>\n";
+	print "		</opt>\n";
+
 	return 0;
 };
