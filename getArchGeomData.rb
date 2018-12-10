@@ -101,11 +101,15 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument  #
   exit                                                             #
 end
 ####
-# Format the input path to something Dir.glob understands
+# Format the input path and output file path to something Dir.glob understands
 options[:folder].gsub!('\\', '/') # Convert all backslashes to forward
 options[:folder].gsub!(/^\./, '') # Remove leading period
 options[:folder].gsub!(/^\//, '') # Remove leading forward slash
 options[:folder].gsub!(/\/$/, '') # Remove trailing forward slash
+
+options[:output].gsub!('\\', '/') # Convert all backslashes to forward
+options[:output].gsub!(/^\./, '') # Remove leading period
+options[:output].gsub!(/^\//, '') # Remove leading forward slash
 
 =begin
 # Begin processing files in user designated folder
@@ -150,7 +154,8 @@ files.each do |file|
   # Get the gross areas from results
   locationText = "HouseFile/AllResults/Results"
   h2kElements.each(locationText) do |element|
-    unless element.attributes["houseCode"] =~ /UserHouse/
+    # puts element.attributes["houseCode"]
+    if element.attributes["houseCode"] != nil
       next
     end
     # Gather data from this results set (User defined)
