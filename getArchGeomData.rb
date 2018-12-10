@@ -114,8 +114,12 @@ options[:output].gsub!(/^\//, '') # Remove leading forward slash
 =begin
 # Begin processing files in user designated folder
 =end
-# Get all files in the user-provided 
+# Get all files in the user-provided
 files = Dir.glob(options[:folder]+'/*.h2k')
+if files.empty?
+  puts "No h2k files in #{options[:folder]}"
+  exit
+end
 
 # Loop through all the files and gather the data
 files.each do |file|
@@ -223,4 +227,3 @@ end
 formatter = REXML::Formatters::Pretty.new
 formatter.compact = true
 File.open("#{options[:output]}","w"){|file| file.puts formatter.write(resXML.root,"")}
-# resXML.write(File.open("#{options[:output]}", "w"))
