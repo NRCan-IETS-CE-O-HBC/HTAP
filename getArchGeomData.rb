@@ -154,6 +154,23 @@ files.each do |file|
   # Heated volume
   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House"
   reshash["heatedVolume"] = h2kElements[locationText].attributes["volume"]
+
+  # Get location info
+  locationText = "HouseFile/ProgramInformation"
+  reshash["weatherRegion"] = h2kElements[locationText+"/Weather/Region/English"].text
+  reshash["weatherLocation"] = h2kElements[locationText+"/Weather/Location/English"].text
+  reshash["listedRegion"] = h2kElements[locationText+"/Client/StreetAddress/Province"].text
+  if reshash["listedRegion"] != nil
+    reshash["listedRegion"] = reshash["listedRegion"].upcase
+  else
+    reshash["listedRegion"] = 'NA'
+  end
+  reshash["listedLocation"] = h2kElements[locationText+"/Client/StreetAddress/City"].text
+  if reshash["listedLocation"] != nil
+    reshash["listedLocation"] = reshash["listedLocation"].upcase
+  else
+    reshash["listedLocation"] = 'NA'
+  end
   
   # Get the gross areas from results
   locationText = "HouseFile/AllResults/Results"
