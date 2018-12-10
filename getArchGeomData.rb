@@ -101,9 +101,11 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument  #
   exit                                                             #
 end
 ####
-# Remove any training slashes or leading periods from directory input
-options[:folder].gsub!(/\\$|\/$/, '')
-options[:folder].gsub!(/^\./, '')
+# Format the input path to something Dir.glob understands
+options[:folder].gsub!('\\', '/') # Convert all backslashes to forward
+options[:folder].gsub!(/^\./, '') # Remove leading period
+options[:folder].gsub!(/^\//, '') # Remove leading forward slash
+options[:folder].gsub!(/\/$/, '') # Remove trailing forward slash
 
 =begin
 # Begin processing files in user designated folder
