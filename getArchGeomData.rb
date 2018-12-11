@@ -3,6 +3,8 @@ require 'optparse'
 require 'rexml/document'
 require 'pp'
 
+require_relative 'include/H2KUtils' 
+
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 
 =begin
@@ -133,14 +135,9 @@ files.each do |file|
   
   # Get a name for this record
   reshash["filename"] = File.basename(file, ".*") 
-
-  # Get the building type
-  locationText = "HouseFile/House/Specifications/HouseType"
-  reshash["buildingType"] = getTypeHouseString(h2kElements[locationText].attributes["code"].to_i)
-
-  # Get number of storeys
-  locationText = "HouseFile/House/Specifications/Storeys"
-  reshash["storeys"] = getNumStoreysString(h2kElements[locationText].attributes["code"].to_i)
+  
+  reshash["buildingType"] = H2KUtils.getHouseType(h2kElements) 
+  reshash["storeys"] = H2KUtils.getStories(h2kElements)
 
   # Get the plan shape
   locationText = "HouseFile/House/Specifications/PlanShape"

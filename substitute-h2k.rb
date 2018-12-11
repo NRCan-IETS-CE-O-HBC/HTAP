@@ -19,6 +19,8 @@ require 'digest'
 require 'json'
 require 'set'
 
+require_relative 'include/H2KUtils'
+
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
@@ -5610,7 +5612,7 @@ def postprocess( scaleData )
    end
 
    # Get house heated floor area
-   $FloorArea = getHeatedFloorArea( h2kPostElements )
+   $FloorArea = H2KUtils.getHeatedFloorArea( h2kPostElements )
    $HouseVolume= h2kPostElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
    # ==================== Get results for all h2k calcs from XML file (except above case)
    
@@ -6107,23 +6109,10 @@ end  # End of postprocess
 # =========================================================================================
 def getHouseInfo (elements)
 
-  $BuilderName = elements["HouseFile/ProgramInformation/File/BuilderName"].text
-  if $BuilderName !=nil
-    $BuilderName.gsub!(/\s*/, '')    # Removes mid-line white space
-    $BuilderName.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
-  end
 
-  $HouseType = elements["HouseFile/House/Specifications/HouseType/English"].text
-  if $HouseType !=nil
-    $HouseType.gsub!(/\s*/, '')    # Removes mid-line white space
-    $HouseType.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
-  end
-
-  $HouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
-  if $HouseStoreys!= nil
-    $HouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
-    $HouseStoreys.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
-  end
+  $BuilderName  = H2KUtils.getBuilderName(elements) 
+  $HouseType    = H2KUtils.getHouseType(elements) 
+  $HouseStoreys = H2KUtils.getStories(elements)
 
   locationText = "HouseFile/House/Components/Ceiling"
   areaCeiling_temp = 0.0
@@ -6349,104 +6338,7 @@ end # End of getEnvelopeSpecs
 # =========================================================================================
 # Get the best estimate of the house heated floor area
 # =========================================================================================
-def getHeatedFloorArea( elements )
-   # Initialize vars
-   areaRatio = 0
-   heatedFloorArea = 0
-   
-   # Get XML file version that "elements" came from. The version can be from the original file (pre-processed inputs)
-   # or from the post-processed outputs (which will match the version of the H2K CLI used), depending on the "elements"
-   # passed to this function.
-   versionMajor = elements["HouseFile/Application/Version"].attributes["major"].to_i
-   versionMinor = elements["HouseFile/Application/Version"].attributes["minor"].to_i
-   versionBuild = elements["HouseFile/Application/Version"].attributes["build"].to_i
 
-   if (versionMajor == 11 && versionMinor >= 5 && versionBuild >= 8) || versionMajor > 11 then
-      # "House", "Multi-unit: one unit", or "Multi-unit: whole building"
-      buildingType =  elements["HouseFile/House/Specifications"].attributes["buildingType"]
-      areaAboveGradeInput = elements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["aboveGrade"].to_f
-      areaBelowGradeInput = elements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["belowGrade"].to_f
-   else
-      buildingType = "House"
-      areaAboveGradeInput = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
-      areaBelowGradeInput = elements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
-   end
-
-   areaUserInputTotal = areaAboveGradeInput + areaBelowGradeInput
-
-   case elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_f
-   when 1
-      numStoreysInput = 1
-   when 2
-      numStoreysInput = 1.5  # 1.5 storeys
-   when 3
-      numStoreysInput = 2
-   when 4
-      numStoreysInput = 2.5  # 2.5 storeys
-   when 5
-      numStoreysInput = 3
-   when 6..7
-      numStoreysInput = 2    # Split level or Spli entry/raised basement
-   end
-
-   # Get house area estimates from the first XML <results> section - these are totals of multiple surfaces
-   if  ( elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"]!= nil ) then 
-     ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
-   else 
-     ceilingAreaOut = 0 
-   end 
-   
-   if  ( elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"]!= nil ) then 
-     slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
-   else
-     slabAreaOut = 0
-   end 
-
-   if  ( elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"] != nil ) then 
-      basementSlabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
-   else 
-     basementSlabAreaOut  = 0 
-   end 
-   
-   if numStoreysInput == 1 then 
-      # Single storey house -- avoid counting a basement heated area 
-      areaEstimateTotal = ceilingAreaOut
-   else
-      # Multi-storey houses add area of "heated" basement & crawlspace (check if heated!)
-      loc = "HouseFile/House/Temperatures/Basement"
-      loc2 = "HouseFile/House/Temperatures/Crawlspace"
-      if elements[loc].attributes["heated"] == "true" || elements[loc].attributes["heatingSetPoint"] == "true" || elements[loc2].attributes["heated"] == "true"
-         areaEstimateTotal = ceilingAreaOut * numStoreysInput + basementSlabAreaOut
-      else
-         areaEstimateTotal = ceilingAreaOut * numStoreysInput
-      end
-   end
-   
-   if areaEstimateTotal > 0
-      areaRatio = areaUserInputTotal / areaEstimateTotal
-   else
-      stream_out("\nNote: House area estimate from results section is zero.\n")
-   end
-   
-   if buildingType.include? "Multi-unit" then
-      # For multis using the "new" MURB method assume that heated area comes from a valid user input (not an estimate form ceiling/basement areas)
-      heatedFloorArea = areaUserInputTotal
-   elsif areaRatio > 0.50 && areaRatio < 2.0 then
-      # Accept user input area if it's between 50% and 200% of the estimated area!
-      heatedFloorArea = areaUserInputTotal
-   else
-      # Use user input area for Triplexes (type 4), Apartments (type 5), or
-      # row house (end:6 or middle:8) regardless of area ratio (but non-zero)
-      houseType = elements["HouseFile/House/Specifications/HouseType"].attributes["code"].to_i
-      if (houseType == 4 || houseType == 5 || houseType == 6 || houseType == 8) && areaUserInputTotal > 0
-         heatedFloorArea = areaUserInputTotal
-      else
-         heatedFloorArea = areaEstimateTotal
-      end
-   end
-   
-   return heatedFloorArea
-end
 
 # =========================================================================================
 # Get the total ceiling area, in square mtres, for the type specified and ceiling code name
@@ -7304,7 +7196,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
         unitCost = -0.988 * Math.log(optValue.to_f, Math::E) + 1.3216
       end
     end
-    cost = unitCost * getHeatedFloorArea(elements)  * SF_PER_SM
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)  * SF_PER_SM
   when "Opt-Ceilings" #.................................................................................
     if ( optTag =~ /Opt-Ceiling/ )
       nominalR = 0
@@ -7519,21 +7411,21 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       headerAreaout +=  element.attributes["floorHeader"].to_f
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-ExposedFloor" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-CasementWindows" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-Skylights" #.................................................................................
     if optValue == "NA"
       unitCost = 0
@@ -7546,7 +7438,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       skylightAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-DoorWindows" #.................................................................................
     if optValue == "NA"
       unitCost = 0
@@ -7559,7 +7451,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       doorwindowAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-Doors" #.................................................................................
     if optValue == "NA"
       unitCost = 0
@@ -7571,77 +7463,77 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       doorAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-H2KFoundation" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-H2KFoundationSlabCrawl" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-DHWSystem" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-DWHRSystem" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-HVACSystem" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-HRVspec" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-Baseloads" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-RoofPitch" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-StandoffPV" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   when "Opt-H2K-PV" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * getHeatedFloorArea(elements)
+    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
   end
   return cost
 end
