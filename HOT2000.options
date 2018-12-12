@@ -1885,7 +1885,7 @@
 *attribute:start 
 *attribute:name = Opt-GenericWall_1Layer_definitions
 *attribute:tag:1  = <Opt-GenInsulLayerInboard-a>
-*attribute:tag:2  = Opt-H2K-EffRValue
+*attribute:tag:2  = OPT-H2K-EffRValue
 *attribute:default = Stud_2x6_R20
  
 *option:NA:value:1 = NA 
@@ -2228,7 +2228,7 @@ Whitehorse Wall Options (Code is R28)
    
 *attribute:name = Opt-FloorHeader
 *attribute:tag:1  = OPT-H2K-CodeName    ! Use "NA" (or non-existent name) for user-Specified case
-*attribute:tag:2  = Opt-H2K-EffRValue   ! User-Specified R-value (Imperial)
+*attribute:tag:2  = OPT-H2K-EffRValue   ! User-Specified R-value (Imperial)
 *attribute:default = NA
 
 *option:NA:value:1 =   NA
@@ -4044,7 +4044,7 @@ Whitehorse Wall Options (Code is R28)
 *attribute:start 
 *attribute:name = Opt-FloorHeader
 *attribute:tag:1  = <Opt-GenInsulLayerInboard-a>
-*attribute:tag:2  = Opt-H2K-EffRValue
+*attribute:tag:2  = OPT-H2K-EffRValue
 *attribute:default = NA
  
 *option:NA:value:1 = NA 

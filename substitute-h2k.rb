@@ -32,8 +32,8 @@ SF_PER_SM = 10.7639
 # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
 #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
 #      re-trying a run)! 
-$maxRunTime = 10 # seconds - could be longer on slow machines. 
-$maxTries   = 10 # JTB 05-10-2016: Also setting maximum retries within timeout period
+$maxRunTime = 25 # seconds - could be longer on slow machines. 
+$maxTries   = 3 # JTB 05-10-2016: Also setting maximum retries within timeout period
 
 $gJasonExport = false 
 $gJasonTest = false 
@@ -1753,7 +1753,7 @@ def processFile(h2kElements)
             # Generic wall insulation thickness settings: - one layer
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
-               if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+               if ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
                   # Change ALL existing wall codes to User Specified R-value
                   locationText = "HouseFile/House/Components/Wall/Construction/Type"
                   h2kElements.each(locationText) do |element| 
@@ -1769,7 +1769,7 @@ def processFile(h2kElements)
             # Floor header User-Specified R-values
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FloorHeader/ )
-               if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+               if ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
                   # Change ALL existing floor headers codes to User Specified R-value
                   # Should it be different for the main floors and basement??
                   locationText = "HouseFile/House/Components/*/Components/FloorHeader/Construction/Type"

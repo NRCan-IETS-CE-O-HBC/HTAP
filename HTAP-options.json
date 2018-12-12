@@ -2281,7 +2281,7 @@
           "base": {
             "<Opt-win-S-CON>": "DblLeHcArg",
             "<Opt-win-E-CON>": "DblLeScArg",
-            "<Opt-win-N-CON>": "DblLeScArg",            
+            "<Opt-win-N-CON>": "DblLeScArg",
             "<Opt-win-W-CON>": "DblLeScArg",
             "<Opt-win-SE-CON>": "DblLeScArg",
             "<Opt-win-SW-CON>": "DblLeScArg",
@@ -4115,8 +4115,8 @@
       "CeilR40": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR40",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "40"
           }
         },
         "costs": {
@@ -4142,8 +4142,8 @@
       "CeilR50": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR50",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "50"
           }
         },
         "costs": {
@@ -4169,8 +4169,8 @@
       "CeilR60": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR60",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
           }
         },
         "costs": {
@@ -4196,8 +4196,8 @@
       "CeilR70": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR70",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "70"
           }
         },
         "costs": {
@@ -5433,7 +5433,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NA",
-            "Opt-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA"
           }
         },
         "costs": {
@@ -5460,7 +5460,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "18.1"
+            "OPT-H2K-EffRValue": "18.1"
           }
         },
         "costs": {
@@ -5487,7 +5487,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "15.8"
+            "OPT-H2K-EffRValue": "15.8"
           }
         },
         "costs": {
@@ -5514,7 +5514,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "15.8"
+            "OPT-H2K-EffRValue": "15.8"
           }
         },
         "costs": {
@@ -5541,7 +5541,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "17.5"
+            "OPT-H2K-EffRValue": "17.5"
           }
         },
         "costs": {
@@ -5568,7 +5568,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "21.9"
+            "OPT-H2K-EffRValue": "21.9"
           }
         },
         "costs": {
@@ -5595,7 +5595,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1366",
-            "Opt-H2K-EffRValue": "24"
+            "OPT-H2K-EffRValue": "24"
           }
         },
         "costs": {
@@ -5622,7 +5622,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1329",
-            "Opt-H2K-EffRValue": "23"
+            "OPT-H2K-EffRValue": "23"
           }
         },
         "costs": {
@@ -5649,7 +5649,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1457",
-            "Opt-H2K-EffRValue": "25"
+            "OPT-H2K-EffRValue": "25"
           }
         },
         "costs": {
@@ -5676,7 +5676,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1668",
-            "Opt-H2K-EffRValue": "26.2"
+            "OPT-H2K-EffRValue": "26.2"
           }
         },
         "costs": {
@@ -5703,7 +5703,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1998",
-            "Opt-H2K-EffRValue": "31.2"
+            "OPT-H2K-EffRValue": "31.2"
           }
         },
         "costs": {
@@ -5730,7 +5730,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2324",
-            "Opt-H2K-EffRValue": "39"
+            "OPT-H2K-EffRValue": "39"
           }
         },
         "costs": {
@@ -5757,7 +5757,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.14",
-            "Opt-H2K-EffRValue": "25"
+            "OPT-H2K-EffRValue": "25"
           }
         },
         "costs": {
@@ -5784,7 +5784,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1541",
-            "Opt-H2K-EffRValue": "24.3"
+            "OPT-H2K-EffRValue": "24.3"
           }
         },
         "costs": {
@@ -5811,7 +5811,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1812",
-            "Opt-H2K-EffRValue": "31"
+            "OPT-H2K-EffRValue": "31"
           }
         },
         "costs": {
@@ -5838,7 +5838,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1945",
-            "Opt-H2K-EffRValue": "30.2"
+            "OPT-H2K-EffRValue": "30.2"
           }
         },
         "costs": {
@@ -5865,7 +5865,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2078",
-            "Opt-H2K-EffRValue": "35"
+            "OPT-H2K-EffRValue": "35"
           }
         },
         "costs": {
@@ -5892,7 +5892,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1422",
-            "Opt-H2K-EffRValue": "25"
+            "OPT-H2K-EffRValue": "25"
           }
         },
         "costs": {
@@ -5919,7 +5919,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1358",
-            "Opt-H2K-EffRValue": "24"
+            "OPT-H2K-EffRValue": "24"
           }
         },
         "costs": {
@@ -5946,7 +5946,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1726",
-            "Opt-H2K-EffRValue": "30"
+            "OPT-H2K-EffRValue": "30"
           }
         },
         "costs": {
@@ -5973,7 +5973,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.208",
-            "Opt-H2K-EffRValue": "35"
+            "OPT-H2K-EffRValue": "35"
           }
         },
         "costs": {
@@ -6000,7 +6000,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2432",
-            "Opt-H2K-EffRValue": "41"
+            "OPT-H2K-EffRValue": "41"
           }
         },
         "costs": {
@@ -6027,7 +6027,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1203",
-            "Opt-H2K-EffRValue": "21"
+            "OPT-H2K-EffRValue": "21"
           }
         },
         "costs": {
@@ -6054,7 +6054,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1374",
-            "Opt-H2K-EffRValue": "23.8"
+            "OPT-H2K-EffRValue": "23.8"
           }
         },
         "costs": {
@@ -6081,7 +6081,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1504",
-            "Opt-H2K-EffRValue": "26"
+            "OPT-H2K-EffRValue": "26"
           }
         },
         "costs": {
@@ -6108,7 +6108,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1634",
-            "Opt-H2K-EffRValue": "29.9"
+            "OPT-H2K-EffRValue": "29.9"
           }
         },
         "costs": {
@@ -6135,7 +6135,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2003",
-            "Opt-H2K-EffRValue": "34"
+            "OPT-H2K-EffRValue": "34"
           }
         },
         "costs": {
@@ -6162,7 +6162,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1367",
-            "Opt-H2K-EffRValue": "23.3"
+            "OPT-H2K-EffRValue": "23.3"
           }
         },
         "costs": {
@@ -6189,7 +6189,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1812",
-            "Opt-H2K-EffRValue": "30.3"
+            "OPT-H2K-EffRValue": "30.3"
           }
         },
         "costs": {
@@ -6216,7 +6216,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2256",
-            "Opt-H2K-EffRValue": "41.5"
+            "OPT-H2K-EffRValue": "41.5"
           }
         },
         "costs": {
@@ -6243,7 +6243,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2464",
-            "Opt-H2K-EffRValue": "41.2"
+            "OPT-H2K-EffRValue": "41.2"
           }
         },
         "costs": {
@@ -6270,7 +6270,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1982",
-            "Opt-H2K-EffRValue": "33.2"
+            "OPT-H2K-EffRValue": "33.2"
           }
         },
         "costs": {
@@ -6297,7 +6297,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone4",
-            "Opt-H2K-EffRValue": "15.79"
+            "OPT-H2K-EffRValue": "15.79"
           }
         },
         "costs": {
@@ -6324,7 +6324,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone5_noHRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -6351,7 +6351,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone5_HRV",
-            "Opt-H2K-EffRValue": "16.86"
+            "OPT-H2K-EffRValue": "16.86"
           }
         },
         "costs": {
@@ -6378,7 +6378,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone6_noHRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -6405,7 +6405,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone6_HRV",
-            "Opt-H2K-EffRValue": "16.86"
+            "OPT-H2K-EffRValue": "16.86"
           }
         },
         "costs": {
@@ -6432,7 +6432,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7A_noHRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -6459,7 +6459,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7A_HRV",
-            "Opt-H2K-EffRValue": "16.52"
+            "OPT-H2K-EffRValue": "16.52"
           }
         },
         "costs": {
@@ -6486,7 +6486,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7B_noHRV",
-            "Opt-H2K-EffRValue": "21.86"
+            "OPT-H2K-EffRValue": "21.86"
           }
         },
         "costs": {
@@ -6513,7 +6513,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7B_HRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -6540,7 +6540,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone8_noHRV",
-            "Opt-H2K-EffRValue": "21.86"
+            "OPT-H2K-EffRValue": "21.86"
           }
         },
         "costs": {
@@ -6567,7 +6567,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone8_HRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -6594,7 +6594,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "Main_Wall_R30",
-            "Opt-H2K-EffRValue": "30"
+            "OPT-H2K-EffRValue": "30"
           }
         },
         "costs": {
@@ -6622,7 +6622,7 @@
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-GenInsulLayerInboard-a>",
-      "Opt-H2K-EffRValue"
+      "OPT-H2K-EffRValue"
     ]
   },
   "Opt-MainWall": {
@@ -7481,7 +7481,7 @@
       "NA": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA"
           }
         },
         "costs": {
@@ -7507,7 +7507,7 @@
       "Header_R20": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "20"
+            "OPT-H2K-EffRValue": "20"
           }
         },
         "costs": {
@@ -7533,7 +7533,7 @@
       "Header_R30": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "30"
+            "OPT-H2K-EffRValue": "30"
           }
         },
         "costs": {
@@ -7559,7 +7559,7 @@
       "Header_R40": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "40"
+            "OPT-H2K-EffRValue": "40"
           }
         },
         "costs": {
@@ -7585,7 +7585,7 @@
       "Header_R50": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "50"
+            "OPT-H2K-EffRValue": "50"
           }
         },
         "costs": {
@@ -7611,7 +7611,7 @@
       "Header_R60": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "60"
+            "OPT-H2K-EffRValue": "60"
           }
         },
         "costs": {
@@ -7637,7 +7637,7 @@
       "NBC_Wall_zone4": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "15.79"
+            "OPT-H2K-EffRValue": "15.79"
           }
         },
         "costs": {
@@ -7663,7 +7663,7 @@
       "NBC_Wall_zone5_noHRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -7689,7 +7689,7 @@
       "NBC_Wall_zone5_HRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "16.86"
+            "OPT-H2K-EffRValue": "16.86"
           }
         },
         "costs": {
@@ -7715,7 +7715,7 @@
       "NBC_Wall_zone6_noHRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -7741,7 +7741,7 @@
       "NBC_Wall_zone6_HRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "16.86"
+            "OPT-H2K-EffRValue": "16.86"
           }
         },
         "costs": {
@@ -7767,7 +7767,7 @@
       "NBC_Wall_zone7A_noHRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -7793,7 +7793,7 @@
       "NBC_Wall_zone7A_HRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "16.52"
+            "OPT-H2K-EffRValue": "16.52"
           }
         },
         "costs": {
@@ -7819,7 +7819,7 @@
       "NBC_Wall_zone7B_noHRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "21.86"
+            "OPT-H2K-EffRValue": "21.86"
           }
         },
         "costs": {
@@ -7845,7 +7845,7 @@
       "NBC_Wall_zone7B_HRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -7871,7 +7871,7 @@
       "NBC_Wall_zone8_noHRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "21.86"
+            "OPT-H2K-EffRValue": "21.86"
           }
         },
         "costs": {
@@ -7897,7 +7897,7 @@
       "NBC_Wall_zone8_HRV": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "OPT-H2K-EffRValue": "17.49"
           }
         },
         "costs": {
@@ -7924,7 +7924,7 @@
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
-      "Opt-H2K-EffRValue"
+      "OPT-H2K-EffRValue"
     ]
   },
   "Opt-H2KFoundation": {
