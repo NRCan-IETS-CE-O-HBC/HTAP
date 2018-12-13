@@ -144,9 +144,17 @@ files.each do |file|
   reshash["planShape"] = getPlanShapeString(h2kElements[locationText].attributes["code"].to_i)
 
   # Heated floor areas as reported by the user
-  locationText = "HouseFile/House/Specifications"
-  reshash["aboveGradeHeatedFloorArea"] = h2kElements[locationText].attributes["aboveGradeHeatedFloorArea"]
-  reshash["belowGradeHeatedFloorArea"] = h2kElements[locationText].attributes["belowGradeHeatedFloorArea"]
+  versionMajor = h2kElements["HouseFile/Application/Version"].attributes["major"].to_i
+  versionMinor = h2kElements["HouseFile/Application/Version"].attributes["minor"].to_i
+  versionBuild = h2kElements["HouseFile/Application/Version"].attributes["build"].to_i
+  if (versionMajor == 11 && versionMinor >= 5 && versionBuild >= 8) || versionMajor > 11 then
+      # "House", "Multi-unit: one unit", or "Multi-unit: whole building"
+      reshash["aboveGradeHeatedFloorArea"] = h2kElements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["aboveGrade"].to_f
+      reshash["belowGradeHeatedFloorArea"] = h2kElements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["belowGrade"].to_f
+   else
+      reshash["aboveGradeHeatedFloorArea"] = h2kElements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
+      reshash["belowGradeHeatedFloorArea"] = h2kElements["HouseFile/House/Specifications"].attributes["belowGradeHeatedFloorArea"].to_f
+   end
 
   # Heated volume
   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House"
