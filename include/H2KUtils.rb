@@ -30,14 +30,14 @@ module H2KUtils
   
   end 
   
-  def H2KUtils.getStories(elements)
-    $MyHouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
-    if $MyHouseStoreys!= nil
-      $MyHouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
-      $MyHouseStoreys.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
-    end
+  def H2KUtils.getStoreys(elements)  
     
-    return $MyHouseStories
+    $MyHouseStoreysInt = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_i
+    $MyHouseStoreysString = self.getNumStoreysString($MyHouseStoreysInt) 
+    
+    
+    
+    return $MyHouseStoreysString
     
   end 
 
@@ -141,6 +141,22 @@ module H2KUtils
    return heatedFloorArea
  
   end # End GetHeatedFloorArea
+  
+  
+  def self.getNumStoreysString(iVal)
+    sout = ''
+    case iVal
+      when 1 then sout = 'One'
+      when 2 then sout = 'One and half'
+      when 3 then sout = 'Two'
+      when 4 then sout = 'Two and half'
+      when 5 then sout = 'Three'
+      when 6 then sout = 'Split level'
+      when 7 then sout = 'Split entry'
+      else sout = 'NA'
+    end
+    return sout
+  end
   
   
 end 

@@ -37,20 +37,6 @@ def getTypeHouseString(iVal)
   return sout
 end
 
-def getNumStoreysString(iVal)
-  sout = ''
-  case iVal
-    when 1 then sout = 'One'
-    when 2 then sout = 'One and half'
-    when 3 then sout = 'Two'
-    when 4 then sout = 'Two and half'
-    when 5 then sout = 'Three'
-    when 6 then sout = 'Split level'
-    when 7 then sout = 'Split entry'
-    else sout = 'NA'
-  end
-  return sout
-end
 
 def getPlanShapeString(iVal)
   sout = ''
@@ -137,7 +123,7 @@ files.each do |file|
   reshash["filename"] = File.basename(file, ".*") 
   
   reshash["buildingType"] = H2KUtils.getHouseType(h2kElements) 
-  reshash["storeys"] = H2KUtils.getStories(h2kElements)
+  reshash["storeys"] = H2KUtils.getStoreys(h2kElements)
 
   # Get the plan shape
   locationText = "HouseFile/House/Specifications/PlanShape"
