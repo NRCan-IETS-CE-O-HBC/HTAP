@@ -19,15 +19,17 @@ require 'digest'
 require 'json'
 require 'set'
 
+require_relative 'include/msgs' 
 require_relative 'include/H2KUtils'
+require_relative 'include/HTAPUtils'
+require_relative 'include/constants'
+require_relative 'include/costing'
+require_relative 'include/legacy-code'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods 
 
-# Constants in Ruby start with upper case letters and, by convention, all upper case
-R_PER_RSI = 5.678263
-KWH_PER_GJ = 277.778
-W_PER_KW = 1000.0
-SF_PER_SM = 10.7639
+
+$program = "substitute-h2k.rb"
 
 # Parameters controlling timeout and re-try limits for HOT2000 
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
@@ -39,6 +41,7 @@ $maxTries   = 10 # JTB 05-10-2016: Also setting maximum retries within timeout p
 
 $gJasonExport = false 
 $gJasonTest = false 
+ScriptName = "substitute.rb"
 
 # HOT2000 output data sets depend on the run mode set in the HOT2000 inputs. In General mode 
 # just one run is done and one set of outputs is generated, In ERS mode, multiple (7) runs of the 
@@ -77,7 +80,6 @@ $gTotalCost          = 0
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
 $gRotate             = "S"
-$gGOStep             = 0
 $gArchGOChoiceFile   = 0
 $gReadROutStrTxt = false
 
@@ -150,10 +152,9 @@ $AliasOutput  = $AliasShortOutput
 $AliasConfig  = $AliasShortConfig 
 $AliasArch    = $AliasShortArch   
 
-$LegacyOptionsToIgnore = Set.new [ "Opt-RoofPitch", "Opt-StandoffPV", "Opt-DHWLoadScale", "Opt-HRVduct" ] 
+ 
 
 # Path where this script was started and considered master
-# When running GenOpt, it will be a Tmp folder!
 $gMasterPath = Dir.getwd()
 $gMasterPath.gsub!(/\//, '\\')
 $unitCostFileName = $gMasterPath+"/HTAPUnitCosts.json"
@@ -197,25 +198,7 @@ $gAvgEnergyWaterHeatingFossil = 0
 $gAmtOil = 0
 $Locale = ""      # Weather location for current run
 $gWarn = false 
-# Data from Hanscomb 2011 NBC analysis
-$RegionalCostFactors = Hash.new
-$RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
-                           "Edmonton"     =>  1.12 ,
-                           "Calgary"      =>  1.12 ,  # Assume same as Edmonton?
-                           "Ottawa"       =>  1.00 ,
-                           "Toronto"      =>  1.00 ,
-                           "Quebec"       =>  1.00 ,  # Assume same as Montreal?
-                           "Montreal"     =>  1.00 ,
-                           "Vancouver"    =>  1.10 ,
-                           "PrinceGeorge" =>  1.10 ,
-                           "Kamloops"     =>  1.10 ,
-                           "Regina"       =>  1.08 ,  # Same as Winnipeg?
-                           "Winnipeg"     =>  1.08 ,
-                           "Fredricton"   =>  1.00 ,  # Same as Quebec?
-                           "Whitehorse"   =>  1.00 ,
-                           "Yellowknife"  =>  1.38 ,
-                           "Inuvik"       =>  1.38 , 
-                           "Alert"        =>  1.38   }
+
 
 $PVInt = "NA"
 $PVIntModel = false
@@ -227,161 +210,7 @@ $annACLatentLoadFromBrowseRpt = 0.0
 $TotalAirConditioningLoad = 0.0
 $AvgACCOP = 0.0
 
-# Setting Heating Degree Days
-$HDDHash =  {
-            "WHITEHORSE" => 6580 ,
-            "TORONTO" => 3520 ,
-            "OTTAWA" => 4500 ,
-            "EDMONTON" => 5120 ,
-            "CALGARY" => 5000 ,
-            "MONTREAL" => 4200 ,
-            "QUEBEC" => 5080 ,
-            "HALIFAX" => 4000 ,
-            "FREDERICTON" => 4670 ,
-            "WINNIPEG" => 5670 ,
-            "REGINA" => 5600 ,
-            "VANCOUVER" => 2825 ,
-            "PRINCEGEORGE" => 4720 ,
-            "KAMLOOPS" => 3450 ,
-            "YELLOWKNIFE" => 8170 ,
-            "INUVIK" => 9600 ,
-            "ABBOTSFORD" => 2860 ,
-            "CASTLEGAR" => 3580 ,
-            "FORTNELSON" => 6710 ,
-            "FORTSTJOHN" => 5750 ,
-            "PORTHARDY" => 3440 ,
-            "PRINCERUPERT" => 3900 ,
-            "SMITHERS" => 5040 ,
-            "SUMMERLAND" => 3350 ,
-            "VICTORIA" => 2650 ,
-            "WILLIAMSLAKE" => 4400 ,
-            "COMOX" => 3100 ,
-            "CRANBROOK" => 4400 ,
-            "QUESNEL" => 4650 ,
-            "SANDSPIT" => 3450 ,
-            "TERRACE" => 4150 ,
-            "TOFINO" => 3150 ,
-            "WHISTLER" => 4180 ,
-            "FORTMCMURRAY" => 6250 ,
-            "LETHBRIDGE" => 4500 ,
-            "ROCKYMOUNTAINHOUSE" => 5640 ,
-            "SUFFIELD" => 4770 ,
-            "COLDLAKE" => 5860 ,
-            "CORONATION" => 5640 ,
-            "GRANDEPRAIRIE" => 5790 ,
-            "MEDICINEHAT" => 4540 ,
-            "PEACERIVER" => 6050 ,
-            "REDDEER" => 5550 ,
-            "ESTEVAN" => 5340 ,
-            "PRINCEALBERT" => 6100 ,
-            "SASKATOON" => 5700 ,
-            "SWIFTCURRENT" => 5150 ,
-            "URANIUMCITY" => 7500 ,
-            "BROADVIEW" => 5760 ,
-            "MOOSEJAW" => 5270 ,
-            "NORTHBATTLEFORD" => 5900 ,
-            "YORKTON" => 6000 ,
-            "BRANDON" => 5760 ,
-            "CHURCHILL" => 8950 ,
-            "THEPAS" => 6480 ,
-            "THOMPSON" => 7600 ,
-            "DAUPHIN" => 5900 ,
-            "PORTAGELAPRAIRIE" => 5600 ,
-            "BIGTROUTLAKE" => 7650 ,
-            "KINGSTON" => 4000 ,
-            "LONDON" => 3900 ,
-            "MUSKOKA" => 4760 ,
-            "NORTHBAY" => 5150 ,
-            "SAULTSTEMARIE" => 4960 ,
-            "SIMCOE" => 3700 ,
-            "SUDBURY" => 5180 ,
-            "THUNDERBAY" => 5650 ,
-            "TIMMINS" => 5940 ,
-            "WINDSOR" => 3400 ,
-            "GOREBAY" => 4700 ,
-            "KAPUSKASING" => 6250 ,
-            "KENORA" => 5630 ,
-            "SIOUXLOOKOUT" => 5950 ,
-            "TORONTOMETRESSTN" => 3890 ,
-            "TRENTON" => 4110 ,
-            "WIARTON" => 4300 ,
-            "BAGOTVILLE" => 5700 ,
-            "KUUJJUAQ" => 8550 ,
-            "KUUJJUARAPIK" => 9150 ,
-            "SCHEFFERVILLE" => 8550 ,
-            "SEPTILES" => 6200 ,
-            "SHERBROOKE" => 4700 ,
-            "VALDOR" => 6180 ,
-            "BAIECOMEAU" => 6020 ,
-            "LAGRANDERIVIERE" => 8100 ,
-            "MONTJOLI" => 5370 ,
-            "MONTREALMIRABEL" => 4500   ,
-            "STHUBERT" => 4490    ,
-            "STEAGATHEDESMONTS" => 5390 ,
-            "CHATHAM" => 4950 ,
-            "MONCTON" => 4680 ,
-            "SAINTJOHN" => 4570 ,
-            "CHARLO" => 5500 ,
-            "GREENWOOD" => 4140 ,
-            "SYDNEY" => 4530 ,
-            "TRURO" => 4500 ,
-            "YARMOUTH" => 3990 ,
-            "CHARLOTTETOWN" => 4460    ,
-            "SUMMERSIDE" => 4600 ,
-            "BONAVISTA" => 5000 ,
-            "GANDER" => 5110 ,
-            "GOOSEBAY" => 6670 ,
-            "SAINTJOHNS" => 4800 ,
-            "STEPHENVILLE" => 4850 ,
-            "CARTWRIGHT" => 6440 ,
-            "DANIELSHARBOUR" => 4760 ,
-            "DEERLAKE" => 4760 ,
-            "WABUSHLAKE" => 7710 ,
-            "DAWSONCITY" => 8120 ,
-            "FORTSMITH" => 7300 ,
-            "NORMANWELLS" => 8510 ,
-            "BAKERLAKE" => 10700 ,
-            "IQALUIT" => 9980 ,
-            "RESOLUTE" => 12360 ,
-            "CORALHARBOUR" => 10720 ,
-            "HALLBEACH" => 10720 ,
-            "XXXXX" => 1
-            }
-
-#Index of provinces, used by HOT2000 for region            
-$ProvArr = [ "BRITISH COLUMBIA", 
-             "ALBERTA", 
-             "SASKATCHEWAN", 
-             "MANITOBA", 
-             "ONTARIO", 
-             "QUEBEC", 
-             "NEW BRUNSWICK", 
-             "NOVA SCOTIA", 
-             "PRINCE EDWARD ISLAND", 
-             "NEWFOUNDLAND AND LABRADOR", 
-             "YUKON TERRITORY", 
-             "NORTHWEST TERRITORY", 
-             "NUNAVUT", 
-             "OTHER" ]            
-            
-            
-# Setting hash for permafrost locations
-$PermafrostHash =  {
-            "YELLOWKNIFE"  => "discontinuous" ,
-            "INUVIK"       => "continuous",
-            "CHURCHILL"    => "continuous",
-            "KUUJJUAQ"     => "continuous" ,
-            "DAWSONCITY"   => "discontinuous" ,
-            "NORMANWELLS"  => "discontinuous" ,
-            "BAKERLAKE"    => "continuous",
-            "IQALUIT"      => "continuous",
-            "RESOLUTE"     => "continuous" ,
-            "CORALHARBOUR" => "continuous",
-            "HALLBEACH"    => "continuous"
-            }
-
-             
-            
+    
             
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
@@ -568,7 +397,7 @@ def exportOptionsToJson()
     $JSONoutput.write(JSON.pretty_generate($gOptions))
     $JSONoutput.close 
     
-    parse_json_options_file("HTAP-options.json")
+    $gOptions2 = HTAPData.parse_json_options_file("HTAP-options.json")
     
     $JSONoutput  = File.open("HTAPJSONOptionsStructure.json", 'w') 
     $JSONoutput.write(JSON.pretty_generate($gOptions2))
@@ -588,25 +417,8 @@ end
 
 
 
-def self.checksum(dir)
-  md5 = Digest::MD5.new
-  searchLoc = dir.gsub(/\\/, "/") 
   
-  files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||  
-                                               f =~ /Browse\.Rpt/i || 
-                                               f =~ /WINMB\.H2k/i  || 
-                                               f =~ /ROutStr\.H2k/i ||
-                                               f =~ /ROutStr\.Txt/i ||
-                                               f =~ /WMB_.*\.Txt/i ||
-                                               f =~ /HOT2000\.ini/i ||      
-                                               f =~ /wizdefs.h2k/i                                                 
-                                         }    
-  content = files.map{|f| File.read(f)}.join
-  md5result = md5.update content
-  content.clear
-  return md5.update content
  
-end
 
 def parse_json_options_file(filename)
   # New parsing method for json format 
@@ -937,253 +749,6 @@ end
 
 
 
-
-
-def fatalerror( err_msg )
-# Display a fatal error and quit. -----------------------------------
-
-# See if error string is not empty: if not, call err-out to log it
-  if ( err_msg.gsub(/\s*/,'') != "") then
-    err_out(err_msg)
-  end
-
-  ReportMsgs()
-
-  # On error - attempt to save inputs .
-  $gChoices.sort.to_h
-  $fSUMMARY.write "\n"
-  for attribute in $gChoices.keys()
-    choice = $gChoices[attribute]
-    $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
-  end
-
-  for status_type in $gStatus.keys()
-    $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
-  end
-  $fSUMMARY.write( "s.success = false\n")
-
-  #stream_out "\n substitute-h2k.rb: FATAL ERROR: \n\n"
-  #stream_out "   + ERROR: #{err_msg}\n"
-  #stream_out "\n=========================================================\n"
-
-  $fSUMMARY.close
-  $fLOG.close
-
-  exit() # Run stopped
-end
-
-def ReportMsgs()
-
-  $ErrorBuffer = ""
-  $WarningBuffer = ""
-  $gErrors.each  do |msg|
-
-    $fSUMMARY.write "s.error    = \"#{msg}\" \n"
-    $ErrorBuffer += "   + ERROR: #{msg} \n\n"
-
-  end
-
-  $gWarnings.each do |msg|
-
-    $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
-    $WarningBuffer += "   + WARNING: #{msg} \n\n"
-
-  end
-
-  if $allok then
-    status = "Run completed successfully"
-    $fSUMMARY.write "s.success    = true\n"
-  else
-    status = "Run failed."
-    $fSUMMARY.write "s.success    = false\n"
-  end
-
-  if ($ErrorBuffer.to_s.gsub(/\s*/, "" ).empty?)
-    $ErrorBuffer = "   (nil)\n"
-  end
-
-  endProcessTime = Time.now
-  $totalDiff = endProcessTime - $startProcessTime
-  $fSUMMARY.write "s.processingtime  = #{$totalDiff}\n"
-
-  stream_out " =========================================================\n"
-  stream_out " substitute-h2k.rb run summary : \n"
-  stream_out " =========================================================\n"
-  stream_out "\n"
-  stream_out( " Total processing time: #{$totalDiff.to_f.round(2)} seconds\n" )
-  stream_out( " Total H2K execution time : #{$runH2KTime.to_f.round(2)} seconds\n" )
-  stream_out( " H2K evaluation attempts: #{$gStatus["H2KExecutionAttempts"]} \n\n" )
-  stream_out " substitute-h2k.rb -> Warning messages:\n\n"
-  stream_out "#{$WarningBuffer}\n"
-  stream_out ""
-  stream_out " substitute-h2k.rb -> Error messages:\n\n"
-  stream_out "#{$ErrorBuffer}\n"
-  stream_out " substitute-h2k.rb STATUS: #{status} \n"
-  stream_out " =========================================================\n"
-
-end
-
-# =========================================================================================
-# Optionally write text to buffer -----------------------------------
-# =========================================================================================
-def stream_out(msg)
-  if ($gTest_params["verbosity"] != "quiet")
-    print msg
-  end
-  if ($gTest_params["logfile"])
-    $fLOG.write(msg)
-  end
-end
-
-# =========================================================================================
-# Write debug output ------------------------------------------------
-# =========================================================================================
-def debug_out(debmsg)
-  if $gDebug
-    puts debmsg
-  end
-  if ($gTest_params["logfile"])
-    $fLOG.write(debmsg)
-  end
-end
-
-# =========================================================================================
-# Write warning output ------------------------------------------------
-# =========================================================================================
-def warn_out(msg)
-  if $gWarn
-    puts "\n\n WARNING: #{msg}\n\n"
-  end
-  if ($gTest_params["logfile"])
-    $fLOG.write("\n\n WARNING: #{msg}\n\n")
-  end
-
-  $gWarnings << msg.gsub(/\n/,'')
-
-end
-
-def err_out(msg)
-
-  puts "\n\n ERROR: #{msg}\n\n"
-
-  if ($fLOG != nil )
-    $fLOG.write("\n\n ERROR: #{msg}\n\n")
-  end
-  $gErrors << msg.gsub(/\n/,'')
-  $allok = false
-end
-
-
-# =========================================================================================
-# Returns XML elements of HOT2000 file.
-# =========================================================================================
-def get_elements_from_filename(fileSpec)
-  # Split fileSpec into path and filename
-  var = Array.new()
-  (var[1], var[2]) = File.split( fileSpec )
-  # Determine file extension
-  tempExt = File.extname(var[2])
-
-  debug_out "Testing file read location, #{fileSpec}... "
-  
-  
-  # Open file...
-  fFileHANDLE = File.new(fileSpec, "r")
-  if fFileHANDLE == nil then
-    fatalerror("Could not read #{fileSpec}.\n")
-  end
-
-  # Global variable $XMDoc is used elsewhere for access to
-  # HOT2000 model file elements access using Path.
-  if ( tempExt.downcase == ".h2k" )
-    $XMLdoc = Document.new(fFileHANDLE)
-  elsif ( tempExt.downcase == ".flc" )
-    $XMLFueldoc = Document.new(fFileHANDLE)
-  elsif ( tempExt.downcase == ".cod" )
-    $XMLCodedoc = Document.new(fFileHANDLE)
-  else
-    $XMLOtherdoc = Document.new(fFileHANDLE)
-  end
-  fFileHANDLE.close() # Close the since content read
-
-  if ( tempExt.downcase == ".h2k" )
-    return $XMLdoc.elements()
-  elsif ( tempExt.downcase == ".flc" )
-    return $XMLFueldoc.elements()
-  elsif ( tempExt.downcase == ".cod" )
-    return $XMLCodedoc.elements()
-  else
-    return $XMLOtherdoc.elements()
-  end
-end
-
-# =========================================================================================
-# Add magic h2k files for diagnostics, if they don't already exist.
-# =========================================================================================
-def write_h2k_magic_files(filepath)
-
-  $WinMBFile = "#{filepath}\\H2K\\WINMB.H2k"
-  $ROutFile  = "#{filepath}\\H2K\\ROutstr.H2k"
-
-  if ( ! File.file?( $WinMBFile ) )
-
-    $Handle = File.open($WinMBFile, 'w')
-    $Handle.write "< auto-generated by substitute-h2k.rb >"
-    $Handle.close
-
-  end
-
-  if ( ! File.file?( $ROutFile ) )
-
-    $Handle = File.open($ROutFile, 'w')
-    $Handle.write "<Choose diagnostics>
-All,
-<End>
-     x 'Boot', ! 1 = Startup
-     x 'Calculations', ! 2 = Anncal, HseChk, FndChk...
-     x 'DHW', ! 3 = All DHW routines
-     x 'Space Heat', ! 4 = Space heating system models
-     x 'Space Heat Ini', ! 5 = Space heating initialization
-     x 'IMS', ! 6 = IMS model
-     x 'AIM2', ! 7 = AIM2 model
-     x 'HRV', ! 8 = HRV model + Fans No HR
-     x 'BHB', ! 9 = Basement Heat balance
-     x 'Rooms', ! 10 = Room by room calcs
-     x 'C/S', ! 11 = Crawl Space'
-     x 'Slab',! 12 = Slab on Grade
-     x 'Cooling', ! 13 = Cooling
-     x 'P9', !   14 = P9 Combo
-     x 'Windows', ! 15 = Window diagnostics (need this even when All specified
-     x 'Wizard', ! 16 = HOT2000 Wizard
-
-(This version auto-generated by substitute-h2k.rb)
-
-Put this file in the HOT2000 program directory to turn on diagnostics.
-When HOT2000 is started up, a message will appear to state that the
-diagnostics will be written to a file named Routstr.Txt.  Other message
-boxes will appear on the screen as calculations, ETC occur.  Click OK to
-proceed, but note the last message box to appear before the problem
-occurs.
-JB> Other setting under <Choose diagnostics> is \"Calculations\"
-The contents of the diagnostics file were not intended to be of much
-use to the general user, but may be useful to the developers in
-determining problems with calculations ETC.
-This tool should only be used once, I.E. for a single run that causes
-the problem to be analysed.
-- put the file in the program directory (where HOT2000.exe is located)
-- run HOT2000, open the file in question, do the run, quit the program
-- e-mail the file Routstr.txt (Winzip/compress it to reduce space) to
-  HOT2000 support.
-- rename Routstr.h2k to 0Routstr.h2k to suppress the diagnostics
-Brian Bradley
-bbradley@nrcan.gc.ca
-204-984-4920"
-    $Handle.close
-  end
-
-end
-
-
 # =========================================================================================
 # Search through the HOT2000 working file (copy of input file specified on command line)
 # and change values for settings defined in choice/options files.
@@ -1200,7 +765,7 @@ def processFile(h2kElements)
   if ( !File.exist?(h2kCodeFile) )
     fatalerror("Code library file #{codeLibName} not found in #{$run_path + "\\StdLibs" + "\\"}!")
   else
-    h2kCodeElements = get_elements_from_filename(h2kCodeFile)
+    h2kCodeElements = H2KFile.get_elements_from_filename(h2kCodeFile)
   end
 
    # Will contain XML elements for fuel cost file, if Opt-Location is processed! 
@@ -1334,7 +899,7 @@ def processFile(h2kElements)
                      # Open fuel file and read elements to use below. This assumes that this tag
                      # always comes before the remainder of the weather location tags below!!
                      
-                     h2kFuelElements = get_elements_from_filename(h2kFuelFile)
+                     h2kFuelElements = H2KFile.get_elements_from_filename(h2kFuelFile)
                   end
 
                elsif ( tag =~ /OPT-ElecName/ && value != "NA" )
@@ -5220,7 +4785,7 @@ def postprocess( scaleData )
    stream_out( "\n Loading XML elements from #{$gWorkingModelFile} ...")
   
    # Load all XML elements from HOT2000 file (post-run results now available)
-   h2kPostElements = get_elements_from_filename( $gWorkingModelFile )
+   h2kPostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
   
    if ( $gCustomCostAdjustment ) 
       $gRegionalCostAdj = $gCostAdjustmentFactor
@@ -5612,7 +5177,7 @@ def postprocess( scaleData )
    end
 
    # Get house heated floor area
-   $FloorArea = H2KUtils.getHeatedFloorArea( h2kPostElements )
+   $FloorArea = H2KFile.getHeatedFloorArea( h2kPostElements )
    $HouseVolume= h2kPostElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
    # ==================== Get results for all h2k calcs from XML file (except above case)
    
@@ -6110,9 +5675,9 @@ end  # End of postprocess
 def getHouseInfo (elements)
 
 
-  $BuilderName  = H2KUtils.getBuilderName(elements) 
-  $HouseType    = H2KUtils.getHouseType(elements) 
-  $HouseStoreys = H2KUtils.getStories(elements)
+  $BuilderName  = H2KFile.getBuilderName(elements) 
+  $HouseType    = H2KFile.getHouseType(elements) 
+  $HouseStoreys = H2KFile.getStories(elements)
 
   locationText = "HouseFile/House/Components/Ceiling"
   areaCeiling_temp = 0.0
@@ -6436,7 +6001,7 @@ end
 # =========================================================================================
 # Fix the paths specified in the HOT2000.ini file
 # =========================================================================================
-def fix_H2K_INI()
+def bfix_H2K_INI()
    # Rewrite INI file with updated location !
    fH2K_ini_file_OUT = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "w") 
    $ini_out="[HOT2000]
@@ -7563,11 +7128,7 @@ if $fLOG == nil then
    fatalerror("Could not open #{$gTest_params["logfile"]}.\n")
 end
      
-$gErrors = Array.new
-$gWarnings = Array.new 
-$gStatus = Hash.new 
-
-     
+    
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
@@ -7844,83 +7405,14 @@ end
  Parse configuration (choice) file. 
 =end
 
-
-
 stream_out("\n\n Reading user-defined choices (#{$gChoiceFile})...\n")
-fCHOICES = File.new($gChoiceFile, "r") 
-if fCHOICES == nil then
-   err_out("Could not read #{$gChoiceFile}.\n")
-   fatalerror(" ")
-end
-
-
-
-$linecount = 0
-
-while !fCHOICES.eof? do
-
-   $line = fCHOICES.readline
-   $line.strip!              # Removes leading and trailing whitespace
-   $line.gsub!(/\!.*$/, '')  # Removes comments
-   $line.gsub!(/\s*/, '')    # Removes mid-line white space
-   $linecount += 1
-   
-   debug_out ("  Line: #{$linecount} >#{$line}<\n")
-   
-   if ( $line !~ /^\s*$/ )
-      
-      lineTokenValue = $line.split(':')
-      attribute = lineTokenValue[0]
-      value = lineTokenValue[1]
-    
-      if ( $LegacyOptionsToIgnore.include? attribute ) then 
-        warn_out ("Choice file includes legacy choice (#{attribute}), which is no longer supported. Input ignored.")
-        next 
-      end 
-    
-      # Parse config commands
-      if ( attribute =~ /^GOconfig_/ )
-         attribute.gsub!( /^GOconfig_/, '')
-         if ( attribute =~ /rotate/ )
-            $gRotate = value
-            $gChoices["GOconfig_rotate"] = value
-            stream_out ("   - #{attribute} -> #{value} \n")
-            $gChoiceOrder.push("GOconfig_rotate")
-         end 
-         if ( attribute =~ /step/ )
-            $gGOStep = value
-            $gArchGOChoiceFile = 1
-         end 
-      else
-         extradata = value
-         if ( value =~ /\|/ )
-            #value.gsub!(/\|.*$/, '') 
-            value = value.gsub(/\|.*$/, '') 
-            extradata.gsub!(/^.*\|/, '') 
-            extradata.gsub!(/^.*\|/, '') 
-         else
-            extradata = ""
-         end
-         
-         $gChoices[attribute] = value
-         
-         stream_out ("   - #{attribute} -> #{value} \n")
-         
-         # Additional data that may be used to attribute the choices. 
-         $gExtraDataSpecd[attribute] = extradata
-         
-         # Save order of choices to make sure we apply them correctly. 
-         $gChoiceOrder.push(attribute)
-      end
-   end
-end
-
-fCHOICES.close
+$gChoices, $gChoiceOrder = HTAPData.parse_choice_file($gChoiceFile)
 stream_out (" ...done.\n\n")
+
 
 if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    $Archetype_value = $gChoices["Opt-Archetype"]
-  
+   
    # IF NA is set, and nothing is given at the command line, default to SmallSFD.
    if ( $Archetype_value =~ /NA/ ) 
       $Archetype_value = "SmallSFD"
@@ -7937,7 +7429,8 @@ if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    stream_out ("            HOT2000 run folder: #{$run_path} \n")
 end
 
-
+# Create a working h2k file, or if one exists, check to make sure it is 
+# identical to the one whe use. 
 # Variables for doing a md5 test on the integrety of the run. 
 $DirVerified = false
 $CopyTries = 0 
@@ -7966,7 +7459,7 @@ while ( ! $DirVerified && $CopyTries < 3 ) do
     stream_out(" (checksum match)\n") 
   else 
 
-    #FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
+    FileUtils.rm_r ( "#{$gMasterPath}\\H2K" ) 
     stream_out(" (CHECKSUM MISMATCH!!!)\n") 
     warn_out ("Working H2K installation dir (#{$gMasterPath}) differs from source #{$gMasterPath}. Attempting to re-create (#{$CopyTries+1}). Return error code #{$?}.")
   end 
@@ -7974,9 +7467,6 @@ while ( ! $DirVerified && $CopyTries < 3 ) do
   $CopyTries  = $CopyTries  + 1 
     
 end 
-
-
-
 
 $gStatus["MD5master"] = $masterMD5.to_s
 $gStatus["MD5workingcopy"] = $workingMD5.to_s
@@ -7986,8 +7476,8 @@ $gStatus["H2KDirCheckSumMatch"] = $DirVerified
 if ( ! $DirVerified ) 
   fatalerror ("\nFatal Error! Integrity of H2K folder at #{$gMasterPath} is compromised!\n Return error code #{$?}\n")
 else 
-  fix_H2K_INI()
-  write_h2k_magic_files("#{$gMasterPath}")
+  H2KUtils.fix_H2K_INI($gMasterPath)
+  H2KUtils.write_h2k_magic_files($gMasterPath)
   # Remove existing RoutStr file! It can grow very large, if present.
   rOut_file  = "#{$gMasterPath}\\H2K\\ROutstr.txt"
   if File.exist?(rOut_file)
@@ -8014,7 +7504,7 @@ end
 
 # Load all XML elements from HOT2000 file
 stream_out("\n Parsing a copy of HOT2000 model (#{$gWorkingModelFile}) for optimization work...")
-h2kElements = get_elements_from_filename($gWorkingModelFile)
+h2kElements = H2KFile.get_elements_from_filename($gWorkingModelFile)
 stream_out("done.")
 
 # Get rule set choices hash values in $ruleSetChoices for the 
@@ -8028,8 +7518,8 @@ $Locale = $gChoices["Opt-Location"]
 # Weather city name
 
 # Base location from original H2K file. 
-$gBaseLocale = getWeatherCity( h2kElements )
-$gBaseRegion = getRegion( h2kElements )
+$gBaseLocale = H2KFile.getWeatherCity( h2kElements )
+$gBaseRegion = H2KFile.getRegion( h2kElements )
 
 if $Locale.empty? || $Locale == "NA"
    # from base model file
@@ -8126,55 +7616,14 @@ end
 =end
 stream_out("\n Validating choices and options... ");  
 
-# Search through options and determine if they are used in Choices file (warn if not). 
-$gOptions.each do |option, ignore|
-
-    if ( $LegacyOptionsToIgnore.include? option ) then 
-    
-      warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
-      next 
-      
-    end 
-
-    debug_out ("> option : #{option} ? = #{$gChoices.has_key?(option)}\n"); 
-    if ( !$gChoices.has_key?(option)  )
-      
-      $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
-      
-         
-      if ( ! $gOptions[option]["default"]["defined"]  )
-         $ThisMsg += "No default value defined in options file."
-         err_out ($ThisMsg)
-         $allok = false 
-         
-      elsif ( option =~ /Opt-Archetype/ ) 
-      
-         if ( ! $gBaseModelFile ) 
-           $gChoices["Opt-Archetype"] = $gBaseModelFile
-         end 
-      
-      else 
-         
-         # Add default value. 
-         $gChoices[option] = $gOptions[option]["default"]["value"]
-         # Apply them at the end. 
-         $gChoiceOrder.push(option)
-         
-         $ThisMsg +=  " Using default value (#{$gChoices[option]})"
-         warn_out ( $ThisMsg )
-         
-      end
-    end
-    $ThisMsg = ""
-end
+$OptionsOK,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder ) 
+if ( ! $OptionsOK ) then 
+  $allOK = false
+end 
 
 if (! $allok ) 
   fatalerror ("Could not parse options") 
 end 
-
-
-
-
 
 
 # Search through choices and determine if they match options in the Options file (error if not). 
@@ -8228,239 +7677,18 @@ if ( !$allok )
    fatalerror ( "" )
 end
 
+
+#================ 
+# Older code associated with processing 'conditions' for various 
+# options. no longer needed (?)
+
 =begin rdoc
  Process conditions. 
 =end
 
 debug_out " ========================== CONDITIONS ==========================================" 
-
-$gChoices.each do |attrib1, choice|
-
-   debug_out " = Processing conditions for #{attrib1}-> #{choice} ..."
-      
-   $gOptions[attrib1]["options"][choice]["result"] = Hash.new
-  
-
-   
-   if ( $gOptions[attrib1]["options"][choice].empty? ) then 
-     debug_out "Skipped! "
-     next 
-   end
-   
- 
-
-   
-   if ( $gOptions[attrib1]["options"][choice]["values"].nil? )then 
-    debug_out "Skipped! "
-     next 
-   end 
-   
-   valHash = $gOptions[attrib1]["options"][choice]["values"]
-   if ( !valHash.empty?  )
-     
-      for valueIndex in valHash.keys()
-         condHash = $gOptions[attrib1]["options"][choice]["values"][valueIndex]["conditions"] 
-     
-         # Check for 'all' conditions
-         $ValidConditionFound = 0
-        
-         if ( condHash.has_key?("all") ) 
-            debug_out ("   - VALINDEX: #{valueIndex} : found valid condition: \"all\" !\n")
-            $gOptions[attrib1]["options"][choice]["result"][valueIndex] = Hash.new 
-            $gOptions[attrib1]["options"][choice]["result"][valueIndex] = condHash["all"]
-            $ValidConditionFound = 1
-         else
-            # Loop through hash 
-            for conditions in condHash.keys()
-               if (conditions !~ /else/ ) 
-                  debug_out ( " >>>>> Testing |#{conditions}| <<<\n" )
-                  valid_condition = 1
-                  conditionArray = conditions.split(';')
-                  conditionArray.each do |condition|
-                     debug_out ("      #{condition} \n")
-                     testArray = condition.split('=')
-                     testAttribute = testArray[0]
-                     testValueList = testArray[1]
-                     if ( testValueList == "" )
-                        testValueList = "XXXX"
-                     end
-                     testValueArray = testValueList.split('|')
-                     thesevalsmatch = 0
-                     testValueArray.each do |testValue|
-                        if ( testValue.match($gChoices[testAttribute]) )
-                           thesevalsmatch = 1
-                        end
-                        debug_out ("       \##{$gChoices[testAttribute]} = #{$gChoices[testAttribute]} / #{testValue} / -> #{thesevalsmatch} \n"); 
-                     end
-                     if ( thesevalsmatch == 0 )
-                        valid_condition = 0
-                     end
-                  end
-                  if ( valid_condition == 1 )
-                     $gOptions[attrib1]["options"][choice]["result"][valueIndex]  = condHash[conditions]
-                     $ValidConditionFound = 1
-                     debug_out ("   - VALINDEX: #{valueIndex} : found valid condition: \"#{conditions}\" !\n")
-                  end
-               end
-            end
-         end
-         # Check if else condition exists. 
-         if ( $ValidConditionFound == 0 )
-            debug_out ("Looking for else!: #{condHash["else"]}<\n" )
-            if ( condHash.has_key?("else") )
-               $gOptions[attrib1]["options"][choice]["result"][valueIndex] = condHash["else"]
-               $ValidConditionFound = 1
-               debug_out ("   - VALINDEX: #{valueIndex} : found valid condition: \"else\" !\n")
-            end
-         end
-         
-         if ( $ValidConditionFound == 0 )
-            $ThisMsg = "No valid conditions were defined for #{attrib1} in options file (#{$gOptionFile}). Choices must match one of the following: "
-            for conditions in condHash.keys()
-               $ThisMsg +=   "#{conditions} ; "
-            end
-            err_out($ThisMsg) 
-
-         end
-      end
-   end
-   
-   # This block can probably be removed. 
-   # Check conditions on external entities that are not 'value' or 'cost' ...
-   extHash = $gOptions[attrib1]["options"][choice]
-   
-   for externalParam in extHash.keys()
-      
-      if ( externalParam =~ /production/ )
-         
-         condHash = $gOptions[attrib1]["options"][choice][externalParam]["conditions"]
-         
-         # Check for 'all' conditions
-         $ValidConditionFound = 0
-         
-         if ( condHash.has_key?("all") )
-            debug_out ("   - EXTPARAM: #{externalParam} : found valid condition: \"all\" ! (#{condHash["all"]})\n")
-            $gOptions[attrib1]["options"][choice]["ext-result"][externalParam] = $CondHash["all"]
-            $ValidConditionFound = 1
-         else
-            # Loop through hash 
-            for conditions in condHash.keys()
-               valid_condition = 1
-               conditionArray = conditions.split(':')
-               conditionArray.each do |condition|
-                  testArray = condition.split('=')
-                  testAttribute = testArray[0]
-                  testValueList = testArray[1]
-                  if ( testValueList == "" )
-                     testValueList = "XXXX"
-                  end
-                  testValueArray = testValueList.split('|')
-                  thesevalsmatch = 0
-                  testValueArray.each do |testValue|
-                     if ( testValue.match($gChoices[testAttribute]) )
-                        thesevalsmatch = 1
-                        debug_out ("       \##{$gChoices[testAttribute]} = #{$gChoices[testAttribute]} / #{testValue} / -> #{thesevalsmatch} \n")
-                     end
-                     if ( thesevalsmatch == 0 )
-                        valid_condition = 0
-                     end
-                  end
-               end
-               if ( valid_condition == 1 )
-                  $gOptions[attrib1]["options"][choice]["ext-result"][externalParam] = condHash[conditions]
-                  $ValidConditionFound = 1
-                  debug_out ("   - EXTPARAM: #{externalParam} : found valid condition: \"#{conditions}\" (#{condHash[$conditions]})\n")
-               end
-            end
-         end
-         
-         # Check if else condition exists. 
-         if ( $ValidConditionFound == 0 )
-            if ( condHash.has_key?("else") )
-               $gOptions[attrib1]["options"][choice]["ext-result"][externalParam] = condHash["else"]
-               $ValidConditionFound = 1
-               debug_out ("   - EXTPARAM: #{externalParam} : found valid condition: \"else\" ! (#{condHash["else"]})\n")
-            end
-         end
-        
-         if ( $ValidConditionFound == 0 )
-            $ThisMsg = "No valid conditions were defined for #{attrib1} in options file (#{$gOptionFile}). Choices must match one of the following: "
-            for conditions in condHash.keys()
-               $ThisMsg +=  "#{conditions};"
-            end
-            err_out($ThisMsg) 
-         end
-      end
-   end
-   
-   #debug_out (" >>>>> #{$gOptions[attrib1]["options"][choice]["result"]["production-elec-perKW"]}\n"); 
-  
-   # This section implements the multiply-cost 
-   
-   if ( $allok )
-      cost = $gOptions[attrib1]["options"][choice]["cost"]
-      cost_type = $gOptions[attrib1]["options"][choice]["cost-type"]
-      if ( defined?(cost) )
-         repcost = cost
-      else
-         repcost = "?"
-      end
-      if ( !defined?(cost_type) ) 
-         $cost_type = "" 
-      end
-      if ( !defined?(cost) ) 
-         cost = "" 
-      end
-      debug_out ("   - found cost: \$#{cost} (#{cost_type}) \n")
-   
-      scaleCost = 0
-   
-      # Scale cost by some other parameter. 
-      if ( repcost =~ /\<MULTIPLY-COST:.+/ )
-         
-         multiplier = cost
-         
-         multiplier.gsub!(/\</, '')
-         multiplier.gsub!(/\>/, '')
-         multiplier.gsub!(/MULTIPLY-COST:/, '')
-   
-         multArray = multiplier.split('*')
-         baseOption = multArray[0]
-         scaleFactor = multArray[1]
-     
-         baseChoice = $gChoices[baseOption]
-         baseCost = $gOptions[baseOption]["options"][baseChoice]["cost"]
-     
-         compCost = baseCost.to_f * scaleFactor.to_f
-   
-         scaleCost = 1
-         $gOptions[attrib1]["options"][choice]["cost"] = compCost.to_s
-         
-         cost = compCost.to_s
-         if ( !defined?(cost) )
-            cost = "0"
-         end
-         if ( !defined?(cost_type) )
-            $cost_type = ""
-         end
-      end
-   
-      #cost should be rounded in debug statement
-      debug_out ( "\nMAPPING for #{attrib1} = #{choice} (@ \$#{cost} inc. cost [#{cost_type}] ): \n\n")
-      
-      if ( scaleCost == 1 )
-         #baseCost should be rounded in debug statement
-         debug_out (     "  (cost computed as $ScaleFactor *  #{baseCost} [cost of #{baseChoice}])\n\n")
-      end
-      
-   end
-   
-   # Check on value of error flag before continuing with while loop
-   # (the flag may be reset in the next iteration!)
-   if ( !$allok )
-      break    # exit the loop - don't process rest of choices against options
-   end
-end   #end of do each gChoices loop
+# Can this be removed? 
+LegacyProcessConditions() 
 
 # Seems like we've found everything!
 
