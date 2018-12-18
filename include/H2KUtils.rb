@@ -4,10 +4,56 @@
 # the h2k environment. 
 # ==========================================
 
+module H2KFile
 
-module H2KUtils
+  # =========================================================================================
+  # Returns XML elements of HOT2000 file.
+  # =========================================================================================
+  def H2KFile.get_elements_from_filename(fileSpec)
+  
+    # Split fileSpec into path and filename
+    var = Array.new()
+    (var[1], var[2]) = File.split( fileSpec )
+    # Determine file extension
+    tempExt = File.extname(var[2])
+    
+    debug_out "Testing file read location, #{fileSpec}... "
+    
+    
+    # Open file...
+    fFileHANDLE = File.new(fileSpec, "r")
+    if fFileHANDLE == nil then
+      fatalerror("Could not read #{fileSpec}.\n")
+    end
+    
+    # Global variable $XMDoc is used elsewhere for access to
+    # HOT2000 model file elements access using Path.
+    if ( tempExt.downcase == ".h2k" )
+      $XMLdoc = Document.new(fFileHANDLE)
+    elsif ( tempExt.downcase == ".flc" )
+      $XMLFueldoc = Document.new(fFileHANDLE)
+    elsif ( tempExt.downcase == ".cod" )
+      $XMLCodedoc = Document.new(fFileHANDLE)
+    else
+      $XMLOtherdoc = Document.new(fFileHANDLE)
+    end
+    fFileHANDLE.close() # Close the since content read
+    
+    if ( tempExt.downcase == ".h2k" )
+      return $XMLdoc.elements()
+    elsif ( tempExt.downcase == ".flc" )
+      return $XMLFueldoc.elements()
+    elsif ( tempExt.downcase == ".cod" )
+      return $XMLCodedoc.elements()
+    else
+      return $XMLOtherdoc.elements()
+    end
+  end
 
-  def H2KUtils.getBuilderName(elements)
+  # =========================================================================================
+  # Returns Name of a builder
+  # =========================================================================================
+  def H2KFile.getBuilderName(elements)
 
     $MyBuilderName = elements["HouseFile/ProgramInformation/File/BuilderName"].text
     if $MyBuilderName !=nil
@@ -18,7 +64,7 @@ module H2KUtils
     return $MyBuilderName
   end 
   
-  def H2KUtils.getHouseType(elements)
+  def H2KFile.getHouseType(elements)
   
     $MyHouseType = elements["HouseFile/House/Specifications/HouseType/English"].text
     if $MyHouseType !=nil
@@ -30,7 +76,7 @@ module H2KUtils
   
   end 
   
-  def H2KUtils.getStories(elements)
+  def H2KFile.getStories(elements)
     $MyHouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
     if $MyHouseStoreys!= nil
       $MyHouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
@@ -41,7 +87,7 @@ module H2KUtils
     
   end 
 
-  def H2KUtils.getHeatedFloorArea(elements) 
+  def H2KFile.getHeatedFloorArea(elements) 
 
    # Initialize vars
    areaRatio = 0
@@ -142,5 +188,264 @@ module H2KUtils
  
   end # End GetHeatedFloorArea
   
+  def H2KFile.GetHouseVolume(elements)
+    
+    $MyHouseVolume= elements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
+    
+    return $MyHouseVolume
+    
+  end 
+  
+  
+  # =========================================================================================
+  # Get the name of the base file weather city
+  # =========================================================================================
+  def H2KFile.getWeatherCity(elements)
+     wth_cityName = elements["HouseFile/ProgramInformation/Weather/Location/English"].text
+     wth_cityName.gsub!(/\s*/, '')    # Removes mid-line white space
+     
+     return wth_cityName   
+  end
+  
+  # =========================================================================================
+  # Get the name of the base file weather city
+  # =========================================================================================
+  def H2KFile.getRegion(elements)   
+       
+     regionCode = elements["HouseFile/ProgramInformation/Weather/Region"].attributes["code"].to_i
+
+     regionName = $ProvArr[regionCode-1] 
+        
+     return regionName   
+  end
+  
+  
+  # =========================================================================================
+  #  Function to create the Program XML section that contains the ERS program mode data
+  # =========================================================================================
+  def H2KFile.createProgramXMLSection( houseElements )
+     loc = "HouseFile"
+     houseElements[loc].add_element("Program")
+  
+     loc = "HouseFile/Program"
+     houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
+     houseElements[loc].add_element("Labels")
+  
+     loc = "HouseFile/Program/Labels"
+     houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+     houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+     houseElements[loc].add_element("English")
+     loc = "HouseFile/Program/Labels/English"
+     houseElements[loc].add_text("EnerGuide Rating System")
+     loc = "HouseFile/Program/Labels"
+     houseElements[loc].add_element("French")
+     loc = "HouseFile/Program/Labels/French"
+     houseElements[loc].add_text("Système de cote ÉnerGuide")
+  
+     loc = "HouseFile/Program"
+     houseElements[loc].add_element("Version")
+     loc = "HouseFile/Program/Version"
+     houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+     houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+     houseElements[loc].attributes["major"] = "15"
+     houseElements[loc].attributes["minor"] = "1"
+     houseElements[loc].attributes["build"] = "19"
+     houseElements[loc].add_element("Labels")
+     loc = "HouseFile/Program/Version/Labels"
+     houseElements[loc].add_element("English")
+     loc = "HouseFile/Program/Labels/English"
+     houseElements[loc].add_text("v15.1b19")
+     loc = "HouseFile/Program/Version/Labels"
+     houseElements[loc].add_element("French")
+     loc = "HouseFile/Program/Labels/French"
+     houseElements[loc].add_text("v15.1b19")
+  
+     loc = "HouseFile/Program"
+     houseElements[loc].add_element("SdkVersion")
+     loc = "HouseFile/Program/SdkVersion"
+     houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+     houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+     houseElements[loc].attributes["major"] = "1"
+     houseElements[loc].attributes["minor"] = "11"
+     houseElements[loc].add_element("Labels")
+     loc = "HouseFile/Program/SdkVersion/Labels"
+     houseElements[loc].add_element("English")
+     loc = "HouseFile/Program/Labels/English"
+     houseElements[loc].add_text("v1.11")
+     loc = "HouseFile/Program/SdkVersion/Labels"
+     houseElements[loc].add_element("French")
+     loc = "HouseFile/Program/Labels/French"
+     houseElements[loc].add_text("v1.11")
+     
+     loc = "HouseFile/Program"
+     houseElements[loc].add_element("Options")
+     loc = "HouseFile/Program/Options"
+     houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+     houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+     houseElements[loc].add_element("Main")
+     loc = "HouseFile/Program/Options/Main"
+     houseElements[loc].attributes["applyHouseholdOperatingConditions"] = "false"
+     houseElements[loc].attributes["applyReducedOperatingConditions"] = "false"
+     houseElements[loc].attributes["atypicalElectricalLoads"] = "false"
+     houseElements[loc].attributes["waterConservation"] = "false"
+     houseElements[loc].attributes["referenceHouse"] = "false"
+     houseElements[loc].add_element("Vermiculite")
+     loc = "HouseFile/Program/Options/Main/Vermiculite"
+     houseElements[loc].attributes["code"] = "1"
+     houseElements[loc].add_element("English")
+     loc = "HouseFile/Program/Options/Main/Vermiculite/English"
+     houseElements[loc].add_text("Unknown")
+     loc = "HouseFile/Program/Options/Main/Vermiculite"
+     houseElements[loc].add_element("French")
+     loc = "HouseFile/Program/Options/Main/Vermiculite/French"
+     houseElements[loc].add_text("Inconnu")
+     loc = "HouseFile/Program/Options"
+     houseElements[loc].add_element("RURComments")
+     loc = "HouseFile/Program/Options/RURComments"
+     houseElements[loc].attributes["xml:space"] = "preserve"
+     
+     loc = "HouseFile/Program"
+     houseElements[loc].add_element("Results")
+     loc = "HouseFile/Program/Results"
+     houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+     houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+     houseElements[loc].add_element("Tsv")
+     houseElements[loc].add_element("Ers")
+     houseElements[loc].add_element("RefHse")
+     
+  end
+  
   
 end 
+
+# =========================================================================================
+# h2k-utilities.rb : scripts used to manage basic I/O on h2k environment
+# =========================================================================================
+
+module H2KUtils
+
+  # =========================================================================================
+  # Add magic h2k files for diagnostics, if they don't already exist.
+  # =========================================================================================
+  def H2KUtils.write_h2k_magic_files(path)
+  
+    $WinMBFile = "#{path}\\H2K\\WINMB.H2k"
+    $ROutFile  = "#{path}\\H2K\\ROutstr.H2k"
+  
+  
+
+    if ( ! File.file?( $WinMBFile ) )
+  
+      $Handle = File.open($WinMBFile, 'w')
+      $Handle.write "< auto-generated by substitute-h2k.rb >"
+      $Handle.close
+  
+    end
+
+    if ( ! File.file?( $ROutFile ) )
+   
+      $Handle = File.open($ROutFile, 'w')
+      
+      # Note that this text below is space-sensitive.
+      $Handle.write "<Choose diagnostics>
+All,
+<End>
+     x 'Boot', ! 1 = Startup
+     x 'Calculations', ! 2 = Anncal, HseChk, FndChk...
+     x 'DHW', ! 3 = All DHW routines
+     x 'Space Heat', ! 4 = Space heating system models
+     x 'Space Heat Ini', ! 5 = Space heating initialization
+     x 'IMS', ! 6 = IMS model
+     x 'AIM2', ! 7 = AIM2 model
+     x 'HRV', ! 8 = HRV model + Fans No HR
+     x 'BHB', ! 9 = Basement Heat balance
+     x 'Rooms', ! 10 = Room by room calcs
+     x 'C/S', ! 11 = Crawl Space'
+     x 'Slab',! 12 = Slab on Grade
+     x 'Cooling', ! 13 = Cooling
+     x 'P9', !   14 = P9 Combo
+     x 'Windows', ! 15 = Window diagnostics (need this even when All specified
+     x 'Wizard', ! 16 = HOT2000 Wizard
+  
+(This version auto-generated by substitute-h2k.rb)
+
+Put this file in the HOT2000 program directory to turn on diagnostics.
+When HOT2000 is started up, a message will appear to state that the
+diagnostics will be written to a file named Routstr.Txt.  Other message
+boxes will appear on the screen as calculations, ETC occur.  Click OK to
+proceed, but note the last message box to appear before the problem
+occurs.
+JB> Other setting under <Choose diagnostics> is \"Calculations\"
+The contents of the diagnostics file were not intended to be of much
+use to the general user, but may be useful to the developers in
+determining problems with calculations ETC.
+This tool should only be used once, I.E. for a single run that causes
+the problem to be analysed.
+- put the file in the program directory (where HOT2000.exe is located)
+- run HOT2000, open the file in question, do the run, quit the program
+- e-mail the file Routstr.txt (Winzip/compress it to reduce space) to
+  HOT2000 support.
+- rename Routstr.h2k to 0Routstr.h2k to suppress the diagnostics
+Brian Bradley
+bbradley@nrcan.gc.ca
+204-984-4920"
+      $Handle.close
+
+    return  
+    end
+    
+    
+  
+  end
+  
+
+  
+  # Compute a checksum for directory, ignoring files that HOT2000 commonly alters during
+  
+
+  
+  # =========================================================================================
+  # Fix the paths specified in the HOT2000.ini file
+  # =========================================================================================
+  def H2KUtils.fix_H2K_INI(path)
+     # Rewrite INI file with updated location !
+     fH2K_ini_file_OUT = File.new("#{path}\\H2K\\HOT2000.ini", "w") 
+     
+     $ini_out=
+"[HOT2000]
+LANGUAGE=E
+ECONOMIC_FILE=#{path}\\H2K\\StdLibs\\econLib.eda
+WEATHER_FILE=#{path}\\H2K\\Dat\\Wth110.dir
+FUELCOST_FILE=#{path}\\H2K\\StdLibs\\fuelLib.flc
+CODELIB_FILE=#{path}\\H2K\\StdLibs\\codeLib.cod
+HSEBLD_FILE=#{path}\\H2K\\Dat\\XPstd.slb    
+UPDATES_URI=http://198.103.48.154/hot2000/LatestVersions.xml
+CHECK_FOR_UPDATES=N
+UNITS=M
+"
+     fH2K_ini_file_OUT.write($ini_out)
+     fH2K_ini_file_OUT.close
+  
+  end
+
+end 
+
+def self.checksum(dir)
+  md5 = Digest::MD5.new
+  searchLoc = dir.gsub(/\\/, "/") 
+  
+  files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||  
+                                               f =~ /Browse\.Rpt/i || 
+                                               f =~ /WINMB\.H2k/i  || 
+                                               f =~ /ROutStr\.H2k/i ||
+                                               f =~ /ROutStr\.Txt/i ||
+                                               f =~ /WMB_.*\.Txt/i ||
+                                               f =~ /HOT2000\.ini/i ||      
+                                               f =~ /wizdefs.h2k/i                                                 
+                                         }    
+  content = files.map{|f| File.read(f)}.join
+  md5result = md5.update content
+  content.clear
+  return md5.update content
+ 
+end
