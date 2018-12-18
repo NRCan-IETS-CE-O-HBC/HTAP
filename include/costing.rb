@@ -24,7 +24,7 @@ $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
                            
                            
                            
-module Costing
+module Costing 
 
   def Costing.ParseUnitCosts(unitCostFileName)
   

@@ -12,17 +12,37 @@ require 'fileutils'
 require 'digest'
 require 'json'
 require 'set'
+require 'pp'
 
 require_relative 'include/msgs' 
 require_relative 'include/H2KUtils'
-require_relative 'include/constants'
-require_relative 'include/json-utilities'
+require_relative 'include/HTAPUtils'
 require_relative 'include/costing'
 
+require_relative 'include/constants'
+
+include REXML  
+
+$program = "cost_these_choices.rb"
+
+$allok = true 
+$startProcessTime = Time.now 
 
 $gTest_params = Hash.new  
 $gTest_params["verbosity"] = "quiet"
 $gTest_params["logfile"] = "cost_these_choices.log" 
+
+$gOptions = Hash.new 
+$gChoices = Hash.new 
+$gChoicesOrder = Array.new
+
+# Path where this script was started and considered master
+$gMasterPath = Dir.getwd()
+$gMasterPath.gsub!(/\//, '\\')
+
+
+sumFileSpec = $gMasterPath + "/cost_these_choices_summary.txt"
+$fSUMMARY = File.new(sumFileSpec, "w")
 
 
 $fLOG = File.new($gTest_params["logfile"], "w") 
@@ -42,11 +62,11 @@ $help_msg = "
  
  This script estimates the upgrade costs for a given HTAP file and 
  associated .chocies 
- 
- use: cost_these_choices.rb --options options.json
-                            --choices these.choices
-                            --costs   unitcosts.json
-                            --h2k h2k.filename
+                                          
+ use: cost_these_choices.rb --options     options.json
+                            --choices     these.choices
+                            --unitcosts   unitcosts.json
+                            --h2k         h2k.filename
                       
  
  Command line options:
@@ -125,11 +145,56 @@ stream_out ("         OptionFile: #{$gOptionFile} \n")
 stream_out ("         Base model: #{$gBaseModelFile} \n")
 stream_out ("         Costs     : #{$gCostsFile} \n")
 
-# Parse options file 
+#-------------------------------------------------------------------
+# COLLECT INPUT 
+#-------------------------------------------------------------------
 
+# Parse options file 
 $gOptions   = HTAPData.parse_json_options_file($gOptionFile)
+
+# Parse unit costs
 $gUnitCosts = Costing.ParseUnitCosts($gCostsFile)
 
+# Parse choices
+$gChoices, $gChoiceOrder = HTAPData.parse_choice_file($gChoiceFile)
 
 
+# ( not yet supported - read archetype out of choice file) 
+
+# Parse h2k file 
+h2kElements = H2KFile.get_elements_from_filename($gBaseModelFile)
+
+#-------------------------------------------------------------------
+# APPLY RULESETS - Not supported right now 
+#-------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------
+#  Verify options and choices make sense ! 
+#-------------------------------------------------------------------
+$OptionsErr,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder ) 
+
+if ( $OptionsErr ) then 
+  fatalerror ("Could not parse options") 
+  $allok = false 
+end 
+
+
+#-------------------------------------------------------------------
+# Perform a calculation for sizing impact 
+#-------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------
+# Collect dimension data about house 
+#-------------------------------------------------------------------
+
+# Base location from original H2K file. 
+$gBaseLocale = H2KFile.getWeatherCity( h2kElements )
+$gBaseRegion = H2KFile.getRegion( h2kElements )
+
+
+
+
+ReportMsgs()
 
