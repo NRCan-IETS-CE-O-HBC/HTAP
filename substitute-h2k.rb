@@ -5901,69 +5901,6 @@ def getEnvelopeSpecs(elements)
 end # End of getEnvelopeSpecs
 
 # =========================================================================================
-# Get the best estimate of the house heated floor area
-# =========================================================================================
-
-
-# =========================================================================================
-# Get the total ceiling area, in square mtres, for the type specified and ceiling code name
-# from the passed elements. The ceiling type is one of:
-#   All = All ceilings regardless of type
-#   Attics = Ceilings of type Attic/Gable (2), Attic/Hip (3) or Scissor (6)
-#   Flat = Ceilings of type Flat (5)
-#   Cathedral = Ceilings of type Cathedral (4)
-# The ceiling code name is "NA" for user specified code options
-# =========================================================================================
-def getCeilingArea( elements, ceilingType, ceilingCodeName )
-  area = 0.0
-  locationText = "HouseFile/House/Components/Ceiling"
-  elements.each(locationText) do |element|
-    if ceilingType == "Attics"
-      # Check if construction type (element 3) is Attic/gable (2), Attic/hip (3) or Scissor (6)
-      if element[3][1].attributes["code"] == "2" || element[3][1].attributes["code"] == "3" || element[3][1].attributes["code"] == "6"
-        if ceilingCodeName == "NA"
-          area += element[5].attributes["area"].to_f
-        else
-          if element[3][3].text == ceilingCodeName
-            area += element[5].attributes["area"].to_f
-          end
-        end
-      end
-    elsif ceilingType == "Flat"
-      # Check if construction type (element 3) is Flat (5)
-      if element[3][1].attributes["code"] == "5"
-        if ceilingCodeName == "NA"
-          area += element[5].attributes["area"].to_f
-        else
-          if element[3][3].text == ceilingCodeName
-            area += element[5].attributes["area"].to_f
-          end
-        end
-      end
-    elsif ceilingType == "Cathedral"
-      # Check if construction type (element 3) is Cathedral (4)
-      if element[3][1].attributes["code"] == "4"
-        if ceilingCodeName == "NA"
-          area += element[5].attributes["area"].to_f
-        else
-          if element[3][3].text == ceilingCodeName
-            area += element[5].attributes["area"].to_f
-          end
-        end
-      end
-    elsif ceilingType == "All"
-      if ceilingCodeName == "NA"
-        area += element[5].attributes["area"].to_f
-      else
-        if element[3][3].text == ceilingCodeName
-          area += element[5].attributes["area"].to_f
-        end
-      end
-    end
-  end
-  return area
-end
-# =========================================================================================
 # Calculate electricity cost using global results array and electricity cost rate structure
 # This routine is only called when the PV external model is used!
 # =========================================================================================
@@ -5998,107 +5935,10 @@ def calcElectCost( calcType )
    $gResults[$outputHCode]["avgFuelCostsTotal$"] += $gResults[$outputHCode]["avgFuelCostsElec$"]   
 end
 
-# =========================================================================================
-# Fix the paths specified in the HOT2000.ini file
-# =========================================================================================
-def bfix_H2K_INI()
-   # Rewrite INI file with updated location !
-   fH2K_ini_file_OUT = File.new("#{$gMasterPath}\\H2K\\HOT2000.ini", "w") 
-   $ini_out="[HOT2000]
-LANGUAGE=E
-ECONOMIC_FILE=#{$gMasterPath}\\H2K\\StdLibs\\econLib.eda
-WEATHER_FILE=#{$gMasterPath}\\H2K\\Dat\\Wth110.dir
-FUELCOST_FILE=#{$gMasterPath}\\H2K\\StdLibs\\fuelLib.flc
-CODELIB_FILE=#{$gMasterPath}\\H2K\\StdLibs\\codeLib.cod
-HSEBLD_FILE=#{$gMasterPath}\\H2K\\Dat\\XPstd.slb    
-UPDATES_URI=http://198.103.48.154/hot2000/LatestVersions.xml
-CHECK_FOR_UPDATES=N
-UNITS=M
-"
-   fH2K_ini_file_OUT.write($ini_out)
-   fH2K_ini_file_OUT.close
-
-end
-
-# =========================================================================================
-# Get the name of the base file weather city
-# =========================================================================================
-def getWeatherCity(elements)
-   wth_cityName = elements["HouseFile/ProgramInformation/Weather/Location/English"].text
-   wth_cityName.gsub!(/\s*/, '')    # Removes mid-line white space
-   
-   return wth_cityName   
-end
-
-# =========================================================================================
-# Get the name of the base file weather city
-# =========================================================================================
-def getRegion(elements)
-   
-     
-   regionCode = elements["HouseFile/ProgramInformation/Weather/Region"].attributes["code"].to_i
-
-   regionName = $ProvArr[regionCode-1] 
-      
-   return regionName   
-end
 
 
-# =========================================================================================
-# Get primary heating system type and fuel
-# =========================================================================================
-def getPrimaryHeatSys(elements)
-   
-   if elements["HouseFile/House/HeatingCooling/Type1/Baseboards"] != nil
-      #sysType1 = "Baseboards"
-      fuelName = "electricity"
-   elsif elements["HouseFile/House/HeatingCooling/Type1/Furnace"] != nil
-      #sysType1 = "Furnace"
-      fuelName = elements["HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EnergySource/English"].text
-   elsif elements["HouseFile/House/HeatingCooling/Type1/Boiler"] != nil
-      #sysType1 = "Boiler"
-      fuelName = elements["HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EnergySource/English"].text
-   elsif elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"] != nil
-      #sysType1 = "Combo"
-      fuelName = elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EnergySource/English"].text
-   elsif elements["HouseFile/House/HeatingCooling/Type1/P9"] != nil
-      #sysType1 = "P9"
-      fuelName = elements["HouseFile/House/HeatingCooling/Type1//TestData/EnergySource/English"].text
-   end
-   
-   return fuelName
-end
 
-# =========================================================================================
-# Get secondary heating system type
-# =========================================================================================
-def getSecondaryHeatSys(elements)
-   
-   sysType2 = "NA"
-   
-   if elements["HouseFile/House/HeatingCooling/Type2/AirHeatPump"] != nil
-      sysType2 = "AirHeatPump"
-   elsif elements["HouseFile/House/HeatingCooling/Type2/WaterHeatPump"] != nil
-      sysType2 = "WaterHeatPump"
-   elsif elements["HouseFile/House/HeatingCooling/Type2/GroundHeatPump"] != nil
-      sysType2 = "GroundHeatPump"
-   elsif elements["HouseFile/House/HeatingCooling/Type2/AirConditioning"] != nil
-      sysType2 = "AirConditioning"
-   end
-   
-   return sysType2
-end
 
-# =========================================================================================
-# Get primary DHW system type and fuel
-# =========================================================================================
-def getPrimaryDHWSys(elements)
-   
-   fuelName = elements["HouseFile/House/Components/HotWater/Primary/EnergySource/English"].text
-   #tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
-   
-   return fuelName
-end
 
 # =========================================================================================
 # Permafrost  ------------------------------------------------
@@ -6337,9 +6177,9 @@ def NBC_936_2010_RuleSet( ruleType, elements, locale_HDD, cityName )
 
   
    # System data...
-   primHeatFuelName = getPrimaryHeatSys( elements )
-   secSysType = getSecondaryHeatSys( elements )
-   primDHWFuelName = getPrimaryDHWSys( elements )
+   primHeatFuelName = H2KFile.getPrimaryHeatSys( elements )
+   secSysType = H2KFile.getSecondaryHeatSys( elements )
+   primDHWFuelName = H2KFile.getPrimaryDHWSys( elements )
 
    # Basement, slab, or both in model file?
    # Decide which to use for compliance based on count!
@@ -6761,11 +6601,11 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
         unitCost = -0.988 * Math.log(optValue.to_f, Math::E) + 1.3216
       end
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)  * SF_PER_SM
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)  * SF_PER_SM
   when "Opt-Ceilings" #.................................................................................
     if ( optTag =~ /Opt-Ceiling/ )
       nominalR = 0
-      ceilingArea = getCeilingArea( elements, "All", optValue) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements, "All", optValue) * SF_PER_SM
       # User-defined ceiling code name from code library!
       locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
       elements.each(locationText) do |element|
@@ -6786,7 +6626,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
         cost += unitCost * ceilingArea
       end
     elsif ( optTag =~ /OPT-H2K-EffRValue/ )
-      ceilingArea = getCeilingArea( elements, "All", "NA") * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements, "All", "NA") * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6809,7 +6649,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       # User-defined ceiling code name from code library!
       nominalR = 0
       # Get house ceiling area for attics only (Attic/Gable, Attic/Hip, Scissor)
-      ceilingArea = getCeilingArea( elements,"Attics", optValue ) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements,"Attics", optValue ) * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6832,7 +6672,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       end
     elsif ( optTag =~ /OPT-H2K-EffRValue/ )
       # Get house ceiling area for attics only (Attic/Gable, Attic/Hip, Scissor)
-      ceilingArea = getCeilingArea( elements,"Attics", "NA" ) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements,"Attics", "NA" ) * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6859,7 +6699,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       # User-defined ceiling code name from code library!
       nominalR = 0
       # Get house ceiling area for cathedral ceilings only
-      ceilingArea = getCeilingArea( elements,"Cathedral", optValue ) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements,"Cathedral", optValue ) * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6881,7 +6721,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       end
     elsif ( optTag =~ /OPT-H2K-EffRValue/ )
       # Get house ceiling area for cathedral ceilings only
-      ceilingArea = getCeilingArea( elements,"Cathedral", "NA" ) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements,"Cathedral", "NA" ) * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6905,7 +6745,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       # User-defined ceiling code name from code library!
       nominalR = 0
       # Get house ceiling area for flat ceilings only
-      ceilingArea = getCeilingArea( elements,"Flat", optValue ) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements,"Flat", optValue ) * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6927,7 +6767,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
       end
     elsif ( optTag =~ /OPT-H2K-EffRValue/ )
       # Get house ceiling area for cathedral ceilings only
-      ceilingArea = getCeilingArea( elements,"Flat", "NA" ) * SF_PER_SM
+      ceilingArea = H2KFile.getCeilingArea( elements,"Flat", "NA" ) * SF_PER_SM
       locationText = "HouseFile/House/Components/Ceiling/Construction"
       elements.each(locationText) do |element|
         unitCost = 0
@@ -6976,21 +6816,21 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       headerAreaout +=  element.attributes["floorHeader"].to_f
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-ExposedFloor" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-CasementWindows" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-Skylights" #.................................................................................
     if optValue == "NA"
       unitCost = 0
@@ -7003,7 +6843,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       skylightAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-DoorWindows" #.................................................................................
     if optValue == "NA"
       unitCost = 0
@@ -7016,7 +6856,7 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       doorwindowAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-Doors" #.................................................................................
     if optValue == "NA"
       unitCost = 0
@@ -7028,77 +6868,77 @@ def getOptionCost( unitCostData, optName, optTag, optValue, elements )
     elements.each(locationText) do |element|
       doorAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-H2KFoundation" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-H2KFoundationSlabCrawl" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-DHWSystem" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-DWHRSystem" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-HVACSystem" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-HRVspec" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-Baseloads" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-RoofPitch" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-StandoffPV" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   when "Opt-H2K-PV" #.................................................................................
     if optValue == "NA"
       unitCost = 0
     elsif optValue == ""
       unitCost = 0
     end
-    cost = unitCost * H2KUtils.getHeatedFloorArea(elements)
+    cost = unitCost * H2KFile.getHeatedFloorArea(elements)
   end
   return cost
 end
@@ -7409,7 +7249,6 @@ stream_out("\n\n Reading user-defined choices (#{$gChoiceFile})...\n")
 $gChoices, $gChoiceOrder = HTAPData.parse_choice_file($gChoiceFile)
 stream_out (" ...done.\n\n")
 
-
 if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    $Archetype_value = $gChoices["Opt-Archetype"]
    
@@ -7573,7 +7412,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
       if choice.empty?
          warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
          next  # skip setting this empty choice!
-      elsif $gChoices[attrib] =~ /NA/
+      elsif ( $gChoices[attrib].empty? || $gChoices[attrib] =~ /NA/ ) 
          # Change choice to rule set value for all choices that are "NA"
          $gChoices[attrib] = choice
          stream_out ("   - #{attrib} -> #{choice} \n")
@@ -7617,6 +7456,7 @@ end
 stream_out("\n Validating choices and options... ");  
 
 $OptionsOK,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder ) 
+
 if ( ! $OptionsOK ) then 
   $allOK = false
 end 

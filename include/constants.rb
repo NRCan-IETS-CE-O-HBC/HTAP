@@ -127,7 +127,7 @@ $HDDHash =  {
             "HALLBEACH" => 10720 ,
             "XXXXX" => 1
             }
-            
+
 # Setting hash for permafrost locations
 $PermafrostHash =  {
             "YELLOWKNIFE"  => "discontinuous" ,
@@ -141,33 +141,33 @@ $PermafrostHash =  {
             "RESOLUTE"     => "continuous" ,
             "CORALHARBOUR" => "continuous",
             "HALLBEACH"    => "continuous"
-            }            
-            
-            
-
-#Index of provinces, used by HOT2000 for region            
-$ProvArr = [ "BRITISH COLUMBIA", 
-             "ALBERTA", 
-             "SASKATCHEWAN", 
-             "MANITOBA", 
-             "ONTARIO", 
-             "QUEBEC", 
-             "NEW BRUNSWICK", 
-             "NOVA SCOTIA", 
-             "PRINCE EDWARD ISLAND", 
-             "NEWFOUNDLAND AND LABRADOR", 
-             "YUKON TERRITORY", 
-             "NORTHWEST TERRITORY", 
-             "NUNAVUT", 
-             "OTHER" ]            
-            
-            
-            
-            
-$LegacyOptionsToIgnore = Set.new [ "Opt-RoofPitch", "Opt-StandoffPV", "Opt-DHWLoadScale", "Opt-HRVduct" ]            
+            }
 
 
+
+#Index of provinces, used by HOT2000 for region
+$ProvArr = [ "BRITISH COLUMBIA",
+             "ALBERTA",
+             "SASKATCHEWAN",
+             "MANITOBA",
+             "ONTARIO",
+             "QUEBEC",
+             "NEW BRUNSWICK",
+             "NOVA SCOTIA",
+             "PRINCE EDWARD ISLAND",
+             "NEWFOUNDLAND AND LABRADOR",
+             "YUKON TERRITORY",
+             "NORTHWEST TERRITORY",
+             "NUNAVUT",
+             "OTHER" ]
+
+
+
+
+$LegacyOptionsToIgnore = Set.new [ "Opt-RoofPitch", "Opt-StandoffPV", "Opt-DHWLoadScale", "Opt-HRVduct" ]
+
+CostingSupport = Set.new [ "Opt-Ceilings", "Opt-ACH" ] 
 
 $gErrors = Array.new
-$gWarnings = Array.new 
-$gStatus = Hash.new 
+$gWarnings = Array.new
+$gStatus = Hash.new

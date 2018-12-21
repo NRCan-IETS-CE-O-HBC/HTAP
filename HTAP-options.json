@@ -4201,9 +4201,7 @@
         },
         "costs": {
           "components": [
-            "Example Key-phrase: Layer1",
-            "Example Key-phrase: Layer2",
-            "Example Key-phrase: Layer3"
+            "r70:cost_including_materials:labour:mark-up_and_taxes"
           ],
           "custom-costs": {
             "ExampleScenarioA": {
@@ -4228,9 +4226,7 @@
         },
         "costs": {
           "components": [
-            "Example Key-phrase: Layer1",
-            "Example Key-phrase: Layer2",
-            "Example Key-phrase: Layer3"
+            "r80:cost_including_materials:labour:mark-up_and_taxes"
           ],
           "custom-costs": {
             "ExampleScenarioA": {

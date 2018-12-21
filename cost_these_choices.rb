@@ -14,27 +14,27 @@ require 'json'
 require 'set'
 require 'pp'
 
-require_relative 'include/msgs' 
+require_relative 'include/msgs'
 require_relative 'include/H2KUtils'
 require_relative 'include/HTAPUtils'
 require_relative 'include/costing'
 
 require_relative 'include/constants'
 
-include REXML  
+include REXML
 
 $program = "cost_these_choices.rb"
 
-$allok = true 
-$startProcessTime = Time.now 
+$allok = true
+$startProcessTime = Time.now
 
-$gTest_params = Hash.new  
+$gTest_params = Hash.new
 $gTest_params["verbosity"] = "quiet"
-$gTest_params["logfile"] = "cost_these_choices.log" 
+$gTest_params["logfile"] = "cost_these_choices.log"
 
-$gOptions = Hash.new 
-$gChoices = Hash.new 
-$gChoicesOrder = Array.new
+myOptions = Hash.new
+myChoices = Hash.new
+myChoicesOrder = Array.new
 
 # Path where this script was started and considered master
 $gMasterPath = Dir.getwd()
@@ -45,7 +45,7 @@ sumFileSpec = $gMasterPath + "/cost_these_choices_summary.txt"
 $fSUMMARY = File.new(sumFileSpec, "w")
 
 
-$fLOG = File.new($gTest_params["logfile"], "w") 
+$fLOG = File.new($gTest_params["logfile"], "w")
 if $fLOG == nil then
    fatalerror("Could not open #{$gTest_params["logfile"]}.\n")
 end
@@ -56,145 +56,218 @@ end
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
-$help_msg = "
+myHelp_msg = "
 
- cost_these_choices.rb: 
- 
- This script estimates the upgrade costs for a given HTAP file and 
- associated .chocies 
-                                          
+ cost_these_choices.rb:
+
+ This script estimates the upgrade costs for a given HTAP file and
+ associated .chocies
+
  use: cost_these_choices.rb --options     options.json
                             --choices     these.choices
                             --unitcosts   unitcosts.json
                             --h2k         h2k.filename
-                      
- 
+
+
  Command line options:
-   
+
 "
 
 
 
 # Dump help text, if no argument given
 if ARGV.empty? then
-  puts $help_msg
+  puts myHelp_msg
   exit()
 end
 
+myChoiceFile    = ""
+myOptionFile    = ""
+myCostsFile     = ""
+myBaseModelFile = ""
+
 optparse = OptionParser.new do |opts|
-  
-   opts.banner = $help_msg
+
+   opts.banner = myHelp_msg
 
    opts.on("-h", "--help", "Show help message") do
       puts opts
       exit()
    end
-  
-   opts.on("-v", "--verbose", "Run verbosely") do 
+
+   opts.on("-v", "--verbose", "Run verbosely") do
       $gVerbose = true
       $gTest_params["verbosity"] = "verbose"
    end
 
    opts.on("-d", "--debug", "Run in debug mode") do
-      $gVerbose = true 
+      $gVerbose = true
       $gTest_params["verbosity"] = "verbose"
       $gDebug = true
    end
 
-   
+
    opts.on("-c", "--choices FILE", "Specified choice file (mandatory)") do |c|
-      $gChoiceFile = c
-      if ( !File.exist?($gChoiceFile) )
+      myChoiceFile = c
+      if ( !File.exist?(myChoiceFile) )
          fatalerror("Valid path to choice file must be specified with --choices (or -c) option!")
       end
-   end   
-   
+   end
+
    opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
-      $gOptionFile = o
-      if ( !File.exist?($gOptionFile) )
+      myOptionFile = o
+      if ( !File.exist?(myOptionFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
       end
    end
-   
+
    opts.on("-u", "--unitcosts FILE", "unit costs file ") do |o|
-      $gCostsFile = o
-      if ( !File.exist?($gCostsFile) )
+      myCostsFile = o
+      if ( !File.exist?(myCostsFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
       end
-   end   
-   
+   end
+
 
    opts.on("--h2k FILE", "Specified base file (mandatory)") do |b|
-      $gBaseModelFile = b
-      if !$gBaseModelFile
+      myBaseModelFile = b
+      if !myBaseModelFile
          fatalerror("Base folder file name missing after --base_folder (or -b) option!")
       end
-      if (! File.exist?($gBaseModelFile) ) 
+      if (! File.exist?(myBaseModelFile) )
          fatalerror("Base file does not exist in location specified!")
       end
     end
-   
-   
+
+
 end
 
 optparse.parse!
 
-stream_out ("cost_these_choices.rb: \n") 
-stream_out ("         ChoiceFile: #{$gChoiceFile} \n")
-stream_out ("         OptionFile: #{$gOptionFile} \n")
-stream_out ("         Base model: #{$gBaseModelFile} \n")
-stream_out ("         Costs     : #{$gCostsFile} \n")
+stream_out ("cost_these_choices.rb: \n")
+stream_out ("         ChoiceFile: #{myChoiceFile} \n")
+stream_out ("         OptionFile: #{myOptionFile} \n")
+stream_out ("         Base model: #{myBaseModelFile} \n")
+stream_out ("         Costs     : #{myCostsFile} \n")
 
 #-------------------------------------------------------------------
-# COLLECT INPUT 
+# COLLECT INPUT
 #-------------------------------------------------------------------
 
-# Parse options file 
-$gOptions   = HTAPData.parse_json_options_file($gOptionFile)
+# Parse options file
+myOptions   = HTAPData.parse_json_options_file(myOptionFile)
 
 # Parse unit costs
-$gUnitCosts = Costing.ParseUnitCosts($gCostsFile)
+myUnitCosts = Costing.parseUnitCosts(myCostsFile)
 
 # Parse choices
-$gChoices, $gChoiceOrder = HTAPData.parse_choice_file($gChoiceFile)
+myChoices, myChoiceOrder = HTAPData.parse_choice_file(myChoiceFile)
 
 
-# ( not yet supported - read archetype out of choice file) 
+# ( not yet supported - read archetype out of choice file)
 
-# Parse h2k file 
-h2kElements = H2KFile.get_elements_from_filename($gBaseModelFile)
-
-#-------------------------------------------------------------------
-# APPLY RULESETS - Not supported right now 
-#-------------------------------------------------------------------
-
+# Parse h2k file
+h2kElements = H2KFile.get_elements_from_filename(myBaseModelFile)
 
 #-------------------------------------------------------------------
-#  Verify options and choices make sense ! 
-#-------------------------------------------------------------------
-$OptionsErr,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder ) 
-
-if ( $OptionsErr ) then 
-  fatalerror ("Could not parse options") 
-  $allok = false 
-end 
-
-
-#-------------------------------------------------------------------
-# Perform a calculation for sizing impact 
+# APPLY RULESETS - Not supported right now
 #-------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------
-# Collect dimension data about house 
+#  Verify options and choices make sense !
+#-------------------------------------------------------------------
+myOptionsErr,myChoices,myChoiceOrder = HTAPData.validate_options(myOptions, myChoices, myChoiceOrder )
+
+if ( myOptionsErr ) then
+  fatalerror ("Could not parse options")
+  $allok = false
+end
+
+
+#-------------------------------------------------------------------
+# Perform a calculation for sizing impact  ?
+# (X) Not required; assume that the HOT2000 file as been processed
+#     and systems are sized; locations are updated; future
+#     htap functions for geometry habe been processed.
 #-------------------------------------------------------------------
 
-# Base location from original H2K file. 
-$gBaseLocale = H2KFile.getWeatherCity( h2kElements )
-$gBaseRegion = H2KFile.getRegion( h2kElements )
+#-------------------------------------------------------------------
+# Collect dimension data about house
+#-------------------------------------------------------------------
+
+myH2KHouseInfo = Hash.new
+myH2KHouseInfo = H2KFile.getAllInfo(h2kElements)
+
+pp myH2KHouseInfo
 
 
+#-------------------------------------------------------------------
+# Loop through choices; compute costs
+#-------------------------------------------------------------------
+costSourcesDBs = Array.new
+costSourcesCustom = Array.new
+
+costSourcesCustom    = ["customA", "customB", "customC" ]
+costSourcesDBs       = ["LEEEEP-BC-Vancouver", "*"]
 
 
-ReportMsgs()
+myCosts = Hash.new
+myCosts["total"] = 0
+myCosts["byAttribute"] = Hash.new
+myCosts["bySource"] = Hash.new
 
+myChoices.each do | attrib, choice |
+
+  myCosts["byAttribute"][attrib] = 0
+
+  if ( CostingSupport.include? attrib )
+
+    choiceCosts = Hash.new
+    choiceCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,choice,costSourcesDBs)
+
+    pp choiceCosts
+
+    choiceCosts.keys.each do | costingElement |
+
+      stream_out " COSTING CALC: #{costingElement}\n"
+      #stream_out "   -> units: #{choiceCosts[costingElement]["data"]["units"]} \n"
+      units = choiceCosts[costingElement]["data"]["units"]
+      materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
+      labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
+      source = choiceCosts[costingElement]["data"]["source"]
+
+      measure = Float
+      case units
+      when "default" || "ea"
+        measure = 1
+      when "sf attic"
+        measure = myH2KHouseInfo["dimensions"]["ceilings"]["attic"]
+      else
+        measure = 1
+      end
+
+
+      myCosts["total"] = myCosts["total"] + measure * ( materials + labour )
+
+      myCosts["byAttribute"][attrib] = myCosts["byAttribute"][attrib] + measure * ( materials + labour )
+
+      if ( myCosts["bySource"][source].nil? || myCosts["bySource"][source].empty? ) then
+        myCosts["bySource"][source] = 0
+      end
+      myCosts["bySource"][source] =  myCosts["bySource"][source] + measure * ( materials + labour )
+
+    end
+
+
+  end
+
+end
+
+pp myCosts
+
+
+#ReportMsgs()
+
+
+#pp myH2KHouseInfo
