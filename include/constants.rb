@@ -166,8 +166,21 @@ $ProvArr = [ "BRITISH COLUMBIA",
 
 $LegacyOptionsToIgnore = Set.new [ "Opt-RoofPitch", "Opt-StandoffPV", "Opt-DHWLoadScale", "Opt-HRVduct" ]
 
-CostingSupport = Set.new [ "Opt-Ceilings", "Opt-ACH" ] 
+CostingSupport = Set.new [ "Opt-Ceilings", "Opt-ACH", "Opt-CasementWindows" ]
 
 $gErrors = Array.new
 $gWarnings = Array.new
 $gStatus = Hash.new
+
+$lDebug = false
+
+$localDebug = Hash.new
+$lastDbgMsg = "\n"
+
+$gTest_params = Hash.new
+$gTest_params["logfile"] = false
+
+$caller_stack
+
+$formatter = REXML::Formatters::Pretty.new(2)
+$formatter.compact = true # This is the magic line that does what you need!

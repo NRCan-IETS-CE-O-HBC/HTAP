@@ -26,8 +26,7 @@
             "<OPT-WoodName>": "NA"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "rates2016": {
         "h2kMap": {
@@ -40,8 +39,7 @@
             "<OPT-WoodName>": "NA"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "Ottawa08": {
         "h2kMap": {
@@ -54,8 +52,7 @@
             "<OPT-WoodName>": "Sth_Ont"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "Ottawa97": {
         "h2kMap": {
@@ -68,8 +65,7 @@
             "<OPT-WoodName>": "Sth_Ont"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       }
     },
     "default": "rates2016",
@@ -181,8 +177,7 @@
             "OPT-H2K-Location": "NA"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WHITEHORSE": {
         "h2kMap": {
@@ -192,8 +187,7 @@
             "OPT-H2K-Location": "69"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TORONTO": {
         "h2kMap": {
@@ -203,8 +197,7 @@
             "OPT-H2K-Location": "42"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "OTTAWA": {
         "h2kMap": {
@@ -214,8 +207,7 @@
             "OPT-H2K-Location": "36"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "EDMONTON": {
         "h2kMap": {
@@ -225,8 +217,7 @@
             "OPT-H2K-Location": "15"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CALGARY": {
         "h2kMap": {
@@ -236,8 +227,7 @@
             "OPT-H2K-Location": "14"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MONTREAL": {
         "h2kMap": {
@@ -247,8 +237,7 @@
             "OPT-H2K-Location": "46"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "QUEBEC": {
         "h2kMap": {
@@ -258,8 +247,7 @@
             "OPT-H2K-Location": "48"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "HALIFAX": {
         "h2kMap": {
@@ -269,8 +257,7 @@
             "OPT-H2K-Location": "58"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "FREDERICTON": {
         "h2kMap": {
@@ -280,8 +267,7 @@
             "OPT-H2K-Location": "54"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WINNIPEG": {
         "h2kMap": {
@@ -291,8 +277,7 @@
             "OPT-H2K-Location": "30"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "REGINA": {
         "h2kMap": {
@@ -302,8 +287,7 @@
             "OPT-H2K-Location": "22"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "VANCOUVER": {
         "h2kMap": {
@@ -313,8 +297,7 @@
             "OPT-H2K-Location": "11"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "PRINCEGEORGE": {
         "h2kMap": {
@@ -324,8 +307,7 @@
             "OPT-H2K-Location": "7"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "KAMLOOPS": {
         "h2kMap": {
@@ -335,8 +317,7 @@
             "OPT-H2K-Location": "5"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "YELLOWKNIFE": {
         "h2kMap": {
@@ -346,8 +327,7 @@
             "OPT-H2K-Location": "76"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "INUVIK": {
         "h2kMap": {
@@ -357,8 +337,7 @@
             "OPT-H2K-Location": "73"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "ABBOTSFORD": {
         "h2kMap": {
@@ -368,8 +347,7 @@
             "OPT-H2K-Location": "1"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CASTLEGAR": {
         "h2kMap": {
@@ -379,8 +357,7 @@
             "OPT-H2K-Location": "2"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "FORTNELSON": {
         "h2kMap": {
@@ -390,8 +367,7 @@
             "OPT-H2K-Location": "3"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "FORTSTJOHN": {
         "h2kMap": {
@@ -401,8 +377,7 @@
             "OPT-H2K-Location": "4"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "PORTHARDY": {
         "h2kMap": {
@@ -412,8 +387,7 @@
             "OPT-H2K-Location": "6"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "PRINCERUPERT": {
         "h2kMap": {
@@ -423,8 +397,7 @@
             "OPT-H2K-Location": "8"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SMITHERS": {
         "h2kMap": {
@@ -434,8 +407,7 @@
             "OPT-H2K-Location": "9"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SUMMERLAND": {
         "h2kMap": {
@@ -445,8 +417,7 @@
             "OPT-H2K-Location": "10"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "VICTORIA": {
         "h2kMap": {
@@ -456,8 +427,7 @@
             "OPT-H2K-Location": "12"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WILLIAMSLAKE": {
         "h2kMap": {
@@ -467,8 +437,7 @@
             "OPT-H2K-Location": "13"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "COMOX": {
         "h2kMap": {
@@ -478,8 +447,7 @@
             "OPT-H2K-Location": "92"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CRANBROOK": {
         "h2kMap": {
@@ -489,8 +457,7 @@
             "OPT-H2K-Location": "93"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "QUESNEL": {
         "h2kMap": {
@@ -500,8 +467,7 @@
             "OPT-H2K-Location": "94"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SANDSPIT": {
         "h2kMap": {
@@ -511,8 +477,7 @@
             "OPT-H2K-Location": "95"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TERRACE": {
         "h2kMap": {
@@ -522,8 +487,7 @@
             "OPT-H2K-Location": "96"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TOFINO": {
         "h2kMap": {
@@ -533,8 +497,7 @@
             "OPT-H2K-Location": "97"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WHISTLER": {
         "h2kMap": {
@@ -544,8 +507,7 @@
             "OPT-H2K-Location": "98"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "FORTMCMURRAY": {
         "h2kMap": {
@@ -555,8 +517,7 @@
             "OPT-H2K-Location": "16"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "LETHBRIDGE": {
         "h2kMap": {
@@ -566,8 +527,7 @@
             "OPT-H2K-Location": "17"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "ROCKYMOUNTAINHOUSE": {
         "h2kMap": {
@@ -577,8 +537,7 @@
             "OPT-H2K-Location": "18"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SUFFIELD": {
         "h2kMap": {
@@ -588,8 +547,7 @@
             "OPT-H2K-Location": "19"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "COLDLAKE": {
         "h2kMap": {
@@ -599,8 +557,7 @@
             "OPT-H2K-Location": "99"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CORONATION": {
         "h2kMap": {
@@ -610,8 +567,7 @@
             "OPT-H2K-Location": "100"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "GRANDEPRAIRIE": {
         "h2kMap": {
@@ -621,8 +577,7 @@
             "OPT-H2K-Location": "101"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MEDICINEHAT": {
         "h2kMap": {
@@ -632,8 +587,7 @@
             "OPT-H2K-Location": "102"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "PEACERIVER": {
         "h2kMap": {
@@ -643,8 +597,7 @@
             "OPT-H2K-Location": "103"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "REDDEER": {
         "h2kMap": {
@@ -654,8 +607,7 @@
             "OPT-H2K-Location": "104"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "ESTEVAN": {
         "h2kMap": {
@@ -665,8 +617,7 @@
             "OPT-H2K-Location": "20"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "PRINCEALBERT": {
         "h2kMap": {
@@ -676,8 +627,7 @@
             "OPT-H2K-Location": "21"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SASKATOON": {
         "h2kMap": {
@@ -687,8 +637,7 @@
             "OPT-H2K-Location": "23"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SWIFTCURRENT": {
         "h2kMap": {
@@ -698,8 +647,7 @@
             "OPT-H2K-Location": "24"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "URANIUMCITY": {
         "h2kMap": {
@@ -709,8 +657,7 @@
             "OPT-H2K-Location": "25"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BROADVIEW": {
         "h2kMap": {
@@ -720,8 +667,7 @@
             "OPT-H2K-Location": "105"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MOOSEJAW": {
         "h2kMap": {
@@ -731,8 +677,7 @@
             "OPT-H2K-Location": "106"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "NORTHBATTLEFORD": {
         "h2kMap": {
@@ -742,8 +687,7 @@
             "OPT-H2K-Location": "107"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "YORKTON": {
         "h2kMap": {
@@ -753,8 +697,7 @@
             "OPT-H2K-Location": "108"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BRANDON": {
         "h2kMap": {
@@ -764,8 +707,7 @@
             "OPT-H2K-Location": "26"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CHURCHILL": {
         "h2kMap": {
@@ -775,8 +717,7 @@
             "OPT-H2K-Location": "27"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "THEPAS": {
         "h2kMap": {
@@ -786,8 +727,7 @@
             "OPT-H2K-Location": "28"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "THOMPSON": {
         "h2kMap": {
@@ -797,8 +737,7 @@
             "OPT-H2K-Location": "29"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "DAUPHIN": {
         "h2kMap": {
@@ -808,8 +747,7 @@
             "OPT-H2K-Location": "109"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "PORTAGELAPRAIRIE": {
         "h2kMap": {
@@ -819,8 +757,7 @@
             "OPT-H2K-Location": "110"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BIGTROUTLAKE": {
         "h2kMap": {
@@ -830,8 +767,7 @@
             "OPT-H2K-Location": "31"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "KINGSTON": {
         "h2kMap": {
@@ -841,8 +777,7 @@
             "OPT-H2K-Location": "32"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "LONDON": {
         "h2kMap": {
@@ -852,8 +787,7 @@
             "OPT-H2K-Location": "33"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MUSKOKA": {
         "h2kMap": {
@@ -863,8 +797,7 @@
             "OPT-H2K-Location": "34"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "NORTHBAY": {
         "h2kMap": {
@@ -874,8 +807,7 @@
             "OPT-H2K-Location": "35"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SAULTSTEMARIE": {
         "h2kMap": {
@@ -885,8 +817,7 @@
             "OPT-H2K-Location": "37"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SIMCOE": {
         "h2kMap": {
@@ -896,8 +827,7 @@
             "OPT-H2K-Location": "38"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SUDBURY": {
         "h2kMap": {
@@ -907,8 +837,7 @@
             "OPT-H2K-Location": "39"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "THUNDERBAY": {
         "h2kMap": {
@@ -918,8 +847,7 @@
             "OPT-H2K-Location": "40"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TIMMINS": {
         "h2kMap": {
@@ -929,8 +857,7 @@
             "OPT-H2K-Location": "41"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WINDSOR": {
         "h2kMap": {
@@ -940,8 +867,7 @@
             "OPT-H2K-Location": "43"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "GOREBAY": {
         "h2kMap": {
@@ -951,8 +877,7 @@
             "OPT-H2K-Location": "111"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "KAPUSKASING": {
         "h2kMap": {
@@ -962,8 +887,7 @@
             "OPT-H2K-Location": "112"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "KENORA": {
         "h2kMap": {
@@ -973,8 +897,7 @@
             "OPT-H2K-Location": "113"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SIOUXLOOKOUT": {
         "h2kMap": {
@@ -984,8 +907,7 @@
             "OPT-H2K-Location": "114"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TORONTOMETRESSTN": {
         "h2kMap": {
@@ -995,8 +917,7 @@
             "OPT-H2K-Location": "115"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TRENTON": {
         "h2kMap": {
@@ -1006,8 +927,7 @@
             "OPT-H2K-Location": "116"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WIARTON": {
         "h2kMap": {
@@ -1017,8 +937,7 @@
             "OPT-H2K-Location": "117"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BAGOTVILLE": {
         "h2kMap": {
@@ -1028,8 +947,7 @@
             "OPT-H2K-Location": "44"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "KUUJJUAQ": {
         "h2kMap": {
@@ -1039,8 +957,7 @@
             "OPT-H2K-Location": "45"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "KUUJJUARAPIK": {
         "h2kMap": {
@@ -1050,8 +967,7 @@
             "OPT-H2K-Location": "47"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SCHEFFERVILLE": {
         "h2kMap": {
@@ -1061,8 +977,7 @@
             "OPT-H2K-Location": "49"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SEPTILES": {
         "h2kMap": {
@@ -1072,8 +987,7 @@
             "OPT-H2K-Location": "50"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SHERBROOKE": {
         "h2kMap": {
@@ -1083,8 +997,7 @@
             "OPT-H2K-Location": "51"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "VALDOR": {
         "h2kMap": {
@@ -1094,8 +1007,7 @@
             "OPT-H2K-Location": "52"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BAIECOMEAU": {
         "h2kMap": {
@@ -1105,8 +1017,7 @@
             "OPT-H2K-Location": "118"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "LAGRANDERIVIERE": {
         "h2kMap": {
@@ -1116,8 +1027,7 @@
             "OPT-H2K-Location": "119"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MONTJOLI": {
         "h2kMap": {
@@ -1127,8 +1037,7 @@
             "OPT-H2K-Location": "120"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MONTREALMIRABEL": {
         "h2kMap": {
@@ -1138,8 +1047,7 @@
             "OPT-H2K-Location": "121"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "STHUBERT": {
         "h2kMap": {
@@ -1149,8 +1057,7 @@
             "OPT-H2K-Location": "122"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "STEAGATHEDESMONTS": {
         "h2kMap": {
@@ -1160,8 +1067,7 @@
             "OPT-H2K-Location": "123"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CHATHAM": {
         "h2kMap": {
@@ -1171,8 +1077,7 @@
             "OPT-H2K-Location": "53"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "MONCTON": {
         "h2kMap": {
@@ -1182,8 +1087,7 @@
             "OPT-H2K-Location": "55"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SAINTJOHN": {
         "h2kMap": {
@@ -1193,8 +1097,7 @@
             "OPT-H2K-Location": "56"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CHARLO": {
         "h2kMap": {
@@ -1204,8 +1107,7 @@
             "OPT-H2K-Location": "124"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "GREENWOOD": {
         "h2kMap": {
@@ -1215,8 +1117,7 @@
             "OPT-H2K-Location": "57"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SYDNEY": {
         "h2kMap": {
@@ -1226,8 +1127,7 @@
             "OPT-H2K-Location": "59"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "TRURO": {
         "h2kMap": {
@@ -1237,8 +1137,7 @@
             "OPT-H2K-Location": "60"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "YARMOUTH": {
         "h2kMap": {
@@ -1248,8 +1147,7 @@
             "OPT-H2K-Location": "61"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CHARLOTTETOWN": {
         "h2kMap": {
@@ -1259,8 +1157,7 @@
             "OPT-H2K-Location": "62"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SUMMERSIDE": {
         "h2kMap": {
@@ -1270,8 +1167,7 @@
             "OPT-H2K-Location": "63"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BONAVISTA": {
         "h2kMap": {
@@ -1281,8 +1177,7 @@
             "OPT-H2K-Location": "64"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "GANDER": {
         "h2kMap": {
@@ -1292,8 +1187,7 @@
             "OPT-H2K-Location": "65"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "GOOSEBAY": {
         "h2kMap": {
@@ -1303,8 +1197,7 @@
             "OPT-H2K-Location": "66"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "SAINTJOHNS": {
         "h2kMap": {
@@ -1314,8 +1207,7 @@
             "OPT-H2K-Location": "67"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "STEPHENVILLE": {
         "h2kMap": {
@@ -1325,8 +1217,7 @@
             "OPT-H2K-Location": "68"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CARTWRIGHT": {
         "h2kMap": {
@@ -1336,8 +1227,7 @@
             "OPT-H2K-Location": "125"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "DANIELSHARBOUR": {
         "h2kMap": {
@@ -1347,8 +1237,7 @@
             "OPT-H2K-Location": "126"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "DEERLAKE": {
         "h2kMap": {
@@ -1358,8 +1247,7 @@
             "OPT-H2K-Location": "127"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "WABUSHLAKE": {
         "h2kMap": {
@@ -1369,8 +1257,7 @@
             "OPT-H2K-Location": "128"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "DAWSONCITY": {
         "h2kMap": {
@@ -1380,8 +1267,7 @@
             "OPT-H2K-Location": "91"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "FORTSMITH": {
         "h2kMap": {
@@ -1391,8 +1277,7 @@
             "OPT-H2K-Location": "71"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "NORMANWELLS": {
         "h2kMap": {
@@ -1402,8 +1287,7 @@
             "OPT-H2K-Location": "74"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "BAKERLAKE": {
         "h2kMap": {
@@ -1413,8 +1297,7 @@
             "OPT-H2K-Location": "70"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "IQALUIT": {
         "h2kMap": {
@@ -1424,8 +1307,7 @@
             "OPT-H2K-Location": "72"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "RESOLUTE": {
         "h2kMap": {
@@ -1435,8 +1317,7 @@
             "OPT-H2K-Location": "75"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "CORALHARBOUR": {
         "h2kMap": {
@@ -1446,8 +1327,7 @@
             "OPT-H2K-Location": "129"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "HALLBEACH": {
         "h2kMap": {
@@ -1457,8 +1337,7 @@
             "OPT-H2K-Location": "130"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       },
       "XXXXX": {
         "h2kMap": {
@@ -1468,8 +1347,7 @@
             "OPT-H2K-Location": "1"
           }
         },
-        "costs": {
-        }
+        "costs": {}
       }
     },
     "default": "Ottawa",
@@ -2063,6 +1941,132 @@
             }
           }
         }
+      },
+      "New-Const-air_seal_to_1.00_ach": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "upgrade_to_plastic_air_tight_electrical_boxes",
+            "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+            "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+            "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+            "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+            "all_poly_lapped_joints_located_over_solid_backing:sealed",
+            "preliminary_blower_door_test:single_home",
+            "sprayfoam_rim_joists;_by_wall_area:net_cost",
+            "trades_training"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            }
+          }
+        }
+      },
+      "New-Const-air_seal_to_1.50_ach": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "upgrade_to_plastic_air_tight_electrical_boxes",
+            "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+            "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+            "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+            "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+            "all_poly_lapped_joints_located_over_solid_backing:sealed",
+            "preliminary_blower_door_test:single_home",
+            "sprayfoam_rim_joists;_by_wall_area:net_cost"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            }
+          }
+        }
+      },
+      "New-Const-air_seal_to_2.50_ach": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "upgrade_to_plastic_air_tight_electrical_boxes",
+            "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+            "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+            "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+            "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+            "all_poly_lapped_joints_located_over_solid_backing:sealed"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            }
+          }
+        }
+      },
+      "New-Const-air_seal_to_3.50_ach": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "upgrade_to_plastic_air_tight_electrical_boxes",
+            "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+            "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            }
+          }
+        }
+      },
+      "New-Const-air_seal_to_4-6_ach": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "base-cost"
+          ],
+          "custom-costs": {}
+        }
       }
     },
     "default": "NA",
@@ -2109,6 +2113,177 @@
               "Comment": "eg: Real numbers from ACME builder."
             }
           }
+        }
+      },
+      "NC-2g-HG-u1.82": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "argon",
+          "coat": "clear",
+          "u-value": 1.82,
+          "SHGC": 0.5,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-E-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-N-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-W-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-SE-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-SW-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-NE-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-NW-CON>": "NC-DG-LowE-u1.82"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:double_glaze:vinyl:glass:double_lof_lowe:insulating_spacers:air_fill:shgc_0.5:u-value_1.82"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NC-2g-HG-u1.65": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "argon",
+          "coat": "LowE-HighGain",
+          "u-value": 1.65,
+          "SHGC": 0.51,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-E-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-N-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-W-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-SE-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-SW-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-NE-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-NW-CON>": "NC-DG-LowE-u1.82"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:shgc_0.51:u-value_1.65"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NC-2g-LG-u1.65": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "argon",
+          "coat": "LowE-LowGain",
+          "u-value": 1.65,
+          "SHGC": 0.19,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-E-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-N-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-W-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-SE-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-SW-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-NE-CON>": "NC-DG-LowE-u1.82",
+            "<Opt-win-NW-CON>": "NC-DG-LowE-u1.82"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:shgc_0.19:u-value_1.65"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NC-3g-LG-u1.14": {
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "LowE-LowGain",
+          "u-value": 1.14,
+          "SHGC": 0.17,
+          "frame": "vinyl"
+        },
+        "costs": {
+          "components": [
+            "window:shgc_0.17:u-value_1.14"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "NC-3g-HG-u1.08": {
+        "costs": {
+          "components": [
+            "window:shgc_0.44:u-value_1.08"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        },
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "LowE-HighGain",
+          "u-value": 1.08,
+          "SHGC": 0.44,
+          "frame": "vinyl"
         }
       },
       "DoubleLowEHardCoatAirFill": {

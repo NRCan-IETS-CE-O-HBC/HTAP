@@ -95,7 +95,7 @@
           "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat",
           "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats",
           "incandescent_bulb",
-          "cfl",
+          "compact_fluorescent_lighting",
           "led",
           "standard_manual_switches",
           "automated_switches",
@@ -259,7 +259,7 @@
           "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat",
           "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats",
           "incandescent_bulb",
-          "cfl",
+          "compact_fluorescent_lighting",
           "led",
           "standard_manual_switches",
           "automated_switches",
@@ -344,6 +344,15 @@
       "date_imported": "2018-10-02 11:32:53",
       "schema_used": "oldLeep",
       "origin": "Costs used in Ottawa LEEP 2013",
+      "inherits": {
+      }
+    },
+    "VancouverAirSealData": {
+      "filename": "E3-air-sealing.csv",
+      "date_collated": "2015-01-15",
+      "date_imported": "2019-01-03 12:28:05",
+      "schema_used": "oldLeep",
+      "origin": "Halbig 2015, Air-Barrier details, Report for NRCan. E3 Consulting",
       "inherits": {
       }
     }
@@ -667,6 +676,18 @@
         "source": "LEEP-BC-KamloopsChesnut"
       }
     },
+    "all_poly_lapped_joints_located_over_solid_backing:sealed": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "all poly lapped joints located over solid backing, sealed",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.03125,
+        "note": "",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
     "ashphalt_shingles": {
       "LEEP-MB-Winnipeg": {
         "category": "ROOF",
@@ -689,6 +710,18 @@
         "note": "In-house estimate",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "base-cost": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "base-cost",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.0,
+        "note": "Placeholder for zero-cost",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
       }
     },
     "base_case_wiring:includes_all_switches:receptacles:cable_and_labour": {
@@ -725,6 +758,18 @@
         "note": "Hanscomb - Double stud wall analysis",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "caulking sill plate of walls to the subfloor, and applying a bead of acoustic sealant at top and bottom of drywall",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.03125,
+        "note": "",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
       }
     },
     "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat": {
@@ -775,17 +820,6 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
-    "cfl": {
-      "LEEP-ON-Ottawa": {
-        "category": "LIGHTING",
-        "description": "CFL",
-        "units": "ea",
-        "UnitCostMaterials": 4.08,
-        "UnitCostLabour": 0.0,
-        "note": "Terry Strack report",
-        "date": "n.d.",
-        "source": "LEEP-ON-Ottawa"
-      }
     },
     "compact_fluorescent_lighting": {
       "LEEP-MB-Winnipeg": {
@@ -797,6 +831,16 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-ON-Ottawa": {
+        "category": "LIGHTING",
+        "description": "CFL",
+        "units": "ea",
+        "UnitCostMaterials": 4.08,
+        "UnitCostLabour": 0.0,
+        "note": "Terry Strack report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
       }
     },
     "concrete_cast-in-place_foundation_wall:203mm:excluding_footings": {
@@ -1633,6 +1677,18 @@
         "note": "Hanscomb - Final Report",
         "date": "n.d.",
         "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "greater attention to taping electrical boxes; create better seal around stairs and mechanical penetrations; caulk between joists ",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.0875,
+        "note": "2 hrs for 1600 sq ft, @ $30/hr",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
       }
     },
     "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters": {
@@ -2901,6 +2957,18 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
+    "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "on exterior walls, place acoustic sealant half way up sill plate, and caulk sill plate to subfloor",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.05,
+        "note": "labour and caulking costs",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
     "osb:12.5mm:hanscomb": {
       "LEEP-MB-Winnipeg": {
         "category": "SHEATHING",
@@ -2945,6 +3013,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "preliminary_blower_door_test:single_home": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "preliminary blower door test - single home",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 250.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
       }
     },
     "pv_complete_system": {
@@ -3291,6 +3371,42 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "sprayfoam_rim_joists;_by_linear_foot:total_costs": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "sprayfoam rim joists; by linear foot - total costs",
+        "units": "LF",
+        "UnitCostMaterials": 5.0,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
+    "sprayfoam_rim_joists;_by_wall_area:net_cost": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "sprayfoam rim joists; by wall area - net cost",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.125,
+        "UnitCostLabour": 0.0,
+        "note": "Reflects incremental costs with elimination of insulation, poly and air sealing labour",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
+    "sprayfoam_rim_joists;_by_wall_area:total_costs": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "sprayfoam rim joists; by wall area - total costs",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.5,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
     "standard_manual_switches": {
       "LEEP-ON-Ottawa": {
         "category": "SWITCHING",
@@ -3423,6 +3539,18 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "trades_training": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "trades training ",
+        "units": "ea ",
+        "UnitCostMaterials": 800.0,
+        "UnitCostLabour": 0.0,
+        "note": "4-6 hour on-site education session for trades (electrician, plumber, insulator, site super); $600-$800 cost could be amoritized over multiple units",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
     "traditional_electric_resistance_baseboard_heaters": {
       "LEEP-MB-Winnipeg": {
         "category": "ELECTRIC RESISTANCE BASEBOARDS",
@@ -3433,6 +3561,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "upgrade_to_plastic_air_tight_electrical_boxes": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "upgrade to plastic air tight electrical boxes",
+        "units": "sf wall area (gross)",
+        "UnitCostMaterials": 0.05355,
+        "UnitCostLabour": 0.0,
+        "note": "Assumes 1 box per ~60 sq ft wall area; each box costs $5.43 inc polypan; regular boxes cost 1.85",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
       }
     },
     "upgrading_from_3.57_to_0.6": {
@@ -3481,6 +3621,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "use_air-tight_junction_boxes_for_lighting_on_ceiling": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "Use air-tight junction boxes for lighting on ceiling",
+        "units": "sf attic",
+        "UnitCostMaterials": 0.1125,
+        "UnitCostLabour": 0.0,
+        "note": "air tight electric boxes cost zero to $4.00 more per potlight depending on supplier; polypan costs $14.86",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
       }
     },
     "vapour_barrier:6_mil": {

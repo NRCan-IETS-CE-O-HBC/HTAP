@@ -25,6 +25,9 @@ include REXML
 
 $program = "cost_these_choices.rb"
 
+debug_off()
+debug_out("[!] Debugging output requested for #{$program}\n")
+
 $allok = true
 $startProcessTime = Time.now
 
@@ -144,6 +147,8 @@ end
 
 optparse.parse!
 
+
+
 stream_out ("cost_these_choices.rb: \n")
 stream_out ("         ChoiceFile: #{myChoiceFile} \n")
 stream_out ("         OptionFile: #{myOptionFile} \n")
@@ -195,77 +200,29 @@ end
 #-------------------------------------------------------------------
 # Collect dimension data about house
 #-------------------------------------------------------------------
-
 myH2KHouseInfo = Hash.new
 myH2KHouseInfo = H2KFile.getAllInfo(h2kElements)
-
-pp myH2KHouseInfo
-
+debug_on
+debug_out (" Contents of myH2KHouseInfo:\n#{myH2KHouseInfo.pretty_inspect}")
 
 #-------------------------------------------------------------------
 # Loop through choices; compute costs
 #-------------------------------------------------------------------
-costSourcesDBs = Array.new
-costSourcesCustom = Array.new
+specdCostSources = Hash.new
+specdCostSources = {"custom" => [],
+                      "components" => ["LEEP-BC-Vancouver", "*"]
+                   }
 
-costSourcesCustom    = ["customA", "customB", "customC" ]
-costSourcesDBs       = ["LEEEEP-BC-Vancouver", "*"]
 
 
 myCosts = Hash.new
-myCosts["total"] = 0
-myCosts["byAttribute"] = Hash.new
-myCosts["bySource"] = Hash.new
 
-myChoices.each do | attrib, choice |
-
-  myCosts["byAttribute"][attrib] = 0
-
-  if ( CostingSupport.include? attrib )
-
-    choiceCosts = Hash.new
-    choiceCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,choice,costSourcesDBs)
-
-    pp choiceCosts
-
-    choiceCosts.keys.each do | costingElement |
-
-      stream_out " COSTING CALC: #{costingElement}\n"
-      #stream_out "   -> units: #{choiceCosts[costingElement]["data"]["units"]} \n"
-      units = choiceCosts[costingElement]["data"]["units"]
-      materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
-      labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
-      source = choiceCosts[costingElement]["data"]["source"]
-
-      measure = Float
-      case units
-      when "default" || "ea"
-        measure = 1
-      when "sf attic"
-        measure = myH2KHouseInfo["dimensions"]["ceilings"]["attic"]
-      else
-        measure = 1
-      end
-
-
-      myCosts["total"] = myCosts["total"] + measure * ( materials + labour )
-
-      myCosts["byAttribute"][attrib] = myCosts["byAttribute"][attrib] + measure * ( materials + labour )
-
-      if ( myCosts["bySource"][source].nil? || myCosts["bySource"][source].empty? ) then
-        myCosts["bySource"][source] = 0
-      end
-      myCosts["bySource"][source] =  myCosts["bySource"][source] + measure * ( materials + labour )
-
-    end
-
-
-  end
-
-end
-
-pp myCosts
-
+# Compute costs
+myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
+stream_out ("\n=================================================================\n")
+stream_out ("\nCost these choices.rb\n")
+stream_out ("\nComputed costs:\n#{myCosts.pretty_inspect}\n")
+stream_out ("\n=================================================================\n")
 
 #ReportMsgs()
 
