@@ -5,6 +5,8 @@ module HTAPData
 
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
+
+    debug_on
     stream_out("\n\n Reading available options (#{filename})...")
     debug_out(" --------------JSON options parsing ------------ ")
     fOPTIONS = File.new(filename, "r")

@@ -59,12 +59,21 @@ windowDefs.keys.each do | window |
    if ( ! thisWindowData["characteristics"].nil? ) then
 
      debug_out ".........\n"
-     debug_out "#{window} Has characteristic data !!!\n"
+     debug_out "#{window} Has characteristic data. Syncing with #{h2kCodeFile}!!!\n"
 
      str = ""
-     str = H2KLibs.AddWinToCodeLib(window,thisWindowData["characteristics"],h2kCodeElements)
+     h2kCodeElements = H2KLibs.AddWinToCodeLib(window,thisWindowData["characteristics"],h2kCodeElements)
 
    end
 
 
 end
+
+# maybe create a copy for comparison?
+# h2kCodeFile.gsub!(/\.cod/, "-ed.cod")
+
+newXMLFile = File.open(h2kCodeFile, "w")
+
+$formatter.write($XMLCodedoc,newXMLFile)
+
+newXMLFile.close

@@ -1456,7 +1456,16 @@ def processFile(h2kElements)
             # Windows (by facing direction)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-CasementWindows/ )
-               if ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+               if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
+                 ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+                 ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+               elsif ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
                   ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
                elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
@@ -6946,7 +6955,7 @@ end
 def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
 
   debug_on
-  
+
   h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
   myCosts = Hash.new
   myH2KHouseInfo = Hash.new
@@ -7283,7 +7292,8 @@ if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    if ( $Archetype_value =~ /NA/ )
       $Archetype_value = "SmallSFD"
    end
-
+   debug_on
+   debug_out "Archetype ? #{$Archetype_value}\n"
    $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
    ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
    $h2k_src_path.sub!(/\\User/i, '')     # Strip "User" (any case) from $h2k_src_path

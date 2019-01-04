@@ -614,7 +614,10 @@ end
 # H2Klibs : module containing that manipulate code libraries
 # =========================================================================================
 module H2KLibs
-
+  # =========================================================================================
+  # Takes a window definition from the options file and creates a similar entry in the code
+  # lib. If one already exists, it deletes it and re-creates it.
+  # =========================================================================================
   def H2KLibs.AddWinToCodeLib(name,char,codeElements)
 
      debug_on
@@ -628,13 +631,14 @@ module H2KLibs
        debug_out " Could not find window in lib\n"
      else
        debug_out " Found window at:\n#{exists}. Deleting...\n"
+       exit
      end
 
      # Now (re)create the window record
 
      nextID = H2KLibs.getNextCodeIndex(codeElements)
 
-     location = "/Codes/Window/UserDefined"
+
 
      newWindow = Element.new "Code"
      newWindow.attributes['id'] = "Code #{nextID}"
@@ -644,7 +648,6 @@ module H2KLibs
 
      newWindow.elements.add("Description")
      newWindow.elements["Description"].text = "#{char["panes"]} pane; #{char["coat"]}; #{char["fill"]} fill; U=#{char["u-value"]}"
-
 
 
      newWindow.elements.add("Layers")
@@ -672,6 +675,7 @@ module H2KLibs
      newWindow.elements["Layers/Window"].add_element("WindowStyle", { "code"=>2 })
      newWindow.elements["Layers/Window/WindowStyle"].add_element("English")
      newWindow.elements["Layers/Window/WindowStyle"].add_element("French")
+
      code = -99
      case char["fill"]
      when "air"
@@ -726,19 +730,12 @@ module H2KLibs
      newWindow.elements["Layers/Window/LowECoating"].add_element("English")
      newWindow.elements["Layers/Window/LowECoating"].add_element("French")
 
-     #newWindow.elements["Label"].add("Window")
-
-     #newWindow.elements[""].text = ""
-#
-#
-#     newWindow.elements.add("")
-#     newWindow.elements[""].text = ""
-
 
      $formatter.write(newWindow, $stdout)
 
-
-     return result
+     location = "/Codes/Window/UserDefined"
+     codeElements[location].add_element(newWindow)
+     return codeElements
 
   end
 

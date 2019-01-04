@@ -820,7 +820,6 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
-    },
     "compact_fluorescent_lighting": {
       "LEEP-MB-Winnipeg": {
         "category": "LIGHTING",
@@ -872,6 +871,18 @@
         "units": "linear feet",
         "UnitCostMaterials": 33.65,
         "UnitCostLabour": 5.02,
+        "note": "Hanscomb final report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "copper_pipe_to_and_from_dwhr_and_dhw_systems:15ft-total-run": {
+      "LEEP-ON-Ottawa": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "Copper pipe to and from DWHR and DHW systems - 15 foot run",
+        "units": "ea",
+        "UnitCostMaterials": 504.75,
+        "UnitCostLabour": 75.30,
         "note": "Hanscomb final report",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"

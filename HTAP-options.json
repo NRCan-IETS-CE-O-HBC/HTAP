@@ -2241,6 +2241,11 @@
           "SHGC": 0.17,
           "frame": "vinyl"
         },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-*-CON>": "NC-3g-LG-u1.14"
+          }
+        },
         "costs": {
           "components": [
             "window:shgc_0.17:u-value_1.14"
@@ -2275,6 +2280,11 @@
               "TotUnitCost": 1.7,
               "Comment": "eg: Real numbers from ACME builder."
             }
+          }
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-*-CON>": "NC-3g-HG-u1.08"
           }
         },
         "characteristics": {
@@ -3477,6 +3487,7 @@
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
+      "<Opt-win-*-CON>",
       "<Opt-win-S-CON>",
       "<Opt-win-E-CON>",
       "<Opt-win-N-CON>",
@@ -13099,22 +13110,10 @@
         },
         "costs": {
           "components": [
-            "Example Key-phrase: Layer1",
-            "Example Key-phrase: Layer2",
-            "Example Key-phrase: Layer3"
+            "dwhr_unit:91cm_supply",
+            "copper_pipe_to_and_from_dwhr_and_dhw_systems:15ft-total-run"
           ],
-          "custom-costs": {
-            "ExampleScenarioA": {
-              "Units": "sf floor area",
-              "TotUnitCost": 1.5,
-              "Comment": "eg: Alex's original estimate"
-            },
-            "ExampleScenarioB": {
-              "Units": "sf floor area",
-              "TotUnitCost": 1.7,
-              "Comment": "eg: Real numbers from ACME builder."
-            }
-          }
+          "custom-costs": {}
         }
       },
       "DWHR-eff-42": {
