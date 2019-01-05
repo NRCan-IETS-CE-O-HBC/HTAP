@@ -8,7 +8,7 @@
   </Version>
   <Wall>
     <Favorite>
-      <Code id='1' value='12113B1041' nominalRValue='4.1235'>
+      <Code id='Code 1' value='12113B1041' nominalRValue='4.1235'>
         <Label>12113B1041</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -34,7 +34,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -50,7 +50,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='2' value='1211Z11440' nominalRValue='5.5355'>
+      <Code id='Code 2' value='1211Z11440' nominalRValue='5.5355'>
         <Label>1211Z11440</Label>
         <Description/>
         <Layers>
@@ -76,11 +76,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='4'>
             <English>Plywood/Particle board 9.5 mm (3/8 in)</English>
-            <French>Contreplaqué/pan. part. 9.5 mm (3/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 9.5 mm (3/8 po)</French>
           </Sheathing>
           <Exterior code='4'>
             <English>Brick</English>
@@ -92,7 +92,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='3' value='12113B1000' nominalRValue='4.1235'>
+      <Code id='Code 3' value='12113B1000' nominalRValue='4.1235'>
         <Label>1" XPS (no brick)</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -118,7 +118,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -134,7 +134,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='4' value='1203001000' nominalRValue='0'>
+      <Code id='Code 4' value='1203001000' nominalRValue='0'>
         <Label>1203001000</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -160,7 +160,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -176,7 +176,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='5' value='1201A09520' nominalRValue='2.2517'>
+      <Code id='Code 5' value='1201A09520' nominalRValue='2.2517'>
         <Label>WndWall</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -202,15 +202,15 @@
           </InsulationLayer2>
           <Interior code='9'>
             <English>Lath &amp; plaster</English>
-            <French>Plâtre sur lattis</French>
+            <French>Pl├ótre sur lattis</French>
           </Interior>
           <Sheathing code='5'>
             <English>Plywood/Particle board 12.7 mm (1/2 in)</English>
-            <French>Contreplaqué/pan. part. 12.7 mm (1/2 po)</French>
+            <French>Contreplaqu├®/pan. part. 12.7 mm (1/2 po)</French>
           </Sheathing>
           <Exterior code='2'>
             <English>Hollow metal/vinyl cladding</English>
-            <French>Revêt. en métal creux/vinyle</French>
+            <French>Rev├¬t. en m├®tal creux/vinyle</French>
           </Exterior>
           <StudsCornerIntersection code='0'>
             <English>2 studs</English>
@@ -218,7 +218,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='6' value='12113B1021' nominalRValue='4.1235'>
+      <Code id='Code 6' value='12113B1021' nominalRValue='4.1235'>
         <Label>2x6@16OC, R20+1"XTPS, Holl Vinyl</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -244,7 +244,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -252,7 +252,7 @@
           </Sheathing>
           <Exterior code='2'>
             <English>Hollow metal/vinyl cladding</English>
-            <French>Revêt. en métal creux/vinyle</French>
+            <French>Rev├¬t. en m├®tal creux/vinyle</French>
           </Exterior>
           <StudsCornerIntersection code='1'>
             <English>3 studs</English>
@@ -260,7 +260,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='7' value='1203W01000' nominalRValue='1.8288'>
+      <Code id='Code 7' value='1203W01000' nominalRValue='1.8288'>
         <Label>1203W01000</Label>
         <Description/>
         <Layers>
@@ -278,7 +278,7 @@
           </Spacing>
           <InsulationLayer1 code='W'>
             <English>RSI 2.1 51 mm (2 in) Medium density spray foam</English>
-            <French>RSI 2.1 (51 mm) (2 po) Mousse de densité moyenne à vaporiser</French>
+            <French>RSI 2.1 (51 mm) (2 po) Mousse de densit├® moyenne ├á vaporiser</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -286,7 +286,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -302,7 +302,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='8' value='1203W01000' nominalRValue='1.8288'>
+      <Code id='Code 8' value='1203W01000' nominalRValue='1.8288'>
         <Label>wall-code-test</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -320,7 +320,7 @@
           </Spacing>
           <InsulationLayer1 code='W'>
             <English>RSI 2.1 51 mm (2 in) Medium density spray foam</English>
-            <French>RSI 2.1 (51 mm) (2 po) Mousse de densité moyenne à vaporiser</French>
+            <French>RSI 2.1 (51 mm) (2 po) Mousse de densit├® moyenne ├á vaporiser</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -328,7 +328,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -344,7 +344,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='9' value='1211Z11440' nominalRValue='5.5355'>
+      <Code id='Code 9' value='1211Z11440' nominalRValue='5.5355'>
         <Label>WallR24+2EPS</Label>
         <Description/>
         <Layers>
@@ -370,11 +370,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='4'>
             <English>Plywood/Particle board 9.5 mm (3/8 in)</English>
-            <French>Contreplaqué/pan. part. 9.5 mm (3/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 9.5 mm (3/8 po)</French>
           </Sheathing>
           <Exterior code='4'>
             <English>Brick</English>
@@ -388,7 +388,7 @@
       </Code>
     </Favorite>
     <UserDefined>
-      <Code id='10' nominalRValue='4.6423'>
+      <Code id='Code 10' nominalRValue='4.6423'>
         <Label>R27 (R20 batt with EPS-II)</Label>
         <Description>R27 (R20 batt with EPS-II)</Description>
         <Layers>
@@ -396,11 +396,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='1'>
                 <English>Gypsum board</English>
-                <French>Plaque de plâtre</French>
+                <French>Plaque de pl├ótre</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -419,7 +419,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -427,7 +427,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='5'>
                   <English>RSI 3.52 @ 152 mm (R 20 @ 6.0'') batt</English>
@@ -444,7 +444,7 @@
               </Category>
               <Type code='3'>
                 <English>Type 2 expanded polystyrene</English>
-                <French>Polystyrène expansé Type 2</French>
+                <French>Polystyr├¿ne expans├® Type 2</French>
               </Type>
             </Material>
           </ContinuousInsulation>
@@ -464,17 +464,17 @@
             <Material>
               <Category code='2'>
                 <English>Masonry/stucco</English>
-                <French>Maçonnerie/stucco</French>
+                <French>Ma├ºonnerie/stucco</French>
               </Category>
               <Type code='1'>
-                <English>Brick, fired clay (1920 kg/m³, 120 lb/ft³)</English>
-                <French>Brique en argile réfrac. (1920 kg/m³, 120 lb/pi³)</French>
+                <English>Brick, fired clay (1920 kg/m┬│, 120 lb/ft┬│)</English>
+                <French>Brique en argile r├®frac. (1920 kg/m┬│, 120 lb/pi┬│)</French>
               </Type>
             </Material>
           </ContinuousMedium>
         </Layers>
       </Code>
-      <Code id='11' nominalRValue='2.1101'>
+      <Code id='Code 11' nominalRValue='2.1101'>
         <Label>2x4R12</Label>
         <Description/>
         <Layers>
@@ -482,11 +482,11 @@
             <Material>
               <Category code='4'>
                 <English>Exterior siding</English>
-                <French>Recouvrement extérieur</French>
+                <French>Recouvrement ext├®rieur</French>
               </Category>
               <Type code='1'>
                 <English>Wood siding, bevel, 19 x 250 mm (3/4 x 10 in), lapped</English>
-                <French>Bardage à clin en bois, 19 x 250 mm (3/4 x 10 po)</French>
+                <French>Bardage ├á clin en bois, 19 x 250 mm (3/4 x 10 po)</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -494,7 +494,7 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='4'>
                 <English>Particle board underlay</English>
@@ -517,7 +517,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -525,7 +525,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='3'>
                   <English>RSI 2.11 @ 89 mm (R 12 @ 3.5'') batt</English>
@@ -538,11 +538,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='1'>
                 <English>Gypsum board</English>
-                <French>Plaque de plâtre</French>
+                <French>Plaque de pl├ótre</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -572,14 +572,14 @@
               <Material>
                 <Category code='0'>
                   <English>User defined</English>
-                  <French>Spécifié par l'utilisateur</French>
+                  <French>Sp├®cifi├® par l'utilisateur</French>
                 </Category>
               </Material>
             </CavityInsulation>
           </Strapping>
         </Layers>
       </Code>
-      <Code id='12' nominalRValue='3.1626'>
+      <Code id='Code 12' nominalRValue='3.1626'>
         <Label>stdwall</Label>
         <Description>no interior finish</Description>
         <Layers>
@@ -587,11 +587,11 @@
             <Material>
               <Category code='4'>
                 <English>Exterior siding</English>
-                <French>Recouvrement extérieur</French>
+                <French>Recouvrement ext├®rieur</French>
               </Category>
               <Type code='4'>
                 <English>Hollow-backed metal/vinyl cladding</English>
-                <French>Revêtement doublé de métal creux/vinyle</French>
+                <French>Rev├¬tement doubl├® de m├®tal creux/vinyle</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -599,11 +599,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='7'>
                 <English>Waferboard/Oriented strand board</English>
-                <French>Panneau de copeaux/de copeaux orientés</French>
+                <French>Panneau de copeaux/de copeaux orient├®s</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -615,7 +615,7 @@
               </Category>
               <Type code='3'>
                 <English>Type 2 expanded polystyrene</English>
-                <French>Polystyrène expansé Type 2</French>
+                <French>Polystyr├¿ne expans├® Type 2</French>
               </Type>
             </Material>
           </ContinuousInsulation>
@@ -634,7 +634,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -642,7 +642,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='3'>
                   <English>RSI 2.11 @ 89 mm (R 12 @ 3.5'') batt</English>
@@ -657,7 +657,7 @@
   </Wall>
   <Ceiling>
     <Favorite>
-      <Code id='13' value='2403d01000' nominalRValue='10.5702'>
+      <Code id='Code 13' value='2403d01000' nominalRValue='10.5702'>
         <Label>NBC-zone7A-attic_HRV</Label>
         <Description>RSI 8.67</Description>
         <Layers>
@@ -675,7 +675,7 @@
           </Spacing>
           <InsulationLayer1 code='d'>
             <English>RSI 10.57 (R 60) Blown cellulose</English>
-            <French>RSI 10.57 (R 60) cell. injecté</French>
+            <French>RSI 10.57 (R 60) cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -683,11 +683,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='14' value='2403802000' nominalRValue='9.006'>
+      <Code id='Code 14' value='2403802000' nominalRValue='9.006'>
         <Label>2x4Trs@24"OC,R51cel,Gy+Non In St</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -705,7 +705,7 @@
           </Spacing>
           <InsulationLayer1 code='8'>
             <English>RSI 9.0 (R 51) Blown cellulose</English>
-            <French>RSI 9.0 (R 51) Cell. injecté</French>
+            <French>RSI 9.0 (R 51) Cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -713,11 +713,11 @@
           </InsulationLayer2>
           <Interior code='2'>
             <English>Gypsum + Non insul. strapping</English>
-            <French>P de p + fond de clouage non isolé</French>
+            <French>P de p + fond de clouage non isol├®</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='15' value='2231c90000' nominalRValue='12.3199'>
+      <Code id='Code 15' value='2231c90000' nominalRValue='12.3199'>
         <Label>CeilR60</Label>
         <Description>Effective R60</Description>
         <Layers>
@@ -739,7 +739,7 @@
           </InsulationLayer1>
           <InsulationLayer2 code='9'>
             <English>Same as Insulation Layer 1</English>
-            <French>Même que couche d'isolant 1</French>
+            <French>M├¬me que couche d'isolant 1</French>
           </InsulationLayer2>
           <Interior code='0'>
             <English>None</English>
@@ -747,7 +747,7 @@
           </Interior>
         </Layers>
       </Code>
-      <Code id='16' value='2221a90000' nominalRValue='9.8601'>
+      <Code id='Code 16' value='2221a90000' nominalRValue='9.8601'>
         <Label>CeilR50</Label>
         <Description>Effective R50</Description>
         <Layers>
@@ -769,7 +769,7 @@
           </InsulationLayer1>
           <InsulationLayer2 code='9'>
             <English>Same as Insulation Layer 1</English>
-            <French>Même que couche d'isolant 1</French>
+            <French>M├¬me que couche d'isolant 1</French>
           </InsulationLayer2>
           <Interior code='0'>
             <English>None</English>
@@ -777,7 +777,7 @@
           </Interior>
         </Layers>
       </Code>
-      <Code id='17' value='2201C09000' nominalRValue='4.9688'>
+      <Code id='Code 17' value='2201C09000' nominalRValue='4.9688'>
         <Label>Attic28</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -795,7 +795,7 @@
           </Spacing>
           <InsulationLayer1 code='C'>
             <English>RSI 4.9 (R 28) Blown mineral fibre</English>
-            <French>RSI 4.9 (R 28) Fibre minér. inj.</French>
+            <French>RSI 4.9 (R 28) Fibre min├®r. inj.</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -803,11 +803,11 @@
           </InsulationLayer2>
           <Interior code='9'>
             <English>Lath &amp; plaster</English>
-            <French>Plâtre sur lattis</French>
+            <French>Pl├ótre sur lattis</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='18' value='2403J01000' nominalRValue='7.0652'>
+      <Code id='Code 18' value='2403J01000' nominalRValue='7.0652'>
         <Label>NBC-zone4-attic</Label>
         <Description>RSI 6.91</Description>
         <Layers>
@@ -833,11 +833,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='19' value='2231490000' nominalRValue='7.74'>
+      <Code id='Code 19' value='2231490000' nominalRValue='7.74'>
         <Label>CeilR40</Label>
         <Description>R40 effective insulation</Description>
         <Layers>
@@ -859,7 +859,7 @@
           </InsulationLayer1>
           <InsulationLayer2 code='9'>
             <English>Same as Insulation Layer 1</English>
-            <French>Même que couche d'isolant 1</French>
+            <French>M├¬me que couche d'isolant 1</French>
           </InsulationLayer2>
           <Interior code='0'>
             <English>None</English>
@@ -867,7 +867,7 @@
           </Interior>
         </Layers>
       </Code>
-      <Code id='20' value='2403801000' nominalRValue='9.006'>
+      <Code id='Code 20' value='2403801000' nominalRValue='9.006'>
         <Label>NBC-zone5-attic</Label>
         <Description>RSI 8.69</Description>
         <Layers>
@@ -885,7 +885,7 @@
           </Spacing>
           <InsulationLayer1 code='8'>
             <English>RSI 9.0 (R 51) Blown cellulose</English>
-            <French>RSI 9.0 (R 51) Cell. injecté</French>
+            <French>RSI 9.0 (R 51) Cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -893,11 +893,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='21' value='2403d01000' nominalRValue='10.5702'>
+      <Code id='Code 21' value='2403d01000' nominalRValue='10.5702'>
         <Label>NBC-zone8-attic</Label>
         <Description>RSI 10.43</Description>
         <Layers>
@@ -915,7 +915,7 @@
           </Spacing>
           <InsulationLayer1 code='d'>
             <English>RSI 10.57 (R 60) Blown cellulose</English>
-            <French>RSI 10.57 (R 60) cell. injecté</French>
+            <French>RSI 10.57 (R 60) cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -923,11 +923,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='22' value='2243J90000' nominalRValue='14.1305'>
+      <Code id='Code 22' value='2243J90000' nominalRValue='14.1305'>
         <Label>CeilR70</Label>
         <Description>Effective R70</Description>
         <Layers>
@@ -949,7 +949,7 @@
           </InsulationLayer1>
           <InsulationLayer2 code='9'>
             <English>Same as Insulation Layer 1</English>
-            <French>Même que couche d'isolant 1</French>
+            <French>M├¬me que couche d'isolant 1</French>
           </InsulationLayer2>
           <Interior code='0'>
             <English>None</English>
@@ -957,7 +957,7 @@
           </Interior>
         </Layers>
       </Code>
-      <Code id='23' value='2403d01000' nominalRValue='10.5702'>
+      <Code id='Code 23' value='2403d01000' nominalRValue='10.5702'>
         <Label>NBC-zone7A-attic_noHRV</Label>
         <Description>RSI 10.43</Description>
         <Layers>
@@ -975,7 +975,7 @@
           </Spacing>
           <InsulationLayer1 code='d'>
             <English>RSI 10.57 (R 60) Blown cellulose</English>
-            <French>RSI 10.57 (R 60) cell. injecté</French>
+            <French>RSI 10.57 (R 60) cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -983,11 +983,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='24' value='2403d01000' nominalRValue='10.5702'>
+      <Code id='Code 24' value='2403d01000' nominalRValue='10.5702'>
         <Label>NBC-zone7B-attic</Label>
         <Description>RSI 10.43</Description>
         <Layers>
@@ -1005,7 +1005,7 @@
           </Spacing>
           <InsulationLayer1 code='d'>
             <English>RSI 10.57 (R 60) Blown cellulose</English>
-            <French>RSI 10.57 (R 60) cell. injecté</French>
+            <French>RSI 10.57 (R 60) cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -1013,11 +1013,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
-      <Code id='25' value='2403801000' nominalRValue='9.006'>
+      <Code id='Code 25' value='2403801000' nominalRValue='9.006'>
         <Label>NBC-zone6-attic_noHRV</Label>
         <Description>RSI 8.67</Description>
         <Layers>
@@ -1035,7 +1035,7 @@
           </Spacing>
           <InsulationLayer1 code='8'>
             <English>RSI 9.0 (R 51) Blown cellulose</English>
-            <French>RSI 9.0 (R 51) Cell. injecté</French>
+            <French>RSI 9.0 (R 51) Cell. inject├®</French>
           </InsulationLayer1>
           <InsulationLayer2 code='0'>
             <English>None</English>
@@ -1043,13 +1043,13 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
         </Layers>
       </Code>
     </Favorite>
     <UserDefined>
-      <Code id='26' nominalRValue='9.2209'>
+      <Code id='Code 26' nominalRValue='9.2209'>
         <Label>STDCLG</Label>
         <Description>standard test ceiling</Description>
         <Layers>
@@ -1057,7 +1057,7 @@
             <Material>
               <Category code='1'>
                 <English>Glass/mineral fibre</English>
-                <French>Fibre de verre/minérale densité ordinaire</French>
+                <French>Fibre de verre/min├®rale densit├® ordinaire</French>
               </Category>
               <Type code=''/>
             </Material>
@@ -1081,7 +1081,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -1089,7 +1089,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='7'>
                   <English>RSI 4.93 @ 216 mm (R 28 @ 8.5'') batt</English>
@@ -1102,17 +1102,17 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='1'>
                 <English>Gypsum board</English>
-                <French>Plaque de plâtre</French>
+                <French>Plaque de pl├ótre</French>
               </Type>
             </Material>
           </ContinuousMedium>
         </Layers>
       </Code>
-      <Code id='27' nominalRValue='8.4277'>
+      <Code id='Code 27' nominalRValue='8.4277'>
         <Label>R48</Label>
         <Description/>
         <Layers>
@@ -1131,7 +1131,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -1142,15 +1142,15 @@
                   <French>de bourrage</French>
                 </Category>
                 <Type code='2'>
-                  <English>Loose/blown cellullose (37-51 kg/m³, 2.3-3.2 lb/ft³)</English>
-                  <French>Cellulose, granulé/inj.(37-51 kg/m³, 2.3-3.2 lb/pi³)</French>
+                  <English>Loose/blown cellullose (37-51 kg/m┬│, 2.3-3.2 lb/ft┬│)</English>
+                  <French>Cellulose, granul├®/inj.(37-51 kg/m┬│, 2.3-3.2 lb/pi┬│)</French>
                 </Type>
               </Material>
             </CavityInsulation>
           </WoodFraming>
         </Layers>
       </Code>
-      <Code id='28' nominalRValue='7'>
+      <Code id='Code 28' nominalRValue='7'>
         <Label>21RSI7</Label>
         <Description>2x4attic truss/RSI7 blown cel.</Description>
         <Layers>
@@ -1173,7 +1173,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -1184,8 +1184,8 @@
                   <French>de bourrage</French>
                 </Category>
                 <Type code='2'>
-                  <English>Loose/blown cellullose (37-51 kg/m³, 2.3-3.2 lb/ft³)</English>
-                  <French>Cellulose, granulé/inj.(37-51 kg/m³, 2.3-3.2 lb/pi³)</French>
+                  <English>Loose/blown cellullose (37-51 kg/m┬│, 2.3-3.2 lb/ft┬│)</English>
+                  <French>Cellulose, granul├®/inj.(37-51 kg/m┬│, 2.3-3.2 lb/pi┬│)</French>
                 </Type>
               </Material>
             </CavityInsulation>
@@ -1194,11 +1194,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='1'>
                 <English>Gypsum board</English>
-                <French>Plaque de plâtre</French>
+                <French>Plaque de pl├ótre</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -1208,7 +1208,7 @@
   </Ceiling>
   <CeilingFlat>
     <UserDefined>
-      <Code id='29' nominalRValue='7.0652'>
+      <Code id='Code 29' nominalRValue='7.0652'>
         <Label>CeilR40-UsrDef</Label>
         <Description>R40 ceiling - usr def layers</Description>
         <Layers>
@@ -1227,7 +1227,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -1235,7 +1235,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='E'>
                   <English>RSI 7.04 @ 279 mm (R 40 @ 11.0'') batt</English>
@@ -1246,7 +1246,7 @@
           </WoodFraming>
         </Layers>
       </Code>
-      <Code id='30' nominalRValue='4.6105'>
+      <Code id='Code 30' nominalRValue='4.6105'>
         <Label>stdflat</Label>
         <Description>test of a flat ceiling type</Description>
         <Layers>
@@ -1269,7 +1269,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -1277,7 +1277,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='7'>
                   <English>RSI 4.93 @ 216 mm (R 28 @ 8.5'') batt</English>
@@ -1300,7 +1300,7 @@
               <Material>
                 <Category code='0'>
                   <English>User defined</English>
-                  <French>Spécifié par l'utilisateur</French>
+                  <French>Sp├®cifi├® par l'utilisateur</French>
                 </Category>
               </Material>
             </CavityInsulation>
@@ -1309,11 +1309,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='1'>
                 <English>Gypsum board</English>
-                <French>Plaque de plâtre</French>
+                <French>Plaque de pl├ótre</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -1323,7 +1323,7 @@
   </CeilingFlat>
   <Floor>
     <Favorite>
-      <Code id='31' value='3231L01600' nominalRValue='5.3242'>
+      <Code id='Code 31' value='3231L01600' nominalRValue='5.3242'>
         <Label>3231L01600</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1349,11 +1349,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='6'>
             <English>Plywood/Particle board 15.5 mm (5/8 in)</English>
-            <French>Contreplaqué/pan. part. 15.5 mm (5/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 15.5 mm (5/8 po)</French>
           </Sheathing>
           <Exterior code='0'>
             <English>None</English>
@@ -1365,7 +1365,7 @@
           </DropFraming>
         </Layers>
       </Code>
-      <Code id='32' value='3221a96400' nominalRValue='9.8601'>
+      <Code id='Code 32' value='3221a96400' nominalRValue='9.8601'>
         <Label>Foamed-R52</Label>
         <Description>ExpFloorFoamed-R52</Description>
         <Layers>
@@ -1387,7 +1387,7 @@
           </InsulationLayer1>
           <InsulationLayer2 code='9'>
             <English>Same as Insulation Layer 1</English>
-            <French>Même que couche d'isolant 1</French>
+            <French>M├¬me que couche d'isolant 1</French>
           </InsulationLayer2>
           <Interior code='6'>
             <English>Wood</English>
@@ -1395,7 +1395,7 @@
           </Interior>
           <Sheathing code='4'>
             <English>Plywood/Particle board 9.5 mm (3/8 in)</English>
-            <French>Contreplaqué/pan. part. 9.5 mm (3/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 9.5 mm (3/8 po)</French>
           </Sheathing>
           <Exterior code='0'>
             <English>None</English>
@@ -1407,7 +1407,7 @@
           </DropFraming>
         </Layers>
       </Code>
-      <Code id='33' value='3221a00000' nominalRValue='4.9301'>
+      <Code id='Code 33' value='3221a00000' nominalRValue='4.9301'>
         <Label>NewCode</Label>
         <Description>New code description</Description>
         <Layers>
@@ -1449,7 +1449,7 @@
           </DropFraming>
         </Layers>
       </Code>
-      <Code id='34' value='3231AC8B00' nominalRValue='6.6491'>
+      <Code id='Code 34' value='3231AC8B00' nominalRValue='6.6491'>
         <Label>MyFloor</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1479,7 +1479,7 @@
           </Interior>
           <Sheathing code='B'>
             <English>Gypsum sheathing 12.7 mm (1/2 in)</English>
-            <French>Revêt. plaque de plâtre 12.7 mm (1/2 po)</French>
+            <French>Rev├¬t. plaque de pl├ótre 12.7 mm (1/2 po)</French>
           </Sheathing>
           <Exterior code='0'>
             <English>None</English>
@@ -1493,7 +1493,7 @@
       </Code>
     </Favorite>
     <UserDefined>
-      <Code id='35' nominalRValue='8.4372'>
+      <Code id='Code 35' nominalRValue='8.4372'>
         <Label>stdflr</Label>
         <Description>standard test floor</Description>
         <Layers>
@@ -1501,11 +1501,11 @@
             <Material>
               <Category code='2'>
                 <English>Masonry/stucco</English>
-                <French>Maçonnerie/stucco</French>
+                <French>Ma├ºonnerie/stucco</French>
               </Category>
               <Type code='D'>
-                <English>Mortar (1920 kg/m³, 120 lb/ft³)</English>
-                <French>Mortier (1920 kg/m³, 120 lb/pi³)</French>
+                <English>Mortar (1920 kg/m┬│, 120 lb/ft┬│)</English>
+                <French>Mortier (1920 kg/m┬│, 120 lb/pi┬│)</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -1524,7 +1524,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -1535,8 +1535,8 @@
                   <French>de bourrage</French>
                 </Category>
                 <Type code='2'>
-                  <English>Loose/blown cellullose (37-51 kg/m³, 2.3-3.2 lb/ft³)</English>
-                  <French>Cellulose, granulé/inj.(37-51 kg/m³, 2.3-3.2 lb/pi³)</French>
+                  <English>Loose/blown cellullose (37-51 kg/m┬│, 2.3-3.2 lb/ft┬│)</English>
+                  <French>Cellulose, granul├®/inj.(37-51 kg/m┬│, 2.3-3.2 lb/pi┬│)</French>
                 </Type>
               </Material>
             </CavityInsulation>
@@ -1545,11 +1545,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='7'>
                 <English>Waferboard/Oriented strand board</English>
-                <French>Panneau de copeaux/de copeaux orientés</French>
+                <French>Panneau de copeaux/de copeaux orient├®s</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -1571,7 +1571,7 @@
   </Floor>
   <Lintel>
     <Favorite>
-      <Code id='36' value='101' nominalRValue='0'>
+      <Code id='Code 36' value='101' nominalRValue='0'>
         <Label>L1</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1585,11 +1585,11 @@
           </Material>
           <Insulation code='1'>
             <English>Same as wall framing cavity</English>
-            <French>Même charp. du mur creux</French>
+            <French>M├¬me charp. du mur creux</French>
           </Insulation>
         </Layers>
       </Code>
-      <Code id='37' value='100' nominalRValue='0'>
+      <Code id='Code 37' value='100' nominalRValue='0'>
         <Label>L0</Label>
         <Description>unisulated double wood lintel</Description>
         <Layers>
@@ -1607,7 +1607,7 @@
           </Insulation>
         </Layers>
       </Code>
-      <Code id='38' value='101' nominalRValue='0'>
+      <Code id='Code 38' value='101' nominalRValue='0'>
         <Label>L2</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1621,7 +1621,7 @@
           </Material>
           <Insulation code='1'>
             <English>Same as wall framing cavity</English>
-            <French>Même charp. du mur creux</French>
+            <French>M├¬me charp. du mur creux</French>
           </Insulation>
         </Layers>
       </Code>
@@ -1629,7 +1629,7 @@
   </Lintel>
   <Window>
     <Favorite>
-      <Code id='39' value='421214' nominalRValue='0'>
+      <Code id='Code 39' value='421214' nominalRValue='0'>
         <Label>Win4scLE2_tr</Label>
         <Description>North Wnd4 - Trp, LE2 Sc</Description>
         <Layers>
@@ -1651,7 +1651,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -1659,7 +1659,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='40' value='200022' nominalRValue='0'>
+      <Code id='Code 40' value='200022' nominalRValue='0'>
         <Label>SldDr</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1677,7 +1677,7 @@
           </FillType>
           <SpacerType code='0'>
             <English>Metal</English>
-            <French>Métal</French>
+            <French>M├®tal</French>
           </SpacerType>
           <Type code='2'>
             <English>Slider with sash</English>
@@ -1689,7 +1689,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='41' value='234214' nominalRValue='0'>
+      <Code id='Code 41' value='234214' nominalRValue='0'>
         <Label>DblLeHcArg</Label>
         <Description>DoubleLowEHardCoatArgFill</Description>
         <Layers>
@@ -1711,7 +1711,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -1719,7 +1719,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='42' value='224014' nominalRValue='0'>
+      <Code id='Code 42' value='224014' nominalRValue='0'>
         <Label>DblLeScArg</Label>
         <Description>DoubleLowESoftCoatArgFill</Description>
         <Layers>
@@ -1737,11 +1737,11 @@
           </FillType>
           <SpacerType code='0'>
             <English>Metal</English>
-            <French>Métal</French>
+            <French>M├®tal</French>
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -1749,7 +1749,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='43' value='223224' nominalRValue='0'>
+      <Code id='Code 43' value='223224' nominalRValue='0'>
         <Label>vinyl slider</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1779,7 +1779,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='44' value='321214' nominalRValue='0'>
+      <Code id='Code 44' value='321214' nominalRValue='0'>
         <Label>Win2scLE1_tr</Label>
         <Description>North Wnd1 - Trp, LE1 Sc</Description>
         <Layers>
@@ -1801,7 +1801,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -1809,7 +1809,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='45' value='200002' nominalRValue='0'>
+      <Code id='Code 45' value='200002' nominalRValue='0'>
         <Label>WndW</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1827,7 +1827,7 @@
           </FillType>
           <SpacerType code='0'>
             <English>Metal</English>
-            <French>Métal</French>
+            <French>M├®tal</French>
           </SpacerType>
           <Type code='0'>
             <English>Picture</English>
@@ -1839,7 +1839,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='46' value='233214' nominalRValue='0'>
+      <Code id='Code 46' value='233214' nominalRValue='0'>
         <Label>Vinyl Hinged Low E -20h Estar</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1861,7 +1861,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -1869,7 +1869,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='47' value='223224' nominalRValue='0'>
+      <Code id='Code 47' value='223224' nominalRValue='0'>
         <Label>slider</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1899,7 +1899,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='48' value='223205' nominalRValue='0'>
+      <Code id='Code 48' value='223205' nominalRValue='0'>
         <Label>DoorWinDef</Label>
         <Description>Def Door Win - Dbl, LowE, Ar</Description>
         <Layers>
@@ -1925,11 +1925,11 @@
           </Type>
           <FrameMaterial code='5'>
             <English>Reinforced vinyl</English>
-            <French>Vinyle renforcé</French>
+            <French>Vinyle renforc├®</French>
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='49' value='301014' nominalRValue='0'>
+      <Code id='Code 49' value='301014' nominalRValue='0'>
         <Label>Wind1_trp_CL</Label>
         <Description>North Wnd1 - Triple clear</Description>
         <Layers>
@@ -1947,11 +1947,11 @@
           </FillType>
           <SpacerType code='0'>
             <English>Metal</English>
-            <French>Métal</French>
+            <French>M├®tal</French>
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -1959,7 +1959,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='50' value='223204' nominalRValue='0'>
+      <Code id='Code 50' value='223204' nominalRValue='0'>
         <Label>picture</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -1989,7 +1989,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='51' value='231214' nominalRValue='0'>
+      <Code id='Code 51' value='231214' nominalRValue='0'>
         <Label>DblLeHcAir</Label>
         <Description>DoubleLowEHardCoatAirFill</Description>
         <Layers>
@@ -2011,7 +2011,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -2019,7 +2019,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='52' value='233204' nominalRValue='0'>
+      <Code id='Code 52' value='233204' nominalRValue='0'>
         <Label>Vinyl Picture low E -20</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -2049,7 +2049,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='53' value='223204' nominalRValue='0'>
+      <Code id='Code 53' value='223204' nominalRValue='0'>
         <Label>330204</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -2079,7 +2079,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='54' value='321214' nominalRValue='0'>
+      <Code id='Code 54' value='321214' nominalRValue='0'>
         <Label>Win3hcLE1_tr</Label>
         <Description>North Wnd3 - Trp, LE1 Hc</Description>
         <Layers>
@@ -2101,7 +2101,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -2109,7 +2109,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='55' value='223214' nominalRValue='0'>
+      <Code id='Code 55' value='223214' nominalRValue='0'>
         <Label>casement</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -2131,7 +2131,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -2139,7 +2139,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='56' value='273255' nominalRValue='0'>
+      <Code id='Code 56' value='273255' nominalRValue='0'>
         <Label>SkylightDef</Label>
         <Description>Default skylight-Dbl,LowE,Ar</Description>
         <Layers>
@@ -2149,7 +2149,7 @@
           </GlazingTypes>
           <CoatingsTints code='7'>
             <English>Tint + Low-E .10</English>
-            <French>Teinté + faible E .10</French>
+            <French>Teint├® + faible E .10</French>
           </CoatingsTints>
           <FillType code='3'>
             <English>13 mm Argon</English>
@@ -2161,19 +2161,19 @@
           </SpacerType>
           <Type code='5'>
             <English>Skylight</English>
-            <French>Puits de lumière</French>
+            <French>Puits de lumi├¿re</French>
           </Type>
           <FrameMaterial code='5'>
             <English>Reinforced vinyl</English>
-            <French>Vinyle renforcé</French>
+            <French>Vinyle renforc├®</French>
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='57'>
+      <Code id='Code 57'>
         <Label>NewCode-1</Label>
         <Description/>
       </Code>
-      <Code id='58' value='436214' nominalRValue='0'>
+      <Code id='Code 58' value='436214' nominalRValue='0'>
         <Label>TplLeHcKry</Label>
         <Description>TripleLowEHardCoatKryFill</Description>
         <Layers>
@@ -2195,7 +2195,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -2203,7 +2203,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='59' value='426214' nominalRValue='0'>
+      <Code id='Code 59' value='426214' nominalRValue='0'>
         <Label>TplLeScKry</Label>
         <Description>TripleLowESoftCoatKryFill</Description>
         <Layers>
@@ -2225,7 +2225,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -2233,7 +2233,7 @@
           </FrameMaterial>
         </Layers>
       </Code>
-      <Code id='60' value='421214' nominalRValue='0'>
+      <Code id='Code 60' value='421214' nominalRValue='0'>
         <Label>Win5hcLE2_tr</Label>
         <Description>North Wnd5 - Trp, LE2 Hc</Description>
         <Layers>
@@ -2255,7 +2255,7 @@
           </SpacerType>
           <Type code='1'>
             <English>Hinged</English>
-            <French>à battants</French>
+            <French>├á battants</French>
           </Type>
           <FrameMaterial code='4'>
             <English>Vinyl</English>
@@ -2265,7 +2265,7 @@
       </Code>
     </Favorite>
     <UserDefined>
-      <Code id='61' nominalRValue='0'>
+      <Code id='Code 61' nominalRValue='0'>
         <Label>WorkingWindow</Label>
         <Description/>
         <Layers>
@@ -2280,7 +2280,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2293,7 +2293,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='62' nominalRValue='0'>
+      <Code id='Code 62' nominalRValue='0'>
         <Label>HG-i89-Triple-A</Label>
         <Description>Leep window - Innotech LEEP window</Description>
         <Layers>
@@ -2308,7 +2308,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2321,7 +2321,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='63' nominalRValue='0'>
+      <Code id='Code 63' nominalRValue='0'>
         <Label>MG-i89-Double</Label>
         <Description>Leep i89 double - All weather</Description>
         <Layers>
@@ -2336,7 +2336,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2349,7 +2349,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='64' nominalRValue='0'>
+      <Code id='Code 64' nominalRValue='0'>
         <Label>HG-HP-Triple</Label>
         <Description>LEEP cascadia</Description>
         <Layers>
@@ -2364,7 +2364,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2377,7 +2377,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='65' nominalRValue='0'>
+      <Code id='Code 65' nominalRValue='0'>
         <Label>YHC-W3</Label>
         <Description>Average performance triple-glazed, high SHGC</Description>
         <Layers>
@@ -2392,7 +2392,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2405,7 +2405,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='66' nominalRValue='0'>
+      <Code id='Code 66' nominalRValue='0'>
         <Label>YHC-W11</Label>
         <Description>triple</Description>
         <Layers>
@@ -2420,7 +2420,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2433,7 +2433,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='67' nominalRValue='0'>
+      <Code id='Code 67' nominalRValue='0'>
         <Label>YHC-W2</Label>
         <Description>Average performance triple-glazed, mid SHGC</Description>
         <Layers>
@@ -2448,7 +2448,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2461,7 +2461,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='68' nominalRValue='0'>
+      <Code id='Code 68' nominalRValue='0'>
         <Label>YHC-W12</Label>
         <Description>triple-glazed, high SHGC</Description>
         <Layers>
@@ -2476,7 +2476,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2489,7 +2489,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='69' nominalRValue='0'>
+      <Code id='Code 69' nominalRValue='0'>
         <Label>YHC-W5</Label>
         <Description>High performance triple-glazed, mid SHGC</Description>
         <Layers>
@@ -2504,7 +2504,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2517,7 +2517,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='70' nominalRValue='0'>
+      <Code id='Code 70' nominalRValue='0'>
         <Label>YHC-W13</Label>
         <Description>quad-glazed, high SHGC</Description>
         <Layers>
@@ -2532,7 +2532,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2545,7 +2545,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='71' nominalRValue='0'>
+      <Code id='Code 71' nominalRValue='0'>
         <Label>MG-HP-Double</Label>
         <Description>BC LEEP - star-line</Description>
         <Layers>
@@ -2560,7 +2560,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2573,7 +2573,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='72' nominalRValue='0'>
+      <Code id='Code 72' nominalRValue='0'>
         <Label>HG-avg-Double</Label>
         <Description>North-Star window</Description>
         <Layers>
@@ -2588,7 +2588,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2601,7 +2601,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='73' nominalRValue='0'>
+      <Code id='Code 73' nominalRValue='0'>
         <Label>YHC-W4</Label>
         <Description>High performance triple-glazed, low SHGC</Description>
         <Layers>
@@ -2616,7 +2616,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2629,7 +2629,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='74' nominalRValue='0'>
+      <Code id='Code 74' nominalRValue='0'>
         <Label>HG-VHG-Double</Label>
         <Description>very high gain double (All weather)</Description>
         <Layers>
@@ -2644,7 +2644,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2657,7 +2657,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='75' nominalRValue='0'>
+      <Code id='Code 75' nominalRValue='0'>
         <Label>YHC-W7</Label>
         <Description>Quad-glazed, low SHGC</Description>
         <Layers>
@@ -2672,7 +2672,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2685,7 +2685,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='76' nominalRValue='0'>
+      <Code id='Code 76' nominalRValue='0'>
         <Label>NBC-zone7A-window</Label>
         <Description/>
         <Layers>
@@ -2700,7 +2700,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2713,7 +2713,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='77' nominalRValue='0'>
+      <Code id='Code 77' nominalRValue='0'>
         <Label>NBC-zone7B-window</Label>
         <Description/>
         <Layers>
@@ -2728,7 +2728,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2741,7 +2741,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='78' nominalRValue='0'>
+      <Code id='Code 78' nominalRValue='0'>
         <Label>YHC-W6</Label>
         <Description>High performance triple-glazed, high SHGC</Description>
         <Layers>
@@ -2756,7 +2756,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2769,7 +2769,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='79' nominalRValue='0'>
+      <Code id='Code 79' nominalRValue='0'>
         <Label>NBC-zone4-window</Label>
         <Description/>
         <Layers>
@@ -2784,7 +2784,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2797,7 +2797,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='80' nominalRValue='0'>
+      <Code id='Code 80' nominalRValue='0'>
         <Label>YHC-W9</Label>
         <Description>Quad-glazed, high SHGC</Description>
         <Layers>
@@ -2812,7 +2812,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2825,7 +2825,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='81' nominalRValue='0'>
+      <Code id='Code 81' nominalRValue='0'>
         <Label>LG-HP-Double</Label>
         <Description>BC LEEP - Westeck Double </Description>
         <Layers>
@@ -2840,7 +2840,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2853,7 +2853,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='82' nominalRValue='0'>
+      <Code id='Code 82' nominalRValue='0'>
         <Label>YHC-W8</Label>
         <Description>Quad-glazed, mid SHGC</Description>
         <Layers>
@@ -2868,7 +2868,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -2881,7 +2881,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='83' nominalRValue='0'>
+      <Code id='Code 83' nominalRValue='0'>
         <Label>NBC-zone8-Doorwindow</Label>
         <Description/>
         <Layers>
@@ -2909,7 +2909,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='84' nominalRValue='0'>
+      <Code id='Code 84' nominalRValue='0'>
         <Label>NBC-zone6-Doorwindow</Label>
         <Description/>
         <Layers>
@@ -2937,7 +2937,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='85' nominalRValue='0'>
+      <Code id='Code 85' nominalRValue='0'>
         <Label>NBC-zone5-Doorwindow</Label>
         <Description/>
         <Layers>
@@ -2965,7 +2965,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='86' nominalRValue='0'>
+      <Code id='Code 86' nominalRValue='0'>
         <Label>NBC-zone4-Doorwindow</Label>
         <Description/>
         <Layers>
@@ -2993,7 +2993,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='87' nominalRValue='0'>
+      <Code id='Code 87' nominalRValue='0'>
         <Label>HG-avg-Triple</Label>
         <Description>Reference triple from NWTHC work</Description>
         <Layers>
@@ -3008,7 +3008,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3021,7 +3021,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='88' nominalRValue='0'>
+      <Code id='Code 88' nominalRValue='0'>
         <Label>LG-i89-Triple-B</Label>
         <Description>Innotech window</Description>
         <Layers>
@@ -3036,7 +3036,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3049,7 +3049,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='89' nominalRValue='0'>
+      <Code id='Code 89' nominalRValue='0'>
         <Label>LG-i89-Triple-A</Label>
         <Description>Westeck - LEEP data </Description>
         <Layers>
@@ -3064,7 +3064,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3077,7 +3077,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='90' nominalRValue='0'>
+      <Code id='Code 90' nominalRValue='0'>
         <Label>LG-HP-Triple</Label>
         <Description>Sampe High-performance triple (innotech)</Description>
         <Layers>
@@ -3092,7 +3092,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3105,7 +3105,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='91' nominalRValue='0'>
+      <Code id='Code 91' nominalRValue='0'>
         <Label>NBC-zone6-window</Label>
         <Description/>
         <Layers>
@@ -3120,7 +3120,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3133,7 +3133,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='92' nominalRValue='0'>
+      <Code id='Code 92' nominalRValue='0'>
         <Label>LG-avg-Triple</Label>
         <Description>Typical triple (from NWTHC retrofit work)</Description>
         <Layers>
@@ -3148,7 +3148,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3161,7 +3161,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='93' nominalRValue='0'>
+      <Code id='Code 93' nominalRValue='0'>
         <Label>HG-i89-Triple-B</Label>
         <Description>LEEP bc window - all weather</Description>
         <Layers>
@@ -3176,7 +3176,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3189,7 +3189,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='94' nominalRValue='0'>
+      <Code id='Code 94' nominalRValue='0'>
         <Label>NBC-zone5-window</Label>
         <Description/>
         <Layers>
@@ -3204,7 +3204,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3217,7 +3217,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='95' nominalRValue='0'>
+      <Code id='Code 95' nominalRValue='0'>
         <Label>LG-avg-Double</Label>
         <Description/>
         <Layers>
@@ -3232,7 +3232,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3245,7 +3245,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='96' nominalRValue='0'>
+      <Code id='Code 96' nominalRValue='0'>
         <Label>NBC-zone8-window</Label>
         <Description/>
         <Layers>
@@ -3260,7 +3260,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3273,7 +3273,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='97' nominalRValue='0'>
+      <Code id='Code 97' nominalRValue='0'>
         <Label>YHC-W1</Label>
         <Description>Average performance triple-glazed, low SHGC</Description>
         <Layers>
@@ -3288,7 +3288,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='2'>
               <English>Argon</English>
@@ -3301,7 +3301,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='98' nominalRValue='0'>
+      <Code id='Code 98' nominalRValue='0'>
         <Label>NBC-zone7B-Doorwindow</Label>
         <Description/>
         <Layers>
@@ -3329,7 +3329,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='99' nominalRValue='0'>
+      <Code id='Code 99' nominalRValue='0'>
         <Label>NBC-zone7A-Doorwindow</Label>
         <Description/>
         <Layers>
@@ -3357,7 +3357,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='100' nominalRValue='0'>
+      <Code id='Code 100' nominalRValue='0'>
         <Label>MagicWindow</Label>
         <Description/>
         <Layers>
@@ -3372,7 +3372,7 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
-              <French>à battant</French>
+              <French>├á battant</French>
             </WindowStyle>
             <FillGas code='1'>
               <English>Air</English>
@@ -3385,7 +3385,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='101' nominalRValue='0'>
+      <Code id='Code 101' nominalRValue='0'>
         <Label>YHC-W10</Label>
         <Description>Quad-glazed, high SHGC</Description>
         <Layers>
@@ -3400,6 +3400,34 @@
             </OverallThermalResistance>
             <WindowStyle code='2'>
               <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='3'>
+              <English>Hard Coat</English>
+              <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 102' nominalRValue='1'>
+        <Label>TST-Win-102</Label>
+        <Description>test description</Description>
+        <Layers>
+          <Window frameHeight='10' shgc='0.2' rank='1'>
+            <GlazingType code='2'>
+              <English>NA</English>
+              <French>NA</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.0'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='1'>
+              <English>Casement</English>
               <French>à battant</French>
             </WindowStyle>
             <FillGas code='2'>
@@ -3413,191 +3441,216 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='118' nominalRValue='0'>
+      <Code id='Code 103' nominalRValue='1'>
+        <Label>TST-Win-103</Label>
+        <Description>test description</Description>
+        <Layers>
+          <Window frameHeight='10' shgc='0.5' rank='1'>
+            <GlazingType code='2'>
+              <English>NA</English>
+              <French>NA</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.0'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='1'>
+              <English>Casement</English>
+              <French>à battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='3'>
+              <English>Hard Coat</English>
+              <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 104' nominalRValue='1'>
+        <Label>TST-Win-104</Label>
+        <Description>test description</Description>
+        <Layers>
+          <Window frameHeight='10' shgc='0.2' rank='1'>
+            <GlazingType code='2'>
+              <English>NA</English>
+              <French>NA</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.4'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='1'>
+              <English>Casement</English>
+              <French>à battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='3'>
+              <English>Hard Coat</English>
+              <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 105' nominalRValue='1'>
+        <Label>TST-Win-105</Label>
+        <Description>test description</Description>
+        <Layers>
+          <Window frameHeight='10' shgc='0.5' rank='1'>
+            <GlazingType code='2'>
+              <English>NA</English>
+              <French>NA</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.4'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='1'>
+              <English>Casement</English>
+              <French>à battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='3'>
+              <English>Hard Coat</English>
+              <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 106' nominalRValue='1'>
+        <Label>TST-Win-106</Label>
+        <Description>test description</Description>
+        <Layers>
+          <Window frameHeight='10' shgc='0.2' rank='1'>
+            <GlazingType code='2'>
+              <English>NA</English>
+              <French>NA</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.8'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='1'>
+              <English>Casement</English>
+              <French>à battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='3'>
+              <English>Hard Coat</English>
+              <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 107' nominalRValue='1'>
+        <Label>TST-Win-107</Label>
+        <Description>test description</Description>
+        <Layers>
+          <Window frameHeight='10' shgc='0.5' rank='1'>
+            <GlazingType code='2'>
+              <English>NA</English>
+              <French>NA</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.8'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='1'>
+              <English>Casement</English>
+              <French>à battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='3'>
+              <English>Hard Coat</English>
+              <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 118' nominalRValue='0'>
         <Label>NC-2g-HG-u1.82</Label>
         <Description>2 pane; clear; argon fill; U=1.82</Description>
         <Layers>
-          <Window frameHeight='0' shgc='0.5' rank='1'>
-            <GlazingType code='2'>
+          <WindowLegacy frameHeight='10' shgc='0.5' rank='1'>
+            <Type code='1'>
               <English/>
               <French/>
-            </GlazingType>
-            <OverallThermalResistance code='2' value='1.82'>
-              <English/>
-              <French/>
-            </OverallThermalResistance>
-            <WindowStyle code='2'>
-              <English/>
-              <French/>
-            </WindowStyle>
-            <FillType code='2'>
-              <English/>
-              <French/>
-            </FillType>
-            <SpacerType code='2'>
-              <English/>
-              <French/>
-            </SpacerType>
-            <FrameMaterial code='2'>
-              <English/>
-              <French/>
-            </FrameMaterial>
-            <LowECoating code='3'>
-              <English/>
-              <French/>
-            </LowECoating>
-          </Window>
+            </Type>
+            <RsiValues centreOfGlass='0.5495' edgeOfGlass='0.5495' frame='0.5495'/>
+          </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='119' nominalRValue='0'>
+      <Code id='Code 119' nominalRValue='0'>
         <Label>NC-2g-HG-u1.65</Label>
         <Description>2 pane; LowE-HighGain; argon fill; U=1.65</Description>
         <Layers>
-          <Window frameHeight='0' shgc='0.51' rank='1'>
-            <GlazingType code='2'>
+          <WindowLegacy frameHeight='10' shgc='0.51' rank='1'>
+            <Type code='1'>
               <English/>
               <French/>
-            </GlazingType>
-            <OverallThermalResistance code='2' value='1.65'>
-              <English/>
-              <French/>
-            </OverallThermalResistance>
-            <WindowStyle code='2'>
-              <English/>
-              <French/>
-            </WindowStyle>
-            <FillType code='2'>
-              <English/>
-              <French/>
-            </FillType>
-            <SpacerType code='2'>
-              <English/>
-              <French/>
-            </SpacerType>
-            <FrameMaterial code='2'>
-              <English/>
-              <French/>
-            </FrameMaterial>
-            <LowECoating code='3'>
-              <English/>
-              <French/>
-            </LowECoating>
-          </Window>
+            </Type>
+            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
+          </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='120' nominalRValue='0'>
+      <Code id='Code 120' nominalRValue='0'>
         <Label>NC-2g-LG-u1.65</Label>
         <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
         <Layers>
-          <Window frameHeight='0' shgc='0.19' rank='1'>
-            <GlazingType code='2'>
+          <WindowLegacy frameHeight='10' shgc='0.19' rank='1'>
+            <Type code='1'>
               <English/>
               <French/>
-            </GlazingType>
-            <OverallThermalResistance code='2' value='1.65'>
-              <English/>
-              <French/>
-            </OverallThermalResistance>
-            <WindowStyle code='2'>
-              <English/>
-              <French/>
-            </WindowStyle>
-            <FillType code='2'>
-              <English/>
-              <French/>
-            </FillType>
-            <SpacerType code='2'>
-              <English/>
-              <French/>
-            </SpacerType>
-            <FrameMaterial code='2'>
-              <English/>
-              <French/>
-            </FrameMaterial>
-            <LowECoating code='3'>
-              <English/>
-              <French/>
-            </LowECoating>
-          </Window>
+            </Type>
+            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
+          </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='121' nominalRValue='0'>
+      <Code id='Code 121' nominalRValue='0'>
         <Label>NC-3g-LG-u1.14</Label>
         <Description>3 pane; LowE-LowGain; argon fill; U=1.14</Description>
         <Layers>
-          <Window frameHeight='0' shgc='0.17' rank='1'>
-            <GlazingType code='4'>
+          <WindowLegacy frameHeight='10' shgc='0.17' rank='1'>
+            <Type code='1'>
               <English/>
               <French/>
-            </GlazingType>
-            <OverallThermalResistance code='2' value='1.14'>
-              <English/>
-              <French/>
-            </OverallThermalResistance>
-            <WindowStyle code='2'>
-              <English/>
-              <French/>
-            </WindowStyle>
-            <FillType code='2'>
-              <English/>
-              <French/>
-            </FillType>
-            <SpacerType code='2'>
-              <English/>
-              <French/>
-            </SpacerType>
-            <FrameMaterial code='2'>
-              <English/>
-              <French/>
-            </FrameMaterial>
-            <LowECoating code='3'>
-              <English/>
-              <French/>
-            </LowECoating>
-          </Window>
+            </Type>
+            <RsiValues centreOfGlass='0.8772' edgeOfGlass='0.8772' frame='0.8772'/>
+          </WindowLegacy>
         </Layers>
       </Code>
       <Code id='Code 122' nominalRValue='0'>
         <Label>NC-3g-HG-u1.08</Label>
         <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
         <Layers>
-          <Window frameHeight='0' shgc='0.44' rank='1'>
-            <GlazingType code='4'>
+          <WindowLegacy frameHeight='10' shgc='0.44' rank='1'>
+            <Type code='1'>
               <English/>
               <French/>
-            </GlazingType>
-            <OverallThermalResistance code='2' value='1.08'>
-              <English/>
-              <French/>
-            </OverallThermalResistance>
-            <WindowStyle code='2'>
-              <English/>
-              <French/>
-            </WindowStyle>
-            <FillType code='2'>
-              <English/>
-              <French/>
-            </FillType>
-            <SpacerType code='2'>
-              <English/>
-              <French/>
-            </SpacerType>
-            <FrameMaterial code='2'>
-              <English/>
-              <French/>
-            </FrameMaterial>
-            <LowECoating code='3'>
-              <English/>
-              <French/>
-            </LowECoating>
-          </Window>
+            </Type>
+            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
+          </WindowLegacy>
         </Layers>
       </Code>
     </UserDefined>
   </Window>
   <FloorsAbove>
     <Favorite>
-      <Code id='102' value='4511001660' nominalRValue='0'>
+      <Code id='Code 102' value='4511001660' nominalRValue='0'>
         <Label>I Joist2x11@16"OC,5/8OSB</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -3623,11 +3676,11 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='6'>
             <English>Plywood/Particle board 15.5 mm (5/8 in)</English>
-            <French>Contreplaqué/pan. part. 15.5 mm (5/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 15.5 mm (5/8 po)</French>
           </Sheathing>
           <Exterior code='6'>
             <English>Wood</English>
@@ -3643,7 +3696,7 @@
   </FloorsAbove>
   <FloorsAdded>
     <Favorite>
-      <Code id='103' value='21T44' nominalRValue='3.87'>
+      <Code id='Code 103' value='21T44' nominalRValue='3.87'>
         <Label>SlabRaisedFlr</Label>
         <Description/>
         <Layers>
@@ -3661,11 +3714,11 @@
           </Insulation>
           <InteriorFinish code='4'>
             <English>Tile-linoleum</English>
-            <French>Carreau de linoléum</French>
+            <French>Carreau de linol├®um</French>
           </InteriorFinish>
           <Sheathing code='4'>
             <English>Plywood/Particle board 9.5 mm (3/8 in)</English>
-            <French>Contreplaqué/pan. part. 9.5 mm (3/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 9.5 mm (3/8 po)</French>
           </Sheathing>
         </Layers>
       </Code>
@@ -3673,7 +3726,7 @@
   </FloorsAdded>
   <BasementWall>
     <Favorite>
-      <Code id='104' value='210201' nominalRValue='2.11'>
+      <Code id='Code 104' value='210201' nominalRValue='2.11'>
         <Label>BsmWllR12</Label>
         <Description>R12 Basement Wall (OBC min)</Description>
         <Layers>
@@ -3699,11 +3752,11 @@
           </ExtraInsulationLayer>
           <InteriorFinish code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </InteriorFinish>
         </Layers>
       </Code>
-      <Code id='105' value='210K01' nominalRValue='1.6992'>
+      <Code id='Code 105' value='210K01' nominalRValue='1.6992'>
         <Label>BWall</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -3729,11 +3782,11 @@
           </ExtraInsulationLayer>
           <InteriorFinish code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </InteriorFinish>
         </Layers>
       </Code>
-      <Code id='106' value='200400' nominalRValue='2.4602'>
+      <Code id='Code 106' value='200400' nominalRValue='2.4602'>
         <Label>favbsm</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -3763,7 +3816,7 @@
           </InteriorFinish>
         </Layers>
       </Code>
-      <Code id='107' value='330301' nominalRValue='3.2421'>
+      <Code id='Code 107' value='330301' nominalRValue='3.2421'>
         <Label>2x6 w. R20 batt</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -3789,13 +3842,13 @@
           </ExtraInsulationLayer>
           <InteriorFinish code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </InteriorFinish>
         </Layers>
       </Code>
     </Favorite>
     <UserDefined>
-      <Code id='108' nominalRValue='3.2421'>
+      <Code id='Code 108' nominalRValue='3.2421'>
         <Label>2x6BIW</Label>
         <Description/>
         <Layers>
@@ -3814,7 +3867,7 @@
                 </Category>
                 <Type code='5'>
                   <English>Hem-fir, spruce, pine, fir (SPF)</English>
-                  <French>Pruche, épinette, sapin</French>
+                  <French>Pruche, ├®pinette, sapin</French>
                 </Type>
               </Material>
             </Framing>
@@ -3822,7 +3875,7 @@
               <Material>
                 <Category code='1'>
                   <English>Glass/mineral fibre</English>
-                  <French>Fibre de verre/minérale densité ordinaire</French>
+                  <French>Fibre de verre/min├®rale densit├® ordinaire</French>
                 </Category>
                 <Type code='5'>
                   <English>RSI 3.52 @ 152 mm (R 20 @ 6.0'') batt</English>
@@ -3835,11 +3888,11 @@
             <Material>
               <Category code='1'>
                 <English>Sheathing or board product</English>
-                <French>Produit de revêtement ou planche</French>
+                <French>Produit de rev├¬tement ou planche</French>
               </Category>
               <Type code='1'>
                 <English>Gypsum board</English>
-                <French>Plaque de plâtre</French>
+                <French>Plaque de pl├ótre</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -3849,7 +3902,7 @@
   </BasementWall>
   <CrawlspaceWall>
     <Favorite>
-      <Code id='109' value='1200201000' nominalRValue='2.11'>
+      <Code id='Code 109' value='1200201000' nominalRValue='2.11'>
         <Label>Crwl1</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -3875,7 +3928,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='0'>
             <English>None</English>
@@ -3891,7 +3944,7 @@
           </StudsCornerIntersection>
         </Layers>
       </Code>
-      <Code id='110' value='1211311110' nominalRValue='4.5477'>
+      <Code id='Code 110' value='1211311110' nominalRValue='4.5477'>
         <Label>PW1</Label>
         <Description>Pony Wall</Description>
         <Layers>
@@ -3917,7 +3970,7 @@
           </InsulationLayer2>
           <Interior code='1'>
             <English>12 mm (0.5 in) gypsum board</English>
-            <French>12 mm (0.5 po) Plaque de plâtre (P de p)</French>
+            <French>12 mm (0.5 po) Plaque de pl├ótre (P de p)</French>
           </Interior>
           <Sheathing code='1'>
             <English>Waferboard/OSB 9.5 mm (3/8 in)</English>
@@ -3935,7 +3988,7 @@
       </Code>
     </Favorite>
     <UserDefined>
-      <Code id='111' nominalRValue='1.5'>
+      <Code id='Code 111' nominalRValue='1.5'>
         <Label>RSI1.5</Label>
         <Description/>
         <Layers>
@@ -3947,7 +4000,7 @@
               </Category>
               <Type code='1'>
                 <English>Rigid glass fibre sheathing</English>
-                <French>Revêtement fibre de verre rigide</French>
+                <French>Rev├¬tement fibre de verre rigide</French>
               </Type>
             </Material>
           </ContinuousInsulation>
@@ -3955,11 +4008,11 @@
             <Material>
               <Category code='2'>
                 <English>Masonry/stucco</English>
-                <French>Maçonnerie/stucco</French>
+                <French>Ma├ºonnerie/stucco</French>
               </Category>
               <Type code='3'>
-                <English>Concrete (sand &amp; gravel) (2240 kg/m³, 140 lb/ft³)</English>
-                <French>Béton (sable et gravier) (2240 kg/m³, 140 lb/pi³)</French>
+                <English>Concrete (sand &amp; gravel) (2240 kg/m┬│, 140 lb/ft┬│)</English>
+                <French>B├®ton (sable et gravier) (2240 kg/m┬│, 140 lb/pi┬│)</French>
               </Type>
             </Material>
           </ContinuousMedium>
@@ -3969,7 +4022,7 @@
   </CrawlspaceWall>
   <FloorHeader>
     <Favorite>
-      <Code id='112' value='1800310140' nominalRValue='4.8256'>
+      <Code id='Code 112' value='1800310140' nominalRValue='4.8256'>
         <Label>HdrR20</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -3995,7 +4048,7 @@
           </Exterior>
         </Layers>
       </Code>
-      <Code id='113' value='18003B0240' nominalRValue='4.4014'>
+      <Code id='Code 113' value='18003B0240' nominalRValue='4.4014'>
         <Label>R20 Batt +1" XPS + Brick</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -4021,7 +4074,7 @@
           </Exterior>
         </Layers>
       </Code>
-      <Code id='114' value='18003B0200' nominalRValue='4.4014'>
+      <Code id='Code 114' value='18003B0200' nominalRValue='4.4014'>
         <Label>R20 batt + 1"XPS (no brick)</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -4047,7 +4100,7 @@
           </Exterior>
         </Layers>
       </Code>
-      <Code id='115' value='18003A0440' nominalRValue='4.9272'>
+      <Code id='Code 115' value='18003A0440' nominalRValue='4.9272'>
         <Label>R20 batt+2"EPSII (R27)</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -4065,7 +4118,7 @@
           </InsulationLayer2>
           <Sheathing code='4'>
             <English>Plywood/Particle board 9.5 mm (3/8 in)</English>
-            <French>Contreplaqué/pan. part. 9.5 mm (3/8 po)</French>
+            <French>Contreplaqu├®/pan. part. 9.5 mm (3/8 po)</French>
           </Sheathing>
           <Exterior code='4'>
             <English>Brick</English>
@@ -4073,7 +4126,7 @@
           </Exterior>
         </Layers>
       </Code>
-      <Code id='116' value='1800K00020' nominalRValue='1.76'>
+      <Code id='Code 116' value='1800K00020' nominalRValue='1.76'>
         <Label>BH1</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -4095,11 +4148,11 @@
           </Sheathing>
           <Exterior code='2'>
             <English>Hollow metal/vinyl cladding</English>
-            <French>Revêt. en métal creux/vinyle</French>
+            <French>Rev├¬t. en m├®tal creux/vinyle</French>
           </Exterior>
         </Layers>
       </Code>
-      <Code id='117' value='1800100520' nominalRValue='1.41'>
+      <Code id='Code 117' value='1800100520' nominalRValue='1.41'>
         <Label>WHdr</Label>
         <Description>Your comment here</Description>
         <Layers>
@@ -4117,11 +4170,11 @@
           </InsulationLayer2>
           <Sheathing code='5'>
             <English>Plywood/Particle board 12.7 mm (1/2 in)</English>
-            <French>Contreplaqué/pan. part. 12.7 mm (1/2 po)</French>
+            <French>Contreplaqu├®/pan. part. 12.7 mm (1/2 po)</French>
           </Sheathing>
           <Exterior code='2'>
             <English>Hollow metal/vinyl cladding</English>
-            <French>Revêt. en métal creux/vinyle</French>
+            <French>Rev├¬t. en m├®tal creux/vinyle</French>
           </Exterior>
         </Layers>
       </Code>
