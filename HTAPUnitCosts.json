@@ -1,11 +1,11 @@
 {
   "sources": {
     "LEEP-BC-KamloopsChesnut": {
-      "filename": "LEEP_COSTING_Sept_2016_Chesnut.csv",
+      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_Sept_2016_Chesnut.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2018-10-02 11:32:56",
+      "date_imported": "2019-01-04 20:50:54",
       "schema_used": "oldLeep",
-      "origin": "Costs used in Kamloops LEEP 2016",
+      "origin": "",
       "inherits": {
         "LEEP-ON-Ottawa": [
           "electricity_generated:microfit:rooftop_solar",
@@ -95,7 +95,7 @@
           "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat",
           "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats",
           "incandescent_bulb",
-          "compact_fluorescent_lighting",
+          "cfl",
           "led",
           "standard_manual_switches",
           "automated_switches",
@@ -159,11 +159,11 @@
       }
     },
     "LEEP-BC-Vancouver": {
-      "filename": "LEEP_COSTING_BC-vancouver_V1.0.csv",
+      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_BC-vancouver_V1.0.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2018-10-02 11:32:55",
+      "date_imported": "2019-01-04 20:50:52",
       "schema_used": "oldLeep",
-      "origin": "Costs used in Vancouver LEEP 2016",
+      "origin": "",
       "inherits": {
         "LEEP-ON-Ottawa": [
           "natural_gas_savings",
@@ -259,7 +259,7 @@
           "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_1_thermostat",
           "air_handler:3-zone:17.5_kw_@_140of_ewt_incl._ecm_motor_&_3_thermostats",
           "incandescent_bulb",
-          "compact_fluorescent_lighting",
+          "cfl",
           "led",
           "standard_manual_switches",
           "automated_switches",
@@ -295,11 +295,11 @@
       }
     },
     "LEEP-MB-Winnipeg": {
-      "filename": "LEEP_Costing_MB_winnipeg.csv",
+      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_Costing_MB_winnipeg.csv",
       "date_collated": "2014-09-01",
-      "date_imported": "2018-10-02 11:32:54",
+      "date_imported": "2019-01-04 20:50:51",
       "schema_used": "oldLeep",
-      "origin": "Costs used in MB LEEP 2014",
+      "origin": "",
       "inherits": {
         "LEEP-ON-Ottawa": [
           "upgrading_from_3.57ach_to_1.75",
@@ -339,18 +339,27 @@
       }
     },
     "LEEP-ON-Ottawa": {
-      "filename": "LEEP_COSTING_ottawa_V1.4.csv",
+      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_ottawa_V1.4.csv",
       "date_collated": "2013-09-01",
-      "date_imported": "2018-10-02 11:32:53",
+      "date_imported": "2019-01-04 20:50:49",
       "schema_used": "oldLeep",
-      "origin": "Costs used in Ottawa LEEP 2013",
+      "origin": "",
+      "inherits": {
+      }
+    },
+    "MiscNRCanEstimates2019": {
+      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\misc-cost-data.csv",
+      "date_collated": "2019-01-04",
+      "date_imported": "2019-01-04 20:50:58",
+      "schema_used": "oldLeep",
+      "origin": "NRCan - collected cost estimates from in-house research",
       "inherits": {
       }
     },
     "VancouverAirSealData": {
-      "filename": "E3-air-sealing.csv",
+      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\E3-air-sealing.csv",
       "date_collated": "2015-01-15",
-      "date_imported": "2019-01-03 12:28:05",
+      "date_imported": "2019-01-04 20:50:56",
       "schema_used": "oldLeep",
       "origin": "Halbig 2015, Air-Barrier details, Report for NRCan. E3 Consulting",
       "inherits": {
@@ -820,6 +829,18 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
+    "cfl": {
+      "LEEP-ON-Ottawa": {
+        "category": "LIGHTING",
+        "description": "CFL",
+        "units": "ea",
+        "UnitCostMaterials": 4.08,
+        "UnitCostLabour": 0.0,
+        "note": "Terry Strack report",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      }
+    },
     "compact_fluorescent_lighting": {
       "LEEP-MB-Winnipeg": {
         "category": "LIGHTING",
@@ -830,16 +851,6 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
-      },
-      "LEEP-ON-Ottawa": {
-        "category": "LIGHTING",
-        "description": "CFL",
-        "units": "ea",
-        "UnitCostMaterials": 4.08,
-        "UnitCostLabour": 0.0,
-        "note": "Terry Strack report",
-        "date": "n.d.",
-        "source": "LEEP-ON-Ottawa"
       }
     },
     "concrete_cast-in-place_foundation_wall:203mm:excluding_footings": {
@@ -874,18 +885,28 @@
         "note": "Hanscomb final report",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "Copper pipe to and from DWHR and DHW systems",
+        "units": "linear feet",
+        "UnitCostMaterials": 2.39,
+        "UnitCostLabour": 5.02,
+        "note": "Adjusted materials costs, based on supplier searc",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
-    "copper_pipe_to_and_from_dwhr_and_dhw_systems:15ft-total-run": {
-      "LEEP-ON-Ottawa": {
+    "copper_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run": {
+      "MiscNRCanEstimates2019": {
         "category": "DRAIN WATER HEAT RECOVERY",
-        "description": "Copper pipe to and from DWHR and DHW systems - 15 foot run",
+        "description": "Copper pipe to and from DWHR and DHW systems:15 ft run",
         "units": "ea",
-        "UnitCostMaterials": 504.75,
-        "UnitCostLabour": 75.30,
-        "note": "Hanscomb final report",
+        "UnitCostMaterials": 35.85,
+        "UnitCostLabour": 75.3,
+        "note": "Adjusted materials costs, based on supplier searc",
         "date": "n.d.",
-        "source": "LEEP-ON-Ottawa"
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "dhw_electric_tank": {
@@ -3024,6 +3045,30 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "pex_pipe_to_and_from_dwhr_and_dhw_systems": {
+      "MiscNRCanEstimates2019": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "PEX pipe to and from DWHR and DHW systems ",
+        "units": "linear feet",
+        "UnitCostMaterials": 0.27,
+        "UnitCostLabour": 5.02,
+        "note": "Adjusted materials costs, based on supplier searc",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run": {
+      "MiscNRCanEstimates2019": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "PEX pipe to and from DWHR and DHW systems:15 ft run ",
+        "units": "ea",
+        "UnitCostMaterials": 4.05,
+        "UnitCostLabour": 75.3,
+        "note": "Adjusted materials costs, based on supplier searc",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "preliminary_blower_door_test:single_home": {

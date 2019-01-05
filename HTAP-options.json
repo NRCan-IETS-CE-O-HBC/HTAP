@@ -106,6 +106,7 @@
     "structure": "flat",
     "costed": false,
     "options": {
+      "as-found": "NA",
       "NA": "NA",
       "NBC9_36_noHRV": "NBC9_36_noHRV",
       "NBC9_36_HRV": "NBC9_36_HRV"
@@ -2126,14 +2127,14 @@
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-S-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-E-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-N-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-W-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-SE-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-SW-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-NE-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-NW-CON>": "NC-DG-LowE-u1.82"
+            "<Opt-win-S-CON>":  "NC-2g-HG-u1.82",
+            "<Opt-win-E-CON>":  "NC-2g-HG-u1.82",
+            "<Opt-win-N-CON>":  "NC-2g-HG-u1.82",
+            "<Opt-win-W-CON>":  "NC-2g-HG-u1.82",
+            "<Opt-win-SE-CON>": "NC-2g-HG-u1.82",
+            "<Opt-win-SW-CON>": "NC-2g-HG-u1.82",
+            "<Opt-win-NE-CON>": "NC-2g-HG-u1.82",
+            "<Opt-win-NW-CON>": "NC-2g-HG-u1.82"
           }
         },
         "costs": {
@@ -2165,14 +2166,14 @@
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-S-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-E-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-N-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-W-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-SE-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-SW-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-NE-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-NW-CON>": "NC-DG-LowE-u1.82"
+            "<Opt-win-S-CON>":  "NC-2g-HG-u1.65",
+            "<Opt-win-E-CON>":  "NC-2g-HG-u1.65",
+            "<Opt-win-N-CON>":  "NC-2g-HG-u1.65",
+            "<Opt-win-W-CON>":  "NC-2g-HG-u1.65",
+            "<Opt-win-SE-CON>": "NC-2g-HG-u1.65",
+            "<Opt-win-SW-CON>": "NC-2g-HG-u1.65",
+            "<Opt-win-NE-CON>": "NC-2g-HG-u1.65",
+            "<Opt-win-NW-CON>": "NC-2g-HG-u1.65"
           }
         },
         "costs": {
@@ -2204,14 +2205,14 @@
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-S-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-E-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-N-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-W-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-SE-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-SW-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-NE-CON>": "NC-DG-LowE-u1.82",
-            "<Opt-win-NW-CON>": "NC-DG-LowE-u1.82"
+            "<Opt-win-S-CON>":  "NC-2g-LG-u1.65",
+            "<Opt-win-E-CON>":  "NC-2g-LG-u1.65",
+            "<Opt-win-N-CON>":  "NC-2g-LG-u1.65",
+            "<Opt-win-W-CON>":  "NC-2g-LG-u1.65",
+            "<Opt-win-SE-CON>": "NC-2g-LG-u1.65",
+            "<Opt-win-SW-CON>": "NC-2g-LG-u1.65",
+            "<Opt-win-NE-CON>": "NC-2g-LG-u1.65",
+            "<Opt-win-NW-CON>": "NC-2g-LG-u1.65"
           }
         },
         "costs": {
@@ -2243,7 +2244,14 @@
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-*-CON>": "NC-3g-LG-u1.14"
+            "<Opt-win-S-CON>":  "NC-3g-LG-u1.14",
+            "<Opt-win-E-CON>":  "NC-3g-LG-u1.14",
+            "<Opt-win-N-CON>":  "NC-3g-LG-u1.14",
+            "<Opt-win-W-CON>":  "NC-3g-LG-u1.14",
+            "<Opt-win-SE-CON>": "NC-3g-LG-u1.14",
+            "<Opt-win-SW-CON>": "NC-3g-LG-u1.14",
+            "<Opt-win-NE-CON>": "NC-3g-LG-u1.14",
+            "<Opt-win-NW-CON>": "NC-3g-LG-u1.14"
           }
         },
         "costs": {
@@ -2284,7 +2292,14 @@
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-*-CON>": "NC-3g-HG-u1.08"
+            "<Opt-win-S-CON>":  "NC-3g-HG-u1.08",
+            "<Opt-win-E-CON>":  "NC-3g-HG-u1.08",
+            "<Opt-win-N-CON>":  "NC-3g-HG-u1.08",
+            "<Opt-win-W-CON>":  "NC-3g-HG-u1.08",
+            "<Opt-win-SE-CON>": "NC-3g-HG-u1.08",
+            "<Opt-win-SW-CON>": "NC-3g-HG-u1.08",
+            "<Opt-win-NE-CON>": "NC-3g-HG-u1.08",
+            "<Opt-win-NW-CON>": "NC-3g-HG-u1.08"
           }
         },
         "characteristics": {
@@ -3487,7 +3502,6 @@
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
-      "<Opt-win-*-CON>",
       "<Opt-win-S-CON>",
       "<Opt-win-E-CON>",
       "<Opt-win-N-CON>",
@@ -13111,7 +13125,7 @@
         "costs": {
           "components": [
             "dwhr_unit:91cm_supply",
-            "copper_pipe_to_and_from_dwhr_and_dhw_systems:15ft-total-run"
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
           ],
           "custom-costs": {}
         }
@@ -13168,9 +13182,8 @@
         },
         "costs": {
           "components": [
-            "Example Key-phrase: Layer1",
-            "Example Key-phrase: Layer2",
-            "Example Key-phrase: Layer3"
+            "dwhr_unit:152cm_supply",
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
           ],
           "custom-costs": {
             "ExampleScenarioA": {
