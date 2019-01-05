@@ -620,7 +620,7 @@ module H2KLibs
   # =========================================================================================
   def H2KLibs.AddWinToCodeLib(name,char,codeElements)
 
-     debug_on
+     debug_off
      result = ""
      debug_out " window #{name} has characteristics:\n #{char.pretty_inspect}"
 
@@ -631,7 +631,8 @@ module H2KLibs
        debug_out " Could not find window in lib\n"
      else
        debug_out " Found window at:\n#{exists}. Deleting...\n"
-       exit
+       codeElements[exists].delete_element("./")
+       debug_out "And now... #{H2KLibs.findCodeInLib(name,codeElements)}\n"
      end
 
      # Now (re)create the window record
@@ -652,84 +653,106 @@ module H2KLibs
 
      newWindow.elements.add("Layers")
 
-     newWindow.elements["Layers"].add_element("Window", {"frameHeight"=>0,
-                                                         "shgc"=>char["SHGC"],
-                                                         "rank" =>1  } )
+     useLegacy = true
 
+     if ( useLegacy ) then
 
-     case char["panes"]
-     when 2
-       code = 2
-     when 3
-       code = 4
-     else
-       code = 2
+       rsiVal = 1 / char["u-value"].to_f
+
+       newWindow.elements["Layers"].add_element("WindowLegacy", {"frameHeight"=>10,
+                                                                 "shgc"=>char["SHGC"],
+                                                                 "rank" =>1  } )
+
+       newWindow.elements["Layers/WindowLegacy"].add_element("Type", { "code"=>1 } )
+       newWindow.elements["Layers/WindowLegacy/Type"].add_element("English")
+       newWindow.elements["Layers/WindowLegacy/Type"].add_element("French")
+
+       newWindow.elements["Layers/WindowLegacy"].add_element("RsiValues", {"centreOfGlass" => rsiVal.round(4),
+                                                                           "edgeOfGlass" => rsiVal.round(4),
+                                                                           "frame" => rsiVal.round(4)
+                                                                          } )
      end
 
-     newWindow.elements["Layers/Window"].add_element("GlazingType", { "code"=>code } )
-     newWindow.elements["Layers/Window/GlazingType"].add_element("English")
-     newWindow.elements["Layers/Window/GlazingType"].add_element("French")
-     newWindow.elements["Layers/Window/"].add_element("OverallThermalResistance", { "code"=> 2, "value" => char["u-value"] })
-     newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("English")
-     newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("French")
-     newWindow.elements["Layers/Window"].add_element("WindowStyle", { "code"=>2 })
-     newWindow.elements["Layers/Window/WindowStyle"].add_element("English")
-     newWindow.elements["Layers/Window/WindowStyle"].add_element("French")
+     if ( ! useLegacy )then
 
-     code = -99
-     case char["fill"]
-     when "air"
-       code = 1
-     when "argon"
-       code = 2
-     when "krypton"
-       code = 6
-     else
-       code = 2
+       newWindow.elements["Layers"].add_element("Window", {"frameHeight"=>0,
+                                                           "shgc"=>char["SHGC"],
+                                                           "rank" =>1  } )
+
+
+       case char["panes"]
+       when 2
+         code = 2
+       when 3
+         code = 4
+       else
+         code = 2
+       end
+
+       newWindow.elements["Layers/Window"].add_element("GlazingType", { "code"=>code } )
+       newWindow.elements["Layers/Window/GlazingType"].add_element("English")
+       newWindow.elements["Layers/Window/GlazingType"].add_element("French")
+       newWindow.elements["Layers/Window/"].add_element("OverallThermalResistance", { "code"=> 2, "value" => char["u-value"] })
+       newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("English")
+       newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("French")
+       newWindow.elements["Layers/Window"].add_element("WindowStyle", { "code"=>2 })
+       newWindow.elements["Layers/Window/WindowStyle"].add_element("English")
+       newWindow.elements["Layers/Window/WindowStyle"].add_element("French")
+
+       code = -99
+       case char["fill"]
+       when "air"
+         code = 1
+       when "argon"
+         code = 2
+       when "krypton"
+         code = 6
+       else
+         code = 2
+       end
+
+       newWindow.elements["Layers/Window"].add_element("FillType", { "code"=> code })
+       newWindow.elements["Layers/Window/FillType"].add_element("English")
+       newWindow.elements["Layers/Window/FillType"].add_element("French")
+
+       newWindow.elements["Layers/Window"].add_element("SpacerType", { "code"=> 2})
+       newWindow.elements["Layers/Window/SpacerType"].add_element("English")
+       newWindow.elements["Layers/Window/SpacerType"].add_element("French")
+
+       code = -99
+       case char["frame"]
+       when "vinyl"
+         code = 4
+       when "wood"
+         code = 2
+       when "reinforced vinyl"
+         code = 5
+       else
+         code = 2
+       end
+
+       newWindow.elements["Layers/Window"].add_element("FrameMaterial", { "code"=> 2})
+       newWindow.elements["Layers/Window/FrameMaterial"].add_element("English")
+       newWindow.elements["Layers/Window/FrameMaterial"].add_element("French")
+
+       code = -99
+       case char["coating"]
+       when "clear"
+         code = 1
+       when "LowE-LowGain"
+         code = 2
+       when "LowE-HighGain"
+         code = 3
+       when "tint"
+         code = 4
+       else
+         code = 3
+       end
+
+       newWindow.elements["Layers/Window"].add_element("LowECoating", { "code"=> code})
+       newWindow.elements["Layers/Window/LowECoating"].add_element("English")
+       newWindow.elements["Layers/Window/LowECoating"].add_element("French")
      end
-
-     newWindow.elements["Layers/Window"].add_element("FillType", { "code"=> code })
-     newWindow.elements["Layers/Window/FillType"].add_element("English")
-     newWindow.elements["Layers/Window/FillType"].add_element("French")
-
-     newWindow.elements["Layers/Window"].add_element("SpacerType", { "code"=> 2})
-     newWindow.elements["Layers/Window/SpacerType"].add_element("English")
-     newWindow.elements["Layers/Window/SpacerType"].add_element("French")
-
-     code = -99
-     case char["frame"]
-     when "vinyl"
-       code = 4
-     when "wood"
-       code = 2
-     when "reinforced vinyl"
-       code = 5
-     else
-       code = 2
-     end
-
-     newWindow.elements["Layers/Window"].add_element("FrameMaterial", { "code"=> 2})
-     newWindow.elements["Layers/Window/FrameMaterial"].add_element("English")
-     newWindow.elements["Layers/Window/FrameMaterial"].add_element("French")
-
-     code = -99
-     case char["coating"]
-     when "clear"
-       code = 1
-     when "LowE-LowGain"
-       code = 2
-     when "LowE-HighGain"
-       code = 3
-     when "tint"
-       code = 4
-     else
-       code = 3
-     end
-
-     newWindow.elements["Layers/Window"].add_element("LowECoating", { "code"=> code})
-     newWindow.elements["Layers/Window/LowECoating"].add_element("English")
-     newWindow.elements["Layers/Window/LowECoating"].add_element("French")
-
 
      $formatter.write(newWindow, $stdout)
 
@@ -742,10 +765,10 @@ module H2KLibs
 
   def H2KLibs.getNextCodeIndex(codeElements)
 
-    debug_on
+    debug_off
     index = 0
     codeElements.each("//Code") do | code |
-      thisID = code.attributes['id']
+      thisID = "#{code.attributes['id']}"
       thisID.gsub!(/Code /,"")
 
       if ( thisID.to_i > index ) then

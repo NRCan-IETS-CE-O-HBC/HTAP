@@ -6,7 +6,8 @@ module HTAPData
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
 
-    debug_on
+    debug_off
+
     stream_out("\n\n Reading available options (#{filename})...")
     debug_out(" --------------JSON options parsing ------------ ")
     fOPTIONS = File.new(filename, "r")
@@ -44,10 +45,10 @@ module HTAPData
       #puts "> #{attribute} (#{structure}) \n"
       parsedOptions[attribute] = Hash.new
       parsedOptions[attribute] = { "type" => "internal" ,
-                                "default" => Hash.new ,
-                                "stop-on-error" => errFlag  ,
-                                "tags" => Hash.new   ,
-                                "options" => Hash.new      }
+                                   "default" => Hash.new ,
+                                   "stop-on-error" => errFlag  ,
+                                   "tags" => Hash.new   ,
+                                   "options" => Hash.new      }
 
 
 
@@ -80,9 +81,9 @@ module HTAPData
         debug_out " ........... OPTION: #{optionEntry} ............ "
 
         parsedOptions[attribute]["options"][optionEntry] = Hash.new
-        parsedOptions[attribute]["options"][optionEntry] = { "values"        => Hash.new,
-                                                         "costComponents" => Array.new,
-                                                         "costCustom"     => Hash.new }
+        parsedOptions[attribute]["options"][optionEntry] = {"values"        => Hash.new,
+                                                            "costComponents" => Array.new,
+                                                            "costCustom"     => Hash.new }
 
         # Import legacy costs (to be replaced.)
         costsComponents = Array.new
@@ -241,23 +242,24 @@ module HTAPData
     $ValidatedChoices = choices
     $order = order
 
-    debug_out ("\n  CODE: HTAPData.validate_options(options,choices,order)  \n")
-    debug_out (" choices\n")
+    debug_off
+
+    debug_out (" These choices were supplied:\n")
     choices.each do | choice, value|
 
-      debug_out (" >>> #{choice} = #{value}")
+      debug_out ("  #{choice} = #{value}\n")
 
     end
 
     # Search through options and determine if they are used in Choices file (warn if not).
+
+
     options.each do |option, ignore|
 
-
       if ( $LegacyOptionsToIgnore.include? option ) then
-
+        debug_out (" skipped legacy option #{option}\n")
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
         next
-
       end
 
       debug_out ("> option : #{option} ? = #{choices.has_key?(option)}\n");
@@ -326,7 +328,7 @@ module HTAPData
             err_out( $ThisMsg )
          else
             # Do nothing
-            debug_out ( "   - found $gOptions[\"#{attribute}\"][\"options\"][\"#{choice}\"} \n")
+            debug_out ( "   - found $gOptions[\"#{attrib}\"][\"options\"][\"#{choice}\"} \n")
 
          end
 

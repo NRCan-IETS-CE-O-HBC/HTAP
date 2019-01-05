@@ -29,6 +29,8 @@ module Costing
 
   def Costing.parseUnitCosts(unitCostFileName)
 
+    debug_off
+
     unitCostDataHash = Hash.new
 
     unitCostFile = File.read(unitCostFileName)
@@ -41,7 +43,7 @@ module Costing
 
   def Costing.getCosts(myUnitCosts,myOptions,attrib,choice,useTheseSources)
 
-    debug_on()
+
 
     debug_out(" [>] Costing.getCosts: searching cost data for #{attrib} = #{choice}\n")
 
@@ -98,6 +100,9 @@ module Costing
       # loop through the cost-components that are associated with
       # this option (in myOptions), and attempt to match myUnitCosts data
       # with requested data source (in useTheseSources )
+
+      debug_out " >>> contents of options:\n#{myOptions[attrib]["options"][choice].pretty_inspect}\n"
+
       myOptions[attrib]["options"][choice]["costComponents"].each do | component |
 
         debug_out " . . . . . . . . . . . . . . . . . . . . . . . .  . . . . . . . . . . . .  \n"
@@ -198,11 +203,7 @@ module Costing
 
 
   def Costing.computeCosts(mySpecdSrc,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-
-
-    debug_off()
-
-    debug_out (" Examining attributes and choices...\n")
+    debug_off
 
     costSourcesDBs = Array.new
     costSourcesCustom = Array.new
@@ -224,7 +225,7 @@ module Costing
       end
       debug_out " =================================================================\n"
       debug_out " #{attrib} = #{choice}\n"
-      debug_out (" + Does cost data exist for for #{attrib}? ")
+      debug_out (" + Does cost data exist for #{attrib}? ")
       myCosts["byAttribute"][attrib] = 0
 
       # Check to see if costing is supported for this attribute
@@ -234,6 +235,7 @@ module Costing
       else
         debug_out (" Yes!\n")
         debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
+
         choiceCosts = Hash.new
         choiceCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,choice,costSourcesDBs)
         #debug_out (" Costs recovered from Costing.GetCosts:\n#{choiceCosts.pretty_inspect}\n")
@@ -279,14 +281,14 @@ module Costing
 
           myCostsComponent = measure * ( materials + labour )
 
-          myCosts["total"] += myCostsComponent
+          myCosts["total"] += myCostsComponent.round(2)
 
-          myCosts["byAttribute"][attrib] += myCostsComponent
+          myCosts["byAttribute"][attrib] += myCostsComponent.round(2)
 
           if ( myCosts["bySource"][source].nil?  ) then
             myCosts["bySource"][source] = 0
           end
-          myCosts["bySource"][source] +=  myCostsComponent
+          myCosts["bySource"][source] +=  myCostsComponent.round(2)
 
           debug_out ("   Source    :   #{source}\n")
           debug_out ("   Units     :   #{units}\n")
