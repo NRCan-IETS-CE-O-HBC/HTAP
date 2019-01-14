@@ -17,34 +17,58 @@ def stream_out(msg)
   end
 end
 
+def caller_info()
+
+   parent = caller[1].clone
+
+   file = parent.clone
+   file.gsub!(/^.+\/HTAP\//,"")
+   file.gsub!(/\:[0-9]+\:.+$/,"")
+
+   line = parent.clone
+   line.gsub!(/^C:/, "")
+   line.gsub!(/^[^:]+:/, "")
+   line.gsub!(/:.+$/, "")
+
+   routine = parent.clone
+   routine.gsub!(/^.+in /,'')
+   routine.gsub!(/\'/, '')
+   routine.gsub!(/\`/, '')
+
+   indentLevel = 0
+   caller.each do | a |
+     if ( a =~ /\`each\'/ ||
+          a =~ /\`block in / ||
+          a =~ /\`block \(. levels\) in/  ||
+          a =~ /\`\<main\>/ ) then
+       # Do nothing
+     else
+       indentLevel += 1
+     end
+   end
+
+   callerID = Hash.new
+   callerID = { "file" => file, "routine" => routine, "line" => line, "level" => indentLevel }
+   return callerID
+
+end
+
+
 def debug_on()
-
-  parentRoutine = caller[0]
-
-  line = "#{parentRoutine}"
-  line.gsub!(/^C:/, "")
-  line.gsub!(/^[^:]+:/, "")
-  line.gsub!(/:.+$/, "")
-  #line.gsub(/^[^:]+:([^:]+:[^:]+$)/, "\\1")
-  parentRoutine.gsub!(/^.+in /,'')
-  parentRoutine.gsub!(/\'/, '')
-  parentRoutine.gsub!(/\`/, '')
-  $localDebug[parentRoutine] = true
-
-  debmsg = " Debugging turned on at line \# #{line.to_s}.\n"
-
-  debug_out_now(debmsg,parentRoutine,caller)
-
+  callerID = caller_info()
+  routine = callerID["routine"]
+  file =callerID["file"]
+  line = callerID["line"]
+  $localDebug[routine] = true
+  debmsg = " Debugging turned on at #{file}:#{line.to_s}.\n"
+  print "\n"
+  debug_out_now(debmsg,callerID)
   return 1
 end
 
 def debug_off()
-  parentRoutine = caller[0]
-
-  parentRoutine.gsub!(/^.+in /,'')
-  parentRoutine.gsub!(/\'/, '')
-  parentRoutine.gsub!(/\`/, '')
-  $localDebug[parentRoutine] = false
+  callerID = caller_info()
+  $localDebug[callerID["routine"]] = false
   return 0
 end
 
@@ -52,46 +76,36 @@ end
 # Write debug output ------------------------------------------------
 # =========================================================================================
 def debug_out(debmsg)
-  parentRoutine = caller[0]
-  line = caller[0]
-  parentRoutine.gsub!(/^.+in /,'')
-  parentRoutine.gsub!(/\'/, '')
-  parentRoutine.gsub!(/\`/, '')
 
-
-  if( $localDebug[parentRoutine].nil? ) then
+  callerID = caller_info()
+  if( $localDebug[callerID["routine"]].nil? ) then
     lDebug = false
   else
-    lDebug = $localDebug[parentRoutine]
+    lDebug = $localDebug[callerID["routine"]]
   end
 
   if (lDebug || $gDebug ) then
      debugCaller = Array.new
-     debugCaller = caller
-     debug_out_now( debmsg, parentRoutine, debugCaller)
+     debug_out_now( debmsg, callerID)
   end
 end
 
 
 
-def debug_out_now(debmsg, parentRoutine, debugCaller)
+def debug_out_now(debmsg, callerID)
+
   callindent = ""
-  debugCaller.each do | a |
-    if ( a =~ /\`each\'/ ||
-         a =~ /\`block in / ||
-         a =~ /\`block \(. levels\) in/  ||
-         a =~ /\`\<main\>/ ) then
-      # Do nothing
-    else
-      callindent = "#{callindent}.."
-    end
+
+  level      = callerID["level"]
+  lineNumber = callerID["line"]
+  routine    = callerID["routine"]
+
+  [1..level].each do
+    callIndent ="#{callIndent}.."
   end
 
-  line = debugCaller[0]
-  line.gsub!(/^C:/, "")
-  line.gsub!(/^[^:]+:/, "")
-  line.gsub!(/:.+$/, "")
-  linestring = line
+
+  linestring = lineNumber.to_s
   blankstring = " "
 
   fullmsg = ""
@@ -113,7 +127,7 @@ def debug_out_now(debmsg, parentRoutine, debugCaller)
 
       if first then
         first = false
-        prefix = "[d:#{callindent}#{parentRoutine}:#{linestring} ".ljust(30)
+        prefix = "[d:#{callindent}#{routine}:#{linestring} ".ljust(30)
         prefix = "#{prefix}]"
 
         if (  shortmsg =~ /^[^\s]/ ) then
@@ -181,6 +195,11 @@ def fatalerror( err_msg )
 
 # See if error string is not empty: if not, call err-out to log it
   if ( err_msg.gsub(/\s*/,'') != "") then
+    callerID = caller_info()
+    line     = callerID["line"]
+    file     = callerID["file"]
+    routine  = callerID["routine"]
+    err_msg = "#{err_msg} (fatal error called at #{routine} (#{file}:#{line})"  
     err_out(err_msg)
   end
 
