@@ -164,9 +164,22 @@ $ProvArr = [ "BRITISH COLUMBIA",
 
 
 
-$LegacyOptionsToIgnore = Set.new [ "Opt-RoofPitch", "Opt-StandoffPV", "Opt-DHWLoadScale", "Opt-HRVduct" ]
+$LegacyOptionsToIgnore = Set.new [
+  "Opt-RoofPitch",
+  "Opt-StandoffPV",
+  "Opt-DHWLoadScale",
+  "Opt-HRVduct"
+]
 
-CostingSupport = Set.new [ "Opt-Ceilings", "Opt-ACH", "Opt-CasementWindows" ]
+CostingSupport = Set.new [ "Opt-Ceilings",
+                           "Opt-AtticCeilings",
+                           "Opt-ACH",
+                           "Opt-CasementWindows",
+                           "Opt-DWHRSystem",
+                           "Opt-GenericWall_1Layer_definitions",
+                           "Opt-HVACSystem",
+                           "Opt-HRVonly"
+                         ]
 
 $gErrors = Array.new
 $gWarnings = Array.new
@@ -184,3 +197,5 @@ $caller_stack
 
 $formatter = REXML::Formatters::Pretty.new(2)
 $formatter.compact = true # This is the magic line that does what you need!
+
+$ruleSetSpecs = Hash.new

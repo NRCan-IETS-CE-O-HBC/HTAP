@@ -60,7 +60,7 @@ module HTAPData
           tagindex = tagindex + 1
           parsedOptions[attribute]["tags"][tagindex] = schemaEntry
 
-          debug_out "          #{tagindex} - #{schemaEntry}   "
+          debug_out "          #{tagindex} - #{schemaEntry}   \n"
 
         end
 
@@ -77,8 +77,8 @@ module HTAPData
       end
 
       for optionEntry in jsonRawOptions[attribute]["options"].keys
-        debug_out " "
-        debug_out " ........... OPTION: #{optionEntry} ............ "
+        debug_out " \n"
+        debug_out " ........... OPTION: #{optionEntry} ............ \n"
 
         parsedOptions[attribute]["options"][optionEntry] = Hash.new
         parsedOptions[attribute]["options"][optionEntry] = {"values"        => Hash.new,
@@ -91,26 +91,40 @@ module HTAPData
         if (   jsonRawOptions[attribute]["costed"]  &&
              ! jsonRawOptions[attribute]["options"][optionEntry]["costs"].nil?  ) then
 
+          proxy_cost = false
+          debug_out " parsing cost data for #{attribute} / #{optionEntry}:\n#{jsonRawOptions[attribute]["options"][optionEntry]["costs"].pretty_inspect} \n"
 
-          parsedOptions[attribute]["options"][optionEntry]["costComponents"] = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["components"]
-          parsedOptions[attribute]["options"][optionEntry]["costCustom"] = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["custom-costs"]
+          if ( ! jsonRawOptions[attribute]["options"][optionEntry]["costs"]["proxy"].nil? ) then
+
+             debug_out " Proxy costs detetected for #{attribute} = #{optionEntry} \n"
+             parsedOptions[attribute]["options"][optionEntry]["costProxy"] = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["proxy"]
+             proxy_cost = true
+
+          end
+
+          if ( ! jsonRawOptions[attribute]["options"][optionEntry]["costs"]["components"].nil? && ! proxy_cost ) then
+            parsedOptions[attribute]["options"][optionEntry]["costComponents"] = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["components"]
+          end
+
+          if ( ! jsonRawOptions[attribute]["options"][optionEntry]["costs"]["custom-costs"].nil? )
+            parsedOptions[attribute]["options"][optionEntry]["costCustom"] = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["custom-costs"]
+          end
           #costType = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost-type"]
           #costVal  = jsonRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost"]
 
-          costType = "total"
-          costVal  = 0
+
 
         else
-          costType = "total"
-          costVal  = 0
+
+          # do nothing - no cost data
+
         end
 
 
         # Currently only base supported.
         if ( structure.to_s =~ /tree/) then
           $values = jsonRawOptions[attribute]["options"][optionEntry]["h2kMap"]
-          debug_out" has h2kMap entries - "
-          debug_out"      #{$values["base"]} \n\n"
+          debug_out" has h2kMap entries - \n#{$values["base"].pretty_inspect}\n\n"
 
 
           valuesWithConditions = Hash.new
@@ -154,7 +168,7 @@ module HTAPData
 
   # Parse configuration / choice file
   def HTAPData.parse_choice_file(filename)
-
+    debug_off
     blk = lambda { |h,k| h[k] = Hash.new(&blk) }
     choices = Hash.new(&blk)
     order = Array.new
@@ -179,7 +193,8 @@ module HTAPData
       #debug_out ("  Line: #{$linecount} >#{$line}<\n")
 
       if ( line !~ /^\s*$/ )
-
+        debug_out ("----------------------------------------------------------")
+        debug_out ("LINE: #{line}\n")
         lineTokenValue = line.split(':')
         attribute = lineTokenValue[0]
         value = lineTokenValue[1]
@@ -199,6 +214,22 @@ module HTAPData
               order.push("GOconfig_rotate")
            end
 
+        elsif ( attribute =~ /^Opt-Ruleset/)
+
+          $ruleSetArgs = value.clone
+          ruleSet = value.clone
+
+          $ruleSetArgs.gsub!(/^.+\[(.+)\].*$/,"\\1")
+          $ruleSetArgs.split(/;/).each do |arg|
+            condition = arg.split(/=/)[0]
+            set = arg.split(/=/)[1]
+            debug_out (" #{condition} = #{set}\n")
+            $ruleSetSpecs[condition] = set
+          end
+          ruleSet.gsub!(/\[.*$/,"")
+
+          choices[attribute] = ruleSet
+          debug_out( "parsed #{attribute} -> #{value} ->#{ruleSet}\n")
         else
 
            if ( value =~ /\|/ )
@@ -262,7 +293,7 @@ module HTAPData
         next
       end
 
-      debug_out ("> option : #{option} ? = #{choices.has_key?(option)}\n");
+
 
      if ( !choices.has_key?(option)  )
 

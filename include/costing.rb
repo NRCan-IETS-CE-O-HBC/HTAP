@@ -41,9 +41,155 @@ module Costing
 
   end
 
+
+
+
+  def Costing.getCostComponentList(myOptions,myChoices,attribute,choice)
+    debug_off
+
+    componentList = Array.new
+
+    debug_out " recovering cost component list for  #{attribute} = #{choice} \n"
+
+    if ( ! myOptions[attribute]["options"][choice]["costProxy"].nil? ) then
+
+      proxyChoice = myOptions[attribute]["options"][choice]["costProxy"]
+
+      debug_out " following proxy reference #{choice}->#{proxyChoice}"
+
+      componentList = getCostComponentList(myOptions,myChoices,attribute,proxyChoice)
+
+    elsif ( ! myOptions[attribute]["options"][choice]["costComponents"].nil? )
+
+      componentList = myOptions[attribute]["options"][choice]["costComponents"]
+
+    end
+
+    return componentList
+
+  end
+
+  def Costing.solveComponentConditionals(myOptions,myChoices,attribute,component)
+    debug_off
+    if ( component.is_a?(String) ) then
+      debug_out "retuning string  #{component}"
+      return component
+    elsif ( component.is_a?(Hash) ) then
+
+      # Conditionals are defined as hashes
+      #              { "if[Opt-HVAC.inc?]": {
+      #                  "ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
+      #                  "else": "ducting:direct-duct_hrv"
+      #                }
+      #             }
+      #Attempt to process conditional
+      if ( component.keys[0] =~/if\[/ )
+        testVar = "#{component.keys[0]}"
+        testVar.gsub!(/if\[(.+)\]/, "\\1")
+          myVar = testVar.split(/\./)[0]
+          myTest = testVar.split(/\./)[1]
+
+          # Types of conditionals we support:
+          #    VAR.inc? - does VAR's current costing elements include a given component?
+          #  ...
+
+          case myTest
+          when "inc?"
+            debug_out "          Processing include conditional on #{myVar}\n"
+
+            remoteChoice = myChoices[myVar]
+
+            debug_out "          Processing include conditional on #{myVar}->#{remoteChoice}\n"
+            remoteCostList = Costing.getCostComponentList(myOptions,myChoices,myVar,remoteChoice)
+
+            # Get the components associated with myVar's final value
+
+            countConditionals = 0
+            component.each do | testType, map |
+              countConditionals +=1
+              if ( countConditionals > 1 )
+                choice = myChoices[attribute]
+                warn_out " #{attribute}/#{choice}: only one conditional statement permitted"
+              else
+                found = false
+                map.each do | search, result |
+                  debug_out "     ? does #{myVar} include unit cost #{search} ?\n"
+
+                  if ( search == "else" || search == "ELSE"  )
+                    return result
+                    found = true
+                  else
+                    remoteCostList.each do | remoteComponent |
+                       resolvedComponent = Costing.solveComponentConditionals(myOptions,myChoices,myVar,remoteComponent)
+                       return result if ( search == resolvedComponent )
+                    end
+                  end
+
+                  break if found
+
+                end
+              end
+            end
+
+          when "some other conditional syntax"
+
+          else
+            warn_out " #{attrib}/#{choice}: unknown conditional syntax for cost component"
+          end
+
+        end
+
+      end
+
+    end
+
+  # THE options file may contain nested cost references
+  # with conditionals and proxy cost statements.
+  # This function untangles these references and returns
+  # a cleaner Optiona array specifiying component costs.
+  def Costing.resolveCostingLogic(myOptions,myChoices)
+
+    debug_off
+
+    mySimplerCostTree = Hash.new
+
+
+    myOptions.each do | attribute, contents |
+      debug_out " #{attribute}..................................\n"
+
+
+      mySimplerCostTree[attribute] = { "options" => Hash.new }
+
+      contents["options"].each do | option, optionContents |
+        debug_out " .. #{option} ........................\n"
+
+        mySimplerCostTree[attribute]["options"][option] = Hash.new
+
+        rawCostList = Array.new
+        rawCostList = Costing.getCostComponentList(myOptions,myChoices,attribute,option)
+
+        componentCostList = Array.new
+        # elements inside component Cost list can be a hash, indicating embedded comditional logic
+        rawCostList.each do | component |
+
+          resolvedComponent = Costing.solveComponentConditionals(myOptions,myChoices,attribute,component)
+          componentCostList.push resolvedComponent
+
+        end
+        mySimplerCostTree[attribute]["options"][option]["costComponents"]= componentCostList
+      end
+
+
+
+    end
+
+    return mySimplerCostTree
+  end
+
   def Costing.getCosts(myUnitCosts,myOptions,attrib,choice,useTheseSources)
 
-
+    debug_off
+    debug_off if ( choice != "NA" )
 
     debug_out(" [>] Costing.getCosts: searching cost data for #{attrib} = #{choice}\n")
 
@@ -93,6 +239,10 @@ module Costing
 
     # - COMPONENT COSTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     # Now get costs from components.
+
+    # First, determine if a proxy unit has been specified.
+
+
     if ( ! done ) then
 
       debug_out ( " [x] No custom costs matched. Searching for component-by-component costs.\n")
@@ -100,8 +250,16 @@ module Costing
       # loop through the cost-components that are associated with
       # this option (in myOptions), and attempt to match myUnitCosts data
       # with requested data source (in useTheseSources )
+      proxy_cost = false
+      if ( ! myOptions[attrib]["options"][choice]["costProxy"].nil? )
 
-      debug_out " >>> contents of options:\n#{myOptions[attrib]["options"][choice].pretty_inspect}\n"
+        proxy_cost = true
+        proxy_choice = myOptions[attrib]["options"][choice]["costProxy"]
+
+        debug_out "   Proxy cost specified. Will attempt to use cost data for #{proxy_choice} ...\n"
+        myCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,proxy_choice,useTheseSources)
+        return myCosts
+      end
 
       myOptions[attrib]["options"][choice]["costComponents"].each do | component |
 
@@ -169,6 +327,7 @@ module Costing
           # find the component in myUnitCosts, and determine if it has cost
           # data that matches our source (specd || ancestor if inherited = true || arbitrary source for wildcard. )
           debug_out ("  .  proceeding to process component cost using data from #{source}  \n")
+          debug_out ("    >#{component}<\n")
 
           myUnitCosts["data"][component].keys.each do | costset |
             debug_out "  .   .  found unit cost data from `#{costset}`"
@@ -202,8 +361,10 @@ module Costing
   end
 
 
+
+
   def Costing.computeCosts(mySpecdSrc,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-    debug_off
+    debug_on
 
     costSourcesDBs = Array.new
     costSourcesCustom = Array.new
@@ -216,18 +377,25 @@ module Costing
     myCosts["byAttribute"] = Hash.new
     myCosts["bySource"] = Hash.new
 
-    myChoices.each do | attrib, choice |
+    debug_out ("Choices to be costed:\n#{myChoices.pretty_inspect}\n")
 
+
+    debug_out "  Untangling costing logic via  Costing.resolveCostingLogic(myOptions,myChoices)"
+
+    simpleCostTree = Costing.resolveCostingLogic(myOptions,myChoices)
+
+
+    myChoices.each do | attrib, choice |
+      debug_off()
       if ( CostingSupport.include? attrib )  then
-        debug_on()
-      else
-        debug_off()
+        debug_on()  if (choice != "NA" )
       end
+
       debug_out " =================================================================\n"
       debug_out " #{attrib} = #{choice}\n"
       debug_out (" + Does cost data exist for #{attrib}? ")
       myCosts["byAttribute"][attrib] = 0
-
+      componentCostsSummary = Hash.new
       # Check to see if costing is supported for this attribute
 
       if ( ! CostingSupport.include? attrib )  then
@@ -237,48 +405,98 @@ module Costing
         debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
 
         choiceCosts = Hash.new
-        choiceCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,choice,costSourcesDBs)
-        #debug_out (" Costs recovered from Costing.GetCosts:\n#{choiceCosts.pretty_inspect}\n")
+        choiceCosts = Costing.getCosts(myUnitCosts,simpleCostTree,attrib,choice,costSourcesDBs)
+        #debug_out(" Costs recovered from Costing.GetCosts:\n#{choiceCosts.pretty_inspect}\n")
 
 
         choiceCosts.keys.each do | costingElement |
 
-          debug_out " Computing costs for #{attrib}=#{choice} component [#{costingElement}]\n"
+          debug_out " Computing costs for #{attrib}=#{choice}, \n+-> component [#{costingElement}]\n"
+
+          catagory = choiceCosts[costingElement]["data"]["category"]
+          debug_out "       from catagory: #{catagory} \n"
 
           units = choiceCosts[costingElement]["data"]["units"]
           materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
           labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
           source = choiceCosts[costingElement]["data"]["source"]
 
-          measure = Float
-          case units
-          when "default" || "ea"
-            measure = 1
-          when "sf attic"
-            measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
-          when "lf wall"
+          measure = 0.to_f
 
-          when "sf wall" || "sf wall (net)"
+
+          if ( units == "default" || units == "ea" )
+            measure = 1.0
+          elsif ( units == "sf attic" )
+            measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
+          elsif ( units == "lf wall" )
+
+          elsif ( units == "sf wall" || units == "sf wall (net)" )
             measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"] ) * SF_PER_SM
-          when  "sf wall area (gross)"
+
+          elsif ( units == "sf wall area (gross)" )
             measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["gross"] ) * SF_PER_SM
 
-          when "sf applied"
-            # read the catagory to figure out what to do
-            case choiceCosts[costingElement]["data"]["category"]
-            when "WINDOWS"
-              measure = myH2KHouseInfo["dimensions"]["windows"]["area"]["total"] * SF_PER_SM
+         elsif ( units == "sf heated floor area")
+           measure =  ( myH2KHouseInfo["dimensions"]["heatedFloorArea"] ) * SF_PER_SM
+
+          elsif ( units == "sf applied" )
+            # read the option/catagory
+
+            if ( catagory == "WINDOWS" )
+
+               measure = myH2KHouseInfo["dimensions"]["windows"]["area"]["total"] * SF_PER_SM
+
+            elsif (  attrib == "Opt-GenericWall_1Layer_definitions"  &&
+                    ( catagory == "SHEATHING" || catagory == "INSULATION" )
+                ) then
+
+               measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"] ) * SF_PER_SM
 
             else
+
+               warn_out ("Don't know how to compute '#{units}' for #{costingElement}\n")
+               measure = 0.0
+
             end
 
+          elsif ( units == "kW capacity" )
+
+            if ( catagory == "ELECTRIC RESISTANCE BASEBOARDS" ) then
+              if ( myH2KHouseInfo["HVAC"]["Baseboards"]["count"].to_i == 0  ) then
+                warn_out "H2K file doesn't contain any baseboards. Can't cost #{costingElement}\n"
+              end
+              measure = myH2KHouseInfo["HVAC"]["Baseboards"]["capacity_kW"].to_f * 1.1
+
+            elsif ( catagory == "AIR CONDITIONING" ) then
+              if ( myH2KHouseInfo["HVAC"]["AirConditioner"]["count"].to_i == 0  ) then
+                warn_out "H2K file doesn't contain any air conditioners. Can't cost #{costingElement}\n"
+              end
+
+              measure = myH2KHouseInfo["HVAC"]["AirConditioner"]["capacity_kW"].to_f * 1.1
+
+            else
+               warn_out "Unknown Catagory #{catagory} for #{costingElement}"
+            end
+
+          elsif ( units == "l/s capacity")
+            if ( catagory == "HRV" ) then
+              measure = myH2KHouseInfo["HVAC"]["Ventilator"]["capacity_l/s"].to_f
+            end
 
           else
-            measure = 1
+            warn_out ("Unknown units: \"#{units}\" for #{costingElement}")
+            warn_out ("Can't cost #{costingElement}")
+            measure = 1.0
           end
 
-          # Compute costs :
+          debug_out ("   Source    :   #{source}\n")
+          debug_out ("   Units     :   #{units}\n")
+          debug_out ("   Measure   :   #{measure} (#{units})\n")
+          debug_out ("   Materials : $ #{materials.round(2)} / #{units}\n")
+          debug_out ("   Labour    : $ #{labour.round(2)} / #{units}\n")
 
+          # ===============================================================
+          # Compute costs :
           myCostsComponent = measure * ( materials + labour )
 
           myCosts["total"] += myCostsComponent.round(2)
@@ -286,25 +504,28 @@ module Costing
           myCosts["byAttribute"][attrib] += myCostsComponent.round(2)
 
           if ( myCosts["bySource"][source].nil?  ) then
-            myCosts["bySource"][source] = 0
+            myCosts["bySource"][source] = 0.0
           end
           myCosts["bySource"][source] +=  myCostsComponent.round(2)
 
-          debug_out ("   Source    :   #{source}\n")
-          debug_out ("   Units     :   #{units}\n")
-          debug_out ("   Measure   :   #{measure.round(2)} (#{units})\n")
-          debug_out ("   Materials : $ #{materials.round(2)} / #{units}\n")
-          debug_out ("   Labour    : $ #{labour.round(2)} / #{units}\n")
-          debug_out ("   Cost      : $ #{myCostsComponent.round(2)}\n")
 
+          debug_out ("   Cost      : $ #{myCostsComponent.round(2)}\n")
+          componentCostsSummary[costingElement] = myCostsComponent.round(2)
 
 
         end
 
         debug_out "   ...............................................................\n"
-        debug_out "   Est. cost impact for #{attrib} => #{choice} ? $ #{myCosts["byAttribute"][attrib].round(2)} \n"
-
-
+        debug_out "   EST COST IMPACT:\n"
+        debug_out "     #{attrib} => #{choice} ?   \n"
+        debug_out "\n"
+        componentCostsSummary.keys.each do |thiscomponent|
+          thiscost = '%.2f' % componentCostsSummary[thiscomponent].to_f.round(2)
+          debug_out "      $ #{thiscost.rjust(10)} : #{thiscomponent}\n"
+        end
+        debug_out "      _____________\n"
+        total = '%.2f' % myCosts["byAttribute"][attrib].round(2)
+        debug_out "      $ #{total.rjust(10)} : TOTAL \n"
 
       end
 

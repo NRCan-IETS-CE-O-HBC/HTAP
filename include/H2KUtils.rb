@@ -564,6 +564,100 @@ module H2KFile
       return wallDimsAG
 
     end # def H2KFile.getAGWallArea(elements)
+    # ==========================================================================================
+    # Parses results section and returns peak heating/cooling loads. Need to think about whether
+    # we need to spec the result section ...
+    # ==========================================================================================
+    def H2KFile.getDesignLoads( elements )
+
+      designHeatingLoad = 0
+      designCoolingLoad = 0
+      elements["HouseFile/AllResults"].elements.each do |element|
+
+         houseCode =  element.attributes["houseCode"]
+
+         if (houseCode == nil && element.attributes["sha256"] != nil)
+            houseCode = "General"
+         end
+
+         designHeatingLoad = element.elements[".//Other"].attributes["designHeatLossRate"].to_f
+         designCoolingLoad = element.elements[".//Other"].attributes["designCoolLossRate"].to_f
+      end
+
+      loads = Hash.new
+      loads = { "heating_W" => designHeatingLoad.to_f,
+                "cooling_W" => designCoolingLoad.to_f }
+
+      return loads
+
+    end
+
+    # ==========================================================================================
+    # Parses systems section and returns capacity.
+    # ==========================================================================================
+    def H2KFile.getSystemInfo( elements )
+      debug_on
+      systemInfo = Hash.new
+      systemInfo = { "fansAndPump"   => { "count" => 0.0 },
+                     "Furnace"       => { "count" => 0.0, "capacity_kW" => 0.0, },
+                     "Boiler"        => { "count" => 0.0, "capacity_kW" => 0.0, },
+                     "Baseboards"    => { "count" => 0.0, "capacity_kW" => 0.0, },
+                     "ASHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
+                     "AirConditioner"=> { "count" => 0.0, "capacity_kW" => 0.0, },
+                     "Ventilator"    => { "count" => 0.0, "capacity_l/s" => 0.0 }
+                   }
+
+      elements["HouseFile/House/HeatingCooling/Type1/"].elements.each do |t1_system|
+        debug_out " ....................................................\n"
+        debug_out "Recovering system info for T1 : #{t1_system.name}\n"
+        case t1_system.name
+        when "FansAndPump"
+           systemInfo["fansAndPump"]["count"] += 1
+           systemInfo["fansAndPump"]["powerLowW"] = t1_system.elements[".//Power/"].attributes["low"].to_f
+           systemInfo["fansAndPump"]["powerHighW"] = t1_system.elements[".//Power/"].attributes["high"].to_f
+        when "Baseboards"
+           systemInfo["Baseboards"]["count"] += 1
+           systemInfo["Baseboards"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+        when "Furnace"
+           systemInfo["Furnace"]["count"] += 1
+           systemInfo["Furnace"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+        else
+           fatalerror "Unknown system type \n"
+        end
+
+
+      end
+#
+      elements["HouseFile/House/HeatingCooling/Type2/"].elements.each do |t2_system|
+        debug_out " ....................................................\n"
+        debug_out "Recovering system info for T2: #{t2_system.name}\n"
+        case t2_system.name
+        when "AirConditioning"
+          systemInfo["AirConditioner"]["count"] += 1
+          systemInfo["AirConditioner"]["capacity_kW"] = t2_system.elements[".//Specifications/RatedCapacity"].attributes["value"].to_f
+        else
+          fatalerror "Unknown system type #{t2_system.name}  \n"
+        end
+
+      end
+
+      elements["HouseFile/House/Ventilation/WholeHouseVentilatorList"].elements.each do | ventsys |
+
+        debug_out " ....................................................\n"
+        debug_out "Recoveirng system info for vent #{ventsys.name}"
+        case ventsys.name
+        when "Hrv"
+          systemInfo["Ventilator"]["count"] += 1
+          systemInfo["Ventilator"]["capacity_l/s"] += ventsys.attributes["supplyFlowrate"].to_f
+        else
+           fatalerror "Unknown ventilation type #{ventsys.name}  \n"
+        end
+      end
+      systemInfo["designLoads"] = H2KFile.getDesignLoads( elements )
+
+      return systemInfo
+
+    end
 
     # ======================================================================================
     # Get general geometry characteristics
@@ -586,7 +680,7 @@ module H2KFile
       myH2KHouseInfo["dimensions"]["ceilings"] = Hash.new
       myH2KHouseInfo["dimensions"]["ceilings"]["area"] = Hash.new
 
-      myH2KHouseInfo["heatedFloorArea"] = H2KFile.getHeatedFloorArea( elements )
+      myH2KHouseInfo["dimensions"]["heatedFloorArea"] = H2KFile.getHeatedFloorArea( elements )
 
       myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"]       = H2KFile.getCeilingArea( elements, "all", "NA" )
       myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"]      = H2KFile.getCeilingArea( elements, "flat", "NA" )
@@ -600,6 +694,11 @@ module H2KFile
       myH2KHouseInfo["dimensions"]["walls"] = Hash.new
       myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = Hash.new
       myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = H2KFile.getAGWallDimensions( elements )
+
+      myH2KHouseInfo["HVAC"] = Hash.new
+      myH2KHouseInfo["HVAC"]= H2KFile.getSystemInfo(elements)
+
+
 
       return myH2KHouseInfo
 
