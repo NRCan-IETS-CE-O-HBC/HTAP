@@ -465,8 +465,8 @@ while !fInput.eof? do
 
    when "oldLeep"
 
-      $col1temp = "#{$LineCols[0][1]}"
-      $col3temp = "#{$LineCols[0][3]}"
+      $col1temp = "#{$LineCols[0][0]}"
+      $col3temp = "#{$LineCols[0][2]}"
 
 
 
@@ -474,7 +474,7 @@ while !fInput.eof? do
 
         if (  $col3temp.gsub(/\s+/,"").empty? )  then
 
-          $MyCatagory = "#{$LineCols[0][1]}"
+          $MyCatagory = "#{$LineCols[0][0]}"
           # version for writing
           $MyCatagory.gsub!(/\(.*\)/,"")
           $MyCatagory.gsub!(/^\s+/,"")
@@ -490,7 +490,7 @@ while !fInput.eof? do
         else
 
           $LineHasData = true
-          $MyDescription = "#{$LineCols[0][1]}"
+          $MyDescription = "#{$LineCols[0][0]}"
 
           $MyDescription.gsub!(/\"/,"in")
           $MyDescription.gsub!(/([0-9]+o)c/,"\1C")
@@ -504,7 +504,7 @@ while !fInput.eof? do
           #$MyDescription.gsub!(/\(24.\)/,"(24in)")
           #$MyDescription.gsub!(/(0|O).F EWT/i,"0F EWT")
 
-
+          $MyDescription.gsub!(/o\.c$/, "o.c.")
 
           $MyKeyword   = "#{$MyDescription.downcase}"
 
@@ -520,10 +520,14 @@ while !fInput.eof? do
           $MyKeyword.gsub!(/_:/,":")
           $MyKeyword.gsub!(/:_/,":")
 
-          $MyUnits             = "#{$LineCols[0][3]}"
-          $MyMaterialsUnitCost = "#{$LineCols[0][4]}".delete(",").to_f
-          $MyLabourUnitCost    = "#{$LineCols[0][7]}".delete(",").to_f
-          $MyNote              = "#{$LineCols[0][11]}"
+          $MyUnits             = "#{$LineCols[0][2]}"
+          $MyMaterialsUnitCost = "#{$LineCols[0][3]}".delete(",").to_f
+          $MyLabourUnitCost    = "#{$LineCols[0][6]}".delete(",").to_f
+          $MyNote              = "#{$LineCols[0][10]}"
+
+          $MyUnits.gsub!(/\s+$/,"")
+          $MyUnits.gsub!(/^ea /,"ea")
+          $MyUnits.gsub!(/sq\.ft\. floor/, "sf heated floor area")
 
                     # known misspellings
           $MyNote.gsub!(/agregated/i,"aggregated")
