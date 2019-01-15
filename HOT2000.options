@@ -12,14 +12,17 @@
 *option:S:value:1  = S
 *option:S:cost:    = 0
 
-*option:E:value:1  = S
+*option:E:value:1  = E
 *option:E:cost:    = 0
 
-*option:N:value:1  = S
+*option:N:value:1  = N
 *option:N:cost:    = 0
 
-*option:W:value:1  = S
+*option:W:value:1  = W
 *option:W:cost:    = 0
+
+*option:AVG:value:1  = AVG
+*option:AVG:cost:    = 0
 
 *attribute:end 
 
