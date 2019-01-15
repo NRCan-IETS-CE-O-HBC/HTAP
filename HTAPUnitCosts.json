@@ -3,7 +3,7 @@
     "LEEP-BC-KamloopsChesnut": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_Sept_2016_Chesnut.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2019-01-04 20:50:54",
+      "date_imported": "2019-01-11 14:41:15",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -18,7 +18,7 @@
           "air_sealing_credit_1.75",
           "air_sealing_credit_1.25",
           "framing:conventional:38x140mm_o.c.",
-          "framing:advanced:38x140mm_o.c",
+          "framing:advanced:38x140mm_o.c.",
           "framing:double_stud_wall:305mm",
           "framing:double_stud:vip_wall",
           "framing:interior_basement:38x89mm_o.c.",
@@ -121,6 +121,13 @@
           "insulation:rigid:25mm",
           "insulation:rigid:51mm",
           "insulation:rigid:102mm",
+          "insulation_mineral_wool_board_8_lb._38mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._76mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._89mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._102mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._127mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._150mm_vertical_pt_strapping_&_screws",
           "insulation:polyisocyanurate_51mm",
           "insulation:xps_type_4:rigid:25mm",
           "insulation:xps_type_4:rigid:38mm",
@@ -161,7 +168,7 @@
     "LEEP-BC-Vancouver": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_BC-vancouver_V1.0.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2019-01-04 20:50:52",
+      "date_imported": "2019-01-11 14:41:13",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -178,7 +185,7 @@
           "air_sealing_credit_1.75",
           "air_sealing_credit_1.25",
           "framing:conventional:38x140mm_o.c.",
-          "framing:advanced:38x140mm_o.c",
+          "framing:advanced:38x140mm_o.c.",
           "framing:double_stud_wall:305mm",
           "framing:double_stud:vip_wall",
           "framing:interior_basement:38x89mm_o.c.",
@@ -297,7 +304,7 @@
     "LEEP-MB-Winnipeg": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_Costing_MB_winnipeg.csv",
       "date_collated": "2014-09-01",
-      "date_imported": "2019-01-04 20:50:51",
+      "date_imported": "2019-01-11 14:41:11",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -326,6 +333,9 @@
           "insulation:eps_type_2:rigid:51mm",
           "insulation:eps_type_2:rigid:76mm",
           "insulation:eps_type_2:rigid_4in",
+          "insulation_mineral_wool_board_8_lb._89mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._102mm_vertical_pt_strapping_&_screws",
+          "insulation_mineral_wool_board_8_lb._127mm_vertical_pt_strapping_&_screws",
           "insulation_mineral_wool_board_8_lb._150mm_vertical_pt_strapping_&_screws",
           "dhw_tank:electric:246_l:ef_0.89",
           "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
@@ -341,7 +351,7 @@
     "LEEP-ON-Ottawa": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_ottawa_V1.4.csv",
       "date_collated": "2013-09-01",
-      "date_imported": "2019-01-04 20:50:49",
+      "date_imported": "2019-01-11 14:41:08",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -350,7 +360,7 @@
     "MiscNRCanEstimates2019": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\misc-cost-data.csv",
       "date_collated": "2019-01-04",
-      "date_imported": "2019-01-04 20:50:58",
+      "date_imported": "2019-01-11 14:41:20",
       "schema_used": "oldLeep",
       "origin": "NRCan - collected cost estimates from in-house research",
       "inherits": {
@@ -359,7 +369,7 @@
     "VancouverAirSealData": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\E3-air-sealing.csv",
       "date_collated": "2015-01-15",
-      "date_imported": "2019-01-04 20:50:56",
+      "date_imported": "2019-01-11 14:41:18",
       "schema_used": "oldLeep",
       "origin": "Halbig 2015, Air-Barrier details, Report for NRCan. E3 Consulting",
       "inherits": {
@@ -557,6 +567,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "air_conditioner:dx_3_ton": {
+      "MiscNRCanEstimates2019": {
+        "category": "AIR CONDITIONING",
+        "description": "Air Conditioner: DX 3 ton ",
+        "units": "ea",
+        "UnitCostMaterials": 2025.0,
+        "UnitCostLabour": 810.0,
+        "note": "Enbridge estimate ",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor:circ._pump:and_electrical": {
@@ -909,6 +931,18 @@
         "source": "MiscNRCanEstimates2019"
       }
     },
+    "dhw:powervent_dhw": {
+      "MiscNRCanEstimates2019": {
+        "category": "DHW",
+        "description": "DHW - Powervent DHW",
+        "units": "ea",
+        "UnitCostMaterials": 1200.0,
+        "UnitCostLabour": 480.0,
+        "note": "Enbridge estimate",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
     "dhw_electric_tank": {
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
@@ -1081,7 +1115,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DUCTING",
         "description": "Ducting, central forced air",
-        "units": "sq.ft. floor ",
+        "units": "sf heated floor area",
         "UnitCostMaterials": 0.86,
         "UnitCostLabour": 0.44,
         "note": "Ottawa LEEP builders - July 2014",
@@ -1097,6 +1131,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "ducting:connect_ventilator_to_central_forced_air": {
+      "MiscNRCanEstimates2019": {
+        "category": "DUCTING",
+        "description": "ducting:connect_ventilator_to_central_forced_air",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 0.0,
+        "note": "This is a place holder; central air system costs carry HRV interlock installation; HRV installation costs include connection to central ducts. ",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "ducting:direct-duct_hrv": {
@@ -1127,7 +1173,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DUCTING",
         "description": "Ducting, zoned forced air",
-        "units": "sq.ft. floor ",
+        "units": "sf heated floor area",
         "UnitCostMaterials": 0.9,
         "UnitCostLabour": 0.48,
         "note": "Ottawa LEEP builders - July 2014",
@@ -1435,10 +1481,10 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
-    "framing:advanced:38x140mm_o.c": {
+    "framing:advanced:38x140mm_o.c.": {
       "LEEP-ON-Ottawa": {
         "category": "FRAMING",
-        "description": "Framing, advanced, 38x140mm (2inx6in) @ 610mm (24in.) o.c",
+        "description": "Framing, advanced, 38x140mm (2inx6in) @ 610mm (24in.) o.c.",
         "units": "sf wall",
         "UnitCostMaterials": 0.6,
         "UnitCostLabour": 0.75,
@@ -1448,7 +1494,7 @@
       },
       "LEEP-MB-Winnipeg": {
         "category": "FRAMING",
-        "description": "Framing, advanced, 38x140mm (2inx6in) @ 610mm (24in.) o.c",
+        "description": "Framing, advanced, 38x140mm (2inx6in) @ 610mm (24in.) o.c.",
         "units": "sf wall",
         "UnitCostMaterials": 0.59,
         "UnitCostLabour": 0.75,
@@ -2751,60 +2797,48 @@
         "source": "LEEP-BC-Vancouver"
       }
     },
-    "insulation_mineral_wool_board_8_lb._100mm": {
-      "LEEP-BC-KamloopsChesnut": {
-        "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 100mm (2in)",
-        "units": "sf applied",
-        "UnitCostMaterials": 1.38,
-        "UnitCostLabour": 0.68,
-        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
-        "date": "n.d.",
-        "source": "LEEP-BC-KamloopsChesnut"
-      }
-    },
-    "insulation_mineral_wool_board_8_lb._100mm_vertical_pt_strapping_&_screws": {
+    "insulation_mineral_wool_board_8_lb._102mm_vertical_pt_strapping_&_screws": {
       "LEEP-ON-Ottawa": {
         "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 100mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "description": "Insulation mineral wool board 8 lb. 102mm (4in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
         "units": "sf applied",
-        "UnitCostMaterials": 1.38,
+        "UnitCostMaterials": 2.51,
         "UnitCostLabour": 0.51,
-        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "note": "Proskiw + IN Network Database",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
       },
-      "LEEP-MB-Winnipeg": {
-        "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 100mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
-        "units": "sf applied",
-        "UnitCostMaterials": 1.38,
-        "UnitCostLabour": 0.75,
-        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
-        "date": "n.d.",
-        "source": "LEEP-MB-Winnipeg"
-      },
       "LEEP-BC-Vancouver": {
         "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 100mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "description": "Insulation mineral wool board 8 lb. 102mm (4in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
         "units": "sf applied",
-        "UnitCostMaterials": 1.38,
+        "UnitCostMaterials": 2.51,
         "UnitCostLabour": 0.68,
-        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "note": "Proskiw + IN Network Database",
         "date": "n.d.",
         "source": "LEEP-BC-Vancouver"
       }
     },
-    "insulation_mineral_wool_board_8_lb._150mm": {
-      "LEEP-BC-KamloopsChesnut": {
+    "insulation_mineral_wool_board_8_lb._127mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
         "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 150mm (6in) ",
+        "description": "Insulation mineral wool board 8 lb. 127mm (5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
         "units": "sf applied",
-        "UnitCostMaterials": 5.08,
-        "UnitCostLabour": 0.68,
-        "note": "Northern Building Supply Vancouver",
+        "UnitCostMaterials": 3.04,
+        "UnitCostLabour": 0.51,
+        "note": "Proskiw + IN Network Database",
         "date": "n.d.",
-        "source": "LEEP-BC-KamloopsChesnut"
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 127mm (5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 3.04,
+        "UnitCostLabour": 0.68,
+        "note": "Proskiw + IN Network Database",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
       }
     },
     "insulation_mineral_wool_board_8_lb._150mm_vertical_pt_strapping_&_screws": {
@@ -2829,22 +2863,10 @@
         "source": "LEEP-BC-Vancouver"
       }
     },
-    "insulation_mineral_wool_board_8_lb._89mm": {
-      "LEEP-BC-KamloopsChesnut": {
-        "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) ",
-        "units": "sf applied",
-        "UnitCostMaterials": 1.35,
-        "UnitCostLabour": 0.68,
-        "note": "Proskiw + IN Network Database",
-        "date": "n.d.",
-        "source": "LEEP-BC-KamloopsChesnut"
-      }
-    },
-    "insulation_mineral_wool_board_8_lb._89mm_vertical_pt_strapping_&_screws": {
+    "insulation_mineral_wool_board_8_lb._38mm_vertical_pt_strapping_&_screws": {
       "LEEP-ON-Ottawa": {
         "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "description": "Insulation mineral wool board 8 lb. 38mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
         "units": "sf applied",
         "UnitCostMaterials": 1.35,
         "UnitCostLabour": 0.51,
@@ -2854,7 +2876,7 @@
       },
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "description": "Insulation mineral wool board 8 lb. 38mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
         "units": "sf applied",
         "UnitCostMaterials": 1.35,
         "UnitCostLabour": 0.75,
@@ -2864,11 +2886,97 @@
       },
       "LEEP-BC-Vancouver": {
         "category": "INSULATION",
-        "description": "Insulation mineral wool board 8 lb. 89mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "description": "Insulation mineral wool board 8 lb. 38mm (1.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
         "units": "sf applied",
         "UnitCostMaterials": 1.35,
         "UnitCostLabour": 0.68,
         "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 51mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.51,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 51mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.75,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 51mm (2in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.38,
+        "UnitCostLabour": 0.68,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._76mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 76mm (3in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.99,
+        "UnitCostLabour": 0.51,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-MB-Winnipeg": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 76mm (3in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.99,
+        "UnitCostLabour": 0.75,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-MB-Winnipeg"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 76mm (3in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.99,
+        "UnitCostLabour": 0.68,
+        "note": "SPI Insulation, Home Depot, Hanscome (labour)",
+        "date": "n.d.",
+        "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "insulation_mineral_wool_board_8_lb._89mm_vertical_pt_strapping_&_screws": {
+      "LEEP-ON-Ottawa": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 89mm (3.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.25,
+        "UnitCostLabour": 0.51,
+        "note": "Proskiw + IN Network Database",
+        "date": "n.d.",
+        "source": "LEEP-ON-Ottawa"
+      },
+      "LEEP-BC-Vancouver": {
+        "category": "INSULATION",
+        "description": "Insulation mineral wool board 8 lb. 89mm (3.5in) w/ 19mmx89mm (1x4) vertical PT strapping & screws",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.25,
+        "UnitCostLabour": 0.68,
+        "note": "Proskiw + IN Network Database",
         "date": "n.d.",
         "source": "LEEP-BC-Vancouver"
       }
@@ -2911,7 +3019,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "ELECTRIC RESISTANCE BASEBOARDS",
         "description": "Low profile, designer electric resistance wall heaters",
-        "units": "kW",
+        "units": "kW capacity",
         "UnitCostMaterials": 175.0,
         "UnitCostLabour": 150.0,
         "note": "",
@@ -2929,6 +3037,18 @@
         "note": "In-house estimate",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "natural_gas_furnace": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Natural Gas Furnace (highest efficiency available)",
+        "units": "ea",
+        "UnitCostMaterials": 2588.0,
+        "UnitCostLabour": 1035.0,
+        "note": "Enbridge estimate",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "natural_gas_savings": {
@@ -2984,7 +3104,7 @@
         "units": "ea",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0,
-        "note": "0.00",
+        "note": "0",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
       }
@@ -3067,6 +3187,18 @@
         "UnitCostMaterials": 4.05,
         "UnitCostLabour": 75.3,
         "note": "Adjusted materials costs, based on supplier searc",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "portable_room_ac": {
+      "MiscNRCanEstimates2019": {
+        "category": "AIR CONDITIONING",
+        "description": "Portable room ac",
+        "units": "kW capacity",
+        "UnitCostMaterials": 170.1916667,
+        "UnitCostLabour": 0.0,
+        "note": "homeowner-installed; cost/capacity estimate from web-research; SEER unknown",
         "date": "n.d.",
         "source": "MiscNRCanEstimates2019"
       }
@@ -3599,7 +3731,7 @@
       "VancouverAirSealData": {
         "category": "AIR TIGHTNESS",
         "description": "trades training ",
-        "units": "ea ",
+        "units": "ea",
         "UnitCostMaterials": 800.0,
         "UnitCostLabour": 0.0,
         "note": "4-6 hour on-site education session for trades (electrician, plumber, insulator, site super); $600-$800 cost could be amoritized over multiple units",
@@ -3611,7 +3743,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "ELECTRIC RESISTANCE BASEBOARDS",
         "description": "Traditional electric resistance baseboard heaters",
-        "units": "kW",
+        "units": "kW capacity",
         "UnitCostMaterials": 75.0,
         "UnitCostLabour": 150.0,
         "note": "",
@@ -3713,6 +3845,30 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "ventilation_fan_controls": {
+      "MiscNRCanEstimates2019": {
+        "category": "HRV",
+        "description": "Ventilation fan controls ",
+        "units": "ea",
+        "UnitCostMaterials": 100.0,
+        "UnitCostLabour": 0.0,
+        "note": "Inferred from vancouver LEEP estimate",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "ventilation_fans": {
+      "MiscNRCanEstimates2019": {
+        "category": "HRV",
+        "description": "Ventilation fans (supply and exhaust, per l of capacity)",
+        "units": "l/s capacity",
+        "UnitCostMaterials": 8.0,
+        "UnitCostLabour": 4.48,
+        "note": "Vancouver Leep Estimate ($500 materials and $280 labour) to install supply/install balanced fans for ~60l/s capacity , normalized to fan capacity; includes labour for controls. Consistent with data from websearch",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
     "window:double_glaze:vinyl:glass:double_lof_lowe:insulating_spacers:air_fill:shgc_0.5:u-value_1.82": {
       "LEEP-MB-Winnipeg": {
         "category": "WINDOWS",
@@ -3759,6 +3915,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:shgc_0.46:u-value_1.36": {
+      "MiscNRCanEstimates2019": {
+        "category": "WINDOWS",
+        "description": "window:shgc_0.46:u-value_1.36",
+        "units": "sf applied",
+        "UnitCostMaterials": 29.0,
+        "UnitCostLabour": 3.1,
+        "note": "Based on NorthStar estimates, normalized for LEEP MB data",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "window:shgc_0.51:u-value_1.65": {
