@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version='1.0' encoding='UTF-8'?> 
 <Codes readOnly='false'>
   <Version major='1' minor='3'>
     <Labels>
@@ -3581,7 +3581,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='Code 118' nominalRValue='0'>
+      <Code id='Code 129' nominalRValue='0'>
         <Label>NC-2g-HG-u1.82</Label>
         <Description>2 pane; clear; argon fill; U=1.82</Description>
         <Layers>
@@ -3594,7 +3594,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 119' nominalRValue='0'>
+      <Code id='Code 130' nominalRValue='0'>
         <Label>NC-2g-HG-u1.65</Label>
         <Description>2 pane; LowE-HighGain; argon fill; U=1.65</Description>
         <Layers>
@@ -3607,7 +3607,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 120' nominalRValue='0'>
+      <Code id='Code 131' nominalRValue='0'>
         <Label>NC-2g-LG-u1.65</Label>
         <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
         <Layers>
@@ -3620,7 +3620,20 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 121' nominalRValue='0'>
+      <Code id='Code 132' nominalRValue='0'>
+        <Label>NC-3g-HG-u1.36</Label>
+        <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.46' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 133' nominalRValue='0'>
         <Label>NC-3g-LG-u1.14</Label>
         <Description>3 pane; LowE-LowGain; argon fill; U=1.14</Description>
         <Layers>
@@ -3633,7 +3646,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 122' nominalRValue='0'>
+      <Code id='Code 134' nominalRValue='0'>
         <Label>NC-3g-HG-u1.08</Label>
         <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
         <Layers>
