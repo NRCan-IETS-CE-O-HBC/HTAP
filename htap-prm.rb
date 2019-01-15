@@ -150,7 +150,9 @@ def parse_def_file(filepath)
             # This does nothing only 'mesh' supported for now!!!
             $gRunDefMode = $token_values[1]
 
-            if ( ! ( $gRunDefMode =~ /mesh/ || $gRunDefMode =~ /parametric/ ) ) then
+            if ( ! ( $gRunDefMode =~ /mesh/ ||
+                     $gRunDefMode =~ /parametric/ ||
+                     $gRunDefMode =~ /parmetric-by-scope/     ) ) then
               fatalerror (" Run mode #{$gRunDefMode} is not supported!")
             end
 
@@ -295,7 +297,6 @@ def create_mesh_cartisian_combos(optIndex)
 
     # "! Opt-Archetype" - choice disabled because prm copies the h2k file into the run directory.
     $gArchetypeHash[generated_file] = $gChoiceFileSet["!Opt-Archetype"]
-
     $gLocationHash[generated_file]  = $gChoiceFileSet["Opt-Location"]
     $gRulesetHash[generated_file]   = $gChoiceFileSet["Opt-Ruleset"]
 
@@ -368,88 +369,94 @@ end
 
 def create_parametric_combos()
 
-
   $Folder = $gArchetypeDir
 
 
-  $StartSet = Hash.new
+  startSet = Hash.new
 
-  $gParameterSpace = Hash.new
+  parameterSpace = Hash.new
 
-  $gParameterSpace = $gRunUpgrades.clone
+  parameterSpace = $gRunUpgrades.clone
 
-  $gParameterSpace["Opt-Ruleset"] = Array.new
 
-  $gParameterSpace["Opt-Ruleset"] = $gRulesets
 
-  $gParameterSpace["Opt-Location"] = Array.new
-  $gParameterSpace["Opt-Location"] = $gLocations
 
-  $gParameterSpace["!Opt-Archetype"] = Array.new
+  parameterSpace.keys.each do |attribute|
 
-  $gArchetypes.each do |archetype|
+    startSet[attribute] =  parameterSpace[attribute][0]
+
+  end
+
+  debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
+
+
+  $gArchetypes.each do | archetype |
 
     $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"]
-
     $ArchetypeFiles.each do |h2kpath|
 
-      $gParameterSpace["!Opt-Archetype"].push File.basename(h2kpath)
+      $gLocations.each do | location |
+        $gRulesets.each do | ruleset |
 
-    end
+          debug_out (" Setting parametric scope for #{archetype} / #{location} /#{ruleset} \n")
 
-  end
+          # Base point
+
+          startSet["!Opt-Archetype"] = File.basename(h2kpath)
+          startSet["Opt-Location"] = location
+          startSet["Opt-Ruleset"] = ruleset
+
+          thisSet=Hash.new
+          thisSet = startSet.clone
 
 
+          generated_file = gen_choice_file(thisSet)
+          $gGenChoiceFileList.push generated_file
 
-  $gParameterSpace.keys.each do |attribute|
+          $gArchetypeHash[generated_file] = thisSet["!Opt-Archetype"]
+          $gLocationHash[generated_file]  = thisSet["Opt-Location"]
+          $gRulesetHash[generated_file]   = thisSet["Opt-Ruleset"]
 
-    $StartSet[attribute] =  $gParameterSpace[attribute][0]
+          # Parametric variations....
 
-  end
+          parameterSpace.keys.each do |attribute|
 
-  # Base point -
+            debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
 
-  generated_file = gen_choice_file($StartSet)
-  $gGenChoiceFileList.push generated_file
+            parameterSpace[attribute][1..-1].each do | choice |
 
-  $gArchetypeHash[generated_file] = $StartSet["!Opt-Archetype"]
-  $gLocationHash[generated_file]  = $StartSet["Opt-Location"]
-  $gRulesetHash[generated_file]   = $StartSet["Opt-Ruleset"]
+              debug_out ("      + #{choice} \n")
 
-  $gParameterSpace.keys.each do |attribute|
+              thisSet = startSet.clone
 
-    debug_out ("PARAMETRIC: #{attribute} has #{$gParameterSpace[attribute].length} entries\n")
+              thisSet[attribute] = choice
 
-      $gParameterSpace[attribute][1..-1].each do | choice |
+              generated_file = gen_choice_file(thisSet)
+              $gGenChoiceFileList.push generated_file
 
-        debug_out ("      + #{choice} \n")
+              # Save the name of the archetype that matches this choice file for invoking
+              # with substitute.h2k.
 
-        $gChoiceFileSet = $StartSet.clone
-        $gChoiceFileSet[attribute] = choice
+              # "! Opt-Archetype" - choice disabled because prm copies the h2k file into the run directory.
+              $gArchetypeHash[generated_file] = thisSet["!Opt-Archetype"]
+              $gLocationHash[generated_file]  = thisSet["Opt-Location"]
+              $gRulesetHash[generated_file]   = thisSet["Opt-Ruleset"]
 
-        generated_file = gen_choice_file($gChoiceFileSet)
-        $gGenChoiceFileList.push generated_file
 
-        # Save the name of the archetype that matches this choice file for invoking
-        # with substitute.h2k.
+            end
 
-        # "! Opt-Archetype" - choice disabled because prm copies the h2k file into the run directory.
-        $gArchetypeHash[generated_file] = $gChoiceFileSet["!Opt-Archetype"]
 
-        $gLocationHash[generated_file]  = $gChoiceFileSet["Opt-Location"]
-        $gRulesetHash[generated_file]   = $gChoiceFileSet["Opt-Ruleset"]
+          end
+
+        end
 
       end
-
-
+    end
   end
 
-  if ( $gDebug ) then
 
-    debug_out (" ----- PARAMETRIC RUN: PARAMETER SPACE ----  \n ")
-    pp $gParameterSpace
 
-  end
+  debug_out (" ----- PARAMETRIC RUN: PARAMETER SPACE ----\n#{parameterSpace.pretty_inspect}\n")
 
 end
 
@@ -816,7 +823,7 @@ def run_these_cases(current_task_files)
         end
 
        jsonParsed = false
-       debug_on
+
        debug_out "Looking for #{$RunResultFilenameV2} ? \n"
        if ( File.exist?($RunResultFilenameV2) ) then
          debug_out "Found it. Parsing JSON output !\n"
@@ -834,16 +841,21 @@ def run_these_cases(current_task_files)
             if ( section.eql?("status") || section.eql?("configuration") ) then
               thisRunResults[section].keys.each do | node |
                 debug_out ("  ------ #{section}/#{node}\n")
-                $RunResults["run-#{thread3}"][section][node]  = thisRunResults[section][node]
+                if ( section == status && node == "success" && $RunResults["run-#{thread3}"][section][node] == "false" ) then
+
+                else
+                  $RunResults["run-#{thread3}"][section][node]  = thisRunResults[section][node]
+                end 
+
               end
             else
               debug_out " ...... #{section} \n"
               $RunResults["run-#{thread3}"][section] = thisRunResults[section]
             end
           end
-
+         $runFailed = true if (! $RunResults["run-#{thread3}"]["status"]["success"] == "true")
          jsonParsed = true
-
+         stream_out (" done.\n")
        end
 
        if ( jsonParsed ) then
@@ -854,11 +866,8 @@ def run_these_cases(current_task_files)
          debug_out "processing old token/value file \n"
            contents = File.open($RunResultFilename, 'r')
 
-
            ec=0
            wc=0
-
-
 
            lineCount = 0
            contents.each do |line|
@@ -896,23 +905,23 @@ def run_these_cases(current_task_files)
              stream_out (" done.\n")
            end
 
-
-
-
-
-
         else
-            debug_out ("uhoh = no output anywhere!\n")
+            debug_out ("no output anywhere!\n")
             stream_out (" Output couldn't be found! \n")
             $runFailed = true
+        end
 
+        if ($runFailed)
             #stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
             $failures.write "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb\n"
             $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb"
             $FailedRunCount = $FailedRunCount + 1
 
             $RunResults["run-#{thread3}"]["status"]["success"] = "false"
-            $RunResults["run-#{thread3}"]["status"]["errors"].push = " Run failed - no output generated"
+            #if ( $RunResults["run-#{thread3}"]["status"]["errors"].nil? ) then
+            #  $RunResults["run-#{thread3}"]["status"]["errors"] = Array.new
+            #end
+            #$RunResults["run-#{thread3}"]["status"]["errors"].push = " Run failed - no output generated"
 
             $LocalChoiceFile = File.basename $gOptionFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )

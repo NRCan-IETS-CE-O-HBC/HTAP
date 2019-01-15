@@ -54,7 +54,10 @@ if $fLOG == nil then
 end
 
 
-
+specdCostSources = Hash.new
+specdCostSources = {"custom" => [],
+                      "components" => ["LEEP-BC-Vancouver", "*"]
+                   }
 
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
@@ -88,6 +91,7 @@ myChoiceFile    = ""
 myOptionFile    = ""
 myCostsFile     = ""
 myBaseModelFile = ""
+myChoiceOrder = Array.new
 
 optparse = OptionParser.new do |opts|
 
@@ -166,9 +170,11 @@ myOptions   = HTAPData.parse_json_options_file(myOptionFile)
 myUnitCosts = Costing.parseUnitCosts(myCostsFile)
 
 # Parse choices
-myChoices, myChoiceOrder = HTAPData.parse_choice_file(myChoiceFile)
+#myChoices, myChoiceOrder = HTAPData.parse_choice_file(myChoiceFile)
 
-
+fChoiceFile = File.new(myChoiceFile, "r")
+choiceContents = fChoiceFile .read
+myChoiceSet = JSON.parse(choiceContents)
 # ( not yet supported - read archetype out of choice file)
 
 # Parse h2k file
@@ -182,12 +188,82 @@ h2kElements = H2KFile.get_elements_from_filename(myBaseModelFile)
 #-------------------------------------------------------------------
 #  Verify options and choices make sense !
 #-------------------------------------------------------------------
-myOptionsErr,myChoices,myChoiceOrder = HTAPData.validate_options(myOptions, myChoices, myChoiceOrder )
 
-if ( myOptionsErr ) then
-  fatalerror ("Could not parse options")
-  $allok = false
+
+
+startSet = Hash.new
+myChoiceOrder.push "Opt-Location"
+myChoiceSet["upgrades"].each do | attribute, choices |
+  startSet[attribute] = choices[0]
+  myChoiceOrder.push attribute
 end
+
+myChoiceSet["scope"]["locations"].each do | location |
+  myChoiceSet["scope"]["archetypes"].each do | archetype |
+    startSet["Opt-Location"] = location
+    startSet["Opt-Archetype"] = archetype
+    thisSet = Hash.new
+    thisSet = startSet
+
+    pp thisSet
+
+    myOptionsErr,myChoices,myChoiceOrder = HTAPData.validate_options(myOptions, thisSet, myChoiceOrder )
+    if ( myOptionsErr ) then
+      fatalerror ("Could not parse options")
+      $allok = false
+    end
+
+    #-------------------------------------------------------------------
+    # Collect dimension data about house
+    #-------------------------------------------------------------------
+    myH2KHouseInfo = Hash.new
+    myH2KHouseInfo = H2KFile.getAllInfo(h2kElements)
+    debug_on
+    debug_out (" Contents of myH2KHouseInfo:\n#{myH2KHouseInfo.pretty_inspect}")
+
+    myCosts = Hash.new
+
+    # Compute costs
+    myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,thisSet,myH2KHouseInfo)
+    stream_out ("\n=================================================================\n")
+    stream_out ("\nCost these choices.rb\n")
+    stream_out ("\nComputed costs:\n#{myCosts.pretty_inspect}\n")
+    stream_out ("\n=================================================================\n")
+
+    myChoiceSet["upgrades"].each do | attribute, upgrades |
+
+
+
+      next if ( upgrades.length == 1 )
+
+      upgrades[1..-1].each do |upgrade|
+         debug_out "looking at #{attribute} = #{upgrade}\n"
+
+         thisSet = startSet
+         thisSet[attribute] = upgrade
+
+         myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,thisSet,myH2KHouseInfo)
+         stream_out ("\n=================================================================\n")
+         stream_out ("\nCost these choices.rb\n")
+         stream_out ("\nComputed costs:\n#{myCosts.pretty_inspect}\n")
+         stream_out ("\n=================================================================\n")
+
+
+
+      end
+
+    end
+
+
+  end
+end
+
+
+
+
+
+
+
 
 
 #-------------------------------------------------------------------
@@ -197,34 +273,17 @@ end
 #     htap functions for geometry habe been processed.
 #-------------------------------------------------------------------
 
-#-------------------------------------------------------------------
-# Collect dimension data about house
-#-------------------------------------------------------------------
-myH2KHouseInfo = Hash.new
-myH2KHouseInfo = H2KFile.getAllInfo(h2kElements)
-debug_on
-debug_out (" Contents of myH2KHouseInfo:\n#{myH2KHouseInfo.pretty_inspect}")
+
 
 #-------------------------------------------------------------------
 # Loop through choices; compute costs
 #-------------------------------------------------------------------
-specdCostSources = Hash.new
-specdCostSources = {"custom" => [],
-                      "components" => ["LEEP-BC-Vancouver", "*"]
-                   }
 
 
 
-myCosts = Hash.new
 
-# Compute costs
-myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-stream_out ("\n=================================================================\n")
-stream_out ("\nCost these choices.rb\n")
-stream_out ("\nComputed costs:\n#{myCosts.pretty_inspect}\n")
-stream_out ("\n=================================================================\n")
 
-#ReportMsgs()
+ReportMsgs()
 
 
 #pp myH2KHouseInfo
