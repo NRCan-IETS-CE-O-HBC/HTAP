@@ -1,7 +1,7 @@
 
 def LegacyProcessConditions()
      debug_off
-     
+
      $gChoices.each do |attrib1, choice|
 
        debug_out " = Processing conditions for #{attrib1}-> #{choice} ..."
