@@ -1,0 +1,44 @@
+{
+  "parameters": {
+    "run-mode"        : "parametric",
+    "archetype-dir"   : "C:/HTAP/Archetypes",
+    "unit-costs-db"   : "C:/HTAP/HTAPUnitCosts.json"
+  },
+  "scope": {
+    "archetypes" : [ "NA" ],
+    "locations"  : [ "CALGARY"
+    ],
+    "rulesets"   : [ "NBC9_36[fuel=Electricity;vent=HRV]"
+    ]
+  },
+  "upgrades": {
+    "Opt-FuelCost" : ["rates2016"],
+    "Opt-ResultHouseCode" : ["NA"],
+    "Opt-Specifications" : ["NA"],
+    "Opt-Baseloads" : ["NA"],
+    "Opt-Temperatures" : ["NA"],
+    "Opt-ACH" : ["NA"],
+    "Opt-CasementWindows" : ["NA"],
+    "Opt-Skylights" : ["NA"],
+    "Opt-DoorWindows" : ["NA"],
+    "Opt-Doors" : ["NA"],
+    "Opt-MainWall" : ["NA"],
+    "Opt-GenericWall_1Layer_definitions" : ["NA"],
+    "Opt-FloorHeader" : ["NA"],
+    "Opt-H2KFoundation" : ["NA"],
+    "Opt-H2KFoundationSlabCrawl" : ["NA"],
+    "Opt-ExposedFloor" : ["NA"],
+    "Opt-ExposedFloor" : ["NA"],
+    "Opt-FloorAboveCrawl" : ["NA"],
+    "Opt-Ceilings" : ["NA"],
+    "Opt-AtticCeilings" : ["NA"],
+    "Opt-CathCeilings" : ["NA"],
+    "Opt-FlatCeilings" : ["NA"],
+    "Opt-HRVonly" : ["HRV_sre_60"],
+    "Opt-HRVspec" : ["NA"],
+    "Opt-DHWSystem" : ["NA"],
+    "Opt-HVACSystem" : ["elec-baseboard"],
+    "Opt-DWHRSystem" : ["NA"],
+    "Opt-H2K-PV" : ["NA"]
+  }
+}

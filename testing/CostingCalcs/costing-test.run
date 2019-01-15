@@ -12,9 +12,9 @@ RunParameters_END
 ! run in mesh, even if an optimization mode is added in the future.
 RunScope_START
 
-  archetypes                        = BC-Step-MediumSFD.h2k
-  locations                         = NA
-  rulesets                          = as-found   !, NBC9_36_HRV , R2000_NZE_Pilot_Env
+  archetypes                        = BC-Step-MediumSFD.h2k !, BC-Step-SmallSFD.h2k
+  locations                         = CALGARY !, VANCOUVER, EDMONTON
+  rulesets                          = NBC9_36_HRV  !, R2000_NZE_Pilot_Env
 
 
 RunScope_END
@@ -31,15 +31,15 @@ Upgrades_START
    Opt-Baseloads        = NA
    Opt-Temperatures     = NA
 
-   Opt-ACH              = NA
+   Opt-ACH              = NA, New-Const-air_seal_to_4-6_ach, New-Const-air_seal_to_3.50_ach, New-Const-air_seal_to_2.50_ach, New-Const-air_seal_to_1.50_ach, New-Const-air_seal_to_1.00_ach
 
-   Opt-CasementWindows  = NA, NC-2g-HG-u1.82, NC-3g-HG-u1.08
+   Opt-CasementWindows  = NA , NC-2g-HG-u1.82    , NC-2g-HG-u1.65 , NC-2g-LG-u1.65, NC-3g-LG-u1.14, NC-3g-HG-u1.08, NC-3g-HG-u1.36
    Opt-Skylights        = NA
    Opt-DoorWindows      = NA
    Opt-Doors            = NA
 
    Opt-MainWall         = NA
-   Opt-GenericWall_1Layer_definitions = NA
+   Opt-GenericWall_1Layer_definitions = NA, NC_R-16(eff)_2x4-16inOC_R14-batt+1inUnfacedEPS_poly_vb, NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb, NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb, NC_R-18(eff)_2x6-24inOC_R22-batt_poly_vb, NC_R-18(eff)_2x6-24inOC_R24-batt_poly_vb, NC_R-19(eff)_2x6-16inOC_2lb.ClosedCellSprayFoam_poly_vb, NC_R-19(eff)_2x4-16inOC_R14-batt+1.5inXPS_poly_vb, NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb, NC_R-21(eff)_2x6-16inOC_R24-batt+1inUnfacedEPS_poly_vb, NC_R-22(eff)_2x4-16inOC_R14-batt+2inXPS_poly_vb, NC_R-22(eff)_2x6-24inOC_R24-batt+1inUnfacedEPS_poly_vb, NC_R-23(eff)_2x6-16inOC_R22-batt+1inFoilFacedPolyiso_poly_vb, NC_R-23(eff)_2x6-16inOC_R24-batt+1inFoilFacedPolyiso_poly_vb, NC_R-23(eff)_2x6-24inOC_R22-batt+1inFoilFacedPolyiso_poly_vb, NC_R-24(eff)_2x6-24inOC_R24-batt+1inFoilFacedPolyiso_poly_vb, NC_R-25(eff)_2x6-16inOC_R22-batt+1.5inXPS_poly_vb, NC_R-25(eff)_2x6-16inOC_R22-batt+2inMineralWool_poly_vb, NC_R-25(eff)_2x6-16inOC_R24-batt+1.5inXPS_poly_vb, NC_R-25(eff)_2x6-24inOC_R22-batt+1.5inXPS_poly_vb, NC_R-26(eff)_2x6-16inOC_R24-batt+2inMineralWool_poly_vb, NC_R-26(eff)_2x6-24inOC_R22-batt+2inMineralWool_poly_vb, NC_R-26(eff)_2x6-24inOC_R24-batt+1.5inXPS_poly_vb, NC_R-26(eff)_2x6-24inOC_R24-batt+2inMineralWool_poly_vb, NC_R-27(eff)_2x6-16inOC_R22-batt+2inXPS_poly_vb, NC_R-28(eff)_2x6-16inOC_R24-batt+2inXPS_poly_vb, NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb, NC_R-29(eff)_2x6-24inOC_R24-batt+2inXPS_poly_vb, NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb, NC_R-30(eff)_2x6-24inOC_R24-batt+3inMineralWool_poly_vb
    Opt-FloorHeader      = NA
 
    Opt-H2KFoundation    = NA
@@ -51,7 +51,7 @@ Upgrades_START
 
    Opt-FloorAboveCrawl  = NA
 
-   Opt-Ceilings         = NA
+   Opt-Ceilings         = NA  , CeilR40    , CeilR50, CeilR60, CeilR70,CeilR80,CeilR90, CeilR100
    Opt-AtticCeilings    = NA
    Opt-CathCeilings     = NA
    Opt-FlatCeilings     = NA
@@ -60,7 +60,7 @@ Upgrades_START
    Opt-HRVspec          = NA
    Opt-DHWSystem        = NA
    Opt-HVACSystem       = NA
-   Opt-DWHRSystem       = NA
+   Opt-DWHRSystem       = NA , DWHR-eff-30, DWHR-eff-55
    Opt-H2K-PV           = NA
 
 
