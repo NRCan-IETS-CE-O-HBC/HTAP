@@ -42,7 +42,7 @@ sheets = {
     "orgin" => "NRCan - collected cost estimates from in-house research",
     "date_collated" => "2019-01-04",
     "schema_used" => "oldLeep",
-    "debug" => true
+    "debug" => false
   }
 }
 
