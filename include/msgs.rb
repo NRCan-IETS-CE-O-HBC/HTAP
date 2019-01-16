@@ -4,7 +4,26 @@
 #
 # =========================================================================================
 
+def setTermSize
 
+
+   require 'io/console'
+   $termWidth = IO.console.winsize[1]
+
+end
+
+def shortenToTerm(msg)
+
+  if msg.length > $termWidth then
+    msg.gsub!(/\n/,"")
+    shortmsg = "#{msg[0..$termWidth-5]} ...\n"
+  else
+    shortmsg = msg
+  end
+
+  return shortmsg
+
+end
 # =========================================================================================
 # Optionally write text to buffer -----------------------------------
 # =========================================================================================
@@ -16,6 +35,18 @@ def stream_out(msg)
     $fLOG.write(msg)
   end
 end
+# Take a
+def drawRuler(msg = nil, char="=")
+  c=char
+  if (!  msg.nil? )
+    return "#{char} #{msg} #{c}".ljust($termWidth,c)+"\n"
+  else
+    return "".ljust($termWidth,c)+"\n"
+  end
+  return myruler
+
+end
+
 
 def caller_info()
 
@@ -60,8 +91,10 @@ def debug_on()
   file =callerID["file"]
   line = callerID["line"]
   $localDebug[routine] = true
-  debmsg = " Debugging turned on at #{file}:#{line.to_s}.\n"
+  $lastDbgMsg = "\n"
   print "\n"
+  debug_out_now(drawRuler(nil,"_"),callerID)
+  debmsg = "Debugging turned on at #{file}:#{line.to_s}\n"
   debug_out_now(debmsg,callerID)
   return 1
 end
@@ -100,10 +133,10 @@ def debug_out_now(debmsg, callerID)
   lineNumber = callerID["line"]
   routine    = callerID["routine"]
 
-  [1..level].each do
-    callIndent ="#{callIndent}.."
-  end
-
+  #[1..level].each do
+  #  callIndent ="#{callIndent}.."
+  #end
+  callIndent = ""
 
   linestring = lineNumber.to_s
   blankstring = " "
@@ -112,42 +145,29 @@ def debug_out_now(debmsg, callerID)
 
   if ($lastDbgMsg =~ /\n/ ) then
 
-
-
     first = true
     debmsg.each_line do |line|
-
-      if line.length > 80 then
-        line.gsub!(/\n/,"")
-        shortmsg = "#{line[0..80]}"
-        shortmsg = "#{shortmsg} ...\n"
-      else
-        shortmsg = line
-      end
 
       if first then
         first = false
         prefix = "[d:#{callindent}#{routine}:#{linestring} ".ljust(30)
         prefix = "#{prefix}]"
 
-        if (  shortmsg =~ /^[^\s]/ ) then
+        if (  debmsg =~ /^[^\s]/ ) then
           prefix = "#{prefix} "
         end
       else
-        prefix = "[ ".ljust(30)
-        prefix = prefix = "#{prefix}]   "
+        prefix = "[ ".ljust(30)+"]"
       end
 
-
-
-      fullmsg = "#{fullmsg}#{prefix}#{shortmsg}"
+      fullmsg = "#{fullmsg}"+shortenToTerm("#{prefix}#{line}")
 
     end
 
     #debmsg.gsub!(/\n/,"\n#{blank}")
     #debmsg.gsub!(/\n#{blank}\s*\Z/, '')
   else
-    fullmsg = debmsg
+    fullmsg = shortenToTerm(debmsg)
   end
   print fullmsg
 
@@ -199,7 +219,7 @@ def fatalerror( err_msg )
     line     = callerID["line"]
     file     = callerID["file"]
     routine  = callerID["routine"]
-    err_msg = "#{err_msg} (fatal error called at #{routine} (#{file}:#{line})"  
+    err_msg = "#{err_msg} (fatal error called at #{routine} (#{file}:#{line})"
     err_out(err_msg)
   end
 
@@ -224,6 +244,13 @@ def fatalerror( err_msg )
 
   exit() # Run stopped
 end
+
+def writeHeader()
+ stream_out drawRuler($program)
+ stream_out $info
+ stream_out drawRuler(nil)
+end
+
 
 def ReportMsgs()
 
@@ -259,9 +286,7 @@ def ReportMsgs()
   $totalDiff = endProcessTime - $startProcessTime
   $fSUMMARY.write "s.processingtime  = #{$totalDiff}\n"
 
-  stream_out " =========================================================\n"
-  stream_out " #{$program} run summary : \n"
-  stream_out " =========================================================\n"
+  stream_out drawRuler("#{$program}: Run Summary")
   stream_out "\n"
   stream_out( " Total processing time: #{$totalDiff.to_f.round(2)} seconds\n" )
   if $program =~ /substiture-h2k.rb/ then
@@ -274,7 +299,7 @@ def ReportMsgs()
   stream_out " #{$program} -> Error messages:\n\n"
   stream_out "#{$ErrorBuffer}\n"
   stream_out " #{$program} STATUS: #{status} \n"
-  stream_out " =========================================================\n"
+  stream_out drawRuler
 
 
   #
