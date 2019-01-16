@@ -20,6 +20,8 @@ require 'json'
 require 'set'
 require 'pp'
 
+
+
 require_relative 'include/msgs'
 require_relative 'include/H2KUtils'
 require_relative 'include/HTAPUtils'
@@ -32,7 +34,9 @@ include REXML   # This allows for no "REXML::" prefix to REXML methods
 
 
 $program = "substitute-h2k.rb"
+setTermSize
 
+stream_out drawRuler ($program)
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
@@ -6349,14 +6353,14 @@ end
 
 def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
 
-  debug_on
+
 
   h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
   myCosts = Hash.new
   myH2KHouseInfo = Hash.new
   myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
-
-  debug_out ( " Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+  debug_on
+  debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
 
   specdCostSources = Hash.new
   specdCostSources = {"custom" => [],
@@ -6365,8 +6369,7 @@ def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
 
   # Compute costs
   myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-
-  stream_out "\n = COST IMPACTS ====================================================================================\n"
+  stream_out ( drawRuler("Cost Impacts"))
   myCosts["byAttribute"].each do | attribute , cost |
     #attList = " #{attribute.ljust(30)} = #{myChoices["attribute"].ljust(30)}"
     next if ( cost.to_f < 0.1 )
@@ -6376,9 +6379,6 @@ def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
   myTotal = '%.2f' % myCosts["total"].to_f
   stream_out " ...................................................................................................\n"
   stream_out " #{"TOTAL".ljust(40)}   #{" ".ljust(40)}     $ #{myTotal.rjust(9)}\n"
-
-  stream_out " ====================================================================================================\n"
-
   return myCosts
 
 end
@@ -6610,12 +6610,11 @@ else
 
   if ( $gJasonExport ) then
     stream_out (" \n\n")
-    stream_out (" ............ EXPORT .OPTIONS FILE AS .JSON ............\n\n")
+    stream_out drawRuler("JSON export")
     stream_out (" Option --export-options-to-json specified. \n")
-    stream_out (" Writing HTAP-options.json and quitting. \n\n")
+    stream_out (" Writing HTAP-options.json and quitting...")
     exportOptionsToJson()
-    stream_out ("\n ............                               .............\n")
-    stream_out ("                      Complete.  \n\n")
+    stream_out ("  Complete.  \n\n")
 
     exit
 
@@ -6691,7 +6690,7 @@ if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    if ( $Archetype_value =~ /NA/ )
       $Archetype_value = "SmallSFD"
    end
-   debug_on
+
    debug_out "Archetype ? #{$Archetype_value}\n"
    $gBaseModelFile = $gOptions["Opt-Archetype"]["options"][$Archetype_value]["values"]['1']['conditions']['all']
    ($h2k_src_path, $h2kFileName) = File.split( $gBaseModelFile )
@@ -6809,7 +6808,7 @@ locale.gsub!(/\./, '')
 $HDDs = $HDDHash[ locale.upcase ]
 $Locale_model = locale
 
-debug_on
+
 if !$ruleSetName.empty? && $ruleSetName != "NA"
 
 

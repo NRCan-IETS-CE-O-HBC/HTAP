@@ -77,6 +77,8 @@ module HTAPData
       end
 
       for optionEntry in jsonRawOptions[attribute]["options"].keys
+        debug_off
+        #debug_on if (attribute =~ /DHW/ && optionEntry =~ /NBC-HotWater_gas/ )
         debug_out " \n"
         debug_out " ........... OPTION: #{optionEntry} ............ \n"
 
@@ -266,6 +268,21 @@ module HTAPData
 
   end
 
+  def HTAPData.isChoiceValid(options, attrib, choice)
+    debug_on if (attrib =~ /DHW/ )
+    debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
+    debug_out "options[#{attrib}] contains #{choice}?"
+    if ( options[attrib]["options"][choice].nil? ||
+         options[attrib]["options"][choice].empty?  ) then
+      debug_out " FALSE\n "
+      exit
+      return false
+    else
+      debug_out "true\n"
+      return true
+    end
+
+  end
 
   def HTAPData.validate_options(options,choices,order)
     $err = false

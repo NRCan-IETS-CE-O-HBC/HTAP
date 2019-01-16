@@ -608,7 +608,7 @@ module H2KFile
                    }
 
       elements["HouseFile/House/HeatingCooling/Type1/"].elements.each do |t1_system|
-        debug_out " ....................................................\n"
+
         debug_out "Recovering system info for T1 : #{t1_system.name}\n"
         case t1_system.name
         when "FansAndPump"
@@ -629,7 +629,7 @@ module H2KFile
       end
 #
       elements["HouseFile/House/HeatingCooling/Type2/"].elements.each do |t2_system|
-        debug_out " ....................................................\n"
+
         debug_out "Recovering system info for T2: #{t2_system.name}\n"
         case t2_system.name
         when "AirConditioning"
@@ -643,8 +643,8 @@ module H2KFile
 
       elements["HouseFile/House/Ventilation/WholeHouseVentilatorList"].elements.each do | ventsys |
 
-        debug_out " ....................................................\n"
-        debug_out "Recoveirng system info for vent #{ventsys.name}"
+
+        debug_out "Recoveirng system info for vent #{ventsys.name}\n"
         case ventsys.name
         when "Hrv"
           systemInfo["Ventilator"]["count"] += 1
@@ -853,7 +853,7 @@ module H2KLibs
        newWindow.elements["Layers/Window/LowECoating"].add_element("French")
      end
 
-     $formatter.write(newWindow, $stdout)
+     #$formatter.write(newWindow, $stdout)
 
      location = "/Codes/Window/UserDefined"
      codeElements[location].add_element(newWindow)
