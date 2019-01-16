@@ -8688,6 +8688,54 @@
           ]
         }
       },
+      "gas_combo_p9_rated_OTPF0.95": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "P9",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "Navien America",
+            "Opt-H2K-Type2Func": "13-06-M0424-2",
+            "Opt-H2K-Type2Type": "0.98",
+            "Opt-H2K-Type2CapOpt": "1463",
+            "Opt-H2K-Type2CapVal": "0.95",
+            "Opt-H2K-Type2HeatCOP": "NA",
+            "Opt-H2K-Type2CoolCOP": "95",
+            "Opt-H2K-Type2CutoffType": "7",
+            "Opt-H2K-Type2CutoffTemp": "74",
+            "Opt-H2K-CoolOperWindow": "0.19",
+            "Opt-H2K-P9-manufacturer": "0",
+            "Opt-H2K-P9-model": "0",
+            "Opt-H2K-P9-TPF": "1444",
+            "Opt-H2K-P9-AnnualElec": "1459",
+            "Opt-H2K-P9-WHPF": "94",
+            "Opt-H2K-P9-burnerInput": "96",
+            "Opt-H2K-P9-recEff": "91",
+            "Opt-H2K-P9-ctlsPower": "145",
+            "Opt-H2K-P9-circPower": "231",
+            "Opt-H2K-P9-dailyUse": "548",
+            "Opt-H2K-P9-stbyLossWFan": "107",
+            "Opt-H2K-P9-stbyLossNoFan": "117",
+            "Opt-H2K-P9-oneHrHotWater": "418"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "ducting:central_forced_air",
+            "air_handler:1-zone:ecm_motor:circ._pump:and_electrical",
+            "DHW heater, gas fuelled, on-demand, EF 0.95 (P9 Rated System, TPF 95)"
+          ]
+        }
+      },
       "ComboHeatA": {
         "h2kMap": {
           "base": {
@@ -9321,6 +9369,82 @@
           ]
         }
       },
+      "gas_storagetank_w/powervent_ef0.67": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "190",
+            "Opt-H2K-EF": "0.67",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+             "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67"
+          ]
+        }
+      },
+      "elec_storage_ef0.89": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.8217",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+              "dhw_tank:electric:246_l:ef_0.89"
+          ]
+        }
+      },
+      "elec_tankless_ef0.94": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "4",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.936",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "dhw_electric_tankless"
+          ]
+        }
+      },
+      "elec_heatpump_ef2.30": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "6",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "2.35",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+          ]
+        }
+      },
       "BaseDHW": {
         "h2kMap": {
           "base": {
@@ -9447,11 +9571,9 @@
           }
         },
         "costs": {
+          "proxy": "gas_storagetank_w/powervent_ef0.67",
           "custom-costs": {
-          },
-          "components": [
-
-          ]
+          }
         }
       },
       "NBC-HotWater_elec": {
@@ -9468,9 +9590,7 @@
         "costs": {
           "custom-costs": {
           },
-          "components": [
-
-          ]
+          "proxy": "elec_storage_ef0.89"
         }
       },
       "NBC-HotWater_oil4": {
