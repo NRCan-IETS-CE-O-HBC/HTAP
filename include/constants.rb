@@ -178,7 +178,8 @@ CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-DWHRSystem",
                            "Opt-GenericWall_1Layer_definitions",
                            "Opt-HVACSystem",
-                           "Opt-HRVonly"
+                           "Opt-HRVonly",
+                           "Opt-DHWSystem"
                          ]
 
 $gErrors = Array.new
@@ -192,7 +193,7 @@ $lastDbgMsg = "\n"
 
 $gTest_params = Hash.new
 $gTest_params["logfile"] = false
-
+$termWidth = 130
 $caller_stack
 
 $formatter = REXML::Formatters::Pretty.new(2)

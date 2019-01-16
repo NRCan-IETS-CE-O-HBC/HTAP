@@ -27,6 +27,7 @@ $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
 
 module Costing
 
+
   def Costing.parseUnitCosts(unitCostFileName)
 
     debug_off
@@ -45,17 +46,24 @@ module Costing
 
 
   def Costing.getCostComponentList(myOptions,myChoices,attribute,choice)
-    debug_off
 
+    debug_off if CostingSupport.include? attribute
+    #debug_on if ( attribute =~ /DHW/ )
     componentList = Array.new
 
     debug_out " recovering cost component list for  #{attribute} = #{choice} \n"
-
+    debug_out " contents of options at #{attribute}/#{choice}:#{myOptions[attribute]["options"][choice].pretty_inspect}\n"
     if ( ! myOptions[attribute]["options"][choice]["costProxy"].nil? ) then
 
       proxyChoice = myOptions[attribute]["options"][choice]["costProxy"]
 
       debug_out " following proxy reference #{choice}->#{proxyChoice}"
+      # Should test to see if a component exists!
+
+      if ( ! HTAPData.isChoiceValid(myOptions, attribute, proxyChoice) ) then
+        warn_out ("Cannot cost #{attribute}->#{choice}; specified proxy '#{proxyChoice} doesn't exist.")
+
+      end
 
       componentList = getCostComponentList(myOptions,myChoices,attribute,proxyChoice)
 
@@ -141,7 +149,7 @@ module Costing
 
       end
 
-    end
+  end
 
   # THE options file may contain nested cost references
   # with conditionals and proxy cost statements.
@@ -155,13 +163,16 @@ module Costing
 
 
     myOptions.each do | attribute, contents |
-      debug_out " #{attribute}..................................\n"
+      debug_off
+      #debug_on if CostingSupport.include? attribute
+      debug_out drawRuler("Resolving costing logic for #{attribute}", ". ")
+
 
 
       mySimplerCostTree[attribute] = { "options" => Hash.new }
 
       contents["options"].each do | option, optionContents |
-        debug_out " .. #{option} ........................\n"
+        debug_out " Option = #{option}\n"
 
         mySimplerCostTree[attribute]["options"][option] = Hash.new
 
@@ -365,7 +376,6 @@ module Costing
 
   def Costing.computeCosts(mySpecdSrc,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
     debug_on
-
     costSourcesDBs = Array.new
     costSourcesCustom = Array.new
 
@@ -376,11 +386,11 @@ module Costing
     myCosts["total"] = 0
     myCosts["byAttribute"] = Hash.new
     myCosts["bySource"] = Hash.new
-
+    debug_out drawRuler(" Costing calculations ",'.')
     debug_out ("Choices to be costed:\n#{myChoices.pretty_inspect}\n")
 
 
-    debug_out "  Untangling costing logic via  Costing.resolveCostingLogic(myOptions,myChoices)"
+    debug_out "  Untangling costing logic via  Costing.resolveCostingLogic(myOptions,myChoices)\n"
 
     simpleCostTree = Costing.resolveCostingLogic(myOptions,myChoices)
 
@@ -391,7 +401,6 @@ module Costing
         debug_on()  if (choice != "NA" )
       end
 
-      debug_out " =================================================================\n"
       debug_out " #{attrib} = #{choice}\n"
       debug_out (" + Does cost data exist for #{attrib}? ")
       myCosts["byAttribute"][attrib] = 0
