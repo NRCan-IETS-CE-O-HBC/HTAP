@@ -254,12 +254,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    # ADW May 17 2018: Basements are modified through Opt-H2KFoundation, slabs and crawlspaces through Opt-H2KFoundationSlabCrawl
    # Determine if a crawlspace is present, and if it is, if the crawlspace is heated
    numOfCrawl = 0
-   isCrawlHeated = false
+   isCrawlHeated = H2KFile.heatedCrawlspace(elements)
    if elements["HouseFile/House/Components/Crawlspace"] != nil
       numOfCrawl += 1
-      if elements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
-         isCrawlHeated = true
-      end
    end
 
    # Choices that do NOT depend on ruleType!
@@ -313,7 +310,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
@@ -329,7 +326,6 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
          end
 
        # NEW-H2K Foundation, no HRV
@@ -349,7 +345,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                      = "NBC_FlatCeiling_zone5"
          $ruleSetChoices["Opt-FlatCeilings"]                      = "NBC_FlatCeiling_zone5"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_exposed_zone5"
+         $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
@@ -362,7 +358,6 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone5_noHRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
          end
 
 
@@ -381,7 +376,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
@@ -394,7 +389,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone6_noHRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone6" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
@@ -411,7 +406,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
@@ -423,7 +418,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7A_noHRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_noHRV" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
+
          end
 
 
@@ -443,7 +438,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
@@ -456,7 +451,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7B_noHRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7B_noHRV" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_3.46RSI"
@@ -480,7 +475,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
@@ -493,7 +488,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone8_noHRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_noHRV" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_3.97RSI"
@@ -522,7 +517,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone4"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
@@ -535,7 +530,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_1.99RSI"
@@ -554,7 +549,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone5"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone5"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone5"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
@@ -567,7 +562,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone5_HRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
@@ -585,7 +580,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone6"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
@@ -598,7 +593,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone6_HRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone6" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
+
          end
 
 
@@ -616,7 +611,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7A"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
@@ -629,7 +624,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7A_HRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_HRV" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
@@ -647,7 +642,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone7B"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
@@ -660,7 +655,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone7B_HRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7B_HRV" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
@@ -682,7 +677,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
          $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
 
-         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_exposed_zone8"
+         $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
          $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
@@ -695,7 +690,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone8_HRV"
          else # There is a crawlspace, but it isn't heated. Treat floor above crawlspace as exposed floor
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_HRV" # If there are any slabs, insulate them
-            $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
+
          end
 
          $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"

@@ -239,12 +239,12 @@ $optionCost = 0.00 # Total cost of all options used in this run
 
 def exportOptionsToJson()
 
-
   $gExportFormat = Hash.new
   $gOptions.each do |attribute, defs|
     # Ignore legacy tags that aren't supported anymore.
     if ( $LegacyOptionsToIgnore.include? attribute )
       stream_out "    - skipping : #{attribute} (legacy variable no longer supported)\n"
+
       next
     else
       stream_out "    - exporting > #{attribute}\n"
@@ -654,11 +654,13 @@ def processFile(h2kElements)
    if ( h2kElements[locationText] != nil )
       $PVIntModel = true
    end
+
+
+   # Legacy - set global foundaton type.
    if ( $foundationConfiguration == "wholeFdn")
      # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundation to determine which foundations to change (further down)!
      config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
      (configType, configSubType, fndTypes) = config.split('_')
-
      # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundationSlabCrawl to determine which foundations to change (further down)!
      config2 = $gOptions["Opt-H2KFoundationSlabCrawl"]["options"][ $gChoices["Opt-H2KFoundationSlabCrawl"] ]["values"]["1"]["conditions"]["all"]
      (configType2, configSubType2, fndTypes2) = config2.split('_')
@@ -703,11 +705,7 @@ def processFile(h2kElements)
                debug_out (">>ERR #{choiceEntry} / #{choiceVal} / #{tag} - empty value \n")
                value = ""
             end
-
-        if $autoCostOptions
-          baseOptionCost = getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements)
-        end
-            # Replace existing values in H2K file ....................................
+             # Replace existing values in H2K file ....................................
 
             # Weather Location
             #--------------------------------------------------------------------------
@@ -800,14 +798,7 @@ def processFile(h2kElements)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ACH/ )
                if ( tag =~ /Opt-ACH/ && value != "NA" )
-            if $autoCostOptions
-              # Override the base option cost (baseOptionCost) set above.
-              # Upgrade air sealing costs based on baseline of ACH 3.57.
-              # Do we have data to "adjust" for different base ACH values?
-              #   If existing ACH > 3.57 then set base cost negative by "some amount", and
-              #   If existing ACH < 3.57 then set base cost positive by "some amount".
-              baseOptionCost = 0
-            end
+
                   # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
                   locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
                   h2kElements[locationText].attributes["code"] = "x"
@@ -860,9 +851,9 @@ def processFile(h2kElements)
                   # If this surface code name exists in the code library, use the code
                   # (either Favourite or UsrDef) for ceiling and ceiling_flat groupings.
             # Code names in library are unique and split into two groups: "Ceiling Codes"
-                  # and "Flat or Cathedral Ceiling Codes" so the code name specified CAN ONLY EXIST
-                  # in one of these groups!
-                  # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+            # and "Flat or Cathedral Ceiling Codes" so the code name specified CAN ONLY EXIST
+            # in one of these groups!
+            # Note: Not using "Standard", non-library codes (e.g., 2221292000)
 
                   foundCodeLibElement = nil
                   useThisCodeID = "Code 99"
@@ -960,7 +951,7 @@ def processFile(h2kElements)
                         end
                      end
                   end
-          elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
+            elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
             locationText = "HouseFile/House/Components/Ceiling/Measurements"
             h2kElements[locationText].attributes["heelHeight"] = value
                else
@@ -1226,6 +1217,16 @@ def processFile(h2kElements)
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-ExposedFloor/ )
                if ( tag =~ /OPT-H2K-CodeName/ &&  value != "NA" )
+
+                 if ( h2kElements["HouseFile/House/Components/Crawlspace"] != nil &&
+                      ! H2KFile.heatedCrawlspace(h2kElements) ) then
+                    warn_out ("Opt-ExposedFloor definition uses codes (`OPT-H2K-CodeName`==`#{value}`) & house also " +
+                              "includes unheated crawlspaces. Floors above unheated crawlspaces cannot be set using code "+
+                              "defintions. Use OPT-H2K-EffRValue instead. (run with --hints for more info).")
+
+                    help_out("byOptions", "Opt-ExposedFloor")
+
+                 end
                   # If this code name exists in the code library, use the code
                   # (either Fav or UsrDef) for all entries. Code names in library are unique.
                   # Note: Not using "Standard", non-library codes (e.g., 2221292000)
@@ -1307,6 +1308,8 @@ def processFile(h2kElements)
 
                elsif ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" )
                   # Change ALL existing floor codes to User Specified R-value
+
+                  # 1) Exposed floors - Overhangs, floors above garages, ect...
                   locationText = "HouseFile/House/Components/Floor/Construction/Type"
                   h2kElements.each(locationText) do |element|
                      element.text = "User specified"
@@ -1316,8 +1319,34 @@ def processFile(h2kElements)
                         element.delete_attribute("idref")
                      end
                   end
-               elsif ( tag =~ /Opt-ExposedFloor/ )   # Do nothing for this tag (non-H2K)
-               elsif ( tag =~ /Opt-ExposedFloor-r/ )   # Do nothing for this tag (non-H2K)
+
+                 # 2) Floors above unheated / vented / open crawlspaces
+                 if ( h2kElements["HouseFile/House/Components/Crawlspace"] != nil &&
+                      ! H2KFile.heatedCrawlspace(h2kElements) )
+
+                   locationText = "HouseFile/House/Components/Crawlspace/Floor/Construction/FloorsAbove"
+                   h2kElements.each(locationText) do |element|
+                      element.text = "User specified"     # Description tag
+                      element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                      if element.attributes["idref"] != nil then
+                         # Must delete attribute for User Specified!
+                         element.delete_attribute("idref")
+                      end
+                   end
+#
+#
+                 end
+
+
+
+                elsif ( choiceEntry =~ /Opt-FloorAboveCrawl/ )
+                   # If there is a crawlspace and an R-value has been specified for the floor above the crawlspace, update
+                   if ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" && h2kElements["HouseFile/House/Components/Crawlspace"] != nil)
+
+                   end
+
+
+
                else
                   if ( value == "NA" ) # Don't change anything
                   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
@@ -6448,8 +6477,6 @@ stream_out drawRuler("Parsing input data")
 
 if ( $gOptionFile =~ /\.json/ ) then
 
-  warn_out ("Parsing experiential JSON file ! \n")
-
   $gOptions = HTAPData.parse_json_options_file($gOptionFile)
 
 
@@ -6487,6 +6514,7 @@ else
 
 
 end
+
 
 
 for $currentAttributeName in $gOptions.keys()

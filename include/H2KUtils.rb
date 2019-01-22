@@ -9,7 +9,7 @@ module HTAP2H2K
 
   def HTAP2H2K.conf_foundations(myFdnData,myOptions,h2kElements)
 
-    debug_off
+    debug_on
 
     debug_out "Setting up foundations for this config:\n#{myFdnData.pretty_inspect}\n"
 
@@ -179,6 +179,18 @@ end
 
 module H2KFile
 
+  def H2KFile.heatedCrawlspace(h2kElements)
+    isCrawlHeated = false
+
+
+    if h2kElements["HouseFile/House/Components/Crawlspace"] != nil
+       if h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
+          isCrawlHeated = true
+       end
+    end
+
+    return isCrawlHeated
+  end
 
   def H2KFile.updSlabDef (fdnData,h2kElements)
     debug_off
@@ -233,27 +245,30 @@ module H2KFile
   # Update a basement definition to reflect new data.
   def H2KFile.updBsmCrawlDef(fdnData,h2kElements)
 
-    debug_off
+    debug_on
 
     looplocation = "HouseFile/House/Components"
 
     h2kElements[looplocation].elements.each do | node |
 
-      next if ( node.name != "Basement" && node.name != "Crawlspace" )
+      # Only work if basements, heated crawlspaces
+      next if ( node.name != "Basement"   && node.name != "Crawlspace"               )
+      next if ( node.name == "Crawlspace" && ! H2KFile.heatedCrawlspace(h2kElements) )
 
       label = node.elements[".//Label"].text
 
       debug_out "> updating definitions for #{node.name} '#{label}'\n"
 
       if ( node.name == "Basement" ) then
-
         debug_out(" ... basement code \n")
         config_type = fdnData["BasementConfig"].split(/_/)[0]
         config_subtype= fdnData["BasementConfig"].split(/_/)[1]
+
       elsif ( node.name == "Crawlspace" ) then
         debug_out(" ... crawlspace code \n")
         config_type = fdnData["CrawlConfig"].split(/_/)[0]
         config_subtype= fdnData["CrawlConfig"].split(/_/)[1]
+
       end
 
       debug_out(" setting configuration to #{config_type}, subtype #{config_subtype}\n")

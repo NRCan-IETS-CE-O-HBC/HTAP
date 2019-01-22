@@ -168,7 +168,8 @@ $LegacyOptionsToIgnore = Set.new [
   "Opt-RoofPitch",
   "Opt-StandoffPV",
   "Opt-DHWLoadScale",
-  "Opt-HRVduct"
+  "Opt-HRVduct",
+  "Opt-FloorAboveCrawl",
 ]
 
 CostingSupport = Set.new [ "Opt-Ceilings",
@@ -209,4 +210,4 @@ $ruleSetSpecs = Hash.new
 
 $gChoicesChangedbyProgram = false
 
-$foundationConfiguration = "" 
+$foundationConfiguration = ""

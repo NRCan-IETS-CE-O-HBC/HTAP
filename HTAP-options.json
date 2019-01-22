@@ -8781,101 +8781,39 @@
           ]
         }
       },
+      "NBC_936_4.67RSI":{
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "26.52"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "NBC_936_5.02RSI":{
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "28.51"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "936-Ruleset-AW-custom-R": {
         "h2kMap": {
           "base": {
             "OPT-H2K-CodeName": "NA",
             "OPT-H2K-EffRValue": "31"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_exposed_zone4": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_exposed_zone5": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_exposed_zone6": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_exposed_zone7A": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_exposed_zone7B": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_exposed_zone8": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "28.50"
           }
         },
         "costs": {
@@ -8891,115 +8829,6 @@
     "stop-on-error": true,
     "h2kSchema": [
       "OPT-H2K-CodeName",
-      "OPT-H2K-EffRValue"
-    ]
-  },
-  "Opt-FloorAboveCrawl": {
-    "structure": "tree",
-    "costed": true,
-    "options": {
-      "NA": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "NA"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_crawlceiling_zone4": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_crawlceiling_zone5": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_crawlceiling_zone6": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_crawlceiling_zone7A": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_crawlceiling_zone7B": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_crawlceiling_zone8": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      }
-    },
-    "default": "NA",
-    "stop-on-error": true,
-    "h2kSchema": [
       "OPT-H2K-EffRValue"
     ]
   },

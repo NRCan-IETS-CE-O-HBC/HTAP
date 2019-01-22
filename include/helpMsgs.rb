@@ -20,7 +20,7 @@ def initialize
                       "Opt-FlatCeilings" => nil,
                       "Opt-MainWall" => nil,
                       "Opt-GenericWall_1Layer_definitions" => nil,
-                      "Opt-ExposedFloor" => nil,
+                      "Opt-ExposedFloor" => "Opt-ExposedFloor",
                       "Opt-CasementWindows" => nil,
                       "Opt-Skylights" => nil,
                       "Opt-DoorWindows" => nil,
@@ -40,7 +40,7 @@ def initialize
                       "GOconfig_rotate" => nil,
                       "Opt-Ceilings" => nil,
                       "Opt-FloorHeader" => nil,
-                      "Opt-FloorAboveCrawl" => nil,
+                      "Opt-FloorAboveCrawl" => "Opt-FloorAboveCrawl",
                       "Opt-Baseloads" => nil,
                       "Opt-Temperatures" => nil,
                       "Opt-Specifications" => nil,
@@ -74,7 +74,43 @@ def initialize
 
   (You can also set variables in both columns to 'NA', which causes HTAP to leave the
    foundation alone.)
-   
+
 "
+
+@text["Opt-FloorAboveCrawl"] = "
+ Prior versions of HTAP supported two variables that could set the thermal
+ caracteristics of exposed floors - Opt-ExposedFloors and Opt-FloorAboveCrawl.
+ These have been combined into a single varible (Opt-ExposedFloors) that
+ will set the exposed floor insulation values for both overhanging floors
+ and floors over open/vented crawlspaces.
+
+"
+
+@text["Opt-ExposedFloor"] = "
+ Opt-ExposedFloor sets insulation levels for floor surfaces above unheated
+ spaces (including floors above garages, open crawl spaces). It supports
+ two specific mapping paramaters:
+
+ \"h2kMap\": {
+   \"base\": {
+     \"OPT-H2K-CodeName\": string,
+     \"OPT-H2K-EffRValue\": float
+   }
+
+ Each option definition should set one of these parameters to \"NA\"; setting
+ both to values other than \"NA\" will create an error.
+
+ OPT-H2K-CodeName will set the construction definition of exposed floors to
+ the user defined code. Since HOT2000 does not support using user-defined
+ codes for floors above foundation, it cannot also set the R-Value of floors
+ above foundations.
+
+ OPT-H2K-EffRValue will set the effective R-value of both exposed floors and
+ floors above unheated crawlspaces to the perscribed r-value.
+
+ RECOMMENDATION: USE OPT-H2K-EffRValue, and set OPT-H2K-CodeName to NA.
+"
+
+
 end
 end

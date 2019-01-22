@@ -242,8 +242,9 @@ def help_out(catagory,topic)
       debug_out "by msg (#{topic})...\n"
       myHelpMsg  = myHelp.text[topic]
     else
-      debug_out ("by topic...\n")
+      debug_out ("by topic - #{catagory}/#{topic}...\n")
       msgIndex = myHelp.index[catagory][topic]
+      debug_out ( " ... index #{msgIndex}\n")
       myHelpMsg =  myHelp.text[msgIndex]
     end
   rescue
@@ -263,10 +264,13 @@ def help_out(catagory,topic)
     warn_out " Broken call to help_out() in #{routine} (#{file}:#{line}) - some developer should fix this! "
   end
 
-  stream_out "\n"
-  stream_out drawRuler("Hint - #{topic}",'?')
+  myHelpMsg.gsub!(/^/,'? ')
+
+  stream_out "\n\n"
+  stream_out drawRuler("Hint - #{topic}",'? ')
   stream_out myHelpMsg
-  stream_out drawRuler(nil,'?')
+  stream_out drawRuler(nil,'? ')
+  stream_out "\n\n"
 
 
 end

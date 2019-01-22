@@ -170,7 +170,8 @@ module HTAPData
 
   # Parse configuration / choice file
   def HTAPData.parse_choice_file(filename)
-    debug_off
+    # debug_on
+
     blk = lambda { |h,k| h[k] = Hash.new(&blk) }
     choices = Hash.new(&blk)
     order = Array.new
@@ -192,10 +193,10 @@ module HTAPData
       line.gsub!(/\s*/, '')    # Removes mid-line white space
       linecount += 1
 
-      #debug_out ("  Line: #{$linecount} >#{$line}<\n")
+      debug_out ("  Line: #{$linecount} >#{$line}<\n")
 
       if ( line !~ /^\s*$/ )
-        debug_out ("----------------------------------------------------------")
+        debug_out ("----------------------------------------------------------\n")
         debug_out ("LINE: #{line}\n")
         lineTokenValue = line.split(':')
         attribute = lineTokenValue[0]
@@ -203,6 +204,9 @@ module HTAPData
 
         if ( $LegacyOptionsToIgnore.include? attribute ) then
           warn_out ("Choice file includes legacy choice (#{attribute}), which is no longer supported. Input ignored.")
+
+          help_out("byOptions",attribute)
+
           next
         end
 
@@ -381,7 +385,7 @@ module HTAPData
 
     HTAPData.zeroInvalidFoundaiton($ValidatedChoices)
 
-    
+
 
 
 
