@@ -3,20 +3,27 @@
 # msgs.rb: Various output scripts used to handle reporting to files
 #
 # =========================================================================================
+require_relative 'helpMsgs'
+class Help
+   include HelpTxt
+end
 
+# =========================================================================================
+# Query info about the console, and set terminal width.
+#
+# =========================================================================================
 def setTermSize
-
-
    require 'io/console'
    $termWidth = IO.console.winsize[1]
 
 end
 
 def shortenToTerm(msg)
+  setTermSize if ( $termWidth.nil? )
 
-  if msg.length > $termWidth then
+  if msg.length > $termWidth-3 then
     msg.gsub!(/\n/,"")
-    shortmsg = "#{msg[0..$termWidth-5]} ...\n"
+    shortmsg = "#{msg[0..$termWidth-9]} [...]\n"
   else
     shortmsg = msg
   end
@@ -35,19 +42,41 @@ def stream_out(msg)
     $fLOG.write(msg)
   end
 end
-# Take a
-def drawRuler(msg = nil, char="=")
-  c=char
-  if (!  msg.nil? )
-    return "#{char} #{msg} #{c}".ljust($termWidth,c)+"\n"
-  else
-    return "".ljust($termWidth,c)+"\n"
-  end
-  return myruler
 
+# =========================================================================================
+# Draw a pretty ruler with optional embedded msg, and custom character 'char',
+# formatted to match width of terminal
+# =========================================================================================
+def drawRuler(msg = nil, char=nil)
+  setTermSize if ( $termWidth.nil? )
+
+  c=char
+  # set to default ruler character, if none provided.
+  if ( char.nil? )
+    c = "="
+  end
+
+  if ( ! msg.nil? && c == "=" )
+    topRule = "".ljust($termWidth-1,"_")
+    topRule = "\n#{topRule}\n"
+    prefix = "#{$program}: "
+  else
+    topRule = ""
+    prefix  =""
+  end
+
+  if (! msg.nil? )
+    mainRule = "#{c} #{prefix}#{msg} #{c}".ljust($termWidth-1,c)+"\n"
+  else
+    mainRule = "".ljust($termWidth-1,c)+"\n"
+  end
+
+  return "#{topRule}#{mainRule}"
 end
 
-
+# =========================================================================================
+# Return easy-to-read information about the calling routine
+# =========================================================================================
 def caller_info()
 
    parent = caller[1].clone
@@ -84,7 +113,9 @@ def caller_info()
 
 end
 
-
+# =========================================================================================
+# Hook enabling debugging from within a routine
+# =========================================================================================
 def debug_on()
   callerID = caller_info()
   routine = callerID["routine"]
@@ -93,12 +124,14 @@ def debug_on()
   $localDebug[routine] = true
   $lastDbgMsg = "\n"
   print "\n"
-  debug_out_now(drawRuler(nil,"_"),callerID)
+  debug_out_now(drawRuler(nil,"_ "),callerID)
   debmsg = "Debugging turned on at #{file}:#{line.to_s}\n"
   debug_out_now(debmsg,callerID)
   return 1
 end
-
+# =========================================================================================
+# Hook disabling debugging from within a routine
+# =========================================================================================
 def debug_off()
   callerID = caller_info()
   $localDebug[callerID["routine"]] = false
@@ -106,7 +139,8 @@ def debug_off()
 end
 
 # =========================================================================================
-# Write debug output ------------------------------------------------
+# Check of debugging is active, and if so, call debug_out_now
+# to write out debugging messages.
 # =========================================================================================
 def debug_out(debmsg)
 
@@ -123,8 +157,10 @@ def debug_out(debmsg)
   end
 end
 
-
-
+# =========================================================================================
+# Write out formatted debugging messages to the screen. (in almost all cases,
+# code should call debug_out and not debug_out_now.
+# =========================================================================================
 def debug_out_now(debmsg, callerID)
 
   callindent = ""
@@ -133,10 +169,12 @@ def debug_out_now(debmsg, callerID)
   lineNumber = callerID["line"]
   routine    = callerID["routine"]
 
-  #[1..level].each do
-  #  callIndent ="#{callIndent}.."
-  #end
-  callIndent = ""
+  calldots = ""
+  callblks = ""
+  (1..level).each do
+    calldots ="#{calldots}."
+  end
+
 
   linestring = lineNumber.to_s
   blankstring = " "
@@ -150,7 +188,7 @@ def debug_out_now(debmsg, callerID)
 
       if first then
         first = false
-        prefix = "[d:#{callindent}#{routine}:#{linestring} ".ljust(30)
+        prefix = "[#{calldots}d#{level}:#{callindent}#{routine}:#{linestring} ".ljust(30)
         prefix = "#{prefix}]"
 
         if (  debmsg =~ /^[^\s]/ ) then
@@ -179,12 +217,10 @@ def debug_out_now(debmsg, callerID)
 end
 
 # =========================================================================================
-# Write warning output ------------------------------------------------
+# Write warning message to screen, and log for reporting
 # =========================================================================================
 def warn_out(msg)
-  if $gWarn
-    puts "\n\n WARNING: #{msg}\n\n"
-  end
+  #puts "\n\n WARNING: #{msg}\n\n"
   if ($gTest_params["logfile"])
     $fLOG.write("\n\n WARNING: #{msg}\n\n")
   end
@@ -193,12 +229,55 @@ def warn_out(msg)
 
 end
 
+def help_out(catagory,topic)
+  #require_relative 'helpMsgs'
+  return if (! $gHelp )
+
+  myHelp = Help.new
+  myHelpMsg = nil
+  #pp helpTxt
+
+  begin
+    if (catagory == "byMsg") then
+      debug_out "by msg (#{topic})...\n"
+      myHelpMsg  = myHelp.text[topic]
+    else
+      debug_out ("by topic...\n")
+      msgIndex = myHelp.index[catagory][topic]
+      myHelpMsg =  myHelp.text[msgIndex]
+    end
+  rescue
+     myHelpMsg = nil
+
+  end
+
+  if ( myHelpMsg.nil? )
+    callerID = Hash.new
+    callerID = caller_info()
+    line     = callerID["line"]
+    file     = callerID["file"]
+    routine  = callerID["routine"]
+    myHelpMsg = "\n Unfortunately, nobody has provided any help text\n"+
+                  " for catagory: #{catagory} / topic: #{topic}\n"+
+                  "\n"
+    warn_out " Broken call to help_out() in #{routine} (#{file}:#{line}) - some developer should fix this! "
+  end
+
+  stream_out "\n"
+  stream_out drawRuler("Hint - #{topic}",'?')
+  stream_out myHelpMsg
+  stream_out drawRuler(nil,'?')
+
+
+end
+
+
+# =========================================================================================
+# Write error message to screen, log for reporting, and set global error flag.
+# =========================================================================================
 def err_out(msg)
 
   puts "\n\n ERROR: #{msg}\n\n"
-
-
-
 
   if ($fLOG != nil )
     $fLOG.write("\n\n ERROR: #{msg}\n\n")
@@ -209,7 +288,9 @@ end
 
 
 
-
+# =========================================================================================
+# Write error message to screen, log for reporting, and set global error flag.
+# =========================================================================================
 def fatalerror( err_msg )
 # Display a fatal error and quit. -----------------------------------
 
@@ -251,7 +332,9 @@ def writeHeader()
  stream_out drawRuler(nil)
 end
 
-
+# =========================================================================================
+# Report info about the status of the run,
+# =========================================================================================
 def ReportMsgs()
 
   $ErrorBuffer = ""
