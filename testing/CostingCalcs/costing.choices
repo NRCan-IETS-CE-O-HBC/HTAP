@@ -7,13 +7,13 @@
 ! that are noted in comments below).
 !-----------------------------------------------------------------------
 
-Opt-Ruleset : as-found ! NBC9_36[fuel=gas;vent=noHRV]
+Opt-Ruleset :  NBC9_36[fuel=gas;vent=noHRV]
 
 ! HOT2000 code library file to be used - MUST ALWAYS BE SPECIFIED HERE
 Opt-DBFiles  : H2KCodeLibFile
 
 ! Weather location
-Opt-Location : NA
+Opt-Location : KUUJJUAQ
 
 Opt-FuelCost : NA
 
@@ -52,10 +52,13 @@ Opt-DoorWindows : NA
 Opt-Doors : NA
 
 ! Foundation definitions
-Opt-H2KFoundation : NA
+!Opt-H2KFoundation :   Rigid+BattR30-R24BSlab
+!Opt-H2KFoundationSlabCrawl : NA
 
-Opt-H2KFoundationSlabCrawl : NA
-
+ Opt-FoundationWallExtIns :      xps4inEffR20 ! uninsulated ! xps4inEffR20!  xps2inEffR10
+ Opt-FoundationWallIntIns :      WoodFrameEffR15
+ Opt-FoundationSlabBelowGrade :  xps4inEffR20
+ Opt-FoundationSlabOnGrade :     xps4inEffR20 ! uninsulated
 
 ! Hot water system. Choices:
 Opt-DHWSystem :  NA
@@ -63,18 +66,14 @@ Opt-DHWSystem :  NA
 Opt-DWHRSystem :  NA
 
 ! HVAC system
-Opt-HVACSystem  :  gas-furnace-ecm
+Opt-HVACSystem  : NA !  gas-furnace-ecm
 
 ! HRV spec
 Opt-HRVspec : NA
 
-Opt-HRVonly : VentFans_sre_0
+Opt-HRVonly : NA !  VentFans_sre_0
 
-Opt-RoofPitch : NA
 
-! External (Opt-StandoffPV) and Internal model (Opt-H2K-PV) PV options.
-! Substitute-h2k.rb will select external if both are specified!
-Opt-StandoffPV : NoPV      !SizedPV|8kW
 Opt-H2K-PV : NA !  MonoSi-200m2   !MonoSi-50m2
 
 !---------------------------------------------------------------------------

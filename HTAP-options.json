@@ -6283,6 +6283,726 @@
       "Opt-H2K-EffRValue"
     ]
   },
+  "Opt-FoundationWallExtIns":{
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "uninsulated": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "xps1inEffR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:25mm",
+            "fasteners_for_1in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "xps1.5inEffR7.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "7.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:38mm",
+            "fasteners_for_1in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "xps2inEffR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "fasteners_for_2in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "xps2.5inEffR12.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "12.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:64mm",
+            "fasteners_for_2in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "xps3inEffR15": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "15.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:25mm",
+            "fasteners_for_4in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "xps4inEffR20": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "20.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:51mm",
+            "fasteners_for_4in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "NBC_936_uninsulated_EffR0" :{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-ExtWallReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "uninsulated"
+        }
+      }
+    },
+    "default": "NA",
+    "stop_on-error": true,
+    "h2kSchema": [
+      "H2K-Fdn-ExtWallReff"
+    ]
+  },
+  "Opt-FoundationWallIntIns":{
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "uninsulated": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "WoodFrameEffR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "framing:interior_basement:38x89mm_o.c.",
+            "insulation:r12_batt"
+          ]
+        }
+      },
+      "WoodFrameEffR11": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "11.2"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "framing:interior_basement:38x89mm_o.c.",
+            "insulation:r14_batt"
+          ]
+        }
+      },
+      "WoodFrameEffR15": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "15.8"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "framing:interior_basement:38x89mm_o.c.",
+            "insulation:r20_batt"
+          ]
+        }
+      },
+      "WoodFrameEffR17": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "17.6"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "framing:interior_basement:38x89mm_o.c.",
+            "insulation:r22_batt"
+          ]
+        }
+      },
+      "WoodFrame+intEpsEffR20": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "19.97"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "framing:interior_basement:38x89mm_o.c.",
+            "insulation:r20_batt",
+            "insulation:eps_type_2:rigid:25mm",
+            "fasteners_for_1in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "WoodFrame+intEpsEffR23": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "23.85"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "framing:interior_basement:38x89mm_o.c.",
+            "insulation:r22_batt",
+            "insulation:eps_type_2:rigid:38mm",
+            "fasteners_for_1in_thick_exterior_insulation"
+          ]
+        }
+      },
+      "NBC_936_1.99RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "11.3"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "WoodFrameEffR11"
+        }
+      },
+      "NBC_936_2.98RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "16.93"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "WoodFrameEffR17"
+        }
+      },
+      "NBC_936_3.46RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "19.65"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "WoodFrame+intEpsEffR20"
+        }
+      },
+      "NBC_936_3.97RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "22.55"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "WoodFrame+intEpsEffR23"
+        }
+      }
+    },
+    "default": "NA",
+    "stop_on-error": true,
+    "h2kSchema": [
+      "H2K-Fdn-IntWallReff"
+    ]
+  },
+  "Opt-FoundationSlabBelowGrade":{
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "uninsulated": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "xps1inEffR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:25mm"
+          ]
+        }
+      },
+      "xps1.5inEffR7.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "7.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:38mm"
+          ]
+        }
+      },
+      "xps2inEffR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm"
+          ]
+        }
+      },
+      "xps2.5inEffR12.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "12.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:64mm"
+          ]
+        }
+      },
+      "xps3inEffR15": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "15.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:25mm"
+          ]
+        }
+      },
+      "xps4inEffR20": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "20.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:51mm"
+          ]
+        }
+      },
+      "xps4.5inEffR22.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "22.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:25mm",
+            "insulation:xps_type_4:rigid:64mm"
+          ]
+        }
+      },
+      "NBC_936_uninsulated_EffR0":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "uninsulated"
+        }
+      },
+      "NBC_936_1.96RSI":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
+      "NBC_936_4.44RSI":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "25.22"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps4.5inEffR22.5"
+        }
+      }
+    },
+    "default": "NA",
+    "stop_on-error": true,
+    "h2kSchema": [
+      "H2K-Fdn-SlabBelowGradeReff"
+    ]
+  },
+  "Opt-FoundationSlabOnGrade":{
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "uninsulated": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "xps1inEffR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:25mm"
+          ]
+        }
+      },
+      "xps1.5inEffR7.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "7.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:38mm"
+          ]
+        }
+      },
+      "xps2inEffR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm"
+          ]
+        }
+      },
+      "xps2.5inEffR12.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "12.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:64mm"
+          ]
+        }
+      },
+      "xps3inEffR15": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "15.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:25mm"
+          ]
+        }
+      },
+      "xps3inEffR17.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "17.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:38mm"
+          ]
+        }
+      },
+      "xps4inEffR20": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "20.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:51mm"
+          ]
+        }
+      },
+      "xps4.5inEffR22.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "22.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:64mm"
+          ]
+        }
+      },
+      "xps5.5inEffR27.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "22.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:38mm"
+          ]
+        }
+      },
+      "NBC_936_1.96RSI":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
+      "NBC_936_2.84RSI":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "16.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps3inEffR17.5"
+        }
+      },
+      "NBC_936_3.72RSI":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "21.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps4.5inEffR22.5"
+        }
+      },
+      "NBC_936_4.59RSI":{
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "26.07"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps5.5inEffR27.5"
+        }
+      }
+    },
+    "default": "NA",
+    "stop_on-error": true,
+    "h2kSchema": [
+      "H2K-Fdn-SlabOnGradeReff"
+    ]
+  },
   "Opt-H2KFoundation": {
     "structure": "tree",
     "costed": true,

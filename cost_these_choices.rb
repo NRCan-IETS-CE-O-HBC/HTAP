@@ -25,7 +25,7 @@ include REXML
 
 $program = "cost_these_choices.rb"
 
-debug_off()
+debug_on()
 debug_out("[!] Debugging output requested for #{$program}\n")
 
 $allok = true
@@ -172,9 +172,8 @@ myUnitCosts = Costing.parseUnitCosts(myCostsFile)
 # Parse choices
 #myChoices, myChoiceOrder = HTAPData.parse_choice_file(myChoiceFile)
 
-fChoiceFile = File.new(myChoiceFile, "r")
-choiceContents = fChoiceFile .read
-myChoiceSet = JSON.parse(choiceContents)
+
+myChoices, myChoicesOrder = HTAPData.parse_choice_file(myChoiceFile)
 # ( not yet supported - read archetype out of choice file)
 
 # Parse h2k file
@@ -189,25 +188,7 @@ h2kElements = H2KFile.get_elements_from_filename(myBaseModelFile)
 #  Verify options and choices make sense !
 #-------------------------------------------------------------------
 
-
-
-startSet = Hash.new
-myChoiceOrder.push "Opt-Location"
-myChoiceSet["upgrades"].each do | attribute, choices |
-  startSet[attribute] = choices[0]
-  myChoiceOrder.push attribute
-end
-
-myChoiceSet["scope"]["locations"].each do | location |
-  myChoiceSet["scope"]["archetypes"].each do | archetype |
-    startSet["Opt-Location"] = location
-    startSet["Opt-Archetype"] = archetype
-    thisSet = Hash.new
-    thisSet = startSet
-
-    pp thisSet
-
-    myOptionsErr,myChoices,myChoiceOrder = HTAPData.validate_options(myOptions, thisSet, myChoiceOrder )
+    myOptionsErr,myChoices,myChoiceOrder = HTAPData.validate_options(myOptions, myChoices, myChoiceOrder )
     if ( myOptionsErr ) then
       fatalerror ("Could not parse options")
       $allok = false
@@ -224,39 +205,15 @@ myChoiceSet["scope"]["locations"].each do | location |
     myCosts = Hash.new
 
     # Compute costs
-    myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,thisSet,myH2KHouseInfo)
-    stream_out ("\n=================================================================\n")
-    stream_out ("\nCost these choices.rb\n")
-    stream_out ("\nComputed costs:\n#{myCosts.pretty_inspect}\n")
-    stream_out ("\n=================================================================\n")
+    myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
 
-    myChoiceSet["upgrades"].each do | attribute, upgrades |
+    stream_out ( drawRuler("Cost Impacts"))
+    myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
+    Costing.summarizeCosts(myChoices, myCosts)
 
 
 
-      next if ( upgrades.length == 1 )
 
-      upgrades[1..-1].each do |upgrade|
-         debug_out "looking at #{attribute} = #{upgrade}\n"
-
-         thisSet = startSet
-         thisSet[attribute] = upgrade
-
-         myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,thisSet,myH2KHouseInfo)
-         stream_out ("\n=================================================================\n")
-         stream_out ("\nCost these choices.rb\n")
-         stream_out ("\nComputed costs:\n#{myCosts.pretty_inspect}\n")
-         stream_out ("\n=================================================================\n")
-
-
-
-      end
-
-    end
-
-
-  end
-end
 
 
 

@@ -34,9 +34,8 @@ include REXML   # This allows for no "REXML::" prefix to REXML methods
 
 
 $program = "substitute-h2k.rb"
-setTermSize
 
-stream_out drawRuler ($program)
+stream_out drawRuler("A wrapper for HOT2000")
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
@@ -424,151 +423,6 @@ def exportOptionsToJson()
 end
 
 
-
-
-
-
-
-def parse_json_options_file(filename)
-  # New parsing method for json format
-  stream_out("\n\n Reading available options (#{filename})...")
-  debug_out(" --------------JSON options parsing ------------ ")
-  fOPTIONS = File.new(filename, "r")
-  if fOPTIONS == nil then
-     fatalerror(" Could not read #{filename}.\n")
-  end
-
-
-  $OptionsContents = fOPTIONS.read
-  fOPTIONS.close
-  $JSONRawOptions = JSON.parse($OptionsContents)
-
-
-
-
-  for attribute in $JSONRawOptions.keys()
-
-
-
-    structure = $JSONRawOptions[attribute]["structure"]
-    schema = $JSONRawOptions[attribute]["schema"].to_s
-
-    debug_out "\n ====================================="
-    debug_out " Attribute: #{attribute} "
-    debug_out " structure: #{structure} "
-
-    $StopOnError = $JSONRawOptions[attribute]["stop-on-error"]
-    if ( $StopOnError ) then
-      errFlag = 1
-    else
-      errFlag = 0
-    end
-
-
-    #puts "> #{attribute} (#{structure}) \n"
-    $gOptions2[attribute] = Hash.new
-    $gOptions2[attribute] = { "type" => "internal" ,
-                              "default" => Hash.new ,
-                              "stop-on-error" => errFlag  ,
-                              "tags" => Hash.new   ,
-                              "options" => Hash.new      }
-
-
-
-
-    if ( structure.to_s =~ /tree/)
-      tagindex = 0
-      debug_out " SCHEMA : "
-      for schemaEntry in $JSONRawOptions[attribute]["h2kSchema"]
-        tagindex = tagindex + 1
-        $gOptions2[attribute]["tags"][tagindex] = schemaEntry
-
-        debug_out "          #{tagindex} - #{schemaEntry}   "
-
-      end
-
-    else
-      $gOptions2[attribute]["tags"][1] = "<NotARealTag>"
-    end
-
-    if ( ! $JSONRawOptions[attribute]["default"].nil? ) then
-       default = $JSONRawOptions[attribute]["default"]
-
-      $gOptions2[attribute]["default"] = { "defined" => 1,
-                                           "value"   => default }
-
-    end
-
-    for optionEntry in $JSONRawOptions[attribute]["options"].keys
-      debug_out " "
-      debug_out " ........... OPTION: #{optionEntry} ............ "
-
-      $gOptions2[attribute]["options"][optionEntry] = Hash.new
-
-      # Import legacy costs (to be replaced.)
-
-
-
-      if ( $JSONRawOptions[attribute]["costed"]  &&
-             ! $JSONRawOptions[attribute]["options"][optionEntry]["costs"].nil? &&
-             ! $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"].nil?  &&
-             ! $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost-type"].nil?    )
-
-        costType = $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost-type"]
-        costVal  = $JSONRawOptions[attribute]["options"][optionEntry]["costs"]["legacy"]["cost"]
-      else
-        costType = "total"
-        costVal  = 0
-      end
-
-      $gOptions2[attribute]["options"][optionEntry] = { "values" => Hash.new,
-                                                        "cost-type" => costType, # legacy compatability - to be removed
-                                                        "cost"   => "#{costVal.to_s}"        }   # legacy compatability - to be removed
-
-
-
-      # Currently only base supported.
-      if ( structure.to_s =~ /tree/)
-        $values = $JSONRawOptions[attribute]["options"][optionEntry]["h2kMap"]
-        debug_out" has h2kMap entries - "
-        debug_out"      #{$values["base"]} \n\n"
-
-
-        valuesWithConditions = Hash.new
-
-        for tagname,value in $values["base"]
-
-          tagindex = $JSONRawOptions[attribute]["h2kSchema"].index(tagname) + 1
-          if ( ! tagindex.nil? )
-            valuesWithConditions[tagindex.to_s] = Hash.new
-            valuesWithConditions[tagindex.to_s] = { "conditions" => Hash.new }
-            valuesWithConditions[tagindex.to_s]["conditions"] = { "all" => value }
-          else
-            fatalerror("For #{attribute}: tag #{tagname} does not match schema.\n")
-          end
-        end
-
-        $gOptions2[attribute]["options"][optionEntry]["values"] = valuesWithConditions
-
-      else
-        $values = $JSONRawOptions[attribute]["options"][optionEntry]
-        debug_out " has value - #{$values}"
-        $gOptions2[attribute]["options"][optionEntry]["values"][1.to_s] = { "conditions" =>
-                                                                               { "all" => $values }
-                                                                          }
-
-      end
-
-    end
-
-
-  end
-
-  stream_out("done.\n\n")
-
-
-end
-
 def parse_legacy_options_file(filename)
 
   $currentAttributeName =""
@@ -776,6 +630,13 @@ def processFile(h2kElements)
   else
     h2kCodeElements = H2KFile.get_elements_from_filename(h2kCodeFile)
   end
+  debug_off
+  debug_out ("saving a copy of the pre-substitute version (filepresub.h2k)\n")
+  newXMLFile = File.open("file-presub.h2k", "w")
+  $XMLdoc.write(newXMLFile)
+  newXMLFile.close
+  debug_off
+
 
    # Will contain XML elements for fuel cost file, if Opt-Location is processed!
    # Initialized here outside of Opt-Locations check to make scope broader
@@ -793,15 +654,15 @@ def processFile(h2kElements)
    if ( h2kElements[locationText] != nil )
       $PVIntModel = true
    end
+   if ( $foundationConfiguration == "wholeFdn")
+     # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundation to determine which foundations to change (further down)!
+     config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
+     (configType, configSubType, fndTypes) = config.split('_')
 
-   # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundation to determine which foundations to change (further down)!
-   config = $gOptions["Opt-H2KFoundation"]["options"][ $gChoices["Opt-H2KFoundation"] ]["values"]["1"]["conditions"]["all"]
-   (configType, configSubType, fndTypes) = config.split('_')
-
-   # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundationSlabCrawl to determine which foundations to change (further down)!
-   config2 = $gOptions["Opt-H2KFoundationSlabCrawl"]["options"][ $gChoices["Opt-H2KFoundationSlabCrawl"] ]["values"]["1"]["conditions"]["all"]
-   (configType2, configSubType2, fndTypes2) = config2.split('_')
-
+     # Refer to tag value for OPT-H2K-ConfigType in choice Opt-H2KFoundationSlabCrawl to determine which foundations to change (further down)!
+     config2 = $gOptions["Opt-H2KFoundationSlabCrawl"]["options"][ $gChoices["Opt-H2KFoundationSlabCrawl"] ]["values"]["1"]["conditions"]["all"]
+     (configType2, configSubType2, fndTypes2) = config2.split('_')
+   end
    optDHWTankSize = "1"  # DHW variable defined here so scope includes all DHW tags
 
    sysType1 = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
@@ -819,9 +680,10 @@ def processFile(h2kElements)
   end
 
   baseOptionCost = 0
+   debug_off
    $gChoiceOrder.each do |choiceEntry|
 
-      debug_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} \n")
+      debug_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} = #{$gChoices[choiceEntry]}\n")
 
 
       if ( $gOptions[choiceEntry]["type"] == "internal" )
@@ -1587,6 +1449,7 @@ def processFile(h2kElements)
             #  - Interior & Exterior wall insulation, below slab insulation
             #    based on insulation configuration type
             #--------------------------------------------------------------------------
+
             elsif ( choiceEntry == "Opt-H2KFoundation" )
                locHouseStr = [ "", "" ]
 
@@ -3201,6 +3064,9 @@ def processFile(h2kElements)
 
         end # of if block for this option choice (choiceEntry)
 
+
+
+
         # Calculate cost difference (Upg - Base) for the choiceEntry just parsed
         # Note:
         #   - Base cost below is for NEW HOUSING COST ANALYSIS. We are comparing the
@@ -3212,6 +3078,19 @@ def processFile(h2kElements)
       end
    end
 
+   # Now we have processed all sequential choices - we need to preform
+   # operations tha depend on multiple choices. Start with Foundations...
+   myFdnData = Hash.new
+
+   myFdnData["FoundationWallExtIns"     ] =  $gChoices["Opt-FoundationWallExtIns"     ]
+   myFdnData["FoundationWallIntIns"     ] =  $gChoices["Opt-FoundationWallIntIns"     ]
+   myFdnData["FoundationSlabBelowGrade" ] =  $gChoices["Opt-FoundationSlabBelowGrade" ]
+   myFdnData["FoundationSlabOnGrade"    ] =  $gChoices["Opt-FoundationSlabOnGrade"    ]
+
+   debug_off
+
+   HTAP2H2K.conf_foundations(myFdnData,$gOptions.clone,h2kElements)
+
 
    #Delete results section
    h2kElements["HouseFile"].delete_element("AllResults")
@@ -3221,6 +3100,14 @@ def processFile(h2kElements)
    newXMLFile = File.open($gWorkingModelFile, "w")
    $XMLdoc.write(newXMLFile)
    newXMLFile.close
+
+
+   debug_out ("saving a copy of the pre-h2k version (file-post-sub.h2k)\n")
+   newXMLFile = File.open("file-postsub.h2k", "w")
+   $XMLdoc.write(newXMLFile)
+   newXMLFile.close
+
+
 
 end
 
@@ -5549,7 +5436,7 @@ def postprocess( scaleData )
 
     stream_out( " done \n")
 
-   stream_out "\n----------------------- SIMULATION RESULTS ---------------------------------\n"
+   stream_out drawRuler("Simulation Results")
 
    stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
    stream_out  " Peak Cooling Load (W): #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}  \n"
@@ -5657,30 +5544,7 @@ def postprocess( scaleData )
    # stream_out("  - #{$gAvgPelletCons_t.round(1)} (Pellet, tonnes)\n")
    # stream_out ("> SCALE #{scaleData} \n");
    # Estimate total cost of upgrades
-   $gTotalCost = 0
 
-   if ( $Locale == "NA" )
-      thisLocale = "Basehouse location"
-   else
-      thisLocale = $Locale
-   end
-   stream_out ("\n\n Estimated costs in #{thisLocale} (x #{$gRegionalCostAdj} Ottawa costs) : \n\n")
-
-   $gChoices.sort.to_h
-   for attribute in $gChoices.keys()
-
-      debug_out "Costing for #{attribute}: "
-
-      choice = $gChoices[attribute]
-      cost = $gOptions[attribute]["options"][choice]["cost"].to_f
-      $gTotalCost += cost
-      stream_out( " +  #{cost.round()} ( #{attribute} : #{choice} ) \n")
-   end
-   stream_out ( " - #{($gIncBaseCosts * $gRegionalCostAdj).round} (Base costs for windows)  \n")
-   stream_out ( " --------------------------------------------------------\n")
-   stream_out ( " =   #{($gTotalCost-$gIncBaseCosts * $gRegionalCostAdj).round} ( Total incremental cost ) \n\n")
-   $gRegionalCostAdj != 0 ? val = $gTotalCost / $gRegionalCostAdj : val = 0
-   stream_out ( " ( Unadjusted upgrade costs: \$ #{val} )\n\n")
 
    if ( $gERSNum > 0 )
       $tmpval = $gERSNum.round(1)
@@ -6352,14 +6216,13 @@ end
 #===============================================================================
 
 def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
-
-
+  debug_off
 
   h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
   myCosts = Hash.new
   myH2KHouseInfo = Hash.new
   myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
-  debug_on
+
   debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
 
   specdCostSources = Hash.new
@@ -6368,17 +6231,10 @@ def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
                      }
 
   # Compute costs
-  myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
+
   stream_out ( drawRuler("Cost Impacts"))
-  myCosts["byAttribute"].each do | attribute , cost |
-    #attList = " #{attribute.ljust(30)} = #{myChoices["attribute"].ljust(30)}"
-    next if ( cost.to_f < 0.1 )
-    costtxt = '%.2f' % cost.to_f
-    stream_out " #{attribute.ljust(40)} = #{myChoices[attribute].ljust(40)} --> $ #{costtxt.rjust(9)}\n"
-  end
-  myTotal = '%.2f' % myCosts["total"].to_f
-  stream_out " ...................................................................................................\n"
-  stream_out " #{"TOTAL".ljust(40)}   #{" ".ljust(40)}     $ #{myTotal.rjust(9)}\n"
+  myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
+  Costing.summarizeCosts(myChoices, myCosts)
   return myCosts
 
 end
@@ -6454,6 +6310,12 @@ optparse = OptionParser.new do |opts|
       $cmdlineopts["verbose"] = true
       $gTest_params["verbosity"] = "verbose"
    end
+
+   opts.on("--hints", "Provide helpful hints for intrepreting output") do
+      $gHelp = true
+
+   end
+
 
    opts.on("-d", "--debug", "Run in debug mode") do
       $cmdlineopts["verbose"] = true
@@ -6566,7 +6428,7 @@ end
 $h2k_src_path = "C:\\H2K-CLI-Min"
 $run_path = $gMasterPath + "\\H2K"
 
-stream_out ("\n > substitute-h2k.rb  \n")
+stream_out ("\n Input files:  \n")
 stream_out ("         path: #{$gMasterPath} \n")
 stream_out ("         ChoiceFile: #{$gChoiceFile} \n")
 stream_out ("         OptionFile: #{$gOptionFile} \n")
@@ -6582,6 +6444,7 @@ stream_out ("         HOT2000 run folder: #{$run_path} \n")
 $linecount = 0
 $gParameters = Hash.new
 
+stream_out drawRuler("Parsing input data")
 
 if ( $gOptionFile =~ /\.json/ ) then
 
@@ -6609,13 +6472,13 @@ else
 
 
   if ( $gJasonExport ) then
+
     stream_out (" \n\n")
     stream_out drawRuler("JSON export")
     stream_out (" Option --export-options-to-json specified. \n")
     stream_out (" Writing HTAP-options.json and quitting...")
     exportOptionsToJson()
     stream_out ("  Complete.  \n\n")
-
     exit
 
   end
@@ -6628,7 +6491,7 @@ end
 
 for $currentAttributeName in $gOptions.keys()
 
-# Store options
+# Store options - what does this do?
 debug_out ( "========== #{$currentAttributeName} ===========\n");
 debug_out ( "Storing data for #{$currentAttributeName}: \n" );
 
@@ -6665,16 +6528,6 @@ $OptHash = $gOptions[$currentAttributeName]["options"]
 
 end
 
-
-
-
-
-
-
-
-
-
-
 =begin rdoc
  Parse configuration (choice) file.
 =end
@@ -6683,6 +6536,12 @@ stream_out("\n\n Reading user-defined choices (#{$gChoiceFile})...\n")
 $gChoices, $gChoiceOrder = HTAPData.parse_choice_file($gChoiceFile)
 stream_out (" ...done.\n\n")
 
+stream_out ( " Specified choices: \n")
+$gChoices.each do | attribute, value |
+  stream_out (" - #{attribute.ljust(35)} = #{value} \n ")
+end
+
+stream_out(drawRuler("Setting up HOT2000 environment"))
 if $gLookForArchetype == 1 && !$gChoices["Opt-Archetype"].empty?
    $Archetype_value = $gChoices["Opt-Archetype"]
 
@@ -6772,14 +6631,25 @@ if ( ! $PRMcall )
          fatalerror ("Fatal Error! Could not delete #{$gWorkingModelFile}!\n Del return error code #{$?}\n")
       end
    end
+
+   debug_out "copy arguements: #{$gBaseModelFile} -> #{$gWorkingModelFile}\n "
    FileUtils.cp($gBaseModelFile,$gWorkingModelFile)
    stream_out("\n  (File #{$gWorkingModelFile} created.)\n\n")
 end
 
 # Load all XML elements from HOT2000 file
+
+stream_out(drawRuler("Reading HOT2000 file"))
 stream_out("\n Parsing a copy of HOT2000 model (#{$gWorkingModelFile}) for optimization work...")
 h2kElements = H2KFile.get_elements_from_filename($gWorkingModelFile)
 stream_out("done.")
+
+
+
+# Which fdn set?
+
+$foundationConfiguration =  HTAPData.whichFdnConfig($gChoices)
+
 
 # Get rule set choices hash values in $ruleSetChoices for the
 # rule set name specified in the choice file
@@ -6809,8 +6679,9 @@ $HDDs = $HDDHash[ locale.upcase ]
 $Locale_model = locale
 
 
-if !$ruleSetName.empty? && $ruleSetName != "NA"
 
+if !$ruleSetName.empty? && $ruleSetName != "NA"
+   stream_out(drawRuler("Processing Rulesets"))
 
    ruleSet = $ruleSetName
 
@@ -6821,7 +6692,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
      conditionString = "; #{cond}=#{value}"
    end
 
-   stream_out("\n\n Applying #{ruleSet}#{conditionString}:\n")
+   stream_out("\n\n Applying Ruleset #{ruleSet}#{conditionString}:\n")
 
    if ( ruleSet =~ /as-found/ )
      # Do nothing!
@@ -6862,6 +6733,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
          next  # skip setting this empty choice!
       elsif ( $gChoices[attrib].empty? || $gChoices[attrib] =~ /NA/ )
          # Change choice to rule set value for all choices that are "NA"
+
          $gChoices[attrib] = choice
          stream_out ("   - #{attrib} -> #{choice} \n")
       else
@@ -6871,8 +6743,6 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
 
 end
 
-debug_out("-----------------------------------\n")
-debug_out("-----------------------------------\n")
 debug_out("Parsing parameters ...\n")
 
 $gCustomCostAdjustment = 0
@@ -6901,9 +6771,23 @@ end
 =begin rdoc
  Validate choices and options.
 =end
-stream_out("\n Validating choices and options... ");
+stream_out(drawRuler("Validating choices and options"))
+
 
 $OptionsOK,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder )
+
+if ( $gChoicesChangedbyProgram ) then
+
+  warn_out ("#{$program} made changes to specified choices to ensure combinations are compatable with HTAP data model.")
+
+end
+
+stream_out(" Choices that will be used in the simulation:\n")
+$gChoices.each do | attribute, value |
+  stream_out (" - #{attribute.ljust(35)} = #{value} \n ")
+end
+
+
 
 if ( ! $OptionsOK ) then
   $allOK = false
@@ -6938,11 +6822,14 @@ end
 # Process the working file by replacing all existing values with the values
 # specified in the attributes $gChoices and corresponding $gOptions
 
+stream_out drawRuler(' Manipulating HOT2000 file ')
 stream_out (" Performing substitutions on H2K file...")
 
 processFile( h2kElements )
 
 stream_out( "done.")
+
+
 
 
 # Orientation changes. For now, we assume the arrays must always point south.
@@ -6994,7 +6881,7 @@ $gAmtOil = 0
 $FloorArea = 0
 
 
-
+stream_out drawRuler('Running HOT2000 simulations')
 
 
 orientations.each do |direction|
@@ -7013,13 +6900,13 @@ orientations.each do |direction|
 
 end
 
+
+
 # if autocosts were estimatd, compute costs
 if ( $autoEstimateCosts ) then
 
-   debug_out "Costing clacs!!!\n"
-   myUnitCosts = Costing.parseUnitCosts($unitCostFileName)
-
-   costEstimates = estimateCosts($gOptions,myUnitCosts,$gChoices,$gChoiceOrder)
+     myUnitCosts = Costing.parseUnitCosts($unitCostFileName)
+     costEstimates = estimateCosts($gOptions,myUnitCosts,$gChoices,$gChoiceOrder)
 
 end
 
