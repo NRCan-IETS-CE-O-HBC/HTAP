@@ -179,12 +179,18 @@ CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-GenericWall_1Layer_definitions",
                            "Opt-HVACSystem",
                            "Opt-HRVonly",
-                           "Opt-DHWSystem"
+                           "Opt-DHWSystem",
+                           "Opt-FoundationWallExtIns",
+                           "Opt-FoundationWallIntIns",
+                           "Opt-FoundationSlabBelowGrade",
+                           "Opt-FoundationSlabOnGrade"
                          ]
 
 $gErrors = Array.new
 $gWarnings = Array.new
 $gStatus = Hash.new
+
+$gHelp = false
 
 $lDebug = false
 
@@ -193,10 +199,14 @@ $lastDbgMsg = "\n"
 
 $gTest_params = Hash.new
 $gTest_params["logfile"] = false
-$termWidth = 130
+$termWidth = nil
 $caller_stack
 
 $formatter = REXML::Formatters::Pretty.new(2)
 $formatter.compact = true # This is the magic line that does what you need!
 
 $ruleSetSpecs = Hash.new
+
+$gChoicesChangedbyProgram = false
+
+$foundationConfiguration = "" 

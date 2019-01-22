@@ -4,7 +4,7 @@ def LegacyProcessConditions()
 
      $gChoices.each do |attrib1, choice|
 
-       debug_out " = Processing conditions for #{attrib1}-> #{choice} ..."
+       debug_out " = Processing conditions for #{attrib1}-> #{choice} ...\n"
 
        $gOptions[attrib1]["options"][choice]["result"] = Hash.new
 

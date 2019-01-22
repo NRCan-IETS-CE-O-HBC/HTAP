@@ -375,7 +375,7 @@ module Costing
 
 
   def Costing.computeCosts(mySpecdSrc,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-    debug_on
+    debug_off
     costSourcesDBs = Array.new
     costSourcesCustom = Array.new
 
@@ -398,7 +398,7 @@ module Costing
     myChoices.each do | attrib, choice |
       debug_off()
       if ( CostingSupport.include? attrib )  then
-        debug_on()  if (choice != "NA" )
+        #debug_off()  if (choice != "NA" )
       end
 
       debug_out " #{attrib} = #{choice}\n"
@@ -409,6 +409,10 @@ module Costing
 
       if ( ! CostingSupport.include? attrib )  then
         debug_out (" no.\n")
+
+      elsif ( choice == "NA" )
+        debug_out ("yes, but choice is 'NA'.\n")
+        myCosts["byAttribute"][attrib] += 0.0
       else
         debug_out (" Yes!\n")
         debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
@@ -417,7 +421,7 @@ module Costing
         choiceCosts = Costing.getCosts(myUnitCosts,simpleCostTree,attrib,choice,costSourcesDBs)
         #debug_out(" Costs recovered from Costing.GetCosts:\n#{choiceCosts.pretty_inspect}\n")
 
-
+        costsOK = true
         choiceCosts.keys.each do | costingElement |
 
           debug_out " Computing costs for #{attrib}=#{choice}, \n+-> component [#{costingElement}]\n"
@@ -430,73 +434,187 @@ module Costing
           labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
           source = choiceCosts[costingElement]["data"]["source"]
 
-          measure = 0.to_f
+          measure = 0.0
 
+          debug_out "  Recovering measure for #{attrib}/#{choice}/#{costingElement}\n"
+          case attrib
+          # .....................................................................
+          when "Opt-ACH"
+            if ( units == "sf wall" || units == "sf wall (net)" )
+              measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"] ) * SF_PER_SM
+            elsif ( units == "sf wall area (gross)" )
+              measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["gross"] ) * SF_PER_SM
+            elsif ( units == "sf attic" )
+              measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
+            else
+              costsOK = false
+            end
+          # ........................................................................
+          when "Opt-AtticCeilings"
 
-          if ( units == "default" || units == "ea" )
-            measure = 1.0
-          elsif ( units == "sf attic" )
-            measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
-          elsif ( units == "lf wall" )
+            if ( units == "sf attic" )
+              measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
+            else
+              costsOK = false
+            end
 
-          elsif ( units == "sf wall" || units == "sf wall (net)" )
-            measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"] ) * SF_PER_SM
+          # ........................................................................
+          when "Opt-GenericWall_1Layer_definitions"
 
-          elsif ( units == "sf wall area (gross)" )
-            measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["gross"] ) * SF_PER_SM
+            if ( units == "sf wall" || units == "sf wall (net)" || units == "sf applied" )
+              measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"] ) * SF_PER_SM
 
-         elsif ( units == "sf heated floor area")
-           measure =  ( myH2KHouseInfo["dimensions"]["heatedFloorArea"] ) * SF_PER_SM
+            elsif ( units == "sf wall area (gross)" )
+              measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["gross"] ) * SF_PER_SM
 
-          elsif ( units == "sf applied" )
-            # read the option/catagory
+            elsif ( units == "sf attic" )
+              measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
 
-            if ( catagory == "WINDOWS" )
+            else
+              costsOK = false
+            end
+
+          # ........................................................................
+          when "Opt-CasementWindows"
+
+            if ( units == "sf applied" &&  catagory == "WINDOWS" )
 
                measure = myH2KHouseInfo["dimensions"]["windows"]["area"]["total"] * SF_PER_SM
 
-            elsif (  attrib == "Opt-GenericWall_1Layer_definitions"  &&
-                    ( catagory == "SHEATHING" || catagory == "INSULATION" )
-                ) then
-
-               measure =  ( myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"] ) * SF_PER_SM
-
             else
 
-               warn_out ("Don't know how to compute '#{units}' for #{costingElement}\n")
-               measure = 0.0
+               costsOK = false
 
             end
 
-          elsif ( units == "kW capacity" )
+          # ........................................................................
 
-            if ( catagory == "ELECTRIC RESISTANCE BASEBOARDS" ) then
-              if ( myH2KHouseInfo["HVAC"]["Baseboards"]["count"].to_i == 0  ) then
-                warn_out "H2K file doesn't contain any baseboards. Can't cost #{costingElement}\n"
+          when "Opt-FoundationWallExtIns"
+
+              if ( units == "sf applied" || units == "sf wall")
+
+                 measure = myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["external"] * SF_PER_SM
+
+
+              else
+
+                 costsOK = false
+
               end
-              measure = myH2KHouseInfo["HVAC"]["Baseboards"]["capacity_kW"].to_f * 1.1
+            # ..................................................................
+            when "Opt-FoundationWallIntIns"
 
-            elsif ( catagory == "AIR CONDITIONING" ) then
-              if ( myH2KHouseInfo["HVAC"]["AirConditioner"]["count"].to_i == 0  ) then
-                warn_out "H2K file doesn't contain any air conditioners. Can't cost #{costingElement}\n"
-              end
+                if ( units == "sf applied" || units == "sf wall")
 
-              measure = myH2KHouseInfo["HVAC"]["AirConditioner"]["capacity_kW"].to_f * 1.1
+                   measure = myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["internal"] * SF_PER_SM
 
-            else
-               warn_out "Unknown Catagory #{catagory} for #{costingElement}"
-            end
 
-          elsif ( units == "l/s capacity")
-            if ( catagory == "HRV" ) then
-              measure = myH2KHouseInfo["HVAC"]["Ventilator"]["capacity_l/s"].to_f
-            end
+                else
+
+                   costsOK = false
+
+                end
+
+
+            # ..................................................................
+            when "Opt-FoundationSlabBelowGrade"
+
+                if ( units == "sf applied" )
+
+                   measure = ( myH2KHouseInfo["dimensions"]["below-grade"]["basement"]["floor-area"]  +
+                               myH2KHouseInfo["dimensions"]["below-grade"]["crawlspace"]["floor-area"] ) * SF_PER_SM
+
+                else
+
+                   costsOK = false
+
+                end
+
+                # ..................................................................
+              when "Opt-FoundationSlabOnGrade"
+
+                    if ( units == "sf applied" )
+
+                       measure = ( myH2KHouseInfo["dimensions"]["below-grade"]["crawlspace"]["floor-area"] ) * SF_PER_SM
+
+                    else
+
+                       costsOK = false
+
+                    end
+            # ..................................................................
+            when "Opt-DHWSystem"
+
+                  if ( units == "ea" )
+
+                     measure = 1.0
+
+                  else
+
+                     costsOK = false
+
+                  end
+
+           # ..................................................................
+           when "Opt-HVACSystem"
+
+                if ( units == "ea" )
+
+                   measure = 1.0
+
+                elsif ( units == "sf heated floor area")
+                   measure =  ( myH2KHouseInfo["dimensions"]["heatedFloorArea"] ) * SF_PER_SM
+
+                 elsif ( units == "kW capacity" )
+
+                     if ( catagory == "ELECTRIC RESISTANCE BASEBOARDS" ) then
+                       if ( myH2KHouseInfo["HVAC"]["Baseboards"]["count"].to_i == 0  ) then
+                         warn_out "H2K file doesn't contain any baseboards. Can't cost #{costingElement}\n"
+                       end
+                       measure = myH2KHouseInfo["HVAC"]["Baseboards"]["capacity_kW"].to_f * 1.1
+
+                     elsif ( catagory == "AIR CONDITIONING" ) then
+                       if ( myH2KHouseInfo["HVAC"]["AirConditioner"]["count"].to_i == 0  ) then
+                         warn_out "H2K file doesn't contain any air conditioners. Can't cost #{costingElement}\n"
+                       end
+
+                       measure = myH2KHouseInfo["HVAC"]["AirConditioner"]["capacity_kW"].to_f * 1.1
+
+                     else
+                        warn_out "Unknown Catagory #{catagory} for #{costingElement}"
+                     end
+
+                else
+
+                   costsOK = false
+
+                end
+          # ..................................................................
+          when "Opt-HRVonly"
+
+            if ( units == "ea" )
+
+               measure = 1.0
+
+             elsif ( units == "l/s capacity")
+               if ( catagory == "HRV" ) then
+                 measure = myH2KHouseInfo["HVAC"]["Ventilator"]["capacity_l/s"].to_f
+               end
+
+             else
+
+                costsOK = false
+
+             end
 
           else
-            warn_out ("Unknown units: \"#{units}\" for #{costingElement}")
-            warn_out ("Can't cost #{costingElement}")
+            debug_out( "Attribute #{attrib} - no costing rules a\n")
             measure = 1.0
+            costsOK = false
           end
+
+
+
 
           debug_out ("   Source    :   #{source}\n")
           debug_out ("   Units     :   #{units}\n")
@@ -521,6 +639,13 @@ module Costing
           debug_out ("   Cost      : $ #{myCostsComponent.round(2)}\n")
           componentCostsSummary[costingElement] = myCostsComponent.round(2)
 
+          if ( ! costsOK )
+            warn_out ("Can't cost #{attrib}/#{choice}/#{costingElement}")
+            debug_out( "Unknown unit of measure for #{attrib}/#{choice}/#{costingElement}!\n")
+            warn_out ("Unknown units: \"#{units}\" for #{costingElement}")
+            debug_out("available measures\n#{myH2KHouseInfo.pretty_inspect}\n")
+            exit
+          end
 
         end
 
@@ -539,9 +664,25 @@ module Costing
       end
 
     end
-
+    #debug_out "Compute-Costs: Returning \n#{myCosts.pretty_inspect}\n"
     return myCosts
 
   end # def compute costs
+
+  # Draw a table summarizing the costs
+  def Costing.summarizeCosts(myChoices,myCosts)
+
+    myCosts["byAttribute"].each do | attribute , cost |
+      #attList = " #{attribute.ljust(30)} = #{myChoices["attribute"].ljust(30)}"
+      next if ( cost.to_f < 0.1 )
+      costtxt = '%.2f' % cost.to_f
+      stream_out " #{attribute.ljust(40)} = #{myChoices[attribute].ljust(40)} --> $ #{costtxt.rjust(9)}\n"
+    end
+    myTotal = '%.2f' % myCosts["total"].to_f
+    stream_out " ...................................................................................................\n"
+    stream_out " #{"TOTAL".ljust(40)}   #{" ".ljust(40)}     $ #{myTotal.rjust(9)}\n"
+
+  end
+
 
 end

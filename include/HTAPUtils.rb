@@ -212,7 +212,7 @@ module HTAPData
            if ( attribute =~ /rotate/ )
               $gRotate = value
               choices["GOconfig_rotate"] = value
-              stream_out ("  parsed: #{attribute} -> #{value} \n")
+              debug_out ("  parsed: #{attribute} -> #{value} \n")
               order.push("GOconfig_rotate")
            end
 
@@ -231,7 +231,7 @@ module HTAPData
           ruleSet.gsub!(/\[.*$/,"")
 
           choices[attribute] = ruleSet
-          debug_out( "parsed #{attribute} -> #{value} ->#{ruleSet}\n")
+          debug_out( "parsed #{attribute} = #{value} -> #{ruleSet}\n")
         else
 
            if ( value =~ /\|/ )
@@ -257,25 +257,18 @@ module HTAPData
     fCHOICES.close
 
     # ------------------------------------------------------
-
-    choices.each do | attrib, choice|
-
-      stream_out (" - #{attrib} = #{choice} \n")
-
-    end
-
+    debug_out ("Parsed choices:\n#{choices.pretty_inspect}\n")
     return choices,order
 
   end
 
   def HTAPData.isChoiceValid(options, attrib, choice)
-    debug_on if (attrib =~ /DHW/ )
+    debug_off # if (attrib =~ /DHW/ )
     debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
     debug_out "options[#{attrib}] contains #{choice}?"
     if ( options[attrib]["options"][choice].nil? ||
          options[attrib]["options"][choice].empty?  ) then
       debug_out " FALSE\n "
-      exit
       return false
     else
       debug_out "true\n"
@@ -384,8 +377,119 @@ module HTAPData
 
     end
 
-    return $err, $ValidatedChoices, $order
 
+
+    HTAPData.zeroInvalidFoundaiton($ValidatedChoices)
+
+    
+
+
+
+
+    $gChoicesChangedbyProgram = true
+
+  return $err, $ValidatedChoices, $order
+
+  end
+
+
+
+
+  def HTAPData.whichFdnConfig(myChoices)
+    debug_off
+
+    pp myChoices
+    config = ""
+    fdnConfigs = Hash.new
+
+    fdnConfigs["wholeFdn"] = HTAPData.valOrNaOrNil([myChoices["Opt-H2KFoundation"],
+                                                    myChoices["Opt-H2KFoundationSlabCrawl"]
+                                                   ])
+
+    fdnConfigs["surfBySurf"] = HTAPData.valOrNaOrNil([myChoices["Opt-FoundationSlabBelowGrade"] ,
+                                                      myChoices["Opt-FoundationSlabOnGrade"]    ,
+                                                      myChoices["Opt-FoundationWallIntIns"]     ,
+                                                      myChoices["Opt-FoundationWallExtIns"]
+                                                    ])
+
+    if ( fdnConfigs["wholeFdn"]   == "nonNA" ||
+         fdnConfigs["surfBySurf"] == "nil" ||
+         ( fdnConfigs["wholeFdn"]   == "NA" &&  fdnConfigs["surfBySurf"] == "NA" ) ) then
+         config = "wholeFdn"
+    else
+         config = "surfBySurf"
+    end
+
+
+    if ( fdnConfigs["wholeFdn"]   != "nil" &&  fdnConfigs["surfBySurf"] != "nil" ) then
+
+      # Can't have both!
+
+      warn_out ("HTAP cannot use whole foundation and surf-by-surf definitions. Either use Opt-H2KFoundation... or Opt-Foundaiton... defintions")
+      warn_out ("Ignoring Options Opt-FoundationSlabBelowGrade,Opt-FoundationSlabOnGrade,Opt-FoundationWallIntIns and  Opt-FoundationWallExtIns")
+      help_out(catagory,topic)
+
+      #HTAPData.zeroInvalidFoundaiton(myChoices)
+
+
+    end
+
+
+
+    debug_out ("Intrepreted #{fdnConfigs.pretty_inspect}\n Result: #{config}\n")
+
+    return config
+
+  end
+
+
+  def HTAPData.zeroInvalidFoundaiton(choices)
+
+    if ( $foundationConfiguration == "wholeFdn" )
+
+      choices.delete("Opt-FoundationSlabBelowGrade")
+      choices.delete("Opt-FoundationSlabOnGrade")
+      choices.delete("Opt-FoundationWallIntIns")
+      choices.delete("Opt-FoundationWallExtIns")
+    end
+
+    if ( $foundationConfiguration == "surfBySurf")
+      choices.delete("Opt-H2KFoundation")
+      choices.delete("Opt-H2KFoundationSlabCrawl")
+    end
+
+  end
+
+
+  def HTAPData.valOrNaOrNil(values)
+
+    debug_off
+    result = nil
+
+    valNonNa        = false
+    valDefined      = false
+
+    values.each do | value |
+      debug_out "value: ?#{value}?"
+      if ( ! value.nil? && ! value.empty?  ) then
+          valDefined=true
+          if ( value != "NA" ) then
+              valNonNa = true
+              #break
+          end
+      end
+
+    end
+
+    if ( valNonNa ) then
+      result = "nonNA"
+    elsif ( valDefined )
+      result = "NA"
+    else
+      result = "nil"
+    end
+    debug_out ("result? #{result}\n")
+    return result
   end
 
 end
