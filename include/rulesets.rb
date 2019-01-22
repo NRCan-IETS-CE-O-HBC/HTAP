@@ -220,7 +220,7 @@ end
 def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
    debug_on
-
+   debug_out "Applying ruleset for HDD #{locale_HDD}\n"
    primHeatFuelName = ""
    secSysType = ""
    primDHWFuelName = ""
@@ -228,10 +228,12 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
    # Should test for this type somewhere
    if ( ! ruleSpecs["fuel"].nil? )
+     debug_out ( " Fuel specfied, overide h2k file contents\n")
      primHeatFuelName = ruleSpecs["fuel"]
      secSysType = "Baseboard"
      primDHWFuelName = ruleSpecs["fuel"]
    else
+     debug_out ( " Fuel not specified, obtain from h2k file contnets \n")
      # Use system data
      primHeatFuelName = H2KFile.getPrimaryHeatSys( elements )
      secSysType = H2KFile.getSecondaryHeatSys( elements )
@@ -261,6 +263,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    end
 
    # Choices that do NOT depend on ruleType!
+   applyPermafrostRules = false
 
    $ruleSetChoices["Opt-ACH"] = "ACH_NBC"
    $ruleSetChoices["Opt-Baseloads"] = "NBC-Baseloads"
@@ -268,6 +271,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    $ruleSetChoices["Opt-Temperatures"] = "NBC_Temps"
    if ($PermafrostHash[cityName] == "continuous")
       $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Perma"
+      applyPermafrostRules = true
    else
       $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Normal"
    end
@@ -317,6 +321,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
 
       # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
+
+      # LEGACY H2K Foundation /
+
          $ruleSetChoices["Opt-H2KFoundation"] = "NBC_BCIN_zone4"
          if isCrawlHeated
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SCB_zone4"
@@ -324,6 +331,14 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone4" # If there are any slabs, insulate them
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
          end
+
+       # NEW-H2K Foundation, no HRV
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_1.99RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+
 
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
@@ -350,6 +365,13 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
          end
 
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+
+
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -375,6 +397,11 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
          end
 
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -398,6 +425,14 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_noHRV" # If there are any slabs, insulate them
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
          end
+
+
+        $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_3.46RSI"
+        $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+        $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+        $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+
+
 
       # Zone 7B ( 6000 < HDD < 6999) without an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
@@ -424,6 +459,18 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
          end
 
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_3.46RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         if ( applyPermafrostRules ) then
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+         else
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         end
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+
+
+
       # Zone 8 (HDD <= 7000) without an HRV
       elsif locale_HDD >= 7000
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -448,6 +495,15 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_noHRV" # If there are any slabs, insulate them
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
          end
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_3.97RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         if ( applyPermafrostRules ) then
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+         else
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         end
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_4.59RSI"
 
       end
 
@@ -482,6 +538,13 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone4"
          end
 
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_1.99RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+
+
+
       # Zone 5 ( 3000 < HDD < 3999) with an HRV
       elsif locale_HDD >= 3000 && locale_HDD < 3999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -506,6 +569,12 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone5" # If there are any slabs, insulate them
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone5"
          end
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+
 
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
       elsif locale_HDD >= 4000 && locale_HDD < 4999
@@ -532,6 +601,12 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone6"
          end
 
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -556,6 +631,12 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone7A_HRV" # If there are any slabs, insulate them
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7A"
          end
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_2.84RSI"
+
 
       # Zone 7B ( 6000 < HDD < 6999) with an HRV
       elsif locale_HDD >= 6000 && locale_HDD < 6999
@@ -582,6 +663,16 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone7B"
          end
 
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         if ( applyPermafrostRules ) then
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+         else
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         end
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_2.84RSI"
+
+
       # Zone 8 (HDD <= 7000) with an HRV
       elsif locale_HDD >= 7000
          # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
@@ -606,6 +697,16 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
             $ruleSetChoices["Opt-H2KFoundationSlabCrawl"] = "NBC_SOnly_zone8_HRV" # If there are any slabs, insulate them
             $ruleSetChoices["Opt-FloorAboveCrawl"] = "NBC_crawlceiling_zone8"
          end
+
+         $ruleSetChoices["Opt-FoundationWallIntIns"] = "NBC_936_2.98RSI"
+         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
+         if ( applyPermafrostRules ) then
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+         else
+           $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+         end
+         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+
 
       end
    else
