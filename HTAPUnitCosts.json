@@ -3,7 +3,7 @@
     "LEEP-BC-KamloopsChesnut": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_Sept_2016_Chesnut.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2019-01-11 14:41:15",
+      "date_imported": "2019-01-31 11:48:11",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -168,7 +168,7 @@
     "LEEP-BC-Vancouver": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_BC-vancouver_V1.0.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2019-01-11 14:41:13",
+      "date_imported": "2019-01-31 11:48:08",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -304,7 +304,7 @@
     "LEEP-MB-Winnipeg": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_Costing_MB_winnipeg.csv",
       "date_collated": "2014-09-01",
-      "date_imported": "2019-01-11 14:41:11",
+      "date_imported": "2019-01-31 11:48:06",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -351,7 +351,7 @@
     "LEEP-ON-Ottawa": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_ottawa_V1.4.csv",
       "date_collated": "2013-09-01",
-      "date_imported": "2019-01-11 14:41:08",
+      "date_imported": "2019-01-31 11:48:04",
       "schema_used": "oldLeep",
       "origin": "",
       "inherits": {
@@ -360,16 +360,20 @@
     "MiscNRCanEstimates2019": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\misc-cost-data.csv",
       "date_collated": "2019-01-04",
-      "date_imported": "2019-01-11 14:41:20",
+      "date_imported": "2019-01-31 11:48:15",
       "schema_used": "oldLeep",
       "origin": "NRCan - collected cost estimates from in-house research",
       "inherits": {
+        "LEEP-MB-Winnipeg": [
+          "insulation:r12_batt",
+          "insulation:r28_batt"
+        ]
       }
     },
     "VancouverAirSealData": {
       "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\E3-air-sealing.csv",
       "date_collated": "2015-01-15",
-      "date_imported": "2019-01-11 14:41:18",
+      "date_imported": "2019-01-31 11:48:13",
       "schema_used": "oldLeep",
       "origin": "Halbig 2015, Air-Barrier details, Report for NRCan. E3 Consulting",
       "inherits": {
@@ -927,6 +931,18 @@
         "UnitCostMaterials": 35.85,
         "UnitCostLabour": 75.3,
         "note": "Adjusted materials costs, based on supplier searc",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "credit:elimination_of_vapor_barrier_at_floor_header": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "credit:elimination of vapor barrier (materials, labour) at floor header",
+        "units": "sf header area",
+        "UnitCostMaterials": -0.11,
+        "UnitCostLabour": -0.28,
+        "note": "Data estimated form LEEP ON, MB; confirmed with E3 air-seal data ",
         "date": "n.d.",
         "source": "MiscNRCanEstimates2019"
       }
@@ -2301,6 +2317,16 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r10_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.39,
+        "UnitCostLabour": 0.21,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:r12_batt": {
@@ -2357,6 +2383,52 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r14_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.53,
+        "UnitCostLabour": 0.25,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "insulation:r15_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r15_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.61,
+        "UnitCostLabour": 0.27,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "insulation:r17_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r17_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.68,
+        "UnitCostLabour": 0.3,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "insulation:r19_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r19_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.75,
+        "UnitCostLabour": 0.32,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:r20_batt": {
@@ -2381,6 +2453,18 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "insulation:r21_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r21_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.82,
+        "UnitCostLabour": 0.34,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
     "insulation:r22_batt": {
       "LEEP-ON-Ottawa": {
         "category": "INSULATION",
@@ -2401,6 +2485,16 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r22_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.9,
+        "UnitCostLabour": 0.36,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:r24_batt": {
@@ -2413,6 +2507,40 @@
         "note": "Hanscomb - aggregated average of material and labour for base case walls",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r24_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.97,
+        "UnitCostLabour": 0.38,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "insulation:r26_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r26_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.04,
+        "UnitCostLabour": 0.4,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "insulation:r27_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r27_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.12,
+        "UnitCostLabour": 0.43,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:r28_batt": {
@@ -2427,6 +2555,18 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "insulation:r29_batt": {
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r29_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.2,
+        "UnitCostLabour": 0.45,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
     "insulation:r31_batt": {
       "LEEP-ON-Ottawa": {
         "category": "INSULATION",
@@ -2437,6 +2577,16 @@
         "note": "NRCan Estimate - 02/05/2012",
         "date": "02/05/2012",
         "source": "LEEP-ON-Ottawa"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r31_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 1.28,
+        "UnitCostLabour": 0.47,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:r36_dense-pack_cellulose": {
@@ -2449,18 +2599,6 @@
         "note": "Scaled estimate based on Hanscomb report.",
         "date": "n.d.",
         "source": "LEEP-BC-Vancouver"
-      }
-    },
-    "insulation:r40_batt": {
-      "LEEP-MB-Winnipeg": {
-        "category": "INSULATION",
-        "description": "Insulation, R40 batt (11in depp) ",
-        "units": "sf applied",
-        "UnitCostMaterials": 0.86,
-        "UnitCostLabour": 0.0,
-        "note": "",
-        "date": "n.d.",
-        "source": "LEEP-MB-Winnipeg"
       }
     },
     "insulation:r40_dense-pack_cellulose": {
@@ -3591,6 +3729,18 @@
         "UnitCostMaterials": 0.5,
         "UnitCostLabour": 0.0,
         "note": "",
+        "date": "n.d.",
+        "source": "VancouverAirSealData"
+      }
+    },
+    "sprayfoam_rim_joists;by_header_area": {
+      "VancouverAirSealData": {
+        "category": "AIR TIGHTNESS",
+        "description": "sprayfoam rim joists;by header area",
+        "units": "sf header area",
+        "UnitCostMaterials": 3.2,
+        "UnitCostLabour": 1.72,
+        "note": "Data extrapolated from E3 - 50% higher than Leep estimates, possibly b/c foaming header only is more expensive? ",
         "date": "n.d.",
         "source": "VancouverAirSealData"
       }
