@@ -5,11 +5,12 @@ module HTAPData
 
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
+    stream_out("\n\n Reading available options (#{filename})...")
 
     debug_off
+    debug_out("Parsing JSON Options file #{filename}\n")
 
-    stream_out("\n\n Reading available options (#{filename})...")
-    debug_out(" --------------JSON options parsing ------------ ")
+
     fOPTIONS = File.new(filename, "r")
 
     parsedOptions = Hash.new
@@ -30,7 +31,7 @@ module HTAPData
       structure = jsonRawOptions[attribute]["structure"]
       schema = jsonRawOptions[attribute]["schema"].to_s
 
-      debug_out "\n ====================================="
+      debug_out drawRuler(nil, ". ")
       debug_out " Attribute: #{attribute} "
       debug_out " structure: #{structure} "
 
@@ -168,9 +169,32 @@ module HTAPData
 
   end
 
+  # Simple function that returns the tags/values as a token-value
+  # list. Should be able to directly access this through options,
+  # but legacy data map obscures it.
+  def HTAPData.getResultsForChoice(options,attribute,choice)
+    #debug_on
+    result = Hash.new
+
+    debug_out( "contents of options[#{attribute}][`options`][#{choice}][`values`] =\n#{options[attribute]["options"][choice]["values"].pretty_inspect}")
+
+    options[attribute]["tags"].each do |tagIndex, tagName|
+     debug_out "Querying tag #{tagIndex}\n"
+     if ( ! options[attribute]["options"][choice]["values"][tagIndex.to_s].nil? ) then
+       tagValue = options[attribute]["options"][choice]["values"][tagIndex.to_s]["conditions"]["all"]
+       result[tagName] = tagValue
+     else
+       result[tagName] = nil
+     end
+    end
+    debug_out ("returning: \n#{result.pretty_inspect}\n")
+    return result
+
+  end
+
   # Parse configuration / choice file
   def HTAPData.parse_choice_file(filename)
-    # debug_on
+    #debug_on
 
     blk = lambda { |h,k| h[k] = Hash.new(&blk) }
     choices = Hash.new(&blk)
@@ -204,7 +228,6 @@ module HTAPData
 
         if ( $LegacyOptionsToIgnore.include? attribute ) then
           warn_out ("Choice file includes legacy choice (#{attribute}), which is no longer supported. Input ignored.")
-
           help_out("byOptions",attribute)
 
           next
@@ -227,8 +250,8 @@ module HTAPData
 
           $ruleSetArgs.gsub!(/^.+\[(.+)\].*$/,"\\1")
           $ruleSetArgs.split(/;/).each do |arg|
-            condition = arg.split(/=/)[0]
-            set = arg.split(/=/)[1]
+            condition = arg.split(/>/)[0]
+            set = arg.split(/>/)[1]
             debug_out (" #{condition} = #{set}\n")
             $ruleSetSpecs[condition] = set
           end
@@ -262,6 +285,7 @@ module HTAPData
 
     # ------------------------------------------------------
     debug_out ("Parsed choices:\n#{choices.pretty_inspect}\n")
+
     return choices,order
 
   end
@@ -287,7 +311,11 @@ module HTAPData
     $ValidatedChoices = choices
     $order = order
 
-    debug_off
+    #debug_on
+
+    debug_out (" Validating HTAP options\n")
+
+     debug_out ("I will skip: #{$LegacyOptionsToIgnore.pretty_inspect}\n")
 
     debug_out (" These choices were supplied:\n")
     choices.each do | choice, value|
@@ -300,7 +328,7 @@ module HTAPData
 
 
     options.each do |option, ignore|
-
+      debug_out drawRuler("Option #{option}","  .")
       if ( $LegacyOptionsToIgnore.include? option ) then
         debug_out (" skipped legacy option #{option}\n")
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
@@ -310,7 +338,7 @@ module HTAPData
 
 
      if ( !choices.has_key?(option)  )
-
+        debug_out " #{option} was not defined in the choice file\n"
         $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
 
 
@@ -352,6 +380,8 @@ module HTAPData
 
      end
 
+    next if ( $LegacyOptionsToIgnore.include? attrib )
+
 
      debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
 
@@ -383,11 +413,7 @@ module HTAPData
 
 
 
-    HTAPData.zeroInvalidFoundaiton($ValidatedChoices)
-
-
-
-
+    HTAPData.zeroInvalidFoundaiton($ValidatedChoices,$gChoiceOrder)
 
 
     $gChoicesChangedbyProgram = true
@@ -400,20 +426,22 @@ module HTAPData
 
 
   def HTAPData.whichFdnConfig(myChoices)
-    debug_off
+    #debug_on
 
-    pp myChoices
+    # Use a copy, bc these tests cause new keys to be creaed?
+    choiceClone = myChoices.clone
+
     config = ""
     fdnConfigs = Hash.new
 
-    fdnConfigs["wholeFdn"] = HTAPData.valOrNaOrNil([myChoices["Opt-H2KFoundation"],
-                                                    myChoices["Opt-H2KFoundationSlabCrawl"]
+    fdnConfigs["wholeFdn"] = HTAPData.valOrNaOrNil([choiceClone["Opt-H2KFoundation"],
+                                                   choiceClone["Opt-H2KFoundationSlabCrawl"]
                                                    ])
 
-    fdnConfigs["surfBySurf"] = HTAPData.valOrNaOrNil([myChoices["Opt-FoundationSlabBelowGrade"] ,
-                                                      myChoices["Opt-FoundationSlabOnGrade"]    ,
-                                                      myChoices["Opt-FoundationWallIntIns"]     ,
-                                                      myChoices["Opt-FoundationWallExtIns"]
+    fdnConfigs["surfBySurf"] = HTAPData.valOrNaOrNil([choiceClone["Opt-FoundationSlabBelowGrade"] ,
+                                                      choiceClone["Opt-FoundationSlabOnGrade"]    ,
+                                                      choiceClone["Opt-FoundationWallIntIns"]     ,
+                                                      choiceClone["Opt-FoundationWallExtIns"]
                                                     ])
 
     if ( fdnConfigs["wholeFdn"]   == "nonNA" ||
@@ -423,7 +451,6 @@ module HTAPData
     else
          config = "surfBySurf"
     end
-
 
     if ( fdnConfigs["wholeFdn"]   != "nil" &&  fdnConfigs["surfBySurf"] != "nil" ) then
 
@@ -447,7 +474,7 @@ module HTAPData
   end
 
 
-  def HTAPData.zeroInvalidFoundaiton(choices)
+  def HTAPData.zeroInvalidFoundaiton(choices,order)
 
     if ( $foundationConfiguration == "wholeFdn" )
 
@@ -455,11 +482,20 @@ module HTAPData
       choices.delete("Opt-FoundationSlabOnGrade")
       choices.delete("Opt-FoundationWallIntIns")
       choices.delete("Opt-FoundationWallExtIns")
+
+      order.delete("Opt-FoundationSlabBelowGrade")
+      order.delete("Opt-FoundationSlabOnGrade")
+      order.delete("Opt-FoundationWallIntIns")
+      order.delete("Opt-FoundationWallExtIns")
+
+
     end
 
     if ( $foundationConfiguration == "surfBySurf")
       choices.delete("Opt-H2KFoundation")
       choices.delete("Opt-H2KFoundationSlabCrawl")
+      order.delete("Opt-H2KFoundation")
+      order.delete("Opt-H2KFoundationSlabCrawl")
     end
 
   end
