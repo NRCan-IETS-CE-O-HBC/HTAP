@@ -231,3 +231,199 @@ def LegacyProcessConditions()
     end   #end of do each gChoices loop
 
 end
+
+
+
+def parse_legacy_options_file(filename)
+
+  $currentAttributeName =""
+  $AttributeOpen = 0
+  $ExternalAttributeOpen = 0
+  $ParametersOpen = 0
+
+
+  # Parse the option file.
+  stream_out("\n\n Reading available options (#{filename})...")
+  fOPTIONS = File.new(filename, "r")
+  if fOPTIONS == nil then
+    fatalerror(" Could not read #{filename}.\n")
+  end
+
+  while !fOPTIONS.eof? do
+
+    $line = fOPTIONS.readline
+    $line.strip!
+    # Removes leading and trailing whitespace
+    $line.gsub!(/\!.*$/, '')
+    # Removes comments
+    $line.gsub!(/\s*/, '')
+    # Removes mid-line white space
+    $line.gsub!(/\^/, ' ')
+    # JTB Added Jun 30/16: Replace '^' with space (used in some option tags to indicate space between words)
+    $linecount += 1
+
+    if ( $line !~ /^\s*$/ )
+      # Not an empty line!
+      lineTokenValue = $line.split('=')
+      $token = lineTokenValue[0]
+      $value = lineTokenValue[1]
+
+      # Allow value to contain spaces when "~" character used in options file
+      #(e.g. *option:retro_GSHP:value:2 = *gshp~../hvac/heatx_v1.gshp)
+      if ($value)
+        $value.gsub!(/~/, ' ')
+      end
+
+      # The file contains 'attributes that are either internal (evaluated by HOT2000)
+      # or external (computed elsewhere and post-processed).
+
+      # Open up a new attribute
+      if ( $token =~ /^\*attribute:start/ )
+        $AttributeOpen = 1
+      end
+
+      # Open up a new external attribute
+      if ( $token =~ /^\*ext-attribute:start/ )
+        $ExternalAttributeOpen = 1
+      end
+
+      # Open up parameter block
+      if ( $token =~ /^\*ext-parameters:start/ )
+        $ParametersOpen = 1
+      end
+
+      # Parse parameters.
+      if ( $ParametersOpen == 1 )
+        # Read parameters. Format:
+        #  *param:NAME = VALUE
+        if ( $token =~ /^\*param/ )
+          $token.gsub!(/\*param:/, '')
+          $gParameters[$token] = $value
+        end
+      end
+
+      # Parse attribute contents Name/Tag/Option(s)
+      if ( $AttributeOpen || $ExternalAttributeOpen )
+
+        if ( $token =~ /^\*attribute:name/ )
+
+          $currentAttributeName = $value
+          if ( $ExternalAttributeOpen == 1 ) then
+            $gOptions[$currentAttributeName]["type"] = "external"
+          else
+            $gOptions[$currentAttributeName]["type"] = "internal"
+          end
+
+          $gOptions[$currentAttributeName]["default"]["defined"] = 0
+
+          $gOptions[$currentAttributeName]["stop-on-error"] = 1
+
+          if ( $currentAttributeName =~ /Opt-Archetype/ && $gLookForArchetype == 0 )
+            $gOptions[$currentAttributeName]["stop-on-error"] = 0
+          end
+
+        elsif ( $token =~ /^\*attribute:on-error/ )
+
+          if ($value =~ /ignore/ )
+            $gOptions[$currentAttributeName]["stop-on-error"] = 0
+          end
+
+        elsif ( $token =~ /^\*attribute:tag/ )
+
+          arrResult = $token.split(':')
+          $TagIndex = arrResult[2]
+          $gOptions[$currentAttributeName]["tags"][$TagIndex] = $value
+
+        elsif ( $token =~ /^\*attribute:default/ )
+          # Possibly define default value.
+
+          $gOptions[$currentAttributeName]["default"]["defined"] = 1
+          $gOptions[$currentAttributeName]["default"]["value"] = $value
+
+        elsif ( $token =~ /^\*option/ )
+          # Format:
+          #  *Option:NAME:MetaType:Index or
+          #  *Option[CONDITIONS]:NAME:MetaType:Index or
+          # MetaType is:
+          #  - cost
+          #  - value
+          #  - alias (for Dakota)
+          #  - production-elec
+          #  - production-sh
+          #  - production-dhw
+          #  - WindowParams
+
+          $breakToken = $token.split(':')
+          $condition_string = ""
+
+          # Check option keyword to see if it has specific conditions
+          # format is *option[condition1>value1;condition2>value2 ...]
+
+          if ( $breakToken[0] =~ /\[.+\]/ )
+            $condition_string = $breakToken[0]
+            $condition_string.gsub!(/\*option\[/, '')
+              $condition_string.gsub!(/\]/, '')
+              $condition_string.gsub!(/>/, '=')
+            else
+              $condition_string = "all"
+            end
+
+            $OptionName = $breakToken[1]
+            $DataType   = $breakToken[2]
+
+            $ValueIndex = ""
+            $CostType = ""
+
+            # Assign values
+
+            if ( $DataType =~ /value/ )
+              $ValueIndex = $breakToken[3]
+              $gOptions[$currentAttributeName]["options"][$OptionName]["values"][$ValueIndex]["conditions"][$condition_string] = $value
+            end
+
+            if ( $DataType =~ /cost/ )
+              $CostType = $breakToken[3]
+              $gOptions[$currentAttributeName]["options"][$OptionName]["cost-type"] = $CostType
+              $gOptions[$currentAttributeName]["options"][$OptionName]["cost"] = $value
+            end
+
+            # Window data processing for generic window definitions:
+            if ( $DataType =~ /WindowParams/ )
+              debug_out ("\nProcessing window data for #{$currentAttributeName} / #{$OptionName}  \n")
+              $Param = $breakToken[3]
+              $GenericWindowParams[$OptionName][$Param] = $value
+              $GenericWindowParamsDefined = 1
+            end
+
+            # External entities...
+            if ( $DataType =~ /production/ )
+              if ( $DataType =~ /cost/ )
+                $CostType = $breakToken[3]
+              end
+              $gOptions[$currentAttributeName]["options"][$OptionName][$DataType]["conditions"][$condition_string] = $value
+            end
+
+          end
+
+        end
+
+
+        # Close attribute and append contents to global options array
+        if ( $token =~ /^\*attribute:end/ || $token =~ /^\*ext-attribute:end/)
+
+          $AttributeOpen = 0
+
+        end
+
+        if ( $token =~ /\*ext-parameters:end/ )
+          $ParametersOpen = 0
+        end
+
+      end
+
+    end
+
+    fOPTIONS.close
+    stream_out ("  done.\n")
+
+  end
