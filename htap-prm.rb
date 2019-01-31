@@ -58,6 +58,8 @@ $snailStartWait = 1
 $choicesInMemory = true
 $ChoiceFileContents = Hash.new
 
+$program = "htap-prm.rb"
+
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
@@ -300,10 +302,21 @@ def create_mesh_cartisian_combos(optIndex)
     $gLocationHash[generated_file]  = $gChoiceFileSet["Opt-Location"]
     $gRulesetHash[generated_file]   = $gChoiceFileSet["Opt-Ruleset"]
 
+    $combosGenerated += 1
+    $combosSinceLastUpdate += 1
+
+    if ( $combosSinceLastUpdate == $comboInterval )
+      stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
+      $combosSinceLastUpdate = 0
+
+
+    end
+
   else
 
     case optIndex
     when -3
+
 
       $gLocations.each do |location|
 
@@ -315,23 +328,13 @@ def create_mesh_cartisian_combos(optIndex)
 
     when -2
 
-      $gArchetypes.each do |archentry|
+      $archetypeFiles.each do |file|
 
-
-        $Folder = $gArchetypeDir
-        # Allow wildcards; expand list!
-
-        $ArchetypeFiles = Dir["#{$Folder}/#{archentry}"]
-
-        $ArchetypeFiles.each do |h2kpath|
-
-          $h2kfile = File.basename(h2kpath)
+          $h2kfile = File.basename(file)
 
           $gChoiceFileSet["!Opt-Archetype"] = $h2kfile
 
           create_mesh_cartisian_combos(optIndex+1)
-
-        end
 
       end
 
@@ -370,7 +373,6 @@ end
 def create_parametric_combos()
 
   $Folder = $gArchetypeDir
-
 
   startSet = Hash.new
 
@@ -416,7 +418,7 @@ def create_parametric_combos()
           $gArchetypeHash[generated_file] = thisSet["!Opt-Archetype"]
           $gLocationHash[generated_file]  = thisSet["Opt-Location"]
           $gRulesetHash[generated_file]   = thisSet["Opt-Ruleset"]
-
+          $combosGenerated += 1
           # Parametric variations....
 
           parameterSpace.keys.each do |attribute|
@@ -442,6 +444,15 @@ def create_parametric_combos()
               $gLocationHash[generated_file]  = thisSet["Opt-Location"]
               $gRulesetHash[generated_file]   = thisSet["Opt-Ruleset"]
 
+              $combosGenerated += 1
+              $combosSinceLastUpdate += 1
+
+              if ( $combosSinceLastUpdate == $comboInterval )
+                stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
+                $combosSinceLastUpdate = 0
+
+
+              end
 
             end
 
@@ -553,8 +564,8 @@ def run_these_cases(current_task_files)
   numberOfFiles = $FinishedTheseFiles.count {|k| k.include?(false)}
 
 
-  stream_out (" - HTAP-prm: begin runs ----------------------------\n\n")
-
+  stream_out drawRuler("Begin Runs")
+  stream_out "\n"
   $choicefileIndex = 0
   $RunsDone = false
 
@@ -563,12 +574,40 @@ def run_these_cases(current_task_files)
   # Loop until all files have been processed.
   $GiveUp = false
 
+  startProcessTime = Time.now
+
   while  ! $RunsDone
 
       $batchCount = $batchCount + 1
 
+      batchStartTime = Time.now
+      fracCompleted = $choicefileIndex.to_f/numberOfFiles.to_f
+      debug_out ("> BATCH #{$batchCount}, Index: #{$choicefileIndex}, Complete: #{fracCompleted*100}% \n")
+      timeMsg = ""
+      if ( fracCompleted > 0.0 ) then
+        timeNow = Time.now
+        timeLapsed = (timeNow - startProcessTime)
+        timeRemaining =   timeLapsed / fracCompleted - timeLapsed
 
-      stream_out ("   + Batch #{$batchCount} ( #{$choicefileIndex}/#{numberOfFiles} files processed so far...) \n" )
+
+        debug_out "Time Differential = #{(timeNow - startProcessTime)}\n"
+        if ( timeRemaining > 86400 )
+          timeMsg = ", ~#{(timeRemaining / 86400).round(2)} days remaining"
+
+        elsif ( timeRemaining > 3600 )
+          timeMsg = ", ~#{(timeRemaining / 3600).round(1)} hours remaining"
+
+        elsif ( timeRemaining > 60 )
+          timeMsg = ", ~#{(timeRemaining / 60).round(0)} minutes remaining"
+
+        elsif ( timeRemaining > 60 )
+          timeMsg = ", ~#{(timeRemaining).round(0)} seconds remaining"
+
+
+        end
+      end
+
+      stream_out ("   + Batch #{$batchCount} ( #{(fracCompleted*100).round(4)}% done, #{$choicefileIndex}/#{numberOfFiles} files processed so far#{timeMsg} ...) \n" )
       if ( $batchCount == 1 && $snailStart ) then
 
         stream_out ("   |\n")
@@ -580,6 +619,7 @@ def run_these_cases(current_task_files)
       $choicefiles.clear
       $PIDS.clear
       $SaveDirs.clear
+
 
 
       # Compute the number of threads we will start: lesser of a) files remaining, or b) threads allowed.
@@ -796,6 +836,7 @@ def run_these_cases(current_task_files)
 
 
       for thread3 in 0..$ThreadsNeeded-1
+        #debug_on
         count = thread3 + 1
         stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
 
@@ -845,7 +886,7 @@ def run_these_cases(current_task_files)
 
                 else
                   $RunResults["run-#{thread3}"][section][node]  = thisRunResults[section][node]
-                end 
+                end
 
               end
             else
@@ -861,7 +902,9 @@ def run_these_cases(current_task_files)
        if ( jsonParsed ) then
          # do nothing !
          debug_out "No futher file processing needed\n"
-
+         debug_out drawRuler " . "
+         debug_out "results from run-#{thread3}:\n"
+         debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
        elsif (  File.exist?($RunResultFilename)  ) then
          debug_out "processing old token/value file \n"
            contents = File.open($RunResultFilename, 'r')
@@ -1017,7 +1060,9 @@ def run_these_cases(current_task_files)
 
      $RunResults.clear
 
-     stream_out ("done.#{errs}\n\n")
+     batchLapsedTime = "#{(Time.now - batchStartTime).round(0)} seconds"
+
+     stream_out ("done. Duration: #{batchLapsedTime}.#{errs}\n\n")
 
      if ( ! $FinishedTheseFiles.has_value?(false) )
 
@@ -1063,10 +1108,6 @@ end
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
-$help_msg = "
- ======================================================
- HTAP-prm.rb ( a simple parallel run manager for HTAP )
- ======================================================\n\n"
 
 $gMasterPath = Dir.getwd()
 
@@ -1094,7 +1135,6 @@ $StopOnError = false
 #=====================================================================================
 optparse = OptionParser.new do |opts|
 
-   opts.banner = $help_msg
 
    opts.separator " USAGE: htap-prm.rb -o path\\to\\htap-options.json -r path\\to\\runfile.run -v "
    opts.separator " "
@@ -1220,6 +1260,8 @@ optparse = OptionParser.new do |opts|
 
 end
 
+stream_out(drawRuler("A simple parallel run manager for HTAP"))
+
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
 
@@ -1241,15 +1283,9 @@ $RunTheseFiles = Array.new
 $FinishedTheseFiles = Hash.new
 
 
-stream_out("\n")
-stream_out(" ======================================================\n")
-stream_out(" HTAP-prm.rb ( a simple parallel run manager for HTAP ) \n")
-stream_out(" ======================================================\n\n")
-
-
 # Generate working directories
 #stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
-stream_out(" - HTAP-prm: initalizing ---------------------------\n\n")
+stream_out(" Initialization: \n")
 
 stream_out("    - Deleting prior HTAP-work directories... ")
 FileUtils.rm_rf Dir.glob("HTAP-work-*")
@@ -1298,33 +1334,94 @@ else
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
 
   parse_def_file($gRunDefinitionsFile)
+  $archetypeFiles = Array.new
+  $Folder = $gArchetypeDir
+  $gArchetypes.each do |arch_entry|
+    $archetypeFiles = Dir["#{$Folder}/#{arch_entry}"]
+  end
+
+
 
   stream_out (" done.\n")
 
   case $gRunDefMode
   when  "mesh"
 
-    stream_out ("    - Creating mesh run combinations from run definitions... ")
+    # estimate the number of combonations
+    #debug_out
+    runningProduct = 1
+    stream_out "    - Evaluating combinations for mesh run\n\n"
+    stream_out "          * "+$gLocations.length.to_s.ljust(10)+" (options for Location)\n" if ($gLocations.length>1 )
+    stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+" (options for Archetypes)\n" if ($archetypeFiles.length>1 )
+    stream_out "          * "+$gRulesets.length.to_s.ljust(10)+" (options for Rulesets)\n" if ($gRulesets.length>1 )
+    $gRunUpgrades.each do | attribute, choices |
+       runningProduct *= choices.length
+       if ( choices.length > 1 ) then
+          stream_out "          * "+choices.length.to_s.ljust(10)+" (options for #{attribute})\n"
+       end
+    end
+    runningProduct *= $gLocations.length
+    runningProduct *= $archetypeFiles.length
+    runningProduct *= $gRulesets.length
+    stream_out "          ----------------------------------------------------------\n"
+    stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
+
+
+
+
+    $combosRequired = runningProduct
+    $combosGenerated = 0
+    $combosSinceLastUpdate = 0
+    $comboInterval = 1000
 
     create_mesh_cartisian_combos(-3)
 
 
+    stream_out ("    - Setting up mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
 
   when "parametric"
 
-    stream_out ("    - Creating parametric run combinations from run definitions... ")
+    # estimate the number of combonations
+    #debug_out
+    runningSum = 1
+    runningProduct = 1
+    stream_out "    - Evaluating combinations for parametric run\n\n"
+    stream_out "          * "+$gLocations.length.to_s.ljust(10)+"  { # of options for Location }\n" if ($gLocations.length>1 )
+    stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+"  { # of options for Archetypes }\n" if ($archetypeFiles.length>1 )
+    stream_out "          * "+$gRulesets.length.to_s.ljust(10)+"  { # of options for Rulesets }\n" if ($gRulesets.length>1 )
+    stream_out "          *    (   1          { base option for all choices }\n"
+    $gRunUpgrades.each do | attribute, choices |
+       if ( choices.length > 1 ) then
+          runningSum += choices.length - 1
+          stream_out "                +  "+(choices.length-1).to_s.ljust(10)+" { additional options for #{attribute} }\n"
+       end
+    end
+    stream_out "               )\n"
+    runningProduct *= $gLocations.length
+    runningProduct *= $archetypeFiles.length
+    runningProduct *= $gRulesets.length
+    runningProduct *= runningSum
+    stream_out "          ----------------------------------------------------------\n"
+    stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
+
+    $combosRequired = runningProduct
+    $combosGenerated = 0
+    $combosSinceLastUpdate = 0
+    $comboInterval = 1000
+
+    stream_out ("    - Setting up parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
 
     create_parametric_combos()
-
+    stream_out ("    - Setting up parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
   end
 
   $RunTheseFiles = $gGenChoiceFileList
 
-  if ($choicesInMemory )
-    stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n")
-  else
-    stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n")
-  end
+  #if ($choicesInMemory )
+  #  stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n")
+  #else
+  #  stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n")
+  #end
 
 
 
