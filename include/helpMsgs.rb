@@ -39,7 +39,8 @@ def initialize
                       "Opt-H2K-PV" => nil,
                       "GOconfig_rotate" => nil,
                       "Opt-Ceilings" => nil,
-                      "Opt-FloorHeader" => nil,
+                      "Opt-FloorHeaderIntIns" => nil,
+                      "Opt-FloorHeader" => "Opt-FloorHeader",
                       "Opt-FloorAboveCrawl" => "Opt-FloorAboveCrawl",
                       "Opt-Baseloads" => nil,
                       "Opt-Temperatures" => nil,
@@ -109,6 +110,19 @@ def initialize
  floors above unheated crawlspaces to the perscribed r-value.
 
  RECOMMENDATION: USE OPT-H2K-EffRValue, and set OPT-H2K-CodeName to NA.
+"
+
+@text["Opt-FloorHeader"] = "
+ Option Opt-FloorHeader is no longer supported. Use Opt-FloorHeaderIntIns
+ instead.
+
+ Option Opt-FloorHeader would set the header insulation value independently
+ of the wall insulation value. This approach makes no sense for walls with
+ external insulated sheathing. Opt-FloorHeaderIntIns allows users to specify
+ internal insualtion values; substitute-h2k.rb will add these values
+ to the external insulaton layer to estimate the effective RSI for the header
+ + external insulaton assembly. 
+
 "
 
 

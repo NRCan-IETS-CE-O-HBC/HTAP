@@ -18,12 +18,13 @@ def setTermSize
 
 end
 
-def shortenToTerm(msg)
+def shortenToTerm(msg,extrashort = 0, truncStr="[...]")
+
   setTermSize if ( $termWidth.nil? )
 
-  if msg.length > $termWidth-3 then
+  if msg.length > $termWidth-extrashort-3 then
     msg.gsub!(/\n/,"")
-    shortmsg = "#{msg[0..$termWidth-9]} [...]\n"
+    shortmsg = "#{msg[0..$termWidth-extrashort-9]} #{truncStr}\n"
   else
     shortmsg = msg
   end
@@ -48,7 +49,7 @@ end
 # formatted to match width of terminal
 # =========================================================================================
 def drawRuler(msg = nil, char=nil)
-  setTermSize if ( $termWidth.nil? )
+  setTermSize if ( $termWidth.nil?  )
 
   c=char
   # set to default ruler character, if none provided.
@@ -117,6 +118,7 @@ end
 # Hook enabling debugging from within a routine
 # =========================================================================================
 def debug_on()
+  return if ( $gNoDebug )
   callerID = caller_info()
   routine = callerID["routine"]
   file =callerID["file"]
@@ -133,6 +135,7 @@ end
 # Hook disabling debugging from within a routine
 # =========================================================================================
 def debug_off()
+  return if ( $gNoDebug )
   callerID = caller_info()
   $localDebug[callerID["routine"]] = false
   return 0
@@ -143,7 +146,7 @@ end
 # to write out debugging messages.
 # =========================================================================================
 def debug_out(debmsg)
-
+  return if ( $gNoDebug )
   callerID = caller_info()
   if( $localDebug[callerID["routine"]].nil? ) then
     lDebug = false
@@ -162,7 +165,7 @@ end
 # code should call debug_out and not debug_out_now.
 # =========================================================================================
 def debug_out_now(debmsg, callerID)
-
+  return if ( $gNoDebug )
   callindent = ""
 
   level      = callerID["level"]
@@ -216,17 +219,52 @@ def debug_out_now(debmsg, callerID)
 
 end
 
+
+# =========================================================================================
+# Log Informational message  for latter reporting reporting
+# =========================================================================================
+def info_out(msg)
+  #puts "\n\n WARNING: #{msg}\n\n"
+  callerID = Hash.new
+  callerID = caller_info()
+  line     = callerID["line"]
+  file     = callerID["file"]
+  routine  = callerID["routine"]
+  msg.gsub(/^\n+/, "")
+  msg.gsub(/\n+$/, "")
+  msg += " (message reported by #{routine} - #{file}:#{line})"
+
+  if ($gTest_params["logfile"])
+    $fLOG.write("Info: #{msg}")
+  end
+
+  $gInfoMsgs << msg
+
+end
+
+
 # =========================================================================================
 # Write warning message to screen, and log for reporting
 # =========================================================================================
 def warn_out(msg)
-  #puts "\n\n WARNING: #{msg}\n\n"
+
+  callerID = Hash.new
+  callerID = caller_info()
+  line     = callerID["line"]
+  file     = callerID["file"]
+  routine  = callerID["routine"]
+  msg.gsub(/^\n+/, "")
+  msg.gsub(/\n+$/, "")
+  msg += " (warning reported by #{routine} - #{file}:#{line})"
+
   if ($gTest_params["logfile"])
-    $fLOG.write("\n\n WARNING: #{msg}\n\n")
+    $fLOG.write(msg)
   end
 
-  $gWarnings << msg.gsub(/\n/,'')
-
+  $gWarnings << msg
+  stream_out "\n"
+  stream_out prettyList( " (?) WARNING:",msg)
+  stream_out "\n"
 end
 
 def help_out(catagory,topic)
@@ -263,13 +301,22 @@ def help_out(catagory,topic)
                   "\n"
     warn_out " Broken call to help_out() in #{routine} (#{file}:#{line}) - some developer should fix this! "
   end
-
-  myHelpMsg.gsub!(/^/,'? ')
-
+  shortMsg = ""
+  myHelpMsg.gsub!(/^/,' ?')
+  maxlen = 0
+  myHelpMsg.each_line do | helpline |
+    maxlen = helpline.length if ( helpline.length > maxlen)
+  end
+  boxlen = [$termWidth - 5, maxlen + 5 ].min
+  myHelpMsg.each_line do | helpline |
+    helpline.gsub!(/\n/,"")
+    shortMsg += shortenToTerm(helpline,30,"").ljust(boxlen)+"?\n"
+  end
   stream_out "\n\n"
-  stream_out drawRuler("Hint - #{topic}",'? ')
-  stream_out myHelpMsg
-  stream_out drawRuler(nil,'? ')
+  stream_out shortenToTerm(drawRuler("Hint - #{topic}",' ?'),$termWidth-boxlen-9,"")
+  stream_out shortMsg
+
+  stream_out shortenToTerm(drawRuler(nil,' ?'),$termWidth-boxlen-9,"")
   stream_out "\n\n"
 
 
@@ -336,26 +383,73 @@ def writeHeader()
  stream_out drawRuler(nil)
 end
 
+
+# print a pretty line
+
+def prettyList(prefix,msg)
+
+  tgtWrapLen = $termWidth - prefix.length - 10
+
+  wrappedMsg = msg.gsub(/\n/, ' ').gsub(/(.{1,#{tgtWrapLen}})(\s+|$)/, "\\1\n").strip
+  prettyMsg = ""
+
+  blankPrefix = " ".ljust(prefix.length)
+  first = true
+  wrappedMsg.each_line do |line|
+    if first then
+      prettyMsg += "#{prefix} #{line}"
+      first = false
+    else
+      prettyMsg += "#{blankPrefix} #{line}"
+    end
+  end
+
+  return prettyMsg +"\n\n"
+
+end
+
+
 # =========================================================================================
 # Report info about the status of the run,
 # =========================================================================================
 def ReportMsgs()
 
+  $InfoBuffer = ""
   $ErrorBuffer = ""
   $WarningBuffer = ""
-  $gErrors.each  do |msg|
 
-    $fSUMMARY.write "s.error    = \"#{msg}\" \n"
-    $ErrorBuffer += "   + ERROR: #{msg} \n\n"
+
+
+  $gInfoMsgs.each do |msg|
+
+    $fSUMMARY.write "s.info   = \"#{msg}\" \n"
+
+    $InfoBuffer += prettyList("   (-) Info:",msg)
+    #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
+
+
 
   $gWarnings.each do |msg|
 
     $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
-    $WarningBuffer += "   + WARNING: #{msg} \n\n"
+
+    $WarningBuffer += prettyList("   (?) WARNING:",msg)
+    #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
+
+
+
+  $gErrors.each  do |msg|
+
+    $fSUMMARY.write "s.error    = \"#{msg}\" \n"
+    $ErrorBuffer += prettyList("   (!) ERROR:",msg)
+
+  end
+
+
 
   if $allok then
     status = "Run completed successfully"
@@ -373,26 +467,30 @@ def ReportMsgs()
   $totalDiff = endProcessTime - $startProcessTime
   $fSUMMARY.write "s.processingtime  = #{$totalDiff}\n"
 
-  stream_out drawRuler("#{$program}: Run Summary")
+  stream_out drawRuler("Run Summary")
   stream_out "\n"
   stream_out( " Total processing time: #{$totalDiff.to_f.round(2)} seconds\n" )
-  if $program =~ /substiture-h2k.rb/ then
+  if $program =~ /substitute-h2k\.rb/ then
     stream_out( " Total H2K execution time : #{$runH2KTime.to_f.round(2)} seconds\n" )
     stream_out( " H2K evaluation attempts: #{$gStatus["H2KExecutionAttempts"]} \n\n" )
   end
-  stream_out " #{$program} -> Warning messages:\n\n"
+
+  stream_out " -> Informational messages:\n\n"
+  stream_out "#{$InfoBuffer}\n"
+
+  stream_out " -> Warning messages:\n\n"
   stream_out "#{$WarningBuffer}\n"
   stream_out ""
-  stream_out " #{$program} -> Error messages:\n\n"
+  stream_out " -> Error messages:\n\n"
   stream_out "#{$ErrorBuffer}\n"
   stream_out " #{$program} STATUS: #{status} \n"
   stream_out drawRuler
 
 
-  #
   #if ($fLOG != nil )
   #  $fLOG.write("\n\n ERROR: #{msg}\n\n")
   #end
   #$gErrors << msg.gsub(/\n/,'')
   #$allok = false
+
 end
