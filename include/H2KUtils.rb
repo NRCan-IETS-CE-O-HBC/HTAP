@@ -9,7 +9,7 @@ module HTAP2H2K
 
   def HTAP2H2K.conf_foundations(myFdnData,myOptions,h2kElements)
 
-    debug_on
+    #debug_on
 
     debug_out "Setting up foundations for this config:\n#{myFdnData.pretty_inspect}\n"
 
@@ -245,7 +245,7 @@ module H2KFile
   # Update a basement definition to reflect new data.
   def H2KFile.updBsmCrawlDef(fdnData,h2kElements)
 
-    debug_on
+    #debug_on
 
     looplocation = "HouseFile/House/Components"
 
@@ -1033,7 +1033,7 @@ module H2KFile
                 if ( bgDims[component.name.downcase]["configuration"].nil? )
                   bgDims[component.name.downcase]["configuration"] = component.elements[".//Configuration"].text
                 else (bgDims[component.name.downcase]["configuration"] !=  component.elements[".//Configuration"].text )
-                  fatalerror (" HTAP doesn't support foundations with mutilple configurations for #{component.name}\n")
+                  #warn_out(" HTAP doesn't support foundations with mutilple configurations for #{component.name}\n")
                 end
 
 
@@ -1156,7 +1156,7 @@ module H2KFile
                 systemInfo["Furnace"]["count"] += 1
                 systemInfo["Furnace"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
               else
-                fatalerror "Unknown system type \n"
+                warn_out "Unknown system type #{t1_system.name}\n"
               end
 
 
@@ -1170,7 +1170,7 @@ module H2KFile
                 systemInfo["AirConditioner"]["count"] += 1
                 systemInfo["AirConditioner"]["capacity_kW"] = t2_system.elements[".//Specifications/RatedCapacity"].attributes["value"].to_f
               else
-                fatalerror "Unknown system type #{t2_system.name}  \n"
+                warn_out "Unknown system type #{t2_system.name}  \n"
               end
 
             end
@@ -1184,7 +1184,7 @@ module H2KFile
                 systemInfo["Ventilator"]["count"] += 1
                 systemInfo["Ventilator"]["capacity_l/s"] += ventsys.attributes["supplyFlowrate"].to_f
               else
-                fatalerror "Unknown ventilation type #{ventsys.name}  \n"
+                warn_out "Unknown whole house ventilation type #{ventsys.name}\n"
               end
             end
             systemInfo["designLoads"] = H2KFile.getDesignLoads( elements )
