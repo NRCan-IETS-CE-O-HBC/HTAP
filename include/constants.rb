@@ -170,6 +170,7 @@ $LegacyOptionsToIgnore = Set.new [
   "Opt-DHWLoadScale",
   "Opt-HRVduct",
   "Opt-FloorAboveCrawl",
+  "Opt-FloorHeader"
 ]
 
 CostingSupport = Set.new [ "Opt-Ceilings",
@@ -184,11 +185,35 @@ CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-FoundationWallExtIns",
                            "Opt-FoundationWallIntIns",
                            "Opt-FoundationSlabBelowGrade",
-                           "Opt-FoundationSlabOnGrade"
+                           "Opt-FoundationSlabOnGrade",
+                           "Opt-FloorHeaderIntIns"
                          ]
+
+AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
+                                     "Opt-FuelCost",
+                                     "Opt-ResultHouseCode",
+                                     "Opt-Specifications",
+                                     "Opt-Location",
+                                     "Opt-Ruleset",
+                                     "Opt-Temperatures" ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $gErrors = Array.new
 $gWarnings = Array.new
+$gInfoMsgs = Array.new
 $gStatus = Hash.new
 
 $gHelp = false
