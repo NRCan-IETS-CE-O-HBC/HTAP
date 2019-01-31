@@ -1598,7 +1598,8 @@
             "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
             "all_poly_lapped_joints_located_over_solid_backing:sealed",
             "preliminary_blower_door_test:single_home",
-            "sprayfoam_rim_joists;_by_wall_area:net_cost",
+            "sprayfoam_rim_joists;by_header_area",
+            "credit:elimination_of_vapor_barrier_at_floor_header",
             "trades_training"
           ],
           "custom-costs": {
@@ -1608,7 +1609,7 @@
       "New-Const-air_seal_to_1.50_ach": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.00",
+            "<Opt-ACH>": "1.50",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1623,7 +1624,8 @@
             "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
             "all_poly_lapped_joints_located_over_solid_backing:sealed",
             "preliminary_blower_door_test:single_home",
-            "sprayfoam_rim_joists;_by_wall_area:net_cost"
+            "sprayfoam_rim_joists;by_header_area",
+            "credit:elimination_of_vapor_barrier_at_floor_header"
           ],
           "custom-costs": {
           }
@@ -1632,7 +1634,7 @@
       "New-Const-air_seal_to_2.50_ach": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.00",
+            "<Opt-ACH>": "2.50",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1654,7 +1656,7 @@
       "New-Const-air_seal_to_3.50_ach": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.00",
+            "<Opt-ACH>": "3.50",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1673,7 +1675,7 @@
       "New-Const-air_seal_to_4-6_ach": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "1.00",
+            "<Opt-ACH>": "5.00",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -4483,7 +4485,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone4",
-            "Opt-H2K-EffRValue": "15.79"
+            "Opt-H2K-EffRValue": "15.79",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4496,7 +4499,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone5_noHRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "Opt-H2K-EffRValue": "17.49",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4509,7 +4513,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone5_HRV",
-            "Opt-H2K-EffRValue": "16.86"
+            "Opt-H2K-EffRValue": "16.86",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4522,7 +4527,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone6_noHRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "Opt-H2K-EffRValue": "17.49",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4535,7 +4541,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone6_HRV",
-            "Opt-H2K-EffRValue": "16.86"
+            "Opt-H2K-EffRValue": "16.86",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4548,7 +4555,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7A_noHRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "Opt-H2K-EffRValue": "17.49",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4561,7 +4569,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7A_HRV",
-            "Opt-H2K-EffRValue": "16.52"
+            "Opt-H2K-EffRValue": "16.52",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4574,7 +4583,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7B_noHRV",
-            "Opt-H2K-EffRValue": "21.86"
+            "Opt-H2K-EffRValue": "21.86",
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -4587,7 +4597,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7B_HRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "Opt-H2K-EffRValue": "17.49",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4600,7 +4611,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone8_noHRV",
-            "Opt-H2K-EffRValue": "21.86"
+            "Opt-H2K-EffRValue": "21.86",
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -4613,7 +4625,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone8_HRV",
-            "Opt-H2K-EffRValue": "17.49"
+            "Opt-H2K-EffRValue": "17.49",
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4640,7 +4653,8 @@
       "NC_R-16(eff)_2x6-24inOC_R19-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.47
+            "Opt-H2K-EffRValue": 16.47,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4659,7 +4673,8 @@
       "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.27
+            "Opt-H2K-EffRValue": 16.27,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4678,7 +4693,8 @@
       "NC_R-17(eff)_2x4-16inOC_R14-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.81
+            "Opt-H2K-EffRValue": 16.81,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -4698,7 +4714,8 @@
       "NC_R-16(eff)_2x4-16inOC_R14-batt+1inUnfacedEPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.22
+            "Opt-H2K-EffRValue": 16.22,
+            "HeaderExtInsRValue": 3.5
           }
         },
         "costs": {
@@ -4718,7 +4735,8 @@
       "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 17.04
+            "Opt-H2K-EffRValue": 17.04,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4737,7 +4755,8 @@
       "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 17.66
+            "Opt-H2K-EffRValue": 17.66,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4756,7 +4775,8 @@
       "NC_R-18(eff)_2x6-24inOC_R22-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 17.72
+            "Opt-H2K-EffRValue": 17.72,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4775,7 +4795,8 @@
       "NC_R-18(eff)_2x6-24inOC_R24-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 18.46
+            "Opt-H2K-EffRValue": 18.46,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4794,7 +4815,8 @@
       "NC_R-19(eff)_2x6-16inOC_2lb.ClosedCellSprayFoam_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 18.97
+            "Opt-H2K-EffRValue": 18.97,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4813,7 +4835,8 @@
       "NC_R-19(eff)_2x4-16inOC_R14-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 19.33
+            "Opt-H2K-EffRValue": 19.33,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -4833,7 +4856,8 @@
       "NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 19.93
+            "Opt-H2K-EffRValue": 19.93,
+            "HeaderExtInsRValue": 0.0
           }
         },
         "costs": {
@@ -4852,7 +4876,8 @@
       "NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.01
+            "Opt-H2K-EffRValue": 21.01,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -4872,7 +4897,8 @@
       "NC_R-21(eff)_2x6-16inOC_R24-batt+1inUnfacedEPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.41
+            "Opt-H2K-EffRValue": 21.41,
+            "HeaderExtInsRValue": 3.5
           }
         },
         "costs": {
@@ -4892,7 +4918,8 @@
       "NC_R-21(eff)_2x6-16inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.47
+            "Opt-H2K-EffRValue": 21.47,
+            "HeaderExtInsRValue": 5.5
           }
         },
         "costs": {
@@ -4912,7 +4939,8 @@
       "NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.52
+            "Opt-H2K-EffRValue": 21.52,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -4932,7 +4960,8 @@
       "NC_R-22(eff)_2x4-16inOC_R14-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.86
+            "Opt-H2K-EffRValue": 21.86,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -4952,7 +4981,8 @@
       "NC_R-22(eff)_2x6-24inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.98
+            "Opt-H2K-EffRValue": 21.98,
+            "HeaderExtInsRValue": 5.5
           }
         },
         "costs": {
@@ -4972,7 +5002,8 @@
       "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.09
+            "Opt-H2K-EffRValue": 22.09,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -4992,7 +5023,8 @@
       "NC_R-22(eff)_2x6-24inOC_R24-batt+1inUnfacedEPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.21
+            "Opt-H2K-EffRValue": 22.21,
+            "HeaderExtInsRValue": 3.5
           }
         },
         "costs": {
@@ -5012,7 +5044,8 @@
       "NC_R-23(eff)_2x6-16inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.55
+            "Opt-H2K-EffRValue": 22.55,
+            "HeaderExtInsRValue": 5.5
           }
         },
         "costs": {
@@ -5032,7 +5065,8 @@
       "NC_R-23(eff)_2x6-16inOC_R24-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.71
+            "Opt-H2K-EffRValue": 22.71,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -5052,7 +5086,8 @@
       "NC_R-23(eff)_2x6-24inOC_R22-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.77
+            "Opt-H2K-EffRValue": 22.77,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -5072,7 +5107,8 @@
       "NC_R-23(eff)_2x6-16inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.17
+            "Opt-H2K-EffRValue": 23.17,
+            "HeaderExtInsRValue": 5.5
           }
         },
         "costs": {
@@ -5092,7 +5128,8 @@
       "NC_R-23(eff)_2x6-24inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.23
+            "Opt-H2K-EffRValue": 23.23,
+            "HeaderExtInsRValue": 5.5
           }
         },
         "costs": {
@@ -5112,7 +5149,8 @@
       "NC_R-24(eff)_2x6-24inOC_R24-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.51
+            "Opt-H2K-EffRValue": 23.51,
+            "HeaderExtInsRValue": 5.0
           }
         },
         "costs": {
@@ -5132,7 +5170,8 @@
       "NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.53
+            "Opt-H2K-EffRValue": 23.53,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5152,7 +5191,8 @@
       "NC_R-24(eff)_2x6-16inOC_R19-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.95
+            "Opt-H2K-EffRValue": 23.95,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5172,7 +5212,8 @@
       "NC_R-24(eff)_2x6-24inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.97
+            "Opt-H2K-EffRValue": 23.97,
+            "HeaderExtInsRValue": 5.5
           }
         },
         "costs": {
@@ -5192,7 +5233,8 @@
       "NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 24.04
+            "Opt-H2K-EffRValue": 24.04,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5212,7 +5254,8 @@
       "NC_R-24(eff)_2x6-24inOC_R19-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 24.46
+            "Opt-H2K-EffRValue": 24.46,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5232,7 +5275,8 @@
       "NC_R-25(eff)_2x6-16inOC_R22-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 24.61
+            "Opt-H2K-EffRValue": 24.61,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5252,7 +5296,8 @@
       "NC_R-25(eff)_2x6-16inOC_R22-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.03
+            "Opt-H2K-EffRValue": 25.03,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5272,7 +5317,8 @@
       "NC_R-25(eff)_2x6-16inOC_R24-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.23
+            "Opt-H2K-EffRValue": 25.23,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5292,7 +5338,8 @@
       "NC_R-25(eff)_2x6-24inOC_R22-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.29
+            "Opt-H2K-EffRValue": 25.29,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5312,7 +5359,8 @@
       "NC_R-26(eff)_2x6-16inOC_R24-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.65
+            "Opt-H2K-EffRValue": 25.65,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5332,7 +5380,8 @@
       "NC_R-26(eff)_2x6-24inOC_R22-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.71
+            "Opt-H2K-EffRValue": 25.71,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5352,7 +5401,8 @@
       "NC_R-26(eff)_2x6-24inOC_R24-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.03
+            "Opt-H2K-EffRValue": 26.03,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5372,7 +5422,8 @@
       "NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.06
+            "Opt-H2K-EffRValue": 26.06,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -5392,7 +5443,8 @@
       "NC_R-26(eff)_2x6-24inOC_R24-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.45
+            "Opt-H2K-EffRValue": 26.45,
+            "HeaderExtInsRValue": 7.5
           }
         },
         "costs": {
@@ -5412,7 +5464,8 @@
       "NC_R-27(eff)_2x6-24inOC_R19-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.57
+            "Opt-H2K-EffRValue": 26.57,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -5432,7 +5485,8 @@
       "NC_R-27(eff)_2x6-16inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 27.14
+            "Opt-H2K-EffRValue": 27.14,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -5452,7 +5506,8 @@
       "NC_R-28(eff)_2x6-16inOC_R24-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 27.76
+            "Opt-H2K-EffRValue": 27.76,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -5472,7 +5527,8 @@
       "NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 27.82
+            "Opt-H2K-EffRValue": 27.82,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -5492,7 +5548,8 @@
       "NC_R-29(eff)_2x6-24inOC_R24-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 28.56
+            "Opt-H2K-EffRValue": 28.56,
+            "HeaderExtInsRValue": 10.0
           }
         },
         "costs": {
@@ -5512,7 +5569,8 @@
       "NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 29.64
+            "Opt-H2K-EffRValue": 29.64,
+            "HeaderExtInsRValue": 11.5
           }
         },
         "costs": {
@@ -5532,7 +5590,8 @@
       "NC_R-30(eff)_2x6-24inOC_R24-batt+3inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 30.44
+            "Opt-H2K-EffRValue": 30.44,
+            "HeaderExtInsRValue": 11.5
           }
         },
         "costs": {
@@ -5554,7 +5613,8 @@
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-GenInsulLayerInboard-a>",
-      "Opt-H2K-EffRValue"
+      "Opt-H2K-EffRValue",
+      "HeaderExtInsRValue"
     ]
   },
   "Opt-MainWall": {
@@ -6034,256 +6094,156 @@
       "OPT-H2K-EffRValue"
     ]
   },
-  "Opt-FloorHeader": {
+  "Opt-FloorHeaderIntIns": {
     "structure": "tree",
     "costed": true,
     "options": {
       "NA": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "NA"
+            "FloorHeaderIntIns_Eff_RValue": "NA"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
 
           ]
         }
       },
-      "Header_R20": {
+      "uninsulated": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "20"
+            "FloorHeaderIntIns_Eff_RValue": "2.73"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
 
           ]
         }
       },
-      "Header_R30": {
+      "NC_R-10eff_3inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "30"
+            "FloorHeaderIntIns_Eff_RValue": "10.95"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r10_batt"
           ]
         }
       },
-      "Header_R40": {
+      "NC_R-15eff_4.5inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "40"
+            "FloorHeaderIntIns_Eff_RValue": "15.19"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r15_batt"
           ]
         }
       },
-      "Header_R50": {
+      "NC_R-16eff_5inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "50"
+            "FloorHeaderIntIns_Eff_RValue": "16.73"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r17_batt"
           ]
         }
       },
-      "Header_R60": {
+      "NC_R-18eff_5.5inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "60"
+            "FloorHeaderIntIns_Eff_RValue": "18.27"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r19_batt"
           ]
         }
       },
-      "NBC_Wall_zone4": {
+      "NC_R-22eff_5.5inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "15.79"
+            "FloorHeaderIntIns_Eff_RValue": "22.0"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r24_batt"
           ]
         }
       },
-      "NBC_Wall_zone5_noHRV": {
+      "NC_R-26eff_8inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "FloorHeaderIntIns_Eff_RValue": "26.29"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r28_batt"
           ]
         }
       },
-      "NBC_Wall_zone5_HRV": {
+      "NC_R-29eff_5.5inBatt": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "16.86"
+            "FloorHeaderIntIns_Eff_RValue": "29.3"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
           "components": [
-
+            "insulation:r31_batt"
           ]
         }
       },
-      "NBC_Wall_zone6_noHRV": {
+      "NBC_RSI2.78_int": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "FloorHeaderIntIns_Eff_RValue": "15.79"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
+          "proxy": "NC_R-15eff_4.5inBatt"
         }
       },
-      "NBC_Wall_zone6_HRV": {
+      "NBC_RSI2.97_int": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "16.86"
+            "FloorHeaderIntIns_Eff_RValue": "16.868"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
+          "proxy": "NC_R-16eff_5inBatt"
         }
       },
-      "NBC_Wall_zone7A_noHRV": {
+      "NBC_RSI3.08_int": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": "17.49"
+            "FloorHeaderIntIns_Eff_RValue": "17.49"
           }
         },
         "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_Wall_zone7A_HRV": {
-        "h2kMap": {
-          "base": {
-            "Opt-H2K-EffRValue": "16.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_Wall_zone7B_noHRV": {
-        "h2kMap": {
-          "base": {
-            "Opt-H2K-EffRValue": "21.86"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_Wall_zone7B_HRV": {
-        "h2kMap": {
-          "base": {
-            "Opt-H2K-EffRValue": "17.49"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_Wall_zone8_noHRV": {
-        "h2kMap": {
-          "base": {
-            "Opt-H2K-EffRValue": "21.86"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_Wall_zone8_HRV": {
-        "h2kMap": {
-          "base": {
-            "Opt-H2K-EffRValue": "17.49"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
+          "proxy": "NC_R-18eff_5.5inBatt"
         }
       }
     },
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
-      "Opt-H2K-EffRValue"
+      "FloorHeaderIntIns_Eff_RValue"
     ]
   },
-  "Opt-FoundationWallExtIns":{
+  "Opt-FoundationWallExtIns": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -6407,7 +6367,7 @@
           ]
         }
       },
-      "NBC_936_uninsulated_EffR0" :{
+      "NBC_936_uninsulated_EffR0": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-ExtWallReff": "0.0"
@@ -6426,7 +6386,7 @@
       "H2K-Fdn-ExtWallReff"
     ]
   },
-  "Opt-FoundationWallIntIns":{
+  "Opt-FoundationWallIntIns": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -6607,7 +6567,7 @@
       "H2K-Fdn-IntWallReff"
     ]
   },
-  "Opt-FoundationSlabBelowGrade":{
+  "Opt-FoundationSlabBelowGrade": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -6741,7 +6701,7 @@
           ]
         }
       },
-      "NBC_936_uninsulated_EffR0":{
+      "NBC_936_uninsulated_EffR0": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabBelowGradeReff": "0.0"
@@ -6753,7 +6713,7 @@
           "proxy": "uninsulated"
         }
       },
-      "NBC_936_1.96RSI":{
+      "NBC_936_1.96RSI": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabBelowGradeReff": "11.13"
@@ -6765,7 +6725,7 @@
           "proxy": "xps2.5inEffR12.5"
         }
       },
-      "NBC_936_4.44RSI":{
+      "NBC_936_4.44RSI": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabBelowGradeReff": "25.22"
@@ -6784,7 +6744,7 @@
       "H2K-Fdn-SlabBelowGradeReff"
     ]
   },
-  "Opt-FoundationSlabOnGrade":{
+  "Opt-FoundationSlabOnGrade": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -6948,7 +6908,7 @@
           ]
         }
       },
-      "NBC_936_1.96RSI":{
+      "NBC_936_1.96RSI": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabOnGradeReff": "11.13"
@@ -6960,7 +6920,7 @@
           "proxy": "xps2.5inEffR12.5"
         }
       },
-      "NBC_936_2.84RSI":{
+      "NBC_936_2.84RSI": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabOnGradeReff": "16.13"
@@ -6972,7 +6932,7 @@
           "proxy": "xps3inEffR17.5"
         }
       },
-      "NBC_936_3.72RSI":{
+      "NBC_936_3.72RSI": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabOnGradeReff": "21.13"
@@ -6984,7 +6944,7 @@
           "proxy": "xps4.5inEffR22.5"
         }
       },
-      "NBC_936_4.59RSI":{
+      "NBC_936_4.59RSI": {
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabOnGradeReff": "26.07"
@@ -8305,7 +8265,7 @@
       }
     },
     "default": "NA",
-    "stop-on-error": true,
+    "stop-on-error": false,
     "h2kSchema": [
       "OPT-H2K-ConfigType",
       "OPT-H2K-IntWallCode",
@@ -8694,7 +8654,7 @@
       }
     },
     "default": "NA",
-    "stop-on-error": true,
+    "stop-on-error": false,
     "h2kSchema": [
       "OPT-H2K-ConfigType",
       "OPT-H2K-CrawlWallCode",
@@ -8711,6 +8671,20 @@
           "base": {
             "OPT-H2K-CodeName": "NA",
             "OPT-H2K-EffRValue": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "2x10": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "28.68"
           }
         },
         "costs": {
@@ -8781,7 +8755,7 @@
           ]
         }
       },
-      "NBC_936_4.67RSI":{
+      "NBC_936_4.67RSI": {
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": "26.52"
@@ -8795,7 +8769,7 @@
           ]
         }
       },
-      "NBC_936_5.02RSI":{
+      "NBC_936_5.02RSI": {
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": "28.51"
@@ -9083,8 +9057,8 @@
           "custom-costs": {
           },
           "components": [
-             "traditional_electric_resistance_baseboard_heaters",
-             "ducting:direct-duct_hrv"
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv"
           ]
         }
       },
@@ -9114,9 +9088,9 @@
           "custom-costs": {
           },
           "components": [
-             "traditional_electric_resistance_baseboard_heaters",
-             "ducting:direct-duct_hrv",
-             "portable_room_ac"
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv",
+            "portable_room_ac"
           ]
         }
       },
@@ -9229,11 +9203,12 @@
           "custom-costs": {
           },
           "components": [
-              { "SIZE<8.5kW" : "ashp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
-                "SIZE<11kW" : "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters" ,
-                "else" : "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
-              },
-              "ducting:central_forced_air"
+            {
+              "SIZE<8.5kW": "ashp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+              "SIZE<11kW": "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+              "else": "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
+            },
+            "ducting:central_forced_air"
           ]
         }
       },
@@ -9752,9 +9727,10 @@
           },
           "components": [
             "hrv:conventional_sre_60%_@_0:55%_@_-25",
-            { "if[Opt-HVACSystem.inc?]": {
-              "ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
-              "else": "ducting:direct-duct_hrv"
+            {
+              "if[Opt-HVACSystem.inc?]": {
+                "ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
+                "else": "ducting:direct-duct_hrv"
               }
             }
           ]
@@ -9828,9 +9804,9 @@
           "custom-costs": {
           },
           "components": [
-             "ducting:exhaust_fan_vent",
-             "ventilation_fans",
-             "ventilation_fan_controls"
+            "ducting:exhaust_fan_vent",
+            "ventilation_fans",
+            "ventilation_fan_controls"
           ]
         }
       },
@@ -9933,7 +9909,7 @@
           "custom-costs": {
           },
           "components": [
-             "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67"
+            "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67"
           ]
         }
       },
@@ -9952,7 +9928,7 @@
           "custom-costs": {
           },
           "components": [
-              "dhw_tank:electric:246_l:ef_0.89"
+            "dhw_tank:electric:246_l:ef_0.89"
           ]
         }
       },
