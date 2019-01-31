@@ -9,13 +9,17 @@ require 'set'
 require 'pp'
 
 require 'csv'
-
+require_relative '../include/constants'
 require_relative '../include/msgs'
 require_relative '../include/H2KUtils'
 require_relative '../include/HTAPUtils'
 
 require_relative '../include/costing'
 require_relative '../include/legacy-code'
+
+$program = "wall-def-import.rb"
+
+stream_out drawRuler("A simple script that parses CWC wall definitions and syncs them with the options file")
 
 wallAlias = Hash.new
 wallAlias = {
@@ -89,10 +93,12 @@ wallAlias = {
 
   totalDefs = 0
 
+  stream_out "Reading #{CWCdefsName}: line #{lineCount}\r"
+
   while !cwcDefs.eof? do
 
     lineCount += 1
-
+    stream_out "Reading #{CWCdefsName}: line #{lineCount}\r"
     line = cwcDefs.readline
     #print "======================================================================\n"
     #print "lineCount #{lineCount} \n"
@@ -193,7 +199,7 @@ wallAlias = {
           "vapourBarrier" => intVapBarrier,
           "spacing" => spacing,
           "extIns"  => extIns,
-          "rRom"    => rNom
+          "rNom"    => rNom
         }
 
       else
@@ -208,9 +214,14 @@ wallAlias = {
       end
     end
 
-    #pp wallDefs
-    wallDefsList.keys.each do | code |
+    stream_out "Reading #{CWCdefsName}: line #{lineCount} done!\n"
 
+    #pp wallDefs
+
+    codeCount = 0
+    wallDefsList.keys.each do | code |
+      codeCount += 1
+      stream_out " Building wall definitions for each code: #{codeCount} \r"
       thisCount    = wallDefsList[code]["Count"]
       thisRMax     = wallDefsList[code]["MaxReff"]
       thisRMin     = wallDefsList[code]["MinReff"]
@@ -219,7 +230,11 @@ wallAlias = {
       thisSpacing  = wallDefsList[code]["spacing"]
       thisExtIns   = wallDefsList[code]["extIns" ]
       thisVB       = wallDefsList[code]["vapourBarrier" ]
-      thisrNom     = wallDefsList[code]["rNom" ]
+      thisRNomInt,  extInsReff   = wallDefsList[code]["rNom" ].split(/\+/)
+
+      extInsReff = "0ci" if ( extInsReff.nil? )
+      extInsReff.gsub!(/ci/,"")
+
 
       thisREffAvg = (thisRMax + thisRMin) / 2
 
@@ -227,7 +242,9 @@ wallAlias = {
 
       wallDefs[wall] = Hash.new
       wallDefs[wall] = {
-        "h2kMap" => { "base" => {"Opt-H2K-EffRValue" => thisREffAvg.to_f.round(2) } },
+        "h2kMap" => { "base" => {"Opt-H2K-EffRValue" => thisREffAvg.to_f.round(2),
+                                 "HeaderExtInsRValue" => extInsReff.to_f
+                    } },
         "costs"  => { "components"=> Array.new },
         "custom-costs" => Hash.new
       }
@@ -304,13 +321,14 @@ wallAlias = {
         if ( ! found &&
             rEff > rEffReq &&
             cwcWall =~ /2x6-16inOC/ &&
-            cwcWall !~ /Polyiso/  &&
+            cwcWall !~ /Polyiso/    &&
             cwcWall !~ /SprayFoam/  ) then
            print "      #{cwcWall} complies (rEFF =#{rEff})\n"
            data["costs"]["proxy"] = cwcWall
            data["costs"].delete("components") if( !data["costs"]["components"].nil? )
-
+           data["h2kMap"]["base"]["HeaderExtInsRValue"] = wallDefs[cwcWall]["h2kMap"]["base"]["HeaderExtInsRValue"]
            found = true
+
         end
       end
 
