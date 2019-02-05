@@ -18,7 +18,6 @@ require_relative 'include/msgs'
 require_relative 'include/H2KUtils'
 require_relative 'include/HTAPUtils'
 require_relative 'include/costing'
-
 require_relative 'include/constants'
 
 include REXML
@@ -56,8 +55,8 @@ end
 
 specdCostSources = Hash.new
 specdCostSources = {"custom" => [],
-                      "components" => ["LEEP-BC-Vancouver", "*"]
-                   }
+  "components" => ["MiscNRCanEstimates2019","VancouverAirSealData","LEEP-BC-Vancouver","*"]
+}
 
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
@@ -207,17 +206,14 @@ h2kElements = H2KFile.get_elements_from_filename(myBaseModelFile)
     # Compute costs
     myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
 
+
+    myCosts, costsOK = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
     stream_out ( drawRuler("Cost Impacts"))
-    myCosts = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-    Costing.summarizeCosts(myChoices, myCosts)
+    stream_out Costing.summarizeCosts(myChoices, myCosts)
 
-
-
-
-
-
-
-
+    File.write('HTAP-costing-audit-report.txt', Costing.auditCosts(myChoices, myCosts, myH2KHouseInfo)) 
+    stream_out "\n"
+    info_out("Costing audit report written to 'HTAP-costing-audit-report.txt'")
 
 
 

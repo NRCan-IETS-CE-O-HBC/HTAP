@@ -307,8 +307,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       # Effective thermal resistance of above-ground opaque assemblies (Table 9.36.2.6 A&B)
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]               ="NBC_RSI2.78_int"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
@@ -342,8 +342,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"]    = "NBC_Wall_zone5_noHRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]                 ="NBC_RSI3.08_int"
          $ruleSetChoices["Opt-AtticCeilings"]                     = "NBC_Ceiling_zone5_noHRV"
-         $ruleSetChoices["Opt-CathCeilings"]                      = "NBC_FlatCeiling_zone5"
-         $ruleSetChoices["Opt-FlatCeilings"]                      = "NBC_FlatCeiling_zone5"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_936_4.67RSI"
 
@@ -373,8 +373,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_noHRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI3.08_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
@@ -403,8 +403,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_noHRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI3.08_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_noHRV"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
@@ -444,8 +444,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
 
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
@@ -489,8 +489,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
                   "includes R-5 continuous insulation that will be added to header")
 
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
@@ -531,8 +531,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone4"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI2.78_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone4"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone4"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone4"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
@@ -563,8 +563,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone5_HRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI2.97_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone5_HRV"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone5"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone5"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
@@ -594,8 +594,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone6_HRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI2.97_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone6"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone6"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone6"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
@@ -625,8 +625,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7A_HRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI2.97_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7A_HRV"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7A"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7A"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
@@ -656,9 +656,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone7B_HRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI3.08_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone7B"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone7B"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone7B"
-
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
@@ -691,8 +690,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NBC_Wall_zone8_HRV"
          $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NBC_RSI3.08_int"
          $ruleSetChoices["Opt-AtticCeilings"]                  = "NBC_Ceiling_zone8"
-         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_FlatCeiling_zone8"
-         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_zone8"
+         $ruleSetChoices["Opt-CathCeilings"]                   = "NBC_CathCeiling_RSI4.67"
+         $ruleSetChoices["Opt-FlatCeilings"]                   = "NBC_FlatCeiling_RSI4.67"
 
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 

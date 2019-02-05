@@ -1,0 +1,960 @@
+{
+  "NC_R-16(eff)_2x6-24inOC_R19-batt_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 16.47,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 16.27,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-17(eff)_2x4-16inOC_R14-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 16.81,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r14_batt",
+        "framing:conventional:38x89mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-16(eff)_2x4-16inOC_R14-batt+1inUnfacedEPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 16.22,
+        "HeaderExtInsRValue": 3.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:eps_type_1:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r14_batt",
+        "framing:conventional:38x89mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 17.04,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 17.66,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-18(eff)_2x6-24inOC_R22-batt_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 17.72,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-18(eff)_2x6-24inOC_R24-batt_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 18.46,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-19(eff)_2x6-16inOC_2lb.ClosedCellSprayFoam_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 18.97,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-19(eff)_2x4-16inOC_R14-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 19.33,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r14_batt",
+        "framing:conventional:38x89mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 19.93,
+        "HeaderExtInsRValue": 0.0
+      }
+    },
+    "costs": {
+      "components": [
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 21.01,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-21(eff)_2x6-16inOC_R24-batt+1inUnfacedEPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 21.41,
+        "HeaderExtInsRValue": 3.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:eps_type_1:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-21(eff)_2x6-16inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 21.47,
+        "HeaderExtInsRValue": 5.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:polyisocyanurate:foil-faced:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 21.52,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-22(eff)_2x4-16inOC_R14-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 21.86,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r14_batt",
+        "framing:conventional:38x89mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-22(eff)_2x6-24inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 21.98,
+        "HeaderExtInsRValue": 5.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:polyisocyanurate:foil-faced:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 22.09,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-22(eff)_2x6-24inOC_R24-batt+1inUnfacedEPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 22.21,
+        "HeaderExtInsRValue": 3.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:eps_type_1:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-23(eff)_2x6-16inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 22.55,
+        "HeaderExtInsRValue": 5.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:polyisocyanurate:foil-faced:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-23(eff)_2x6-16inOC_R24-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 22.71,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-23(eff)_2x6-24inOC_R22-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 22.77,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-23(eff)_2x6-16inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 23.17,
+        "HeaderExtInsRValue": 5.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:polyisocyanurate:foil-faced:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-23(eff)_2x6-24inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 23.23,
+        "HeaderExtInsRValue": 5.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:polyisocyanurate:foil-faced:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-24(eff)_2x6-24inOC_R24-batt+1inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 23.51,
+        "HeaderExtInsRValue": 5.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 23.53,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-24(eff)_2x6-16inOC_R19-batt+2inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 23.95,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-24(eff)_2x6-24inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 23.97,
+        "HeaderExtInsRValue": 5.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:polyisocyanurate:foil-faced:25mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 24.04,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-24(eff)_2x6-24inOC_R19-batt+2inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 24.46,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-25(eff)_2x6-16inOC_R22-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 24.61,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-25(eff)_2x6-16inOC_R22-batt+2inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 25.03,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-25(eff)_2x6-16inOC_R24-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 25.23,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-25(eff)_2x6-24inOC_R22-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 25.29,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-26(eff)_2x6-16inOC_R24-batt+2inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 25.65,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-26(eff)_2x6-24inOC_R22-batt+2inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 25.71,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-26(eff)_2x6-24inOC_R24-batt+1.5inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 26.03,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:38mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 26.06,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-26(eff)_2x6-24inOC_R24-batt+2inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 26.45,
+        "HeaderExtInsRValue": 7.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-27(eff)_2x6-24inOC_R19-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 26.57,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r20_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-27(eff)_2x6-16inOC_R22-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 27.14,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-28(eff)_2x6-16inOC_R24-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 27.76,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 27.82,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r22_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-29(eff)_2x6-24inOC_R24-batt+2inXPS_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 28.56,
+        "HeaderExtInsRValue": 10.0
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation:xps_type_4:rigid:51mm",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 29.64,
+        "HeaderExtInsRValue": 11.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._76mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:conventional:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  },
+  "NC_R-30(eff)_2x6-24inOC_R24-batt+3inMineralWool_poly_vb": {
+    "h2kMap": {
+      "base": {
+        "Opt-H2K-EffRValue": 30.44,
+        "HeaderExtInsRValue": 11.5
+      }
+    },
+    "costs": {
+      "components": [
+        "insulation_mineral_wool_board_8_lb._76mm_vertical_pt_strapping_&_screws",
+        "air_barrier_membrane",
+        "osb:12mm",
+        "insulation:r24_batt",
+        "framing:advanced:38x140mm_o.c.",
+        "vapour_barrier:6_mil",
+        "1/2in_gypsum_board"
+      ]
+    },
+    "custom-costs": {
+    }
+  }
+}

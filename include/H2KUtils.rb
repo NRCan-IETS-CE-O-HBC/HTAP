@@ -38,6 +38,8 @@ module HTAP2H2K
     slabConfigInsulated = "SCB_25"
 
     h2kFdnData = Hash.new
+
+
     rEff_ExtWall = myFdnData["FoundationWallExtIns"]
     rEff_IntWall = myFdnData["FoundationWallIntIns"]
     rEff_SlabOG  = myFdnData["FoundationSlabOnGrade"]
@@ -50,6 +52,14 @@ module HTAP2H2K
       debug_out ("'NA' spec'd for Int/Ext walls and below-grade slabs. No changes needed\n")
     else
 
+      debug_out (">>> FDN CHOICE: #{myFdnData["FoundationSlabBelowGrade"]}\n")
+
+      bExtWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallExtIns",myFdnData["FoundationWallExtIns"])["H2K-Fdn-ExtWallReff"].to_f > 0.01 )
+      bIntWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallIntIns",myFdnData["FoundationWallIntIns"])["H2K-Fdn-IntWallReff"].to_f > 0.01 )
+      bBGSlabInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabBelowGrade",myFdnData["FoundationSlabBelowGrade"])["H2K-Fdn-SlabBelowGradeReff"].to_f > 0.01 )
+
+
+
       rEff_ExtWall = "uninsulated" if ( rEff_ExtWall == "NA")
       rEff_IntWall = "uninsulated" if ( rEff_IntWall == "NA")
       rEff_SlabBG  = "uninsulated" if ( rEff_SlabBG  == "NA")
@@ -61,7 +71,7 @@ module HTAP2H2K
       # Where is the insulation ?
       #
       # [  ] exterior     [   ] Interior      [  ] Slab  (None! )
-      if  ( rEff_ExtWall == "uninsulated" && rEff_IntWall == "uninsulated" && rEff_SlabBG == "uninsulated" ) then
+      if  ( ! bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
         basementConfig = "BCNN_2"
         crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
@@ -70,7 +80,7 @@ module HTAP2H2K
 
 
         # [ X ] exterior     [   ] Interior      [  ] Slab  ( full height exterior)
-      elsif  ( rEff_ExtWall != "uninsulated" && rEff_IntWall == "uninsulated" && rEff_SlabBG == "uninsulated" ) then
+      elsif  ( bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
         basementConfig = "BCEN_2"
         crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
@@ -78,7 +88,8 @@ module HTAP2H2K
         h2kFdnData["?ExtWallIns"] = true
 
         # [   ] exterior     [  X ] Interior      [  ] Slab   ( full height interior )
-      elsif ( rEff_ExtWall == "uninsulated" && rEff_IntWall != "uninsulated" && rEff_SlabBG == "uninsulated" ) then
+      elsif  ( ! bExtWallInsul &&  bIntWallInsul && ! bBGSlabInsul ) then
+
         basementConfig = "BCIN_1"
         crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
@@ -86,7 +97,8 @@ module HTAP2H2K
         h2kFdnData["?ExtWallIns"] = false
 
         # [ X ] exterior     [ X ] Interior      [  ] Slab     ( full height exterior, within 8" of slab on interior )
-      elsif ( rEff_ExtWall != "uninsulated" && rEff_IntWall != "uninsulated" && rEff_SlabBG == "uninsulated" ) then
+      elsif  ( bExtWallInsul && bIntWallInsul && ! bBGSlabInsul ) then
+
         basementConfig = "BCCN_5"
         crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
@@ -94,7 +106,8 @@ module HTAP2H2K
         h2kFdnData["?ExtWallIns"] = true
 
         #      [ X ] exterior                  [   ] Interior                   [ X ] Slab     ( full height exterior, underneath slab )
-      elsif ( rEff_ExtWall != "uninsulated" && rEff_IntWall == "uninsulated" && rEff_SlabBG != "uninsulated" ) then
+      elsif  (  bExtWallInsul && ! bIntWallInsul &&  bBGSlabInsul ) then
+
         basementConfig = "BCEB_4"
         crawlSpaceConfig = slabConfigInsulated
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
@@ -105,7 +118,8 @@ module HTAP2H2K
 
 
         # [   ] exterior     [ x  ] Interior      [ X ] Slab     ( full height exterior, underneath slab )
-      elsif ( rEff_ExtWall == "uninsulated" && rEff_IntWall != "uninsulated" && rEff_SlabBG != "uninsulated" ) then
+      elsif  ( ! bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
+
         basementConfig = "BCIB_1"
         crawlSpaceConfig = slabConfigInsulated
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
@@ -116,7 +130,8 @@ module HTAP2H2K
 
 
         #      [ X ] exterior                  [  X ] Interior                   [ X ] Slab     ( full height exterior, underneath slab )
-      elsif ( rEff_ExtWall != "uninsulated" && rEff_IntWall != "uninsulated" && rEff_SlabBG != "uninsulated" ) then
+      elsif  (  bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
+
         basementConfig = "BCCB_9"
         crawlSpaceConfig = slabConfigInsulated
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
@@ -133,17 +148,13 @@ module HTAP2H2K
       debug_out " Basement/crawlspace configuration : #{basementConfig}\n"
       h2kFdnData["BasementConfig"] = basementConfig
       h2kFdnData["CrawlConfig"] = crawlSpaceConfig
-      h2kFdnData["rEffIntWall"] =
-         myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
-      h2kFdnData["rEffExtWall"] =
-         myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["values"]["1"]["conditions"]["all"].to_f
-      h2kFdnData["rEff_SlabBG"] =
-         myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["values"]["1"]["conditions"]["all"].to_f
+      h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
+      h2kFdnData["rEffExtWall"] =  myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["values"]["1"]["conditions"]["all"].to_f
+      h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["values"]["1"]["conditions"]["all"].to_f
 
       debug_out "Processing basements/crawlspaces with following specs:\n#{h2kFdnData.pretty_inspect}"
 
       H2KFile.updBsmCrawlDef(h2kFdnData,h2kElements)
-
 
 
     end
@@ -154,8 +165,9 @@ module HTAP2H2K
       debug_out ("'NA' spec'd for on-grade slab. No changes needed\n")
 
     else
+      bOGSlabInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabOnGrade",myFdnData["FoundationSlabOnGrade"])["H2K-Fdn-SlabOnGradeReff"].to_f > 0.01 )
       h2kSlabData = Hash.new
-      if ( rEff_SlabOG == "uninsulated" ) then
+      if ( ! bOGSlabInsul  ) then
         slabConfig = "SCN_1"
         h2kSlabData["?ogSlabIns"] = false
       else
@@ -184,9 +196,9 @@ module H2KFile
 
 
     if h2kElements["HouseFile/House/Components/Crawlspace"] != nil
-       if h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
-          isCrawlHeated = true
-       end
+      if h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
+        isCrawlHeated = true
+      end
     end
 
     return isCrawlHeated
@@ -299,7 +311,7 @@ module H2KFile
         node.elements[loc].attributes["nominalInsulation"]= "#{((fdnData["rEffIntWall"].to_f)/R_PER_RSI).round(4)}"
         #   <Section nominalRsi='2.11' percentage='100' rank='1' rsi='1.7687'/>
 
-                 node.elements[loc].elements.add("Composite")
+        node.elements[loc].elements.add("Composite")
 
 
         node.elements["#{loc}/Composite"].elements.each do | section |
@@ -843,189 +855,204 @@ module H2KFile
 
 
 
-    # ======================================================================================
-    # Get wall characteristics (above-grade, headers....)
-    # ======================================================================================
-    def H2KFile.getAGWallDimensions(elements)
+  # ======================================================================================
+  # Get wall characteristics (above-grade, headers....)
+  # ======================================================================================
+  def H2KFile.getAGWallDimensions(elements)
 
-      debug_off()
+    #debug_off
 
-      debug_out ("[>] H2KFile.getAGWallDimensions \n")
-      wallDimsAG = Hash.new
-      wallDimsAG["perimeter"] = 0.0
-      wallDimsAG["count"] = 0
-      wallDimsAG["area"] = Hash.new
-      wallDimsAG["area"]["gross"]   = 0.0
-      wallDimsAG["area"]["net"]     = 0.0
-      wallDimsAG["area"]["headers"] = 0.0
+    debug_out ("[>] H2KFile.getAGWallDimensions \n")
+    wallDimsAG = Hash.new
+    wallDimsAG["perimeter"] = 0.0
+    wallDimsAG["count"] = 0
+    wallDimsAG["area"] = Hash.new
+    wallDimsAG["area"]["gross"]   = 0.0
+    wallDimsAG["area"]["net"]     = 0.0
+    wallDimsAG["area"]["headers"] = 0.0
+    wallDimsAG["area"]["windows"] = 0.0
+    wallDimsAG["area"]["doors"] = 0.0
 
-      locationWallText = "HouseFile/House/Components/Wall"
-      locationWindowText = "HouseFile/House/Components/Wall/Components/Window"
-      locationDoorText = "HouseFile/House/Components/Wall/Components/Door"
-      locationHeaderText = "HouseFile/House/Components/Wall/Components/FloorHeader"
-      wallCounter = 0
+    locationWallText = "HouseFile/House/Components/Wall"
+    locationWindowText = "HouseFile/House/Components/Wall/Components/Window"
+    locationDoorText = "HouseFile/House/Components/Wall/Components/Door"
+    locationHeaderText = "HouseFile/House/Components/Wall/Components/FloorHeader"
+    wallCounter = 0
 
-      elements.each(locationWallText) do |wall|
+    elements.each(locationWallText) do |wall|
+      debug_out(drawRuler("Wall"," , "))
+      debug_out("\n")
+      areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
 
-        areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
+      # Id for this wall, to match to windows/doors
+      idWall = wall.attributes["id"].to_i
 
-        # Id for this wall, to match to windows/doors
-        idWall = wall.attributes["id"].to_i
+      debug_out (" > #{idWall} AREA: #{areaWall_temp} \n")
+      # Loop through windows, sum areas of windows attched to this wall.
+      areaWindows = 0.0
+      elements.each(locationWindowText) do |window|
 
-        # Loop through windows, sum areas of windows attched to this wall.
-        areaWindows = 0.0
-        elements.each(locationWindowText) do |window|
+        if (window.parent.parent.attributes["id"].to_i == idWall)
 
-          if (window.parent.parent.attributes["id"].to_i == idWall)
+          thisWinArea  = (
+            window.elements["Measurements"].attributes["height"].to_f *
+            window.elements["Measurements"].attributes["width"].to_f
+          ) * window.attributes["number"].to_i / 1000000
 
-            thisWinArea  = ( window.elements["Measurements"].attributes["height"].to_f *
-              window.elements["Measurements"].attributes["width"].to_f   ) * window .attributes["number"].to_i / 1000000
-              areaWindows += thisWinArea
+          areaWindows += thisWinArea
+          debug_out "     WINDOW: parent id #{window.parent.parent.attributes["id"].to_i} - area: #{thisWinArea}\n"
+        end
+        # if (window.parent.parent.attributes["id"].to_i == idWall)
+      end
+      debug_out ("TOTAL window area so far #{areaWindows}\n")
+      #   elements.each(locationWindowTest) do |window|
 
-            end # if (window.parent.parent.attributes["id"].to_i == idWall)
-          end #   elements.each(locationWindowTest) do |window|
-
-          # Loop through doors, sum areas of doors attched to this wall.
-          areaDoors= 0.0
-          elements.each(locationDoorText) do |door|
-
-
-            if (door.parent.parent.attributes["id"].to_i == idWall)
-
-              thisDoorArea  = ( door.elements["Measurements"].attributes["height"].to_f *
-                door.elements["Measurements"].attributes["width"].to_f   )
-                areaDoors += thisDoorArea
+      # Loop through doors, sum areas of doors attched to this wall.
+      areaDoors= 0.0
+      elements.each(locationDoorText) do |door|
 
 
-              end
-              # if (door.parent.parent.attributes["id"].to_i == idWall)
+        if (door.parent.parent.attributes["id"].to_i == idWall)
 
-            end
-            #   elements.each(locationWindowTest) do |door|
-
-            # Loop through floor headers.
-            areaHeaders = 0
-            elements.each(locationHeaderText) do |header|
-
-              if (header.parent.parent.attributes["id"].to_i == idWall)
-
-                thisHeaderArea  = ( header.elements["Measurements"].attributes["height"].to_f *
-                  header.elements["Measurements"].attributes["perimeter"].to_f   )
-                  areaHeaders += thisHeaderArea
-
-                end
-                # if (header.parent.parent.attributes["id"].to_i == idWall)
-
-              end
-              #   elements.each(locationHeaderText) do |header|
-
-              # Permiter for linear foot calcs.
-              wallDimsAG["perimeter"] += wall.elements["Measurements"].attributes["perimeter"].to_f
-
-              # Gross wall area, including windows/doors
-              wallDimsAG["area"]["gross"] += areaWall_temp + areaHeaders
-
-              # Net wall area, excluding windows, doors.
-              wallDimsAG["area"]["net"] += areaWall_temp - areaWindows - areaDoors
-              wallDimsAG["area"]["headers"] += areaHeaders
-              wallDimsAG["area"]["windows"] = areaWindows
-              wallDimsAG["area"]["doors"] = areaDoors
-              wallDimsAG["count"] += 1.to_i
-
-            end
-            # elements.each(locationWallText) do |wall|
-
-            debug_out ("  Output follows: \n#{wallDimsAG.pretty_inspect}")
-
-            debug_out ("[<] H2KFile.getAGWallDimensions \n")
-            return wallDimsAG
+          thisDoorArea  = (
+            door.elements["Measurements"].attributes["height"].to_f *
+            door.elements["Measurements"].attributes["width"].to_f
+          )
+          areaDoors += thisDoorArea
 
           end
-          # def H2KFile.getAGWallArea(elements)
+          # if (door.parent.parent.attributes["id"].to_i == idWall)
 
-          def H2KFile.getBGDimensions(elements)
+        end
+        debug_out ("TOTAL door area so far #{areaDoors}\n")
+        #   elements.each(locationWindowTest) do |door|
 
-            debug_off
-            bgDims = Hash.new
-            [ "basement", "crawlspace", "slab" ].each do | type |
-              bgDims[type] = Hash.new
-              bgDims[type] = { "exposed-perimeter" => 0.0,
-                               "total-perimeter" => 0.0,
-                               "floor-area" => 0.0,
-                               "configuration" => nil }
+        # Loop through floor headers.
+        areaHeaders = 0
+        elements.each(locationHeaderText) do |header|
 
+          if (header.parent.parent.attributes["id"].to_i == idWall)
+
+            thisHeaderArea  = (
+              header.elements["Measurements"].attributes["height"].to_f *
+              header.elements["Measurements"].attributes["perimeter"].to_f
+            )
+            areaHeaders += thisHeaderArea
+
+          end
+          # if (header.parent.parent.attributes["id"].to_i == idWall)
+
+        end
+        debug_out ("TOTAL header so far #{areaHeaders}\n")
+        #   elements.each(locationHeaderText) do |header|
+
+          # Permiter for linear foot calcs.
+          wallDimsAG["perimeter"] += wall.elements["Measurements"].attributes["perimeter"].to_f
+
+          # Gross wall area, including windows/doors
+          wallDimsAG["area"]["gross"] += areaWall_temp + areaHeaders
+
+          # Net wall area, excluding windows, doors.
+          wallDimsAG["area"]["net"] += areaWall_temp - areaWindows - areaDoors
+          wallDimsAG["area"]["headers"] += areaHeaders
+          wallDimsAG["area"]["windows"] += areaWindows
+          wallDimsAG["area"]["doors"]   += areaDoors
+          wallDimsAG["count"] += 1.to_i
+
+        end
+        # elements.each(locationWallText) do |wall|
+
+        debug_out ("Output follows:\n#{wallDimsAG.pretty_inspect}\n")
+
+        debug_out ("[<] H2KFile.getAGWallDimensions \n")
+        return wallDimsAG
+
+      end
+      # def H2KFile.getAGWallArea(elements)
+
+      def H2KFile.getBGDimensions(elements)
+
+        debug_off
+        bgDims = Hash.new
+        [ "basement", "crawlspace", "slab" ].each do | type |
+          bgDims[type] = Hash.new
+          bgDims[type] = { "exposed-perimeter" => 0.0,
+            "total-perimeter" => 0.0,
+            "floor-area" => 0.0,
+            "configuration" => nil }
+
+          end
+
+          wallCornerCount = 0
+          wallDims = Array.new
+
+          bgDims["walls"] = { "total-area" => Hash.new, "below-grade-area" =>Hash.new }
+          bgDims["walls"]["total-area"]["internal"] = 0.0
+          bgDims["walls"]["total-area"]["external"] = 0.0
+          bgDims["walls"]["below-grade-area"]["internal"] = 0.0
+          bgDims["walls"]["below-grade-area"]["external"] = 0.0
+
+
+          debug_off()
+          debug_out ("Parsing below-grade dimensions\n")
+
+          loc = "HouseFile/House/Components"
+          count = 0
+          elements[loc].elements.each do | component |
+
+
+
+            if (   component.name == "Crawlspace" )
+              # Don't count below-grade characteristics of vented/open crawlspaces.
+              ventType = component.elements[".//VentilationType"].attributes["code"].to_i
+              debug_out " (Skipping vented/open Crawlspace)\n"
+              next if ( ventType != 3 )
             end
 
-            wallCornerCount = 0
-            wallDims = Array.new
 
-            bgDims["walls"] = { "total-area" => Hash.new, "below-grade-area" =>Hash.new }
-            bgDims["walls"]["total-area"]["internal"] = 0.0
-            bgDims["walls"]["total-area"]["external"] = 0.0
-            bgDims["walls"]["below-grade-area"]["internal"] = 0.0
-            bgDims["walls"]["below-grade-area"]["external"] = 0.0
+            if ( component.name == "Basement" ||
+              component.name == "Crawlspace" ||
+              component.name == "Slab" )
+
+              # Skip
 
 
-            debug_off()
-            debug_out ("Parsing below-grade dimensions\n")
+              count += 1
+              debug_out(drawRuler(nil, "  *"))
 
-            loc = "HouseFile/House/Components"
-            count = 0
-            elements[loc].elements.each do | component |
+              debug_out " Processing #{component.name} #{count} /#{component.pretty_inspect} \n"
+              thisExposedPerimeter = component.attributes["exposedSurfacePerimeter"].to_f
 
+              thisIsRectangle = component.elements[".//Floor/Measurements"].attributes["isRectangular"].to_s
 
-
-              if (   component.name == "Crawlspace" )
-                # Don't count below-grade characteristics of vented/open crawlspaces.
-                ventType = component.elements[".//VentilationType"].attributes["code"].to_i
-                debug_out " (Skipping vented/open Crawlspace)\n"
-                next if ( ventType != 3 )
+              if ( thisIsRectangle.eql?("true") )
+                debug_out (" + SHAPE #{thisIsRectangle}\n")
+                thisWidth = component.elements[".//Floor/Measurements"].attributes["width"].to_f
+                thisLength = component.elements[".//Floor/Measurements"].attributes["length"].to_f
+                thisFloorArea = thisWidth * thisLength
+                thisTotalPerimeter = (thisWidth + thisLength) *2
+              else
+                debug_out ("non-rectangular!!!\n")
+                thisFloorArea = component.elements[".//Floor/Measurements"].attributes["area"].to_f
+                thisTotalPerimeter = component.elements[".//Floor/Measurements"].attributes["perimeter"].to_f
               end
+              debug_out " >>>>> floor area? : #{thisFloorArea}\n"
+              if (component.name == "Basement" || component.name == "Crawlspace")
+                thisHeight = component.elements[".//Wall/Measurements"].attributes["height"].to_f
+                thisDepth = component.elements[".//Wall/Measurements"].attributes["depth"].to_f
+                thisCorners = component.elements[".//Wall/Construction"].attributes["corners"].to_f
+                thisTotalExposedWallArea = thisHeight * thisExposedPerimeter
+                thisTotalExposedWallAreaBG = thisDepth * thisExposedPerimeter
 
 
-               if ( component.name == "Basement" ||
-                    component.name == "Crawlspace" ||
-                    component.name == "Slab" )
+                # Total corners
+                wallCornerCount += thisCorners
 
-                 # Skip
-
-
-                 count += 1
-                 debug_out(drawRuler(nil, "  *"))
-
-                 debug_out " Processing #{component.name} #{count} /#{component.pretty_inspect} \n"
-                 thisExposedPerimeter = component.attributes["exposedSurfacePerimeter"].to_f
-
-                 thisIsRectangle = component.elements[".//Floor/Measurements"].attributes["isRectangular"].to_s
-
-                 if ( thisIsRectangle.eql?("true") )
-                   debug_out (" + SHAPE #{thisIsRectangle}\n")
-                   thisWidth = component.elements[".//Floor/Measurements"].attributes["width"].to_f
-                   thisLength = component.elements[".//Floor/Measurements"].attributes["length"].to_f
-                   thisFloorArea = thisWidth * thisLength
-                   thisTotalPerimeter = (thisWidth + thisLength) *2
-                else
-                  debug_out ("non-rectangular!!!\n")
-                   thisFloorArea = component.elements[".//Floor/Measurements"].attributes["area"].to_f
-                   thisTotalPerimeter = component.elements[".//Floor/Measurements"].attributes["perimeter"].to_f
-                end
-                debug_out " >>>>> floor area? : #{thisFloorArea}\n"
-                if (component.name == "Basement" || component.name == "Crawlspace")
-                   thisHeight = component.elements[".//Wall/Measurements"].attributes["height"].to_f
-                   thisDepth = component.elements[".//Wall/Measurements"].attributes["depth"].to_f
-                   thisCorners = component.elements[".//Wall/Construction"].attributes["corners"].to_f
-                   thisTotalExposedWallArea = thisHeight * thisExposedPerimeter
-                   thisTotalExposedWallAreaBG = thisDepth * thisExposedPerimeter
-
-
-                   # Total corners
-                   wallCornerCount += thisCorners
-
-                   wallDims.push( {"type"       => component.name,
-                                   "corners"    => thisCorners,
-                                   "thisHeight" => thisHeight,
-                                   "thisDepth"  => thisDepth,
-                                   "thisExpPerimeter" => thisExposedPerimeter})
+                wallDims.push( {"type"       => component.name,
+                  "corners"    => thisCorners,
+                  "thisHeight" => thisHeight,
+                  "thisDepth"  => thisDepth,
+                  "thisExpPerimeter" => thisExposedPerimeter})
 
 
                 end
@@ -1038,16 +1065,16 @@ module H2KFile
 
 
 
-                 #type
+                #type
 
-                 #debug_out "> perimeter-#{thisPerimeter}\n"
+                #debug_out "> perimeter-#{thisPerimeter}\n"
 
-                 bgDims[component.name.downcase]["exposed-perimeter"] += thisExposedPerimeter
-                 bgDims[component.name.downcase]["total-perimeter"] += thisTotalPerimeter
-                 bgDims[component.name.downcase]["floor-area"] += thisFloorArea
+                bgDims[component.name.downcase]["exposed-perimeter"] += thisExposedPerimeter
+                bgDims[component.name.downcase]["total-perimeter"] += thisTotalPerimeter
+                bgDims[component.name.downcase]["floor-area"] += thisFloorArea
 
               else
-                 debug_out " (skpping #{component.name})\n"
+                debug_out " (skpping #{component.name})\n"
               end
 
 
@@ -1137,6 +1164,7 @@ module H2KFile
               "Boiler"        => { "count" => 0.0, "capacity_kW" => 0.0, },
               "Baseboards"    => { "count" => 0.0, "capacity_kW" => 0.0, },
               "ASHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
+              "GSHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
               "AirConditioner"=> { "count" => 0.0, "capacity_kW" => 0.0, },
               "Ventilator"    => { "count" => 0.0, "capacity_l/s" => 0.0 }
             }
@@ -1155,6 +1183,7 @@ module H2KFile
               when "Furnace"
                 systemInfo["Furnace"]["count"] += 1
                 systemInfo["Furnace"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+                systemInfo[""]
               else
                 warn_out "Unknown system type #{t1_system.name}\n"
               end
@@ -1166,6 +1195,12 @@ module H2KFile
 
               debug_out "Recovering system info for T2: #{t2_system.name}\n"
               case t2_system.name
+              when "GroundHeatPump"
+                systemInfo["GSHP"]["count"] += 1
+                systemInfo["GSHP"]["capacity_kW"] = t2_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+              when "AirHeatPump"
+                systemInfo["ASHP"]["count"] += 1
+                systemInfo["ASHP"]["capacity_kW"] = t2_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
               when "AirConditioning"
                 systemInfo["AirConditioner"]["count"] += 1
                 systemInfo["AirConditioner"]["capacity_kW"] = t2_system.elements[".//Specifications/RatedCapacity"].attributes["value"].to_f
@@ -1203,6 +1238,8 @@ module H2KFile
             debug_off
             myH2KHouseInfo = Hash.new
 
+            # we don't know the filename - create a placeholder that can set elsewhere
+            myH2KHouseInfo["h2kFile"] = "unknown"
             # Location/region
             myH2KHouseInfo["locale"] = Hash.new
             myH2KHouseInfo["locale"]["weatherLoc"] = H2KFile.getWeatherCity( elements )

@@ -161,7 +161,7 @@
       "NBC-arch11_fullBsmt": "C:\\H2K-CLI-Min\\User\\NRCan-A11_1500sf_2storey_rowMid_fullBsmt.h2k"
     },
     "default": "NZEH-Arch-1",
-    "stop-on-error": true
+    "stop-on-error": false
   },
   "Opt-Location": {
     "structure": "tree",
@@ -3732,7 +3732,7 @@
           ]
         }
       },
-      "NBC_FlatCeiling_zone4": {
+      "NBC_CathCeiling_RSI4.67": {
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
@@ -3743,82 +3743,22 @@
           "custom-costs": {
           },
           "components": [
-
+             "insulation:r27_batt"
           ]
         }
       },
-      "NBC_FlatCeiling_zone5": {
+      "NBC_CathCeiling_RSI5.02": {
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "26.52"
+            "OPT-H2K-EffRValue": "28.51"
           }
         },
         "costs": {
           "custom-costs": {
           },
           "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone6": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone7A": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone7B": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone8": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
+             "insulation:r29_batt"
           ]
         }
       }
@@ -3879,7 +3819,7 @@
           ]
         }
       },
-      "NBC_FlatCeiling_zone4": {
+      "NBC_FlatCeiling_RSI4.67": {
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
@@ -3890,82 +3830,22 @@
           "custom-costs": {
           },
           "components": [
-
+             "insulation:r27_batt"
           ]
         }
       },
-      "NBC_FlatCeiling_zone5": {
+      "NBC_FlatCeiling_RSI5.02": {
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "26.52"
+            "OPT-H2K-EffRValue": "28.51"
           }
         },
         "costs": {
           "custom-costs": {
           },
           "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone6": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "26.52"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone7A": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone7B": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "NBC_FlatCeiling_zone8": {
-        "h2kMap": {
-          "base": {
-            "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "28.50"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
+             "insulation:r29_batt"
           ]
         }
       }
@@ -8893,7 +8773,7 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-SysType1": "Furnace",
-            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-SysType2": "AirConditioning",
             "Opt-H2K-Type1Fuel": "2",
             "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
@@ -8910,6 +8790,38 @@
           "components": [
             "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
             "ducting:central_forced_air"
+          ]
+        }
+      },
+      "gas-furnace-ecm+AC": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "4.27",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+            "ducting:central_forced_air",
+            "ac_2.5_ton:14_seer"
           ]
         }
       },
@@ -9204,9 +9116,11 @@
           },
           "components": [
             {
-              "SIZE<8.5kW": "ashp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
-              "SIZE<11kW": "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
-              "else": "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
+              "H2KHouseInfo.HVAC/GSHP/capacity_kW": {
+                "<?8.5" : "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+                "<?11.0": "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+                "else"  : "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
+              }
             },
             "ducting:central_forced_air"
           ]
@@ -9728,8 +9642,8 @@
           "components": [
             "hrv:conventional_sre_60%_@_0:55%_@_-25",
             {
-              "if[Opt-HVACSystem.inc?]": {
-                "ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
+              "HTAPOptions.Opt-HVACSystem/options/[choice]/costComponents": {
+                "inc?ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
                 "else": "ducting:direct-duct_hrv"
               }
             }

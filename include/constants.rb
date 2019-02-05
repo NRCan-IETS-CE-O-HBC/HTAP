@@ -236,3 +236,5 @@ $ruleSetSpecs = Hash.new
 $gChoicesChangedbyProgram = false
 
 $foundationConfiguration = ""
+
+CostingAuditReportName = 'HTAP-costing-audit-report.txt'

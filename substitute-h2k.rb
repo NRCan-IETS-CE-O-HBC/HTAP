@@ -496,6 +496,11 @@ def processFile(h2kElements)
     config2 = $gOptions["Opt-H2KFoundationSlabCrawl"]["options"][ $gChoices["Opt-H2KFoundationSlabCrawl"] ]["values"]["1"]["conditions"]["all"]
     (configType2, configSubType2, fndTypes2) = config2.split('_')
   end
+
+
+
+
+
   optDHWTankSize = "1"
   # DHW variable defined here so scope includes all DHW tags
 
@@ -1136,7 +1141,7 @@ def processFile(h2kElements)
           # Floor header User-Specified R-values
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-ExposedFloor/ )
-          if ( tag =~ /OPT-H2K-CodeName/ &&  value != "NA" )
+          if ( tag =~ /OPT-H2K-CodeName/ &&  value != "NA" && value != "")
 
             if ( h2kElements["HouseFile/House/Components/Crawlspace"] != nil &&
               ! H2KFile.heatedCrawlspace(h2kElements) ) then
@@ -1269,7 +1274,7 @@ def processFile(h2kElements)
 
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" or value == "" )
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -6374,23 +6379,26 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         #===============================================================================
 
         def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
-          debug_on
+          debug_off
+
 
           h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
           myCosts = Hash.new
           myH2KHouseInfo = Hash.new
           myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
-
+          myH2KHouseInfo["h2kFile"] = $gWorkingModelFile
+          debug_out ( "Data from #{$gWorkingModelFile}\n")
           debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
 
           specdCostSources = Hash.new
-          specdCostSources = {"custom" => [],
+          specdCostSources = {
+            "custom" => [],
             "components" => ["MiscNRCanEstimates2019","VancouverAirSealData","LEEP-BC-Vancouver","*"]
           }
 
           # Compute costs
           costsOK = false
-          stream_out ( drawRuler("Cost Impacts"))
+
           myCosts, costsOK = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
 
           if ( ! costsOK )
@@ -6399,8 +6407,17 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             debug_out "\n\n"
             debug_out drawRuler(" cost calculations complete; reporting "," / ")
             debug_out "\n\n"
-            Costing.summarizeCosts(myChoices, myCosts)
+            stream_out ( drawRuler("Cost Impacts"))
+            stream_out( Costing.summarizeCosts(myChoices, myCosts))
+            File.write(CostingAuditReportName, Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo))
+            info_out("Comprehensive costing calculation report written to #{CostingAuditReportName}")
+
           end
+
+          #debug_on
+          debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+          debug_off
+
           return myCosts
 
         end
@@ -6413,18 +6430,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $gTest_params["logfile"]   = $gMasterPath + "\\SubstitutePL-log.txt"
 
         # Open output file here so we can log errors too!
-        sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
 
-        $fSUMMARY = File.new(sumFileSpec, "w")
-
-        if $fSUMMARY == nil then
-          fatalerror("Could not open #{sumFileSpec}. \n")
-        end
-
-        $fLOG = File.new($gTest_params["logfile"], "w")
-        if $fLOG == nil then
-          fatalerror("Could not open #{$gTest_params["logfile"]}.\n")
-        end
+        $fLOG, $fSUMMARY = openLogFiles($gTest_params["logfile"],$gMasterPath + "\\SubstitutePL-output.txt" )
 
 
         #-------------------------------------------------------------------
@@ -6832,6 +6839,26 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
           locale.gsub!(/\./, '')
           $HDDs = $HDDHash[ locale.upcase ]
+
+          case $HDDs.to_i
+          when 0..2999
+            climateZone = "Zone 4"
+          when 3000..3999
+            climateZone = "Zone 5"
+          when 4000..4999
+            climateZone = "Zone 6"
+          when 5000..5999
+            climateZone = "Zone 7a"
+          when 6000..6999
+            climateZone = "Zone 7b"
+          when 7000..9999999
+            climateZone = "Zone 8"
+          else
+            climateZone = "nil"
+            warn_out ("Could not compute climate zone for #{locale} - HDDs:#{$HDDs}")
+
+          end
+
           $Locale_model = locale
 
           isSetbyRuleset = Hash.new
@@ -6957,7 +6984,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           stream_out(drawRuler("Validating choices and options"))
 
 
-          $OptionsOK,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder )
+          $OptionsERR,$gChoices, $gChoiceOrder = HTAPData.validate_options($gOptions, $gChoices, $gChoiceOrder )
 
 
 
@@ -6974,8 +7001,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
 
-          if ( ! $OptionsOK ) then
-            $allOK = false
+          if ( $OptionsERR ) then
+            $allok = false
           end
 
           if (! $allok )
@@ -7140,6 +7167,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "Weather-Locale"      =>  "#{$Locale_model}",
             "Base-Region"         =>  "#{$gBaseRegion}",
             "Base-Locale"         =>  "#{$gBaseLocale}",
+            "climate-zone"        =>  "#{climateZone}",
             "fuel-heating-presub"  =>  "#{$ArchetypeData["pre-substitution"]["fuelHeating"]}",
             "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelHDHW"]}",
             "Ceiling-Type"        =>  "#{$Ceilingtype}",

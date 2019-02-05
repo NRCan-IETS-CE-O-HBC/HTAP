@@ -1,7 +1,64 @@
 
+def HTAPInit()
 
+  $startProcessTime = Time.now
+  $fLOG, $fSUMMARY = openLogFiles("log-geth2kinfo.text","summary-geth2kinfo.txt")
+  $allok = true
+
+end
 
 module HTAPData
+
+  def HTAPData.simpleConditional( modelValue, conditionalOperator, queryValue)
+    result = nil
+
+    #debug_on
+    debug_out "ModelValue : #{modelValue.pretty_inspect}\n"
+    debug_out "CONDITIONAL : #{conditionalOperator}\n"
+    debug_out "queryValue : #{queryValue}\n"
+    case conditionalOperator
+    when "<"
+      if (modelValue.to_f < queryValue.to_f )
+        result = true
+      else
+        result = false
+      end
+
+    when "<"
+      if (modelValue.to_f = queryValue.to_f )
+        result = true
+      else
+        result = false
+      end
+
+    when "="
+      # Do i need to think more carefully about casts here?
+      if (modelValue == queryValue )
+        result = true
+      else
+        result = false
+      end
+
+    when "inc"
+      result = false
+      modelValue.each do | value |
+        if ( value == queryValue ) then
+          result = true
+        end
+      end
+
+    when /else/i
+      result = true
+    else
+      warn_out ("Unknown conditional operator #{condition}")
+      result = false
+
+    end
+    debug_out "RESULT: #{result}\n"
+
+    return result
+
+  end
 
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
@@ -175,8 +232,9 @@ module HTAPData
   def HTAPData.getResultsForChoice(options,attribute,choice)
     #debug_on
     result = Hash.new
-
-    debug_out( "contents of options[#{attribute}][`options`][#{choice}][`values`] =\n#{options[attribute]["options"][choice]["values"].pretty_inspect}")
+    debug_out ("Att: #{attribute}\n")
+    debug_out ("Choice: #{choice}\n")
+    debug_out( "contents of options[#{attribute}][`options`][#{choice}][`values`] ") #{}"=\n#{options[attribute]["options"][choice]["values"].pretty_inspect}")
 
     options[attribute]["tags"].each do |tagIndex, tagName|
      debug_out "Querying tag #{tagIndex}\n"
@@ -227,7 +285,7 @@ module HTAPData
         value = lineTokenValue[1]
 
         if ( $LegacyOptionsToIgnore.include? attribute ) then
-          warn_out ("Choice file includes legacy choice (#{attribute}), which is no longer supported. Input ignored.")
+          info_out ("Choice file includes legacy choice (#{attribute}), which is no longer supported. Input ignored.")
           help_out("byOptions",attribute)
 
           next
@@ -306,10 +364,8 @@ module HTAPData
   end
 
   def HTAPData.validate_options(options,choices,order)
-    $err = false
-    $ValidatedChoices = Hash.new
-    $ValidatedChoices = choices
-    $order = order
+    err = false
+    validatedChoices = choices
 
     #debug_on
 
@@ -318,7 +374,7 @@ module HTAPData
      debug_out ("I will skip: #{$LegacyOptionsToIgnore.pretty_inspect}\n")
 
     debug_out (" These choices were supplied:\n")
-    choices.each do | choice, value|
+    choices.each do | choice, value |
 
       debug_out ("  #{choice} = #{value}\n")
 
@@ -339,86 +395,131 @@ module HTAPData
 
      if ( !choices.has_key?(option)  )
         debug_out " #{option} was not defined in the choice file\n"
-        $ThisMsg = "Option #{option} was not specified in Choices file OR rule set; "
+        thisMsg = "Option #{option} was not specified in Choices file OR rule set; "
 
 
         if ( ! options[option]["default"]["defined"]  )
-           $ThisMsg += "No default value defined in options file."
-           err_out ($ThisMsg)
-           $err = true
+           thisMsg += "No default value defined in options file."
+           err_out (thisMsg)
+           err = true
 
         elsif ( option =~ /Opt-Archetype/ )
 
            if ( ! $gBaseModelFile )
-             $ValidatedChoices["Opt-Archetype"] = $gBaseModelFile
+             validatedChoices["Opt-Archetype"] = $gBaseModelFile
            end
 
         else
 
            # Add default value.
-          $ValidatedChoices[option] = options[option]["default"]["value"]
-           # Apply them at the end.
-           $order.push(option)
+           validatedChoices[option] = options[option]["default"]["value"]
 
-           $ThisMsg +=  " Using default value (#{$ValidatedChoices[option]})"
-           warn_out ( $ThisMsg )
+           # Apply them at the end.
+           order.push(option)
+
+           thisMsg +=  " Using default value (#{validatedChoices[option]})"
+           info_out ( thisMsg )
 
         end
       end
-      $ThisMsg = ""
+      thisMsg = ""
     end
 
 
-# Search through choices and determine if they match options in the Options file (error if not).
+    # Search through choices and determine if they match options in the Options file (error if not).
 
-   $ValidatedChoices.each do |attrib, choice|
+    validatedChoices.each do |attrib, choice|
 
-     if ( $LegacyOptionsToIgnore.include? attrib ) then
+      if ( $LegacyOptionsToIgnore.include? attrib ) then
 
-       warn_out ("Choice file includes legacy option (#{attrib}), which is no longer supported.")
-       next
+        warn_out ("Choice file includes legacy option (#{attrib}), which is no longer supported.")
+        next
 
-     end
+      end
 
-    next if ( $LegacyOptionsToIgnore.include? attrib )
-
-
-     debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
+      next if ( $LegacyOptionsToIgnore.include? attrib )
 
 
-     # Is attribute used in choices file defined in options ?
-     if ( !options.has_key?(attrib) )
-        $ThisMsg = "Attribute #{attrib} in choice file OR rule set can't be found in options file."
-        err_out( $ThisMsg )
-        $err = true
-     else
+      debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
+
+
+      # Is attribute used in choices file defined in options ?
+      if ( !options.has_key?(attrib) )
+        thisMsg = "Attribute #{attrib} in choice file OR rule set can't be found in options file."
+        err_out( thisMsg )
+        err = true
+      else
         debug_out ( "   - found $gOptions[\"#{attrib}\"] \n")
-     end
+      end
 
-       # Is choice in options?
-       if ( ! options[attrib]["options"].has_key?(choice) )
-         if (  options[attrib]["stop-on-error"] == 1 )
-            $err = true
-            $ThisMsg = "Choice #{choice} for attribute #{attrib} is not defined in options file."
-            err_out( $ThisMsg )
-         else
-            # Do nothing
-            debug_out ( "   - found $gOptions[\"#{attrib}\"][\"options\"][\"#{choice}\"} \n")
+      # Is choice in options?
+      if ( ! options[attrib]["options"].has_key?(choice) )
+        if (  options[attrib]["stop-on-error"] == 1 )
+          err = true
+          thisMsg = "Choice #{choice} for attribute #{attrib} is not defined in options file."
+          err_out( thisMsg )
+        else
+          # Do nothing
+          debug_out ( "   - found $gOptions[\"#{attrib}\"][\"options\"][\"#{choice}\"} \n")
 
-         end
+        end
 
       end
 
     end
 
+    validatedChoices, order = HTAPData.zeroInvalidFoundaiton(options,validatedChoices,order)
+
+    return err ,validatedChoices, order
+
+  end
+
+  def HTAPData.zeroInvalidFoundaiton(options,choices,order)
+
+    if ( $foundationConfiguration == "surfBySurf" ) then
+
+      choices.delete("Opt-H2KFoundation")
+      choices.delete("Opt-H2KFoundationSlabCrawl")
+      order.delete("Opt-H2KFoundation")
+      order.delete("Opt-H2KFoundationSlabCrawl")
+
+      # Check to see if unsupported configuration ahs resutled -
+      #debug_on
+      choices.each do | option, choice |
+        debug_out ("OPTION: #{option}, #{choice}\n")
+      end
+
+      wallExtRValue = HTAPData.getResultsForChoice(options,"Opt-FoundationWallExtIns",choices["Opt-FoundationWallExtIns"])["H2K-Fdn-ExtWallReff"].to_f
+      wallIntRValue = HTAPData.getResultsForChoice(options,"Opt-FoundationWallIntIns",choices["Opt-FoundationWallIntIns"])["H2K-Fdn-IntWallReff"].to_f
+      wallSlbRValue = HTAPData.getResultsForChoice(options,"Opt-FoundationSlabBelowGrade",choices["Opt-FoundationSlabBelowGrade"])["H2K-Fdn-SlabBelowGradeReff"].to_f
+
+      if ( wallSlbRValue > 0.01 && wallIntRValue  < 0.01 && wallExtRValue < 0.01 ) then
+        choices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+        warn_out("HOT2000 does not support modelling insulated below-grade slabs with uninsualted foundation walls. Changing Opt-FoundationSlabBelowGrade to 'NBC_936_uninsulated_EffR0' (was #{choices["Opt-FoundationSlabBelowGrade"]}).")
+        $gChoicesChangedbyProgram = true
+        help_out("byOptions", "Opt-FoundationSlabBelowGrade")
+
+      end
+    end
 
 
-    HTAPData.zeroInvalidFoundaiton($ValidatedChoices,$gChoiceOrder)
+
+    if ( $foundationConfiguration == "wholeFdn" ) then
+
+      choices.delete("Opt-FoundationSlabBelowGrade")
+      choices.delete("Opt-FoundationSlabOnGrade")
+      choices.delete("Opt-FoundationWallIntIns")
+      choices.delete("Opt-FoundationWallExtIns")
+
+      order.delete("Opt-FoundationSlabBelowGrade")
+      order.delete("Opt-FoundationSlabOnGrade")
+      order.delete("Opt-FoundationWallIntIns")
+      order.delete("Opt-FoundationWallExtIns")
 
 
-    $gChoicesChangedbyProgram = true
+    end
 
-  return $err, $ValidatedChoices, $order
+    return choices, order
 
   end
 
@@ -458,14 +559,10 @@ module HTAPData
 
       warn_out ("HTAP cannot use whole foundation and surf-by-surf definitions. Either use Opt-H2KFoundation... or Opt-Foundaiton... defintions")
       warn_out ("Ignoring Options Opt-FoundationSlabBelowGrade,Opt-FoundationSlabOnGrade,Opt-FoundationWallIntIns and  Opt-FoundationWallExtIns")
+      $gChoicesChangedbyProgram = true
       help_out(catagory,topic)
 
-      #HTAPData.zeroInvalidFoundaiton(myChoices)
-
-
     end
-
-
 
     debug_out ("Intrepreted #{fdnConfigs.pretty_inspect}\n Result: #{config}\n")
 
@@ -473,32 +570,6 @@ module HTAPData
 
   end
 
-
-  def HTAPData.zeroInvalidFoundaiton(choices,order)
-
-    if ( $foundationConfiguration == "wholeFdn" )
-
-      choices.delete("Opt-FoundationSlabBelowGrade")
-      choices.delete("Opt-FoundationSlabOnGrade")
-      choices.delete("Opt-FoundationWallIntIns")
-      choices.delete("Opt-FoundationWallExtIns")
-
-      order.delete("Opt-FoundationSlabBelowGrade")
-      order.delete("Opt-FoundationSlabOnGrade")
-      order.delete("Opt-FoundationWallIntIns")
-      order.delete("Opt-FoundationWallExtIns")
-
-
-    end
-
-    if ( $foundationConfiguration == "surfBySurf")
-      choices.delete("Opt-H2KFoundation")
-      choices.delete("Opt-H2KFoundationSlabCrawl")
-      order.delete("Opt-H2KFoundation")
-      order.delete("Opt-H2KFoundationSlabCrawl")
-    end
-
-  end
 
 
   def HTAPData.valOrNaOrNil(values)

@@ -8,6 +8,27 @@ class Help
    include HelpTxt
 end
 
+def openLogFiles( logFile, summaryFile )
+
+  fSUMMARY = File.new(summaryFile, "w")
+
+  if fSUMMARY == nil then
+    fatalerror("Could not open #{summaryFile}. \n")
+  end
+
+  fLOG = File.new(logFile, "w")
+  if fLOG == nil then
+    fatalerror("Could not open #{logFile}.\n")
+  else
+    fLOG.write ("\n#{$program} LOG FILE.\n\n")
+    fLOG.write ("Run started at #{Time.now}\n")
+  end
+
+  return fLOG, fSUMMARY
+
+end
+
+
 # =========================================================================================
 # Query info about the console, and set terminal width.
 #
@@ -15,6 +36,25 @@ end
 def setTermSize
    require 'io/console'
    $termWidth = IO.console.winsize[1]
+
+end
+
+def shortenToLen(msg, len, truncStr=" [...] ")
+
+  if ( msg.length > len  )
+    truncLen = truncStr.length
+    if ( len < truncLen+1 )
+      finalLen = len
+      truncStr = ""
+    else
+      finalLen = len - truncLen
+    end
+    shortmsg = "#{msg[0..finalLen]}#{truncStr}"
+  else
+    shortmsg = "#{msg}"
+
+  end
+  return shortmsg
 
 end
 
@@ -26,7 +66,7 @@ def shortenToTerm(msg,extrashort = 0, truncStr="[...]")
     msg.gsub!(/\n/,"")
     shortmsg = "#{msg[0..$termWidth-extrashort-9]} #{truncStr}\n"
   else
-    shortmsg = msg
+    shortmsg = "#{msg}"
   end
 
   return shortmsg
@@ -48,8 +88,11 @@ end
 # Draw a pretty ruler with optional embedded msg, and custom character 'char',
 # formatted to match width of terminal
 # =========================================================================================
-def drawRuler(msg = nil, char=nil)
+def drawRuler(msg = nil, char=nil, myLength=nil)
+
   setTermSize if ( $termWidth.nil?  )
+
+  myLength = $termWidth if myLength.nil?
 
   c=char
   # set to default ruler character, if none provided.
@@ -58,7 +101,7 @@ def drawRuler(msg = nil, char=nil)
   end
 
   if ( ! msg.nil? && c == "=" )
-    topRule = "".ljust($termWidth-1,"_")
+    topRule = "".ljust(myLength-1,"_")
     topRule = "\n#{topRule}\n"
     prefix = "#{$program}: "
   else
@@ -67,9 +110,9 @@ def drawRuler(msg = nil, char=nil)
   end
 
   if (! msg.nil? )
-    mainRule = "#{c} #{prefix}#{msg} #{c}".ljust($termWidth-1,c)+"\n"
+    mainRule = "#{c} #{prefix}#{msg} #{c}".ljust(myLength-1,c)+"\n"
   else
-    mainRule = "".ljust($termWidth-1,c)+"\n"
+    mainRule = "".ljust(myLength-1,c)+"\n"
   end
 
   return "#{topRule}#{mainRule}"
@@ -113,6 +156,33 @@ def caller_info()
    return callerID
 
 end
+
+# =========================================================================================
+# Hook enabling debugging from within a routine
+# =========================================================================================
+def debug_pause(seconds=nil)
+  return if ( $gNoDebug )
+  callerID = caller_info()
+  routine = callerID["routine"]
+  file =callerID["file"]
+  line = callerID["line"]
+  $localDebug[routine] = true
+  $lastDbgMsg = "\n"
+  print "\n"
+  debug_out_now(drawRuler(nil,"_ "),callerID)
+  if ( seconds.nil? )
+    debmsg = "debug_pause(): execution halted at #{file}:#{line.to_s}\n"
+    debug_out_now(debmsg,callerID)
+    exit
+  else
+    debmsg = "debug_pause(): execution paused for #{seconds}s at #{file}:#{line.to_s}\n"
+    debug_out_now(debmsg,callerID)
+    sleep(seconds)
+    return
+  end
+end
+# =======
+
 
 # =========================================================================================
 # Hook enabling debugging from within a routine
@@ -185,7 +255,7 @@ def debug_out_now(debmsg, callerID)
   fullmsg = ""
 
   if ($lastDbgMsg =~ /\n/ ) then
-
+    prefixLen = 0
     first = true
     debmsg.each_line do |line|
 
@@ -193,14 +263,15 @@ def debug_out_now(debmsg, callerID)
         first = false
         prefix = "[#{calldots}d#{level}:#{callindent}#{routine}:#{linestring} ".ljust(30)
         prefix = "#{prefix}]"
+        prefixLen = prefix.length-1
 
-        if (  debmsg =~ /^[^\s]/ ) then
-          prefix = "#{prefix} "
-        end
       else
-        prefix = "[ ".ljust(30)+"]"
+        prefix = "[ ".ljust(prefixLen)+"]"
       end
 
+      if (  debmsg =~ /^[^\s]/ ) then
+        prefix = "#{prefix} "
+      end
       fullmsg = "#{fullmsg}"+shortenToTerm("#{prefix}#{line}")
 
     end
@@ -342,7 +413,7 @@ end
 # =========================================================================================
 # Write error message to screen, log for reporting, and set global error flag.
 # =========================================================================================
-def fatalerror( err_msg )
+def fatalerror( err_msg=nil )
 # Display a fatal error and quit. -----------------------------------
 
 # See if error string is not empty: if not, call err-out to log it
@@ -424,44 +495,50 @@ def ReportMsgs()
 
     $fSUMMARY.write "s.info   = \"#{msg}\" \n"
 
-    $InfoBuffer += prettyList("   (-) Info:",msg)
+    $InfoBuffer += prettyList("   (-) Info -",msg)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
-
+  if ($InfoBuffer.to_s.gsub(/\s*/, "" ).empty?)
+      $InfoBuffer = "   (nil)\n"
+  end
 
 
   $gWarnings.each do |msg|
 
     $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
 
-    $WarningBuffer += prettyList("   (?) WARNING:",msg)
+    $WarningBuffer += prettyList("   (?) WARNING -",msg)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
-
+  if ($WarningBuffer.to_s.gsub(/\s*/, "" ).empty?)
+      $WarningBuffer = "   (nil)\n"
+  end
 
 
   $gErrors.each  do |msg|
 
     $fSUMMARY.write "s.error    = \"#{msg}\" \n"
-    $ErrorBuffer += prettyList("   (!) ERROR:",msg)
+    $ErrorBuffer += prettyList("   (!) ERROR -",msg)
+
+
 
   end
-
-
-
-  if $allok then
-    status = "Run completed successfully"
-    $fSUMMARY.write "s.success    = true\n"
-  else
-    status = "Run failed."
-    $fSUMMARY.write "s.success    = false\n"
-  end
-
   if ($ErrorBuffer.to_s.gsub(/\s*/, "" ).empty?)
     $ErrorBuffer = "   (nil)\n"
   end
+
+
+  if $allok then
+    status = "Task completed successfully"
+    $fSUMMARY.write "s.success    = true\n"
+  else
+    status = "Task failed"
+    $fSUMMARY.write "s.success    = false\n"
+  end
+
+
 
   endProcessTime = Time.now
   $totalDiff = endProcessTime - $startProcessTime
@@ -483,7 +560,7 @@ def ReportMsgs()
   stream_out ""
   stream_out " -> Error messages:\n\n"
   stream_out "#{$ErrorBuffer}\n"
-  stream_out " #{$program} STATUS: #{status} \n"
+  stream_out " STATUS: #{status} \n"
   stream_out drawRuler
 
 
