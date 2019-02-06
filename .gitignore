@@ -1,0 +1,16 @@
+NewHouseArch
+HTAP-prm-output.json
+HTAP-prm-output.csv
+HTAP-prm-failures.txt
+HTAP-sim-*
+HTAP-work-*
+substitute-h2k-errors.txt
+SubstitutePL-log.txt
+SubstitutePL-output.txt
+HTAP-costing-audit-report.txt
+h2k_run_results.json
+file-postsub.h2k
+file-presub.h2k
+cmd.txt
+**/testing/**.h2k
+**/testing/**sim-**.choices
