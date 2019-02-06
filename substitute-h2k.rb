@@ -32,8 +32,10 @@ SF_PER_SM = 10.7639
 # JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
 #      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on 
 #      re-trying a run)! 
+
 $maxRunTime = 25 # seconds - could be longer on slow machines. 
 $maxTries   = 3 # JTB 05-10-2016: Also setting maximum retries within timeout period
+
 
 $gJasonExport = false 
 $gJasonTest = false 
@@ -68,7 +70,9 @@ $gChoiceFile  = ""
 $gOptionFile  = ""
 $PRMcall      = false 
 $ExtraOutput1 = false
+
 $TsvOutput = false
+
 $keepH2KFolder = false
 $autoCostOptions = false
 
@@ -1769,7 +1773,9 @@ def processFile(h2kElements)
             # Floor header User-Specified R-values
             #--------------------------------------------------------------------------
             elsif ( choiceEntry =~ /Opt-FloorHeader/ )
+
                if ( tag =~ /OPT-H2K-EffRValue/ && value != "NA" )
+
                   # Change ALL existing floor headers codes to User Specified R-value
                   # Should it be different for the main floors and basement??
                   locationText = "HouseFile/House/Components/*/Components/FloorHeader/Construction/Type"
@@ -5076,9 +5082,10 @@ def runsims( direction )
 
      begin
        
+
        debug_out ("running #{runThis} ... \n") 
        debug_out ("timeout limit  #{$maxRunTime} ... \n") 
-       
+
        pid = Process.spawn( runThis, :new_pgroup => true )
        stream_out ("\n Attempt ##{tries}:  Invoking HOT2000 (PID #{pid}) ...")
        runStatus = Timeout::timeout($maxRunTime){
@@ -5163,10 +5170,12 @@ def runsims( direction )
      
      
 
+
      
    end 
    
     $gStatus["H2KExecutionTime"] = $runH2KTime
+
 
    $NumTries = tries
    
@@ -7667,8 +7676,11 @@ $allok = true
 
 $gChoiceOrder = Array.new
 
-$gTest_params["verbosity"] = "quiet"
-$gTest_params["logfile"]   = $gMasterPath + "\\SubstitutePL-log.txt"
+
+   regionName = $ProvArr[regionCode-1] 
+      
+   return regionName   
+end
 
 # Open output file here so we can log errors too! 
 sumFileSpec = $gMasterPath + "\\SubstitutePL-output.txt"
@@ -8214,6 +8226,7 @@ if !$ruleSetName.empty? && $ruleSetName != "NA"
          # User hasn't provided input on this parameter. Reset to ruleset requirement.
          $gChoices[attrib] = choice 
          stream_out ("   - #{attrib} -> #{choice}\n")
+
       elsif $gChoices[attrib] =~ /NA/
          # Change choice to rule set value for all choices that are "NA"
          $gChoices[attrib] = choice
@@ -8386,6 +8399,7 @@ $gChoices.each do |attrib1, choice|
      next 
    end 
    
+
    valHash = $gOptions[attrib1]["options"][choice]["values"]
    if ( !valHash.empty?  )
      
@@ -8765,6 +8779,7 @@ if ($TsvOutput)
 	$fSUMMARY.write( "#{$AliasOutput}.ERS-RefHouseRatingGJ/a  =  #{$gResults['TSV']['ERSRefHouseRating']} \n" )
 	$fSUMMARY.write( "#{$AliasOutput}.ERS-GHGt/a  =  #{$gResults['TSV']['ERSGHG']} \n" )
 end
+
 
 # These #s are not yet averaged for orientations!
 $fSUMMARY.write( "#{$AliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )

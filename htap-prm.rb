@@ -40,6 +40,20 @@ $LastWriteCall = ""
 
 #Default: Mesh
 $gRunDefMode   = "mesh"
+$RunScopeOpen = false
+
+#Params for JSON output
+$gJSONize = false
+$gJSONAllData = Array.new
+$gHashLoc = 0
+
+$gComputeCosts = false 
+
+$snailStart = false 
+$snailStartWait = 1
+
+$choicesInMemory = true
+$ChoiceFileContents = Hash.new
 
 #Sample method = default flags 
 $sample_method    = "random" # Doesn't do anything yet
@@ -225,6 +239,7 @@ def parse_def_file(filepath)
                      
                       
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i ) 
+
 
           
           
@@ -609,7 +624,7 @@ def gen_choice_file(choices)
     choices.each do | attribute, choice | 
   
       choicefile.write(" #{attribute} : #{choice} \n")   
-  
+
     end 
   
     choicefile.close
@@ -1019,11 +1034,11 @@ def run_these_cases(current_task_files)
       $outputlines = ""
       
       row = 0 
-      
+     
       
       # Alternative output in JSON format. Can be memory-intensive
       if ( $gJSONize ) 
-      
+
         
         $RunResults.each do |run,data|
           
@@ -1196,6 +1211,7 @@ def run_these_cases(current_task_files)
            # Deal with header first 
                      
            data.sort.to_h.each do |column,value|
+
            
              case column 
              when /s\.error/, /s\.warning/, /BIN-data/
@@ -1318,6 +1334,7 @@ optparse = OptionParser.new do |opts|
       if ( !File.exist?($gOptionFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
       end
+
    end
   
    opts.on("-r", "--run-def FILE", "Specified run definitions file (.run)") do |o|
@@ -1326,6 +1343,7 @@ optparse = OptionParser.new do |opts|
       if ( !File.exist?($gRunDefinitionsFile) )
          fatalerror("Valid path to run definitions (.run) file must be specified with --run-def (or -r) option!")
       end
+
    end
    
    opts.separator "\n Configuration options: "
@@ -1401,7 +1419,6 @@ optparse = OptionParser.new do |opts|
    #      fatalerror("Valid path to substitute-h2k,rb script must be specified with --substitute-h2k-path (or -s) option!")
    #   end
    #end
-
 
    
    #opts.on("-ss", "--snailStart X", "Optional delay (X sec) between spawning threads on the ",
@@ -1519,13 +1536,16 @@ else
       
     create_mesh_cartisian_combos(-3) 
 
+
     $RunTheseFiles = $gGenChoiceFileList 
+
     
   when "parametric"   
   
     stream_out ("    - Creating parametric run combinations from run definitions... ") 
     
     create_parametric_combos() 
+
     
     $RunTheseFiles = $gGenChoiceFileList 
 
@@ -1569,12 +1589,23 @@ else
     
     $sample_size_msg = "; sampled #{$sample_size.to_i} for run"
     
+
   end 
 
  
 
   if ($choicesInMemory )
     stream_out (" done. (created #{$gGenChoiceFileNum} combinations#{$sample_size_msg})\n") 
+  else 
+    stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
+  end 
+
+  
+  
+  $RunTheseFiles = $gGenChoiceFileList  
+
+  if ($choicesInMemory )
+    stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n") 
   else 
     stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n") 
   end 

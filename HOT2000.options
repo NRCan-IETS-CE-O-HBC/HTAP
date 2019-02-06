@@ -1880,6 +1880,160 @@
 *attribute:end
 
 !-----------------------------------------------------------------------
+!   AtticCeiling : Change all ceilings of construction type Attic/gable,
+!                  Attic/hip and scissor
+!-----------------------------------------------------------------------
+*attribute:start 
+   
+*attribute:name = Opt-AtticCeilings
+*attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
+*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+*attribute:default = NA
+
+*option:NA:value:1 = NA     ! No change
+*option:NA:value:2 = NA
+*option:NA:cost:total = 0
+
+*option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name must NOT exist in code library
+*option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+*option:UsrSpecR40:cost:total = 0
+
+*option:CeilR40:value:1 =  CeilR40     ! H2K: Code name must exist in code library
+*option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+*option:CeilR40:cost:total = 0
+
+*option:NBC_Ceiling_zone4:value:1 =  NA
+*option:NBC_Ceiling_zone4:value:2 =  39.24
+*option:NBC_Ceiling_zone4:cost:total    =  0
+
+*option:NBC_Ceiling_zone5_noHRV:value:1 =  NA
+*option:NBC_Ceiling_zone5_noHRV:value:2 =  49.23
+*option:NBC_Ceiling_zone5_noHRV:cost:total    =  0
+
+*option:NBC_Ceiling_zone5_HRV:value:1 =  NA
+*option:NBC_Ceiling_zone5_HRV:value:2 =  39.24
+*option:NBC_Ceiling_zone5_HRV:cost:total    =  0
+
+*option:NBC_Ceiling_zone6:value:1 =  NA
+*option:NBC_Ceiling_zone6:value:2 =  49.23
+*option:NBC_Ceiling_zone6:cost:total    =  0
+
+*option:NBC_Ceiling_zone7A_noHRV:value:1 =  NA
+*option:NBC_Ceiling_zone7A_noHRV:value:2 =  59.22
+*option:NBC_Ceiling_zone7A_noHRV:cost:total    =  0
+
+*option:NBC_Ceiling_zone7A_HRV:value:1 =  NA
+*option:NBC_Ceiling_zone7A_HRV:value:2 =  49.23
+*option:NBC_Ceiling_zone7A_HRV:cost:total    =  0
+                        
+*option:NBC_Ceiling_zone7B:value:1 =  NA
+*option:NBC_Ceiling_zone7B:value:2 =  59.22
+*option:NBC_Ceiling_zone7B:cost:total    =  0
+
+*option:NBC_Ceiling_zone8:value:1 =  NA
+*option:NBC_Ceiling_zone8:value:2 =  59.22
+*option:NBC_Ceiling_zone8:cost:total    =  0
+
+*attribute:end
+
+
+!-------------------------------------------------------------------------
+!   Cathedral Ceiling : Change all ceilings of construction type Cathedral
+!-------------------------------------------------------------------------
+*attribute:start 
+   
+*attribute:name = Opt-CathCeilings
+*attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
+*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+*attribute:default = NA
+
+*option:NA:value:1 = NA     ! No change
+*option:NA:value:2 = NA
+*option:NA:cost:total = 0
+
+*option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name must NOT exist in code library
+*option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+*option:UsrSpecR40:cost:total = 0
+
+*option:CeilR40:value:1 =  CeilR-40     ! H2K: Code name must exist in code library
+*option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+*option:CeilR40:cost:total = 0
+
+*option:NBC_FlatCeiling_zone4:value:1 =  NA
+*option:NBC_FlatCeiling_zone4:value:2 =  26.52
+*option:NBC_FlatCeiling_zone4:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone5:value:1 =  NA
+*option:NBC_FlatCeiling_zone5:value:2 =  26.52
+*option:NBC_FlatCeiling_zone5:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone6:value:1 =  NA
+*option:NBC_FlatCeiling_zone6:value:2 =  26.52
+*option:NBC_FlatCeiling_zone6:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone7A:value:1 =  NA
+*option:NBC_FlatCeiling_zone7A:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7A:cost:total    =  0
+                        
+*option:NBC_FlatCeiling_zone7B:value:1 =  NA
+*option:NBC_FlatCeiling_zone7B:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7B:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone8:value:1 =  NA
+*option:NBC_FlatCeiling_zone8:value:2 =  28.50
+*option:NBC_FlatCeiling_zone8:cost:total    =  0
+
+*attribute:end
+
+!-------------------------------------------------------------------------
+!   Flat Ceiling : Change all ceilings of construction type Flat
+!-------------------------------------------------------------------------
+*attribute:start 
+   
+*attribute:name = Opt-FlatCeilings
+*attribute:tag:1  = <Opt-Ceiling>       ! H2K also uses this for library code name
+*attribute:tag:2  = OPT-H2K-EffRValue   ! H2K R-value (Imperial) or "NA" if use code name in tag 1
+*attribute:default = NA
+
+*option:NA:value:1 = NA                ! No change
+*option:NA:value:2 = NA
+*option:NA:cost:total = 0
+
+*option:UsrSpecR40:value:1 =  NA       ! H2K: NA or code name must NOT exist in code library
+*option:UsrSpecR40:value:2 =  40       ! H2K R-value (Imperial)
+*option:UsrSpecR40:cost:total = 0
+
+*option:CeilR40:value:1 =  CeilR-40     ! H2K: Code name must exist in code library
+*option:CeilR40:value:2 =  NA          ! H2K: No user-specified R-value (Imperial), code name used!
+*option:CeilR40:cost:total = 0
+
+*option:NBC_FlatCeiling_zone4:value:1 =  NA
+*option:NBC_FlatCeiling_zone4:value:2 =  26.52
+*option:NBC_FlatCeiling_zone4:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone5:value:1 =  NA
+*option:NBC_FlatCeiling_zone5:value:2 =  26.52
+*option:NBC_FlatCeiling_zone5:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone6:value:1 =  NA
+*option:NBC_FlatCeiling_zone6:value:2 =  26.52
+*option:NBC_FlatCeiling_zone6:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone7A:value:1 =  NA
+*option:NBC_FlatCeiling_zone7A:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7A:cost:total    =  0
+                        
+*option:NBC_FlatCeiling_zone7B:value:1 =  NA
+*option:NBC_FlatCeiling_zone7B:value:2 =  28.50
+*option:NBC_FlatCeiling_zone7B:cost:total    =  0
+
+*option:NBC_FlatCeiling_zone8:value:1 =  NA
+*option:NBC_FlatCeiling_zone8:value:2 =  28.50
+*option:NBC_FlatCeiling_zone8:cost:total    =  0
+
+*attribute:end
+
+!-----------------------------------------------------------------------
 !   Generic wall insulation thickness settings: - one layer
 !-----------------------------------------------------------------------
 *attribute:start 
