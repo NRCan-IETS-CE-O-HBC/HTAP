@@ -446,7 +446,7 @@ end
 # and change values for settings defined in choice/options files.
 # =========================================================================================
 def processFile(h2kElements)
-  debug_off
+  debug_on
   # Load all XML elements from HOT2000 code library file. This file is specified
   # in option Opt-DBFiles
   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
@@ -458,11 +458,16 @@ def processFile(h2kElements)
   else
     h2kCodeElements = H2KFile.get_elements_from_filename(h2kCodeFile)
   end
+  begin
+    debug_out ("saving a copy of the pre-substitute version (filepresub.h2k)\n")
+    newXMLFile = File.open("file-presub.h2k", "w")
+    $XMLdoc.write(newXMLFile)
 
-  debug_out ("saving a copy of the pre-substitute version (filepresub.h2k)\n")
-  newXMLFile = File.open("file-presub.h2k", "w")
-  $XMLdoc.write(newXMLFile)
-  newXMLFile.close
+  rescue
+    warn_out ("Couldn't create debugging file - filepresub.h2k")
+  ensure
+    newXMLFile.close
+  end
 
   $ArchetypeData["pre-substitution"]["fuelHeating"] = H2KFile.getPrimaryHeatSys( h2kElements )
   $ArchetypeData["pre-substitution"]["fuelDHW"] = H2KFile.getPrimaryDHWSys( h2kElements )
@@ -3136,7 +3141,7 @@ def processFile(h2kElements)
   myFdnData["FoundationSlabBelowGrade" ] =  $gChoices["Opt-FoundationSlabBelowGrade" ]
   myFdnData["FoundationSlabOnGrade"    ] =  $gChoices["Opt-FoundationSlabOnGrade"    ]
 
-  debug_off
+
 
   HTAP2H2K.conf_foundations(myFdnData,$gOptions.clone,h2kElements)
 
@@ -3145,18 +3150,29 @@ def processFile(h2kElements)
   h2kElements["HouseFile"].delete_element("AllResults")
 
   # Save changes to the XML doc in existing working H2K file (overwrite original)
-  debug_out (" Overwriting: #{$gWorkingModelFile} \n")
-  newXMLFile = File.open($gWorkingModelFile, "w")
-  $XMLdoc.write(newXMLFile)
-  newXMLFile.close
+  begin
+    debug_out (" Overwriting: #{$gWorkingModelFile} \n")
+    newXMLFile = File.open($gWorkingModelFile, "w")
+    $XMLdoc.write(newXMLFile)
 
+  rescue
+    fatalerror("Could not overwrite #{$gWorkingModelFile}\n ")
+  ensure
+    newXMLFile.close
+  end
 
-  debug_out ("saving a copy of the pre-h2k version (file-post-sub.h2k)\n")
-  newXMLFile = File.open("file-postsub.h2k", "w")
-  $XMLdoc.write(newXMLFile)
-  newXMLFile.close
+  begin
+    debug_out ("saving a copy of the pre-h2k version (file-post-sub.h2k)\n")
+    newXMLFile = File.open("file-postsub.h2k", "w")
+    $XMLdoc.write(newXMLFile)
+    newXMLFile.close
+  rescue
+    warn_out ("Could not create debugging file - file-postsub.h2k")
+  ensure
+    newXMLFile.close
+  end
 
-
+  debug_out ("Returning from process...")
 
 end
 
@@ -4011,7 +4027,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         elsif ( sysType1Name == "Furnace" )
 
 
-          stream_out ("ADDING FURNACE ....\n")
+          debug_out ("ADDING FURNACE ....\n")
 
           locationText = "HouseFile/House/HeatingCooling/Type1/Furnace"
           elements[locationText].add_element("EquipmentInformation")

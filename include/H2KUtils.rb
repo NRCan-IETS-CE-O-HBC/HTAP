@@ -407,23 +407,29 @@ module H2KFile
 
 
     # Open file...
-    fFileHANDLE = File.new(fileSpec, "r")
-    if fFileHANDLE == nil then
-      fatalerror("Could not read #{fileSpec}.\n")
-    end
+    begin
+      fFileHANDLE = File.new(fileSpec, "r")
+      if fFileHANDLE == nil then
+        fatalerror("Could not read #{fileSpec}.\n")
+      end
 
-    # Global variable $XMDoc is used elsewhere for access to
-    # HOT2000 model file elements access using Path.
-    if ( tempExt.downcase == ".h2k" )
-      $XMLdoc = Document.new(fFileHANDLE)
-    elsif ( tempExt.downcase == ".flc" )
-      $XMLFueldoc = Document.new(fFileHANDLE)
-    elsif ( tempExt.downcase == ".cod" )
-      $XMLCodedoc = Document.new(fFileHANDLE)
-    else
-      $XMLOtherdoc = Document.new(fFileHANDLE)
+      # Global variable $XMDoc is used elsewhere for access to
+      # HOT2000 model file elements access using Path.
+      if ( tempExt.downcase == ".h2k" )
+        $XMLdoc = Document.new(fFileHANDLE)
+      elsif ( tempExt.downcase == ".flc" )
+        $XMLFueldoc = Document.new(fFileHANDLE)
+      elsif ( tempExt.downcase == ".cod" )
+        $XMLCodedoc = Document.new(fFileHANDLE)
+      else
+        $XMLOtherdoc = Document.new(fFileHANDLE)
+      end
+    rescue
+      warn_out ("Errors encounterd when reading #{fileSpec}")
+    ensure
+
+      fFileHANDLE.close() # Close the since content read
     end
-    fFileHANDLE.close() # Close the since content read
 
     if ( tempExt.downcase == ".h2k" )
       return $XMLdoc.elements()
