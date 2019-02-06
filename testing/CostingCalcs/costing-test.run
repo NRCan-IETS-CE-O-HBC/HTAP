@@ -12,7 +12,7 @@ RunParameters_END
 ! run in mesh, even if an optimization mode is added in the future.
 RunScope_START
 
-  archetypes                        = ERS-*.H2K
+  archetypes                        = ERS-1003.H2K
   locations                         = VANCOUVER, TORONTO, CALGARY, OTTAWA, EDMONTON
   rulesets                          = NBC9_36[fuel>gas;vent>HRV], NBC9_36[fuel>elec;vent>HRV]  !, R2000_NZE_Pilot_Env
 
@@ -30,20 +30,20 @@ Upgrades_START
    Opt-Baseloads        = NA
    Opt-Temperatures     = NA
 
-   Opt-ACH              = NA ,  New-Const-air_seal_to_4-6_ach, New-Const-air_seal_to_3.50_ach, New-Const-air_seal_to_2.50_ach, New-Const-air_seal_to_2.50_ach, New-Const-air_seal_to_1.50_ach, New-Const-air_seal_to_1.00_ach
+   Opt-ACH              = NA !,  New-Const-air_seal_to_4-6_ach, New-Const-air_seal_to_3.50_ach, New-Const-air_seal_to_2.50_ach, New-Const-air_seal_to_2.50_ach, New-Const-air_seal_to_1.50_ach, New-Const-air_seal_to_1.00_ach
 
-   Opt-CasementWindows  = NA ,  NC-2g-HG-u1.65 , NC-3g-HG-u1.08, NC-3g-HG-u1.36
+   Opt-CasementWindows  = NA !,  NC-2g-HG-u1.65 , NC-3g-HG-u1.08, NC-3g-HG-u1.36
    Opt-Skylights        = NA
    Opt-DoorWindows      = NA
    Opt-Doors            = NA
 
    Opt-MainWall         = NA
-   Opt-GenericWall_1Layer_definitions = NA  , NC_R-18(eff)_2x6-24inOC_R22-batt_poly_vb,NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb, NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb, NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb, NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb
+   Opt-GenericWall_1Layer_definitions = NA ! , NC_R-18(eff)_2x6-24inOC_R22-batt_poly_vb,NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb, NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb, NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb, NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb
 
-   Opt-FoundationWallExtIns =      NA , xps1inEffR5,  xps2inEffR10, xps4inEffR20
-   Opt-FoundationWallIntIns =      NA , WoodFrame+intEpsEffR23
-   Opt-FoundationSlabBelowGrade =  NA , xps1inEffR5, xps2inEffR10, xps4inEffR20
-   Opt-FoundationSlabOnGrade =     NA , xps1inEffR5, xps2inEffR10, xps4inEffR20
+   Opt-FoundationWallExtIns =      NA !, xps1inEffR5,  xps2inEffR10, xps4inEffR20
+   Opt-FoundationWallIntIns =      NA !, WoodFrame+intEpsEffR23
+   Opt-FoundationSlabBelowGrade =  NA !, xps1inEffR5, xps2inEffR10, xps4inEffR20
+   Opt-FoundationSlabOnGrade =     NA !, xps1inEffR5, xps2inEffR10, xps4inEffR20
 
 
    Opt-ExposedFloor      = NA
@@ -52,15 +52,15 @@ Upgrades_START
    Opt-FloorAboveCrawl  = NA
 
    Opt-Ceilings         = NA
-   Opt-AtticCeilings    = NA,CeilR60, CeilR70, CeilR80, CeilR90, CeilR100
+   Opt-AtticCeilings    = NA !,CeilR60, CeilR70, CeilR80, CeilR90, CeilR100
    Opt-CathCeilings     = NA
    Opt-FlatCeilings     = NA
 
    Opt-HRVonly          = NA !, HRV_60, HRV_81
    Opt-HRVspec          = NA
    Opt-DHWSystem        = NA
-   Opt-HVACSystem       = NA, CCASHP, GSHP
-   Opt-DWHRSystem       = NA , DWHR-eff-30, DWHR-eff-55
+   Opt-HVACSystem       = NA !, CCASHP, GSHP
+   Opt-DWHRSystem       = NA !, DWHR-eff-30, DWHR-eff-55
    Opt-H2K-PV           = NA
 
 
