@@ -9,7 +9,7 @@ class Help
 end
 
 def openLogFiles( logFile, summaryFile )
-  debug_on
+  #debug_off 
   begin
     debug_out "Summary file: #{summaryFile}\n"
     fSUMMARY = File.new(summaryFile, "w")
