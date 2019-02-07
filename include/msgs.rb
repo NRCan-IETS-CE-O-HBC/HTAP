@@ -9,19 +9,21 @@ class Help
 end
 
 def openLogFiles( logFile, summaryFile )
-
-  fSUMMARY = File.new(summaryFile, "w")
-
-  if fSUMMARY == nil then
+  debug_on
+  begin
+    debug_out "Summary file: #{summaryFile}\n"
+    fSUMMARY = File.new(summaryFile, "w")
+  rescue
     fatalerror("Could not open #{summaryFile}. \n")
   end
 
+  begin
+  debug_out "Log file: #{logFile}\n"
   fLOG = File.new(logFile, "w")
-  if fLOG == nil then
+  fLOG.write ("\n#{$program} LOG FILE.\n\n")
+  fLOG.write ("Run started at #{Time.now}\n")
+  rescue
     fatalerror("Could not open #{logFile}.\n")
-  else
-    fLOG.write ("\n#{$program} LOG FILE.\n\n")
-    fLOG.write ("Run started at #{Time.now}\n")
   end
 
   return fLOG, fSUMMARY
@@ -429,18 +431,19 @@ def fatalerror( err_msg=nil )
   ReportMsgs()
 
   # On error - attempt to save inputs .
-  $gChoices.sort.to_h
-  $fSUMMARY.write "\n"
-  for attribute in $gChoices.keys()
-    choice = $gChoices[attribute]
-    $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
-  end
+  if ($program == "substitute-h2k.rb")
+    $gChoices.sort.to_h
+    $fSUMMARY.write "\n"
+    for attribute in $gChoices.keys()
+      choice = $gChoices[attribute]
+      $fSUMMARY.write("#{$AliasInput}.#{attribute} = #{choice}\n")
+    end
 
-  for status_type in $gStatus.keys()
-    $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
-  end
-  $fSUMMARY.write( "s.success = false\n")
-
+    for status_type in $gStatus.keys()
+      $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
+    end
+    $fSUMMARY.write( "s.success = false\n")
+  end 
 
   $fSUMMARY.close
   $fLOG.close
