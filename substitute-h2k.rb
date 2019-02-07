@@ -40,13 +40,11 @@ $program = "substitute-h2k.rb"
 stream_out drawRuler("A wrapper for HOT2000")
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
-# JTB: Typical H2K run on my desktop takes under 4 seconds but timeout values in the range
-#      of 4-10 don't seem to work (something to do with timing of GenOpt's timing on
-#      re-trying a run)!
+# Typical H2K run < 10 seconds, but may much take longer in ERS mode
 $maxRunTime = 50
-# seconds - could be longer on slow machines.
-$maxTries   = 3
 # JTB 05-10-2016: Also setting maximum retries within timeout period
+$maxTries   = 3
+
 
 $gJasonExport = false
 $gJasonTest = false
@@ -83,6 +81,7 @@ $gChoiceFile  = ""
 $gOptionFile  = ""
 $PRMcall      = false
 $ExtraOutput1 = false
+$TsvOutput = false
 $keepH2KFolder = false
 $autoCostOptions = false
 $autoEstimateCosts = true
@@ -1056,7 +1055,7 @@ def processFile(h2kElements)
           # Generic wall insulation thickness settings: - one layer
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
-          if ( tag =~ /Opt-H2K-EffRValue/ && value != "NA" )
+          if ( tag =~ /OPT-H2K-EffRValue/i && value != "NA" )
             # Change ALL existing wall codes to User Specified R-value
             locationText = "HouseFile/House/Components/Wall/Construction/Type"
             h2kElements.each(locationText) do |element|
@@ -5425,6 +5424,17 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
           # h2kPostElements |element| loop (and scope of local variable houseCode!)
 
+          # TSV output
+        	locationText = "HouseFile/Program/Results/Tsv"
+        	if h2kPostElements["HouseFile/Program"] != nil
+        		$TsvOutput = true
+        		$gResults["TSV"]["ERSRating"] = h2kPostElements[locationText].elements["ERSRating"].attributes["value"].to_f
+        		$gResults["TSV"]["ERSRefHouseRating"] = h2kPostElements[locationText].elements["ERSRefHouseRating"].attributes["value"].to_f
+        		$gResults["TSV"]["ERSGHG"] = h2kPostElements[locationText].elements["ERSGHG"].attributes["value"].to_f
+        	end
+
+
+
           if ( $gDebug )
             $gResults.each do |houseCode, data|
               debug_out (">Results for " << houseCode.to_s)
@@ -7393,7 +7403,14 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # includes pellets
       $fSUMMARY.write( "#{$aliasOutput}.EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
-      $fSUMMARY.write( "#{$aliasOutput}.SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
+
+      if ($TsvOutput)
+      	$fSUMMARY.write( "#{$AliasOutput}.ERS-RatingGJ/a  =  #{$gResults['TSV']['ERSRating']} \n" )
+      	$fSUMMARY.write( "#{$AliasOutput}.ERS-RefHouseRatingGJ/a  =  #{$gResults['TSV']['ERSRefHouseRating']} \n" )
+      	$fSUMMARY.write( "#{$AliasOutput}.ERS-GHGt/a  =  #{$gResults['TSV']['ERSGHG']} \n" )
+      end
+
 
       # These #s are not yet averaged for orientations!
       $fSUMMARY.write( "#{$aliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
