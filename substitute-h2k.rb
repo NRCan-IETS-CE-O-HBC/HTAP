@@ -3135,14 +3135,15 @@ def processFile(h2kElements)
   # operations tha depend on multiple choices. Start with Foundations...
   myFdnData = Hash.new
 
-  myFdnData["FoundationWallExtIns"     ] =  $gChoices["Opt-FoundationWallExtIns"     ]
-  myFdnData["FoundationWallIntIns"     ] =  $gChoices["Opt-FoundationWallIntIns"     ]
-  myFdnData["FoundationSlabBelowGrade" ] =  $gChoices["Opt-FoundationSlabBelowGrade" ]
-  myFdnData["FoundationSlabOnGrade"    ] =  $gChoices["Opt-FoundationSlabOnGrade"    ]
 
 
-
-  HTAP2H2K.conf_foundations(myFdnData,$gOptions.clone,h2kElements)
+  if ( $foundationConfiguration == "surfBySurf")
+    myFdnData["FoundationWallExtIns"     ] =  $gChoices["Opt-FoundationWallExtIns"     ]
+    myFdnData["FoundationWallIntIns"     ] =  $gChoices["Opt-FoundationWallIntIns"     ]
+    myFdnData["FoundationSlabBelowGrade" ] =  $gChoices["Opt-FoundationSlabBelowGrade" ]
+    myFdnData["FoundationSlabOnGrade"    ] =  $gChoices["Opt-FoundationSlabOnGrade"    ]
+    HTAP2H2K.conf_foundations(myFdnData,$gOptions.clone,h2kElements)
+  end
 
 
   #Delete results section
