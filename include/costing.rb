@@ -91,8 +91,8 @@ module Costing
       return component
     elsif ( component.is_a?(Hash) ) then
       finalResult = nil
-      debug_off
-      debug_on if (attribute =~ /HVAC/ )
+      #debug_off
+      #debug_on if (attribute =~ /HVAC/ )
       debug_out " Solving component conditionals for HASH:\n#{component.pretty_inspect}"
 
       # Conditionals are defined as hashes
