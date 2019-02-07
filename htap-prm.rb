@@ -14,10 +14,16 @@ require 'json'
 require 'set'
 require 'rexml/document'
 
+
 require_relative 'include/msgs'
 require_relative 'include/constants'
+require_relative 'include/HTAPUtils.rb'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
+
+$program = "htap-prm.rb"
+
+HTAPInit()
 
 $gRunUpgrades         = Hash.new
 $gOptionList          = Array.new
@@ -41,8 +47,15 @@ $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
 $gGenChoiceFileList = Array.new
 
-#default
+#default: mesh, parametric and sample also supported
 $gRunDefMode   = "mesh"
+
+#Sample method = default flags
+$sample_method    = "random" # Doesn't do anything yet
+$sample_size      = 100
+$sample_seeded    = false
+
+#Flag for parsing
 $RunScopeOpen = false
 
 #Params for JSON output
@@ -58,7 +71,7 @@ $snailStartWait = 1
 $choicesInMemory = true
 $ChoiceFileContents = Hash.new
 
-$program = "htap-prm.rb"
+
 
 =begin rdoc
 =========================================================================================
@@ -66,20 +79,6 @@ $program = "htap-prm.rb"
           (can't put at bottom of listing).
 =========================================================================================
 =end
-def fatalerror( err_msg )
-# Display a fatal error and quit. -----------------------------------
-   if ($gTest_params["logfile"])
-      $fLOG.write("\nsubstitute-h2k.rb -> Fatal error: \n")
-      $fLOG.write("#{err_msg}\n")
-   end
-   print "\n=========================================================\n"
-   print "substitute-h2k.rb -> Fatal error: \n\n"
-   print "     #{err_msg}\n"
-   print "\n\n"
-   print "substitute-h2k.rb -> Other Error or warning messages:\n\n"
-   print "#{$ErrorBuffer}\n"
-   exit() # Run stopped
-end
 
 
 =begin rdoc
@@ -149,14 +148,41 @@ def parse_def_file(filepath)
 
 
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i )
-            # This does nothing only 'mesh' supported for now!!!
+
             $gRunDefMode = $token_values[1]
 
             if ( ! ( $gRunDefMode =~ /mesh/ ||
                      $gRunDefMode =~ /parametric/ ||
-                     $gRunDefMode =~ /parmetric-by-scope/     ) ) then
+                     $gRunDefMode =~ /sample/         ) ) then
               fatalerror (" Run mode #{$gRunDefMode} is not supported!")
             end
+
+            # Sample run mode: Additional arguments may be provided.
+             if ( $gRunDefMode =~ /sample/ ) then
+                # parse parameters `n`, `seed` from `sample{ n=###; seed =###}`
+                $sample_args = $gRunDefMode.clone
+                $sample_args.gsub!(/.+\{/,'')
+                $sample_args.gsub!(/\}/,'')
+                $sample_arg_array = $sample_args.split(";")
+
+                 $sample_arg_array.each do |arg|
+
+                   $sample_arg_vals = arg.split(":")
+
+                   case $sample_arg_vals[0]
+                  when "n"
+                    $sample_size = $sample_arg_vals[1]
+                  when "seed"
+                    $sample_seed_val = $sample_arg_vals[1]
+                    $sample_seeded = true
+                  end
+
+                 end
+
+                 $gRunDefMode.gsub!(/\{.*$/,"")
+
+              end
+
 
           end
 
@@ -177,6 +203,7 @@ def parse_def_file(filepath)
 
             # locations -
             $gLocations = $token_values[1].to_s.split(",")
+            $WildCardsInUse = true if ($gLocations.grep(/\*/).length > 0 )
 
           end
 
@@ -222,49 +249,52 @@ def parse_def_file(filepath)
        fatalerror(" Could not read #{filename}.\n")
     end
 
-    $OptionsContents = fOPTIONS.read
+    optionsContents = fOPTIONS.read
     fOPTIONS.close
+    jsonRawOptions = JSON.parse(optionsContents)
+    optionsContents = nil
 
-    $JSONRawOptions = JSON.parse($OptionsContents)
-    $OptionsContents = nil
+
+
+    debug_out ("Locations\n")
+    locationIndex = 0
+    $gLocations.clone.each do | choice |
+      pattern = choice.gsub(/\*/, ".*")
+      debug_out( " Wildcard Query /#{pattern}/ \n" )
+      superSet = jsonRawOptions["Opt-Location"]["options"].keys
+      $gLocations.delete(choice)
+      $gLocations.concat superSet.grep(/#{pattern}/)
+      locationIndex += 1
+    end
+
 
     $gRunUpgrades.keys.each do |key|
       debug_out( " Wildcard search for #{key} => \n" )
-
-
-
-
       $gRunUpgrades[key].clone.each do |choice|
 
         debug_out (" ? #{choice} \n")
 
         if ( choice =~ /\*/ ) then
 
-          $pattern = choice.gsub(/\*/, ".*")
-
-          debug_out "              Wildcard matching on #{key}=#{$pattern}\n"
-
+          pattern = choice.gsub(/\*/, ".*")
+          debug_out "              Wildcard matching on #{key}=#{pattern}\n"
           # Matching
-
-          $SuperSet = $JSONRawOptions[key]["options"].keys
-
+          superSet = jsonRawOptions[key]["options"].keys
           $gRunUpgrades[key].delete(choice)
-
-          $gRunUpgrades[key].concat $SuperSet.grep(/#{$pattern}/)
+          $gRunUpgrades[key].concat superSet.grep(/#{pattern}/)
 
 
         end
 
       end
 
-
     end
-
-      $JSONRawOptions = nil
+    jsonRawOptions = nil
 
   end
 
-
+  #debug_out ("Final locations: #{$gLocations.pretty_inspect}")
+  #debug_out ("Final Upgrades: #{$gRunUpgrades.pretty_inspect}")
 
 
   # What if archetypes are defined using a wildcard?
@@ -306,7 +336,7 @@ def create_mesh_cartisian_combos(optIndex)
     $combosSinceLastUpdate += 1
 
     if ( $combosSinceLastUpdate == $comboInterval )
-      stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
+      stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
       $combosSinceLastUpdate = 0
 
 
@@ -668,7 +698,11 @@ def run_these_cases(current_task_files)
 
           else
               # Delete contents, but not H2K folder
+              begin
               FileUtils.rm_r Dir.glob("#{$RunDirectory}/*.*")
+              rescue
+                fatalerror ("Could not delete the contents of #{$RunDirectory}\n")
+              end
           end
 
 
@@ -836,7 +870,7 @@ def run_these_cases(current_task_files)
 
 
       for thread3 in 0..$ThreadsNeeded-1
-        #debug_on
+        #debug_off
         count = thread3 + 1
         stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
 
@@ -904,9 +938,10 @@ def run_these_cases(current_task_files)
          debug_out "No futher file processing needed\n"
          debug_out drawRuler " . "
          debug_out "results from run-#{thread3}:\n"
-         debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
+         #debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
        elsif (  File.exist?($RunResultFilename)  ) then
          debug_out "processing old token/value file \n"
+
            contents = File.open($RunResultFilename, 'r')
 
            ec=0
@@ -953,6 +988,7 @@ def run_these_cases(current_task_files)
             stream_out (" Output couldn't be found! \n")
             $runFailed = true
         end
+        debug_off
 
         if ($runFailed)
             #stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
@@ -968,7 +1004,7 @@ def run_these_cases(current_task_files)
 
             $LocalChoiceFile = File.basename $gOptionFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
-              warn_out(" Warning! Could delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
+              warn_out("Could not delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
             end
 
 
@@ -1014,24 +1050,27 @@ def run_these_cases(current_task_files)
         $RunResults.keys.each do | run |
 
           $gJSONAllData[$gHashLoc] = Hash.new
-          $gJSONAllData[$gHashLoc] = { "result-number"           =>  $gHashLoc+1,
-                                        "status"                 => $RunResults[run]["status"            ],
-                                        "archetype"              => $RunResults[run]["archetype"         ],
-                                        "input"                  => $RunResults[run]["input"             ],
-                                        "output"                 => $RunResults[run]["output"            ],
-                                        "configuration"          => $RunResults[run]["configuration"     ],
-                                        "miscellaneous_info"     => $RunResults[run]["miscellaneous_info"],
-                                        "cost-estimates"     => $RunResults[run]["cost-estimates"]  }
+          $gJSONAllData[$gHashLoc] = {
+            "result-number"           =>  $gHashLoc+1,
+            "status"                 => $RunResults[run]["status"            ],
+            "archetype"              => $RunResults[run]["archetype"         ],
+            "input"                  => $RunResults[run]["input"             ],
+            "output"                 => $RunResults[run]["output"            ],
+            "configuration"          => $RunResults[run]["configuration"     ],
+            "miscellaneous_info"     => $RunResults[run]["miscellaneous_info"],
+            "cost-estimates"     => $RunResults[run]["cost-estimates"]
+          }
 
 
           if ( $gJSONAllData[$gHashLoc]["status"]["success"] == "false" ) then
-
-            $runFailed = true
-            errs=" *** simulation errors found ***"
-            $msg = "#{$gJSONAllData[$gHashLoc]["configuration"]["ChoiceFile"]} (dir: #{$gJSONAllData[$gHashLoc]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
-            $failures.write "$msg\n"
-            $FailedRuns.push $msg
-            $FailedRunCount = $FailedRunCount + 1
+            if ( ! $runFailed )
+              $runFailed = true
+              errs=" *** simulation errors found ***"
+              $msg = "#{$gJSONAllData[$gHashLoc]["configuration"]["ChoiceFile"]} (dir: #{$gJSONAllData[$gHashLoc]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
+              $failures.write "$msg\n"
+              $FailedRuns.push $msg
+              $FailedRunCount = $FailedRunCount + 1
+            end
 
           else
 
@@ -1054,8 +1093,47 @@ def run_these_cases(current_task_files)
          end # ends $RunResults.each do
 
 
+         # CSV OUTPUT.
+         outputlines = ""
+         headerLine = ""
+         headerOut = false
+         $RunResults.each do |run,data|
+
+           # Only write out data from successful runs - this helps prevent corrupted database
+           next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
+
+           debug_out "Run - #{run}\n"
+             data.keys.sort.each do | section |
+               data[section].keys.sort.each do |subsection|
+                 debug_out " . section #{section} : #{subsection} \n"
+                 contents = data[section][subsection]
+
+                 headerLine.concat("#{section[0]}.#{subsection},") if ( ! headerOut)
+
+                 if ( contents.is_a?(Hash) || contents.is_a?(Array) ) then
+                   debug_out "> extended output only\n"
+                   result = "Details in JSON output"
+                 else
+                   debug_out "> core output \n#{contents}\n"
+                   result = contents
+                 end
+
+                 outputlines.concat("#{result},")
+
+               end
+             end
+             if ( ! headerOut )
+               headerLine.concat("\n")
+               $fCSVout.write(headerLine)
+                headerOut = true
+            end
+            outputlines.concat("\n")
 
 
+           end
+           $fCSVout.write(outputlines)
+           $fCSVout.flush
+           debug_off
      $failures.flush
 
      $RunResults.clear
@@ -1273,7 +1351,7 @@ $FailedRuns  = Array.new
 $RunDirectoryRoot  = "HTAP-work"
 $SaveDirectoryRoot = "HTAP-sim"
 $RunResultFilenameV2 = "h2k_run_results.json"
-$RunResultFilename = "SubstitutePL-output.txt"
+$RunResultFilename = "substitute-h2k_summary.out"
 
 
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
@@ -1294,6 +1372,11 @@ stream_out("    - Deleting prior HTAP-sim directories... ")
 FileUtils.rm_rf Dir.glob("HTAP-sim-*")
 stream_out (" done.\n")
 
+begin
+  $fCSVout = File.open($gOutputFile, 'w')
+rescue
+  fatalerror( "Could not open CSV output file ($gOutputFile)\n")
+end
 
 
 for prethread in 0..$gNumberOfThreads-1
@@ -1303,7 +1386,6 @@ for prethread in 0..$gNumberOfThreads-1
 
 end
 
-$outputCSV = File.open($gOutputFile, 'w')
 
 $failures = File.open($gFailFile, 'w')
 
@@ -1345,12 +1427,12 @@ else
   stream_out (" done.\n")
 
   case $gRunDefMode
-  when  "mesh"
+  when  "mesh", "sample"
 
     # estimate the number of combonations
     #debug_out
     runningProduct = 1
-    stream_out "    - Evaluating combinations for mesh run\n\n"
+    stream_out "    - Evaluating combinations for gRunDefMode run\n\n"
     stream_out "          * "+$gLocations.length.to_s.ljust(10)+" (options for Location)\n" if ($gLocations.length>1 )
     stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+" (options for Archetypes)\n" if ($archetypeFiles.length>1 )
     stream_out "          * "+$gRulesets.length.to_s.ljust(10)+" (options for Rulesets)\n" if ($gRulesets.length>1 )
@@ -1377,7 +1459,44 @@ else
     create_mesh_cartisian_combos(-3)
 
 
-    stream_out ("    - Setting up mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+    stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+
+
+
+    if ($gRunDefMode == "mesh" ) then
+      $RunTheseFiles = $gGenChoiceFileList
+    else
+
+      $pop_size= $gGenChoiceFileList.count
+
+      debug_out "SAMPLE PARAMETERS: \n"
+      debug_out " - population       : #{$pop_size} \n"
+      debug_out " - requested sample : #{$sample_size} \n"
+      debug_out " - Seeded?          : #{$sample_seeded} \n"
+      debug_out " - Seedval?         : #{$sample_seed_val} \n"
+
+      if ( $pop_size.to_i < $sample_size.to_i ) then
+
+        warn_out("Sample run method - requested sample size (#{$sample_size}) exceeds size of parameter space (#{$pop_size}).\n")
+        warn_out("Run will only return #{$pop_size} results.\n\n")
+
+        $sample_size = $pop_size
+
+      end
+
+      if ( $sample_seeded ) then
+
+        $RunTheseFiles = $gGenChoiceFileList.shuffle(random: Random.new($sample_seed_val.to_i)).first($sample_size.to_i)
+
+      else
+        $RunTheseFiles = $gGenChoiceFileList.shuffle.first($sample_size.to_i)
+      end
+
+      debug_out ($RunTheseFiles.pretty_inspect)
+
+
+      stream_out ("    - Sampled #{$sample_size.to_i} combinations for run\n")
+    end
 
   when "parametric"
 
@@ -1409,13 +1528,18 @@ else
     $combosSinceLastUpdate = 0
     $comboInterval = 1000
 
-    stream_out ("    - Setting up parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
+    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
 
     create_parametric_combos()
-    stream_out ("    - Setting up parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+    $RunTheseFiles = $gGenChoiceFileList
+
+
   end
 
-  $RunTheseFiles = $gGenChoiceFileList
+
+
+
 
   #if ($choicesInMemory )
   #  stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n")
@@ -1462,7 +1586,7 @@ if ( $FailedRunCount > 0 )
 end
 
 # Close output files (JSON output dumped in a single write - already closed at this point.
-$outputCSV.close
+$fCSVout.close
 $failures.close
 
 
