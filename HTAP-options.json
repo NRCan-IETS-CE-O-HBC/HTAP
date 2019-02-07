@@ -3145,8 +3145,8 @@
       "CeilR40": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR40",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "40"
           }
         },
         "costs": {
@@ -3160,8 +3160,8 @@
       "CeilR50": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR50",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "50"
           }
         },
         "costs": {
@@ -3175,8 +3175,8 @@
       "CeilR60": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR60",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
           }
         },
         "costs": {
@@ -3190,8 +3190,8 @@
       "CeilR70": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR70",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "70"
           }
         },
         "costs": {
@@ -3865,7 +3865,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NA",
-            "Opt-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA"
           }
         },
         "costs": {
@@ -3880,7 +3880,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "18.1"
+            "OPT-H2K-EffRValue": "18.1"
           }
         },
         "costs": {
@@ -3895,7 +3895,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "15.94"
+            "OPT-H2K-EffRValue": "15.8"
           }
         },
         "costs": {
@@ -3915,7 +3915,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "15.8"
+            "OPT-H2K-EffRValue": "15.8"
           }
         },
         "costs": {
@@ -3930,7 +3930,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "15.8"
+            "OPT-H2K-EffRValue": "15.8"
           }
         },
         "costs": {
@@ -3945,7 +3945,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "17.5"
+            "OPT-H2K-EffRValue": "17.5"
           }
         },
         "costs": {
@@ -3960,7 +3960,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.08748",
-            "Opt-H2K-EffRValue": "21.9"
+            "OPT-H2K-EffRValue": "21.9"
           }
         },
         "costs": {
@@ -3975,7 +3975,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1366",
-            "Opt-H2K-EffRValue": "24"
+            "OPT-H2K-EffRValue": "24"
           }
         },
         "costs": {
@@ -3990,7 +3990,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1329",
-            "Opt-H2K-EffRValue": "23"
+            "OPT-H2K-EffRValue": "23"
           }
         },
         "costs": {
@@ -4005,7 +4005,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1457",
-            "Opt-H2K-EffRValue": "25"
+            "OPT-H2K-EffRValue": "25"
           }
         },
         "costs": {
@@ -4020,7 +4020,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1668",
-            "Opt-H2K-EffRValue": "26.2"
+            "OPT-H2K-EffRValue": "26.2"
           }
         },
         "costs": {
@@ -4035,7 +4035,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1998",
-            "Opt-H2K-EffRValue": "31.2"
+            "OPT-H2K-EffRValue": "31.2"
           }
         },
         "costs": {
@@ -4050,7 +4050,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2324",
-            "Opt-H2K-EffRValue": "39"
+            "OPT-H2K-EffRValue": "39"
           }
         },
         "costs": {
@@ -4065,7 +4065,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.14",
-            "Opt-H2K-EffRValue": "25"
+            "OPT-H2K-EffRValue": "25"
           }
         },
         "costs": {
@@ -4080,7 +4080,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1541",
-            "Opt-H2K-EffRValue": "24.3"
+            "OPT-H2K-EffRValue": "24.3"
           }
         },
         "costs": {
@@ -4095,7 +4095,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1812",
-            "Opt-H2K-EffRValue": "31"
+            "OPT-H2K-EffRValue": "31"
           }
         },
         "costs": {
@@ -4110,7 +4110,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1945",
-            "Opt-H2K-EffRValue": "30.2"
+            "OPT-H2K-EffRValue": "30.2"
           }
         },
         "costs": {
@@ -4125,7 +4125,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2078",
-            "Opt-H2K-EffRValue": "35"
+            "OPT-H2K-EffRValue": "35"
           }
         },
         "costs": {
@@ -4140,7 +4140,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1422",
-            "Opt-H2K-EffRValue": "25"
+            "OPT-H2K-EffRValue": "25"
           }
         },
         "costs": {
@@ -4155,7 +4155,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1358",
-            "Opt-H2K-EffRValue": "24"
+            "OPT-H2K-EffRValue": "24"
           }
         },
         "costs": {
@@ -4170,7 +4170,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1726",
-            "Opt-H2K-EffRValue": "30"
+            "OPT-H2K-EffRValue": "30"
           }
         },
         "costs": {
@@ -4185,7 +4185,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.208",
-            "Opt-H2K-EffRValue": "35"
+            "OPT-H2K-EffRValue": "35"
           }
         },
         "costs": {
@@ -4200,7 +4200,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2432",
-            "Opt-H2K-EffRValue": "41"
+            "OPT-H2K-EffRValue": "41"
           }
         },
         "costs": {
@@ -4215,7 +4215,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1203",
-            "Opt-H2K-EffRValue": "21"
+            "OPT-H2K-EffRValue": "21"
           }
         },
         "costs": {
@@ -4230,7 +4230,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1374",
-            "Opt-H2K-EffRValue": "23.8"
+            "OPT-H2K-EffRValue": "23.8"
           }
         },
         "costs": {
@@ -4245,7 +4245,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1504",
-            "Opt-H2K-EffRValue": "26"
+            "OPT-H2K-EffRValue": "26"
           }
         },
         "costs": {
@@ -4260,7 +4260,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1634",
-            "Opt-H2K-EffRValue": "29.9"
+            "OPT-H2K-EffRValue": "29.9"
           }
         },
         "costs": {
@@ -4275,7 +4275,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2003",
-            "Opt-H2K-EffRValue": "34"
+            "OPT-H2K-EffRValue": "34"
           }
         },
         "costs": {
@@ -4290,7 +4290,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1367",
-            "Opt-H2K-EffRValue": "23.3"
+            "OPT-H2K-EffRValue": "23.3"
           }
         },
         "costs": {
@@ -4305,7 +4305,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1812",
-            "Opt-H2K-EffRValue": "30.3"
+            "OPT-H2K-EffRValue": "30.3"
           }
         },
         "costs": {
@@ -4320,7 +4320,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2256",
-            "Opt-H2K-EffRValue": "41.5"
+            "OPT-H2K-EffRValue": "41.5"
           }
         },
         "costs": {
@@ -4335,7 +4335,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.2464",
-            "Opt-H2K-EffRValue": "41.2"
+            "OPT-H2K-EffRValue": "41.2"
           }
         },
         "costs": {
@@ -4350,7 +4350,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "0.1982",
-            "Opt-H2K-EffRValue": "33.2"
+            "OPT-H2K-EffRValue": "33.2"
           }
         },
         "costs": {
@@ -4365,7 +4365,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone4",
-            "Opt-H2K-EffRValue": "15.79",
+            "OPT-H2K-EffRValue": "15.79",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4379,7 +4379,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone5_noHRV",
-            "Opt-H2K-EffRValue": "17.49",
+            "OPT-H2K-EffRValue": "17.49",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4393,7 +4393,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone5_HRV",
-            "Opt-H2K-EffRValue": "16.86",
+            "OPT-H2K-EffRValue": "16.86",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4407,7 +4407,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone6_noHRV",
-            "Opt-H2K-EffRValue": "17.49",
+            "OPT-H2K-EffRValue": "17.49",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4421,7 +4421,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone6_HRV",
-            "Opt-H2K-EffRValue": "16.86",
+            "OPT-H2K-EffRValue": "16.86",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4435,7 +4435,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7A_noHRV",
-            "Opt-H2K-EffRValue": "17.49",
+            "OPT-H2K-EffRValue": "17.49",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4449,7 +4449,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7A_HRV",
-            "Opt-H2K-EffRValue": "16.52",
+            "OPT-H2K-EffRValue": "16.52",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4463,7 +4463,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7B_noHRV",
-            "Opt-H2K-EffRValue": "21.86",
+            "OPT-H2K-EffRValue": "21.86",
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4477,7 +4477,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone7B_HRV",
-            "Opt-H2K-EffRValue": "17.49",
+            "OPT-H2K-EffRValue": "17.49",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4491,7 +4491,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone8_noHRV",
-            "Opt-H2K-EffRValue": "21.86",
+            "OPT-H2K-EffRValue": "21.86",
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4505,7 +4505,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone8_HRV",
-            "Opt-H2K-EffRValue": "17.49",
+            "OPT-H2K-EffRValue": "17.49",
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4519,7 +4519,7 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "Main_Wall_R30",
-            "Opt-H2K-EffRValue": "30"
+            "OPT-H2K-EffRValue": "30"
           }
         },
         "costs": {
@@ -4533,7 +4533,7 @@
       "NC_R-16(eff)_2x6-24inOC_R19-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.47,
+            "OPT-H2K-EffRValue": 16.47,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4553,7 +4553,7 @@
       "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.27,
+            "OPT-H2K-EffRValue": 16.27,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4573,7 +4573,7 @@
       "NC_R-17(eff)_2x4-16inOC_R14-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.81,
+            "OPT-H2K-EffRValue": 16.81,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4594,7 +4594,7 @@
       "NC_R-16(eff)_2x4-16inOC_R14-batt+1inUnfacedEPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 16.22,
+            "OPT-H2K-EffRValue": 16.22,
             "HeaderExtInsRValue": 3.5
           }
         },
@@ -4615,7 +4615,7 @@
       "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 17.04,
+            "OPT-H2K-EffRValue": 17.04,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4635,7 +4635,7 @@
       "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 17.66,
+            "OPT-H2K-EffRValue": 17.66,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4655,7 +4655,7 @@
       "NC_R-18(eff)_2x6-24inOC_R22-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 17.72,
+            "OPT-H2K-EffRValue": 17.72,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4675,7 +4675,7 @@
       "NC_R-18(eff)_2x6-24inOC_R24-batt_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 18.46,
+            "OPT-H2K-EffRValue": 18.46,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4695,7 +4695,7 @@
       "NC_R-19(eff)_2x6-16inOC_2lb.ClosedCellSprayFoam_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 18.97,
+            "OPT-H2K-EffRValue": 18.97,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4715,7 +4715,7 @@
       "NC_R-19(eff)_2x4-16inOC_R14-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 19.33,
+            "OPT-H2K-EffRValue": 19.33,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -4736,7 +4736,7 @@
       "NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 19.93,
+            "OPT-H2K-EffRValue": 19.93,
             "HeaderExtInsRValue": 0.0
           }
         },
@@ -4756,7 +4756,7 @@
       "NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.01,
+            "OPT-H2K-EffRValue": 21.01,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4777,7 +4777,7 @@
       "NC_R-21(eff)_2x6-16inOC_R24-batt+1inUnfacedEPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.41,
+            "OPT-H2K-EffRValue": 21.41,
             "HeaderExtInsRValue": 3.5
           }
         },
@@ -4798,7 +4798,7 @@
       "NC_R-21(eff)_2x6-16inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.47,
+            "OPT-H2K-EffRValue": 21.47,
             "HeaderExtInsRValue": 5.5
           }
         },
@@ -4819,7 +4819,7 @@
       "NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.52,
+            "OPT-H2K-EffRValue": 21.52,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4840,7 +4840,7 @@
       "NC_R-22(eff)_2x4-16inOC_R14-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.86,
+            "OPT-H2K-EffRValue": 21.86,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -4861,7 +4861,7 @@
       "NC_R-22(eff)_2x6-24inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 21.98,
+            "OPT-H2K-EffRValue": 21.98,
             "HeaderExtInsRValue": 5.5
           }
         },
@@ -4882,7 +4882,7 @@
       "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.09,
+            "OPT-H2K-EffRValue": 22.09,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4903,7 +4903,7 @@
       "NC_R-22(eff)_2x6-24inOC_R24-batt+1inUnfacedEPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.21,
+            "OPT-H2K-EffRValue": 22.21,
             "HeaderExtInsRValue": 3.5
           }
         },
@@ -4924,7 +4924,7 @@
       "NC_R-23(eff)_2x6-16inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.55,
+            "OPT-H2K-EffRValue": 22.55,
             "HeaderExtInsRValue": 5.5
           }
         },
@@ -4945,7 +4945,7 @@
       "NC_R-23(eff)_2x6-16inOC_R24-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.71,
+            "OPT-H2K-EffRValue": 22.71,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4966,7 +4966,7 @@
       "NC_R-23(eff)_2x6-24inOC_R22-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 22.77,
+            "OPT-H2K-EffRValue": 22.77,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -4987,7 +4987,7 @@
       "NC_R-23(eff)_2x6-16inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.17,
+            "OPT-H2K-EffRValue": 23.17,
             "HeaderExtInsRValue": 5.5
           }
         },
@@ -5008,7 +5008,7 @@
       "NC_R-23(eff)_2x6-24inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.23,
+            "OPT-H2K-EffRValue": 23.23,
             "HeaderExtInsRValue": 5.5
           }
         },
@@ -5029,7 +5029,7 @@
       "NC_R-24(eff)_2x6-24inOC_R24-batt+1inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.51,
+            "OPT-H2K-EffRValue": 23.51,
             "HeaderExtInsRValue": 5.0
           }
         },
@@ -5050,7 +5050,7 @@
       "NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.53,
+            "OPT-H2K-EffRValue": 23.53,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5071,7 +5071,7 @@
       "NC_R-24(eff)_2x6-16inOC_R19-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.95,
+            "OPT-H2K-EffRValue": 23.95,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5092,7 +5092,7 @@
       "NC_R-24(eff)_2x6-24inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 23.97,
+            "OPT-H2K-EffRValue": 23.97,
             "HeaderExtInsRValue": 5.5
           }
         },
@@ -5113,7 +5113,7 @@
       "NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 24.04,
+            "OPT-H2K-EffRValue": 24.04,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5134,7 +5134,7 @@
       "NC_R-24(eff)_2x6-24inOC_R19-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 24.46,
+            "OPT-H2K-EffRValue": 24.46,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5155,7 +5155,7 @@
       "NC_R-25(eff)_2x6-16inOC_R22-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 24.61,
+            "OPT-H2K-EffRValue": 24.61,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5176,7 +5176,7 @@
       "NC_R-25(eff)_2x6-16inOC_R22-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.03,
+            "OPT-H2K-EffRValue": 25.03,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5197,7 +5197,7 @@
       "NC_R-25(eff)_2x6-16inOC_R24-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.23,
+            "OPT-H2K-EffRValue": 25.23,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5218,7 +5218,7 @@
       "NC_R-25(eff)_2x6-24inOC_R22-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.29,
+            "OPT-H2K-EffRValue": 25.29,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5239,7 +5239,7 @@
       "NC_R-26(eff)_2x6-16inOC_R24-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.65,
+            "OPT-H2K-EffRValue": 25.65,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5260,7 +5260,7 @@
       "NC_R-26(eff)_2x6-24inOC_R22-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 25.71,
+            "OPT-H2K-EffRValue": 25.71,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5281,7 +5281,7 @@
       "NC_R-26(eff)_2x6-24inOC_R24-batt+1.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.03,
+            "OPT-H2K-EffRValue": 26.03,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5302,7 +5302,7 @@
       "NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.06,
+            "OPT-H2K-EffRValue": 26.06,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -5323,7 +5323,7 @@
       "NC_R-26(eff)_2x6-24inOC_R24-batt+2inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.45,
+            "OPT-H2K-EffRValue": 26.45,
             "HeaderExtInsRValue": 7.5
           }
         },
@@ -5344,7 +5344,7 @@
       "NC_R-27(eff)_2x6-24inOC_R19-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 26.57,
+            "OPT-H2K-EffRValue": 26.57,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -5365,7 +5365,7 @@
       "NC_R-27(eff)_2x6-16inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 27.14,
+            "OPT-H2K-EffRValue": 27.14,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -5386,7 +5386,7 @@
       "NC_R-28(eff)_2x6-16inOC_R24-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 27.76,
+            "OPT-H2K-EffRValue": 27.76,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -5407,7 +5407,7 @@
       "NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 27.82,
+            "OPT-H2K-EffRValue": 27.82,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -5428,7 +5428,7 @@
       "NC_R-29(eff)_2x6-24inOC_R24-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 28.56,
+            "OPT-H2K-EffRValue": 28.56,
             "HeaderExtInsRValue": 10.0
           }
         },
@@ -5449,7 +5449,7 @@
       "NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 29.64,
+            "OPT-H2K-EffRValue": 29.64,
             "HeaderExtInsRValue": 11.5
           }
         },
@@ -5470,7 +5470,7 @@
       "NC_R-30(eff)_2x6-24inOC_R24-batt+3inMineralWool_poly_vb": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-EffRValue": 30.44,
+            "OPT-H2K-EffRValue": 30.44,
             "HeaderExtInsRValue": 11.5
           }
         },
@@ -5493,7 +5493,7 @@
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-GenInsulLayerInboard-a>",
-      "Opt-H2K-EffRValue",
+      "OPT-H2K-EffRValue",
       "HeaderExtInsRValue"
     ]
   },
