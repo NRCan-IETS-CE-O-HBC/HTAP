@@ -1,8 +1,15 @@
+#!/usr/bin/env ruby
 
 def HTAPInit()
-
   $startProcessTime = Time.now
-  $fLOG, $fSUMMARY = openLogFiles("log-geth2kinfo.text","summary-geth2kinfo.txt")
+  progShort = $program
+  progShort.gsub!(/\.rb/,"")
+  debug_out "Opening log files for #{progShort}"
+    begin
+  $fLOG, $fSUMMARY = openLogFiles("#{progShort}_log.txt","#{progShort}_summary.out")
+  rescue
+    fatalerror ("Could not open log files.")
+  end
   $allok = true
 
 end
