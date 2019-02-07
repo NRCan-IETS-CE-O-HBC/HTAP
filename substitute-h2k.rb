@@ -36,7 +36,7 @@ include REXML
 
 
 $program = "substitute-h2k.rb"
-
+HTAPInit()
 stream_out drawRuler("A wrapper for HOT2000")
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
@@ -72,7 +72,7 @@ $outputHCode = "SOC"
 # throughout this file).
 # Note loose convention to start global variables with a 'g'.
 # Ruby *requires* globals to start with '$'.
-$startProcessTime = Time.now
+
 $gDebug = false
 $gSkipSims = false
 $gTest_params = Hash.new
@@ -166,10 +166,10 @@ $aliasLongStatus  = "status"
 $aliasLongCosts   = "cost-estimates"
 
 # Default to short
-$aliasInput   = $aliasShortInput
-$aliasOutput  = $aliasShortOutput
-$aliasConfig  = $aliasShortConfig
-$aliasArch    = $aliasShortArch
+$aliasInput   = $aliasLongInput
+$aliasOutput  = $aliasLongOutput
+$aliasConfig  = $aliasLongConfig
+$aliasArch    = $aliasLongArch
 
 
 
@@ -445,7 +445,7 @@ end
 # and change values for settings defined in choice/options files.
 # =========================================================================================
 def processFile(h2kElements)
-  debug_on
+  #debug_off
   # Load all XML elements from HOT2000 code library file. This file is specified
   # in option Opt-DBFiles
   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
@@ -3114,6 +3114,7 @@ def processFile(h2kElements)
 
         end
         # of if block for this option choice (choiceEntry)
+
 
       end
       # end of tag loop
@@ -6451,7 +6452,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # Open output file here so we can log errors too!
 
-        $fLOG, $fSUMMARY = openLogFiles($gTest_params["logfile"],$gMasterPath + "\\SubstitutePL-output.txt" )
 
 
         #-------------------------------------------------------------------
