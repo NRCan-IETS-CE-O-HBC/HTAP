@@ -195,7 +195,7 @@ module Costing
 
     debug_out drawRuler("Step 1: mapping proxies and recovering initial cost lists\n"," .")
     # Step 1: map proxies.
-    myOptions.keys.each do | attribute |
+    myChoices.keys.each do | attribute |
 
       next if ! CostingSupport.include? attribute
 
