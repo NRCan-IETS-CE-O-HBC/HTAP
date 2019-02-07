@@ -3115,13 +3115,6 @@ def processFile(h2kElements)
         end
         # of if block for this option choice (choiceEntry)
 
-        # Calculate cost difference (Upg - Base) for the choiceEntry just parsed
-        # Note:
-        #   - Base cost below is for NEW HOUSING COST ANALYSIS. We are comparing the
-        #     baseline new house cost to an upgrade cost for specific upgrade option(s).
-        if $autoCostOptions && value != "NA"
-          $optionCost += getOptionCost(unitCostDataHash, choiceEntry, tag, value, h2kElements) - baseOptionCost
-        end
       end
       # end of tag loop
     end
