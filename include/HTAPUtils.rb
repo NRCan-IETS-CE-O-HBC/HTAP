@@ -5,13 +5,21 @@ def HTAPInit()
   progShort = $program
   progShort.gsub!(/\.rb/,"")
   debug_out "Opening log files for #{progShort}"
-    begin
+  begin
   $fLOG, $fSUMMARY = openLogFiles("#{progShort}_log.txt","#{progShort}_summary.out")
+  log_out drawRuler("LOG FILE.",nil,80)
+  log_out("Run started at #{$startProcessTime}\n")
+
   rescue
     fatalerror ("Could not open log files.")
   end
   $allok = true
 
+  $scriptLocation = File.expand_path(File.dirname(__FILE__)+"\\..\\.")
+  log_out ("#{$program} location: #{$scriptLocation}\n")
+
+  log_out ("Parsing configuration file")
+  HTAPConfig.parseConfigData()
 end
 
 module HTAPData
@@ -610,4 +618,169 @@ module HTAPData
     return result
   end
 
+end
+
+module HTAPConfig
+
+  def HTAPConfig.parseConfigData()
+    begin
+      configContent = File.read("#{$scriptLocation}/#{ConfigDataFile}")
+      $gConfigData = JSON.parse(configContent)
+    rescue
+      log_out("could not parse configuration file:  #{$scriptLocation}/#{ConfigDataFile} \n")
+    end
+  end
+
+  def self.setData(keys,content)
+    #debug_on
+    #debug_out ("Setting data for: #{keys.length} keys\n")
+    #debug_out ("passed Keypath #{keys.pretty_inspect}\n")
+
+    exists =  self.checkKeys($gConfigData,keys,"create")
+    if ( keys.length > 1)
+      $gConfigData.dig(*keys[0..-2])[keys.last] = content
+    else
+      $gConfigData[keys[0]] = content
+    end
+  end
+
+  def self.checkKeys(object, keys, action="report")
+    #debug_on
+    #debug_out("checking for KEYPATH:\n #{keys.pretty_inspect}\n")
+    #debug_out("object @ 1:\n#{object.pretty_inspect}\n")
+    if ( action != "report" && action != "create")
+      fatalerror("#{self.checkKeys}: developer error Known action (#{action})")
+    end
+    found = false
+
+    if( ! object[keys[0]].nil? )
+      found = true
+    end
+    debug_out ("Query - #{keys[0]} ? #{found}\n")
+
+    if ( ! found && action == "create" )
+      if ( keys.length > 1)
+        object[keys[0]] = Hash.new
+      else
+        object[keys[0]] = ""
+      end
+    end
+    #debug_out("object @ 2:\n#{object.pretty_inspect}\n")
+    if ( keys.length > 1 && ( found || action == "create" ) )
+      found = self.checkKeys(object[keys[0]], keys[1..-1], action )
+    end
+
+    debug_out("object @ 3:\n#{object.pretty_inspect}\n")
+    return found
+  end
+
+  def self.getData(keys)
+    #debug_on
+    #debug_out ("keys len: #{keys.length}\n")
+
+    found = self.checkKeys($gConfigData,keys)
+
+    if ( ! found )
+      contents = nil
+    else
+
+      if ( keys.length < 2 )
+        #debug_out "Using key: #{keys[0]} = #{$gConfigData["updateTime"]}|\n"
+        contents = $gConfigData[keys[0]]
+      else
+        contents = $gConfigData.dig(*keys[0..-2])[keys.last]
+      end
+    end
+
+    return found, contents
+  end
+
+  def HTAPConfig.setPrmSpeed(timePerEval)
+
+    speedsSet, speeds = self.getData(["prm","timePerEval"])
+
+    if( ! speedsSet )
+      speeds = Array.new
+    else
+      speeds.shift if (speeds.length > 9)
+    end
+
+    speeds.push timePerEval.round(1)
+    self.setData(["prm","timePerEval"],speeds)
+
+  end
+
+  def HTAPConfig.getPrmSpeed()
+    goodEstimate = true
+    avgSpeed = 0
+    speedsSet, speeds = self.getData(["prm","timePerEval"])
+
+    if( ! speedsSet )
+      goodEstimate = false
+    else
+
+
+      if ( speeds.length < 1 )
+        goodEstimate = false
+
+      else
+
+        speeds.each do | speed |
+          avgSpeed += speed / speeds.length
+        end
+
+      end
+
+    end
+
+
+    return goodEstimate, avgSpeed
+  end
+
+  def HTAPConfig.countSuccessfulEvals(evals)
+
+    evalSet, evalCount = self.getData(["prm","successfulH2Kevals"])
+
+    evalCount = 0 if (! evalSet)
+
+    evalCount += evals
+
+    self.setData(["prm","successfulH2Kevals"],evalCount)
+
+  end
+
+  def HTAPConfig.reportSuccessfulEvals()
+
+    evalSet, evalCount = self.getData(["prm","successfulH2Kevals"])
+
+    evalCount = 0 if (! evalSet)
+
+    return evalCount
+
+  end
+
+  def HTAPConfig.checkOddities()
+
+    oddSet, oddOut = self.getData(["oddities"])
+
+    return false if (! oddSet )
+    return oddOut
+
+  end
+
+
+
+  def HTAPConfig.writeConfigData()
+
+    self.setData( ["updateTime"], Time.now  )
+
+    begin
+      configFileOutput  = File.open("#{$scriptLocation}/#{ConfigDataFile}", 'w')
+      configFileOutput.write(JSON.pretty_generate($gConfigData))
+    rescue
+      log_out("could not write configuration file:  #{$scriptLocation}/#{ConfigDataFile} \n")
+    ensure
+      configFileOutput.close
+    end
+  end
 end

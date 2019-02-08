@@ -20,8 +20,6 @@ def openLogFiles( logFile, summaryFile )
   begin
   debug_out "Log file: #{logFile}\n"
   fLOG = File.new(logFile, "w")
-  fLOG.write ("\n#{$program} LOG FILE.\n\n")
-  fLOG.write ("Run started at #{Time.now}\n")
   rescue
     fatalerror("Could not open #{logFile}.\n")
   end
@@ -29,6 +27,14 @@ def openLogFiles( logFile, summaryFile )
   return fLOG, fSUMMARY
 
 end
+
+
+def input(prompt="", newline=false)
+  require 'readline'
+  prompt += "\n" if newline
+  Readline.readline(prompt, true).squeeze(" ").strip
+end
+
 
 
 # =========================================================================================
@@ -81,10 +87,35 @@ def stream_out(msg)
   if ($gTest_params["verbosity"] != "quiet")
     print msg
   end
-  if ($gTest_params["logfile"])
-    $fLOG.write(msg)
+  log_out(msg, true)
+  if ( msg =~ /\n/ )
+    $newLine = true
+  else
+    $newLine = false
   end
 end
+
+def log_out(msg,fromScreen=false)
+  $logBufferCount += 1
+  logmsg = ""
+  if ( ! $fLOG.nil? )
+    if ( fromScreen && $newLine ) then
+      msg.each_line do |line|
+        logmsg = "[to-term]#{line}"
+      end
+    else
+      logmsg = msg
+    end
+
+    $fLOG.write("#{logmsg}")
+    if ( $logBufferCount > 10 )
+      $fLOG.flush
+      $logBufferCount = 0
+    end
+  end
+end
+
+
 
 # =========================================================================================
 # Draw a pretty ruler with optional embedded msg, and custom character 'char',
@@ -297,7 +328,7 @@ end
 # Log Informational message  for latter reporting reporting
 # =========================================================================================
 def info_out(msg)
-  #puts "\n\n WARNING: #{msg}\n\n"
+
   callerID = Hash.new
   callerID = caller_info()
   line     = callerID["line"]
@@ -305,7 +336,7 @@ def info_out(msg)
   routine  = callerID["routine"]
   msg.gsub(/^\n+/, "")
   msg.gsub(/\n+$/, "")
-  msg += " (message reported by #{routine} - #{file}:#{line})"
+  #msg += " (message reported by #{routine} - #{file}:#{line})"
 
   if ($gTest_params["logfile"])
     $fLOG.write("Info: #{msg}")
@@ -572,5 +603,26 @@ def ReportMsgs()
   #end
   #$gErrors << msg.gsub(/\n/,'')
   #$allok = false
+
+end
+
+def formatTimeInterval(timearg)
+
+  time = timearg.to_f
+  if ( time > 86400 )
+    timeMsg = "#{(time / 86400).round(1)} days"
+
+  elsif ( time> 3600 )
+    timeMsg = "#{(time / 3600).round(1)} hours"
+
+  elsif ( time > 60 )
+    timeMsg = "#{(time / 60).round(0)} minutes"
+
+  else
+    timeMsg = "#{(time ).round(0)} seconds"
+
+  end
+
+  return timeMsg
 
 end

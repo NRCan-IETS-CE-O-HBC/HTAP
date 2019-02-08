@@ -216,6 +216,8 @@ $gWarnings = Array.new
 $gInfoMsgs = Array.new
 $gStatus = Hash.new
 
+$scriptLocation = ""
+
 $gHelp = false
 
 $lDebug = false
@@ -238,3 +240,7 @@ $gChoicesChangedbyProgram = false
 $foundationConfiguration = ""
 
 CostingAuditReportName = 'HTAP-costing-audit-report.txt'
+ConfigDataFile = "htap.config"
+$gConfigData = Hash.new
+$newLine = true
+$logBufferCount = 0 

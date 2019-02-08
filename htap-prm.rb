@@ -608,7 +608,7 @@ def run_these_cases(current_task_files)
   # Loop until all files have been processed.
   $GiveUp = false
 
-  startProcessTime = Time.now
+  startRunsTime= Time.now
 
   while  ! $RunsDone
 
@@ -620,25 +620,12 @@ def run_these_cases(current_task_files)
       timeMsg = ""
       if ( fracCompleted > 0.0 ) then
         timeNow = Time.now
-        timeLapsed = (timeNow - startProcessTime)
+        timeLapsed = (timeNow - startRunsTime)
         timeRemaining =   timeLapsed / fracCompleted - timeLapsed
+        timeMsg = ", ~#{formatTimeInterval(timeRemaining)} remaining"
 
+        debug_out "Time Differential = #{(timeNow -startRunsTime)}\n"
 
-        debug_out "Time Differential = #{(timeNow - startProcessTime)}\n"
-        if ( timeRemaining > 86400 )
-          timeMsg = ", ~#{(timeRemaining / 86400).round(2)} days remaining"
-
-        elsif ( timeRemaining > 3600 )
-          timeMsg = ", ~#{(timeRemaining / 3600).round(1)} hours remaining"
-
-        elsif ( timeRemaining > 60 )
-          timeMsg = ", ~#{(timeRemaining / 60).round(0)} minutes remaining"
-
-        elsif ( timeRemaining > 60 )
-          timeMsg = ", ~#{(timeRemaining).round(0)} seconds remaining"
-
-
-        end
       end
 
       stream_out ("   + Batch #{$batchCount} ( #{(fracCompleted*100).round(4)}% done, #{$choicefileIndex}/#{numberOfFiles} files processed so far#{timeMsg} ...) \n" )
@@ -1143,7 +1130,8 @@ def run_these_cases(current_task_files)
 
      batchLapsedTime = "#{(Time.now - batchStartTime).round(0)} seconds"
 
-     stream_out ("done. Duration: #{batchLapsedTime}.#{errs}\n\n")
+     stream_out ("done.\n")
+     stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs}\n\n")
 
      if ( ! $FinishedTheseFiles.has_value?(false) )
 
@@ -1208,7 +1196,7 @@ $gRunDefinitionsProvided = false
 $gRunDefinitionsFile = ""
 
 $gNumberOfThreads = 3
-
+$promptBeforeProceeding = false
 $StopOnError = false
 
 #=====================================================================================
@@ -1246,16 +1234,23 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-   opts.on("-a", "--cost-assemblies FILE", "Estimate costs for assemblies using costing database.") do |o|
-      $gComputeCosts = true
-      $gCostingFile = o
-      if ( ! File.exist?($gRunDefinitionsFile) ) then
-        fatalerror("Costing file #{$gCostingFile} could not be found!")
-      end
+   #   opts.on("-a", "--cost-assemblies FILE", "Estimate costs for assemblies using costing database.") do |o|
+   #      $gComputeCosts = true
+   #      $gCostingFile = o
+   #      if ( ! File.exist?($gRunDefinitionsFile) ) then
+   #        fatalerror("Costing file #{$gCostingFile} could not be found!")
+   #      end
+   #
+   #   end
 
+   opts.on(
+     "-c", "--confirm", "Prompt before proceeding with run. After estimating the size",
+     "and duration of the run, HTAP will ask for conformation before.",
+     "coninuing."
+   ) do
+
+     $promptBeforeProceeding = true
    end
-
-
 
    opts.on("-e", "--extra-output", "Report additional data on archetype and part-load characteristics") do
       $cmdlineopts["extra-output"] = true
@@ -1279,12 +1274,6 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.separator "\n Debugging options: "
-
-   opts.on("--debug", "Run in debug mode. Prints extra output to screen.") do
-      $cmdlineopts["verbose"] = true
-      $gTest_params["verbosity"] = "verbose"
-      $gDebug = true
-   end
 
    opts.on("--stop-on-error", "Terminate run upon first error encountered.") do
 
@@ -1366,14 +1355,7 @@ $FinishedTheseFiles = Hash.new
 
 # Generate working directories
 #stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
-stream_out(" Initialization: \n")
-
-stream_out("    - Deleting prior HTAP-work directories... ")
-FileUtils.rm_rf Dir.glob("HTAP-work-*")
-stream_out (" done.\n")
-stream_out("    - Deleting prior HTAP-sim directories... ")
-FileUtils.rm_rf Dir.glob("HTAP-sim-*")
-stream_out (" done.\n")
+stream_out("\n Initialization: \n")
 
 begin
   $fCSVout = File.open($gOutputFile, 'w')
@@ -1397,7 +1379,7 @@ $gMeshRunDefs = Hash.new
 #==================================================================
 #
 #==================================================================
-
+runLength = 0
 if ( ! $gRunDefinitionsProvided )
   # Basic mode: Run a set of .choice files that are provided as arguements to the command line
   #  - load choice files into array for now
@@ -1429,16 +1411,17 @@ else
 
   stream_out (" done.\n")
 
+
   case $gRunDefMode
   when  "mesh", "sample"
 
     # estimate the number of combonations
     #debug_out
     runningProduct = 1
-    stream_out "    - Evaluating combinations for gRunDefMode run\n\n"
-    stream_out "          * "+$gLocations.length.to_s.ljust(10)+" (options for Location)\n" if ($gLocations.length>1 )
-    stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+" (options for Archetypes)\n" if ($archetypeFiles.length>1 )
-    stream_out "          * "+$gRulesets.length.to_s.ljust(10)+" (options for Rulesets)\n" if ($gRulesets.length>1 )
+    stream_out "    - Evaluating combinations for #{$gRunDefMode} run\n\n"
+    stream_out "          * "+$gLocations.length.to_s.ljust(10)+" (options for Location)\n" #if ($gLocations.length>1 )
+    stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+" (options for Archetypes)\n" #if ($archetypeFiles.length>1 )
+    stream_out "          * "+$gRulesets.length.to_s.ljust(10)+" (options for Rulesets)\n" #if ($gRulesets.length>1 )
     $gRunUpgrades.each do | attribute, choices |
        runningProduct *= choices.length
        if ( choices.length > 1 ) then
@@ -1497,8 +1480,8 @@ else
 
       debug_out ($RunTheseFiles.pretty_inspect)
 
-
       stream_out ("    - Sampled #{$sample_size.to_i} combinations for run\n")
+
     end
 
   when "parametric"
@@ -1511,7 +1494,7 @@ else
     stream_out "          * "+$gLocations.length.to_s.ljust(10)+"  { # of options for Location }\n" #if ($gLocations.length>1 )
     stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+"  { # of options for Archetypes }\n" #if ($archetypeFiles.length>1 )
     stream_out "          * "+$gRulesets.length.to_s.ljust(10)+"  { # of options for Rulesets }\n" #if ($gRulesets.length>1 )
-    stream_out "          *    (   1          { base option for all choices }\n"
+    stream_out "          *   (    1          { base option for all choices }\n"
     $gRunUpgrades.each do | attribute, choices |
        if ( choices.length > 1 ) then
           runningSum += choices.length - 1
@@ -1560,6 +1543,34 @@ end
 
 
 $batchCount = 0
+goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
+evalSpeed = 30.0 if ( ! goodEst )
+estDuration = $RunTheseFiles.length.to_f * evalSpeed / [$gNumberOfThreads, $RunTheseFiles.length].min
+
+stream_out("    - Guesstimated time requirements ~ #{formatTimeInterval(estDuration)} (including pre- & post-processing)\n")
+$waitTime = 0
+if ( $promptBeforeProceeding )
+  waitstart =Time.now
+  stream_out("\n    ? Continue with run ? [yes] \r")
+  exitQuery = input "    ? Continue with run ? [yes] "
+  stream_out("\n")
+  waitend = Time.now
+
+  if ( exitQuery =~ /y[es]*/i ||  exitQuery == "" || exitQuery.nil? )
+  else
+    log_out ("User terminated run with response #{exitQuery}\n")
+    fatalerror("Run terminated by user")
+  end
+  $waitTime = waitend - waitstart
+  log_out ("Waited for #{formatTimeInterval($waitTime)}\n")
+end
+
+stream_out("    - Deleting prior HTAP-work directories... ")
+FileUtils.rm_rf Dir.glob("HTAP-work-*")
+stream_out (" done.\n")
+stream_out("    - Deleting prior HTAP-sim directories... ")
+FileUtils.rm_rf Dir.glob("HTAP-sim-*")
+stream_out (" done.\n")
 
 
 if ( $choicesInMemory )
@@ -1588,10 +1599,23 @@ if ( $FailedRunCount > 0 )
 
 end
 
+if ( $CompletedRunCount> 0  &&  $ThreadsNeeded > 0  )
+  lapsedTime = Time.now - $startProcessTime - $waitTime
+  timePerEvaluation = lapsedTime /  $CompletedRunCount * $ThreadsNeeded
+  HTAPConfig.setPrmSpeed(timePerEvaluation)
+  HTAPConfig.countSuccessfulEvals($CompletedRunCount)
+end
+
+
+if ( HTAPConfig.checkOddities() ) then
+  info_out(" Fun Fact - so far HTAP has performed #{HTAPConfig.reportSuccessfulEvals()} successful hot2000 simulations for you.")
+end
 # Close output files (JSON output dumped in a single write - already closed at this point.
 $fCSVout.close
 $failures.close
+HTAPConfig.writeConfigData()
 
+ReportMsgs()
 
 stream_out ("\n\n")
 
