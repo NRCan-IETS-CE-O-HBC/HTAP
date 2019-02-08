@@ -470,14 +470,12 @@ module H2KFile
 
   end
 
-  def H2KFile.getStories(elements)
-    myHouseStoreys = elements["HouseFile/House/Specifications/Storeys/English"].text
-    if myHouseStoreys!= nil
-      myHouseStoreys.gsub!(/\s*/, '')    # Removes mid-line white space
-      myHouseStoreys.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
-    end
+  def H2KFile.getStoreys(elements)
 
-    return myHouseStoreys
+    myHouseStoreysInt = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_i
+    myHouseStoreysString = self.getNumStoreysString(myHouseStoreysInt)
+
+    return myHouseStoreysString
 
   end
 
@@ -900,10 +898,7 @@ module H2KFile
 
         if (window.parent.parent.attributes["id"].to_i == idWall)
 
-          thisWinArea  = (
-            window.elements["Measurements"].attributes["height"].to_f *
-            window.elements["Measurements"].attributes["width"].to_f
-          ) * window.attributes["number"].to_i / 1000000
+          thisWinArea  = ( window.elements["Measurements"].attributes["height"].to_f *   window.elements["Measurements"].attributes["width"].to_f ) * window.attributes["number"].to_i / 1000000
 
           areaWindows += thisWinArea
           debug_out "     WINDOW: parent id #{window.parent.parent.attributes["id"].to_i} - area: #{thisWinArea}\n"
@@ -920,680 +915,676 @@ module H2KFile
 
         if (door.parent.parent.attributes["id"].to_i == idWall)
 
-          thisDoorArea  = (
-            door.elements["Measurements"].attributes["height"].to_f *
-            door.elements["Measurements"].attributes["width"].to_f
-          )
+          thisDoorArea  = ( door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f  )
           areaDoors += thisDoorArea
 
-          end
-          # if (door.parent.parent.attributes["id"].to_i == idWall)
-
         end
-        debug_out ("TOTAL door area so far #{areaDoors}\n")
-        #   elements.each(locationWindowTest) do |door|
-
-        # Loop through floor headers.
-        areaHeaders = 0
-        elements.each(locationHeaderText) do |header|
-
-          if (header.parent.parent.attributes["id"].to_i == idWall)
-
-            thisHeaderArea  = (
-              header.elements["Measurements"].attributes["height"].to_f *
-              header.elements["Measurements"].attributes["perimeter"].to_f
-            )
-            areaHeaders += thisHeaderArea
-
-          end
-          # if (header.parent.parent.attributes["id"].to_i == idWall)
-
-        end
-        debug_out ("TOTAL header so far #{areaHeaders}\n")
-        #   elements.each(locationHeaderText) do |header|
-
-          # Permiter for linear foot calcs.
-          wallDimsAG["perimeter"] += wall.elements["Measurements"].attributes["perimeter"].to_f
-
-          # Gross wall area, including windows/doors
-          wallDimsAG["area"]["gross"] += areaWall_temp + areaHeaders
-
-          # Net wall area, excluding windows, doors.
-          wallDimsAG["area"]["net"] += areaWall_temp - areaWindows - areaDoors
-          wallDimsAG["area"]["headers"] += areaHeaders
-          wallDimsAG["area"]["windows"] += areaWindows
-          wallDimsAG["area"]["doors"]   += areaDoors
-          wallDimsAG["count"] += 1.to_i
-
-        end
-        # elements.each(locationWallText) do |wall|
-
-        debug_out ("Output follows:\n#{wallDimsAG.pretty_inspect}\n")
-
-        debug_out ("[<] H2KFile.getAGWallDimensions \n")
-        return wallDimsAG
+        # if (door.parent.parent.attributes["id"].to_i == idWall)
 
       end
-      # def H2KFile.getAGWallArea(elements)
+      debug_out ("TOTAL door area so far #{areaDoors}\n")
+      #   elements.each(locationWindowTest) do |door|
 
-      def H2KFile.getBGDimensions(elements)
+      # Loop through floor headers.
+      areaHeaders = 0
+      elements.each(locationHeaderText) do |header|
 
-        debug_off
-        bgDims = Hash.new
-        [ "basement", "crawlspace", "slab" ].each do | type |
-          bgDims[type] = Hash.new
-          bgDims[type] = { "exposed-perimeter" => 0.0,
-            "total-perimeter" => 0.0,
-            "floor-area" => 0.0,
-            "configuration" => nil }
+        if (header.parent.parent.attributes["id"].to_i == idWall)
 
-          end
+          thisHeaderArea  = ( header.elements["Measurements"].attributes["height"].to_f *  header.elements["Measurements"].attributes["perimeter"].to_f  )
+          areaHeaders += thisHeaderArea
 
-          wallCornerCount = 0
-          wallDims = Array.new
+        end
+        # if (header.parent.parent.attributes["id"].to_i == idWall)
 
-          bgDims["walls"] = { "total-area" => Hash.new, "below-grade-area" =>Hash.new }
-          bgDims["walls"]["total-area"]["internal"] = 0.0
-          bgDims["walls"]["total-area"]["external"] = 0.0
-          bgDims["walls"]["below-grade-area"]["internal"] = 0.0
-          bgDims["walls"]["below-grade-area"]["external"] = 0.0
+      end
+      debug_out ("TOTAL header so far #{areaHeaders}\n")
+      #   elements.each(locationHeaderText) do |header|
+
+      # Permiter for linear foot calcs.
+      wallDimsAG["perimeter"] += wall.elements["Measurements"].attributes["perimeter"].to_f
 
+      # Gross wall area, including windows/doors
+      wallDimsAG["area"]["gross"] += areaWall_temp + areaHeaders
 
-          debug_off()
-          debug_out ("Parsing below-grade dimensions\n")
+      # Net wall area, excluding windows, doors.
+      wallDimsAG["area"]["net"] += areaWall_temp - areaWindows - areaDoors
+      wallDimsAG["area"]["headers"] += areaHeaders
+      wallDimsAG["area"]["windows"] += areaWindows
+      wallDimsAG["area"]["doors"]   += areaDoors
+      wallDimsAG["count"] += 1.to_i
 
-          loc = "HouseFile/House/Components"
-          count = 0
-          elements[loc].elements.each do | component |
+    end
+    # elements.each(locationWallText) do |wall|
 
+    debug_out ("Output follows:\n#{wallDimsAG.pretty_inspect}\n")
 
+    debug_out ("[<] H2KFile.getAGWallDimensions \n")
+    return wallDimsAG
 
-            if (   component.name == "Crawlspace" )
-              # Don't count below-grade characteristics of vented/open crawlspaces.
-              ventType = component.elements[".//VentilationType"].attributes["code"].to_i
-              debug_out " (Skipping vented/open Crawlspace)\n"
-              next if ( ventType != 3 )
-            end
+  end
 
+  # def H2KFile.getAGWallArea(elements)
 
-            if ( component.name == "Basement" ||
-              component.name == "Crawlspace" ||
-              component.name == "Slab" )
+  def H2KFile.getBGDimensions(elements)
 
-              # Skip
+    debug_off
+    bgDims = Hash.new
+    [ "basement", "crawlspace", "slab" ].each do | type |
+      bgDims[type] = Hash.new
+      bgDims[type] = {
+        "exposed-perimeter" => 0.0,
+        "total-perimeter" => 0.0,
+        "floor-area" => 0.0,
+        "configuration" => nil
+      }
+    end
 
+    wallCornerCount = 0
+    wallDims = Array.new
 
-              count += 1
-              debug_out(drawRuler(nil, "  *"))
+    bgDims["walls"] = { "total-area" => Hash.new, "below-grade-area" =>Hash.new }
+    bgDims["walls"]["total-area"]["internal"] = 0.0
+    bgDims["walls"]["total-area"]["external"] = 0.0
+    bgDims["walls"]["below-grade-area"]["internal"] = 0.0
+    bgDims["walls"]["below-grade-area"]["external"] = 0.0
 
-              debug_out " Processing #{component.name} #{count} /#{component.pretty_inspect} \n"
-              thisExposedPerimeter = component.attributes["exposedSurfacePerimeter"].to_f
 
-              thisIsRectangle = component.elements[".//Floor/Measurements"].attributes["isRectangular"].to_s
+    debug_off()
+    debug_out ("Parsing below-grade dimensions\n")
 
-              if ( thisIsRectangle.eql?("true") )
-                debug_out (" + SHAPE #{thisIsRectangle}\n")
-                thisWidth = component.elements[".//Floor/Measurements"].attributes["width"].to_f
-                thisLength = component.elements[".//Floor/Measurements"].attributes["length"].to_f
-                thisFloorArea = thisWidth * thisLength
-                thisTotalPerimeter = (thisWidth + thisLength) *2
-              else
-                debug_out ("non-rectangular!!!\n")
-                thisFloorArea = component.elements[".//Floor/Measurements"].attributes["area"].to_f
-                thisTotalPerimeter = component.elements[".//Floor/Measurements"].attributes["perimeter"].to_f
-              end
-              debug_out " >>>>> floor area? : #{thisFloorArea}\n"
-              if (component.name == "Basement" || component.name == "Crawlspace")
-                thisHeight = component.elements[".//Wall/Measurements"].attributes["height"].to_f
-                thisDepth = component.elements[".//Wall/Measurements"].attributes["depth"].to_f
-                thisCorners = component.elements[".//Wall/Construction"].attributes["corners"].to_f
-                thisTotalExposedWallArea = thisHeight * thisExposedPerimeter
-                thisTotalExposedWallAreaBG = thisDepth * thisExposedPerimeter
+    loc = "HouseFile/House/Components"
+    count = 0
+    elements[loc].elements.each do | component |
 
+      if (   component.name == "Crawlspace" )
+        # Don't count below-grade characteristics of vented/open crawlspaces.
+        ventType = component.elements[".//VentilationType"].attributes["code"].to_i
+        debug_out " (Skipping vented/open Crawlspace)\n"
+        next if ( ventType != 3 )
+      end
 
-                # Total corners
-                wallCornerCount += thisCorners
 
-                wallDims.push( {"type"       => component.name,
-                  "corners"    => thisCorners,
-                  "thisHeight" => thisHeight,
-                  "thisDepth"  => thisDepth,
-                  "thisExpPerimeter" => thisExposedPerimeter})
+      if (
+        component.name == "Basement" ||
+        component.name == "Crawlspace" ||
+        component.name == "Slab"
+        ) then
 
+        # Skip
 
-                end
+        count += 1
+        debug_out(drawRuler(nil, "  *"))
 
-                if ( bgDims[component.name.downcase]["configuration"].nil? )
-                  bgDims[component.name.downcase]["configuration"] = component.elements[".//Configuration"].text
-                else (bgDims[component.name.downcase]["configuration"] !=  component.elements[".//Configuration"].text )
-                  #warn_out(" HTAP doesn't support foundations with mutilple configurations for #{component.name}\n")
-                end
+        debug_out " Processing #{component.name} #{count} /#{component.pretty_inspect} \n"
+        thisExposedPerimeter = component.attributes["exposedSurfacePerimeter"].to_f
 
+        thisIsRectangle = component.elements[".//Floor/Measurements"].attributes["isRectangular"].to_s
 
+        if ( thisIsRectangle.eql?("true") )
+          debug_out (" + SHAPE #{thisIsRectangle}\n")
+          thisWidth = component.elements[".//Floor/Measurements"].attributes["width"].to_f
+          thisLength = component.elements[".//Floor/Measurements"].attributes["length"].to_f
+          thisFloorArea = thisWidth * thisLength
+          thisTotalPerimeter = (thisWidth + thisLength) *2
+        else
+          debug_out ("non-rectangular!!!\n")
+          thisFloorArea = component.elements[".//Floor/Measurements"].attributes["area"].to_f
+          thisTotalPerimeter = component.elements[".//Floor/Measurements"].attributes["perimeter"].to_f
+        end
+        debug_out " >>>>> floor area? : #{thisFloorArea}\n"
+        if (component.name == "Basement" || component.name == "Crawlspace") then
+
+          thisHeight = component.elements[".//Wall/Measurements"].attributes["height"].to_f
+          thisDepth = component.elements[".//Wall/Measurements"].attributes["depth"].to_f
+          thisCorners = component.elements[".//Wall/Construction"].attributes["corners"].to_f
+          thisTotalExposedWallArea = thisHeight * thisExposedPerimeter
+          thisTotalExposedWallAreaBG = thisDepth * thisExposedPerimeter
+
+
+          # Total corners
+          wallCornerCount += thisCorners
+
+          wallDims.push( {
+            "type"       => component.name,
+            "corners"    => thisCorners,
+            "thisHeight" => thisHeight,
+            "thisDepth"  => thisDepth,
+            "thisExpPerimeter" => thisExposedPerimeter }
+          )
 
-                #type
-
-                #debug_out "> perimeter-#{thisPerimeter}\n"
-
-                bgDims[component.name.downcase]["exposed-perimeter"] += thisExposedPerimeter
-                bgDims[component.name.downcase]["total-perimeter"] += thisTotalPerimeter
-                bgDims[component.name.downcase]["floor-area"] += thisFloorArea
-
-              else
-                debug_out " (skpping #{component.name})\n"
-              end
-
-
-
-            end
-
-
-            # Estimate number of internal corners
-
-            cornersExt = [4, (4+(wallCornerCount-4)/2).round(0)].max
-            cornersInt = [wallCornerCount-cornersExt,0].max
-
-
-
-
-            debug_out ("Estimate- exterior corners - #{cornersExt} \n")
-            debug_out ("Estimate- interior corners - #{cornersInt} \n")
-
-
-            wallExtTotal = 0.0
-            wallExtBG    = 0.0
-            wallIntTOtal = 0.0
-            wallIntBG    = 0.0
-
-            wallDims.each do |wall|
-
-              #how many corners belong to this wall?
-              fracOfCorners = wall["corners"]/wallCornerCount
-
-              # assume 8" wall
-              fdnWallWidth = 8.0 * 2.54 / 100.0
-              # exposed perimiter,
-              bgDims["walls"]["total-area"]["internal"] += wall["thisHeight"] * ( wall["thisExpPerimeter"] )
-              bgDims["walls"]["total-area"]["external"] += wall["thisHeight"] * ( wall["thisExpPerimeter"] + fracOfCorners * ( cornersExt - cornersInt ) * fdnWallWidth * 2.0 )
-              bgDims["walls"]["below-grade-area"]["internal"] += wall["thisDepth"] * ( wall["thisExpPerimeter"]  )
-              bgDims["walls"]["below-grade-area"]["external"] += wall["thisDepth"] * ( wall["thisExpPerimeter"] + fracOfCorners * ( cornersExt - cornersInt ) * fdnWallWidth * 2.0 )
-
-
-
-
-            end
-
-            debug_out ("Below-grade dimensions:\n#{bgDims.pretty_inspect}\n")
-
-            return bgDims
-
-          end # def H2KFile.getAGWallArea(elements)
-
-
-
-          # ==========================================================================================
-          # Parses results section and returns peak heating/cooling loads. Need to think about whether
-          # we need to spec the result section ...
-          # ==========================================================================================
-          def H2KFile.getDesignLoads( elements )
-
-            designHeatingLoad = 0
-            designCoolingLoad = 0
-            elements["HouseFile/AllResults"].elements.each do |element|
-
-              houseCode =  element.attributes["houseCode"]
-
-              if (houseCode == nil && element.attributes["sha256"] != nil)
-                houseCode = "General"
-              end
-
-              designHeatingLoad = element.elements[".//Other"].attributes["designHeatLossRate"].to_f
-              designCoolingLoad = element.elements[".//Other"].attributes["designCoolLossRate"].to_f
-            end
-
-            loads = Hash.new
-            loads = { "heating_W" => designHeatingLoad.to_f,
-              "cooling_W" => designCoolingLoad.to_f }
-
-              return loads
-
-            end
-
-            # ==========================================================================================
-            # Parses systems section and returns capacity.
-            # ==========================================================================================
-            def H2KFile.getSystemInfo( elements )
-              debug_off
-              systemInfo = Hash.new
-              systemInfo = { "fansAndPump"   => { "count" => 0.0 },
-              "Furnace"       => { "count" => 0.0, "capacity_kW" => 0.0, },
-              "Boiler"        => { "count" => 0.0, "capacity_kW" => 0.0, },
-              "Baseboards"    => { "count" => 0.0, "capacity_kW" => 0.0, },
-              "ASHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
-              "GSHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
-              "AirConditioner"=> { "count" => 0.0, "capacity_kW" => 0.0, },
-              "Ventilator"    => { "count" => 0.0, "capacity_l/s" => 0.0 }
-            }
-
-            elements["HouseFile/House/HeatingCooling/Type1/"].elements.each do |t1_system|
-
-              debug_out "Recovering system info for T1 : #{t1_system.name}\n"
-              case t1_system.name
-              when "FansAndPump"
-                systemInfo["fansAndPump"]["count"] += 1
-                systemInfo["fansAndPump"]["powerLowW"] = t1_system.elements[".//Power/"].attributes["low"].to_f
-                systemInfo["fansAndPump"]["powerHighW"] = t1_system.elements[".//Power/"].attributes["high"].to_f
-              when "Baseboards"
-                systemInfo["Baseboards"]["count"] += 1
-                systemInfo["Baseboards"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
-              when "Furnace"
-                systemInfo["Furnace"]["count"] += 1
-                systemInfo["Furnace"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
-                systemInfo[""]
-              else
-                warn_out "Unknown system type #{t1_system.name}\n"
-              end
-
-
-            end
-            #
-            elements["HouseFile/House/HeatingCooling/Type2/"].elements.each do |t2_system|
-
-              debug_out "Recovering system info for T2: #{t2_system.name}\n"
-              case t2_system.name
-              when "GroundHeatPump"
-                systemInfo["GSHP"]["count"] += 1
-                systemInfo["GSHP"]["capacity_kW"] = t2_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
-              when "AirHeatPump"
-                systemInfo["ASHP"]["count"] += 1
-                systemInfo["ASHP"]["capacity_kW"] = t2_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
-              when "AirConditioning"
-                systemInfo["AirConditioner"]["count"] += 1
-                systemInfo["AirConditioner"]["capacity_kW"] = t2_system.elements[".//Specifications/RatedCapacity"].attributes["value"].to_f
-              else
-                warn_out "Unknown system type #{t2_system.name}  \n"
-              end
-
-            end
-
-            elements["HouseFile/House/Ventilation/WholeHouseVentilatorList"].elements.each do | ventsys |
-
-
-              debug_out "Recoveirng system info for vent #{ventsys.name}\n"
-              case ventsys.name
-              when "Hrv"
-                systemInfo["Ventilator"]["count"] += 1
-                systemInfo["Ventilator"]["capacity_l/s"] += ventsys.attributes["supplyFlowrate"].to_f
-              else
-                warn_out "Unknown whole house ventilation type #{ventsys.name}\n"
-              end
-            end
-            systemInfo["designLoads"] = H2KFile.getDesignLoads( elements )
-
-            return systemInfo
-
-          end
-
-          # ======================================================================================
-          # Get general geometry characteristics
-          #
-          # This is a common funciton that draws upon Rasoul's functions "GetHouseInfo",
-          # getEnvelopeSpecs
-          # ======================================================================================
-          def H2KFile.getAllInfo(elements)
-            debug_off
-            myH2KHouseInfo = Hash.new
-
-            # we don't know the filename - create a placeholder that can set elsewhere
-            myH2KHouseInfo["h2kFile"] = "unknown"
-            # Location/region
-            myH2KHouseInfo["locale"] = Hash.new
-            myH2KHouseInfo["locale"]["weatherLoc"] = H2KFile.getWeatherCity( elements )
-            myH2KHouseInfo["locale"]["region"]     = H2KFile.getRegion( elements )
-
-
-            # Dimensions
-            myH2KHouseInfo["dimensions"] = Hash.new
-            myH2KHouseInfo["dimensions"]["ceilings"] = Hash.new
-            myH2KHouseInfo["dimensions"]["ceilings"]["area"] = Hash.new
-
-            myH2KHouseInfo["dimensions"]["heatedFloorArea"] = H2KFile.getHeatedFloorArea( elements )
-
-            myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"]       = H2KFile.getCeilingArea( elements, "all", "NA" )
-            myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"]      = H2KFile.getCeilingArea( elements, "flat", "NA" )
-            myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"]     = H2KFile.getCeilingArea( elements, "attic", "NA" )
-            myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"] = H2KFile.getCeilingArea( elements, "cathedral", "NA" )
-
-            myH2KHouseInfo["dimensions"]["windows"] = Hash.new
-            myH2KHouseInfo["dimensions"]["windows"]["area"] = Hash.new
-            myH2KHouseInfo["dimensions"]["windows"]["area"] = H2KFile.getWindowArea( elements )
-
-            myH2KHouseInfo["dimensions"]["walls"] = Hash.new
-            myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = Hash.new
-            myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = H2KFile.getAGWallDimensions( elements )
-            myH2KHouseInfo["dimensions"]["below-grade"] = H2KFile.getBGDimensions( elements )
-
-            myH2KHouseInfo["HVAC"] = Hash.new
-            myH2KHouseInfo["HVAC"]= H2KFile.getSystemInfo(elements)
-
-            debug_out ("House info:\n#{myH2KHouseInfo.pretty_inspect}\n")
-
-
-
-            return myH2KHouseInfo
-
-          end
 
         end
 
+        if ( bgDims[component.name.downcase]["configuration"].nil? )
+          bgDims[component.name.downcase]["configuration"] = component.elements[".//Configuration"].text
+        else (bgDims[component.name.downcase]["configuration"] !=  component.elements[".//Configuration"].text )
+          #warn_out(" HTAP doesn't support foundations with mutilple configurations for #{component.name}\n")
+        end
+
+
+        bgDims[component.name.downcase]["exposed-perimeter"] += thisExposedPerimeter
+        bgDims[component.name.downcase]["total-perimeter"] += thisTotalPerimeter
+        bgDims[component.name.downcase]["floor-area"] += thisFloorArea
+
+      else
+        debug_out " (skpping #{component.name})\n"
+      end
 
 
 
-        # =========================================================================================
-        # H2Klibs : module containing that manipulate code libraries
-        # =========================================================================================
-        module H2KLibs
-          # =========================================================================================
-          # Takes a window definition from the options file and creates a similar entry in the code
-          # lib. If one already exists, it deletes it and re-creates it.
-          # =========================================================================================
-          def H2KLibs.AddWinToCodeLib(name,char,codeElements)
+    end
 
-            debug_off
-            result = ""
-            debug_out " window #{name} has characteristics:\n #{char.pretty_inspect}"
 
-            exists = H2KLibs.findCodeInLib(name,codeElements)
-            debug_out ("> #{exists}\n")
-            if ( exists.eql?("not found") ) then
-              # check to make sure we haven't matched somewhere else in the tree
-              debug_out " Could not find window in lib\n"
-            else
-              debug_out " Found window at:\n#{exists}. Deleting...\n"
-              codeElements[exists].delete_element("./")
-              debug_out "And now... #{H2KLibs.findCodeInLib(name,codeElements)}\n"
+    # Estimate number of internal corners
+
+    cornersExt = [4, (4+(wallCornerCount-4)/2).round(0)].max
+    cornersInt = [wallCornerCount-cornersExt,0].max
+
+
+
+
+    debug_out ("Estimate- exterior corners - #{cornersExt} \n")
+    debug_out ("Estimate- interior corners - #{cornersInt} \n")
+
+
+    wallExtTotal = 0.0
+    wallExtBG    = 0.0
+    wallIntTOtal = 0.0
+    wallIntBG    = 0.0
+
+    wallDims.each do |wall|
+
+      #how many corners belong to this wall?
+      fracOfCorners = wall["corners"]/wallCornerCount
+
+      # assume 8" wall
+      fdnWallWidth = 8.0 * 2.54 / 100.0
+      # exposed perimiter,
+      bgDims["walls"]["total-area"]["internal"] += wall["thisHeight"] * ( wall["thisExpPerimeter"] )
+      bgDims["walls"]["total-area"]["external"] += wall["thisHeight"] * ( wall["thisExpPerimeter"] + fracOfCorners * ( cornersExt - cornersInt ) * fdnWallWidth * 2.0 )
+      bgDims["walls"]["below-grade-area"]["internal"] += wall["thisDepth"] * ( wall["thisExpPerimeter"]  )
+      bgDims["walls"]["below-grade-area"]["external"] += wall["thisDepth"] * ( wall["thisExpPerimeter"] + fracOfCorners * ( cornersExt - cornersInt ) * fdnWallWidth * 2.0 )
+
+    end
+
+    debug_out ("Below-grade dimensions:\n#{bgDims.pretty_inspect}\n")
+
+    return bgDims
+
+  end # def H2KFile.getAGWallArea(elements)
+
+  # Small function that intreprets h2k story codes and returns readable strings
+  def self.getNumStoreysString(iVal)
+     sout = ''
+     case iVal
+       when 1 then sout = 'One'
+       when 2 then sout = 'One and half'
+       when 3 then sout = 'Two'
+       when 4 then sout = 'Two and half'
+       when 5 then sout = 'Three'
+       when 6 then sout = 'Split level'
+       when 7 then sout = 'Split entry'
+       else sout = 'NA'
+     end
+     return sout
+   end
+
+  # ==========================================================================================
+  # Parses results section and returns peak heating/cooling loads. Need to think about whether
+  # we need to spec the result section ...
+  # ==========================================================================================
+  def H2KFile.getDesignLoads( elements )
+
+    designHeatingLoad = 0
+    designCoolingLoad = 0
+    elements["HouseFile/AllResults"].elements.each do |element|
+
+      houseCode =  element.attributes["houseCode"]
+
+      if (houseCode == nil && element.attributes["sha256"] != nil)
+        houseCode = "General"
+      end
+
+      designHeatingLoad = element.elements[".//Other"].attributes["designHeatLossRate"].to_f
+      designCoolingLoad = element.elements[".//Other"].attributes["designCoolLossRate"].to_f
+    end
+
+    loads = Hash.new
+    loads = { "heating_W" => designHeatingLoad.to_f,
+      "cooling_W" => designCoolingLoad.to_f }
+
+      return loads
+
+    end
+
+    # ==========================================================================================
+    # Parses systems section and returns capacity.
+    # ==========================================================================================
+    def H2KFile.getSystemInfo( elements )
+      debug_off
+      systemInfo = Hash.new
+      systemInfo = { "fansAndPump"   => { "count" => 0.0 },
+      "Furnace"       => { "count" => 0.0, "capacity_kW" => 0.0, },
+      "Boiler"        => { "count" => 0.0, "capacity_kW" => 0.0, },
+      "Baseboards"    => { "count" => 0.0, "capacity_kW" => 0.0, },
+      "ASHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
+      "GSHP"          => { "count" => 0.0, "capacity_kW" => 0.0, },
+      "AirConditioner"=> { "count" => 0.0, "capacity_kW" => 0.0, },
+      "Ventilator"    => { "count" => 0.0, "capacity_l/s" => 0.0 }
+    }
+
+    elements["HouseFile/House/HeatingCooling/Type1/"].elements.each do |t1_system|
+
+      debug_out "Recovering system info for T1 : #{t1_system.name}\n"
+      case t1_system.name
+      when "FansAndPump"
+        systemInfo["fansAndPump"]["count"] += 1
+        systemInfo["fansAndPump"]["powerLowW"] = t1_system.elements[".//Power/"].attributes["low"].to_f
+        systemInfo["fansAndPump"]["powerHighW"] = t1_system.elements[".//Power/"].attributes["high"].to_f
+      when "Baseboards"
+        systemInfo["Baseboards"]["count"] += 1
+        systemInfo["Baseboards"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+      when "Furnace"
+        systemInfo["Furnace"]["count"] += 1
+        systemInfo["Furnace"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+        systemInfo[""]
+      else
+        warn_out "Unknown system type #{t1_system.name}\n"
+      end
+
+
+    end
+    #
+    elements["HouseFile/House/HeatingCooling/Type2/"].elements.each do |t2_system|
+
+      debug_out "Recovering system info for T2: #{t2_system.name}\n"
+      case t2_system.name
+      when "GroundHeatPump"
+        systemInfo["GSHP"]["count"] += 1
+        systemInfo["GSHP"]["capacity_kW"] = t2_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+      when "AirHeatPump"
+        systemInfo["ASHP"]["count"] += 1
+        systemInfo["ASHP"]["capacity_kW"] = t2_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
+      when "AirConditioning"
+        systemInfo["AirConditioner"]["count"] += 1
+        systemInfo["AirConditioner"]["capacity_kW"] = t2_system.elements[".//Specifications/RatedCapacity"].attributes["value"].to_f
+      else
+        warn_out "Unknown system type #{t2_system.name}  \n"
+      end
+
+    end
+
+    elements["HouseFile/House/Ventilation/WholeHouseVentilatorList"].elements.each do | ventsys |
+
+
+      debug_out "Recoveirng system info for vent #{ventsys.name}\n"
+      case ventsys.name
+      when "Hrv"
+        systemInfo["Ventilator"]["count"] += 1
+        systemInfo["Ventilator"]["capacity_l/s"] += ventsys.attributes["supplyFlowrate"].to_f
+      else
+        warn_out "Unknown whole house ventilation type #{ventsys.name}\n"
+      end
+    end
+    systemInfo["designLoads"] = H2KFile.getDesignLoads( elements )
+
+    return systemInfo
+
+  end
+
+  # ======================================================================================
+  # Get general geometry characteristics
+  #
+  # This is a common funciton that draws upon Rasoul's functions "GetHouseInfo",
+  # getEnvelopeSpecs
+  # ======================================================================================
+  def H2KFile.getAllInfo(elements)
+    debug_off
+    myH2KHouseInfo = Hash.new
+
+    # we don't know the filename - create a placeholder that can set elsewhere
+    myH2KHouseInfo["h2kFile"] = "unknown"
+    # Location/region
+    myH2KHouseInfo["locale"] = Hash.new
+    myH2KHouseInfo["locale"]["weatherLoc"] = H2KFile.getWeatherCity( elements )
+    myH2KHouseInfo["locale"]["region"]     = H2KFile.getRegion( elements )
+
+
+    # Dimensions
+    myH2KHouseInfo["dimensions"] = Hash.new
+    myH2KHouseInfo["dimensions"]["ceilings"] = Hash.new
+    myH2KHouseInfo["dimensions"]["ceilings"]["area"] = Hash.new
+
+    myH2KHouseInfo["dimensions"]["heatedFloorArea"] = H2KFile.getHeatedFloorArea( elements )
+
+    myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"]       = H2KFile.getCeilingArea( elements, "all", "NA" )
+    myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"]      = H2KFile.getCeilingArea( elements, "flat", "NA" )
+    myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"]     = H2KFile.getCeilingArea( elements, "attic", "NA" )
+    myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"] = H2KFile.getCeilingArea( elements, "cathedral", "NA" )
+
+    myH2KHouseInfo["dimensions"]["windows"] = Hash.new
+    myH2KHouseInfo["dimensions"]["windows"]["area"] = Hash.new
+    myH2KHouseInfo["dimensions"]["windows"]["area"] = H2KFile.getWindowArea( elements )
+
+    myH2KHouseInfo["dimensions"]["walls"] = Hash.new
+    myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = Hash.new
+    myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = H2KFile.getAGWallDimensions( elements )
+    myH2KHouseInfo["dimensions"]["below-grade"] = H2KFile.getBGDimensions( elements )
+
+    myH2KHouseInfo["HVAC"] = Hash.new
+    myH2KHouseInfo["HVAC"]= H2KFile.getSystemInfo(elements)
+
+    debug_out ("House info:\n#{myH2KHouseInfo.pretty_inspect}\n")
+
+
+
+    return myH2KHouseInfo
+
+  end
+
+end
+
+
+
+
+# =========================================================================================
+# H2Klibs : module containing that manipulate code libraries
+# =========================================================================================
+module H2KLibs
+  # =========================================================================================
+  # Takes a window definition from the options file and creates a similar entry in the code
+  # lib. If one already exists, it deletes it and re-creates it.
+  # =========================================================================================
+  def H2KLibs.AddWinToCodeLib(name,char,codeElements)
+
+    debug_off
+    result = ""
+    debug_out " window #{name} has characteristics:\n #{char.pretty_inspect}"
+
+    exists = H2KLibs.findCodeInLib(name,codeElements)
+    debug_out ("> #{exists}\n")
+    if ( exists.eql?("not found") ) then
+      # check to make sure we haven't matched somewhere else in the tree
+      debug_out " Could not find window in lib\n"
+    else
+      debug_out " Found window at:\n#{exists}. Deleting...\n"
+      codeElements[exists].delete_element("./")
+      debug_out "And now... #{H2KLibs.findCodeInLib(name,codeElements)}\n"
+    end
+
+    # Now (re)create the window record
+
+    nextID = H2KLibs.getNextCodeIndex(codeElements)
+
+
+
+    newWindow = Element.new "Code"
+    newWindow.attributes['id'] = "Code #{nextID}"
+    newWindow.attributes['nominalRValue'] = 0
+    newWindow.elements.add("Label")
+    newWindow.elements["Label"].text = "#{name}"
+
+    newWindow.elements.add("Description")
+    newWindow.elements["Description"].text = "#{char["panes"]} pane; #{char["coat"]}; #{char["fill"]} fill; U=#{char["u-value"]}"
+
+
+    newWindow.elements.add("Layers")
+
+    useLegacy = true
+
+    if ( useLegacy ) then
+
+      rsiVal = 1 / char["u-value"].to_f
+
+      newWindow.elements["Layers"].add_element(
+        "WindowLegacy", {"frameHeight"=>10, "shgc"=>char["SHGC"],  "rank" =>1  }
+      )
+
+      newWindow.elements["Layers/WindowLegacy"].add_element("Type", { "code"=>1 } )
+      newWindow.elements["Layers/WindowLegacy/Type"].add_element("English")
+      newWindow.elements["Layers/WindowLegacy/Type"].add_element("French")
+
+      newWindow.elements["Layers/WindowLegacy"].add_element(
+        "RsiValues", {"centreOfGlass" => rsiVal.round(4),  "edgeOfGlass" => rsiVal.round(4),  "frame" => rsiVal.round(4) }
+      )
+    end
+
+    if ( ! useLegacy )then
+
+      newWindow.elements["Layers"].add_element(
+        "Window", {"frameHeight"=>0,  "shgc"=>char["SHGC"],  "rank" =>1  }
+      )
+
+      case char["panes"]
+      when 2
+        code = 2
+      when 3
+        code = 4
+      else
+        code = 2
+      end
+
+      newWindow.elements["Layers/Window"].add_element("GlazingType", { "code"=>code } )
+      newWindow.elements["Layers/Window/GlazingType"].add_element("English")
+      newWindow.elements["Layers/Window/GlazingType"].add_element("French")
+      newWindow.elements["Layers/Window/"].add_element("OverallThermalResistance", { "code"=> 2, "value" => char["u-value"] })
+      newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("English")
+      newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("French")
+      newWindow.elements["Layers/Window"].add_element("WindowStyle", { "code"=>2 })
+      newWindow.elements["Layers/Window/WindowStyle"].add_element("English")
+      newWindow.elements["Layers/Window/WindowStyle"].add_element("French")
+
+      code = -99
+      case char["fill"]
+      when "air"
+        code = 1
+      when "argon"
+        code = 2
+      when "krypton"
+        code = 6
+      else
+        code = 2
+      end
+
+      newWindow.elements["Layers/Window"].add_element("FillType", { "code"=> code })
+      newWindow.elements["Layers/Window/FillType"].add_element("English")
+      newWindow.elements["Layers/Window/FillType"].add_element("French")
+
+      newWindow.elements["Layers/Window"].add_element("SpacerType", { "code"=> 2})
+      newWindow.elements["Layers/Window/SpacerType"].add_element("English")
+      newWindow.elements["Layers/Window/SpacerType"].add_element("French")
+
+      code = -99
+      case char["frame"]
+      when "vinyl"
+        code = 4
+      when "wood"
+        code = 2
+      when "reinforced vinyl"
+        code = 5
+      else
+        code = 2
+      end
+
+      newWindow.elements["Layers/Window"].add_element("FrameMaterial", { "code"=> 2})
+      newWindow.elements["Layers/Window/FrameMaterial"].add_element("English")
+      newWindow.elements["Layers/Window/FrameMaterial"].add_element("French")
+
+      code = -99
+      case char["coating"]
+      when "clear"
+        code = 1
+      when "LowE-LowGain"
+        code = 2
+      when "LowE-HighGain"
+        code = 3
+      when "tint"
+        code = 4
+      else
+        code = 3
+      end
+
+      newWindow.elements["Layers/Window"].add_element("LowECoating", { "code"=> code})
+      newWindow.elements["Layers/Window/LowECoating"].add_element("English")
+      newWindow.elements["Layers/Window/LowECoating"].add_element("French")
+    end
+
+    #$formatter.write(newWindow, $stdout)
+
+    location = "/Codes/Window/UserDefined"
+    codeElements[location].add_element(newWindow)
+    return codeElements
+
+  end
+
+
+  def H2KLibs.getNextCodeIndex(codeElements)
+
+    debug_off
+    index = 0
+    codeElements.each("//Code") do | code |
+      thisID = "#{code.attributes['id']}"
+      thisID.gsub!(/Code /,"")
+
+      if ( thisID.to_i > index ) then
+        index = thisID.to_i
+      end
+
+    end
+
+    debug_out "Next code index is #{index+1}\n"
+    return index+1
+
+  end
+
+  def H2KLibs.findCodeInLib(name,codeElements)
+
+    debug_off
+
+    debug_out " Looking for #{name}\n"
+
+    result = ""
+    path = ""
+    location ="not found"
+    found = false
+    #XPath.each(codeElements, "//Label")
+    codeTypes = Array.new
+    codeElements["Codes"].elements.each do | attribute |
+      if (  attribute.name !~ /Version/ ) then
+        path = "Codes/#{attribute.name}"
+
+        codeElements[path].elements.each do | type |
+          path = "Codes/#{attribute.name}/#{type.name}"
+
+          codeElements[path].elements.each do | code |
+            path = "Codes/#{attribute.name}/#{type.name}/#{code.name}"
+            #debug_out ("s: #{path} \n")
+            if ( code.attributes["value"].eql?(name) ) then
+              found = true
+              location = "#{path}[@attribute='#{name}']"
+            elsif ( code.elements["Label"].text.eql?(name) ) then
+              found = true
+              location = "#{path}/Label[text()='#{name}']/.."
             end
+            break if found
+          end
+          break if found
+        end
+      end
+      break if found
+    end
 
-            # Now (re)create the window record
-
-            nextID = H2KLibs.getNextCodeIndex(codeElements)
-
-
-
-            newWindow = Element.new "Code"
-            newWindow.attributes['id'] = "Code #{nextID}"
-            newWindow.attributes['nominalRValue'] = 0
-            newWindow.elements.add("Label")
-            newWindow.elements["Label"].text = "#{name}"
-
-            newWindow.elements.add("Description")
-            newWindow.elements["Description"].text = "#{char["panes"]} pane; #{char["coat"]}; #{char["fill"]} fill; U=#{char["u-value"]}"
-
-
-            newWindow.elements.add("Layers")
-
-            useLegacy = true
-
-            if ( useLegacy ) then
-
-              rsiVal = 1 / char["u-value"].to_f
-
-              newWindow.elements["Layers"].add_element("WindowLegacy", {"frameHeight"=>10,
-                "shgc"=>char["SHGC"],
-                "rank" =>1  } )
-
-                newWindow.elements["Layers/WindowLegacy"].add_element("Type", { "code"=>1 } )
-                newWindow.elements["Layers/WindowLegacy/Type"].add_element("English")
-                newWindow.elements["Layers/WindowLegacy/Type"].add_element("French")
-
-                newWindow.elements["Layers/WindowLegacy"].add_element("RsiValues", {"centreOfGlass" => rsiVal.round(4),
-                  "edgeOfGlass" => rsiVal.round(4),
-                  "frame" => rsiVal.round(4)
-                  } )
-                end
-
-                if ( ! useLegacy )then
-
-                  newWindow.elements["Layers"].add_element("Window", {"frameHeight"=>0,
-                    "shgc"=>char["SHGC"],
-                    "rank" =>1  } )
-
-
-                    case char["panes"]
-                    when 2
-                      code = 2
-                    when 3
-                      code = 4
-                    else
-                      code = 2
-                    end
 
-                    newWindow.elements["Layers/Window"].add_element("GlazingType", { "code"=>code } )
-                    newWindow.elements["Layers/Window/GlazingType"].add_element("English")
-                    newWindow.elements["Layers/Window/GlazingType"].add_element("French")
-                    newWindow.elements["Layers/Window/"].add_element("OverallThermalResistance", { "code"=> 2, "value" => char["u-value"] })
-                    newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("English")
-                    newWindow.elements["Layers/Window/OverallThermalResistance"].add_element("French")
-                    newWindow.elements["Layers/Window"].add_element("WindowStyle", { "code"=>2 })
-                    newWindow.elements["Layers/Window/WindowStyle"].add_element("English")
-                    newWindow.elements["Layers/Window/WindowStyle"].add_element("French")
+    debug_out " >#{location}<\n"
 
-                    code = -99
-                    case char["fill"]
-                    when "air"
-                      code = 1
-                    when "argon"
-                      code = 2
-                    when "krypton"
-                      code = 6
-                    else
-                      code = 2
-                    end
-
-                    newWindow.elements["Layers/Window"].add_element("FillType", { "code"=> code })
-                    newWindow.elements["Layers/Window/FillType"].add_element("English")
-                    newWindow.elements["Layers/Window/FillType"].add_element("French")
-
-                    newWindow.elements["Layers/Window"].add_element("SpacerType", { "code"=> 2})
-                    newWindow.elements["Layers/Window/SpacerType"].add_element("English")
-                    newWindow.elements["Layers/Window/SpacerType"].add_element("French")
-
-                    code = -99
-                    case char["frame"]
-                    when "vinyl"
-                      code = 4
-                    when "wood"
-                      code = 2
-                    when "reinforced vinyl"
-                      code = 5
-                    else
-                      code = 2
-                    end
+    return location
 
-                    newWindow.elements["Layers/Window"].add_element("FrameMaterial", { "code"=> 2})
-                    newWindow.elements["Layers/Window/FrameMaterial"].add_element("English")
-                    newWindow.elements["Layers/Window/FrameMaterial"].add_element("French")
+  end
 
-                    code = -99
-                    case char["coating"]
-                    when "clear"
-                      code = 1
-                    when "LowE-LowGain"
-                      code = 2
-                    when "LowE-HighGain"
-                      code = 3
-                    when "tint"
-                      code = 4
-                    else
-                      code = 3
-                    end
+end
 
-                    newWindow.elements["Layers/Window"].add_element("LowECoating", { "code"=> code})
-                    newWindow.elements["Layers/Window/LowECoating"].add_element("English")
-                    newWindow.elements["Layers/Window/LowECoating"].add_element("French")
-                  end
 
-                  #$formatter.write(newWindow, $stdout)
+# =========================================================================================
+# H2Kutilis : module containing functions that manage h2k environment
+# =========================================================================================
+module H2KUtils
 
-                  location = "/Codes/Window/UserDefined"
-                  codeElements[location].add_element(newWindow)
-                  return codeElements
+  # =========================================================================================
+  # Add magic h2k files for diagnostics, if they don't already exist.
+  # =========================================================================================
+  def H2KUtils.write_h2k_magic_files(path)
 
-                end
+    # Text in these vaiables are space-sensitive - saved elsewhere.
+    require_relative '../include/h2kConfigFiles.rb'
 
+    $WinMBFile = "#{path}\\H2K\\WINMB.H2k"
+    $ROutFile  = "#{path}\\H2K\\ROutstr.H2k"
 
-                def H2KLibs.getNextCodeIndex(codeElements)
 
-                  debug_off
-                  index = 0
-                  codeElements.each("//Code") do | code |
-                    thisID = "#{code.attributes['id']}"
-                    thisID.gsub!(/Code /,"")
 
-                    if ( thisID.to_i > index ) then
-                      index = thisID.to_i
-                    end
+    if ( ! File.file?( $WinMBFile ) )
 
-                  end
+      myHandle = File.open($WinMBFile, 'w')
+      myHandle.write "< auto-generated by substitute-h2k.rb >"
+      myHandle.close
 
-                  debug_out "Next code index is #{index+1}\n"
-                  return index+1
+    end
 
-                end
+    if ( ! File.file?( $ROutFile ) )
 
-                def H2KLibs.findCodeInLib(name,codeElements)
+      myHandle = File.open($ROutFile, 'w')
 
-                  debug_off
+      # Note that this text below is space-sensitive.
+      myHandle.write H2K_rout_str
+      myHandle.close
 
-                  debug_out " Looking for #{name}\n"
+      return
+    end
 
-                  result = ""
-                  path = ""
-                  location ="not found"
-                  found = false
-                  #XPath.each(codeElements, "//Label")
-                  codeTypes = Array.new
-                  codeElements["Codes"].elements.each do | attribute |
-                    if (  attribute.name !~ /Version/ ) then
-                      path = "Codes/#{attribute.name}"
 
-                      codeElements[path].elements.each do | type |
-                        path = "Codes/#{attribute.name}/#{type.name}"
 
-                        codeElements[path].elements.each do | code |
-                          path = "Codes/#{attribute.name}/#{type.name}/#{code.name}"
-                          #debug_out ("s: #{path} \n")
-                          if ( code.attributes["value"].eql?(name) ) then
-                            found = true
-                            location = "#{path}[@attribute='#{name}']"
-                          elsif ( code.elements["Label"].text.eql?(name) ) then
-                            found = true
-                            location = "#{path}/Label[text()='#{name}']/.."
-                          end
-                          break if found
-                        end
-                        break if found
-                      end
-                    end
-                    break if found
-                  end
+  end
 
+  # =========================================================================================
+  # Fix the paths specified in the HOT2000.ini file
+  # =========================================================================================
+  def H2KUtils.fix_H2K_INI(path)
 
-                  debug_out " >#{location}<\n"
+    require_relative '../include/h2kConfigFiles.rb'
+    # Rewrite INI file with updated location !
+    fH2K_ini_file_OUT = File.new("#{path}\\H2K\\HOT2000.ini", "w")
 
-                  return location
+    debug_off
+    myIniOut = H2K_ini_out
+    myIniOut.gsub!(/%PATH%/, path )
 
-                end
+    debug_out ("writing IniOut - fH2K_ini_file_OUT:\n#{myIniOut}\n")
 
-              end
+    fH2K_ini_file_OUT.write(myIniOut)
+    fH2K_ini_file_OUT.close
 
+  end
 
-              # =========================================================================================
-              # H2Kutilis : module containing functions that manage h2k environment
-              # =========================================================================================
+end
 
-              module H2KUtils
+# Compute a checksum for directory, ignoring files that HOT2000 commonly alters during ar run
+# Can this be put inside the module?
+def self.checksum(dir)
+  md5 = Digest::MD5.new
+  searchLoc = dir.gsub(/\\/, "/")
 
-                # =========================================================================================
-                # Add magic h2k files for diagnostics, if they don't already exist.
-                # =========================================================================================
-                def H2KUtils.write_h2k_magic_files(path)
-
-
-                  require_relative '../include/h2kConfigFiles.rb'
-
-                  $WinMBFile = "#{path}\\H2K\\WINMB.H2k"
-                  $ROutFile  = "#{path}\\H2K\\ROutstr.H2k"
-
-
-
-                  if ( ! File.file?( $WinMBFile ) )
-
-                    myHandle = File.open($WinMBFile, 'w')
-                    myHandle.write "< auto-generated by substitute-h2k.rb >"
-                    myHandle.close
-
-                  end
-
-                  if ( ! File.file?( $ROutFile ) )
-
-                    myHandle = File.open($ROutFile, 'w')
-
-                    # Note that this text below is space-sensitive.
-                    myHandle.write H2K_rout_str
-                    myHandle.close
-
-                    return
-                  end
-
-
-
-                end
-
-
-
-                # Compute a checksum for directory, ignoring files that HOT2000 commonly alters during
-
-
-
-                # =========================================================================================
-                # Fix the paths specified in the HOT2000.ini file
-                # =========================================================================================
-                def H2KUtils.fix_H2K_INI(path)
-
-                  require_relative '../include/h2kConfigFiles.rb'
-                  # Rewrite INI file with updated location !
-                  fH2K_ini_file_OUT = File.new("#{path}\\H2K\\HOT2000.ini", "w")
-
-                  debug_off
-                  myIniOut = H2K_ini_out
-                  myIniOut.gsub!(/%PATH%/, path )
-
-                  debug_out ("writing IniOut - fH2K_ini_file_OUT:\n#{myIniOut}\n")
-
-                  fH2K_ini_file_OUT.write(myIniOut)
-                  fH2K_ini_file_OUT.close
-
-                end
-
-              end
-
-              def self.checksum(dir)
-                md5 = Digest::MD5.new
-                searchLoc = dir.gsub(/\\/, "/")
-
-                files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||
-                  f =~ /Browse\.Rpt/i ||
-                  f =~ /WINMB\.H2k/i  ||
-                  f =~ /ROutStr\.H2k/i ||
-                  f =~ /ROutStr\.Txt/i ||
-                  f =~ /WMB_.*\.Txt/i ||
-                  f =~ /HOT2000\.ini/i ||
-                  f =~ /wizdefs.h2k/i
-                }
-                content = files.map{|f| File.read(f)}.join
-                md5result = md5.update content
-                content.clear
-                return md5.update content
-
-              end
+  files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||
+    f =~ /Browse\.Rpt/i ||
+    f =~ /WINMB\.H2k/i  ||
+    f =~ /ROutStr\.H2k/i ||
+    f =~ /ROutStr\.Txt/i ||
+    f =~ /WMB_.*\.Txt/i ||
+    f =~ /HOT2000\.ini/i ||
+    f =~ /wizdefs.h2k/i
+  }
+  content = files.map{|f| File.read(f)}.join
+  md5result = md5.update content
+  content.clear
+  return md5.update content
+end
