@@ -259,7 +259,8 @@ def parse_def_file(filepath)
     debug_out ("Locations\n")
     locationIndex = 0
     $gLocations.clone.each do | choice |
-      pattern = choice.gsub(/\*/, ".*")
+      pattern = choice.gsub(/\./, "\.")
+      pattern.gsub!(/\*/, ".*")
       debug_out( " Wildcard Query /#{pattern}/ \n" )
       superSet = jsonRawOptions["Opt-Location"]["options"].keys
       $gLocations.delete(choice)
@@ -277,7 +278,7 @@ def parse_def_file(filepath)
         if ( choice =~ /\*/ ) then
 
           pattern = choice.gsub(/\*/, ".*")
-          debug_out "              Wildcard matching on #{key}=#{pattern}\n"
+          debug_out "              Wildcard matching on #{key} =~ /#{pattern}/\n"
           # Matching
           superSet = jsonRawOptions[key]["options"].keys
           $gRunUpgrades[key].delete(choice)
@@ -401,7 +402,7 @@ end
 
 
 def create_parametric_combos()
-
+  #debug_on
   $Folder = $gArchetypeDir
 
   startSet = Hash.new
@@ -426,11 +427,10 @@ def create_parametric_combos()
 
     $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"]
     $ArchetypeFiles.each do |h2kpath|
-
       $gLocations.each do | location |
         $gRulesets.each do | ruleset |
 
-          debug_out (" Setting parametric scope for #{archetype} / #{location} /#{ruleset} \n")
+          debug_out (" Setting parametric scope for #{h2kpath} / #{location} /#{ruleset} \n")
 
           # Base point
 
@@ -449,11 +449,12 @@ def create_parametric_combos()
           $gLocationHash[generated_file]  = thisSet["Opt-Location"]
           $gRulesetHash[generated_file]   = thisSet["Opt-Ruleset"]
           $combosGenerated += 1
+          $combosSinceLastUpdate += 1
           # Parametric variations....
 
           parameterSpace.keys.each do |attribute|
 
-            debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
+            #debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
 
             parameterSpace[attribute][1..-1].each do | choice |
 
@@ -476,18 +477,21 @@ def create_parametric_combos()
 
               $combosGenerated += 1
               $combosSinceLastUpdate += 1
-
-              if ( $combosSinceLastUpdate == $comboInterval )
+              if ( $combosSinceLastUpdate >= $comboInterval )
                 stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
                 $combosSinceLastUpdate = 0
-
-
               end
 
             end
 
 
           end
+
+          if ( $combosSinceLastUpdate >= $comboInterval )
+            stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
+            $combosSinceLastUpdate = 0
+          end
+
 
         end
 
@@ -759,7 +763,7 @@ def run_these_cases(current_task_files)
           if ($gComputeCosts ) then
             $SubCostFlag = "--auto_cost_options"
           end
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --prm #{$gExtendedOutputFlag} #{$SubCostFlag} 2>&1"
+          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --no-debug --prm #{$gExtendedOutputFlag} #{$SubCostFlag} "
 
           # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("cmd.txt", 'w')
@@ -769,7 +773,7 @@ def run_these_cases(current_task_files)
           #debug_out(" ( cmd: #{cmdscript} |  \n")
 
 
-          pid = Process.spawn( cmdscript, :out => File::NULL, :err => "substitute-h2k-errors.txt" )
+          pid = Process.spawn( cmdscript, :out => "substitute-h2k-errors.txt", :err => [:child, :out] )
 
 
 
@@ -870,7 +874,7 @@ def run_these_cases(current_task_files)
 
 
       for thread3 in 0..$ThreadsNeeded-1
-        #debug_off
+
         count = thread3 + 1
         stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
 
@@ -898,7 +902,7 @@ def run_these_cases(current_task_files)
         end
 
        jsonParsed = false
-
+       #debug_out "pp: \n#{$RunResults["run-#{thread3}"].pretty_inspect}\n"
        debug_out "Looking for #{$RunResultFilenameV2} ? \n"
        if ( File.exist?($RunResultFilenameV2) ) then
          debug_out "Found it. Parsing JSON output !\n"
@@ -916,7 +920,7 @@ def run_these_cases(current_task_files)
             if ( section.eql?("status") || section.eql?("configuration") ) then
               thisRunResults[section].keys.each do | node |
                 debug_out ("  ------ #{section}/#{node}\n")
-                if ( section == status && node == "success" && $RunResults["run-#{thread3}"][section][node] == "false" ) then
+                if ( section == status && node == "success" && $RunResults["run-#{thread3}"][section][node] == false ) then
 
                 else
                   $RunResults["run-#{thread3}"][section][node]  = thisRunResults[section][node]
@@ -928,7 +932,7 @@ def run_these_cases(current_task_files)
               $RunResults["run-#{thread3}"][section] = thisRunResults[section]
             end
           end
-         $runFailed = true if (! $RunResults["run-#{thread3}"]["status"]["success"] == "true")
+         $runFailed = true if (! $RunResults["run-#{thread3}"]["status"]["success"] )
          jsonParsed = true
          stream_out (" done.\n")
        end
@@ -976,7 +980,7 @@ def run_these_cases(current_task_files)
            end
            contents.close
 
-           if $RunResults["run-#{thread3}"]["s.success"] =~ /false/ then
+           if $RunResults["run-#{thread3}"]["status.success"] == false then
              $runFailed = true
              stream_out (" done (with errors).\n")
            else
@@ -1062,15 +1066,14 @@ def run_these_cases(current_task_files)
           }
 
 
-          if ( $gJSONAllData[$gHashLoc]["status"]["success"] == "false" ) then
-            if ( ! $runFailed )
-              $runFailed = true
-              errs=" *** simulation errors found ***"
-              $msg = "#{$gJSONAllData[$gHashLoc]["configuration"]["ChoiceFile"]} (dir: #{$gJSONAllData[$gHashLoc]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
-              $failures.write "$msg\n"
-              $FailedRuns.push $msg
-              $FailedRunCount = $FailedRunCount + 1
-            end
+          if ( $gJSONAllData[$gHashLoc]["status"]["success"] == false ) then
+
+            $runFailed = true
+            errs="\n\n       (!) simulation errors found (!)"
+            $msg = "#{$gJSONAllData[$gHashLoc]["configuration"]["ChoiceFile"]} (dir: #{$gJSONAllData[$gHashLoc]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
+            $failures.write "$msg\n"
+            $FailedRuns.push $msg
+            $FailedRunCount = $FailedRunCount + 1
 
           else
 
@@ -1505,9 +1508,9 @@ else
     runningSum = 1
     runningProduct = 1
     stream_out "    - Evaluating combinations for parametric run\n\n"
-    stream_out "          * "+$gLocations.length.to_s.ljust(10)+"  { # of options for Location }\n" if ($gLocations.length>1 )
-    stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+"  { # of options for Archetypes }\n" if ($archetypeFiles.length>1 )
-    stream_out "          * "+$gRulesets.length.to_s.ljust(10)+"  { # of options for Rulesets }\n" if ($gRulesets.length>1 )
+    stream_out "          * "+$gLocations.length.to_s.ljust(10)+"  { # of options for Location }\n" #if ($gLocations.length>1 )
+    stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+"  { # of options for Archetypes }\n" #if ($archetypeFiles.length>1 )
+    stream_out "          * "+$gRulesets.length.to_s.ljust(10)+"  { # of options for Rulesets }\n" #if ($gRulesets.length>1 )
     stream_out "          *    (   1          { base option for all choices }\n"
     $gRunUpgrades.each do | attribute, choices |
        if ( choices.length > 1 ) then
