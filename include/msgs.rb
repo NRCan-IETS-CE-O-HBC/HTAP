@@ -9,7 +9,7 @@ class Help
 end
 
 def openLogFiles( logFile, summaryFile )
-  #debug_off 
+  #debug_off
   begin
     debug_out "Summary file: #{summaryFile}\n"
     fSUMMARY = File.new(summaryFile, "w")
@@ -443,7 +443,7 @@ def fatalerror( err_msg=nil )
       $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
     end
     $fSUMMARY.write( "s.success = false\n")
-  end 
+  end
 
   $fSUMMARY.close
   $fLOG.close
@@ -496,7 +496,7 @@ def ReportMsgs()
 
   $gInfoMsgs.each do |msg|
 
-    $fSUMMARY.write "s.info   = \"#{msg}\" \n"
+    $fSUMMARY.write "status.info   = \"#{msg}\" \n"
 
     $InfoBuffer += prettyList("   (-) Info -",msg)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
@@ -509,7 +509,7 @@ def ReportMsgs()
 
   $gWarnings.each do |msg|
 
-    $fSUMMARY.write "s.warning   = \"#{msg}\" \n"
+    $fSUMMARY.write "status.warning   = \"#{msg}\" \n"
 
     $WarningBuffer += prettyList("   (?) WARNING -",msg)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
@@ -522,7 +522,7 @@ def ReportMsgs()
 
   $gErrors.each  do |msg|
 
-    $fSUMMARY.write "s.error    = \"#{msg}\" \n"
+    $fSUMMARY.write "status.error    = \"#{msg}\" \n"
     $ErrorBuffer += prettyList("   (!) ERROR -",msg)
 
 
@@ -535,17 +535,17 @@ def ReportMsgs()
 
   if $allok then
     status = "Task completed successfully"
-    $fSUMMARY.write "s.success    = true\n"
+    $fSUMMARY.write "status.success    = true\n"
   else
     status = "Task failed"
-    $fSUMMARY.write "s.success    = false\n"
+    $fSUMMARY.write "status.success    = false\n"
   end
 
 
 
   endProcessTime = Time.now
   $totalDiff = endProcessTime - $startProcessTime
-  $fSUMMARY.write "s.processingtime  = #{$totalDiff}\n"
+  $fSUMMARY.write "status.processingtime  = #{$totalDiff}\n"
 
   stream_out drawRuler("Run Summary")
   stream_out "\n"
