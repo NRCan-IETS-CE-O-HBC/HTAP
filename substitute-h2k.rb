@@ -5694,7 +5694,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
-          $HouseStoreys = H2KFile.getStories(elements)
+          $HouseStoreys = H2KFile.getStoreys(elements)
 
           locationText = "HouseFile/House/Components/Ceiling"
           areaCeiling_temp = 0.0
@@ -6509,10 +6509,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             end
 
 
-            opts.on("-d", "--debug", "Run in debug mode") do
-              $cmdlineopts["verbose"] = true
-              $gTest_params["verbosity"] = "debug"
-              $gDebug = true
+            opts.on("-d", "--no-debug", "Disable all debugging") do
+              #$cmdlineopts["verbose"] = true
+              #{$gTest_params["verbosity"] = "debug"}
+              $gNoDebug = true
             end
 
             opts.on("-r", "--report-choices", "Report .choice file input as part of output") do
