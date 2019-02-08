@@ -3,7 +3,7 @@ require 'optparse'
 require 'rexml/document'
 require 'pp'
 
-require_relative 'include/H2KUtils' 
+require_relative 'include/H2KUtils'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 
@@ -37,20 +37,7 @@ def getTypeHouseString(iVal)
   return sout
 end
 
-def getNumStoreysString(iVal)
-  sout = ''
-  case iVal
-    when 1 then sout = 'One'
-    when 2 then sout = 'One and half'
-    when 3 then sout = 'Two'
-    when 4 then sout = 'Two and half'
-    when 5 then sout = 'Three'
-    when 6 then sout = 'Split level'
-    when 7 then sout = 'Split entry'
-    else sout = 'NA'
-  end
-  return sout
-end
+
 
 def getPlanShapeString(iVal)
   sout = ''
@@ -132,12 +119,12 @@ files.each do |file|
 
   # Initialize results hash
   reshash = {}
-  
+
   # Get a name for this record
-  reshash["filename"] = File.basename(file, ".*") 
-  
-  reshash["buildingType"] = H2KUtils.getHouseType(h2kElements) 
-  reshash["storeys"] = H2KUtils.getStories(h2kElements)
+  reshash["filename"] = File.basename(file, ".*")
+
+  reshash["buildingType"] = H2KUtils.getHouseType(h2kElements)
+  reshash["storeys"] = H2KUtils.getStoreys(h2kElements)
 
   # Get the plan shape
   locationText = "HouseFile/House/Specifications/PlanShape"
@@ -168,7 +155,7 @@ files.each do |file|
   else
     reshash["listedLocation"] = 'NA'
   end
-  
+
   # Get the gross areas from results
   locationText = "HouseFile/AllResults/Results"
   h2kElements.each(locationText) do |element|
@@ -180,7 +167,7 @@ files.each do |file|
     pointer = "./Other/GrossArea"
     reshash["aboveGradeWallArea"] = element.elements[pointer + "/MainFloors"].attributes["mainWalls"].to_f
     reshash["aboveGradeWallArea"] = sprintf("%0.4f",reshash["aboveGradeWallArea"] + element.elements[pointer + "/Basement"].attributes["aboveGrade"].to_f)
-    
+
     reshash["belowGradeWallArea"] = sprintf("%0.4f",element.elements[pointer + "/Basement"].attributes["belowGrade"].to_f)
     reshash["ponyWallArea"] = sprintf("%0.4f",element.elements[pointer].attributes["ponyWall"].to_f)
     reshash["doorsArea"] = sprintf("%0.4f",element.elements[pointer].attributes["doors"].to_f)
@@ -195,13 +182,13 @@ files.each do |file|
     else
       reshash["crawlFloorHeaderArea"] = "0.000"
     end
-    
+
     # Get the window area data
     $A_WIN_DIR_KEYS.each do |dir|
       reshash["windowArea" + dir] = element.elements[pointer + "/MainFloors/Windows/#{dir}"].attributes["grossArea"].to_f
       reshash["windowArea" + dir] = sprintf("%0.4f",reshash["windowArea" + dir] + element.elements[pointer + "/Basement/Windows/#{dir}"].attributes["grossArea"].to_f)
     end
-    
+
     break # We're done here, don't keep looping
   end
 
@@ -217,7 +204,7 @@ files.each do |file|
   (2..6).each do |i|
     reshash[$A_CEILING_KEYS[i] + "CeilingArea"] = sprintf("%0.4f",reshash[$A_CEILING_KEYS[i] + "CeilingArea"])
   end
-  
+
   # Add results hash to array
   $resarray.push(reshash)
 end
@@ -234,7 +221,7 @@ $resarray.each do |reshash|
     resElement.add_element "#{key}"
     resElement.elements["#{key}"].add_text("#{value}")
   end
-  
+
   # Add this element to the xml doc
   resXML.elements["MODELS"] << resElement
 end
