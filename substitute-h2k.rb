@@ -37,7 +37,6 @@ include REXML
 
 $program = "substitute-h2k.rb"
 HTAPInit()
-stream_out drawRuler("A wrapper for HOT2000")
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # Typical H2K run < 10 seconds, but may much take longer in ERS mode
@@ -6459,8 +6458,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         #-------------------------------------------------------------------
         $help_msg = "
 
-        substitute-h2k.rb:
-
         This script searches through a suite of model input files
         and substitutes values from a specified input file.
 
@@ -6478,6 +6475,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # Dump help text, if no argument given
         if ARGV.empty? then
+          stream_out drawRuler("A wrapper for HOT2000")
           puts $help_msg
           exit()
         end
@@ -6602,6 +6600,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           # Note: .parse! strips all arguments from ARGV and .parse does not
           #       The parsing code above effects only those options that occur on the command line!
           optparse.parse!
+
+          stream_out drawRuler("A wrapper for HOT2000")
 
           if $gDebug
             debug_out( $cmdlineopts )

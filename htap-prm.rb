@@ -608,6 +608,9 @@ def run_these_cases(current_task_files)
   # Loop until all files have been processed.
   $GiveUp = false
 
+  # flag for CSV header file.
+  headerOut = false
+
   startRunsTime= Time.now
 
   while  ! $RunsDone
@@ -760,8 +763,8 @@ def run_these_cases(current_task_files)
           #debug_out(" ( cmd: #{cmdscript} |  \n")
 
 
-          pid = Process.spawn( cmdscript, :out => "substitute-h2k-errors.txt", :err => [:child, :out] )
-
+          pid = Process.spawn( cmdscript, :err => "substitute-h2k-errors.txt" )
+          #pid = Process.spawn( cmdscript, :out => "substitute-h2k-errors.txt", :err => [:child, :out] )
 
 
 
@@ -1086,12 +1089,12 @@ def run_these_cases(current_task_files)
          # CSV OUTPUT.
          outputlines = ""
          headerLine = ""
-         headerOut = false
+         batchSuccessCount = 0
          $RunResults.each do |run,data|
 
            # Only write out data from successful runs - this helps prevent corrupted database
            next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
-
+           batchSuccessCount += 1
            debug_out "Run - #{run}\n"
              data.keys.sort.each do | section |
                data[section].keys.sort.each do |subsection|
@@ -1115,6 +1118,7 @@ def run_these_cases(current_task_files)
              if ( ! headerOut )
                headerLine.concat("\n")
                $fCSVout.write(headerLine)
+
                 headerOut = true
             end
             outputlines.concat("\n")
@@ -1133,6 +1137,8 @@ def run_these_cases(current_task_files)
      stream_out ("done.\n")
      stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs}\n\n")
 
+     HTAPConfig.countSuccessfulEvals(batchSuccessCount)
+     HTAPConfig.writeConfigData()
      if ( ! $FinishedTheseFiles.has_value?(false) )
 
        $RunsDone = true
@@ -1177,6 +1183,11 @@ end
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
+
+# Dump help text, if no argument given
+
+
+
 
 $gMasterPath = Dir.getwd()
 
@@ -1331,7 +1342,9 @@ optparse = OptionParser.new do |opts|
 end
 
 stream_out(drawRuler("A simple parallel run manager for HTAP"))
-
+if ARGV.empty? then
+   ARGV.push "-h"
+end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
 
@@ -1603,7 +1616,6 @@ if ( $CompletedRunCount> 0  &&  $ThreadsNeeded > 0  )
   lapsedTime = Time.now - $startProcessTime - $waitTime
   timePerEvaluation = lapsedTime /  $CompletedRunCount * $ThreadsNeeded
   HTAPConfig.setPrmSpeed(timePerEvaluation)
-  HTAPConfig.countSuccessfulEvals($CompletedRunCount)
 end
 
 
