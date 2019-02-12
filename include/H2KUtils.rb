@@ -968,7 +968,7 @@ module H2KFile
 
   def H2KFile.getBGDimensions(elements)
 
-    debug_off
+    #debug_off
     bgDims = Hash.new
     [ "basement", "crawlspace", "slab" ].each do | type |
       bgDims[type] = Hash.new
@@ -990,32 +990,24 @@ module H2KFile
     bgDims["walls"]["below-grade-area"]["external"] = 0.0
 
 
-    debug_off()
+    #debug_on()
     debug_out ("Parsing below-grade dimensions\n")
 
     loc = "HouseFile/House/Components"
     count = 0
     elements[loc].elements.each do | component |
+      debug_out drawRuler("> component #{component.name}?\n", " + ")
 
-      if (   component.name == "Crawlspace" )
-        # Don't count below-grade characteristics of vented/open crawlspaces.
-        ventType = component.elements[".//VentilationType"].attributes["code"].to_i
-        debug_out " (Skipping vented/open Crawlspace)\n"
-        next if ( ventType != 3 )
-      end
+      next if ( component.name == "Crawlspace" && component.attributes["heated"] !~ /true/ )
+      next if (
+        component.name != "Basement" &&
+        component.name != "Crawlspace" &&
+        component.name != "Slab"
+      )
 
-
-      if (
-        component.name == "Basement" ||
-        component.name == "Crawlspace" ||
-        component.name == "Slab"
-        ) then
-
-        # Skip
 
         count += 1
         debug_out(drawRuler(nil, "  *"))
-
         debug_out " Processing #{component.name} #{count} /#{component.pretty_inspect} \n"
         thisExposedPerimeter = component.attributes["exposedSurfacePerimeter"].to_f
 
@@ -1066,11 +1058,6 @@ module H2KFile
         bgDims[component.name.downcase]["exposed-perimeter"] += thisExposedPerimeter
         bgDims[component.name.downcase]["total-perimeter"] += thisTotalPerimeter
         bgDims[component.name.downcase]["floor-area"] += thisFloorArea
-
-      else
-        debug_out " (skpping #{component.name})\n"
-      end
-
 
 
     end
@@ -1156,12 +1143,12 @@ module H2KFile
 
       return loads
 
-    end
+  end
 
     # ==========================================================================================
     # Parses systems section and returns capacity.
     # ==========================================================================================
-    def H2KFile.getSystemInfo( elements )
+  def H2KFile.getSystemInfo( elements )
       debug_off
       systemInfo = Hash.new
       systemInfo = { "fansAndPump"   => { "count" => 0.0 },
