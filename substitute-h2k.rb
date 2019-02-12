@@ -6957,6 +6957,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           houseUpgraded = false
           houseSetByRuleset = false
+          houseUpgradeList = ""
           $gChoices.each do |thisAttrib,thisChoice|
 
             next if ( AttribThatAreNotUpgrades.include?(thisAttrib) )
@@ -6964,6 +6965,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               houseSetByRuleset = true
             elsif ( thisChoice != "NA" )
               houseUpgraded = true
+              houseUpgradeList += "#{thisAttrib}=>#{thisChoice};"
             end
 
           end
