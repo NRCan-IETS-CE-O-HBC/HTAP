@@ -759,6 +759,27 @@ module HTAPConfig
 
   end
 
+  def HTAPConfig.getCreationDate()
+      dateSet, date = self.getData(["createTime"])
+      if ( ! dateSet )
+        dateStr = "?"
+      else
+        dateStr = date.split(/ /)[0]
+      end
+      return dateStr
+  end
+
+
+  def HTAPConfig.setCreationDate()
+      dateSet, date = self.getData(["createTime"])
+      if ( ! dateSet )
+        self.setData(["createTime"],Time.now)
+      end
+  end
+
+
+
+
   def HTAPConfig.checkOddities()
 
     oddSet, oddOut = self.getData(["oddities"])
