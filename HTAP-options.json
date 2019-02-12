@@ -8950,6 +8950,29 @@
           ]
         }
       },
+      "zero-cost-baseboard": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "1",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "NA",
+            "Opt-H2K-Type1EEMotor": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "elec-baseboard": {
         "h2kMap": {
           "base": {
