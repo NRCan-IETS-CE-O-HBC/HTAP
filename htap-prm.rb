@@ -613,6 +613,8 @@ def run_these_cases(current_task_files)
 
   startRunsTime= Time.now
 
+  fJSONout  = File.open("#{$gOutputJSON}", 'w')
+  firstJSONLine = true
   while  ! $RunsDone
 
       $batchCount = $batchCount + 1
@@ -867,7 +869,7 @@ def run_these_cases(current_task_files)
 
         count = thread3 + 1
         stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
-
+        Dir.chdir($gMasterPath)
         Dir.chdir($RunDirs[thread3])
 
 
@@ -1004,24 +1006,6 @@ def run_these_cases(current_task_files)
 
         end
 
-        Dir.chdir($gMasterPath)
-
-        # Save files from runs that failed, or possibly all runs.
-        if ( $gSaveAllRuns || $runFailed )
-
-          if ( ! Dir.exist?($SaveDirs[thread3]) )
-
-            Dir.mkdir($SaveDirs[thread3])
-
-          else
-
-            FileUtils.rm_rf Dir.glob("#{$SaveDirs[thread3]}/*.*")
-
-          end
-
-          FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
-          FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
-        end
 
         #Update status of this thread.
         $FinishedTheseFiles[$choicefiles[thread3]] = true
@@ -1030,7 +1014,7 @@ def run_these_cases(current_task_files)
       end
 
       errs = ""
-      stream_out ("     - Post-processing results... ")
+      stream_out ("     - Post-processing results:\n")
 
       $outputlines = ""
 
@@ -1040,36 +1024,35 @@ def run_these_cases(current_task_files)
       # Alternative output in JSON format. Can be memory-intensive
 
 
+      $gJSONAllData = Array.new
+      $RunResults.keys.each do | run |
+        thisRunHash = {
+          "result-number"           =>  $gHashLoc+1,
+          "status"                 => $RunResults[run]["status"            ],
+          "archetype"              => $RunResults[run]["archetype"         ],
+          "input"                  => $RunResults[run]["input"             ],
+          "output"                 => $RunResults[run]["output"            ],
+          "configuration"          => $RunResults[run]["configuration"     ],
+          "miscellaneous_info"     => $RunResults[run]["miscellaneous_info"],
+          "cost-estimates"     => $RunResults[run]["cost-estimates"]
+        }
 
-        $RunResults.keys.each do | run |
+        $gJSONAllData.push thisRunHash
 
-          $gJSONAllData[$gHashLoc] = Hash.new
-          $gJSONAllData[$gHashLoc] = {
-            "result-number"           =>  $gHashLoc+1,
-            "status"                 => $RunResults[run]["status"            ],
-            "archetype"              => $RunResults[run]["archetype"         ],
-            "input"                  => $RunResults[run]["input"             ],
-            "output"                 => $RunResults[run]["output"            ],
-            "configuration"          => $RunResults[run]["configuration"     ],
-            "miscellaneous_info"     => $RunResults[run]["miscellaneous_info"],
-            "cost-estimates"     => $RunResults[run]["cost-estimates"]
-          }
+        if ($RunResults[run]["status"]["success"] == false ) then
 
+          $runFailed = true
+          errs="\n\n       (!) simulation errors found (!)"
+          $msg = "#{$RunResults[run]["configuration"]["ChoiceFile"]} (dir: #{$RunResults[run]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
+          $failures.write "$msg\n"
+          $FailedRuns.push $msg
+          $FailedRunCount = $FailedRunCount + 1
 
-          if ( $gJSONAllData[$gHashLoc]["status"]["success"] == false ) then
+        else
 
-            $runFailed = true
-            errs="\n\n       (!) simulation errors found (!)"
-            $msg = "#{$gJSONAllData[$gHashLoc]["configuration"]["ChoiceFile"]} (dir: #{$gJSONAllData[$gHashLoc]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
-            $failures.write "$msg\n"
-            $FailedRuns.push $msg
-            $FailedRunCount = $FailedRunCount + 1
+          $CompletedRunCount = $CompletedRunCount + 1
 
-          else
-
-            $CompletedRunCount = $CompletedRunCount + 1
-
-          end
+        end
 
 
           # Increment hash increment too.
@@ -1083,6 +1066,28 @@ def run_these_cases(current_task_files)
 
 
 
+          #debug_on
+          debug_out ("\n Q #{thread3} = #{$runFailed}? \n")
+          debug_off
+          # Save files from runs that failed, or possibly all runs.
+          if ( $gSaveAllRuns || $runFailed )
+            Dir.chdir($gMasterPath)
+            if ( ! Dir.exist?($SaveDirs[thread3]) )
+
+              Dir.mkdir($SaveDirs[thread3])
+
+            else
+
+              FileUtils.rm_rf Dir.glob("#{$SaveDirs[thread3]}/*.*")
+
+            end
+
+            FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
+            FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
+          end
+
+
+
          end # ends $RunResults.each do
 
 
@@ -1090,8 +1095,8 @@ def run_these_cases(current_task_files)
          outputlines = ""
          headerLine = ""
          batchSuccessCount = 0
+         stream_out("        -> Writing csv output output to HTAP-prm-output.csv ... ")
          $RunResults.each do |run,data|
-
            # Only write out data from successful runs - this helps prevent corrupted database
            next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
            batchSuccessCount += 1
@@ -1127,14 +1132,42 @@ def run_these_cases(current_task_files)
            end
            $fCSVout.write(outputlines)
            $fCSVout.flush
-           debug_off
+           stream_out ("done.\n")
+
+           if ($gJSONize )
+             termLastBatch = ""
+
+             stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
+             nextBatch = JSON.pretty_generate($gJSONAllData)
+
+             if ( ! firstJSONLine )
+
+               fJSONout.seek(-2, :CUR)
+               txtOut = ",\n"
+               nextBatch.each_line  do | line  |
+                next if (line =~ /^\[/ )
+                txtOut += line
+              end
+
+             else
+               termLastBatch = ""
+               txtOut = nextBatch
+             end
+
+             firstJSONLine = false
+             fJSONout.write txtOut
+             fJSONout.flush
+             stream_out("done.\n")
+           end
+
+
+
      $failures.flush
 
      $RunResults.clear
 
      batchLapsedTime = "#{(Time.now - batchStartTime).round(0)} seconds"
 
-     stream_out ("done.\n")
      stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs}\n\n")
 
      HTAPConfig.countSuccessfulEvals(batchSuccessCount)
@@ -1147,20 +1180,12 @@ def run_these_cases(current_task_files)
 
 
   end
-
+  fJSONout.close
 
   if ( $GiveUp ) then
     stream_out(" - HTAP-prm: runs terminated due to error ----------\n\n")
   else
     stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
-  end
-
-  if ($gJSONize )
-    stream_out(" - Writing JSON output to HTAP-prm-output.json... ")
-    $JSONoutput  = File.open($gOutputJSON, 'w')
-    $JSONoutput.write(JSON.pretty_generate($gJSONAllData))
-    $JSONoutput.close
-    stream_out("done.\n\n")
   end
 
 
@@ -1620,11 +1645,12 @@ end
 
 
 if ( HTAPConfig.checkOddities() ) then
-  info_out(" Fun Fact - so far HTAP has performed #{HTAPConfig.reportSuccessfulEvals()} successful hot2000 simulations for you.")
+  info_out(" Fun fact: HTAP has performed #{HTAPConfig.reportSuccessfulEvals()} successful hot2000 simulations for you since #{HTAPConfig.getCreationDate()}.")
 end
 # Close output files (JSON output dumped in a single write - already closed at this point.
 $fCSVout.close
 $failures.close
+HTAPConfig.setCreationDate()
 HTAPConfig.writeConfigData()
 
 ReportMsgs()
