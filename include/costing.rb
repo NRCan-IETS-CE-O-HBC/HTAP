@@ -501,6 +501,8 @@ module Costing
           debug_out "       from catagory: #{catagory} \n"
 
           units = choiceCosts[costingElement]["data"]["units"]
+          # Aliases for standard units - perhaps these should be located in the cost-parsing text?
+          units = "ea" if ( units =~ /ea\.?ch/i  )
           materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
           labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
           source = choiceCosts[costingElement]["data"]["source"]
