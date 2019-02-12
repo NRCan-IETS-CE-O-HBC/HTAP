@@ -7237,7 +7237,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             results[$aliasLongInput] = Hash.new
             results[$aliasLongInput] = { "Run-Region" =>  "#{$gRunRegion}",
             "Run-Locale" =>  "#{$gRunLocale}",
-            "House-Upgraded"   =>  "#{houseUpgraded}"
+            "House-Upgraded"   =>  "#{houseUpgraded}",
+            "House-ListOfUpgrades" => "#{houseUpgradeList}"
           }
           $gChoices.sort.to_h
           for attribute in $gChoices.keys()
