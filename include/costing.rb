@@ -448,6 +448,7 @@ module Costing
     myCosts["total"] = 0
     myCosts["byAttribute"] = Hash.new
     myCosts["bySource"] = Hash.new
+    myCosts["byBuildingComponent"] = Hash.new
     myCosts["audit"] = Hash.new
     debug_out drawRuler(" Costing calculations ",'.')
     debug_out ("Choices to be costed:\n#{myChoices.pretty_inspect}\n")
@@ -832,12 +833,36 @@ module Costing
 
     end
 
+
+
+    myCosts["byBuildingComponent"]["envelope"] =
+      myCosts["byAttribute"]["Opt-ACH"] +
+      myCosts["byAttribute"]["Opt-CasementWindows"] +
+      myCosts["byAttribute"]["Opt-GenericWall_1Layer_definitions"] +
+      myCosts["byAttribute"]["Opt-FloorHeaderIntIns"] +
+      myCosts["byAttribute"]["Opt-FoundationWallExtIns"] +
+      myCosts["byAttribute"]["Opt-FoundationWallIntIns"] +
+      myCosts["byAttribute"]["Opt-FoundationSlabBelowGrade"] +
+      myCosts["byAttribute"]["Opt-FoundationSlabOnGrade"] +
+      myCosts["byAttribute"]["Opt-Ceilings"] +
+      myCosts["byAttribute"]["Opt-AtticCeilings"]
+
+    myCosts["byBuildingComponent"]["mechanical"] =
+      myCosts["byAttribute"]["Opt-HRVonly"] +
+      myCosts["byAttribute"]["Opt-DHWSystem"] +
+      myCosts["byAttribute"]["Opt-HVACSystem"] +
+      myCosts["byAttribute"]["Opt-DWHRSystem"]
+
+    # Not supported yet.
+    myCosts["byBuildingComponent"]["renewable"] = 0
+
     myCosts["status"] = allCostsOK
     if (! allCostsOK ) then
       warn_out ("Costing calculations could not be computed correctly")
     end
 
     debug_out "Compute-Costs: Returning \n#{myCosts.pretty_inspect}\n"
+
     return myCosts,allCostsOK
 
   end
