@@ -8,43 +8,44 @@ def initialize
 
 @index = Hash.new
 @index["byOptions"] = Hash.new
-@index["byOptions"] = { "Opt-Ruleset" => nil,
-                      "Opt-DBFiles" => nil,
-                      "Opt-Location" => nil,
-                      "Opt-FuelCost" => nil,
-                      "Opt-ResultHouseCode" => nil,
-                      "Opt-Archetype" => nil,
-                      "Opt-ACH" => nil,
-                      "Opt-AtticCeilings" => nil,
-                      "Opt-CathCeilings" => nil,
-                      "Opt-FlatCeilings" => nil,
-                      "Opt-MainWall" => nil,
-                      "Opt-GenericWall_1Layer_definitions" => nil,
-                      "Opt-ExposedFloor" => "Opt-ExposedFloor",
-                      "Opt-CasementWindows" => nil,
-                      "Opt-Skylights" => nil,
-                      "Opt-DoorWindows" => nil,
-                      "Opt-Doors" => nil,
-                      "Opt-H2KFoundation" => nil,
-                      "Opt-H2KFoundationSlabCrawl" => nil,
-                      "Opt-FoundationWallExtIns" => nil,
-                      "Opt-FoundationWallIntIns" => nil,
-                      "Opt-FoundationSlabBelowGrade" => nil,
-                      "Opt-FoundationSlabOnGrade" => nil,
-                      "Opt-DHWSystem" => nil,
-                      "Opt-DWHRSystem" => nil,
-                      "Opt-HVACSystem" => nil,
-                      "Opt-HRVspec" => nil,
-                      "Opt-HRVonly" => nil,
-                      "Opt-H2K-PV" => nil,
-                      "GOconfig_rotate" => nil,
-                      "Opt-Ceilings" => nil,
-                      "Opt-FloorHeaderIntIns" => nil,
-                      "Opt-FloorHeader" => "Opt-FloorHeader",
-                      "Opt-FloorAboveCrawl" => "Opt-FloorAboveCrawl",
-                      "Opt-Baseloads" => nil,
-                      "Opt-Temperatures" => nil,
-                      "Opt-Specifications" => nil,
+@index["byOptions"] = {
+  "Opt-Ruleset" => nil,
+  "Opt-DBFiles" => nil,
+  "Opt-Location" => nil,
+  "Opt-FuelCost" => nil,
+  "Opt-ResultHouseCode" => nil,
+  "Opt-Archetype" => nil,
+  "Opt-ACH" => nil,
+  "Opt-AtticCeilings" => nil,
+  "Opt-CathCeilings" => nil,
+  "Opt-FlatCeilings" => nil,
+  "Opt-MainWall" => nil,
+  "Opt-GenericWall_1Layer_definitions" => nil,
+  "Opt-ExposedFloor" => "Opt-ExposedFloor",
+  "Opt-CasementWindows" => nil,
+  "Opt-Skylights" => nil,
+  "Opt-DoorWindows" => nil,
+  "Opt-Doors" => nil,
+  "Opt-H2KFoundation" => nil,
+  "Opt-H2KFoundationSlabCrawl" => nil,
+  "Opt-FoundationWallExtIns" => nil,
+  "Opt-FoundationWallIntIns" => nil,
+  "Opt-FoundationSlabBelowGrade" => nil,
+  "Opt-FoundationSlabOnGrade" => nil,
+  "Opt-DHWSystem" => nil,
+  "Opt-DWHRSystem" => nil,
+  "Opt-HVACSystem" => nil,
+  "Opt-HRVspec" => nil,
+  "Opt-HRVonly" => nil,
+  "Opt-H2K-PV" => nil,
+  "GOconfig_rotate" => nil,
+  "Opt-Ceilings" => nil,
+  "Opt-FloorHeaderIntIns" => nil,
+  "Opt-FloorHeader" => "Opt-FloorHeader",
+  "Opt-FloorAboveCrawl" => "Opt-FloorAboveCrawl",
+  "Opt-Baseloads" => nil,
+  "Opt-Temperatures" => nil,
+  "Opt-Specifications" => nil,
 }
 
 
@@ -121,8 +122,18 @@ def initialize
  external insulated sheathing. Opt-FloorHeaderIntIns allows users to specify
  internal insualtion values; substitute-h2k.rb will add these values
  to the external insulaton layer to estimate the effective RSI for the header
- + external insulaton assembly. 
+ + external insulaton assembly.
 
+"
+
+@text["cliamte_Zone names"] = "
+ Climate zone names should be one of:
+   - Zone 4
+   - Zone 5
+   - Zone 6
+   - Zone 7a
+   - Zone 7b
+   - Zone 8
 "
 
 
