@@ -30,6 +30,7 @@ require_relative 'include/constants'
 require_relative 'include/rulesets'
 require_relative 'include/costing'
 require_relative 'include/legacy-code'
+require_relative 'include/application_modules'
 
 include REXML
 # This allows for no "REXML::" prefix to REXML methods
@@ -3128,7 +3129,8 @@ def processFile(h2kElements)
   # operations tha depend on multiple choices. Start with Foundations...
   myFdnData = Hash.new
 
-
+  
+  debug_out ( ">>> $foundation config? #{$foundationConfiguration}\n")
 
   if ( $foundationConfiguration == "surfBySurf")
     myFdnData["FoundationWallExtIns"     ] =  $gChoices["Opt-FoundationWallExtIns"     ]
@@ -3166,6 +3168,7 @@ def processFile(h2kElements)
   end
 
   debug_out ("Returning from process...")
+  #debug_pause
 
 end
 
@@ -7249,6 +7252,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # duplicate? "Area-ExposedFloor-m2"=>  "#{$FoundationArea["Floor"].round(2)}",
 
+        results["analysis_BCStepCode"] = {
+          "TEDI_compliance" =>  BCStepCode.getStepByTEDI(climateZone,$TEDI_kWh_m2)
+        }
+
         results[$aliasLongOutput] = {   "HDDs"              => $HDDs,
           "Energy-Total-GJ"   => $gResults[$outputHCode]['avgEnergyTotalGJ'].round(1),
           "Ref-En-Total-GJ"   => $RefEnergy.round(1),
@@ -7361,23 +7368,23 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $fSUMMARY.write( "#{$aliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Locale       =  #{$gBaseLocale}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Ceiling-Type    =  #{$Ceilingtype}\n" )
-        $fSUMMARY.write( "#{$aliasArch}.Area-Slab-m2    =  #{$FoundationArea["Slab"].round(2)}\n" )
-        $fSUMMARY.write( "#{$aliasArch}.Area-Basement-m2    =  #{$FoundationArea["Basement"].round(2)}\n" )
-        $fSUMMARY.write( "#{$aliasArch}.Area-ExposedFloor-m2    =  #{$FoundationArea["Floor"].round(2)}\n" )
-        $fSUMMARY.write( "#{$aliasArch}.Area-Walkout-m2    =  #{$FoundationArea["Walkout"].round(2)}\n" )
-        $fSUMMARY.write( "#{$aliasArch}.Area-Crawl-m2    =  #{$FoundationArea["Crawl"].round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Slab-m2    =  #{$FoundationArea["Slab"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Basement-m2    =  #{$FoundationArea["Basement"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-ExposedFloor-m2    =  #{$FoundationArea["Floor"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Walkout-m2    =  #{$FoundationArea["Walkout"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Crawl-m2    =  #{$FoundationArea["Crawl"].to_f.round(2)}\n" )
       end
       $fSUMMARY.write( "#{$aliasOutput}.HDDs              =  #{$HDDs}\n" )
       $fSUMMARY.write( "#{$aliasOutput}.Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Elec    =  #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)}  \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Elec    =  #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)}  \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
       #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
       $fSUMMARY.write( "#{$aliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
@@ -7417,50 +7424,50 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
 
-      $fSUMMARY.write( "#{$aliasArch}.Floor-Area-m2     =  #{$FloorArea.round(1)} \n" )
-      $fSUMMARY.write( "#{$aliasArch}.House-Volume-m3   =  #{$HouseVolume.round(1)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.TEDI_kWh_m2       =  #{$TEDI_kWh_m2.round(1)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.MEUI_kWh_m2       =  #{$MEUI_kWh_m2.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasArch}.Floor-Area-m2     =  #{$FloorArea.to_f.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasArch}.House-Volume-m3   =  #{$HouseVolume.to_f.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.TEDI_kWh_m2       =  #{$TEDI_kWh_m2.to_f.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.MEUI_kWh_m2       =  #{$MEUI_kWh_m2.to_f.round(1)} \n" )
 
-      $fSUMMARY.write( "#{$aliasOutput}.ERS-Value         =  #{$gERSNum.round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasOutput}.NumTries          =  #{$NumTries.round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasOutput}.LapsedTime        =  #{$runH2KTime.round(2)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.ERS-Value         =  #{$gERSNum.to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.NumTries          =  #{$NumTries.to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.LapsedTime        =  #{$runH2KTime.to_f.round(2)}\n" )
       # Windows characteristics
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-S        =  #{$SHGCWin[1].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-S     =  #{$rValueWin[1].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-S     =  #{$AreaWin_sum[1].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-SE       =  #{$SHGCWin[2].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-SE    =  #{$rValueWin[2].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-SE    =  #{$AreaWin_sum[2].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-E        =  #{$SHGCWin[3].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-E     =  #{$rValueWin[3].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-E     =  #{$AreaWin_sum[3].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-NE       =  #{$SHGCWin[4].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-NE    =  #{$rValueWin[4].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-NE    =  #{$AreaWin_sum[4].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-N        =  #{$SHGCWin[5].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-N     =  #{$rValueWin[5].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-N     =  #{$AreaWin_sum[5].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-NW       =  #{$SHGCWin[6].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-NW    =  #{$rValueWin[6].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-NW    =  #{$AreaWin_sum[6].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-W        =  #{$SHGCWin[7].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-W     =  #{$rValueWin[7].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-W     =  #{$AreaWin_sum[7].round(1)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-SW       =  #{$SHGCWin[8].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-SW    =  #{$rValueWin[8].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-SW    =  #{$AreaWin_sum[8].round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-S        =  #{$SHGCWin[1].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-S     =  #{$rValueWin[1].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-S     =  #{$AreaWin_sum[1].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-SE       =  #{$SHGCWin[2].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-SE    =  #{$rValueWin[2].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-SE    =  #{$AreaWin_sum[2].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-E        =  #{$SHGCWin[3].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-E     =  #{$rValueWin[3].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-E     =  #{$AreaWin_sum[3].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-NE       =  #{$SHGCWin[4].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-NE    =  #{$rValueWin[4].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-NE    =  #{$AreaWin_sum[4].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-N        =  #{$SHGCWin[5].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-N     =  #{$rValueWin[5].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-N     =  #{$AreaWin_sum[5].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-NW       =  #{$SHGCWin[6].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-NW    =  #{$rValueWin[6].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-NW    =  #{$AreaWin_sum[6].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-W        =  #{$SHGCWin[7].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-W     =  #{$rValueWin[7].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-W     =  #{$AreaWin_sum[7].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-SW       =  #{$SHGCWin[8].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-SW    =  #{$rValueWin[8].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-SW    =  #{$AreaWin_sum[8].to_f.round(1)}\n" )
       # House components
-      $fSUMMARY.write( "#{$aliasArch}.Area-Door-m2      =  #{$AreaComp['door'].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Area-DoorWin-m2   =  #{$AreaComp['doorwin'].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Area-Windows-m2   =  #{$AreaComp['win'].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Area-Wall-m2      =  #{$AreaComp['wall'].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Area-Header-m2    =  #{$AreaComp['header'].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Area-Ceiling-m2   =  #{$AreaComp['ceiling'].round(3)}\n" )
-      #$fSUMMARY.write( "#{$aliasArch}.Area-ExposedFloor-m2     =  #{$AreaComp['floor'].round(3)}\n" )
-      $fSUMMARY.write( "#{$aliasArch}.Area-House-m2     =  #{$AreaComp['house'].round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Door-m2      =  #{$AreaComp['door'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-DoorWin-m2   =  #{$AreaComp['doorwin'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Windows-m2   =  #{$AreaComp['win'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Wall-m2      =  #{$AreaComp['wall'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Header-m2    =  #{$AreaComp['header'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Ceiling-m2   =  #{$AreaComp['ceiling'].to_f.round(3)}\n" )
+      #$fSUMMARY.write( "#{$aliasArch}.Area-ExposedFloor-m2     =  #{$AreaComp['floor'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-House-m2     =  #{$AreaComp['house'].to_f.round(3)}\n" )
       # House R-Value
-      $fSUMMARY.write( "#{$aliasOutput}.House-R-Value(SI) =  #{$RSI['house'].round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.House-R-Value(SI) =  #{$RSI['house'].to_f.round(3)}\n" )
 
       $fSUMMARY.write( "#{$aliasOutput}.Cost of options using unit costs = #{$optionCost.round(0)}\n")
       for status_type in $gStatus.keys()
