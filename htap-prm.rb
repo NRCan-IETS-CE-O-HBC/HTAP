@@ -649,7 +649,9 @@ def run_these_cases(current_task_files)
 
 
       # Compute the number of threads we will start: lesser of a) files remaining, or b) threads allowed.
+
       $ThreadsNeeded = [$FinishedTheseFiles.count {|k| k.include?(false)}, $gNumberOfThreads].min
+      debug_out "TOTAL THREADS NEEDED: #{$ThreadsNeeded}"
 
       #=====================================================================================
       # Multi-threaded runs - Step 1: Spawn threads.
@@ -893,22 +895,22 @@ def run_these_cases(current_task_files)
 
         end
 
-       jsonParsed = false
-       #debug_out "pp: \n#{$RunResults["run-#{thread3}"].pretty_inspect}\n"
-       debug_out "Looking for #{$RunResultFilenameV2} ? \n"
-       if ( File.exist?($RunResultFilenameV2) ) then
-         debug_out "Found it. Parsing JSON output !\n"
-         contents = File.read($RunResultFilenameV2)
-         thisRunResults = Hash.new
-         thisRunResults = JSON.parse(contents)
+        jsonParsed = false
+        #debug_out "pp: \n#{$RunResults["run-#{thread3}"].pretty_inspect}\n"
+        debug_out "Looking for #{$RunResultFilenameV2} ? \n"
+        if ( File.exist?($RunResultFilenameV2) ) then
+          debug_out "Found it. Parsing JSON output !\n"
+          contents = File.read($RunResultFilenameV2)
+          thisRunResults = Hash.new
+          thisRunResults = JSON.parse(contents)
 
 
-         #$RunResults["run-#{thread3}"]["output"] = thisRunResults["output"]
-         #$RunResults["run-#{thread3}"]["cost-estimates"] = thisRunResults["costEstimates"]
-         #$RunResults["run-#{thread3}"]["input"] = thisRunResults["input"]
-         #$RunResults["run-#{thread3}"]["archetype"] = thisRunResults["archetype"]
+          #$RunResults["run-#{thread3}"]["output"] = thisRunResults["output"]
+          #$RunResults["run-#{thread3}"]["cost-estimates"] = thisRunResults["costEstimates"]
+          #$RunResults["run-#{thread3}"]["input"] = thisRunResults["input"]
+          #$RunResults["run-#{thread3}"]["archetype"] = thisRunResults["archetype"]
 
-         thisRunResults.keys.each do | section |
+          thisRunResults.keys.each do | section |
             if ( section.eql?("status") || section.eql?("configuration") ) then
               thisRunResults[section].keys.each do | node |
                 debug_out ("  ------ #{section}/#{node}\n")
@@ -924,67 +926,67 @@ def run_these_cases(current_task_files)
               $RunResults["run-#{thread3}"][section] = thisRunResults[section]
             end
           end
-         $runFailed = true if (! $RunResults["run-#{thread3}"]["status"]["success"] )
-         jsonParsed = true
-         stream_out (" done.\n")
-       end
+          $runFailed = true if (! $RunResults["run-#{thread3}"]["status"]["success"] )
+          jsonParsed = true
+          stream_out (" done.\n")
+        end
 
-       if ( jsonParsed ) then
-         # do nothing !
-         debug_out "No futher file processing needed\n"
-         debug_out drawRuler " . "
-         debug_out "results from run-#{thread3}:\n"
-         #debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
-       elsif (  File.exist?($RunResultFilename)  ) then
-         debug_out "processing old token/value file \n"
+        if ( jsonParsed ) then
+          # do nothing !
+          debug_out "No futher file processing needed\n"
+          debug_out drawRuler " . "
+          debug_out "results from run-#{thread3}:\n"
+          #debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
+        elsif (  File.exist?($RunResultFilename)  ) then
+          debug_out "processing old token/value file \n"
 
-           contents = File.open($RunResultFilename, 'r')
+          contents = File.open($RunResultFilename, 'r')
 
-           ec=0
-           wc=0
+          ec=0
+          wc=0
 
-           lineCount = 0
-           contents.each do |line|
-             lineCount = lineCount + 1
-             line_clean = line.gsub(/ /, '')
-             line_clean = line.gsub(/\n/, '')
-             if ( ! line_clean.to_s.empty? )
-               $contents = Array.new
-               $contents = line_clean.split('=')
-               token = $contents[0].gsub(/\s*/,'')
-               value = $contents[1].gsub(/^\s*/,'')
-               value = $contents[1].gsub(/^ /,'')
-               value = $contents[1].gsub(/ +$/,'')
+          lineCount = 0
+          contents.each do |line|
+            lineCount = lineCount + 1
+            line_clean = line.gsub(/ /, '')
+            line_clean = line.gsub(/\n/, '')
+            if ( ! line_clean.to_s.empty? )
+              $contents = Array.new
+              $contents = line_clean.split('=')
+              token = $contents[0].gsub(/\s*/,'')
+              value = $contents[1].gsub(/^\s*/,'')
+              value = $contents[1].gsub(/^ /,'')
+              value = $contents[1].gsub(/ +$/,'')
 
 
-               # add prefix to
-               case token
-               when /s.error/
-                 token.concat("@#{ec}")
-                 ec = ec + 1
-               when /s.warning/
-                 token.concat("@#{wc}")
-                 wc=wc+1
-               end
-               $RunResults["run-#{thread3}"][token] = value
-             end
+              # add prefix to
+              case token
+              when /s.error/
+                token.concat("@#{ec}")
+                ec = ec + 1
+              when /s.warning/
+                token.concat("@#{wc}")
+                wc=wc+1
+              end
+              $RunResults["run-#{thread3}"][token] = value
+            end
 
-           end
-           contents.close
+          end
+          contents.close
 
-           if $RunResults["run-#{thread3}"]["status.success"] == false then
-             $runFailed = true
-             stream_out (" done (with errors).\n")
-           else
-             stream_out (" done.\n")
-           end
+          if $RunResults["run-#{thread3}"]["status.success"] == false then
+            $runFailed = true
+            stream_out (" done (with errors).\n")
+          else
+            stream_out (" done.\n")
+          end
 
         else
             debug_out ("no output anywhere!\n")
             stream_out (" Output couldn't be found! \n")
             $runFailed = true
         end
-        debug_off
+
 
         if ($runFailed)
             #stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
@@ -1005,6 +1007,24 @@ def run_these_cases(current_task_files)
 
 
         end
+
+        # Save files from runs that failed, or possibly all runs.
+        if ( $gSaveAllRuns || $runFailed )
+          Dir.chdir($gMasterPath)
+          if ( ! Dir.exist?($SaveDirs[thread3]) )
+
+            Dir.mkdir($SaveDirs[thread3])
+
+          else
+
+            FileUtils.rm_rf Dir.glob("#{$SaveDirs[thread3]}/*.*")
+
+          end
+
+          FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
+          FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
+        end
+
 
 
         #Update status of this thread.
@@ -1033,9 +1053,12 @@ def run_these_cases(current_task_files)
           "input"                  => $RunResults[run]["input"             ],
           "output"                 => $RunResults[run]["output"            ],
           "configuration"          => $RunResults[run]["configuration"     ],
-          "miscellaneous_info"     => $RunResults[run]["miscellaneous_info"],
-          "cost-estimates"     => $RunResults[run]["cost-estimates"]
+          "cost-estimates"         => $RunResults[run]["cost-estimates"]
         }
+
+        if ( ! $RunResults[run]["analysis_BCStepCode"].nil? ) then
+          thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
+        end
 
         $gJSONAllData.push thisRunHash
 
@@ -1055,110 +1078,109 @@ def run_these_cases(current_task_files)
         end
 
 
-          # Increment hash increment too.
-          $gHashLoc = $gHashLoc + 1
+        # Increment hash increment too.
+        $gHashLoc = $gHashLoc + 1
 
-          if ( $runFailed && $StopOnError ) then
-            $RunsDone = true
-            $GiveUp = true
-          end
+        if ( $runFailed && $StopOnError ) then
+          $RunsDone = true
+          $GiveUp = true
+        end
+
+      end # ends $RunResults.each do
 
 
+      # CSV OUTPUT.
+      outputlines = ""
+      headerLine = ""
+      batchSuccessCount = 0
+      stream_out("        -> Writing csv output output to HTAP-prm-output.csv ... ")
 
+      $RunResults.each do |run,data|
+        # Only write out data from successful runs - this helps prevent corrupted database
+        next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
+        batchSuccessCount += 1
+        debug_out "Run - #{run}\n"
+        data.keys.sort.each do | section |
+          data[section].keys.sort.each do |subsection|
+            debug_out " . location #{section} : #{subsection} \n"
 
-          #debug_on
-          debug_out ("\n Q #{thread3} = #{$runFailed}? \n")
-          debug_off
-          # Save files from runs that failed, or possibly all runs.
-          if ( $gSaveAllRuns || $runFailed )
-            Dir.chdir($gMasterPath)
-            if ( ! Dir.exist?($SaveDirs[thread3]) )
+            contents = data[section][subsection]
 
-              Dir.mkdir($SaveDirs[thread3])
+            if ( section =~ /cost-estimates/ &&
+              ( subsection =~ /byAttribute/ ||
+                subsection =~ /byBuildingComponent/
+              )
+              ) then
+              debug_out " . location #{section} : #{subsection} \n"
+              contents.each do | colName, colValue |
+
+                headerLine.concat("#{section}|#{subsection}|#{colName},") if ( ! headerOut)
+
+                if ( colValue.is_a?(Hash) || colValue.is_a?(Array) ) then
+                  debug_out "> extended output only\n"
+                  result = "Details in JSON output"
+                else
+                  debug_out "> core output \n#{colValue}\n"
+                  result = colValue
+                end
+                outputlines.concat("#{result},")
+              end
 
             else
 
-              FileUtils.rm_rf Dir.glob("#{$SaveDirs[thread3]}/*.*")
+              headerLine.concat("#{section}|#{subsection},") if ( ! headerOut)
 
-            end
-
-            FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
-            FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
-          end
-
-
-
-         end # ends $RunResults.each do
-
-
-         # CSV OUTPUT.
-         outputlines = ""
-         headerLine = ""
-         batchSuccessCount = 0
-         stream_out("        -> Writing csv output output to HTAP-prm-output.csv ... ")
-         $RunResults.each do |run,data|
-           # Only write out data from successful runs - this helps prevent corrupted database
-           next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
-           batchSuccessCount += 1
-           debug_out "Run - #{run}\n"
-             data.keys.sort.each do | section |
-               data[section].keys.sort.each do |subsection|
-                 debug_out " . section #{section} : #{subsection} \n"
-                 contents = data[section][subsection]
-
-                 headerLine.concat("#{section[0]}.#{subsection},") if ( ! headerOut)
-
-                 if ( contents.is_a?(Hash) || contents.is_a?(Array) ) then
-                   debug_out "> extended output only\n"
-                   result = "Details in JSON output"
-                 else
-                   debug_out "> core output \n#{contents}\n"
-                   result = contents
-                 end
-
-                 outputlines.concat("#{result},")
-
-               end
-             end
-             if ( ! headerOut )
-               headerLine.concat("\n")
-               $fCSVout.write(headerLine)
-
-                headerOut = true
-            end
-            outputlines.concat("\n")
-
-
-           end
-           $fCSVout.write(outputlines)
-           $fCSVout.flush
-           stream_out ("done.\n")
-
-           if ($gJSONize )
-             termLastBatch = ""
-
-             stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
-             nextBatch = JSON.pretty_generate($gJSONAllData)
-
-             if ( ! firstJSONLine )
-
-               fJSONout.seek(-2, :CUR)
-               txtOut = ",\n"
-               nextBatch.each_line  do | line  |
-                next if (line =~ /^\[/ )
-                txtOut += line
+              if ( contents.is_a?(Hash) || contents.is_a?(Array) ) then
+                debug_out "> extended output only\n"
+                result = "Details in JSON output"
+              else
+                debug_out "> core output \n#{contents}\n"
+                result = contents
               end
 
-             else
-               termLastBatch = ""
-               txtOut = nextBatch
-             end
+              outputlines.concat("#{result},")
+            end
+          end
+        end
+        if ( ! headerOut )
+          headerLine.concat("\n")
+          $fCSVout.write(headerLine)
 
-             firstJSONLine = false
-             fJSONout.write txtOut
-             fJSONout.flush
-             stream_out("done.\n")
-           end
+          headerOut = true
+        end
+        outputlines.concat("\n")
+
+
+      end
+      $fCSVout.write(outputlines)
+      $fCSVout.flush
+      stream_out ("done.\n")
+
+      if ($gJSONize )
+        termLastBatch = ""
+
+        stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
+        nextBatch = JSON.pretty_generate($gJSONAllData)
+
+        if ( ! firstJSONLine )
+
+          fJSONout.seek(-2, :CUR)
+          txtOut = ",\n"
+          nextBatch.each_line  do | line  |
+            next if (line =~ /^\[/ )
+              txtOut += line
+            end
+
+          else
+            termLastBatch = ""
+            txtOut = nextBatch
+          end
+
+          firstJSONLine = false
+          fJSONout.write txtOut
+          fJSONout.flush
+          stream_out("done.\n")
+        end
 
 
 
@@ -1616,6 +1638,7 @@ if ( $choicesInMemory )
 else
   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 end
+
 
 run_these_cases($RunTheseFiles)
 
