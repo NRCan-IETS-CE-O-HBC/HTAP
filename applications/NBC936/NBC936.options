@@ -2708,3 +2708,159 @@
 *option:NBC_Specs_Perma:cost:total = 0
 
 *attribute:end
+
+!-----------------------------------------------------------------------
+! Photovoltaics 
+! Use internal HOT2000 PV Generation model
+! Choice file used to specify Internal PV OR External PV but not both!
+!-----------------------------------------------------------------------
+*attribute:start
+*attribute:name  = Opt-H2K-PV
+*attribute:tag:1 = Opt-H2K-Area           ! m2
+*attribute:tag:2 = Opt-H2K-Slope          ! degrees from horizontal
+*attribute:tag:3 = Opt-H2K-Azimuth        ! degrees from S
+*attribute:tag:4 = Opt-H2K-PVModuleType   ! 1:Mono-Si, 2:Poly-Si, 3:a-Si, 4:CdTe, 5:CIS, 6:UsrSpec
+*attribute:tag:5 = Opt-H2K-GridAbsRate    ! %
+*attribute:tag:6 = Opt-H2K-InvEff         ! %
+*attribute:default = NA
+
+*option:NA:value:1 = NA
+*option:NA:value:2 = NA
+*option:NA:value:3 = NA
+*option:NA:value:4 = NA
+*option:NA:value:5 = NA
+*option:NA:value:6 = NA
+*option:NA:cost:total  = 0
+
+*option:MonoSi-5kW:value:1 = 53             !53m2 is required area for 5 kW for Mono-Si
+*option:MonoSi-5kW:value:2 = 18.4           !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
+*option:MonoSi-5kW:value:3 = 0
+*option:MonoSi-5kW:value:4 = 1
+*option:MonoSi-5kW:value:5 = 90
+*option:MonoSi-5kW:value:6 = 90
+*option:MonoSi-5kW:cost:total = 21500      !$21500 assumed cost for 5 kW PV system for Prince George & Kelowna LEEP
+
+*option:MonoSi-10kW:value:1 = 107          !107m2 is required area for 10 kW for Mono-Si
+*option:MonoSi-10kW:value:2 = 18.4         !22.6 for 5-12 roof in Prince George and 18.4 for 4-12 slope in Kelowna
+*option:MonoSi-10kW:value:3 = 0
+*option:MonoSi-10kW:value:4 = 1
+*option:MonoSi-10kW:value:5 = 90
+*option:MonoSi-10kW:value:6 = 90
+*option:MonoSi-10kW:cost:total = 33395     !$33395 assumed cost for 10 kW PV system for Prince George & Kelowna LEEP
+
+*option:MonoSi-200m2:value:1 = 200
+*option:MonoSi-200m2:value:2 = 43
+*option:MonoSi-200m2:value:3 = 0
+*option:MonoSi-200m2:value:4 = 1
+*option:MonoSi-200m2:value:5 = 90
+*option:MonoSi-200m2:value:6 = 90
+*option:MonoSi-200m2:cost:total = 0
+
+!-------------------------------
+! R-2000 test - NO PV generation
+*option:R2000_test:value:1 = 0				!0m2 to cancel PV generation
+*option:R2000_test:value:2 = 0
+*option:R2000_test:value:3 = 0
+*option:R2000_test:value:4 = 1
+*option:R2000_test:value:5 = 90
+*option:R2000_test:value:6 = 90
+*option:R2000_test:cost:total = 0
+
+*attribute:end
+
+!-----------------------------------------------------------------------
+! External PV. Production data from PV Watts.
+!-----------------------------------------------------------------------
+
+*ext-attribute:start 
+*attribute:name      = Opt-StandoffPV
+*attribute:default   = NoPV 
+
+*option[Opt-Location>CALGARY    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.630 ! GJ/kW Installed
+*option[Opt-Location>CALGARY    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.733 ! GJ/kW Installed
+*option[Opt-Location>CALGARY    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.814 ! GJ/kW Installed
+*option[Opt-Location>EDMONTON   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.13208 ! GJ/kW Installed
+*option[Opt-Location>EDMONTON   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.24764 ! GJ/kW Installed
+*option[Opt-Location>EDMONTON   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.32324 ! GJ/kW Installed
+*option[Opt-Location>VANCOUVER  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GJ/kW Installed
+*option[Opt-Location>VANCOUVER  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GJ/kW Installed
+*option[Opt-Location>VANCOUVER  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GJ/kW Installed
+*option[Opt-Location>KAMLOOPS  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GJ/kW Installed
+*option[Opt-Location>KAMLOOPS  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GJ/kW Installed
+*option[Opt-Location>KAMLOOPS  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GJ/kW Installed
+*option[Opt-Location>PRINCEGEORGE  ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.618	! GJ/kW Installed
+*option[Opt-Location>PRINCEGEORGE  ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.64716	! GJ/kW Installed
+*option[Opt-Location>PRINCEGEORGE  ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.60036	! GJ/kW Installed
+*option[Opt-Location>REGINA     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.78764  ! GJ/kW Installed
+*option[Opt-Location>REGINA     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.94604  ! GJ/kW Installed
+*option[Opt-Location>REGINA     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 5.05584  ! GJ/kW Installed
+*option[Opt-Location>WINNIPEG   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.49568	 ! GJ/kW Installed
+*option[Opt-Location>WINNIPEG   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.60476	 ! GJ/kW Installed
+*option[Opt-Location>WINNIPEG   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.66416	 ! GJ/kW Installed
+*option[Opt-Location>TORONTO    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.9168	 ! GJ/kW Installed
+*option[Opt-Location>TORONTO    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.942	 ! GJ/kW Installed
+*option[Opt-Location>TORONTO    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.8844	 ! GJ/kW Installed
+*option[Opt-Location>OTTAWA     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.16088	 ! GJ/kW Installed
+*option[Opt-Location>OTTAWA     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.21956    ! GJ/kW Installed
+*option[Opt-Location>OTTAWA     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.21164	 ! GJ/kW Installed
+*option[Opt-Location>MONTREAL   ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.93192	 ! GJ/kW Installed
+*option[Opt-Location>MONTREAL   ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.9852	   ! GJ/kW Installed
+*option[Opt-Location>MONTREAL   ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.9654	 ! GJ/kW Installed
+*option[Opt-Location>QUEBEC     ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 4.1526	 ! GJ/kW Installed
+*option[Opt-Location>QUEBEC     ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.22496	 ! GJ/kW Installed
+*option[Opt-Location>QUEBEC     ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.23216	 ! GJ/kW Installed
+*option[Opt-Location>Fredricton ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.93732 ! GJ/kW Installed
+*option[Opt-Location>Fredricton ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 4.00608 ! GJ/kW Installed
+*option[Opt-Location>Fredricton ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 4.01544 ! GJ/kW Installed
+*option[Opt-Location>HALIFAX    ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.85848! GJ/kW Installed
+*option[Opt-Location>HALIFAX    ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.90168! GJ/kW Installed
+*option[Opt-Location>HALIFAX    ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.86892! GJ/kW Installed
+*option[Opt-Location>WHITEHORSE ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
+*option[Opt-Location>WHITEHORSE ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
+*option[Opt-Location>WHITEHORSE ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
+*option[Opt-Location>YELLOWKNIFE ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
+*option[Opt-Location>YELLOWKNIFE ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
+*option[Opt-Location>YELLOWKNIFE ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
+*option[Opt-Location>INUVIK ;Opt-RoofPitch>6-12  ]:SizedPV:production-elec-perKW  = 3.36888! GJ/kW Installed
+*option[Opt-Location>INUVIK ;Opt-RoofPitch>8-12  ]:SizedPV:production-elec-perKW  = 3.47472! GJ/kW Installed
+*option[Opt-Location>INUVIK ;Opt-RoofPitch>12-12 ]:SizedPV:production-elec-perKW  = 3.55536! GJ/kW Installed
+*option:SizedPV:cost:PerKW = 0 ! $/kW installed
+
+*option:NoPV:production-elec-perKW  = 0	! GJ/kW Installed
+*option:NoPV:cost:PerKW = 0 
+
+*option:SizedPV|3kW:dummy
+*option:SizedPV|3kW:cost:PerKW = 0 ! $/kW installed
+
+*option:SizedPV|4kW:dummy
+*option:SizedPV|4kW:cost:PerKW = 0 ! $/kW installed
+
+*option:SizedPV|5kW:dummy
+*option:SizedPV|5kW:cost:PerKW = 0 ! $/kW installed
+
+*option:SizedPV|6kW:dummy
+*option:SizedPV|6kW:cost:PerKW = 0 ! $/kW installed
+
+*option:SizedPV|7kW:dummy
+*option:SizedPV|7kW:cost:PerKW = 0 ! $/kW installed
+
+*option:SizedPV|8kW:dummy
+*option:SizedPV|8kW:cost:PerKW = 0 ! $/kW installed
+
+*option:SizedPV|12kW:dummy
+*option:SizedPV|12kW:cost:PerKW = 0 ! $/kW installed
+
+*ext-attribute:end
+
+
+!---------------------------------------------------
+!  Pay attention to these !
+!---------------------------------------------------
+
+*ext-parameters:start
+
+*param:BaseUpgradeCost = 0 !14216.602
+*param:BaseUtilitiesCost = 0 !1447
+*param:PVTarrifDollarsPerkWh = 0.0999
+
+ext-parameters:end 
