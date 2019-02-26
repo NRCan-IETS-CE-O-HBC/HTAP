@@ -411,6 +411,7 @@ Upgrades_END
 
 #### Run file inputs
 
+
 * `run-mode = [parametric|mesh|sample{}|optimize]`: Single string denoting the method that *htap-prm.rb* should use to explore the solution space. 
     - If set to `parametric`, **htap-prm.rb** will undertake a parametric analysis where each `RunScope` and `Upgrades` option is initialized to the first value in their list, and each evaluation will be a variant of the initial model with only one of the options changed to a member in the list. This run mode is useful for sensitivity studies.
     - If set to `mesh`, **htap-prm.rb** will undertake a batch analysis examining all combinations of `RunScope` and `Upgrades` options. Depending on the number of options examined for each attribute, the time required to complete a mesh run may be very large. 
@@ -429,6 +430,7 @@ Upgrades_END
     - `NBC9_36_HRV`: This ruleset causes the model's parameters to be changed to minimum perscribed values under the 2015 NBC (part 9.36), with a heat recovery ventilation system.
     - `NBC9_36_noHRV`: This ruleset causes the model's parameters to be changed to minimum perscribed values under the 2015 NBC (part 9.36), with a exhaust fan ventilation. 
 * `Opt-XXXXXXX = [ option_a, option b, option_c ... ]` : List of upgrade options (for attribute `Opt-XXXXXXX`) to be investigated during the HTAP run. These options are applied after a given ruleset has been imposed. The attributes and their options are listed [below](#attributes).
+
 
 <a name="cost-definition"></a>
 ### The unit cost database (`HTAPUnitCosts.json`) 

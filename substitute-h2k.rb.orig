@@ -90,7 +90,12 @@ $gTotalCost          = 0
 $gIncBaseCosts       = 12000
 # Note: This is dependent on model!
 $cost_type           = 0
+<<<<<<< HEAD
 $gRotate             = "N"
+$gGOStep             = 0
+=======
+$gRotate             = "S"
+>>>>>>> general-dev
 $gArchGOChoiceFile   = 0
 $gReadROutStrTxt = false
 
@@ -232,9 +237,165 @@ $annACLatentLoadFromBrowseRpt = 0.0
 $TotalAirConditioningLoad = 0.0
 $AvgACCOP = 0.0
 
-costEstimates = Hash.new
+<<<<<<< HEAD
+# Flag for indicating model is to be rotated
 $gRotateModel = false
 
+# Setting Heating Degree Days
+$HDDHash =  {
+            "WHITEHORSE" => 6580 ,
+            "TORONTO" => 3520 ,
+            "OTTAWA" => 4500 ,
+            "EDMONTON" => 5120 ,
+            "CALGARY" => 5000 ,
+            "MONTREAL" => 4200 ,
+            "QUEBEC" => 5080 ,
+            "HALIFAX" => 4000 ,
+            "FREDERICTON" => 4670 ,
+            "WINNIPEG" => 5670 ,
+            "REGINA" => 5600 ,
+            "VANCOUVER" => 2825 ,
+            "PRINCEGEORGE" => 4720 ,
+            "KAMLOOPS" => 3450 ,
+            "YELLOWKNIFE" => 8170 ,
+            "INUVIK" => 9600 ,
+            "ABBOTSFORD" => 2860 ,
+            "CASTLEGAR" => 3580 ,
+            "FORTNELSON" => 6710 ,
+            "FORTSTJOHN" => 5750 ,
+            "PORTHARDY" => 3440 ,
+            "PRINCERUPERT" => 3900 ,
+            "SMITHERS" => 5040 ,
+            "SUMMERLAND" => 3350 ,
+            "VICTORIA" => 2650 ,
+            "WILLIAMSLAKE" => 4400 ,
+            "COMOX" => 3100 ,
+            "CRANBROOK" => 4400 ,
+            "QUESNEL" => 4650 ,
+            "SANDSPIT" => 3450 ,
+            "TERRACE" => 4150 ,
+            "TOFINO" => 3150 ,
+            "WHISTLER" => 4180 ,
+            "FORTMCMURRAY" => 6250 ,
+            "LETHBRIDGE" => 4500 ,
+            "ROCKYMOUNTAINHOUSE" => 5640 ,
+            "SUFFIELD" => 4770 ,
+            "COLDLAKE" => 5860 ,
+            "CORONATION" => 5640 ,
+            "GRANDEPRAIRIE" => 5790 ,
+            "MEDICINEHAT" => 4540 ,
+            "PEACERIVER" => 6050 ,
+            "REDDEER" => 5550 ,
+            "ESTEVAN" => 5340 ,
+            "PRINCEALBERT" => 6100 ,
+            "SASKATOON" => 5700 ,
+            "SWIFTCURRENT" => 5150 ,
+            "URANIUMCITY" => 7500 ,
+            "BROADVIEW" => 5760 ,
+            "MOOSEJAW" => 5270 ,
+            "NORTHBATTLEFORD" => 5900 ,
+            "YORKTON" => 6000 ,
+            "BRANDON" => 5760 ,
+            "CHURCHILL" => 8950 ,
+            "THEPAS" => 6480 ,
+            "THOMPSON" => 7600 ,
+            "DAUPHIN" => 5900 ,
+            "PORTAGELAPRAIRIE" => 5600 ,
+            "BIGTROUTLAKE" => 7650 ,
+            "KINGSTON" => 4000 ,
+            "LONDON" => 3900 ,
+            "MUSKOKA" => 4760 ,
+            "NORTHBAY" => 5150 ,
+            "SAULTSTEMARIE" => 4960 ,
+            "SIMCOE" => 3700 ,
+            "SUDBURY" => 5180 ,
+            "THUNDERBAY" => 5650 ,
+            "TIMMINS" => 5940 ,
+            "WINDSOR" => 3400 ,
+            "GOREBAY" => 4700 ,
+            "KAPUSKASING" => 6250 ,
+            "KENORA" => 5630 ,
+            "SIOUXLOOKOUT" => 5950 ,
+            "TORONTOMETRESSTN" => 3890 ,
+            "TRENTON" => 4110 ,
+            "WIARTON" => 4300 ,
+            "BAGOTVILLE" => 5700 ,
+            "KUUJJUAQ" => 8550 ,
+            "KUUJJUARAPIK" => 9150 ,
+            "SCHEFFERVILLE" => 8550 ,
+            "SEPTILES" => 6200 ,
+            "SHERBROOKE" => 4700 ,
+            "VALDOR" => 6180 ,
+            "BAIECOMEAU" => 6020 ,
+            "LAGRANDERIVIERE" => 8100 ,
+            "MONTJOLI" => 5370 ,
+            "MONTREALMIRABEL" => 4500   ,
+            "STHUBERT" => 4490    ,
+            "STEAGATHEDESMONTS" => 5390 ,
+            "CHATHAM" => 4950 ,
+            "MONCTON" => 4680 ,
+            "SAINTJOHN" => 4570 ,
+            "CHARLO" => 5500 ,
+            "GREENWOOD" => 4140 ,
+            "SYDNEY" => 4530 ,
+            "TRURO" => 4500 ,
+            "YARMOUTH" => 3990 ,
+            "CHARLOTTETOWN" => 4460    ,
+            "SUMMERSIDE" => 4600 ,
+            "BONAVISTA" => 5000 ,
+            "GANDER" => 5110 ,
+            "GOOSEBAY" => 6670 ,
+            "SAINTJOHNS" => 4800 ,
+            "STEPHENVILLE" => 4850 ,
+            "CARTWRIGHT" => 6440 ,
+            "DANIELSHARBOUR" => 4760 ,
+            "DEERLAKE" => 4760 ,
+            "WABUSHLAKE" => 7710 ,
+            "DAWSONCITY" => 8120 ,
+            "FORTSMITH" => 7300 ,
+            "NORMANWELLS" => 8510 ,
+            "BAKERLAKE" => 10700 ,
+            "IQALUIT" => 9980 ,
+            "RESOLUTE" => 12360 ,
+            "CORALHARBOUR" => 10720 ,
+            "HALLBEACH" => 10720 ,
+            "XXXXX" => 1
+            }
+
+#Index of provinces, used by HOT2000 for region            
+$ProvArr = [ "BRITISH COLUMBIA", 
+             "ALBERTA", 
+             "SASKATCHEWAN", 
+             "MANITOBA", 
+             "ONTARIO", 
+             "QUEBEC", 
+             "NEW BRUNSWICK", 
+             "NOVA SCOTIA", 
+             "PRINCE EDWARD ISLAND", 
+             "NEWFOUNDLAND AND LABRADOR", 
+             "YUKON TERRITORY", 
+             "NORTHWEST TERRITORY", 
+             "NUNAVUT", 
+             "OTHER" ]            
+            
+            
+# Setting hash for permafrost locations
+$PermafrostHash =  {
+            "YELLOWKNIFE"  => "discontinuous" ,
+            "INUVIK"       => "continuous",
+            "CHURCHILL"    => "continuous",
+            "KUUJJUAQ"     => "continuous" ,
+            "DAWSONCITY"   => "discontinuous" ,
+            "NORMANWELLS"  => "discontinuous" ,
+            "BAKERLAKE"    => "continuous",
+            "IQALUIT"      => "continuous",
+            "RESOLUTE"     => "continuous" ,
+            "CORALHARBOUR" => "continuous",
+            "HALLBEACH"    => "continuous"
+            }
+=======
+costEstimates = Hash.new
+>>>>>>> general-dev
 
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
@@ -4582,8 +4743,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Procedure to run HOT2000
       # =========================================================================================
       def runsims( direction )
+
         $RotationAngle = $angles[direction]
-      
+
         # Save rotation angle for reporting
         $gRotationAngle = $RotationAngle
 
@@ -4595,14 +4757,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         #   is not accessible from the CLI version of HOT2000 and hasn't been well tested.
 
 
-      $XMLdoc.write(newXMLFile)
-      newXMLFile.close
-   end
         # make a back-up copy, in case HOT2000 crashses mid-run and empties the runfille
 
 
         # Command to execute H2k.
         runThis = "HOT2000.exe -inp ..\\#{$h2kFileName}"
+
+
 
 
         # JB TODO: What does this comment mean? --> AF: Extra counters to count ls tmpval how many times we've tried HOT2000.
@@ -6398,53 +6559,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           return cost
         end
 
-#===============================================================================
-# setRotateModel: takes in the h2k file and desired 
-#===============================================================================
-def setRotateModel( elements, direction )
-    # TODO: Check validity of direction input
-    # Update the whole-building
-    locationText = "HouseFile/House/Specifications/FacingDirection"
-    iDirCode = elements[locationText].attributes["code"].to_i
-    iDirCode = iDirCode + direction
-    if ( iDirCode > 8 )
-        iDirCode = iDirCode - 8
-    end
-    elements[locationText].attributes["code"] = iDirCode.to_s
-    # Check wall directions 
-    locationText = "HouseFile/House/Components/Wall/FacingDirection"
-    elements.each(locationText) do |element|
-        if ( element.attributes["code"].to_i != 1 )
-            iDirCode = element.attributes["code"].to_i
-            iDirCode = iDirCode + direction
-            if ( iDirCode > 9 )
-                iDirCode = iDirCode - 8
-            end
-            element.attributes["code"] = iDirCode.to_s
-        end
-    end
-    # Check the windows in walls directions
-    locationText = "HouseFile/House/Components/Wall/Components/Window/FacingDirection"
-    elements.each(locationText) do |element|
-        iDirCode = element.attributes["code"].to_i
-        iDirCode = iDirCode + direction
-        if ( iDirCode > 8 )
-            iDirCode = iDirCode - 8
-        end
-        element.attributes["code"] = iDirCode.to_s
-    end
-    # Check the windows in the basement
-    locationText = "HouseFile/House/Components/Basement/Components/Window/FacingDirection"
-    elements.each(locationText) do |element|
-        iDirCode = element.attributes["code"].to_i
-        iDirCode = iDirCode + direction
-        if ( iDirCode > 8 )
-            iDirCode = iDirCode - 8
-        end
-        element.attributes["code"] = iDirCode.to_s
-    end
-end
-
         #===============================================================================
         # Costing module
 
@@ -6646,9 +6760,6 @@ end
             end
 
 
-      $cmdlineopts["rotate-model"] = true
-      $gRotateModel = true
-   end
 
           end
 
@@ -6692,6 +6803,191 @@ end
           $linecount = 0
           $gParameters = Hash.new
 
+<<<<<<< HEAD
+# =========================================================================================
+# Procedure to run HOT2000
+# =========================================================================================
+def runsims( direction )
+      $RotationAngle = $angles[direction]
+      
+      # Save rotation angle for reporting
+      $gRotationAngle = $RotationAngle
+      
+      Dir.chdir( $run_path )
+      debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n") 
+      
+   # Rotate the model, if necessary:
+   if ( $gRotateModel )
+      h2kElements = get_elements_from_filename($gWorkingModelFile) # Reload the file 
+      setRotateModel( h2kElements, $RotationAngle )
+      newXMLFile = File.open($gWorkingModelFile, "w")
+      $XMLdoc.write(newXMLFile)
+      newXMLFile.close
+   end
+   # make a back-up copy, in case HOT2000 crashses mid-run and empties the runfille
+
+   # Command to execute H2k. 
+   runThis = "HOT2000.exe -inp ..\\#{$h2kFileName}"
+
+   # JB TODO: What does this comment mean? --> AF: Extra counters to count ls tmpval how many times we've tried HOT2000.
+   keepTrying = true 
+   tries = 1
+   # This loop actually calls hot2000!
+   pid = 0 
+ 
+   $runH2KTime = Time.now - Time.now  
+   
+   
+   while keepTrying do 
+
+     startH2Krun = Time.now 
+     
+     $gStatus["H2KExecutionAttempts"] = tries
+     
+     FileUtils.cp("..\\#{$h2kFileName}", "..\\run_file_file_#{tries}.h2k")   
+     
+     runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
+
+     begin
+       
+       debug_out ("running #{runThis} ... \n") 
+       debug_out ("timeout limit  #{$maxRunTime} ... \n") 
+       
+       pid = Process.spawn( runThis, :new_pgroup => true )
+       stream_out ("\n Attempt ##{tries}:  Invoking HOT2000 (PID #{pid}) ...")
+       runStatus = Timeout::timeout($maxRunTime){
+         Process.waitpid(pid, 0)
+       }
+       status = $?.exitstatus  
+     rescue Timeout::Error
+       
+       begin 
+         Process.kill('KILL', pid)
+       rescue 
+         # do nothing - process may have died on its own?
+       end 
+
+       
+       status = -1 
+       
+       sleep(2)
+     end
+
+     
+     endH2Krun = Time.now
+
+     $runH2KTime = $runH2KTime + ( endH2Krun - startH2Krun )      
+ 
+     stream_out(" Hot2000 (PID: #{pid}) finished with exit status #{status} \n")
+    
+     if status == -1 
+        warn_out("\n\n Attempt ##{tries}: Timeout on H2K call after #{$maxRunTime} seconds." )
+        keepTrying = true       # Successful run - don't try agian  
+    
+     elsif status == 0 
+      
+  
+        stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
+        keepTrying = false       # Successful run - don't try agian 
+        
+        FileUtils.cp("..\\run_file_file_#{tries}.h2k", "..\\#{$h2kFileName}")
+         
+     elsif status == 3 ||  status == nil  # Pre-check message(s)
+ 
+
+        warn_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!" )
+        keepTrying = false       # Successful run - don't try agian 
+        
+        FileUtils.cp("..\\run_file_file_#{tries}.h2k", "..\\#{$h2kFileName}")
+
+     #elsif status == nil  
+     #   # Get nil status when can't load an h2k file.
+     #   
+     #   fatalerror( "When spawning H2K, process returned nil return code after #{$runH2KTime.round(2).to_s} seconds; HOT2000 message box or couldn't load file!\n" )
+     #   keepTrying = false   # Give up.
+     
+     end 
+     
+         
+     if ( keepTrying && tries < $maxTries )  # Unsuccessful run - try again for up to maxTries     
+        tries = tries + 1
+        keepTrying = true
+        
+        # if run failed, overwrite the h2k file with the backup. Needed because if H2k times out, or crashes mid-run, 
+        # the h2k file may be corrupted. 
+    
+       
+       # Try to kill the process again to make sure there are no zombies holding write access to h2k files. 
+     
+     elsif ( keepTrying && tries == $maxTries ) 
+
+        warn_out("Max number of execution attempts (#{$maxTries}) reached. Giving up.")
+        fatalerror("Hot2000 evaluation could not be completed successfully") 
+        keepTrying = false   # Give up.
+     
+     end     
+     
+     begin 
+         Process.kill('KILL', pid)
+         sleep(2)
+     rescue 
+         # do nothing - process may have died on its own?
+     end 
+     
+     
+     
+
+     
+   end 
+   
+    $gStatus["H2KExecutionTime"] = $runH2KTime
+
+   $NumTries = tries
+   
+   
+   
+   Dir.chdir( $gMasterPath )
+   debug_out ("\n Moved to path: #{Dir.getwd()}\n") 
+   
+   # Save output files
+   $OutputFolder = "sim-output"
+   if ( ! Dir.exist?($OutputFolder) )
+      if ( ! system("mkdir #{$OutputFolder}") )
+         fatalerror( "Could not create #{$OutputFolder} below #{$gMasterPath}! MKDir Return code: #{$?}\n" )
+      end
+   else
+      if ( File.exist?("#{$OutputFolder}\\Browse.rpt") )
+         if ( ! system("del #{$OutputFolder}\\Browse.rpt") )    # Delete existing Browse.Rpt
+            fatalerror("Could not delete existing Browse.rpt file in #{$OutputFolder}! Del Return code: #{$?}\n" )
+         end
+      end
+   end
+   
+   # Copy simulation results to sim-output folder in master (for ERS number)
+   # Note that most of the output is contained in the HOT2000 file in XML!
+   if ( Dir.exist?("sim-output") )
+      stream_out ("\n Copying results.")
+      FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
+      
+      if ( $gReadROutStrTxt )
+         if ( File.file?("#{$run_path}\\ROutStr.txt")  ) 
+            FileUtils.cp("#{$run_path}\\ROutStr.txt", ".\\sim-output\\") 
+            debug_out( "\n\n Copied output file Routstr.txt to #{$gMasterPath}\\sim-output.\n" )
+         else 
+            fatalerror("Could not copy Routstr.txt to #{$OutputFolder}! Copy return code: #{$?}\n" )
+         end      
+      end        
+      
+      #if ( ! system("copy /Y #{$run_path}\\Browse.rpt .\\sim-output\\") )
+      #if ( ! FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\") ) 
+      #   fatalerror("\n Fatal Error! Could not copy Browse.rpt to #{$OutputFolder}!\n Copy return code: #{$?}\n" )
+      #else
+      #   debug_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
+      #end
+   end
+
+end   # runsims
+=======
           stream_out drawRuler("Parsing input data")
 
           if ( $gOptionFile =~ /\.json/ ) then
@@ -6711,6 +7007,7 @@ end
               $gOptionsOld = $gOptions
               $gOptions = nil
               $gOptions= HTAPdata.parse_json_options_file("HTAP-options.json")
+>>>>>>> general-dev
 
             end
 
@@ -7075,6 +7372,227 @@ end
           $gChoices.each do | attribute, value |
             stream_out (" - #{attribute.ljust(35)} = #{value} \n ")
           end
+<<<<<<< HEAD
+        end
+        if unitCost == 0
+          # The R-value used in options file doesn't have an associated unit cost data item. Use
+          # regression fit (R-squared = 0.9987)
+          unitCost = 0.038 * optValue.to_f + 0.0253
+        end
+        cost += unitCost * ceilingArea
+      end
+    end
+  when "Opt-Mainwall"  #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    # Get house main wall area from the first XML <results> section - these are totals of multiple surfaces
+    wallAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
+    cost = unitCost * wallAreaOut
+  when "Opt-GenericWall_1Layer_definitions" #.................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    # Get house main wall area from the first XML <results> section - these are totals of multiple surfaces
+    wallAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
+    cost = unitCost * wallAreaOut
+  when "Opt-FloorHeader" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    # Get house floor header area from the first XML <results> section - these are totals of multiple surfaces
+    locationText = "HouseFile/AllResults/Results/Other/GrossArea/*" # Basement, Crawl space
+    headerAreaout = 0
+    elements.each(locationText) do |element|
+      headerAreaout +=  element.attributes["floorHeader"].to_f
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-ExposedFloor" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-CasementWindows" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-Skylights" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    # Get house skylight area from the house components - skylight is the only allowable component for the ceiling
+    locationText = "HouseFile/House/Components/Ceiling/Components/*/Measurements"
+    skylightAreaout = 0
+    elements.each(locationText) do |element|
+      skylightAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-DoorWindows" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    # Get door  area from the house components - skylight is the only allowable component for the ceiling
+    locationText = "HouseFile/House/Components/*/Components/Door/Components/Window/Measurements"
+    doorwindowAreaout = 0
+    elements.each(locationText) do |element|
+      doorwindowAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)/1000000.0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-Doors" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    locationText = "HouseFile/House/Components/*/Components/Door/Measurements"
+    doorAreaout = 0
+    elements.each(locationText) do |element|
+      doorAreaout += (element.attributes["height"].to_f * element.attributes["width"].to_f)
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-H2KFoundation" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-H2KFoundationSlabCrawl" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-DHWSystem" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-DWHRSystem" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-HVACSystem" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-HRVspec" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-Baseloads" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-RoofPitch" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-StandoffPV" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  when "Opt-H2K-PV" #.................................................................................
+    if optValue == "NA"
+      unitCost = 0
+    elsif optValue == ""
+      unitCost = 0
+    end
+    cost = unitCost * getHeatedFloorArea(elements)
+  end
+  return cost
+end
+
+#===============================================================================
+# setRotateModel: takes in the h2k file and desired 
+#===============================================================================
+def setRotateModel( elements, direction )
+    # TODO: Check validity of direction input
+    # Update the whole-building
+    locationText = "HouseFile/House/Specifications/FacingDirection"
+    iDirCode = elements[locationText].attributes["code"].to_i
+    iDirCode = iDirCode + direction
+    if ( iDirCode > 8 )
+        iDirCode = iDirCode - 8
+    end
+    elements[locationText].attributes["code"] = iDirCode.to_s
+    # Check wall directions 
+    locationText = "HouseFile/House/Components/Wall/FacingDirection"
+    elements.each(locationText) do |element|
+        if ( element.attributes["code"].to_i != 1 )
+            iDirCode = element.attributes["code"].to_i
+            iDirCode = iDirCode + direction
+            if ( iDirCode > 9 )
+                iDirCode = iDirCode - 8
+            end
+            element.attributes["code"] = iDirCode.to_s
+        end
+    end
+    # Check the windows in walls directions
+    locationText = "HouseFile/House/Components/Wall/Components/Window/FacingDirection"
+    elements.each(locationText) do |element|
+        iDirCode = element.attributes["code"].to_i
+        iDirCode = iDirCode + direction
+        if ( iDirCode > 8 )
+            iDirCode = iDirCode - 8
+        end
+        element.attributes["code"] = iDirCode.to_s
+    end
+    # Check the windows in the basement
+    locationText = "HouseFile/House/Components/Basement/Components/Window/FacingDirection"
+    elements.each(locationText) do |element|
+        iDirCode = element.attributes["code"].to_i
+        iDirCode = iDirCode + direction
+        if ( iDirCode > 8 )
+            iDirCode = iDirCode - 8
+        end
+        element.attributes["code"] = iDirCode.to_s
+    end
+end
+=begin rdoc
+=========================================================================================
+  END OF ALL METHODS 
+=========================================================================================
+=end
+$allok = true
+=======
+>>>>>>> general-dev
 
 
 
@@ -7100,7 +7618,65 @@ end
           # Can this be removed? NO!
           LegacyProcessConditions()
 
+<<<<<<< HEAD
+   opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
+      $cmdlineopts["base_model"] = b
+      $gBaseModelFile = b
+      if !$gBaseModelFile
+         fatalerror("Base folder file name missing after --base_folder (or -b) option!")
+      end
+      if (! File.exist?($gBaseModelFile) ) 
+         fatalerror("Base file does not exist in location specified!")
+      end
+      $gLookForArchetype = 0; 
+   end
+
+   opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
+      $cmdlineopts["extra_output1"] = true
+      $gReadROutStrTxt = true 
+      $ExtraOutput1 = true
+   end
+
+   opts.on("-k", "--keep_H2K_folder", "Keep the H2K sub-folder generated during last run.") do
+      $cmdlineopts["keep_H2K_folder"] = true
+      $keepH2KFolder = true
+   end
+   
+   opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
+
+     $AliasInput   = $AliasLongInput  
+     $AliasOutput  = $AliasLongOutput 
+     $AliasConfig  = $AliasLongConfig 
+     $AliasArch    = $AliasLongArch   
+         
+   end   
+   
+   opts.on("-a", "--auto-cost-options", "Automatically cost the option(s) set for this run.") do
+    $cmdlineopts["auto_cost_options"] = true
+    $autoCostOptions = true
+   end
+   
+   opts.on("-j", "--export-options-to-json", "Export the .options file into JSON format and quit.") do
+
+     $gJasonExport = true
+         
+   end  
+   
+   opts.on("-t", "--test-json-export", "(debugging) Export the .options file as .json, and then re-import it (debugging)") do
+
+     $gJasonTest = true
+         
+   end     
+   
+   opts.on("-z", "--rotate-model", "Run model in 4 orientations and average output") do
+      $cmdlineopts["rotate-model"] = true
+      $gRotateModel = true
+   end
+   
+end
+=======
           # Seems like we've found everything!
+>>>>>>> general-dev
 
           if ( !$allok )
             fatalerror(" Choices in #{$gChoiceFile} do not match options in #{$gOptionFile}!")
@@ -7630,6 +8206,20 @@ end
 
         end
 
+<<<<<<< HEAD
+# Orientation changes. For now, we assume the arrays must always point south.
+$angles = Hash.new()
+$angles = { "S" => 0 , "E" => 2, "N" => 4, "W" => 6 }
+
+# Orientations is an array we populate with a single member if the orientation 
+# is specified, or with all of the orientations to be run if 'AVG' is spec'd.               
+orientations = Array.new()
+if ( $gRotate =~ /AVG/ || $gRotateModel) 
+   orientations = [ 'S', 'N', 'E', 'W' ]
+else 
+   orientations = [ $gRotate ] 
+end
+=======
         32.times do |n|
           bin =n+1
           if (bin<10)  then
@@ -7639,6 +8229,7 @@ end
           end
 
           binstr = "#{pad}#{bin.to_i}"
+>>>>>>> general-dev
 
           $fSUMMARY.write("#{$aliasOutput}.BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")
 

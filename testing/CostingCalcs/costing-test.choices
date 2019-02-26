@@ -1,0 +1,33 @@
+! Choice file for run $gGenChoiceFileNum
+Opt-FuelCost : rates2016
+Opt-ResultHouseCode : General
+Opt-Specifications : NA
+Opt-Baseloads : NA
+Opt-Temperatures : NA
+Opt-ACH :  New-Const-air_seal_to_1.00_ach
+Opt-CasementWindows : NA! NC-2g-HG-u1.65
+Opt-Skylights : NA
+Opt-DoorWindows : NA
+Opt-Doors : NA
+Opt-MainWall : NA
+Opt-GenericWall_1Layer_definitions : NC_R-27(eff)_2x6-24inOC_R19-batt+2inXPS_poly_vb
+Opt-FloorHeaderIntIns : NC_R-29eff_5.5inBatt
+Opt-FoundationWallExtIns :      uninsulated !xps2inEffR10
+Opt-FoundationWallIntIns :      uninsulated !WoodFrameEffR11
+Opt-FoundationSlabBelowGrade :   xps3inEffR15
+Opt-FoundationSlabOnGrade :      xps4inEffR20
+Opt-ExposedFloor : NA
+Opt-FloorAboveCrawl : NA
+Opt-Ceilings : NA
+Opt-AtticCeilings : NA
+Opt-CathCeilings : NA
+Opt-FlatCeilings : NA
+Opt-HRVonly : HRV_sre_60
+Opt-HRVspec : NA
+Opt-DHWSystem : NA
+Opt-HVACSystem : CCASHP
+Opt-DWHRSystem : DWHR-eff-55
+Opt-H2K-PV : NA
+!Opt-Archetype : ERS-4540.H2K
+Opt-Location : HALIFAX
+Opt-Ruleset : NBC9_36[fuel>electric;vent>HRV]
