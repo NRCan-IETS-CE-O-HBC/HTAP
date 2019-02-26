@@ -9791,6 +9791,28 @@
           "proxy": "VentFans_sre_0"
         }
       }
+      "NBC_noHRVexh": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "utility",
+            "OPT-H2K-AirDistType": "1",
+            "OPT-H2K-OpSched": "480",
+            "OPT-FlowCalc": "1",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "NA",
+            "OPT-H2K-Rating2": "NA",
+            "OPT-H2K-Rating3": "NA",
+            "OPT-H2K-FanPowerCalc": "NBC",
+            "OPT-H2K-FanPower1": "NA",
+            "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "VentFans_sre_0"
+        }
+      }
     },
     "default": "NA",
     "stop-on-error": true,
