@@ -17,25 +17,25 @@ $resarray = [] # Global array to hold all output data
 =begin
 # Definitions (functions) declaration and definition
 =end
-def getTypeHouseString(iVal)
-  sout = ''
-  case iVal
-    when 1 then sout = 'Single-detached'
-    when 2 then sout = 'Double/semi-detached'
-    when 3 then sout = 'Duplex'
-    when 4 then sout = 'Triplex'
-    when 5,13,14 then sout = 'Apartment'
-    when 6 then sout = 'Rowhouse end'
-    when 7 then sout = 'Mobile'
-    when 8 then sout = 'Rowhouse mid'
-    when 9 then sout = 'Detached duplex'
-    when 10 then sout = 'Detached triplex'
-    when 11 then sout = 'Attached duplex'
-    when 12 then sout = 'Attached triplex'
-    else sout = 'NA'
-  end
-  return sout
-end
+#def getTypeHouseString(iVal)
+#  sout = ''
+#  case iVal
+#    when 1 then sout = 'Single-detached'
+#    when 2 then sout = 'Double/semi-detached'
+#    when 3 then sout = 'Duplex'
+#    when 4 then sout = 'Triplex'
+#    when 5,13,14 then sout = 'Apartment'
+#    when 6 then sout = 'Rowhouse end'
+#    when 7 then sout = 'Mobile'
+#    when 8 then sout = 'Rowhouse mid'
+#    when 9 then sout = 'Detached duplex'
+#    when 10 then sout = 'Detached triplex'
+#    when 11 then sout = 'Attached duplex'
+#    when 12 then sout = 'Attached triplex'
+#    else sout = 'NA'
+#  end
+#  return sout
+#end
 
 
 
@@ -123,8 +123,8 @@ files.each do |file|
   # Get a name for this record
   reshash["filename"] = File.basename(file, ".*")
 
-  reshash["buildingType"] = H2KUtils.getHouseType(h2kElements)
-  reshash["storeys"] = H2KUtils.getStoreys(h2kElements)
+  reshash["buildingType"] = H2KFile.getHouseType(h2kElements)
+  reshash["storeys"] = H2KFile.getStoreys(h2kElements)
 
   # Get the plan shape
   locationText = "HouseFile/House/Specifications/PlanShape"
