@@ -9,27 +9,14 @@ use File::Copy::Recursive qw(rmove);
 
 # GLOBALS
 my $sLocCrossRefFile = "../data/LocationCrossRef.xml"; # Path to location cross-ref (holds what HVAC and DHW system is used for each location, and what archetypes)
-my $sArchInfo;
-my $sArchDir; # Path to archetypes
+my $sArchInfo = "../../../Archetypes/EGH-ARCH/ArchInfo.xml"; # Path to database holding archetype info
 
 # INPUTS
-my $iThreads=22; # Must be integer greater than 0
-my $iMode = 1; # MUST BE EITHER 1 (use old 11 archetypes), or 2 (use new archetypes)
+my $iThreads=1; # Must be integer greater than 0
+my $sArchDir = "C:/HTAP/Archetypes/EGH-ARCH"; # Path to archetypes
 my @sLocations = qw( SAINTJOHNS CHARLOTTETOWN  HALIFAX MONCTON MONTREAL TORONTO WINNIPEG SASKATOON CALGARY VANCOUVER WHITEHORSE YELLOWKNIFE IQALUIT); # MUST correpsond to loactions in $sLocCrossRefFile
 my @sRuleSets = qw( NBC9_36_HRV NBC9_36_noHRV);
-my $sOutputFolder = "E:/Classic_Archs_Base";
-
-# Determine which archetype set is to be simulated
-if($iMode == 1) {
-	$sArchDir = "C:/HTAP/Archetypes";
-	$sArchInfo = "../data/ClassicArchInfo.xml";
-} elsif ($iMode == 2) {
-	$sArchDir = "C:/HTAP/Archetypes/EGH-ARCH";
-	$sArchInfo = "../../../Archetypes/EGH-ARCH/ArchInfo.xml";
-} else {
-	die "ERROR: Invalid mode number $iMode! Must be 1 (classic 11 archetypes), or 2 (new archetypes)\n";
-};
-
+my $sOutputFolder = "E:/Arch4_exhaust";
 # Intialize all relevant choices to "NA" OR choose changes to building envelope
 my $hChoices = { 
 				 "Opt-FuelCost" => 'rates2016',
@@ -82,7 +69,6 @@ foreach my $sLoc (@sLocations) { # This loop represents one call to htap paralle
 
 	# Determine the archetypes to be run for this location
 	my $sGroupKey = $hCrossRef->{"$sLoc"}->{"Arch-Set"}; # Identify what housing market to use for this location
-	if($iMode == 1) {$sGroupKey = 'ALL';} # Override if using the old archetypes
 	my @sArchs=();
 	foreach my $sFile (keys (%{$hArchInfo})) {
 		if($hArchInfo->{$sFile}->{"Housing-Market"} =~ m/$sGroupKey/) {push(@sArchs,$sFile);}
