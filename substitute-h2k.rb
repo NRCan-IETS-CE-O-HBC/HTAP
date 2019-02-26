@@ -74,7 +74,7 @@ $autoCostOptions = false
 $gTotalCost          = 0 
 $gIncBaseCosts       = 12000     # Note: This is dependent on model!
 $cost_type           = 0
-$gRotate             = "S"       # Selecting "South" translates to no rotation (0 deg)
+$gRotate             = "N"
 $gGOStep             = 0
 $gArchGOChoiceFile   = 0
 $gReadROutStrTxt = false
@@ -224,6 +224,9 @@ $annACSensibleLoadFromBrowseRpt = 0.0
 $annACLatentLoadFromBrowseRpt = 0.0
 $TotalAirConditioningLoad = 0.0
 $AvgACCOP = 0.0
+
+# Flag for indicating model is to be rotated
+$gRotateModel = false
 
 # Setting Heating Degree Days
 $HDDHash =  {
@@ -5040,7 +5043,7 @@ def runsims( direction )
       debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n") 
       
    # Rotate the model, if necessary:
-   if ( $gRotate =~ /AVG/ )
+   if ( $gRotateModel )
       h2kElements = get_elements_from_filename($gWorkingModelFile) # Reload the file 
       setRotateModel( h2kElements, $RotationAngle )
       newXMLFile = File.open($gWorkingModelFile, "w")
@@ -7943,6 +7946,11 @@ optparse = OptionParser.new do |opts|
          
    end     
    
+   opts.on("-z", "--rotate-model", "Run model in 4 orientations and average output") do
+      $cmdlineopts["rotate-model"] = true
+      $gRotateModel = true
+   end
+   
 end
 
 # Note: .parse! strips all arguments from ARGV and .parse does not
@@ -8729,23 +8737,17 @@ processFile( h2kElements )
 stream_out( "done.")
 
 
-# Orientation changes. HOT2000 has 45 deg resolution. Map directions to Hot2000 units
-# NOTE: Each increment is a 45 degree rotation counterclockwise
+# Orientation changes. For now, we assume the arrays must always point south.
 $angles = Hash.new()
-$angles = { "S" => 0, "SE" => 1, "E" => 2, "NE" => 3, "N" => 4, "NW" => 5, "W" => 6 }
+$angles = { "S" => 0 , "E" => 2, "N" => 4, "W" => 6 }
 
 # Orientations is an array we populate with a single member if the orientation 
 # is specified, or with all of the orientations to be run if 'AVG' is spec'd.               
 orientations = Array.new()
-if ( $gRotate =~ /AVG/) # Only average over 4 90 degree rotations
+if ( $gRotate =~ /AVG/ || $gRotateModel) 
    orientations = [ 'S', 'N', 'E', 'W' ]
 else 
    orientations = [ $gRotate ] 
-   if( ! $angles.has_key? "#{$gRotate}")
-      # Invalid input
-      warn_out("In GOconfig: Unknown rotation input #{$gRotate}! Setting to 'S' (No rotation).")
-      orientations = [ "S" ]
-   end
 end
 
 # Compute scale factor for averaging between orientations (=1 if only 
