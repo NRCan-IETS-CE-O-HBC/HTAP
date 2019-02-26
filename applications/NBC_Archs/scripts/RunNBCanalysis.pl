@@ -168,7 +168,7 @@ sub setRunFile {
 sub getOutputData {
 	my $hRef = shift;
 	my $sLocation = shift;
-	my @sRetrieve = qw( Energy-Total-GJ Energy-DHWGJ Energy-VentGJ EnergyEleckWh EnergyGasM3 EnergyOil_l EnergyProp_L EnergyWood_cord MEUI_kWh_m2 PEAK-Heating-W TEDI_kWh_m2 Opt-ACH );
+	my @sRetrieve = qw( Energy-DHWGJ Energy-VentGJ EnergyEleckWh EnergyGasM3 EnergyOil_l EnergyProp_L EnergyWood_cord MEUI_kWh_m2 PEAK-Heating-W TEDI_kWh_m2 Opt-ACH );
 	
 	# INTERMEDIATES
 	my $sOutputFile = "HTAP-prm-output.csv";
