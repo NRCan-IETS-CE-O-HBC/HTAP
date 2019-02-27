@@ -285,6 +285,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-elec-heat"
       end
    end
+   # Remove any secondary HVAC systems
+   elements["HouseFile/House/HeatingCooling"].delete_element("SupplementaryHeatingSystems")
 
    # DHW Equipment performance requirements (Table 9.36.4.2)
    if (primDHWFuelName =~ /gas/i) != nil
