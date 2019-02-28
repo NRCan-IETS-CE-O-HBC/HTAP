@@ -75,6 +75,11 @@ module HTAPData
 
   end
 
+  def HTAPData.parse_results(filename)
+    return JSON.parse(File.read(filename))
+  end
+
+
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
     stream_out("\n\n Reading available options (#{filename})...")
@@ -490,9 +495,10 @@ module HTAPData
   end
 
   def HTAPData.zeroInvalidFoundaiton(options,choices,order)
+    debug_on
 
     if ( $foundationConfiguration == "surfBySurf" ) then
-
+      debug_out ("Zeroing legacy\n")
       choices.delete("Opt-H2KFoundation")
       choices.delete("Opt-H2KFoundationSlabCrawl")
       order.delete("Opt-H2KFoundation")
@@ -520,7 +526,7 @@ module HTAPData
 
 
     if ( $foundationConfiguration == "wholeFdn" ) then
-
+      debug_out ("Zeroing surfs \n")
       choices.delete("Opt-FoundationSlabBelowGrade")
       choices.delete("Opt-FoundationSlabOnGrade")
       choices.delete("Opt-FoundationWallIntIns")
@@ -542,7 +548,7 @@ module HTAPData
 
 
   def HTAPData.whichFdnConfig(myChoices)
-    #debug_on
+    debug_on
 
     # Use a copy, bc these tests cause new keys to be creaed?
     choiceClone = myChoices.clone
@@ -618,6 +624,92 @@ module HTAPData
     return result
   end
 
+
+
+  def HTAPData.summarizeArchetype(myH2KHouseInfo,fluff=true)
+    # debug_on
+    padding = 35
+    $numPad = 5
+    reportTxt = ""
+
+
+
+    reportTxt += "#### General Info:\n\n"
+    reportTxt += "|#{"Item".ljust(padding)}|#{"Value".ljust(padding)}|\n"
+    reportTxt += "|#{"-".ljust(padding,"-")}|#{"-".ljust(padding,"-")}|\n"
+    reportTxt += "|House type:".ljust(padding) + "|#{myH2KHouseInfo["house-description"]["type"].ljust(padding)}|\n"
+    reportTxt += "|Number of storeys:".ljust(padding) + "|#{myH2KHouseInfo["house-description"]["stories"].ljust(padding)}|\n"
+
+    reportTxt += "\n\n"
+
+
+    reportTxt += "####  Dimensions:\n\n"
+    reportTxt += "|#{"Measure".ljust(padding)}|" "|#{"Value".ljust(padding)}|\n"
+    reportTxt += "|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|\n"
+    reportTxt += "|Heated floor area:".ljust(padding) +
+                "| "+
+                "| #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["heatedFloorArea"]).rjust(padding)}|\n"
+    reportTxt += "|Window area:".ljust(padding) +
+                 "| "+
+                 "| #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["windows"]["area"]["total"]).rjust(padding)}|\n"
+    reportTxt += "|Window to wall ratio".ljust(padding) + "| | #{(myH2KHouseInfo["dimensions"]["windows"]["area"]["total"]/myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"]*100).round(0).to_s.rjust(padding)} % | \n"
+
+
+    #windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+    reportTxt += "|   Window to floor ratio | S  | ".rjust(padding) + " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["1"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | SE |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["2"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | E  |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["3"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | NE |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["4"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | N  |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["5"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | NW |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["5"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | W  |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["7"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    reportTxt += "|                         | SW |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["8"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+
+
+    reportTxt += "|    Ceiling area | total    | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"])}      |\n"
+    reportTxt += "|                 | attic    | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"])}    |\n"
+    reportTxt += "|                 | flat     | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"])}     | \n"
+    reportTxt += "|                 | cathedral| #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"])}| \n"
+    reportTxt += "|    Above grade wall area | | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"])} - net of windows, doors, headers|\n"
+    reportTxt += "|    Below grade wall area | | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["internal"])} - including above-grade components of foundation walls|\n"
+    reportTxt += "|    Slab area |basement   | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["basement"]["floor-area"])} |\n"
+    reportTxt += "|              |crawl-space   | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["crawlspace"]["floor-area"])} |\n"
+    reportTxt += "|              |on-grade | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["slab"]["floor-area"])} |\n"
+    reportTxt += "|    Exposed floors | | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["exposed-floors"]["area"]["total"])} |\n"
+
+
+        reportTxt += "\n\n"
+
+
+
+    reportTxt += "#### Equipment Sizes:\n"
+    reportTxt += "|#{"Measure".ljust(padding)}|" "|#{"Value".ljust(padding)}|\n"
+    reportTxt += "|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|\n"
+    reportTxt += "|    Design Loads | heating| #{numOrDash((myH2KHouseInfo["HVAC"]["designLoads"]["heating_W"]/1000).round(1))} kW - when constructed to NBC requirements|\n"
+    reportTxt += "|                 | cooling| #{numOrDash((myH2KHouseInfo["HVAC"]["designLoads"]["cooling_W"]/1000).round(1))} kW - when constructed to NBC requirements|\n"
+    reportTxt += "|    Ventilation capacity| | #{numOrDash((myH2KHouseInfo["HVAC"]["Ventilator"]["capacity_l/s"]).round(0))} l/s|\n"
+
+    debug_out ("Summarize-Archetype : \n#{reportTxt}\n")
+    return reportTxt
+
+  end
+
+  def self.formatSqFtSqM(area)
+    return "--".rjust($numPad) if numOrDash(area) == "--"
+    return ("#{(area*SF_PER_SM).round(0).to_s.rjust($numPad)} ft^2 (#{(area).round(0)} m^2)")
+  end
+
+  def self.numOrDash(number)
+
+    if (number.to_f < 0.01 )
+      string = "--"
+    else
+      string = "#{number.to_s}"
+    end
+    return string
+
+  end
+
 end
 
 module HTAPConfig
@@ -630,6 +722,8 @@ module HTAPConfig
       log_out("could not parse configuration file:  #{$scriptLocation}/#{ConfigDataFile} \n")
     end
   end
+
+
 
   def self.setData(keys,content)
     #debug_on
@@ -776,7 +870,6 @@ module HTAPConfig
         self.setData(["createTime"],Time.now)
       end
   end
-
 
 
 

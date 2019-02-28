@@ -533,7 +533,7 @@ module Costing
               if ( units == "sf wall" || units == "sf wall (net)" || units == "sf wall area (gross)" ) then
                 measure =
                 (
-                    myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["gross"] + 0.0
+                    myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["gross"] +
                     myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["internal"]
                 ) * SF_PER_SM
 
@@ -544,7 +544,7 @@ module Costing
                 measureDescription = "sq.ft - Ceiling area: including attics, flat roofs and scissor ceilings"
 
               elsif ( units == "sf header area" )
-                measure = myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["headers"] * SF_PER_SM
+                measure = myH2KHouseInfo["dimensions"]["headers"]["area"]["total"] * SF_PER_SM
                 measureDescription = "sq.ft - Floor header area"
 
               elsif ( units == "ea" || units =="undefined")
@@ -557,7 +557,7 @@ module Costing
               end
             when "Opt-FloorHeaderIntIns"
               if ( units == "sf header area" || units == "sf applied" || units =="undefined" )
-                measure = myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["headers"] * SF_PER_SM
+                  measure = myH2KHouseInfo["dimensions"]["headers"]["area"]["total"] * SF_PER_SM
                 measureDescription = "sq.ft - Floor header area"
 
               else
@@ -869,7 +869,183 @@ module Costing
 
   # Create a report auditing all the costing data used in calculaitons,
   # and return as a string.
-  def Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo)
+
+  def Costing.getAttributeComponents(myChoices,myCosts,myH2KHouseInfo)
+
+    myComponentsDetails = Hash.new
+    myChoices.each do |attribute, choice |
+
+
+    end
+
+
+  end
+
+
+
+  def Costing.auditComponents(myChoices,myCosts,myH2KHouseInfo,format="txt")
+    #
+    myUnitCostsDB = Costing.parseUnitCosts("C:\\HTAP\\HTAPUnitCosts.json")
+
+    if ( format != "txt") then
+      markdown = true
+      sep ="|"
+    else
+      sep = ""
+      markdown = false
+    end
+    debug_out ("Format: #{format}, Markdown: #{markdown}, sep: #{sep} \n")
+
+    lenLongestComponent   = 20
+    lenLongestDescription = 20
+    lenLongestUnits       = 10
+
+    index = 0
+    colWidth = 12
+    colPad = 2
+    colSep = "   "
+    reportTxt = ""
+    myChoices.each do | attribute, choice |
+      next if ( ! CostingSupport.include? attribute  )
+      debug_out drawRuler(nil, "  .  ")
+      debug_out "Getting text formats  for #{attribute}\n"
+
+
+
+
+      componentdata = myCosts["audit"][attribute]
+
+      componentdata["elements"].each do | component, data |
+
+        lenLongestComponent = [lenLongestComponent, component.gsub(/_/," ").gsub(/:/,": ").length].max
+        lenLongestDescription = [lenLongestDescription, data["measureDescription"].length ].max
+        lenLongestUnits = [lenLongestUnits, data["units"].length].max
+      end
+
+
+    end
+    lenLongestComponent   = [ lenLongestComponent   , 60  ].min
+    lenLongestDescription = [ lenLongestDescription , 100 ].min
+    lenLongestUnits       = [ lenLongestUnits       , 50  ].min
+
+    reportLength = lenLongestComponent + lenLongestDescription + 6 * colWidth + 6*colSep.length
+
+    myChoices.each do | attribute, choice |
+      next if ( ! CostingSupport.include? attribute  )
+      index += 1
+      componentdata = myCosts["audit"][attribute]
+
+      reportTxt += "###### #{index}) #{attribute.gsub(/_/,"\\_")} -> #{choice.gsub(/_/,"\\_")}\n"
+      reportTxt += "Estimated benchmark cost for this measure: **$ #{'%.2f' % myCosts["byAttribute"][attribute].to_f}**.\n\n"
+
+
+      if ( componentdata["providence"]["proxyCosts"] == true  ) then
+        reportTxt += "Note that costs have not been defined for #{choice.gsub(/_/,"\\_")}."
+        reportTxt += " ==Used specification from #{componentdata["providence"]["proxyChoice"].gsub(/_/,"\\_")} to estimate costs.== Details follow.\n"
+      end
+
+
+      # Header row
+      reportTxt += "\n"
+
+      reportTxt += "Component: ".ljust(lenLongestComponent+2)
+      reportTxt += "#{sep}"
+      reportTxt += "  Materials ($/unit)  ".ljust(colWidth)
+      reportTxt += "#{sep}"
+      reportTxt += "  Labour ($/unit) ".rjust(colWidth)
+      reportTxt += "#{sep} "
+      reportTxt += " Total unit cost ($/unit) ".rjust(colWidth)
+      reportTxt += "#{sep}"
+      reportTxt += "  Qty.   ".rjust(colWidth)
+      reportTxt += "#{sep}"
+      reportTxt += "  Applied costs\ ($)".ljust(colWidth)+"\n"
+
+
+      reportTxt += ":".ljust(lenLongestComponent+2,"-")
+      reportTxt += "#{sep}"
+      reportTxt += ":".rjust(colWidth-1,"-")
+      reportTxt += "#{sep}"
+      reportTxt += ":".rjust(colWidth-1,"-")
+      reportTxt += "#{sep}"
+      reportTxt += ":".rjust(colWidth-1,"-")
+      reportTxt += "#{sep}"
+      reportTxt += ":".rjust(colWidth-1,"-")
+      #reportTxt += "#{sep}"
+      #reportTxt += "-".ljust(colWidth-1,"-")
+      reportTxt += "#{sep}"
+      reportTxt += "-".ljust(colWidth-1,"-").+":\n"
+
+      componentNotes ="Notes:\n"
+      componentIndex = 0
+      componentdata["elements"].each do | component, data |
+        componentIndex += 1
+        unitShort= data["measureDescription"].gsub(/-.*$/,"")
+        unitShort = "-" if ( unitShort =~ /No costs have been defined;/ || unitShort =~ /pec as defined in H2K file/ )
+        lineTxt = ""
+        lineTxt += "#{component.gsub(/_/," ").gsub(/:/,": ")}[^#{componentIndex}]"
+        lineTxt += sep
+        lineTxt += "$\ #{'%.2f' % data["unit-cost-materials"].to_f}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += sep
+        lineTxt += "$\ #{'%.2f' % data["unit-cost-labour"].to_f}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += sep
+        lineTxt += "$\ #{'%.2f' % data["unit-cost-total"].to_f}\ /\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += sep
+        lineTxt += "#{'%.2f' % data["quantity"].to_f}\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += sep
+        lineTxt += "$\ #{'%.2f' % data["component-costs"].to_f}".rjust(colWidth-colPad)+" "*colPad
+        #lineTxt += sep
+        #lineTxt += shortenToLen(data["measureDescription"],lenLongestDescription)
+        #lineTxt += data["units"].ljust(colWidth+20)
+        #lineTxt += " ".ljust(colWidth)
+        #lineTxt += shortenToTerm("#{component}",lineTxt.length)
+        reportTxt += lineTxt + "\n"
+
+        #pp myUnitCostsDB["data"][component]
+        #pp data["source"]
+
+
+        mySource = data["source"]
+
+        debug_out "> #{data.pretty_inspect}"
+        debug_out ": (#{mySource})\n"
+        if ( mySource.nil? || mySource.to_s == "nil"  ||mySource.to_s == "NA" )
+          componentNotes += "[^#{componentIndex}]: _#{component.gsub(/_/," ")}_: Computed using #{data["measureDescription"]}\n"
+        else
+
+          myNotes = myUnitCostsDB["data"][component][mySource]["note"]
+          myDate  = myUnitCostsDB["data"][component][mySource]["date"]
+
+          componentNotes += "[^#{componentIndex}]: _#{component.gsub(/_/," ")}_: Source - #{mySource.gsub(/_/,"\\_")} (#{myDate}). #{myNotes} Computed using #{data["measureDescription"]}\n"
+        end
+
+
+      end
+
+
+      reportTxt += "**TOTAL**".rjust(lenLongestComponent+2)
+      reportTxt += sep
+      reportTxt += " ".ljust(colWidth)
+      reportTxt += sep
+      reportTxt += "  ".rjust(colWidth)
+      reportTxt += sep
+      reportTxt += "   ".rjust(colWidth)
+      reportTxt += sep
+      reportTxt += "   ".rjust(colWidth)
+      reportTxt += sep
+      reportTxt += "**$\ #{'%.2f' % myCosts["byAttribute"][attribute].to_f}**".rjust(colWidth-colPad)+" "*colPad
+      reportTxt += "\n"
+      #sep
+      #reportTxt += "( total for measure ) "
+      reportTxt += "\n\n"
+      reportTxt += componentNotes
+      reportTxt += "\n\n"
+    end
+
+    return reportTxt
+
+  end
+
+  def Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo,fluff=true)
 
     audTxt = "\n"
 
@@ -889,25 +1065,26 @@ module Costing
       end
     end
 
-    lenLongestComponent   = [ lenLongestComponent   , 60 ].min
+    lenLongestComponent   = [ lenLongestComponent   , 60  ].min
     lenLongestDescription = [ lenLongestDescription , 100 ].min
-    lenLongestUnits       = [ lenLongestUnits       , 50 ].min
+    lenLongestUnits       = [ lenLongestUnits       , 50  ].min
 
 
 
     reportLength = lenLongestComponent + lenLongestDescription + 6 * colWidth + 6*colSep.length
-    h2kFilename = myH2KHouseInfo["h2kFile"]
-    audTxt += drawRuler("HTAP Costing - Audit Report | h2kFile: #{h2kFilename} | #{Time.now}","=",reportLength)
+    if fluff then
+      h2kFilename = myH2KHouseInfo["h2kFile"]
+      audTxt += drawRuler("HTAP Costing - Audit Report | h2kFile: #{h2kFilename} | #{Time.now}","=",reportLength)
+      audTxt += "\nThis report details HTAP's costing calculations.\n"
+      audTxt += "\nCost summary:\n"
+      audTxt += Costing.summarizeCosts(myChoices, myCosts)
+      audTxt += "\n\n"
+      audTxt += drawRuler("Choice-by-Choice costing calculations", "=", reportLength)
+    end
+    myChoices.each do | attribute, choice |
 
-    audTxt += "\nThis report details HTAP's costing calculations.\n"
-    audTxt += "\nCost summary:\n"
-    audTxt += Costing.summarizeCosts(myChoices, myCosts)
-    audTxt += "\n\n"
-    audTxt += drawRuler("Choice-by-Choice costing calculations", "=", reportLength)
-
-    myCosts["audit"].each do | attribute , componentdata |
       next if ( ! CostingSupport.include? attribute  )
-      choice = myChoices[attribute]
+      componentdata = myCosts["audit"][attribute]
 
       #myCosts["audit"][attrib][costingElement] = {
       #  "source" => source,
@@ -1001,8 +1178,15 @@ module Costing
   end
 
 
-  def Costing.summarizeCosts(myChoices,myCosts)
-    #debug_on
+  def Costing.summarizeCosts(myChoices,myCosts,format="txt")
+    debug_on
+    markdown = false
+    m = ""
+
+    if ( format != "txt") then
+      markdown = true
+      m = "|"
+    end
     maxAttLen = 0
     maxChoiceLen = 0
     myCosts["byAttribute"].each do | attribute, cost |
@@ -1011,9 +1195,10 @@ module Costing
       maxChoiceLen = [myChoices[attribute].length,maxChoiceLen].max
     end
     summaryTxt = ""
-    summaryTxt +=  " ....................................................................................................\n"
-    summaryTxt +=  " #{"Option".ljust(maxAttLen)}   #{"Choice".ljust(maxChoiceLen)}     Cost\n"
-    summaryTxt +=  " ....................................................................................................\n"
+    summaryTxt +=  " ....................................................................................................\n" if (! markdown)
+    summaryTxt +=  "#{m}#{"Option".ljust(maxAttLen)} #{m}  #{"Choice".ljust(maxChoiceLen)} #{m}    Cost#{m}\n"
+    summaryTxt +=  "#{m}---#{m}---#{m}---:#{m}\n" if markdown
+    summaryTxt +=  " ....................................................................................................\n" if (! markdown)
 
 
 
@@ -1021,11 +1206,11 @@ module Costing
       #attList = " #{attribute.ljust(30)} = #{myChoices["attribute"].ljust(30)}"
       #next if ( cost.to_f < 0.1 )
       costtxt = '%.2f' % cost.to_f
-      summaryTxt += " #{attribute.ljust(maxAttLen)} = #{myChoices[attribute].ljust(maxChoiceLen)} --> $ #{costtxt.rjust(9)}\n"
+      summaryTxt += " #{m}#{attribute.gsub(/_/,"\\_").ljust(maxAttLen)} #{m} #{myChoices[attribute].gsub(/_/,"\\_").ljust(maxChoiceLen)} #{m} $ #{costtxt.rjust(9)}#{m}\n"
     end
     myTotal = '%.2f' % myCosts["total"].to_f
-    summaryTxt +=  " ....................................................................................................\n"
-    summaryTxt +=  " #{"TOTAL COMPUTED COSTS".ljust(maxAttLen)}   #{" ".ljust(maxChoiceLen)}     $ #{myTotal.rjust(9)}\n"
+    summaryTxt +=  " ....................................................................................................\n" if (! markdown)
+    summaryTxt +=  "#{m}#{"*Total* ".ljust(maxAttLen)} #{m}  #{" ".ljust(maxChoiceLen)}   #{m}  *$ #{myTotal.rjust(9)}*#{m}\n"
 
     return summaryTxt
   end
