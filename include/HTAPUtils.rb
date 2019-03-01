@@ -626,70 +626,123 @@ module HTAPData
 
 
 
-  def HTAPData.summarizeArchetype(myH2KHouseInfo,fluff=true)
+  def HTAPData.summarizeArchetype(myH2KHouseInfo,secLevel)
     # debug_on
     padding = 35
     $numPad = 5
     reportTxt = ""
 
+    reportTxt = MDRpts.newSection("General Characteristics",secLevel)
+
+    generalInfo = {
+      "Parameter" => ["House type","Number of storeys" ],
+      "Values" => [
+        "#{myH2KHouseInfo["house-description"]["type"]}",
+        "#{myH2KHouseInfo["house-description"]["storeys"]}"
+      ]
+    }
+    reportTxt += MDRpts.newTable(generalInfo)
+
+    reportTxt += MDRpts.newSection("Dimensions",4)
+
+    dimTable = {
+      "Measure" => [
+        "Heated floor area",
+        "Window area",
+        "Window to wall ratio",
+        "Window to floor ratio",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " "
+      ],
+      "noName1" => [
+        "","","",
+        "S ",
+        "SE",
+        "E ",
+        "NE",
+        "N ",
+        "NW",
+        "W ",
+        "SW"
+      ],
+      "Values"  => [
+        formatSqFtSqM(myH2KHouseInfo["dimensions"]["heatedFloorArea"]),
+        formatSqFtSqM(myH2KHouseInfo["dimensions"]["windows"]["area"]["total"]),
+        numOrDash((myH2KHouseInfo["dimensions"]["windows"]["area"]["total"]/myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"]*100).round(0)).to_s+"%",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["1"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["2"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["3"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["4"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["5"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["5"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["7"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %",
+        numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["8"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0))+" %"
+      ]
+    }
 
 
-    reportTxt += "#### General Info:\n\n"
-    reportTxt += "|#{"Item".ljust(padding)}|#{"Value".ljust(padding)}|\n"
-    reportTxt += "|#{"-".ljust(padding,"-")}|#{"-".ljust(padding,"-")}|\n"
-    reportTxt += "|House type:".ljust(padding) + "|#{myH2KHouseInfo["house-description"]["type"].ljust(padding)}|\n"
-    reportTxt += "|Number of storeys:".ljust(padding) + "|#{myH2KHouseInfo["house-description"]["stories"].ljust(padding)}|\n"
+    dimTable["Measure"].push "Ceiling area"
+    dimTable["noName1"].push "total"
+    dimTable["Values"].push formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"])
 
-    reportTxt += "\n\n"
+    dimTable["Measure"].push "Ceiling area"
+    dimTable["noName1"].push "total      "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"])}"
+    dimTable["Measure"].push "            "
+    dimTable["noName1"].push "attic      "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"])} "
+    dimTable["Measure"].push "            "
+    dimTable["noName1"].push "flat       "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"])} "
+    dimTable["Measure"].push "            "
+    dimTable["noName1"].push "cathedral  "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"])}"
+    dimTable["Measure"].push "Above grade wall area "
+    dimTable["noName1"].push "           "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"])} - net of windows, doors, headers"
+    dimTable["Measure"].push "Below grade wall area "
+    dimTable["noName1"].push "           "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["internal"])} - including above-grade components of foundation walls"
+    dimTable["Measure"].push "Slab area             "
+    dimTable["noName1"].push "basement   "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["basement"]["floor-area"])}"
+    dimTable["Measure"].push "                      "
+    dimTable["noName1"].push "crawl-space"
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["crawlspace"]["floor-area"])}"
+    dimTable["Measure"].push "                      "
+    dimTable["noName1"].push "on-grade   "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["slab"]["floor-area"])}"
+    dimTable["Measure"].push "Exposed floors        "
+    dimTable["noName1"].push "           "
+    dimTable["Values"].push  "#{formatSqFtSqM(myH2KHouseInfo["dimensions"]["exposed-floors"]["area"]["total"])}"
 
+    reportTxt += MDRpts.newTable(dimTable)
+    reportTxt += MDRpts.newSection("Equipment Sizes",4)
+    eqTable = {
+      "Measures" => Array.new,
+      "noName"  => Array.new,
+      "Values"   => Array.new
+    }
 
-    reportTxt += "####  Dimensions:\n\n"
-    reportTxt += "|#{"Measure".ljust(padding)}|" "|#{"Value".ljust(padding)}|\n"
-    reportTxt += "|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|\n"
-    reportTxt += "|Heated floor area:".ljust(padding) +
-                "| "+
-                "| #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["heatedFloorArea"]).rjust(padding)}|\n"
-    reportTxt += "|Window area:".ljust(padding) +
-                 "| "+
-                 "| #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["windows"]["area"]["total"]).rjust(padding)}|\n"
-    reportTxt += "|Window to wall ratio".ljust(padding) + "| | #{(myH2KHouseInfo["dimensions"]["windows"]["area"]["total"]/myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"]*100).round(0).to_s.rjust(padding)} % | \n"
+    eqTable["Measures"].push "Design Loads"
+    eqTable["noName"].push "heating"
+    eqTable["Values"].push "#{numOrDash((myH2KHouseInfo["HVAC"]["designLoads"]["heating_W"]/1000).round(1))} kW - when constructed to NBC requirements"
 
+    eqTable["Measures"].push " "
+    eqTable["noName"].push "cooling"
+    eqTable["Values"].push "#{numOrDash((myH2KHouseInfo["HVAC"]["designLoads"]["cooling_W"]/1000).round(1))} kW - when constructed to NBC requirements"
 
-    #windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
-    reportTxt += "|   Window to floor ratio | S  | ".rjust(padding) + " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["1"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | SE |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["2"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | E  |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["3"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | NE |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["4"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | N  |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["5"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | NW |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["5"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | W  |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["7"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
-    reportTxt += "|                         | SW |".rjust(padding) +  " #{numOrDash( (myH2KHouseInfo["dimensions"]["windows"]["area"]["byOrientation"]["8"]/myH2KHouseInfo["dimensions"]["heatedFloorArea"]*100).round(0)).rjust(padding)} %|\n"
+    eqTable["Measures"].push "Ventilation capacity"
+    eqTable["noName"].push "cooling"
+    eqTable["Values"].push "#{numOrDash((myH2KHouseInfo["HVAC"]["Ventilator"]["capacity_l/s"]).round(0))} l/s"
 
+    reportTxt += MDRpts.newTable(eqTable)
 
-    reportTxt += "|    Ceiling area | total    | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["all"])}      |\n"
-    reportTxt += "|                 | attic    | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"])}    |\n"
-    reportTxt += "|                 | flat     | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"])}     | \n"
-    reportTxt += "|                 | cathedral| #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"])}| \n"
-    reportTxt += "|    Above grade wall area | | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["walls"]["above-grade"]["area"]["net"])} - net of windows, doors, headers|\n"
-    reportTxt += "|    Below grade wall area | | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["internal"])} - including above-grade components of foundation walls|\n"
-    reportTxt += "|    Slab area |basement   | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["basement"]["floor-area"])} |\n"
-    reportTxt += "|              |crawl-space   | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["crawlspace"]["floor-area"])} |\n"
-    reportTxt += "|              |on-grade | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["below-grade"]["slab"]["floor-area"])} |\n"
-    reportTxt += "|    Exposed floors | | #{formatSqFtSqM(myH2KHouseInfo["dimensions"]["exposed-floors"]["area"]["total"])} |\n"
-
-
-        reportTxt += "\n\n"
-
-
-
-    reportTxt += "#### Equipment Sizes:\n"
-    reportTxt += "|#{"Measure".ljust(padding)}|" "|#{"Value".ljust(padding)}|\n"
-    reportTxt += "|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|:#{"-".ljust(29,"-")}|\n"
-    reportTxt += "|    Design Loads | heating| #{numOrDash((myH2KHouseInfo["HVAC"]["designLoads"]["heating_W"]/1000).round(1))} kW - when constructed to NBC requirements|\n"
-    reportTxt += "|                 | cooling| #{numOrDash((myH2KHouseInfo["HVAC"]["designLoads"]["cooling_W"]/1000).round(1))} kW - when constructed to NBC requirements|\n"
-    reportTxt += "|    Ventilation capacity| | #{numOrDash((myH2KHouseInfo["HVAC"]["Ventilator"]["capacity_l/s"]).round(0))} l/s|\n"
-
-    debug_out ("Summarize-Archetype : \n#{reportTxt}\n")
     return reportTxt
 
   end
