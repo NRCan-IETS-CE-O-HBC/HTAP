@@ -90,7 +90,7 @@ $gTotalCost          = 0
 $gIncBaseCosts       = 12000
 # Note: This is dependent on model!
 $cost_type           = 0
-$gRotate             = "N"
+$gRotate             = "S"
 $gArchGOChoiceFile   = 0
 $gReadROutStrTxt = false
 
@@ -233,7 +233,6 @@ $TotalAirConditioningLoad = 0.0
 $AvgACCOP = 0.0
 
 costEstimates = Hash.new
-$gRotateModel = false
 
 
 $ruleSetChoices = Hash.new
@@ -4672,9 +4671,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         #   is not accessible from the CLI version of HOT2000 and hasn't been well tested.
 
 
-      $XMLdoc.write(newXMLFile)
-      newXMLFile.close
-   end
         # make a back-up copy, in case HOT2000 crashses mid-run and empties the runfille
 
 
@@ -6723,11 +6719,7 @@ end
             end
 
 
-      $cmdlineopts["rotate-model"] = true
-      $gRotateModel = true
    end
-
-          end
 
           # Note: .parse! strips all arguments from ARGV and .parse does not
           #       The parsing code above effects only those options that occur on the command line!
