@@ -361,6 +361,8 @@ def create_mesh_cartisian_combos(optIndex)
 
       $archetypeFiles.each do |file|
 
+          debug_out ("test file - #{file}\n")
+
           $h2kfile = File.basename(file)
 
           $gChoiceFileSet["!Opt-Archetype"] = $h2kfile
@@ -422,11 +424,11 @@ def create_parametric_combos()
 
   debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
 
-
+ 
   $gArchetypes.each do | archetype |
-
-    $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"]
-    $ArchetypeFiles.each do |h2kpath|
+    debug_out ("> archatype - #{$gArchetypes}\n")
+    $archetypeFiles = Dir["#{$Folder}/#{archetype}"]
+    $archetypeFiles.each do |h2kpath|
       $gLocations.each do | location |
         $gRulesets.each do | ruleset |
 
@@ -1465,13 +1467,18 @@ else
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
 
   parse_def_file($gRunDefinitionsFile)
+
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir
+  debug_out "> #{$Folder}\n"
   $gArchetypes.each do |arch_entry|
-    $archetypeFiles.push Dir["#{$Folder}/#{arch_entry}"]
+    Dir["#{$Folder}/#{arch_entry}"].each {|file| $archetypeFiles.push file}
   end
 
-  debug_out " ARCH: \n#{$gArchetypes.pretty_inspect}\n"
+
+
+
+  debug_out " ARCH: \n#{$archetypeFiles[0].pretty_inspect}\n"
 
   stream_out (" done.\n")
 
