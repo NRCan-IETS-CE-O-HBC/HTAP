@@ -25,7 +25,7 @@ module MDRpts
 
   def MDRpts.newTable(tableData)
 
-    debug_on
+    # debug_on
     tableTxt = ""
 
     debug_out ("data:\n#{tableData.pretty_inspect}\n")

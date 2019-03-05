@@ -495,7 +495,7 @@ module HTAPData
   end
 
   def HTAPData.zeroInvalidFoundaiton(options,choices,order)
-    debug_on
+    #debug_on
 
     if ( $foundationConfiguration == "surfBySurf" ) then
       debug_out ("Zeroing legacy\n")
@@ -548,7 +548,7 @@ module HTAPData
 
 
   def HTAPData.whichFdnConfig(myChoices)
-    debug_on
+    #debug_on
 
     # Use a copy, bc these tests cause new keys to be creaed?
     choiceClone = myChoices.clone

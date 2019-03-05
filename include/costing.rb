@@ -1179,7 +1179,7 @@ module Costing
 
 
   def Costing.summarizeCosts(myChoices,myCosts,format="txt")
-    debug_on
+    #debug_on
     markdown = false
     m = ""
 

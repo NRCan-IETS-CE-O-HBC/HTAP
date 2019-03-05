@@ -827,7 +827,7 @@ module H2KFile
   # Get window dimensions
   # ======================================================================================
   def H2KFile.getWindowArea(elements)
-    debug_on
+
     windowArea = Hash.new
     windowArea["total"] = 0
     windowArea["byOrientation"] = Hash.new
@@ -866,7 +866,7 @@ module H2KFile
   def H2KFile.getAGWallDimensions(elements)
 
     #debug_off
-    debug_on
+
     debug_out ("[>] H2KFile.getAGWallDimensions \n")
     wallDimsAG = Hash.new
     wallDimsAG["perimeter"] = 0.0
@@ -970,7 +970,7 @@ module H2KFile
 
 
     def H2KFile.getExpFloorDimensions(elements)
-      debug_on
+      #debug_on
       locationText = "HouseFile/House/Components/Floor"
       areaFloors = 0
       elements.each(locationText) do |floor|
@@ -992,7 +992,7 @@ module H2KFile
 
 
   def H2KFile.getFlrHeaderDimensions(elements)
-    debug_on
+    #debug_on
     locationText = "HouseFile/House/Components/*/Components/FloorHeader"
     areaHeaders = 0
     areaHeadersAG = 0
