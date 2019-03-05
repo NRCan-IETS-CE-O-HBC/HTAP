@@ -402,7 +402,7 @@ end
 
 
 def create_parametric_combos()
-  #debug_on
+  debug_on
   $Folder = $gArchetypeDir
 
   startSet = Hash.new
@@ -422,7 +422,7 @@ def create_parametric_combos()
 
   debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
 
-
+  debug_on
   $gArchetypes.each do | archetype |
 
     $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"]
@@ -430,7 +430,7 @@ def create_parametric_combos()
       $gLocations.each do | location |
         $gRulesets.each do | ruleset |
 
-          debug_out (" Setting parametric scope for #{h2kpath} / #{location} /#{ruleset} \n")
+          debug_out (" Setting parametric scope for: \n  1  #{archetype} \n  2  #{h2kpath}    \n  3  #{location}     \n  4  #{ruleset} \n")
 
           # Base point
 
@@ -454,7 +454,7 @@ def create_parametric_combos()
 
           parameterSpace.keys.each do |attribute|
 
-            #debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
+            debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
 
             parameterSpace[attribute][1..-1].each do | choice |
 
@@ -502,6 +502,10 @@ def create_parametric_combos()
 
 
   debug_out (" ----- PARAMETRIC RUN: PARAMETER SPACE ----\n#{parameterSpace.pretty_inspect}\n")
+  debug_out( " - gArchetype\n#{$gArchetypeHash.pretty_inspect}\n")
+  debug_out( " - gLocationH\n#{$gLocationHash.pretty_inspect} \n")
+  debug_out( " - gRulesetHa\n#{$gRulesetHash.pretty_inspect}  \n")
+
 
 end
 
@@ -1459,15 +1463,15 @@ else
   #  - First parse the *.run file
 
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
-
+debug_on
   parse_def_file($gRunDefinitionsFile)
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir
   $gArchetypes.each do |arch_entry|
-    $archetypeFiles = Dir["#{$Folder}/#{arch_entry}"]
+    $archetypeFiles.push Dir["#{$Folder}/#{arch_entry}"]
   end
 
-
+  debug_out " ARCH: \n#{$gArchetypes.pretty_inspect}\n"
 
   stream_out (" done.\n")
 

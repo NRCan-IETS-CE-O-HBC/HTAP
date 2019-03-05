@@ -24,6 +24,7 @@ require 'pp'
 
 
 require_relative '../include/msgs'
+require_relative '../include/markdown-reports.rb'
 require_relative '../include/H2KUtils'
 require_relative '../include/HTAPUtils'
 require_relative '../include/constants'
@@ -46,6 +47,9 @@ $gTest_params["verbosity"] = "silent"
 
 myHelp_msg = "no help available."
 
+myRunNumbers = Array.new
+myRunNumbersProvided = false
+
 optparse = OptionParser.new do |opts|
 
   opts.banner = $help_msg
@@ -67,12 +71,16 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on("-c", "--costs FILE", "Specified Unit Costs Database (mandatory)") do |c|
-    $resultsFile = c
+    $costsFile = c
       if ( !File.exist?($resultsFile) )
       fatalerror("Valid path to results file must be specified with --results (or -r) option!")
     end
   end
 
+  opts.on("-n", "--run-number #", "Specified Unit Costs Database (mandatory)") do |n|
+    myRunNumbersProvided = true
+    myRunNumbers.push n.to_i
+  end
 
   opts.on("-w", "--warnings", "Report warning messages") do
     $gWarn = true
@@ -104,10 +112,17 @@ baseCases = Array.new
 allCases = Array.new
 
 # Catagorize data in easy-to-handle arrays.
+debug_on
+results.each do | result |
+debug_out " #{result["result-number"].to_s.ljust(3)} #{result["input"]["Opt-Location"].ljust(20)} #{result["input"]["Opt-Ruleset"].ljust(10)} #{result["archetype"]["h2k-File"][0..15]} #{result["input"]["House-Upgraded"]}\n"
+end
 
 results.each do | result |
-
+  #debug_out ("RESULT:\n#{result.pretty_inspect}\n")
   thisCase = { "topology" => Hash.new, "archetype" => Hash.new, "input" => Hash.new, "costs"=> Hash.new }
+  thisCase["id"] = result["result-number"]
+  thisCase["report"] = if ( myRunNumbersProvided ) ; false else true end
+
   thisCase["topology"]["location"]  = result["input"]["Opt-Location"]
   thisCase["topology"]["archetype"] = result["archetype"]["h2k-File"]
   thisCase["topology"]["ruleset"] = result["input"]["Opt-Ruleset"]
@@ -119,40 +134,127 @@ results.each do | result |
   thisCase["archeype"] = result["archetype"]
   thisCase["costs"] = result["cost-estimates"]
   thisCase["upgraded"] =result["input"]["House-Upgraded"]
-
   #thisCase["BCStepCodeTEDI"] = result["analysis_BCStepCode"]["TEDI_compliance"]
   allCases.push thisCase
-  if ( result["input"]["House-Upgraded"] == "false" ) then
+
+  # Add to base case folder, if this is a base case
+  if ( thisCase["input"]["House-Upgraded"] == "false" ) then
     baseCases.push thisCase
+    debug_out " flag - BASE CASE: =#{thisCase["id"]} / #{thisCase["input"]["House-Upgraded"]}\n"
+
   end
 
 end
 
+# for each base case, add a reference to all cases that have same topologyTxt
+# find associated base case, and add all_poly_lapped_joints_located_over_solid_backing
+baseCases.each do | baseCase |
+  debug_out drawRuler(nil,"._.")
+  debug_out "Q> #{baseCase["id"]}:\n#{baseCase["topology"].pretty_inspect}\n"
+  allCases.select {| someCase |
+    someCase["topology"]   == baseCase["topology"]
+  }.each do | upgradeCase |
+    #debug_out " Setting upgrade case #{upgradeCase["id"]} bc reference to #{baseCase["id"]}\n"
+    upgradeCase["baseCaseID"] = baseCase["id"]
+    debug_out("-> upg: #{upgradeCase["id"]} - #{upgradeCase["input"]["House-ListOfUpgrades"]} \n")
+  end
+  debug_out ("#{baseCase["id"]} has BC #{baseCase["baseCaseID"]}?\n")
+end
+
+
+
+
+requestedRuns       = Array.new
+associatedBaseCases = Array.new
+debug_on
+if (myRunNumbersProvided) then
+  allCases.select{ |someCase| myRunNumbers.include?(someCase["id"])}.each do | thisCase |
+    thisCase["report"] = true
+    debug_out "Requested output for ID \n#{thisCase["id"].pretty_inspect}\n"
+  end
+end
+
+
+allCases.select{ |someCase| someCase["report"]}.each do | thisCase |
+  requestedRuns.push thisCase["id"]
+  debug_out ("check this case: #{thisCase["id"]} ->#{thisCase["baseCaseID"]} \n")
+
+    debug_out "ERR: TOPOLOGY: #{thisCase["topology"].pretty_inspect}\n"
+
+
+  if (! associatedBaseCases.include?(thisCase["baseCaseID"]))
+    associatedBaseCases.push thisCase["baseCaseID"]
+  end
+end
+
 stream_out (" - Total records:    #{allCases.length}\n")
 stream_out (" - Total base cases: #{baseCases.length}\n")
+stream_out (" - Number of records included in report: #{requestedRuns.length}\n")
+
+
 
 
 stream_out (drawRuler("Compiling Audit Data"))
 stream_out " \n"
 debug_on
-reportTxt = "# HTAP batch run - Cost Audit Report {-}\n"
-#reportTxt += "\n[TOC]\n"
+rptTmperr =""
+reportTxt = MDRpts.newSection("HTAP batch run - Cost Audit Report", 1)
+
+reportTxt += MDRpts.newSection("Run Information", 2)
+# more information should be added here.
+
+tableData = Array.new
+tableData = [
+  [ "Total number of HOT2000 runs",
+    "Total number of base cases",
+    "Number of cases in report",
+    "Number of asscoiated cases"
+  ],[allCases.length.to_i,
+    baseCases.length.to_i,
+    requestedRuns.length.to_i,
+    associatedBaseCases.length.to_i,
+  ]
+]
+
+reportTxt += MDRpts.newTable(tableData)
+
+reportTxt += MDRpts.newList([
+  "List of reported cases: #{MDRpts.shortenArrList(requestedRuns)}",
+  "List of base cases: #{MDRpts.shortenArrList(associatedBaseCases)}"
+])
+
 topologyTxt = ""
 baseCaseCount = 0
 
-baseCases.each do | baseCase |
+
+
+
+
+
+associatedBaseCases.each do | id |
+  baseCase = baseCases.select{ | someCase | someCase["id"] == id }[0]
   baseCaseCount += 1
   topologyTxt = ""
+  debug_out "BASE CASE #{id}\n"
+  debug_out "> this base case:\n#{baseCase.pretty_inspect}\n"
 
-  reportTxt += "## Scenario ##{baseCaseCount}\n"
+  reportTxt += MDRpts.newSection("Scenario ##{baseCaseCount}",2)
 
-  topologyTxt += "### Topology: \n"
-  #topologyTxt += "|#{"-".ljust(30,"-")}|#{"-".ljust(30,"-")}|\n"
-  topologyTxt += "| #{"Parameter".ljust(29)}| #{"Value".ljust(29)}|\n"
-  topologyTxt += "|#{"-".ljust(30,"-")}|#{"-".ljust(30,"-")}|\n"
+  reportTxt += MDRpts.newSection("Topology",3)
+
+  tableData = {
+    "Parameter" => Array.new,
+    "Value"    => Array.new,
+  }
+
   baseCase["topology"].each do | parameter, value |
-    topologyTxt += "| #{parameter.ljust(29)}| #{value.ljust(29)}|\n"
+    tableData["Parameter"].push parameter
+    tableData["Value"].push value
   end
+
+  reportTxt += MDRpts.newTable(tableData)
+
+
 
   archetypeAlias = baseCase["topology"]["archetype"]
   rulesetAlias = baseCase["topology"]["ruleset"]
@@ -161,33 +263,40 @@ baseCases.each do | baseCase |
 
   summaryOfCosts = Costing.summarizeCosts(baseCase["input"],baseCase["costs"],"markdown")
   baseCaseAuditTxt = Costing.auditComponents(baseCase["input"],baseCase["costs"],baseCase["costs"]["costing-dimensions"], "markdown")
-  archetypeSummaryTxt = HTAPData.summarizeArchetype(baseCase["costs"]["costing-dimensions"],false)
 
-  #reportTxt += drawRuler(nil,"_",nil)
-  #reportTxt += drawRuler("[#{baseCaseCount}] Base Case","-",nil)
-  #reportTxt += " \n\n"
-  reportTxt += topologyTxt
-  reportTxt += " \n\n"
-  reportTxt += " ### House Characteristics:\n\n"
-  reportTxt += archetypeSummaryTxt
-  #reportTxt += " \n\n"
-  reportTxt += "### Base Case for Secenario ##{baseCaseCount} \n\n"
-  reportTxt += "#### Benchmark costs - summary:\n\n"
-  reportTxt += "Benchmark costs reflect a baseline cost estimate when archetype _#{archetypeAlias}_ "
-  reportTxt += "is constructed to ruleset _#{rulesetAlias.gsub(/_/,"\\_")}_. This estimate does "
-  reportTxt += "not represent the cost to construct the home, or the costs of all energy-related"
-  reportTxt += "components. It merely represents the estimated costs of all measures that are in "
-  reportTxt += "HTAP's unit costs database, for housing components that are also described in the model."
-  reportTxt += "\n\n"
-  reportTxt += "==NRCan cautions against referencing the benchmark estimates from a single run, as these "
-  reportTxt += "estimates may overlook elements that are assumed to be common to all scenarios (e.g. cladding)=="
-  reportTxt += " \n\n"
+
+  #rptTmperr += drawRuler(nil,"_",nil)
+  #rptTmperr += drawRuler("[#{baseCaseCount}] Base Case","-",nil)
+  #rptTmperr += " \n\n"
+
+  reportTxt += MDRpts.newSection("House Characteristics",3)
+
+  reportTxt += HTAPData.summarizeArchetype(baseCase["costs"]["costing-dimensions"],4)
+
+
+
+  reportTxt += MDRpts.newSection("Base case for scenario ##{baseCaseCount}",3)
+  reportTxt += MDRpts.newSection("Benchmark Costs: Summary ##{baseCaseCount}",4)
+  reportTxt += MDRpts.newParagraph(
+   "Benchmark costs reflect a baseline cost estimate when archetype _#{archetypeAlias}_ " +
+   "is constructed to ruleset _#{rulesetAlias.gsub(/_/,"\\_")}_. This estimate does "+
+   "not represent the cost to construct the home, or the costs of all energy-related"+
+   "components. It merely represents the estimated costs of all measures that are in "+
+   "HTAP's unit costs database, for housing components that are also described in the model."
+   )
+  reportTxt += MDRpts.newParagraph(
+     "==NRCan cautions against referencing the benchmark estimates from a single run, as these "+
+     "estimates may overlook elements that are assumed to be common to all scenarios (e.g. cladding)=="
+  )
+
   reportTxt += "#{summaryOfCosts}\n"
-  reportTxt += " \n\n"
-  reportTxt += "#### Benchmark costs - detailed audit:\n\n#{baseCaseAuditTxt}\n\n"
+  rptTmperr += " \n\n"
+
+  reportTxt += MDRpts.newSection("Benchmark Costs: detailed audit ##{baseCaseCount}",4)
 
 
-  reportTxt += "### Upgrades for Scenario #{baseCaseCount}\n"
+  reportTxt += MDRpts.newSection("Upgrades for Scenario #{baseCaseCount}",3)
+  rptTmperr += "### Upgrades for Scenario #{baseCaseCount}\n"
   upgradeIndex = 0
   scenarioCases = Array.new
   scenarioCases = allCases.select {|thisCase|
@@ -202,16 +311,16 @@ baseCases.each do | baseCase |
   }
   debug_out "(Found #{scenarioCases.length} cases)\n"
 
-  reportTxt += "Total number of upgrades processed:#{scenarioCases.length}\n "
+  rptTmperr += "Total number of upgrades processed:#{scenarioCases.length}\n "
 
   scenarioCases.each do | thisCase |
     upgradeIndex += 1
-    reportTxt += "#### Upgrade ##{upgradeIndex}\n"
+    rptTmperr += "#### Upgrade ##{upgradeIndex}\n"
     upgrades = thisCase["input"]["House-ListOfUpgrades"].split(/;/)
 
-    reportTxt += "Upgrades applied in this run:\n\n"
-    reportTxt += "Attribute   |   Base Choice  | Upgrade Choice    \n"
-    reportTxt += ":-----------|:---------------|:-------------\n"
+    rptTmperr += "Upgrades applied in this run:\n\n"
+    rptTmperr += "Attribute   |   Base Choice  | Upgrade Choice    \n"
+    rptTmperr += ":-----------|:---------------|:-------------\n"
     scenarioCostImpacts = Hash.new
     upgradeChoices = Hash.new
     costComponentsDiff= Hash.new
@@ -219,16 +328,16 @@ baseCases.each do | baseCase |
 
       attribute, choice = upgrade.split(/=>/)
       baseChoice = baseCase["input"][attribute]
-      reportTxt += "#{attribute} | #{baseChoice} | #{choice}  \n"
+      rptTmperr += "#{attribute} | #{baseChoice} | #{choice}  \n"
       upgradeChoices[attribute] = choice
       debug_out "UPGRADE: #{attribute} | #{baseChoice} | #{choice}  \n"
 
     end
-    reportTxt +="\n\n"
+    rptTmperr +="\n\n"
 
-    reportTxt += "##### Comparison to base case \n"
+    rptTmperr += "##### Comparison to base case \n"
 
-    reportTxt += "Comparison between upgrade #{upgradeIndex} and base case #{baseCaseCount}: \n\n"
+    rptTmperr += "Comparison between upgrade #{upgradeIndex} and base case #{baseCaseCount}: \n\n"
 
     softwrap = " ".ljust(200," ")
     costComponentsDiff= Hash.new
@@ -241,7 +350,7 @@ baseCases.each do | baseCase |
          "upgrade" => thisCase["costs"]["byAttribute"][attribute] ,
          "net" =>thisCase["costs"]["byAttribute"][attribute]  - baseCase["costs"]["byAttribute"][attribute]
        }
-      reportTxt += "###### Upgrade: #{attribute} -> #{choice}\n\n"
+      rptTmperr += "###### Upgrade: #{attribute} -> #{choice}\n\n"
 
       costComponentsDiff["common"] = baseCase["costs"]["audit"][attribute]["elements"].select{ |component, data|
         thisCase["costs"]["audit"][attribute]["elements"].include?(component) &&
@@ -259,8 +368,8 @@ baseCases.each do | baseCase |
         thisCase["costs"]["audit"][attribute]["elements"][component]["component-costs"] != baseCase["costs"]["audit"][attribute]["elements"][component]["component-costs"]
       }
 
-      reportTxt += " Change  |   Component    | Cost impact   \n"
-      reportTxt += ":-----------|:---------------|----------------:\n"
+      rptTmperr += " Change  |   Component    | Cost impact   \n"
+      rptTmperr += ":-----------|:---------------|----------------:\n"
 
 
       netCostChange = 0
@@ -275,7 +384,7 @@ baseCases.each do | baseCase |
         else
           oper = "+"
         end
-        reportTxt += " ==Added==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units})  |  #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
+        rptTmperr += " ==Added==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units})  |  #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
 
       end
 
@@ -291,7 +400,7 @@ baseCases.each do | baseCase |
         else
           oper = "-"
         end
-        reportTxt += " ==Deleted==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units}) | #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
+        rptTmperr += " ==Deleted==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units}) | #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
 
       end
 
@@ -306,10 +415,10 @@ baseCases.each do | baseCase |
         else
           oper = "-"
         end
-        reportTxt += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
+        rptTmperr += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
 
       end
-      reportTxt += "   | **TOTAL** | **$\ #{'%.2f' % netCostChange}** \n"
+      rptTmperr += "   | **TOTAL** | **$\ #{'%.2f' % netCostChange}** \n"
 
 
     end
@@ -321,9 +430,9 @@ baseCases.each do | baseCase |
         thisCase["costs"]["byAttribute"][attribute] != baseCase["costs"]["byAttribute"][attribute] &&
         ! upgradeChoices.keys.include?(attribute)
       )then
-        reportTxt += "###### Secondard cost impact: #{attribute} -> #{choice}\n"
-        reportTxt += "NOTE: "
-        reportTxt += "Specified upgrades have affected the costs of #{attribute} as well \n"
+        rptTmperr += "###### Secondard cost impact: #{attribute} -> #{choice}\n"
+        rptTmperr += "NOTE: "
+        rptTmperr += "Specified upgrades have affected the costs of #{attribute} as well \n"
 
         scenarioCostImpacts[attribute] = {
            "type" => "secondary impact",
@@ -351,8 +460,8 @@ baseCases.each do | baseCase |
           thisCase["costs"]["audit"][attribute]["elements"][component]["component-costs"] != baseCase["costs"]["audit"][attribute]["elements"][component]["component-costs"]
         }
 
-        reportTxt += " Change  |   Component    | Cost impact   \n"
-        reportTxt += ":-----------|:---------------|----------------:\n"
+        rptTmperr += " Change  |   Component    | Cost impact   \n"
+        rptTmperr += ":-----------|:---------------|----------------:\n"
 
         costComponentsDiff["added"].each do | component, data |
           quantity = data["quantity"]
@@ -364,7 +473,7 @@ baseCases.each do | baseCase |
           else
             oper = "+"
           end
-          reportTxt += " ==Added==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units})  |  #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
+          rptTmperr += " ==Added==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units})  |  #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
 
         end
 
@@ -380,7 +489,7 @@ baseCases.each do | baseCase |
           else
             oper = "-"
           end
-          reportTxt += " ==Deleted==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units}) | #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
+          rptTmperr += " ==Deleted==  | #{component.gsub(/_/," ")} (#{quantity.round(1)} #{units}) | #{oper}\ $\ #{'%.2f' % data["component-costs"].abs} \n"
 
         end
 
@@ -395,10 +504,10 @@ baseCases.each do | baseCase |
           else
             oper = "-"
           end
-          reportTxt += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
+          rptTmperr += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
 
         end
-        reportTxt += "   | **TOTAL** | **$\ #{'%.2f' % netCostChange}** \n"
+        rptTmperr += "   | **TOTAL** | **$\ #{'%.2f' % netCostChange}** \n"
 
 
 
@@ -415,9 +524,9 @@ baseCases.each do | baseCase |
 #
     end
 
-    reportTxt += "###### Summary of cost differences between the base and upgrade cases \n\n"
-    reportTxt += " Type | Attribute | Base case  | Upgrade Case  | Net cost impact\n"
-    reportTxt += ":-----------|:---------------|---------:|----------:|----------------:\n"
+    rptTmperr += "###### Summary of cost differences between the base and upgrade cases \n\n"
+    rptTmperr += " Type | Attribute | Base case  | Upgrade Case  | Net cost impact\n"
+    rptTmperr += ":-----------|:---------------|---------:|----------:|----------------:\n"
     netImpact = 0
     baseImpact = 0
     upgImpact = 0
@@ -425,21 +534,21 @@ baseCases.each do | baseCase |
       netImpact += impact["net"]
       baseImpact += impact["base"]
       upgImpact += impact["upgrade"]
-      reportTxt += " #{impact["type"]} | #{attribute}  | $\ #{impact["base"].round(2)} | $\ #{impact["upgrade"].round(2)} | $\ #{impact["net"].round(2)} \n"
+      rptTmperr += " #{impact["type"]} | #{attribute}  | $\ #{impact["base"].round(2)} | $\ #{impact["upgrade"].round(2)} | $\ #{impact["net"].round(2)} \n"
     end
     scenarioCostImpacts.select{ |a,b| b["type"] != "specified upgrade"}.each do |attribute, impact|
       netImpact += impact["net"]
       baseImpact += impact["base"]
       upgImpact += impact["upgrade"]
-      reportTxt += " #{impact["type"]} | #{attribute}  | $\ #{impact["base"].round(2)} | $\ #{impact["upgrade"].round(2)} | $\ #{impact["net"].round(2)} \n"
+      rptTmperr += " #{impact["type"]} | #{attribute}  | $\ #{impact["base"].round(2)} | $\ #{impact["upgrade"].round(2)} | $\ #{impact["net"].round(2)} \n"
     end
-  reportTxt += "  | **TOTAL**  | **$\ #{baseImpact.round(2)}** | **$\ #{upgImpact.round(2)}** | **$\ #{netImpact.round(2)}** \n"
-    reportTxt += " \n\n"
+  rptTmperr += "  | **TOTAL**  | **$\ #{baseImpact.round(2)}** | **$\ #{upgImpact.round(2)}** | **$\ #{netImpact.round(2)}** \n"
+    rptTmperr += " \n\n"
 
 
 
-    reportTxt += "##### Benchmark costs for Upgrade #{upgradeIndex}\n"
-    reportTxt += Costing.auditComponents(upgradeChoices,thisCase["costs"],thisCase["costs"]["costing-dimensions"], "markdown")
+    rptTmperr += "##### Benchmark costs for Upgrade #{upgradeIndex}\n"
+    rptTmperr += Costing.auditComponents(upgradeChoices,thisCase["costs"],thisCase["costs"]["costing-dimensions"], "markdown")
 
   end
 
@@ -449,7 +558,7 @@ baseCases.each do | baseCase |
 
 
   debug_out "(done with Base case ##{baseCaseCount})\n\n"
-  #reportTxt += baseCaseAuditTxt
+  #rptTmperr += baseCaseAuditTxt
 end
 
 
