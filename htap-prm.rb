@@ -402,7 +402,7 @@ end
 
 
 def create_parametric_combos()
-  debug_on
+  #debug_on
   $Folder = $gArchetypeDir
 
   startSet = Hash.new
@@ -422,7 +422,7 @@ def create_parametric_combos()
 
   debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
 
-  debug_on
+
   $gArchetypes.each do | archetype |
 
     $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"]
@@ -1463,7 +1463,7 @@ else
   #  - First parse the *.run file
 
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
-debug_on
+
   parse_def_file($gRunDefinitionsFile)
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir
