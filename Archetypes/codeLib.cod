@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?> 
+<?xml version='1.0' encoding='UTF-8'?>
 <Codes readOnly='false'>
   <Version major='1' minor='3'>
     <Labels>
@@ -2685,6 +2685,62 @@
           </Window>
         </Layers>
       </Code>
+      <Code id='Code 76' nominalRValue='0'>
+        <Label>NBC-zone7A-window</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='20' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.6'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='2'>
+              <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 77' nominalRValue='0'>
+        <Label>NBC-zone7B-window</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='20' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.4'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='2'>
+              <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
       <Code id='Code 78' nominalRValue='0'>
         <Label>YHC-W6</Label>
         <Description>High performance triple-glazed, high SHGC</Description>
@@ -2709,6 +2765,34 @@
             <LowECoating code='3'>
               <English>Hard Coat</English>
               <French>Traitement dur</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 79' nominalRValue='0'>
+        <Label>NBC-zone4-window</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='20' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.8'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='2'>
+              <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
             </LowECoating>
           </Window>
         </Layers>
@@ -3021,6 +3105,34 @@
           </Window>
         </Layers>
       </Code>
+      <Code id='Code 91' nominalRValue='0'>
+        <Label>NBC-zone6-window</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='20' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.6'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='2'>
+              <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
       <Code id='Code 92' nominalRValue='0'>
         <Label>LG-avg-Triple</Label>
         <Description>Typical triple (from NWTHC retrofit work)</Description>
@@ -3077,6 +3189,34 @@
           </Window>
         </Layers>
       </Code>
+      <Code id='Code 94' nominalRValue='0'>
+        <Label>NBC-zone5-window</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='20' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.8'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='2'>
+              <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
       <Code id='Code 95' nominalRValue='0'>
         <Label>LG-avg-Double</Label>
         <Description/>
@@ -3087,6 +3227,34 @@
               <French>Double/double avec un enduit</French>
             </GlazingType>
             <OverallThermalResistance code='2' value='1.6'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='2'>
+              <English>Casement</English>
+              <French>├á battant</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 96' nominalRValue='0'>
+        <Label>NBC-zone8-window</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='20' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='1.4'>
               <English>U-Value</English>
               <French>Valeur-U</French>
             </OverallThermalResistance>
@@ -3413,7 +3581,7 @@
           </Window>
         </Layers>
       </Code>
-      <Code id='Code 159' nominalRValue='0'>
+      <Code id='Code 135' nominalRValue='0'>
         <Label>NC-2g-HG-u1.82</Label>
         <Description>2 pane; clear; argon fill; U=1.82</Description>
         <Layers>
@@ -3426,7 +3594,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 160' nominalRValue='0'>
+      <Code id='Code 136' nominalRValue='0'>
         <Label>NC-2g-MG-u1.82</Label>
         <Description>2 pane; clear; argon fill; U=1.82</Description>
         <Layers>
@@ -3439,7 +3607,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 161' nominalRValue='0'>
+      <Code id='Code 137' nominalRValue='0'>
         <Label>NC-2g-HG-u1.65</Label>
         <Description>2 pane; LowE-HighGain; argon fill; U=1.65</Description>
         <Layers>
@@ -3452,7 +3620,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 162' nominalRValue='0'>
+      <Code id='Code 138' nominalRValue='0'>
         <Label>NC-2g-MG-u1.65</Label>
         <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
         <Layers>
@@ -3465,7 +3633,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 163' nominalRValue='0'>
+      <Code id='Code 139' nominalRValue='0'>
         <Label>NC-2g-LG-u1.65</Label>
         <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
         <Layers>
@@ -3478,7 +3646,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 164' nominalRValue='0'>
+      <Code id='Code 140' nominalRValue='0'>
         <Label>NC-3g-HG-u1.36</Label>
         <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
         <Layers>
@@ -3491,7 +3659,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 165' nominalRValue='0'>
+      <Code id='Code 141' nominalRValue='0'>
         <Label>NC-3g-MG-u1.36</Label>
         <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
         <Layers>
@@ -3504,7 +3672,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 166' nominalRValue='0'>
+      <Code id='Code 142' nominalRValue='0'>
         <Label>NC-3g-LG-u1.14</Label>
         <Description>3 pane; LowE-LowGain; argon fill; U=1.14</Description>
         <Layers>
@@ -3517,7 +3685,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 167' nominalRValue='0'>
+      <Code id='Code 143' nominalRValue='0'>
         <Label>NC-3g-HG-u1.08</Label>
         <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
         <Layers>
@@ -3530,7 +3698,7 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 168' nominalRValue='0'>
+      <Code id='Code 144' nominalRValue='0'>
         <Label>NC-3g-MG-u1.08</Label>
         <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
         <Layers>
@@ -3540,84 +3708,6 @@
               <French/>
             </Type>
             <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 169' nominalRValue='0'>
-        <Label>NBC-zone4-window</Label>
-        <Description>2 pane; clear; argon fill; U=1.8</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.5556' edgeOfGlass='0.5556' frame='0.5556'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 170' nominalRValue='0'>
-        <Label>NBC-zone5-window</Label>
-        <Description>2 pane; clear; argon fill; U=1.8</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.5556' edgeOfGlass='0.5556' frame='0.5556'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 171' nominalRValue='0'>
-        <Label>NBC-zone6-window</Label>
-        <Description>2 pane; LowE-HighGain; argon fill; U=1.6</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.625' edgeOfGlass='0.625' frame='0.625'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 172' nominalRValue='0'>
-        <Label>NBC-zone7A-window</Label>
-        <Description>2 pane; LowE-HighGain; argon fill; U=1.6</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.625' edgeOfGlass='0.625' frame='0.625'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 173' nominalRValue='0'>
-        <Label>NBC-zone7B-window</Label>
-        <Description>2 pane; LowE-HighGain; argon fill; U=1.4</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.7143' edgeOfGlass='0.7143' frame='0.7143'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 174' nominalRValue='0'>
-        <Label>NBC-zone8-window</Label>
-        <Description>2 pane; LowE-HighGain; argon fill; U=1.4</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.3' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.7143' edgeOfGlass='0.7143' frame='0.7143'/>
           </WindowLegacy>
         </Layers>
       </Code>
