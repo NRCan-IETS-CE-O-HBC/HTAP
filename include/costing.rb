@@ -447,6 +447,11 @@ module Costing
     myCosts = Hash.new
     myCosts["total"] = 0
     myCosts["byAttribute"] = Hash.new
+
+    CostingSupport.each do | attribute |
+      myCosts["byAttribute"][attribute] = 0
+    end
+
     myCosts["bySource"] = Hash.new
     myCosts["byBuildingComponent"] = Hash.new
     myCosts["audit"] = Hash.new
@@ -1084,6 +1089,7 @@ module Costing
     myChoices.each do | attribute, choice |
 
       next if ( ! CostingSupport.include? attribute  )
+      next if ( choice.nil? || myCosts["audit"][attribute].nil? )
       componentdata = myCosts["audit"][attribute]
 
       #myCosts["audit"][attrib][costingElement] = {
@@ -1180,12 +1186,16 @@ module Costing
 
   def Costing.summarizeCosts(myChoices,myCosts,format="txt")
     #debug_on
+
+    # TO DO - simplify the markdown inplementaiton of this table
+
     markdown = false
-    m = ""
+    m = " "
 
     if ( format != "txt") then
       markdown = true
       m = "|"
+
     end
     maxAttLen = 0
     maxChoiceLen = 0
@@ -1203,14 +1213,19 @@ module Costing
 
 
     myCosts["byAttribute"].each do | attribute, cost |
+      next if (myChoices[attribute].nil? || attribute.nil? )
       #attList = " #{attribute.ljust(30)} = #{myChoices["attribute"].ljust(30)}"
       #next if ( cost.to_f < 0.1 )
       costtxt = '%.2f' % cost.to_f
-      summaryTxt += " #{m}#{attribute.gsub(/_/,"\\_").ljust(maxAttLen)} #{m} #{myChoices[attribute].gsub(/_/,"\\_").ljust(maxChoiceLen)} #{m} $ #{costtxt.rjust(9)}#{m}\n"
+      if markdown
+        summaryTxt += " #{m}#{attribute.gsub(/_/,"\\_").ljust(maxAttLen)} #{m} #{myChoices[attribute].gsub(/_/,"\\_").ljust(maxChoiceLen)} #{m} $ #{costtxt.rjust(9)}#{m}\n"
+      else
+        summaryTxt += " #{m}#{attribute.ljust(maxAttLen)} #{m} #{myChoices[attribute].ljust(maxChoiceLen)} #{m} $ #{costtxt.rjust(9)}#{m}\n"
+      end
     end
     myTotal = '%.2f' % myCosts["total"].to_f
     summaryTxt +=  " ....................................................................................................\n" if (! markdown)
-    summaryTxt +=  "#{m}#{"*Total* ".ljust(maxAttLen)} #{m}  #{" ".ljust(maxChoiceLen)}   #{m}  *$ #{myTotal.rjust(9)}*#{m}\n"
+    summaryTxt +=  "#{m}#{"Total ".ljust(maxAttLen)} #{m} #{" ".ljust(maxChoiceLen)} #{m}  $ #{myTotal.rjust(9)}#{m}\n"
 
     return summaryTxt
   end
