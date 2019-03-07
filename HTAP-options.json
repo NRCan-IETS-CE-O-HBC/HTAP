@@ -2644,14 +2644,6 @@
         }
       },
       "NBC-zone4-window": {
-        "characteristics": {
-          "panes": 2,
-          "fill": "argon",
-          "coat": "clear",
-          "u-value": 1.80,
-          "SHGC": 0.26,
-          "frame": "vinyl"
-        },
         "h2kMap": {
           "base": {
             "<Opt-win-S-CON>": "NBC-zone4-window",
@@ -2671,14 +2663,6 @@
         }
       },
       "NBC-zone5-window": {
-        "characteristics": {
-          "panes": 2,
-          "fill": "argon",
-          "coat": "clear",
-          "u-value": 1.80,
-          "SHGC": 0.26,
-          "frame": "vinyl"
-        },
         "h2kMap": {
           "base": {
             "<Opt-win-S-CON>": "NBC-zone5-window",
@@ -2698,14 +2682,6 @@
         }
       },
       "NBC-zone6-window": {
-        "characteristics": {
-          "panes": 2,
-          "fill": "argon",
-          "coat": "LowE-HighGain",
-          "u-value": 1.60,
-          "SHGC": 0.26,
-          "frame": "vinyl"
-        },
         "h2kMap": {
           "base": {
             "<Opt-win-S-CON>": "NBC-zone6-window",
@@ -2725,14 +2701,6 @@
         }
       },
       "NBC-zone7A-window": {
-        "characteristics": {
-          "panes": 2,
-          "fill": "argon",
-          "coat": "LowE-HighGain",
-          "u-value": 1.60,
-          "SHGC": 0.26,
-          "frame": "vinyl"
-        },
         "h2kMap": {
           "base": {
             "<Opt-win-S-CON>": "NBC-zone7A-window",
@@ -2752,14 +2720,6 @@
         }
       },
       "NBC-zone7B-window": {
-        "characteristics": {
-          "panes": 2,
-          "fill": "argon",
-          "coat": "LowE-HighGain",
-          "u-value": 1.40,
-          "SHGC": 0.26,
-          "frame": "vinyl"
-        },
         "h2kMap": {
           "base": {
             "<Opt-win-S-CON>": "NBC-zone7B-window",
@@ -2779,14 +2739,6 @@
         }
       },
       "NBC-zone8-window": {
-        "characteristics": {
-          "panes": 2,
-          "fill": "argon",
-          "coat": "LowE-HighGain",
-          "u-value": 1.40,
-          "SHGC": 0.3,
-          "frame": "vinyl"
-        },
         "h2kMap": {
           "base": {
             "<Opt-win-S-CON>": "NBC-zone8-window",
