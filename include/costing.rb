@@ -1211,9 +1211,11 @@ module Costing
     summaryTxt +=  " ....................................................................................................\n" if (! markdown)
 
 
-
+    
     myCosts["byAttribute"].each do | attribute, cost |
-      next if (myChoices[attribute].nil? || attribute.nil? )
+      #debug_out "> attribute : #{attribute} = >#{myChoices[attribute]}<\n"
+      next if (myChoices[attribute].nil? || attribute.nil? || cost.nil? || myChoices[attribute].empty?)
+      next if ( ! CostingSupport.include?(attribute) )
       #attList = " #{attribute.ljust(30)} = #{myChoices["attribute"].ljust(30)}"
       #next if ( cost.to_f < 0.1 )
       costtxt = '%.2f' % cost.to_f
