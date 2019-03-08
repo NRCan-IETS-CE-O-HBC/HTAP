@@ -70,7 +70,7 @@ $snailStartWait = 1
 
 $choicesInMemory = true
 $ChoiceFileContents = Hash.new
-
+$gDebug = false
 
 
 =begin rdoc
@@ -424,7 +424,7 @@ def create_parametric_combos()
 
   debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
 
- 
+
   $gArchetypes.each do | archetype |
     debug_out ("> archatype - #{$gArchetypes}\n")
     $archetypeFiles = Dir["#{$Folder}/#{archetype}"]
@@ -1091,7 +1091,7 @@ def run_these_cases(current_task_files)
           $RunsDone = true
           $GiveUp = true
         end
-
+        Dir.chdir($gMasterPath)
       end # ends $RunResults.each do
 
 
@@ -1208,14 +1208,14 @@ def run_these_cases(current_task_files)
 
 
   end
-  fJSONout.close
 
+  fJSONout.close
+  Dir.chdir($gMasterPath)
   if ( $GiveUp ) then
     stream_out(" - HTAP-prm: runs terminated due to error ----------\n\n")
   else
     stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
   end
-
 
   if ( ! $gDebug ) then
      stream_out (" - Deleting working directories... ")
@@ -1506,7 +1506,9 @@ else
     stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
 
 
-
+    if ( runningProduct < 1) then
+      fatalerror ( " No combinations to run.")
+    end
 
     $combosRequired = runningProduct
     $combosGenerated = 0
@@ -1584,6 +1586,9 @@ else
     $combosGenerated = 0
     $combosSinceLastUpdate = 0
     $comboInterval = 1000
+    if ( runningProduct <  1 ) then
+      fatalerror ( " No combinations to run.")
+    end
 
     stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
 
