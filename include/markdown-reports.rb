@@ -119,7 +119,7 @@ module MDRpts
 
   def MDRpts.shortenArrList(listData,listSep=",",len=5)
     listTxt = ""
-    pp listData
+
     listLen = [len, listData.length].min
     remainder = listData.length - listLen
     first = true

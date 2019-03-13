@@ -941,7 +941,7 @@ module Costing
       componentdata = myCosts["audit"][attribute]
 
       reportTxt += "###### #{index}) #{attribute.gsub(/_/,"\\_")} -> #{choice.gsub(/_/,"\\_")}\n"
-      reportTxt += "Estimated benchmark cost for this measure: **$ #{'%.2f' % myCosts["byAttribute"][attribute].to_f}**.\n\n"
+      reportTxt += "Estimated benchmark cost for this measure: **$\\ #{'%.2f' % myCosts["byAttribute"][attribute].to_f}**.\n\n"
 
 
       if ( componentdata["providence"]["proxyCosts"] == true  ) then
@@ -963,7 +963,7 @@ module Costing
       reportTxt += "#{sep}"
       reportTxt += "  Qty.   ".rjust(colWidth)
       reportTxt += "#{sep}"
-      reportTxt += "  Applied costs\ ($)".ljust(colWidth)+"\n"
+      reportTxt += "  Applied costs\\ ($)".ljust(colWidth)+"\n"
 
 
       reportTxt += ":".ljust(lenLongestComponent+2,"-")
@@ -989,15 +989,15 @@ module Costing
         lineTxt = ""
         lineTxt += "#{component.gsub(/_/," ").gsub(/:/,": ")}[^#{componentIndex}]"
         lineTxt += sep
-        lineTxt += "$\ #{'%.2f' % data["unit-cost-materials"].to_f}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += "$\\ #{'%.2f' % data["unit-cost-materials"].to_f}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
-        lineTxt += "$\ #{'%.2f' % data["unit-cost-labour"].to_f}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += "$\\ #{'%.2f' % data["unit-cost-labour"].to_f}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
-        lineTxt += "$\ #{'%.2f' % data["unit-cost-total"].to_f}\ /\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += "$\\ #{'%.2f' % data["unit-cost-total"].to_f}\\ /\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
-        lineTxt += "#{'%.2f' % data["quantity"].to_f}\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += "#{'%.2f' % data["quantity"].to_f}\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
-        lineTxt += "$\ #{'%.2f' % data["component-costs"].to_f}".rjust(colWidth-colPad)+" "*colPad
+        lineTxt += "$\\ #{'%.2f' % data["component-costs"].to_f}".rjust(colWidth-colPad)+" "*colPad
         #lineTxt += sep
         #lineTxt += shortenToLen(data["measureDescription"],lenLongestDescription)
         #lineTxt += data["units"].ljust(colWidth+20)
@@ -1037,7 +1037,7 @@ module Costing
       reportTxt += sep
       reportTxt += "   ".rjust(colWidth)
       reportTxt += sep
-      reportTxt += "**$\ #{'%.2f' % myCosts["byAttribute"][attribute].to_f}**".rjust(colWidth-colPad)+" "*colPad
+      reportTxt += "**$\\ #{'%.2f' % myCosts["byAttribute"][attribute].to_f}**".rjust(colWidth-colPad)+" "*colPad
       reportTxt += "\n"
       #sep
       #reportTxt += "( total for measure ) "
@@ -1211,7 +1211,7 @@ module Costing
     summaryTxt +=  " ....................................................................................................\n" if (! markdown)
 
 
-    
+
     myCosts["byAttribute"].each do | attribute, cost |
       #debug_out "> attribute : #{attribute} = >#{myChoices[attribute]}<\n"
       next if (myChoices[attribute].nil? || attribute.nil? || cost.nil? || myChoices[attribute].empty?)
@@ -1220,14 +1220,14 @@ module Costing
       #next if ( cost.to_f < 0.1 )
       costtxt = '%.2f' % cost.to_f
       if markdown
-        summaryTxt += " #{m}#{attribute.gsub(/_/,"\\_").ljust(maxAttLen)} #{m} #{myChoices[attribute].gsub(/_/,"\\_").ljust(maxChoiceLen)} #{m} $ #{costtxt.rjust(9)}#{m}\n"
+        summaryTxt += " #{m}#{attribute.gsub(/_/,"\\_").ljust(maxAttLen)} #{m} #{myChoices[attribute].gsub(/_/,"\\_").ljust(maxChoiceLen)} #{m} $\\ #{costtxt.rjust(9)}#{m}\n"
       else
-        summaryTxt += " #{m}#{attribute.ljust(maxAttLen)} #{m} #{myChoices[attribute].ljust(maxChoiceLen)} #{m} $ #{costtxt.rjust(9)}#{m}\n"
+        summaryTxt += " #{m}#{attribute.ljust(maxAttLen)} #{m} #{myChoices[attribute].ljust(maxChoiceLen)} #{m} $\\ #{costtxt.rjust(9)}#{m}\n"
       end
     end
     myTotal = '%.2f' % myCosts["total"].to_f
     summaryTxt +=  " ....................................................................................................\n" if (! markdown)
-    summaryTxt +=  "#{m}#{"Total ".ljust(maxAttLen)} #{m} #{" ".ljust(maxChoiceLen)} #{m}  $ #{myTotal.rjust(9)}#{m}\n"
+    summaryTxt +=  "#{m}#{"Total ".ljust(maxAttLen)} #{m} #{" ".ljust(maxChoiceLen)} #{m}  $\\ #{myTotal.rjust(9)}#{m}\n"
 
     return summaryTxt
   end
