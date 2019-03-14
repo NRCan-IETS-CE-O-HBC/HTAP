@@ -5520,6 +5520,28 @@
         "custom-costs": {
         }
       },
+		"NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": 32.81,
+            "HeaderExtInsRValue": 15.15
+          }
+        },
+        "costs": {
+          "components": [
+            "insulation:xps_type_4:rigid:25mm",
+				"insulation:xps_type_4:rigid:51mm",
+            "air_barrier_membrane",
+            "osb:12mm",
+            "insulation:r24_batt",
+            "framing:conventional:38x140mm_o.c.",
+            "vapour_barrier:6_mil",
+            "1/2in_gypsum_board"
+          ]
+        },
+        "custom-costs": {
+        }
+      },
       "NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
@@ -9972,7 +9994,7 @@
             "Opt-H2K-Fuel": "1",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.8217",
+            "Opt-H2K-EF": "0.8917",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -10008,11 +10030,11 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "1",
-            "Opt-H2K-TankType": "6",
-            "Opt-H2K-TankSize": "0",
-            "Opt-H2K-EF": "2.35",
-            "Opt-H2K-IntHeatPumpCOP": "NA",
-            "Opt-H2K-FlueDiameter": "0"
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.35",
+            "Opt-H2K-FlueDiameter": "NA"
           }
         },
         "costs": {
