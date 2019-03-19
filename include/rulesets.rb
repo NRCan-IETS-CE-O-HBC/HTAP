@@ -279,11 +279,14 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
       $ruleSetChoices["Opt-HVACSystem"] = "NBC-oil-heat"
    elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
-      if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
-         $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
-      else
+      # ADW 3/07/2019: Error occurs when secSysType =~ /AirHeatPump/. Force to baseboard heater
+      # if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
+         # $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
+      # else
          $ruleSetChoices["Opt-HVACSystem"] = "NBC-elec-heat"
-      end
+      # end
+   else  # ADW 3/07/2019: Assume natural gas (probably propane)
+         $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
    end
    # Remove any secondary HVAC systems
    elements["HouseFile/House/HeatingCooling"].delete_element("SupplementaryHeatingSystems")
@@ -294,7 +297,17 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    elsif (primDHWFuelName =~ /Elect/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
    elsif (primDHWFuelName =~ /Oil/i) != nil
-      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
+      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil4"
+   else # ADW 3/7/2019: Probably solar, use same fuel as heating system
+      if (primHeatFuelName =~ /gas/i ) != nil        # value is "Natural gas"
+         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
+      elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
+         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil4"
+      elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
+	     $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
+	  else # Assume gas
+	     $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
+	  end
    end
    
    # Remove any secondary fuel systems
