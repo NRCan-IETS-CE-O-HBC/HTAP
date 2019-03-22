@@ -7080,6 +7080,23 @@ end
 
           end
 
+		  # Update the floor header choice if required
+		  unless ($gChoices["Opt-GenericWall_1Layer_definitions"].nil?) # There is a wall choice key
+            if( ! $gChoices["Opt-GenericWall_1Layer_definitions"].empty? && $gChoices["Opt-GenericWall_1Layer_definitions"] !~ /NA/ )
+            # A wall choice has been made. Determine if there is an associated interior header insulation choice
+			   unless ($gOptions["Opt-GenericWall_1Layer_definitions"]["options"][ $gChoices["Opt-GenericWall_1Layer_definitions"] ]["values"]["4"].nil?)
+			      # a header map has been supplied
+                  if ( ! $gOptions["Opt-GenericWall_1Layer_definitions"]["options"][ $gChoices["Opt-GenericWall_1Layer_definitions"] ]["values"]["4"]["conditions"]["all"].empty? && $gOptions["Opt-GenericWall_1Layer_definitions"]["options"][ $gChoices["Opt-GenericWall_1Layer_definitions"] ]["values"]["4"]["conditions"]["all"] !~ /NA/ )
+                     # Update Opt-FloorHeaderIntIns choice
+                     if( !$gChoices["Opt-FloorHeaderIntIns"].empty? && !$gChoices["Opt-FloorHeaderIntIns"] !~ /NA/)
+                  	    warn_out("WARNING: Opt-FloorHeaderIntIns choice from choice file or ruleset being overwritten by mapped choice from #{$gChoices["Opt-GenericWall_1Layer_definitions"]}.")
+                     end
+                     $gChoices["Opt-FloorHeaderIntIns"] = $gOptions["Opt-GenericWall_1Layer_definitions"]["options"][ $gChoices["Opt-GenericWall_1Layer_definitions"] ]["values"]["4"]["conditions"]["all"]
+                  end
+			   end
+            end
+	      end
+
           houseUpgraded = false
           houseSetByRuleset = false
           houseUpgradeList = ""

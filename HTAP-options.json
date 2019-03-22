@@ -4732,7 +4732,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 17.04,
-            "HeaderExtInsRValue": 0.0
+            "HeaderExtInsRValue": 0.0,
+			"MappedIntFloorHeader": "NC_R-18eff_5.5inBatt"
           }
         },
         "costs": {
@@ -4752,7 +4753,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 17.66,
-            "HeaderExtInsRValue": 0.0
+            "HeaderExtInsRValue": 0.0,
+			"MappedIntFloorHeader": "NC_R-22eff_5.5inBatt"
           }
         },
         "costs": {
@@ -4999,7 +5001,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 22.09,
-            "HeaderExtInsRValue": 5.0
+            "HeaderExtInsRValue": 5.0,
+			"MappedIntFloorHeader": "NC_R-18eff_5.5inBatt-1inXPS"
           }
         },
         "costs": {
@@ -5062,7 +5065,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 22.71,
-            "HeaderExtInsRValue": 5.0
+            "HeaderExtInsRValue": 5.0,
+			"MappedIntFloorHeader": "NC_R-22eff_5.5inBatt-1inXPS"
           }
         },
         "costs": {
@@ -5272,7 +5276,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 24.61,
-            "HeaderExtInsRValue": 7.5
+            "HeaderExtInsRValue": 7.5,
+			"MappedIntFloorHeader": "NC_R-18eff_5.5inBatt-1.5inXPS"
           }
         },
         "costs": {
@@ -5314,7 +5319,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 25.23,
-            "HeaderExtInsRValue": 7.5
+            "HeaderExtInsRValue": 7.5,
+			"MappedIntFloorHeader": "NC_R-22eff_5.5inBatt-1.5inXPS"
           }
         },
         "costs": {
@@ -5482,7 +5488,9 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 27.14,
-            "HeaderExtInsRValue": 10.0
+            "HeaderExtInsRValue": 10.0,
+			"MappedIntFloorHeader": "NC_R-18eff_5.5inBatt-2inXPS"
+			
           }
         },
         "costs": {
@@ -5503,7 +5511,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 27.76,
-            "HeaderExtInsRValue": 10.0
+            "HeaderExtInsRValue": 10.0,
+			"MappedIntFloorHeader": "NC_R-22eff_5.5inBatt-2inXPS"
           }
         },
         "costs": {
@@ -5520,7 +5529,7 @@
         "custom-costs": {
         }
       },
-		"NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
+	  "NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 32.81,
@@ -5632,7 +5641,8 @@
     "h2kSchema": [
       "<Opt-GenInsulLayerInboard-a>",
       "OPT-H2K-EffRValue",
-      "HeaderExtInsRValue"
+      "HeaderExtInsRValue",
+	  "MappedIntFloorHeader"
     ]
   },
   "Opt-MainWall": {
@@ -6188,6 +6198,45 @@
           ]
         }
       },
+	  "NC_R-18eff_5.5inBatt-1inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "18.27"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:25mm",
+            "insulation:r19_batt"
+          ]
+        }
+      },
+	  "NC_R-18eff_5.5inBatt-1.5inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "18.27"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:38mm",
+            "insulation:r19_batt"
+          ]
+        }
+      },
+	  "NC_R-18eff_5.5inBatt-2inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "18.27"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:51mm",
+            "insulation:r19_batt"
+          ]
+        }
+      },
       "NC_R-22eff_5.5inBatt": {
         "h2kMap": {
           "base": {
@@ -6200,6 +6249,45 @@
           ]
         }
       },
+	  "NC_R-22eff_5.5inBatt-1inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "22.0"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:25mm",
+            "insulation:r24_batt"
+          ]
+        }
+      },
+	  "NC_R-22eff_5.5inBatt-1.5inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "22.0"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:38mm",
+            "insulation:r24_batt"
+          ]
+        }
+      },
+	  "NC_R-22eff_5.5inBatt-2inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "22.0"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:51mm",
+            "insulation:r24_batt"
+          ]
+        }
+      },
       "NC_R-26eff_8inBatt": {
         "h2kMap": {
           "base": {
@@ -6208,6 +6296,45 @@
         },
         "costs": {
           "components": [
+            "insulation:r28_batt"
+          ]
+        }
+      },
+	  "NC_R-26eff_8inBatt-1inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "26.29"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:25mm",
+            "insulation:r28_batt"
+          ]
+        }
+      },
+	  "NC_R-26eff_8inBatt-1.5inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "26.29"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:38mm",
+            "insulation:r28_batt"
+          ]
+        }
+      },
+	  "NC_R-26eff_8inBatt-2inXPS": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "26.29"
+          }
+        },
+        "costs": {
+          "components": [
+		    "insulation:xps_type_4:rigid:51mm",
             "insulation:r28_batt"
           ]
         }
