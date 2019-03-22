@@ -134,7 +134,7 @@ def drawRuler(msg = nil, char=nil, myLength=nil)
   end
 
   if ( ! msg.nil? && c == "=" )
-    topRule = "".ljust(myLength-1,"_")
+    topRule = "_".ljust(myLength-1,"_")
     topRule = "\n#{topRule}\n"
     prefix = "#{$program}: "
   else

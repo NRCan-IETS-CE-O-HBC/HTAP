@@ -844,15 +844,16 @@ module H2KFile
 
     locationText = "HouseFile/House/Components/*/Components/Window"
     elements.each(locationText) do |window|
+
       # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
       thisWindowOrient = window.elements["FacingDirection"].attributes["code"].to_i
       thisWindowArea   = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
 
       windowArea["total"] += thisWindowArea
       windowArea["byOrientation"][thisWindowOrient] += thisWindowArea
-
+      debug_out "> window - #{thisWindowArea.to_s.ljust(30)} m2\n"
     end
-
+    debug_out " TOTAL WINDOW AREA: #{windowArea["total"].to_s.ljust(30)} m2 (#{windowArea["total"]*3.28*3.28} ft2)\n"
     return windowArea
 
   end # function getWindowArea
@@ -928,11 +929,12 @@ module H2KFile
       # Loop through floor headers.
       areaHeaders = 0
       elements.each(locationHeaderText) do |header|
-
+        debug_out "Found header  #{header.attributes["id"].to_i} \n"
         if (header.parent.parent.attributes["id"].to_i == idWall)
 
           thisHeaderArea  = ( header.elements["Measurements"].attributes["height"].to_f *  header.elements["Measurements"].attributes["perimeter"].to_f  )
           areaHeaders += thisHeaderArea
+          debug_out "     HEADER: parent id #{header.parent.parent.attributes["id"].to_i} - area: #{thisHeaderArea}\n"
 
         end
         # if (header.parent.parent.attributes["id"].to_i == idWall)
@@ -965,6 +967,60 @@ module H2KFile
   end
 
   # def H2KFile.getAGWallArea(elements)
+
+
+    def H2KFile.getExpFloorDimensions(elements)
+      #debug_on
+      locationText = "HouseFile/House/Components/Floor"
+      areaFloors = 0
+      elements.each(locationText) do |floor|
+
+        thisFloorArea  = ( floor.elements["Measurements"].attributes["area"].to_f   )
+        areaFloors += thisFloorArea
+
+      end
+
+      floorDims = {
+        "area" => {
+          "total" => areaFloors
+        }
+      }
+
+      return floorDims
+
+    end
+
+
+  def H2KFile.getFlrHeaderDimensions(elements)
+    #debug_on
+    locationText = "HouseFile/House/Components/*/Components/FloorHeader"
+    areaHeaders = 0
+    areaHeadersAG = 0
+    areaHeadersBG = 0
+    elements.each(locationText) do |header|
+
+      thisHeaderArea  = ( header.elements["Measurements"].attributes["height"].to_f *  header.elements["Measurements"].attributes["perimeter"].to_f  )
+      areaHeaders += thisHeaderArea
+      parent = header.parent.parent.name
+
+      areaHeadersAG += thisHeaderArea if ( parent =~ /wall/i )
+      areaHeadersBG += thisHeaderArea if ( parent =~ /basement/i || parent =~ /crawlspace/i)
+
+
+    end
+
+    headerDims = {
+      "area" => {
+        "total" => areaHeaders,
+        "above-grade" => areaHeadersAG,
+        "below-grade" => areaHeadersBG
+      }
+    }
+
+    return headerDims
+
+  end
+
 
   def H2KFile.getBGDimensions(elements)
 
@@ -1232,11 +1288,16 @@ module H2KFile
 
     # we don't know the filename - create a placeholder that can set elsewhere
     myH2KHouseInfo["h2kFile"] = "unknown"
+
+    myH2KHouseInfo["house-description"]
     # Location/region
     myH2KHouseInfo["locale"] = Hash.new
     myH2KHouseInfo["locale"]["weatherLoc"] = H2KFile.getWeatherCity( elements )
     myH2KHouseInfo["locale"]["region"]     = H2KFile.getRegion( elements )
 
+    myH2KHouseInfo["house-description"] = Hash.new
+    myH2KHouseInfo["house-description"]["stories"] = H2KFile.getStoreys(elements)
+    myH2KHouseInfo["house-description"]["type"] = H2KFile.getHouseType(elements)
 
     # Dimensions
     myH2KHouseInfo["dimensions"] = Hash.new
@@ -1257,6 +1318,8 @@ module H2KFile
     myH2KHouseInfo["dimensions"]["walls"] = Hash.new
     myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = Hash.new
     myH2KHouseInfo["dimensions"]["walls"]["above-grade"] = H2KFile.getAGWallDimensions( elements )
+    myH2KHouseInfo["dimensions"]["headers"] =  H2KFile.getFlrHeaderDimensions( elements )
+    myH2KHouseInfo["dimensions"]["exposed-floors"] = H2KFile.getExpFloorDimensions(elements)
     myH2KHouseInfo["dimensions"]["below-grade"] = H2KFile.getBGDimensions( elements )
 
     myH2KHouseInfo["HVAC"] = Hash.new

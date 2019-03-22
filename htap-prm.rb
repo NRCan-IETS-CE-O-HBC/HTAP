@@ -70,7 +70,7 @@ $snailStartWait = 1
 
 $choicesInMemory = true
 $ChoiceFileContents = Hash.new
-
+$gDebug = false
 
 
 =begin rdoc
@@ -361,6 +361,8 @@ def create_mesh_cartisian_combos(optIndex)
 
       $archetypeFiles.each do |file|
 
+          debug_out ("test file - #{file}\n")
+
           $h2kfile = File.basename(file)
 
           $gChoiceFileSet["!Opt-Archetype"] = $h2kfile
@@ -424,13 +426,13 @@ def create_parametric_combos()
 
 
   $gArchetypes.each do | archetype |
-
-    $ArchetypeFiles = Dir["#{$Folder}/#{archetype}"]
-    $ArchetypeFiles.each do |h2kpath|
+    debug_out ("> archatype - #{$gArchetypes}\n")
+    $archetypeFiles = Dir["#{$Folder}/#{archetype}"]
+    $archetypeFiles.each do |h2kpath|
       $gLocations.each do | location |
         $gRulesets.each do | ruleset |
 
-          debug_out (" Setting parametric scope for #{h2kpath} / #{location} /#{ruleset} \n")
+          debug_out (" Setting parametric scope for: \n  1  #{archetype} \n  2  #{h2kpath}    \n  3  #{location}     \n  4  #{ruleset} \n")
 
           # Base point
 
@@ -454,7 +456,7 @@ def create_parametric_combos()
 
           parameterSpace.keys.each do |attribute|
 
-            #debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
+            debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
 
             parameterSpace[attribute][1..-1].each do | choice |
 
@@ -502,6 +504,10 @@ def create_parametric_combos()
 
 
   debug_out (" ----- PARAMETRIC RUN: PARAMETER SPACE ----\n#{parameterSpace.pretty_inspect}\n")
+  debug_out( " - gArchetype\n#{$gArchetypeHash.pretty_inspect}\n")
+  debug_out( " - gLocationH\n#{$gLocationHash.pretty_inspect} \n")
+  debug_out( " - gRulesetHa\n#{$gRulesetHash.pretty_inspect}  \n")
+
 
 end
 
@@ -1085,7 +1091,7 @@ def run_these_cases(current_task_files)
           $RunsDone = true
           $GiveUp = true
         end
-
+        Dir.chdir($gMasterPath)
       end # ends $RunResults.each do
 
 
@@ -1202,14 +1208,14 @@ def run_these_cases(current_task_files)
 
 
   end
-  fJSONout.close
 
+  fJSONout.close
+  Dir.chdir($gMasterPath)
   if ( $GiveUp ) then
     stream_out(" - HTAP-prm: runs terminated due to error ----------\n\n")
   else
     stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
   end
-
 
   if ( ! $gDebug ) then
      stream_out (" - Deleting working directories... ")
@@ -1461,13 +1467,18 @@ else
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
 
   parse_def_file($gRunDefinitionsFile)
+
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir
+  debug_out "> #{$Folder}\n"
   $gArchetypes.each do |arch_entry|
-    $archetypeFiles = Dir["#{$Folder}/#{arch_entry}"]
+    Dir["#{$Folder}/#{arch_entry}"].each {|file| $archetypeFiles.push file}
   end
 
 
+
+
+  debug_out " ARCH: \n#{$archetypeFiles[0].pretty_inspect}\n"
 
   stream_out (" done.\n")
 
@@ -1495,7 +1506,9 @@ else
     stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
 
 
-
+    if ( runningProduct < 1) then
+      fatalerror ( " No combinations to run.")
+    end
 
     $combosRequired = runningProduct
     $combosGenerated = 0
@@ -1573,6 +1586,9 @@ else
     $combosGenerated = 0
     $combosSinceLastUpdate = 0
     $comboInterval = 1000
+    if ( runningProduct <  1 ) then
+      fatalerror ( " No combinations to run.")
+    end
 
     stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
 

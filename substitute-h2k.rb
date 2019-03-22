@@ -3185,7 +3185,7 @@ def processFile(h2kElements)
   # operations tha depend on multiple choices. Start with Foundations...
   myFdnData = Hash.new
 
-  
+
   debug_out ( ">>> $foundation config? #{$foundationConfiguration}\n")
 
   if ( $foundationConfiguration == "surfBySurf")
@@ -6526,7 +6526,6 @@ end
         def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
           debug_off
 
-
           h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
           myCosts = Hash.new
           myH2KHouseInfo = Hash.new
@@ -6556,6 +6555,8 @@ end
             stream_out( Costing.summarizeCosts(myChoices, myCosts))
             File.write(CostingAuditReportName, Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo))
             info_out("Comprehensive costing calculation report written to #{CostingAuditReportName}")
+
+            myCosts["costing-dimensions"] = myH2KHouseInfo
 
           end
 

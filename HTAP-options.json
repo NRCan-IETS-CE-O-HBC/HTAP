@@ -1753,6 +1753,35 @@
           }
         }
       },
+      "NC-2g-MG-u1.82": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "argon",
+          "coat": "clear",
+          "u-value": 1.82,
+          "SHGC": 0.26,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-E-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-N-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-W-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-SE-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-SW-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-NE-CON>": "NC-2g-MG-u1.82",
+            "<Opt-win-NW-CON>": "NC-2g-MG-u1.82"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:double_glaze:vinyl:glass:double_lof_lowe:insulating_spacers:air_fill:shgc_0.5:u-value_1.82"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
       "NC-2g-HG-u1.65": {
         "characteristics": {
           "panes": 2,
@@ -1777,6 +1806,35 @@
         "costs": {
           "components": [
             "window:shgc_0.51:u-value_1.65"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+      "NC-2g-MG-u1.65": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "argon",
+          "coat": "LowE-LowGain",
+          "u-value": 1.65,
+          "SHGC": 0.26,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "NC-2g-MG-u1.65",
+            "<Opt-win-E-CON>":  "NC-2g-MG-u1.65",
+            "<Opt-win-N-CON>":  "NC-2g-MG-u1.65",
+            "<Opt-win-W-CON>":  "NC-2g-MG-u1.65",
+            "<Opt-win-SE-CON>": "NC-2g-MG-u1.65",
+            "<Opt-win-SW-CON>": "NC-2g-MG-u1.65",
+            "<Opt-win-NE-CON>": "NC-2g-MG-u1.65",
+            "<Opt-win-NW-CON>": "NC-2g-MG-u1.65"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:shgc_0.19:u-value_1.65"
           ],
           "custom-costs": {
           }
@@ -1830,6 +1888,35 @@
             "<Opt-win-SW-CON>": "NC-3g-HG-u1.36",
             "<Opt-win-NE-CON>": "NC-3g-HG-u1.36",
             "<Opt-win-NW-CON>": "NC-3g-HG-u1.36"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:shgc_0.46:u-value_1.36"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+      "NC-3g-MG-u1.36": {
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "LowE-HighGain",
+          "u-value": 1.36,
+          "SHGC": 0.26,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "NC-3g-MG-u1.36",
+            "<Opt-win-E-CON>":  "NC-3g-MG-u1.36",
+            "<Opt-win-N-CON>":  "NC-3g-MG-u1.36",
+            "<Opt-win-W-CON>":  "NC-3g-MG-u1.36",
+            "<Opt-win-SE-CON>": "NC-3g-MG-u1.36",
+            "<Opt-win-SW-CON>": "NC-3g-MG-u1.36",
+            "<Opt-win-NE-CON>": "NC-3g-MG-u1.36",
+            "<Opt-win-NW-CON>": "NC-3g-MG-u1.36"
           }
         },
         "costs": {
@@ -1895,6 +1982,35 @@
           "coat": "LowE-HighGain",
           "u-value": 1.08,
           "SHGC": 0.44,
+          "frame": "vinyl"
+        }
+      },
+      "NC-3g-MG-u1.08": {
+        "costs": {
+          "components": [
+            "window:shgc_0.44:u-value_1.08"
+          ],
+          "custom-costs": {
+          }
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "NC-3g-MG-u1.08",
+            "<Opt-win-E-CON>":  "NC-3g-MG-u1.08",
+            "<Opt-win-N-CON>":  "NC-3g-MG-u1.08",
+            "<Opt-win-W-CON>":  "NC-3g-MG-u1.08",
+            "<Opt-win-SE-CON>": "NC-3g-MG-u1.08",
+            "<Opt-win-SW-CON>": "NC-3g-MG-u1.08",
+            "<Opt-win-NE-CON>": "NC-3g-MG-u1.08",
+            "<Opt-win-NW-CON>": "NC-3g-MG-u1.08"
+          }
+        },
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "LowE-HighGain",
+          "u-value": 1.08,
+          "SHGC": 0.26,
           "frame": "vinyl"
         }
       },
@@ -2579,7 +2695,7 @@
           }
         },
         "costs": {
-          "proxy": "NC-2g-HG-u1.82",
+          "proxy": "NC-2g-HG-u1.65",
           "custom-costs": {
           }
         }
@@ -2598,7 +2714,7 @@
           }
         },
         "costs": {
-          "proxy": "NC-2g-HG-u1.82",
+          "proxy": "NC-2g-HG-u1.65",
           "custom-costs": {
           }
         }
@@ -5393,6 +5509,28 @@
         "costs": {
           "components": [
             "insulation:xps_type_4:rigid:51mm",
+            "air_barrier_membrane",
+            "osb:12mm",
+            "insulation:r24_batt",
+            "framing:conventional:38x140mm_o.c.",
+            "vapour_barrier:6_mil",
+            "1/2in_gypsum_board"
+          ]
+        },
+        "custom-costs": {
+        }
+      },
+		"NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": 32.81,
+            "HeaderExtInsRValue": 15.15
+          }
+        },
+        "costs": {
+          "components": [
+            "insulation:xps_type_4:rigid:25mm",
+				"insulation:xps_type_4:rigid:51mm",
             "air_barrier_membrane",
             "osb:12mm",
             "insulation:r24_batt",
@@ -9856,7 +9994,7 @@
             "Opt-H2K-Fuel": "1",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.8217",
+            "Opt-H2K-EF": "0.8917",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -9892,11 +10030,11 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "1",
-            "Opt-H2K-TankType": "6",
-            "Opt-H2K-TankSize": "0",
-            "Opt-H2K-EF": "2.35",
-            "Opt-H2K-IntHeatPumpCOP": "NA",
-            "Opt-H2K-FlueDiameter": "0"
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.35",
+            "Opt-H2K-FlueDiameter": "NA"
           }
         },
         "costs": {
@@ -10292,6 +10430,130 @@
             "Opt-H2K-Other": "3",
             "Opt-H2K-Exterior": "0",
             "Opt-H2K-DHWLoad": "225",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "ERS-Single-regular-19.5kWh&190_per_day": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "2",
+            "Opt-H2K-FracAdultsHome": "50",
+            "Opt-H2K-NumChilds": "1",
+            "Opt-H2K-FracChildsHome": "50",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "6.3",
+            "Opt-H2K-Lighting": "2.6",
+            "Opt-H2K-Other": "9.7",
+            "Opt-H2K-Exterior": "0.9",
+            "Opt-H2K-DHWLoad": "190",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "ERS-MURB-regular-11.8kWh&125_per_day": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "2",
+            "Opt-H2K-FracAdultsHome": "50",
+            "Opt-H2K-NumChilds": "0",
+            "Opt-H2K-FracChildsHome": "50",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "5.2",
+            "Opt-H2K-Lighting": "1.7",
+            "Opt-H2K-Other": "4.4",
+            "Opt-H2K-Exterior": "0.4",
+            "Opt-H2K-DHWLoad": "125",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "ERS-Single-reduced-16kWh&160_per_day": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "2",
+            "Opt-H2K-FracAdultsHome": "50",
+            "Opt-H2K-NumChilds": "1",
+            "Opt-H2K-FracChildsHome": "50",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "4.3",
+            "Opt-H2K-Lighting": "2",
+            "Opt-H2K-Other": "9.7",
+            "Opt-H2K-Exterior": "0.9",
+            "Opt-H2K-DHWLoad": "160",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "ERS-Single-vEfficient-14kWh&160_per_day": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "2",
+            "Opt-H2K-FracAdultsHome": "50",
+            "Opt-H2K-NumChilds": "1",
+            "Opt-H2K-FracChildsHome": "50",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "3.1",
+            "Opt-H2K-Lighting": "1",
+            "Opt-H2K-Other": "9.7",
+            "Opt-H2K-Exterior": "0.9",
+            "Opt-H2K-DHWLoad": "160",
             "Opt-H2K-DHWTemp": "55",
             "Opt-H2K-FuelStove": "NA",
             "Opt-H2K-StoveUse": "NA",
