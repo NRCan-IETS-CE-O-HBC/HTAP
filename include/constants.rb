@@ -186,7 +186,8 @@ CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-FoundationWallIntIns",
                            "Opt-FoundationSlabBelowGrade",
                            "Opt-FoundationSlabOnGrade",
-                           "Opt-FloorHeaderIntIns"
+                           "Opt-FloorHeaderIntIns",
+									"Opt-ExposedFloor"
                          ]
 
 AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
