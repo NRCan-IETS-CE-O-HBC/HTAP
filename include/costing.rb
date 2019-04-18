@@ -666,6 +666,18 @@ module Costing
 
               end
               # ..................................................................
+				when "Opt-ExposedFloor"
+
+              if ( units == "sf applied" || units =="undefined")
+
+                measure = (myH2KHouseInfo["dimensions"]["exposed-floors"]["area"]["total"] ) * SF_PER_SM
+					 measureDescription = "sq.ft - Exposed floor area"
+              else
+
+                costsOK = false
+
+              end
+              # ..................................................................
             when "Opt-DWHRSystem"
 
               if ( units == "ea"  || units =="undefined")
@@ -850,7 +862,8 @@ module Costing
       myCosts["byAttribute"]["Opt-FoundationSlabBelowGrade"] +
       myCosts["byAttribute"]["Opt-FoundationSlabOnGrade"] +
       myCosts["byAttribute"]["Opt-Ceilings"] +
-      myCosts["byAttribute"]["Opt-AtticCeilings"]
+      myCosts["byAttribute"]["Opt-AtticCeilings"]+
+		myCosts["byAttribute"]["Opt-ExposedFloor"]
 
     myCosts["byBuildingComponent"]["mechanical"] =
       myCosts["byAttribute"]["Opt-HRVonly"] +

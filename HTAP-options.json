@@ -5634,6 +5634,29 @@
         },
         "custom-costs": {
         }
+      },
+		"NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": 40,
+            "HeaderExtInsRValue": 22.5
+          }
+        },
+        "costs": {
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+				"insulation:xps_type_4:rigid:64mm",
+				"fasteners_for_4in_thick_exterior_insulation",
+            "air_barrier_membrane",
+            "osb:12mm",
+            "insulation:r24_batt",
+            "framing:conventional:38x140mm_o.c.",
+            "vapour_barrier:6_mil",
+            "1/2in_gypsum_board"
+          ]
+        },
+        "custom-costs": {
+        }
       }
     },
     "default": "Stud_2x6_R20",
@@ -8851,7 +8874,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:r31_batt"
           ]
         }
       },
@@ -8866,7 +8889,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:spray_foam_2pd_urethane:5.5in_thickness"
           ]
         }
       },
@@ -8881,7 +8904,8 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:spray_foam:2pound_urethane:7.5in_thickness",
+				"insulation:spray_foam:38mm:r6/inch"
           ]
         }
       },
@@ -8910,7 +8934,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:r27_batt"
           ]
         }
       },
@@ -8924,7 +8948,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:r29_batt"
           ]
         }
       },
@@ -10292,7 +10316,7 @@
             "Opt-H2K-Fuel": "2",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.67",
+            "Opt-H2K-EF": "0.575",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "76.2"
           }
@@ -10309,7 +10333,7 @@
             "Opt-H2K-Fuel": "1",
             "Opt-H2K-TankType": "3",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.894",
+            "Opt-H2K-EF": "0.876",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -10326,7 +10350,7 @@
             "Opt-H2K-Fuel": "3",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.59",
+            "Opt-H2K-EF": "0.495",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
