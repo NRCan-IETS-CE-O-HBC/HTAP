@@ -10189,7 +10189,7 @@
             "Opt-H2K-Fuel": "2",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.67",
+            "Opt-H2K-EF": "0.575",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "76.2"
           }
@@ -10206,7 +10206,7 @@
             "Opt-H2K-Fuel": "1",
             "Opt-H2K-TankType": "3",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.894",
+            "Opt-H2K-EF": "0.876",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -10223,7 +10223,7 @@
             "Opt-H2K-Fuel": "3",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.59",
+            "Opt-H2K-EF": "0.495",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
