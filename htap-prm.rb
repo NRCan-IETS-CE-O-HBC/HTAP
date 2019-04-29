@@ -1073,7 +1073,7 @@ def run_these_cases(current_task_files)
           $runFailed = true
           errs="\n\n       (!) simulation errors found (!)"
           $msg = "#{$RunResults[run]["configuration"]["ChoiceFile"]} (dir: #{$RunResults[run]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
-          $failures.write "$msg\n"
+          $failures.write "#{$msg}\n"
           $FailedRuns.push $msg
           $FailedRunCount = $FailedRunCount + 1
 
