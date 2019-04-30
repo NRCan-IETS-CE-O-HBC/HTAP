@@ -710,6 +710,12 @@ def processFile(h2kElements)
               locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
               h2kElements[locationText].attributes["isCalculated"] = "false"
               h2kElements[locationText].attributes["leakageArea"] = sELA
+              h2kElements[locationText].add_element("Pressure")
+              h2kElements[locationText + "/Pressure"].attributes["code"] = "1"
+              h2kElements[locationText + "/Pressure"].add_element("English")
+              h2kElements[locationText + "/Pressure/English"].add_text("10 Pa")
+              h2kElements[locationText + "/Pressure"].add_element("French")
+              h2kElements[locationText + "/Pressure/French"].add_text("10 Pa")
             end
           end
 
