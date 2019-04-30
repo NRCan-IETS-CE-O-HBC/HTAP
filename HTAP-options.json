@@ -1580,6 +1580,24 @@
           ]
         }
       },
+      "ACH_0_1_n_0_67": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "0.1",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA",
+            "Opt-FlowExponent": "0.67"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "New-Const-air_seal_to_1.00_ach": {
         "h2kMap": {
           "base": {
@@ -1696,7 +1714,8 @@
       "<Opt-ACH>",
       "Opt-BuildingSite",
       "Opt-WallShield",
-      "Opt-FlueShield"
+      "Opt-FlueShield",
+      "Opt-FlowExponent"
     ]
   },
   "Opt-CasementWindows": {

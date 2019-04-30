@@ -693,6 +693,24 @@ def processFile(h2kElements)
             #else
             #   if ( value == "NA" ) # Don't change anything
             #   else fatalerror("Missing H2K #{choiceEntry} tag:#{tag}") end
+          elsif( tag =~ /Opt-FlowExponent/ )
+            if(value != "NA" && !value.empty?)
+              # Load the flow exponent
+              fExp = value.to_f
+              if(fExp < 0.5 || fExp > 1)
+                fatalerror("In #{choiceEntry}, invalid flow exponent input #{value}")
+              end
+              # Load the house volume
+              fVolume = h2kElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
+              # Load the ACH
+              fACH = $gOptions["Opt-ACH"]["options"][ $gChoices["Opt-ACH"] ]["values"]["1"]["conditions"]["all"].to_f
+              # Determine the ELA @ 10 Pa
+              fELA = (11570.0 * (1.205**0.5)*fACH*fVolume*(10.0**(fExp-0.5)))/(3600.0*(50.0**fExp))
+              sELA = sprintf("%0.2f", fELA)
+              locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+              h2kElements[locationText].attributes["isCalculated"] = "false"
+              h2kElements[locationText].attributes["leakageArea"] = sELA
+            end
           end
 
 
