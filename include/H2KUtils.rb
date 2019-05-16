@@ -479,6 +479,14 @@ module H2KFile
 
   end
 
+  def H2KFile.getFrontOrientation(elements)
+    frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}
+    myHouseFrontOrientCode = elements["HouseFile/House/Specifications/FacingDirection"].attributes["code"].to_i
+    myHouseFrontOrientString = frontFacingH2KVal[myHouseFrontOrientCode]
+
+    return myHouseFrontOrientString
+  end
+
   def H2KFile.getHeatedFloorArea(elements)
 
     # Initialize vars
@@ -1333,7 +1341,7 @@ module H2KFile
 
   end
 
-  def H2KFile.DeleteAllWin(elements)
+  def H2KFile.deleteAllWin(elements)
     # Delete all existing windows - exclude door-windows
     locationText = "HouseFile/House/Components/*/Components/Window"
     elements.each(locationText) do |window|
@@ -1342,7 +1350,7 @@ module H2KFile
 
   end
 
-  def H2KFile.AddWin(elements, facingDirection, height, width, winCode)
+  def H2KFile.addWin(elements, facingDirection, height, width, winCode)
     # Facing direction codes for HOT2000
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
     useThisCodeID  = {  "S"  =>  191 ,    "SE" =>  192 ,    "E"  =>  193 ,    "NE" =>  194 ,    "N"  =>  195 ,    "NW" =>  196 ,    "W"  =>  197 ,    "SW" =>  198   }

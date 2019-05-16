@@ -3108,6 +3108,48 @@ def processFile(h2kElements)
             end
           end
 
+        # Change window distribution
+        # Delete all windows and redistribute according to the choices
+        #-----------------------------------------------------------------------------------
+        elsif (choiceEntry =~ /Opt-WindowDistribution/)
+          #winArea = H2KFile.getWindowArea(h2kElements)
+          wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
+          winArea = wallAreaAG["area"]["windows"].to_f
+          doorArea = wallAreaAG["area"]["doors"].to_f
+          grossWallArea = wallAreaAG["area"]["gross"].to_f
+          fDWR = (winArea+doorArea) / grossWallArea
+
+          frontOrientation = H2KFile.getFrontOrientation(h2kElements)
+          winCode = h2kElements["HouseFile/House/Components/Wall/Components/Window/Construction/Type"].attributes["idref"]
+          if value == "NA"
+            # Do nothing -- window distribution remain unchanged
+          elsif value == "equal-on-all-sides"
+            # TBA
+            if (fDWR < 0.17)
+              fDWR = 0.17
+            elsif (fDWR > 0.22)
+              fDWR = 0.22
+            end
+            equalWinArea = (fDWR * grossWallArea - doorArea)/4
+            newWinHeight = Math.sqrt(equalWinArea) * 1000.0
+            newWinWidth = Math.sqrt(equalWinArea) * 1000.0
+            H2KFile.deleteAllWin(h2kElements)
+            if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
+              H2KFile.addWin(h2kElements, "S", newWinHeight, newWinWidth, winCode)
+              H2KFile.addWin(h2kElements, "N", newWinHeight, newWinWidth, winCode)
+              H2KFile.addWin(h2kElements, "E", newWinHeight, newWinWidth, winCode)
+              H2KFile.addWin(h2kElements, "W", newWinHeight, newWinWidth, winCode)
+            else
+              H2KFile.addWin(h2kElements, "SE", newWinHeight, newWinWidth, winCode)
+              H2KFile.addWin(h2kElements, "NE", newWinHeight, newWinWidth, winCode)
+              H2KFile.addWin(h2kElements, "SW", newWinHeight, newWinWidth, winCode)
+              H2KFile.addWin(h2kElements, "NW", newWinHeight, newWinWidth, winCode)
+            end
+
+
+          end
+
+        #------------------------------------------------------------------------------------
         else
           # Do nothing -- we're ignoring all other tags!
           debug_out("Tag #{tag} ignored!\n")

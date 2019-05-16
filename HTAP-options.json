@@ -10881,5 +10881,15 @@
       "Opt-H2K-GridAbsRate",
       "Opt-H2K-InvEff"
     ]
+  },
+  "Opt-WindowDistribution": {
+    "structure": "flat",
+    "costed": false,
+    "options": {
+      "NA": "NA",
+      "equal-on-all-sides": "equal-on-all-sides"
+    },
+    "default": "NA",
+    "stop-on-error": true
   }
 }
