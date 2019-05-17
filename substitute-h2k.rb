@@ -3112,41 +3112,130 @@ def processFile(h2kElements)
         # Delete all windows and redistribute according to the choices
         #-----------------------------------------------------------------------------------
         elsif (choiceEntry =~ /Opt-WindowDistribution/)
-          #winArea = H2KFile.getWindowArea(h2kElements)
+
+          winAreaOrient = H2KFile.getWindowArea(h2kElements)
           wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
           winArea = wallAreaAG["area"]["windows"].to_f
           doorArea = wallAreaAG["area"]["doors"].to_f
           grossWallArea = wallAreaAG["area"]["gross"].to_f
-          fDWR = (winArea+doorArea) / grossWallArea
 
           frontOrientation = H2KFile.getFrontOrientation(h2kElements)
-          winCode = h2kElements["HouseFile/House/Components/Wall/Components/Window/Construction/Type"].attributes["idref"]
-          if value == "NA"
-            # Do nothing -- window distribution remain unchanged
-          elsif value == "equal-on-all-sides"
-            # TBA
-            if (fDWR < 0.17)
-              fDWR = 0.17
-            elsif (fDWR > 0.22)
-              fDWR = 0.22
-            end
-            equalWinArea = (fDWR * grossWallArea - doorArea)/4
-            newWinHeight = Math.sqrt(equalWinArea) * 1000.0
-            newWinWidth = Math.sqrt(equalWinArea) * 1000.0
-            H2KFile.deleteAllWin(h2kElements)
-            if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
-              H2KFile.addWin(h2kElements, "S", newWinHeight, newWinWidth, winCode)
-              H2KFile.addWin(h2kElements, "N", newWinHeight, newWinWidth, winCode)
-              H2KFile.addWin(h2kElements, "E", newWinHeight, newWinWidth, winCode)
-              H2KFile.addWin(h2kElements, "W", newWinHeight, newWinWidth, winCode)
+
+          # FDWR
+          if (tag =~ /OPT-H2K-FDWR/)
+            if value == "NA"
+              # original FDWR
+              fDWR = (winArea+doorArea) / grossWallArea
+            elsif value == "NBC9.36"
+              # NBC9.36 specify a range (i.e. 0.17 < FDWR < 0.22)
+              # Keep original if in the range, otherwise set to max or min
+              fDWR = (winArea+doorArea) / grossWallArea
+              if (fDWR < 0.17)
+                fDWR = 0.17
+              elsif (fDWR > 0.22)
+                fDWR = 0.22
+              end
             else
-              H2KFile.addWin(h2kElements, "SE", newWinHeight, newWinWidth, winCode)
-              H2KFile.addWin(h2kElements, "NE", newWinHeight, newWinWidth, winCode)
-              H2KFile.addWin(h2kElements, "SW", newWinHeight, newWinWidth, winCode)
-              H2KFile.addWin(h2kElements, "NW", newWinHeight, newWinWidth, winCode)
+              fDWR = value.to_f
+            end
+          end
+
+          locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
+          # Overhang width
+          if (tag =~ /OPT-H2K-OVERHANG-WDTH/)
+            overhangW = Hash.new(0)
+            tempAreaWin = Hash.new(0)
+            maxAreaWin = Hash.new(0)
+            if value != "NA"
+              (1..8).each do |winOrient|
+                overhangW[winOrient] = value
+              end
+            else
+              h2kElements.each(locationTextWin) do |window|
+                winOrient = window.elements["FacingDirection"].attributes["code"].to_i
+                tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+                if tempAreaWin[winOrient] > maxAreaWin[winOrient]
+                  overhangW[winOrient] = window.elements["Measurements"].attributes["overhangWidth"]
+                  maxAreaWin[winOrient] = tempAreaWin[winOrient]
+                end
+              end
+            end
+          end
+
+          # Overhange height
+          if (tag =~ /OPT-H2K-OVERHANG-HGHT/)
+            overhangH = Hash.new(0)
+            tempAreaWin = Hash.new(0)
+            maxAreaWin = Hash.new(0)
+            if value != "NA"
+              (1..8).each do |winOrient|
+                overhangH[winOrient] = value
+              end
+            else
+              h2kElements.each(locationTextWin) do |window|
+                winOrient = window.elements["FacingDirection"].attributes["code"].to_i
+                tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+                if tempAreaWin[winOrient] > maxAreaWin[winOrient]
+                  overhangH[winOrient] = window.elements["Measurements"].attributes["headerHeight"]
+                  maxAreaWin[winOrient] = tempAreaWin[winOrient]
+                end
+              end
+            end
+          end
+
+          # Window size
+          if (tag =~ /OPT-H2K-DISTRIBUTION/ && value != "NA")
+            newWinHeight = Hash.new(0)
+            newWinWidth = Hash.new(0)
+            winCode = Hash.new
+            tempAreaWin = Hash.new(0)
+            maxAreaWin = Hash.new(0)
+            totalNewWinArea = (fDWR * grossWallArea - doorArea)
+            if value == "EQUAL"
+              # four square window
+              equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
+
+              (1..8).each do |winOrient|
+                newWinHeight[winOrient] = equalWinSide
+                newWinWidth[winOrient] = equalWinSide
+              end
+
+            elsif value == "PROPORTIONAL"
+              #TBA
+              (1..8).each do |winOrient|
+                ratioWinArea = (winAreaOrient["byOrientation"][winOrient]/winAreaOrient["total"]).to_f
+                propWinSide = Math.sqrt(totalNewWinArea*ratioWinArea) * 1000.0
+                newWinHeight[winOrient] = propWinSide
+                newWinWidth[winOrient] = propWinSide
+              end
+
+            end
+            # Obtain window codes
+            h2kElements.each(locationTextWin) do |window|
+              winOrient = window.elements["FacingDirection"].attributes["code"].to_i
+              tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+              if tempAreaWin[winOrient] > maxAreaWin[winOrient]
+                winCode[winOrient] = window.elements["Construction"].elements["Type"].attributes["idref"]
+                maxAreaWin[winOrient] = tempAreaWin[winOrient]
+              end
             end
 
+            # Delete all existing windows
+            H2KFile.deleteAllWin(h2kElements)
 
+            # Add equally sized windows on four sides of a house
+            # "S"=> 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+            if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
+              H2KFile.addWin(h2kElements, "S", newWinHeight[1], newWinWidth[1], overhangW[1], overhangH[1], winCode[1])
+              H2KFile.addWin(h2kElements, "E", newWinHeight[3], newWinWidth[3], overhangW[3], overhangH[3], winCode[3])
+              H2KFile.addWin(h2kElements, "N", newWinHeight[5], newWinWidth[5], overhangW[5], overhangH[5], winCode[5])
+              H2KFile.addWin(h2kElements, "W", newWinHeight[7], newWinWidth[7], overhangW[7], overhangH[7], winCode[7])
+            else
+              H2KFile.addWin(h2kElements, "SE", newWinHeight[2], newWinWidth[2], overhangW[2], overhangH[2], winCode[2])
+              H2KFile.addWin(h2kElements, "NE", newWinHeight[4], newWinWidth[4], overhangW[4], overhangH[4], winCode[4])
+              H2KFile.addWin(h2kElements, "NW", newWinHeight[6], newWinWidth[6], overhangW[6], overhangH[6], winCode[6])
+              H2KFile.addWin(h2kElements, "SW", newWinHeight[8], newWinWidth[8], overhangW[8], overhangH[8], winCode[8])
+            end
           end
 
         #------------------------------------------------------------------------------------

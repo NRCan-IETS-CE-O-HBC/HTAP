@@ -1350,7 +1350,7 @@ module H2KFile
 
   end
 
-  def H2KFile.addWin(elements, facingDirection, height, width, winCode)
+  def H2KFile.addWin(elements, facingDirection, height, width, overhangW, overhangH, winCode)
     # Facing direction codes for HOT2000
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
     useThisCodeID  = {  "S"  =>  191 ,    "SE" =>  192 ,    "E"  =>  193 ,    "NE" =>  194 ,    "N"  =>  195 ,    "NW" =>  196 ,    "W"  =>  197 ,    "SW" =>  198   }
@@ -1362,6 +1362,7 @@ module H2KFile
       areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
       if (areaWall_temp > largestWallArea && wall.attributes["adjacentEnclosedSpace"] == "false")
         idWall = wall.attributes["id"]
+        largestWallArea = areaWall_temp
       end
     end
 
@@ -1396,8 +1397,8 @@ module H2KFile
             window.add_element("Measurements")
             window.elements["Measurements"].attributes["height"] = height
             window.elements["Measurements"].attributes["width"] = width
-            window.elements["Measurements"].attributes["headerHeight"] = "0.3048"
-            window.elements["Measurements"].attributes["overhangWidth"] = "0.4572"
+            window.elements["Measurements"].attributes["headerHeight"] = overhangH
+            window.elements["Measurements"].attributes["overhangWidth"] = overhangW
             window.elements["Measurements"].add_element("Tilt")
             window.elements["Measurements"].elements["Tilt"].attributes["code"] = "1"
             window.elements["Measurements"].elements["Tilt"].attributes["value"] = "90"
