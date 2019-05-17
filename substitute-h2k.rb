@@ -3195,9 +3195,27 @@ def processFile(h2kElements)
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
 
-              (1..8).each do |winOrient|
-                newWinHeight[winOrient] = equalWinSide
-                newWinWidth[winOrient] = equalWinSide
+              (1..4).each do |winOrient|
+                if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
+                  newWinHeight[1] = equalWinSide
+                  newWinHeight[3] = equalWinSide
+                  newWinHeight[5] = equalWinSide
+                  newWinHeight[7] = equalWinSide
+                  newWinWidth[1] = equalWinSide
+                  newWinWidth[3] = equalWinSide
+                  newWinWidth[5] = equalWinSide
+                  newWinWidth[7] = equalWinSide
+                else
+                  newWinHeight[2] = equalWinSide
+                  newWinHeight[4] = equalWinSide
+                  newWinHeight[6] = equalWinSide
+                  newWinHeight[8] = equalWinSide
+                  newWinWidth[2] = equalWinSide
+                  newWinWidth[4] = equalWinSide
+                  newWinWidth[6] = equalWinSide
+                  newWinWidth[8] = equalWinSide
+                end
+
               end
 
             elsif value == "PROPORTIONAL"
@@ -3223,18 +3241,16 @@ def processFile(h2kElements)
             # Delete all existing windows
             H2KFile.deleteAllWin(h2kElements)
 
-            # Add equally sized windows on four sides of a house
-            # "S"=> 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
-            if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
-              H2KFile.addWin(h2kElements, "S", newWinHeight[1], newWinWidth[1], overhangW[1], overhangH[1], winCode[1])
-              H2KFile.addWin(h2kElements, "E", newWinHeight[3], newWinWidth[3], overhangW[3], overhangH[3], winCode[3])
-              H2KFile.addWin(h2kElements, "N", newWinHeight[5], newWinWidth[5], overhangW[5], overhangH[5], winCode[5])
-              H2KFile.addWin(h2kElements, "W", newWinHeight[7], newWinWidth[7], overhangW[7], overhangH[7], winCode[7])
-            else
-              H2KFile.addWin(h2kElements, "SE", newWinHeight[2], newWinWidth[2], overhangW[2], overhangH[2], winCode[2])
-              H2KFile.addWin(h2kElements, "NE", newWinHeight[4], newWinWidth[4], overhangW[4], overhangH[4], winCode[4])
-              H2KFile.addWin(h2kElements, "NW", newWinHeight[6], newWinWidth[6], overhangW[6], overhangH[6], winCode[6])
-              H2KFile.addWin(h2kElements, "SW", newWinHeight[8], newWinWidth[8], overhangW[8], overhangH[8], winCode[8])
+            # Add windows on four sides of a house
+            frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}
+            (1..8).each do |winOrient|
+              if (newWinHeight[winOrient] > 0.0 && newWinWidth[winOrient] > 0.0)
+                if winCode[winOrient].nil?
+                  # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
+                  winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
+                end
+                H2KFile.addWin(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
+              end
             end
           end
 
