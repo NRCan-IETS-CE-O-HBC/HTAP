@@ -11027,5 +11027,79 @@
       "Opt-H2K-GridAbsRate",
       "Opt-H2K-InvEff"
     ]
+  },
+  "Opt-WindowDistribution": {
+    "structure": "tree",
+    "costed": false,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "NA",
+            "OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "NA"
+          }
+        }
+      },
+      "equal-on-all-sides_9.36": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "NBC9.36",
+            "OPT-H2K-OVERHANG-WDTH": "0.0",
+            "OPT-H2K-OVERHANG-HGHT": "0.0",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
+		"equal-on-all-sides_mid-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.20",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
+		"equal-on-all-sides_high-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.22",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
+		"proportional_mid-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.20",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "PROPORTIONAL"
+          }
+        }
+      },
+		"proportional_high-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.25",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "PROPORTIONAL"
+          }
+        }
+      }
+	},
+    "default": "NA",
+    "stop-on-error": true,
+	 "h2kSchema": [
+      "OPT-H2K-FDWR",
+      "OPT-H2K-OVERHANG-WDTH",
+      "OPT-H2K-OVERHANG-HGHT",
+		"OPT-H2K-DISTRIBUTION"
+    ]
   }
 }
