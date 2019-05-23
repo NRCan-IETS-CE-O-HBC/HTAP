@@ -747,6 +747,14 @@ module HTAPData
 
   end
 
+  def HTAPData.getGitInfo()
+    revision_number=`git log --pretty=format:'%h' -n 1`
+	revision_number.gsub!(/^'/, '')
+	revision_number.gsub!(/'$/, '')
+    branch_name=`git rev-parse --abbrev-ref HEAD`
+	return branch_name.strip, revision_number.strip
+  end
+
   def self.formatSqFtSqM(area)
     return "--".rjust($numPad) if numOrDash(area) == "--"
     return ("#{(area*SF_PER_SM).round(0).to_s.rjust($numPad)} ft^2 (#{(area).round(0)} m^2)")

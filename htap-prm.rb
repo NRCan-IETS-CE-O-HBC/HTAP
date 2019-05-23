@@ -621,6 +621,11 @@ def run_these_cases(current_task_files)
 
   fJSONout  = File.open("#{$gOutputJSON}", 'w')
   firstJSONLine = true
+  branch_name, revision_number = HTAPData.getGitInfo()
+  # DEBUGGING (TODO: REMOVE)
+  # pp branch_name
+  # pp revision_number
+  # exit
   while  ! $RunsDone
 
       $batchCount = $batchCount + 1
