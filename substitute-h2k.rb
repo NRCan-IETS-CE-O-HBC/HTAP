@@ -7416,7 +7416,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "Util-Bill-Oil"     => $gResults[$outputHCode]['avgFuelCostsOil$'].round(2),
           "Util-Bill-Wood"    => $gResults[$outputHCode]['avgFuelCostsWood$'].round(2),
           "Energy-PV-kWh"     => $gResults[$outputHCode]['avgElecPVGenkWh'].round(0),
-          "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0),
+          "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
+          "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
           "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
           "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),
           "TotalAirConditioning-LoadGJ" => $TotalAirConditioningLoad.round(1) ,
@@ -7536,7 +7537,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
       $fSUMMARY.write( "#{$aliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Useful-Solar-Gain-GJ =  #{$gResults[$outputHCode]['avgSolarGainsUtilized'].round(1)} \n" )
       #$fSUMMARY.write( "#{$aliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
