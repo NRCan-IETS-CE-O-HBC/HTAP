@@ -2125,6 +2125,7 @@
             "<Opt-win-S-CON>": "DblLeHcArg",
             "<Opt-win-E-CON>": "DblLeScArg",
             "<Opt-win-W-CON>": "DblLeScArg",
+            "<Opt-win-N-CON>": "DblLeScArg",
             "<Opt-win-SE-CON>": "DblLeScArg",
             "<Opt-win-SW-CON>": "DblLeScArg",
             "<Opt-win-NE-CON>": "DblLeScArg",
