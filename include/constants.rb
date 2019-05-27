@@ -244,4 +244,7 @@ CostingAuditReportName = 'HTAP-costing-audit-report.txt'
 ConfigDataFile = "htap.config"
 $gConfigData = Hash.new
 $newLine = true
-$logBufferCount = 0 
+$logBufferCount = 0
+
+$branch_name = ""
+$revision_number = ""

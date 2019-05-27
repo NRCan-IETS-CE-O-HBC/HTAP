@@ -20,6 +20,18 @@ def HTAPInit()
 
   log_out ("Parsing configuration file")
   HTAPConfig.parseConfigData()
+
+  # Get version information
+  $branch_name, $revision_number = HTAPData.getGitInfo()
+  log_out ("#{$program} source: Branch #{$branch_name}, revision #{$revision_number}\n")
+
+  # Debug git info
+  debug_out ("Git versioning: Branch      #{$branch_name}\n")
+  debug_out ("Git versioning: Revision \# #{$revision_number}\n")
+
+
+
+
 end
 
 module HTAPData
@@ -749,8 +761,8 @@ module HTAPData
 
   def HTAPData.getGitInfo()
     revision_number=`git log --pretty=format:'%h' -n 1`
-	revision_number.gsub!(/^'/, '')
-	revision_number.gsub!(/'$/, '')
+	  revision_number.gsub!(/^'/, '')
+	  revision_number.gsub!(/'$/, '')
     branch_name=`git rev-parse --abbrev-ref HEAD`
 	return branch_name.strip, revision_number.strip
   end
