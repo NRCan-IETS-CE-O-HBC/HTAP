@@ -248,3 +248,5 @@ $logBufferCount = 0
 
 $branch_name = ""
 $revision_number = ""
+
+$gMasterPath = ""

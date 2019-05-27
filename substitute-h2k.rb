@@ -174,7 +174,8 @@ $aliasArch    = $aliasLongArch
 
 
 # Path where this script was started and considered master
-$gMasterPath = Dir.getwd()
+
+# Not sure why, but substiture-h2k.rb fails without this converison.
 $gMasterPath.gsub!(/\//, '\\')
 $unitCostFileName = "C:/HTAP/HTAPUnitCosts.json"
 

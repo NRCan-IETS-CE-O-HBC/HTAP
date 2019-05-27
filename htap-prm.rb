@@ -1266,11 +1266,6 @@ end
 # Dump help text, if no argument given
 
 
-
-
-$gMasterPath = Dir.getwd()
-
-
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "Lquiet"

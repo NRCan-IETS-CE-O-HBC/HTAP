@@ -2,6 +2,9 @@
 
 def HTAPInit()
   $startProcessTime = Time.now
+
+  $gMasterPath = Dir.getwd()
+
   progShort = $program
   progShort.gsub!(/\.rb/,"")
   debug_out "Opening log files for #{progShort}"
@@ -16,12 +19,14 @@ def HTAPInit()
   $allok = true
 
   $scriptLocation = File.expand_path(File.dirname(__FILE__)+"\\..\\.")
+
   log_out ("#{$program} location: #{$scriptLocation}\n")
 
-  log_out ("Parsing configuration file")
+  log_out ("Parsing configuration file\n")
   HTAPConfig.parseConfigData()
 
   # Get version information
+  log_out ("Recovering git version info\n")
   $branch_name, $revision_number = HTAPData.getGitInfo()
   log_out ("#{$program} source: Branch #{$branch_name}, revision #{$revision_number}\n")
 
@@ -759,12 +764,24 @@ module HTAPData
 
   end
 
+  # Recovers version info from git, returns 'unknown' if errors are encountered
   def HTAPData.getGitInfo()
-    revision_number=`git log --pretty=format:'%h' -n 1`
-	  revision_number.gsub!(/^'/, '')
-	  revision_number.gsub!(/'$/, '')
-    branch_name=`git rev-parse --abbrev-ref HEAD`
-	return branch_name.strip, revision_number.strip
+
+    begin
+      # Change to directory where scripts are located.
+      Dir.chdir($scriptLocation)
+      revision_number=`git log --pretty=format:'%h' -n 1`
+	    revision_number.gsub!(/^'/, '')
+	    revision_number.gsub!(/'$/, '')
+      branch_name=`git rev-parse --abbrev-ref HEAD`
+    rescue
+      revision_number = "unknown"
+      branch_name = "unknown"
+    ensure
+      Dir.chdir($gMasterPath)
+    end
+
+  	return branch_name.strip, revision_number.strip
   end
 
   def self.formatSqFtSqM(area)
