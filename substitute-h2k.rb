@@ -5345,6 +5345,18 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $HCGeneralFound = false
         $HCSOCFound = false
 
+        # Get version information
+        $gResults["version"] = Hash.new
+        $gResults["version"]["h2kHouseFile"] = "#{h2kPostElements["HouseFile/Version"].attributes["major"]}.#{h2kPostElements["HouseFile/Version"].attributes["minor"]}"
+
+        $gResults["version"]["HOT2000"] = "v#{h2kPostElements["HouseFile/Application/Version"].attributes["major"]}"+
+                                          ".#{h2kPostElements["HouseFile/Application/Version"].attributes["minor"]}"+
+                                          "b#{h2kPostElements["HouseFile/Application/Version"].attributes["build"]}"
+
+
+
+
+
         # Make sure that the code we want is available
         h2kPostElements["HouseFile/AllResults"].elements.each do |element|
 
@@ -7330,10 +7342,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             if ( json_output ) then
 
               results = Hash.new
-              results[$aliasLongConfig] = { "OptionsFile"         =>  "#{$gOptionFile}",
-              "Recovered-results"   =>  "#{$outputHCode}"
-            }
-            results[$aliasLongArch] = {   "h2k-File"            =>  "#{$h2kFileName}",
+              results[$aliasLongConfig] = {
+                "OptionsFile"         =>  "#{$gOptionFile}",
+                "Recovered-results"   =>  "#{$outputHCode}",
+                "version" => $gResults["version"]
+              }
+
+              results[$aliasLongArch] = {   "h2k-File"            =>  "#{$h2kFileName}",
             "House-Builder"       =>  "#{$BuilderName}",
             "House-Type"          =>  "#{$HouseType}",
             "House-Storeys"       =>  "#{$HouseStoreys}",
