@@ -8931,6 +8931,111 @@
           ]
         }
       },
+      "condensing-boiler-high": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Boiler",
+            "Opt-H2K-SysType2": "NA",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "condensing-boiler-base": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Boiler",
+            "Opt-H2K-SysType2": "NA",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "90",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
+      "boiler-electric": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Boiler",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "components": [
+            "Example Key-phrase: Layer1",
+            "Example Key-phrase: Layer2",
+            "Example Key-phrase: Layer3"
+          ],
+          "custom-costs": {
+            "ExampleScenarioA": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.5,
+              "Comment": "eg: Alex's original estimate"
+            },
+            "ExampleScenarioB": {
+              "Units": "sf floor area",
+              "TotUnitCost": 1.7,
+              "Comment": "eg: Real numbers from ACME builder."
+            }
+          }
+        }
+      },
       "gas-furnace-ecm": {
         "h2kMap": {
           "base": {
