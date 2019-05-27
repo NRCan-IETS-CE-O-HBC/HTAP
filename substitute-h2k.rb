@@ -3108,6 +3108,153 @@ def processFile(h2kElements)
             end
           end
 
+        # Change window distribution
+        # Delete all windows and redistribute according to the choices
+        #-----------------------------------------------------------------------------------
+        elsif (choiceEntry =~ /Opt-WindowDistribution/)
+
+          winAreaOrient = H2KFile.getWindowArea(h2kElements)
+          wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
+          winArea = wallAreaAG["area"]["windows"].to_f
+          doorArea = wallAreaAG["area"]["doors"].to_f
+          grossWallArea = wallAreaAG["area"]["gross"].to_f
+
+          frontOrientation = H2KFile.getFrontOrientation(h2kElements)
+
+          # FDWR
+          if (tag =~ /OPT-H2K-FDWR/)
+            if value == "NA"
+              # original FDWR
+              fDWR = (winArea+doorArea) / grossWallArea
+            elsif value == "NBC9.36"
+              # NBC9.36 specify a range (i.e. 0.17 < FDWR < 0.22)
+              # Keep original if in the range, otherwise set to max or min
+              fDWR = (winArea+doorArea) / grossWallArea
+              if (fDWR < 0.17)
+                fDWR = 0.17
+              elsif (fDWR > 0.22)
+                fDWR = 0.22
+              end
+            else
+              fDWR = value.to_f
+            end
+          end
+
+          locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
+          # Overhang width
+          if (tag =~ /OPT-H2K-OVERHANG-WDTH/)
+            overhangW = Hash.new(0)
+            tempAreaWin = Hash.new(0)
+            maxAreaWin = Hash.new(0)
+            if value != "NA"
+              (1..8).each do |winOrient|
+                overhangW[winOrient] = value
+              end
+            else
+              h2kElements.each(locationTextWin) do |window|
+                winOrient = window.elements["FacingDirection"].attributes["code"].to_i
+                tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+                if tempAreaWin[winOrient] > maxAreaWin[winOrient]
+                  overhangW[winOrient] = window.elements["Measurements"].attributes["overhangWidth"]
+                  maxAreaWin[winOrient] = tempAreaWin[winOrient]
+                end
+              end
+            end
+          end
+
+          # Overhange height
+          if (tag =~ /OPT-H2K-OVERHANG-HGHT/)
+            overhangH = Hash.new(0)
+            tempAreaWin = Hash.new(0)
+            maxAreaWin = Hash.new(0)
+            if value != "NA"
+              (1..8).each do |winOrient|
+                overhangH[winOrient] = value
+              end
+            else
+              h2kElements.each(locationTextWin) do |window|
+                winOrient = window.elements["FacingDirection"].attributes["code"].to_i
+                tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+                if tempAreaWin[winOrient] > maxAreaWin[winOrient]
+                  overhangH[winOrient] = window.elements["Measurements"].attributes["headerHeight"]
+                  maxAreaWin[winOrient] = tempAreaWin[winOrient]
+                end
+              end
+            end
+          end
+
+          # Window size
+          if (tag =~ /OPT-H2K-DISTRIBUTION/ && value != "NA")
+            newWinHeight = Hash.new(0)
+            newWinWidth = Hash.new(0)
+            winCode = Hash.new
+            tempAreaWin = Hash.new(0)
+            maxAreaWin = Hash.new(0)
+            totalNewWinArea = (fDWR * grossWallArea - doorArea)
+            if value == "EQUAL"
+              # four square window
+              equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
+
+              (1..4).each do |winOrient|
+                if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
+                  newWinHeight[1] = equalWinSide
+                  newWinHeight[3] = equalWinSide
+                  newWinHeight[5] = equalWinSide
+                  newWinHeight[7] = equalWinSide
+                  newWinWidth[1] = equalWinSide
+                  newWinWidth[3] = equalWinSide
+                  newWinWidth[5] = equalWinSide
+                  newWinWidth[7] = equalWinSide
+                else
+                  newWinHeight[2] = equalWinSide
+                  newWinHeight[4] = equalWinSide
+                  newWinHeight[6] = equalWinSide
+                  newWinHeight[8] = equalWinSide
+                  newWinWidth[2] = equalWinSide
+                  newWinWidth[4] = equalWinSide
+                  newWinWidth[6] = equalWinSide
+                  newWinWidth[8] = equalWinSide
+                end
+
+              end
+
+            elsif value == "PROPORTIONAL"
+              #TBA
+              (1..8).each do |winOrient|
+                ratioWinArea = (winAreaOrient["byOrientation"][winOrient]/winAreaOrient["total"]).to_f
+                propWinSide = Math.sqrt(totalNewWinArea*ratioWinArea) * 1000.0
+                newWinHeight[winOrient] = propWinSide
+                newWinWidth[winOrient] = propWinSide
+              end
+
+            end
+            # Obtain window codes
+            h2kElements.each(locationTextWin) do |window|
+              winOrient = window.elements["FacingDirection"].attributes["code"].to_i
+              tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+              if tempAreaWin[winOrient] > maxAreaWin[winOrient]
+                winCode[winOrient] = window.elements["Construction"].elements["Type"].attributes["idref"]
+                maxAreaWin[winOrient] = tempAreaWin[winOrient]
+              end
+            end
+
+            # Delete all existing windows
+            H2KFile.deleteAllWin(h2kElements)
+
+            # Add windows on four sides of a house
+            frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}
+            (1..8).each do |winOrient|
+              if (newWinHeight[winOrient] > 0.0 && newWinWidth[winOrient] > 0.0)
+                if winCode[winOrient].nil?
+                  # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
+                  winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
+                end
+                H2KFile.addWin(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
+              end
+            end
+          end
+
+        #------------------------------------------------------------------------------------
         else
           # Do nothing -- we're ignoring all other tags!
           debug_out("Tag #{tag} ignored!\n")
@@ -7269,7 +7416,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "Util-Bill-Oil"     => $gResults[$outputHCode]['avgFuelCostsOil$'].round(2),
           "Util-Bill-Wood"    => $gResults[$outputHCode]['avgFuelCostsWood$'].round(2),
           "Energy-PV-kWh"     => $gResults[$outputHCode]['avgElecPVGenkWh'].round(0),
-          "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0),
+          "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
+          "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
           "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
           "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),
           "TotalAirConditioning-LoadGJ" => $TotalAirConditioningLoad.round(1) ,
@@ -7389,7 +7537,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
 
       $fSUMMARY.write( "#{$aliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
-      $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(0)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Useful-Solar-Gain-GJ =  #{$gResults[$outputHCode]['avgSolarGainsUtilized'].round(1)} \n" )
       #$fSUMMARY.write( "#{$aliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 

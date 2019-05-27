@@ -5520,6 +5520,28 @@
         "custom-costs": {
         }
       },
+		"NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": 32.81,
+            "HeaderExtInsRValue": 15.15
+          }
+        },
+        "costs": {
+          "components": [
+            "insulation:xps_type_4:rigid:25mm",
+				"insulation:xps_type_4:rigid:51mm",
+            "air_barrier_membrane",
+            "osb:12mm",
+            "insulation:r24_batt",
+            "framing:conventional:38x140mm_o.c.",
+            "vapour_barrier:6_mil",
+            "1/2in_gypsum_board"
+          ]
+        },
+        "custom-costs": {
+        }
+      },
       "NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
           "base": {
@@ -5597,6 +5619,29 @@
             "osb:12mm",
             "insulation:r24_batt",
             "framing:advanced:38x140mm_o.c.",
+            "vapour_barrier:6_mil",
+            "1/2in_gypsum_board"
+          ]
+        },
+        "custom-costs": {
+        }
+      },
+		"NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": 40,
+            "HeaderExtInsRValue": 22.5
+          }
+        },
+        "costs": {
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+				"insulation:xps_type_4:rigid:64mm",
+				"fasteners_for_4in_thick_exterior_insulation",
+            "air_barrier_membrane",
+            "osb:12mm",
+            "insulation:r24_batt",
+            "framing:conventional:38x140mm_o.c.",
             "vapour_barrier:6_mil",
             "1/2in_gypsum_board"
           ]
@@ -8702,7 +8747,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:r31_batt"
           ]
         }
       },
@@ -8717,7 +8762,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:spray_foam_2pd_urethane:5.5in_thickness"
           ]
         }
       },
@@ -8732,7 +8777,8 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:spray_foam:2pound_urethane:7.5in_thickness",
+				"insulation:spray_foam:38mm:r6/inch"
           ]
         }
       },
@@ -8761,7 +8807,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:r27_batt"
           ]
         }
       },
@@ -8775,7 +8821,7 @@
           "custom-costs": {
           },
           "components": [
-
+				"insulation:r29_batt"
           ]
         }
       },
@@ -9972,7 +10018,7 @@
             "Opt-H2K-Fuel": "1",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.8217",
+            "Opt-H2K-EF": "0.8917",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -10008,11 +10054,11 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "1",
-            "Opt-H2K-TankType": "6",
-            "Opt-H2K-TankSize": "0",
-            "Opt-H2K-EF": "2.35",
-            "Opt-H2K-IntHeatPumpCOP": "NA",
-            "Opt-H2K-FlueDiameter": "0"
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.35",
+            "Opt-H2K-FlueDiameter": "NA"
           }
         },
         "costs": {
@@ -10834,6 +10880,80 @@
       "Opt-H2K-PVModuleType",
       "Opt-H2K-GridAbsRate",
       "Opt-H2K-InvEff"
+    ]
+  },
+  "Opt-WindowDistribution": {
+    "structure": "tree",
+    "costed": false,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "NA",
+            "OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "NA"
+          }
+        }
+      },
+      "equal-on-all-sides_9.36": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "NBC9.36",
+            "OPT-H2K-OVERHANG-WDTH": "0.0",
+            "OPT-H2K-OVERHANG-HGHT": "0.0",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
+		"equal-on-all-sides_mid-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.20",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
+		"equal-on-all-sides_high-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.22",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
+		"proportional_mid-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.20",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "PROPORTIONAL"
+          }
+        }
+      },
+		"proportional_high-glazing": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "0.25",
+				"OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "PROPORTIONAL"
+          }
+        }
+      }
+	},
+    "default": "NA",
+    "stop-on-error": true,
+	 "h2kSchema": [
+      "OPT-H2K-FDWR",
+      "OPT-H2K-OVERHANG-WDTH",
+      "OPT-H2K-OVERHANG-HGHT",
+		"OPT-H2K-DISTRIBUTION"
     ]
   }
 }
