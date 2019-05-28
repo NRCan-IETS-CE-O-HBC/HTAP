@@ -80,6 +80,15 @@ def shortenToTerm(msg,extrashort = 0, truncStr="[...]")
   return shortmsg
 
 end
+
+def reportSRC(branch, revision)
+  stream_out ("\n")
+  # Maybe find link to remote reporsitory too?
+  stream_out (" GitHub source: \n")
+  stream_out ("    - Branch:   #{branch} \n")
+  stream_out ("    - Revision: #{revision} \n")
+  return
+end
 # =========================================================================================
 # Optionally write text to buffer -----------------------------------
 # =========================================================================================
