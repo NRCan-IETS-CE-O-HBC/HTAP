@@ -621,6 +621,7 @@ def run_these_cases(current_task_files)
 
   fJSONout  = File.open("#{$gOutputJSON}", 'w')
   firstJSONLine = true
+
   while  ! $RunsDone
 
       $batchCount = $batchCount + 1
@@ -1050,7 +1051,21 @@ def run_these_cases(current_task_files)
       # Alternative output in JSON format. Can be memory-intensive
 
 
-      $gJSONAllData = Array.new
+      $gJSONAllData = Hash.new
+      $gJSONAllData = {
+        "htap-configuration" => Hash.new,
+        "htap-results"=> Array.new
+      }
+
+      $gJSONAllData["htap-configuration"] = {
+        "git-branch" => $branch_name,
+        "git-revision" => $revision_number,
+        "runs-by-h2kVersion" => Hash.new
+      }
+
+
+
+      Array.new
       $RunResults.keys.each do | run |
         thisRunHash = {
           "result-number"           =>  $gHashLoc+1,
@@ -1062,11 +1077,21 @@ def run_these_cases(current_task_files)
           "cost-estimates"         => $RunResults[run]["cost-estimates"]
         }
 
+        # Pick up hot2000 version number for this run, and
+
+        h2kVersion = thisRunHash["configuration"]["version"]["HOT2000"]
+        if ( ! $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"].key?(h2kVersion) )
+          $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] = 0
+        end
+
+        $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] += 1
+
         if ( ! $RunResults[run]["analysis_BCStepCode"].nil? ) then
           thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
         end
 
-        $gJSONAllData.push thisRunHash
+
+        $gJSONAllData["htap-results"].push thisRunHash
 
         if ($RunResults[run]["status"]["success"] == false ) then
 
@@ -1217,6 +1242,7 @@ def run_these_cases(current_task_files)
     stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
   end
 
+
   if ( ! $gDebug ) then
      stream_out (" - Deleting working directories... ")
      FileUtils.rm_rf Dir.glob("HTAP-work-*")
@@ -1238,11 +1264,6 @@ end
 #-------------------------------------------------------------------
 
 # Dump help text, if no argument given
-
-
-
-
-$gMasterPath = Dir.getwd()
 
 
 $cmdlineopts = Hash.new
@@ -1395,6 +1416,9 @@ optparse = OptionParser.new do |opts|
 end
 
 stream_out(drawRuler("A simple parallel run manager for HTAP"))
+
+reportSRC($branch_name, $revision_number)
+
 if ARGV.empty? then
    ARGV.push "-h"
 end
