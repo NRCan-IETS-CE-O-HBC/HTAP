@@ -1905,6 +1905,13 @@ def processFile(h2kElements)
           # DHW System
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-DHWSystem/ )
+          myDHWChoice = $gChoices["Opt-DHWSystem"]
+          if myDHWChoice != "NA"
+            locationText = "HouseFile/House/Components/HotWater"
+            if (! h2kElements[locationText].elements["Secondary"].nil?)
+              h2kElements[locationText].delete_element("Secondary")
+            end
+          end
           if ( tag =~ /Opt-H2K-Fuel/ &&  value != "NA" )
             locationText = "HouseFile/House/Components/HotWater/Primary"
             if ( h2kElements[locationText].attributes["pilotEnergy"] == nil )
