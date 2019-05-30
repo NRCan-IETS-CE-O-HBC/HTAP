@@ -905,25 +905,17 @@ def run_these_cases(current_task_files)
         jsonParsed = false
         #debug_out "pp: \n#{$RunResults["run-#{thread3}"].pretty_inspect}\n"
         debug_out "Looking for #{$RunResultFilenameV2} ? \n"
+        
         if ( File.exist?($RunResultFilenameV2) ) then
           debug_out "Found it. Parsing JSON output !\n"
           contents = File.read($RunResultFilenameV2)
           thisRunResults = Hash.new
           thisRunResults = JSON.parse(contents)
 
+
           if ( ! $gTest_params["audit-costs"] ) then 
-            thisRunResults["costEstimates"]["audit"] = nil 
+            thisRunResults["cost-estimates"]["audit"] = nil 
           end 
-
-
-          #$RunResults["run-#{thread3}"]["output"] = thisRunResults["output"]
-          #$RunResults["run-#{thread3}"]["cost-estimates"] = thisRunResults["costEstimates"]
-          #$RunResults["run-#{thread3}"]["input"] = thisRunResults["input"]
-          #$RunResults["run-#{thread3}"]["archetype"] = thisRunResults["archetype"]
-
-
-          
-
 
           thisRunResults.keys.each do | section |
             if ( section.eql?("status") || section.eql?("configuration") ) then
