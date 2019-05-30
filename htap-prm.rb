@@ -911,11 +911,19 @@ def run_these_cases(current_task_files)
           thisRunResults = Hash.new
           thisRunResults = JSON.parse(contents)
 
+          if ( ! $gTest_params["audit-costs"] ) then 
+            thisRunResults["costEstimates"]["audit"] = nil 
+          end 
+
 
           #$RunResults["run-#{thread3}"]["output"] = thisRunResults["output"]
           #$RunResults["run-#{thread3}"]["cost-estimates"] = thisRunResults["costEstimates"]
           #$RunResults["run-#{thread3}"]["input"] = thisRunResults["input"]
           #$RunResults["run-#{thread3}"]["archetype"] = thisRunResults["archetype"]
+
+
+          
+
 
           thisRunResults.keys.each do | section |
             if ( section.eql?("status") || section.eql?("configuration") ) then
@@ -1379,16 +1387,9 @@ optparse = OptionParser.new do |opts|
 
    end
 
-
-
    #opts.on("-w", "--warnings", "Report warning messages") do
    #   $gWarn = true
    #end
-
-
-
-
-
 
    #opts.on("-s", "--substitute-h2k-path FILE", "Specified path to substitute RB ") do |o|
    #   $cmdlineopts["substitute"] = o
@@ -1398,23 +1399,12 @@ optparse = OptionParser.new do |opts|
    #   end
    #end
 
-
-
    #opts.on("-ss", "--snailStart X", "Optional delay (X sec) between spawning threads on the ",
    #                                 "first batch (and ignored on subsequent batches). May improve",
    #                                 "stability on highly parallel machines with slow disk I/O." ) do |o|
    #   $snailStart = true
    #   $snailStartWait = o.to_f
    #end
-
-
-
-
-
-
-
-
-
 
    opts.separator ""
 
@@ -1428,14 +1418,13 @@ optparse = OptionParser.new do |opts|
 
 end
 
-stream_out(drawRuler("A simple parallel run manager for HTAP"))
-
-reportSRC($branch_name, $revision_number)
-
 if ARGV.empty? then
    ARGV.push "-h"
 end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
+
+stream_out(drawRuler("A simple parallel run manager for HTAP"))
+reportSRC($branch_name, $revision_number)
 
 
 $RunNumber = 0
