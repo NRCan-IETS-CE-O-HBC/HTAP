@@ -2519,14 +2519,14 @@
       </Code>
       <Code id='Code 70' nominalRValue='0'>
         <Label>YHC-W13</Label>
-        <Description>quad-glazed, high SHGC</Description>
+        <Description>quad-glazed, double low-e SHGC</Description>
         <Layers>
-          <Window frameHeight='0' shgc='0.2' rank='1'>
+          <Window frameHeight='0' shgc='0.18' rank='1'>
             <GlazingType code='4'>
               <English>TG with 2 coatings</English>
               <French>Triple vitrage (TV) avec 2 enduits</French>
             </GlazingType>
-            <OverallThermalResistance code='2' value='1'>
+            <OverallThermalResistance code='2' value='0.88'>
               <English>U-Value</English>
               <French>Valeur-U</French>
             </OverallThermalResistance>
