@@ -62,6 +62,18 @@
             "<OPT-WoodName>": "Sth_Ont"
           }
         }
+      },
+      "YHCrates": {
+        "h2kMap": {
+          "base": {
+            "<OPT-LibraryFile>": "fuelLib.flc",
+            "<OPT-ElecName>": "Whitehrs",
+            "<OPT-GasName>": "auto",
+            "<OPT-OilName>": "Whitehrs",
+            "<OPT-PropaneName>": "Whitehrs",
+            "<OPT-WoodName>": "Whitehrs"
+          }
+        }
       }
     },
     "default": "rates2016",
@@ -2757,6 +2769,82 @@
           "custom-costs": {
           }
         }
+      },
+      "YHC-W13": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "YHC-W13",
+            "<Opt-win-E-CON>":  "YHC-W13",
+            "<Opt-win-N-CON>":  "YHC-W13",
+            "<Opt-win-W-CON>":  "YHC-W13",
+            "<Opt-win-SE-CON>": "YHC-W13",
+            "<Opt-win-SW-CON>": "YHC-W13",
+            "<Opt-win-NE-CON>": "YHC-W13",
+            "<Opt-win-NW-CON>": "YHC-W13"
+          }
+        },
+        "costs": {
+          "proxy": "NC-3g-HG-u1.36",
+          "custom-costs": {
+          }
+        }
+      },
+      "YHC-W12": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "YHC-W12",
+            "<Opt-win-E-CON>":  "YHC-W12",
+            "<Opt-win-N-CON>":  "YHC-W12",
+            "<Opt-win-W-CON>":  "YHC-W12",
+            "<Opt-win-SE-CON>": "YHC-W12",
+            "<Opt-win-SW-CON>": "YHC-W12",
+            "<Opt-win-NE-CON>": "YHC-W12",
+            "<Opt-win-NW-CON>": "YHC-W12"
+          }
+        },
+        "costs": {
+          "proxy": "NC-3g-HG-u1.36",
+          "custom-costs": {
+          }
+        }
+      },
+      "YHC-W11": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "YHC-W11",
+            "<Opt-win-E-CON>":  "YHC-W11",
+            "<Opt-win-N-CON>":  "YHC-W11",
+            "<Opt-win-W-CON>":  "YHC-W11",
+            "<Opt-win-SE-CON>": "YHC-W11",
+            "<Opt-win-SW-CON>": "YHC-W11",
+            "<Opt-win-NE-CON>": "YHC-W11",
+            "<Opt-win-NW-CON>": "YHC-W11"
+          }
+        },
+        "costs": {
+          "proxy": "NC-3g-HG-u1.36",
+          "custom-costs": {
+          }
+        }
+      },
+      "YHC-W10": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "YHC-W10",
+            "<Opt-win-E-CON>":  "YHC-W10",
+            "<Opt-win-N-CON>":  "YHC-W10",
+            "<Opt-win-W-CON>":  "YHC-W10",
+            "<Opt-win-SE-CON>": "YHC-W10",
+            "<Opt-win-SW-CON>": "YHC-W10",
+            "<Opt-win-NE-CON>": "YHC-W10",
+            "<Opt-win-NW-CON>": "YHC-W10"
+          }
+        },
+        "costs": {
+          "proxy": "NC-3g-HG-u1.36",
+          "custom-costs": {
+          }
+        }
       }
     },
     "default": "NA",
@@ -3304,6 +3392,21 @@
           }
         }
       },
+	  "CeilR66": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "66"
+          }
+        },
+        "costs": {
+          "components": [
+            "r60:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
       "CeilR70": {
         "h2kMap": {
           "base": {
@@ -3329,6 +3432,21 @@
         "costs": {
           "components": [
             "r80:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+	  "CeilR89": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "89"
+          }
+        },
+        "costs": {
+          "components": [
+            "r90:cost_including_materials:labour:mark-up_and_taxes"
           ],
           "custom-costs": {
           }
