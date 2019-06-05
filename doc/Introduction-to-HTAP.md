@@ -27,13 +27,13 @@ HTAP consists of two parts:
 2. HOT2000 v11.3b90 Setup.exe (if you don't already have it)
 3. HOT2000-CLI v11.3b90 Setup.exe - **When prompted, set the destination location to C:\H2K-CLI-Min (as below)**  
 
-![1559580807706](C:\HTAP-DOC\doc\img\img-1-HOT2000-setup.png)
+![](img/img-1-HOT2000-setup.png)
 
 **b)** To Install the HTAP scripts and configuration files, checkout the files from GitHub:
 
 1. Open up the git shell from the start menu
 
-   ![1559580884167](C:\HTAP-DOC\doc\img\img-2-git)
+   ![](img/img-2-git.png)
 
 2. Type in the following command from location `C:\>`
 
