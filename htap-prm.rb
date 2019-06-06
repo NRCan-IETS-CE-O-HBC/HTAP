@@ -166,7 +166,7 @@ def parse_def_file(filepath)
             # Where is our options file located?
 
             $gCostingFile = $token_values[1]
-
+            $gComputeCosts = true 
 
           end
 
@@ -799,8 +799,8 @@ def run_these_cases(current_task_files)
 
           subCostFlag = ""
           subRulesetsFlag = ""
-          if ($auto_cost_options ) then
-            subCostFlag = "--auto_cost_options --unit-costs-db #{$gCostingFile}"
+          if ($gComputeCosts ) then
+            subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile}"
           end
 
           if ( ! $gRulesetsFile.empty? ) then 
@@ -819,8 +819,8 @@ def run_these_cases(current_task_files)
                            
 
           # Save command for invoking substitute [ useful in debugging ]
-          $cmdtxt = File.open("cmd.txt", 'w')
-          $cmdtxt.write cmdscript
+          $cmdtxt = File.open("run-cmd.ps1", 'w')
+          $cmdtxt.write "#{cmdscript} -v"
           $cmdtxt.close
 
           #debug_out(" ( cmd: #{cmdscript} |  \n")
@@ -964,8 +964,13 @@ def run_these_cases(current_task_files)
           thisRunResults = Hash.new
           thisRunResults = JSON.parse(contents)
 
-
-          if ( ! $gTest_params["audit-costs"] ) then 
+          # Delete audit data unless it is requested. 
+          if ( 
+               ! thisRunResults["cost-estimates"].empty? and 
+               ! thisRunResults["cost-estimates"]["audit"].empty? and 
+               ! $gTest_params["audit-costs"] 
+            ) then 
+          
             thisRunResults["cost-estimates"]["audit"] = nil 
           end 
 
@@ -1385,14 +1390,9 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-   #   opts.on("-a", "--cost-assemblies FILE", "Estimate costs for assemblies using costing database.") do |o|
-   #      $gComputeCosts = true
-   #      $gCostingFile = o
-   #      if ( ! File.exist?($gRunDefinitionsFile) ) then
-   #        fatalerror("Costing file #{$gCostingFile} could not be found!")
-   #      end
-   #
-   #   end
+   opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
+      $gComputeCosts = true
+   end
 
    opts.on(
      "-c", "--confirm", "Prompt before proceeding with run. After estimating the size",
@@ -1409,8 +1409,8 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.on("-k", "--keep-all-files", "Preserve all files, including modified .h2k files, in HTAP-sim-X",
-                                     "directories. (otherwise, only files that generate errors will be
-                                      saved).") do
+                                     "directories. (otherwise, only files that generate errors will be",
+                                     "saved).") do
       $gSaveAllRuns = true
    end
 
@@ -1418,7 +1418,9 @@ optparse = OptionParser.new do |opts|
       $gJSONize = true
    end
 
-   opts.on("-a", "--include_audit_data", "Output progress to console.") do
+   opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
+                                         "output. Slows HTAP down, and make json output unwieldy on",
+                                         "large runs.") do
       $cmdlineopts["audit_data"] = true
       $gTest_params["audit-costs"] = true
    end
