@@ -30,6 +30,7 @@ require_relative 'include/constants'
 require_relative 'include/rulesets'
 require_relative 'include/costing'
 require_relative 'include/legacy-code'
+require_relative 'include/hourly'
 require_relative 'include/application_modules'
 
 include REXML
@@ -4867,9 +4868,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
 
 
-
-
-
         end
 
         $gStatus["H2KExecutionTime"] = $runH2KTime
@@ -5239,15 +5237,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           debug_out(" bin data: #{'%4s' % bin} #{'%12s' % $binDatHrs[bin]} #{'%12s' % $binDatTmp[bin]}  #{'%12s' % $binDatTsfB[bin]} #{'%12s' % $binDatHLR[bin]} #{'%12s' % $binDatT1PLR[bin]} #{'%12s' % $binDatT2PLR[bin]}  #{'%12s' % $binDatT2cap[bin]}\n" )
 
         end
-
-
-
-
-
-
-
-
-
 
         # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
         if File.exist?("#{$run_path}\\Set_EGH.h2k") then
@@ -5736,6 +5725,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
 
           stream_out( " done \n")
+
+
+          # Module for hourly analysis using load-shapes. 
+          debug_on 
+          debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit?"
+          Hourly.analyze()
+          debug_off
 
           stream_out drawRuler("Simulation Results")
 
