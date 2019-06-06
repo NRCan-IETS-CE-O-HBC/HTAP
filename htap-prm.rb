@@ -91,7 +91,7 @@ $gDebug = false
 
 
 def parse_def_file(filepath)
-
+  #debug_on
   $runParamsOpen = false;
   $runScopeOpen  = false;
   $UpgradesOpen  = false;
@@ -109,6 +109,8 @@ def parse_def_file(filepath)
     $defline.gsub!(/\^/,  '')
 
     if ( $defline !~ /^\s*$/ )
+      
+      debug_out ("Parsing: #{$defline}\n")
 
       case
         # Section star/end in the file
@@ -136,6 +138,7 @@ def parse_def_file(filepath)
           $token_values = Array.new
           $token_values = $defline.split("=")
 
+          debug_out "Token:#{$token_values[0]} = #{$token_values[1]} \n"
 
 
           if ( $RunParamsOpen && $token_values[0] =~ /archetype-dir/i )
@@ -145,6 +148,39 @@ def parse_def_file(filepath)
 
 
           end
+
+
+
+          if ( $RunParamsOpen && $token_values[0] =~ /options-file/i )
+            # Where is our options file located?
+
+            $gOptionsFile = $token_values[1]
+
+            debug_out "$gOptionsFile? : #{$gOptionsFile}\n"
+
+
+          end
+
+
+         if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
+            # Where is our options file located?
+
+            $gCostingFile = $token_values[1]
+
+
+          end
+
+
+         if ( $RunParamsOpen && $token_values[0] =~ /rulesets-file/i )
+            # Where is our options file located?
+
+            $gRulesetsFile = $token_values[1]
+
+
+          end
+
+
+
 
 
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i )
@@ -240,11 +276,11 @@ def parse_def_file(filepath)
 
   if ( $WildCardsInUse ) then
 
-    if ( ! $gOptionFile =~ /\.json/i ) then
+    if ( ! $gOptionsFile =~ /\.json/i ) then
       fatalerror ("Wildcard matching is only supported with .json option files")
     end
 
-    fOPTIONS = File.new($gOptionFile, "r")
+    fOPTIONS = File.new($gOptionsFile, "r")
     if fOPTIONS == nil then
        fatalerror(" Could not read #{filename}.\n")
     end
@@ -300,7 +336,7 @@ def parse_def_file(filepath)
 
   # What if archetypes are defined using a wildcard?
 
-
+  
 
 
 
@@ -723,7 +759,8 @@ def run_these_cases(current_task_files)
           end
 
 
-          FileUtils.cp($gOptionFile,$RunDirectory)
+          FileUtils.cp($gOptionsFile,$RunDirectory)
+
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
 
           if ( $gComputeCosts ) then
@@ -732,7 +769,7 @@ def run_these_cases(current_task_files)
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]
-          $LocalOptionsFile = File.basename $gOptionFile
+          $LocalOptionsFile = File.basename $gOptionsFile
 
 
 
@@ -760,11 +797,26 @@ def run_these_cases(current_task_files)
             FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p1")
           end
 
-          $SubCostFlag = ""
-          if ($gComputeCosts ) then
-            $SubCostFlag = "--auto_cost_options"
+          subCostFlag = ""
+          subRulesetsFlag = ""
+          if ($auto_cost_options ) then
+            subCostFlag = "--auto_cost_options --unit-costs-db #{$gCostingFile}"
           end
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --report-choices --no-debug --prm #{$gExtendedOutputFlag} #{$SubCostFlag} "
+
+          if ( ! $gRulesetsFile.empty? ) then 
+            subRulesetsFlag = "--rulesets #{$gRulesetsFile}"
+          end 
+
+          cmdscript =  "ruby #{$gSubstitutePath} "+
+                           "-o #{$LocalOptionsFile} "+
+                           "-c #{$LocalChoiceFile} "+
+                           "-b #{$H2kFile} "+
+                           "#{subRulesetsFlag} "+
+                           "#{subCostFlag} "+ 
+                           "--no-debug "+
+                           "--prm "+
+                           "#{$gExtendedOutputFlag} "
+                           
 
           # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("cmd.txt", 'w')
@@ -1007,7 +1059,7 @@ def run_these_cases(current_task_files)
             #end
             #$RunResults["run-#{thread3}"]["status"]["errors"].push = " Run failed - no output generated"
 
-            $LocalChoiceFile = File.basename $gOptionFile
+            $LocalChoiceFile = File.basename $gOptionsFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
               warn_out("Could not delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
             end
@@ -1076,24 +1128,29 @@ def run_these_cases(current_task_files)
           "configuration"          => $RunResults[run]["configuration"     ],
           "cost-estimates"         => $RunResults[run]["cost-estimates"]
         }
-   
+        
+        debug_out (" Result number = #{run} \n")
+        debug_out (" ARCH = #{thisRunHash["archetype"]["h2k-File"]} \n")
+        
         if ( ! $gTest_params["audit-costs"] ) then 
           thisRunHash["cost-estimates"]["audit"] = nil 
         end 
 
 
         # Pick up hot2000 version number for this run, and
+        begin 
+          h2kVersion = thisRunHash["configuration"]["version"]["HOT2000"]
+          if ( ! $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"].key?(h2kVersion) )
+            $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] = 0
+          end
 
-        h2kVersion = thisRunHash["configuration"]["version"]["HOT2000"]
-        if ( ! $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"].key?(h2kVersion) )
-          $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] = 0
-        end
+          $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] += 1
 
-        $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] += 1
-
-        if ( ! $RunResults[run]["analysis_BCStepCode"].nil? ) then
-          thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
-        end
+          if ( ! $RunResults[run]["analysis_BCStepCode"].nil? ) then
+            thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
+          end
+        rescue 
+        end 
 
 
         $gJSONAllData["htap-results"].push thisRunHash
@@ -1274,7 +1331,8 @@ end
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
-$gOptionFile = ""
+$gOptionsFile = ""
+$gRulesetsFile = ""
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
@@ -1302,10 +1360,10 @@ optparse = OptionParser.new do |opts|
    opts.separator " "
    opts.separator " Required inputs:"
 
-   opts.on("-o", "--options FILE", "Specified options file (mandatory).") do |o|
+   opts.on("-o", "--options FILE", "Specified options file.") do |o|
       $cmdlineopts["options"] = o
-      $gOptionFile = o
-      if ( !File.exist?($gOptionFile) )
+      $gOptionsFile = o
+      if ( !File.exist?($gOptionsFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
       end
    end
@@ -1485,6 +1543,9 @@ else
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
 
   parse_def_file($gRunDefinitionsFile)
+
+  
+  debug_out("> Options file #{$gOptionsFile}")
 
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir

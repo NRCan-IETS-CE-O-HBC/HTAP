@@ -173,6 +173,11 @@ $LegacyOptionsToIgnore = Set.new [
   "Opt-FloorHeader"
 ]
 
+$DoNotValidateOptions = Set.new [  "upgrade-package-list" ]
+
+
+
+
 CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-AtticCeilings",
                            "Opt-ACH",
@@ -187,7 +192,7 @@ CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-FoundationSlabBelowGrade",
                            "Opt-FoundationSlabOnGrade",
                            "Opt-FloorHeaderIntIns",
-									"Opt-ExposedFloor"
+								           "Opt-ExposedFloor"
                          ]
 
 AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
@@ -196,7 +201,8 @@ AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
                                      "Opt-Specifications",
                                      "Opt-Location",
                                      "Opt-Ruleset",
-                                     "Opt-Temperatures" ]
+                                     "Opt-Temperatures",
+                                     "upgrade-package-list" ]
 
 
 

@@ -84,7 +84,7 @@ $ExtraOutput1 = false
 $TsvOutput = false
 $keepH2KFolder = false
 $autoCostOptions = false
-$autoEstimateCosts = true
+$autoEstimateCosts = false 
 
 $gTotalCost          = 0
 $gIncBaseCosts       = 12000
@@ -177,7 +177,8 @@ $aliasArch    = $aliasLongArch
 
 # Not sure why, but substiture-h2k.rb fails without this converison.
 $gMasterPath.gsub!(/\//, '\\')
-$unitCostFileName = "C:/HTAP/HTAPUnitCosts.json"
+#$unitCostFileName = "C:/HTAP/HTAPUnitCosts.json"
+#$rulesetsFileName = "C:/HTAP/HTAP-rulesets.json"
 
 #Variables that store the average utility costs, energy amounts.
 $gAvgEnergy_Total   = 0
@@ -220,6 +221,10 @@ $gAmtOil = 0
 $Locale = ""
 # Weather location for current run
 $gWarn = false
+
+
+$UnitCostFileSet = false 
+$RulesetFileSet = false 
 
 $gNoDebug = false
 
@@ -529,7 +534,7 @@ def processFile(h2kElements)
   baseOptionCost = 0
   #debug_on
   $gChoiceOrder.each do |choiceEntry|
-
+    next if ( $DoNotValidateOptions.include? choiceEntry )
     debug_out drawRuler("By ChoiceOrder : #{choiceEntry}",".  ")
     debug_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} = #{$gChoices[choiceEntry]}\n")
 
@@ -539,9 +544,9 @@ def processFile(h2kElements)
 
       tagHash = $gOptions[choiceEntry]["tags"]
       valHash = $gOptions[choiceEntry]["options"][choiceVal]["result"]
-      debug_out "choice val = #{choiceVal}\n"
-      debug_out "contents of tagHash:\n#{tagHash.pretty_inspect}\n"
-      debug_out "contents of valHash:\n#{valHash.pretty_inspect}\n"
+      #debug_out "choice val = #{choiceVal}\n"
+      #debug_out "contents of tagHash:\n#{tagHash.pretty_inspect}\n"
+      #debug_out "contents of valHash:\n#{valHash.pretty_inspect}\n"
       for tagIndex in tagHash.keys()
         debug_out "tagIndex: #{tagIndex}\n"
         tag = tagHash[tagIndex]
@@ -6667,28 +6672,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               exit()
             end
 
-            opts.on("-v", "--verbose", "Run verbosely") do
-              $cmdlineopts["verbose"] = true
-              $gTest_params["verbosity"] = "verbose"
-            end
-
-            opts.on("--hints", "Provide helpful hints for intrepreting output") do
-              $gHelp = true
-
-            end
-
-
-            opts.on("-d", "--no-debug", "Disable all debugging") do
-              #$cmdlineopts["verbose"] = true
-              #{$gTest_params["verbosity"] = "debug"}
-              $gNoDebug = true
-            end
-
-            opts.on("-r", "--report-choices", "Report .choice file input as part of output") do
-              $cmdlineopts["report-choices"] = true
-              $gReportChoices = true
-            end
-
             opts.on("-c", "--choices FILE", "Specified choice file (mandatory)") do |c|
               $cmdlineopts["choices"] = c
               $gChoiceFile = c
@@ -6697,23 +6680,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               end
             end
 
-            opts.on("-p", "--prm", "Run as a slave to htap-prm") do
-              $cmdlineopts["prm"] = true
-              $PRMcall = true
-            end
-
-            opts.on("-w", "--warnings", "Report warning messages") do
-              $cmdlineopts["warnings"] = true
-              $gWarn = true
-            end
-
             opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
               $cmdlineopts["options"] = o
               $gOptionFile = o
               if ( !File.exist?($gOptionFile) )
                 fatalerror("Valid path to option file must be specified with --options (or -o) option!")
               end
-            end
+            end            
 
             opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
               $cmdlineopts["base_model"] = b
@@ -6727,6 +6700,52 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $gLookForArchetype = 0;
             end
 
+            opts.on("--unit-cost-db FILE", "Specified path to unit cost database (e.g. HTAPUnitCosts.json)") do |c|
+              $cmdlineopts["unitCosts"] = c
+              $unitCostFileName = c
+              if ( !File.exist?($gChoiceFile) )
+                fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
+              end
+              $UnitCostFileSet = true
+            end 
+
+            opts.on("--rulesets FILE", "Specified path to rulesets file (e.g. HTAP-rulesets.json)") do |c|
+              $cmdlineopts["rulesets"] = c
+              $rulesetsFileName  = c
+              if ( !File.exist?($rulesetsFileName) )
+                fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
+              end
+              $RulesetFileSet = true 
+            end 
+
+
+            opts.on("-v", "--verbose", "Run verbosely") do
+              $cmdlineopts["verbose"] = true
+              $gTest_params["verbosity"] = "verbose"
+            end
+
+            opts.on("--hints", "Provide helpful hints for intrepreting output") do
+              $gHelp = true
+            end
+
+
+            opts.on("-d", "--no-debug", "Disable all debugging") do
+              #$cmdlineopts["verbose"] = true
+              #{$gTest_params["verbosity"] = "debug"}
+              $gNoDebug = true
+            end
+
+            opts.on("-p", "--prm", "Run as a slave to htap-prm") do
+              $cmdlineopts["prm"] = true
+              $PRMcall = true
+            end
+
+            opts.on("-w", "--warnings", "Report warning messages") do
+              $cmdlineopts["warnings"] = true
+              $gWarn = true
+            end
+
+
             opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
               $cmdlineopts["extra_output1"] = true
               $gReadROutStrTxt = true
@@ -6738,14 +6757,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $keepH2KFolder = true
             end
 
-            opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
-
-              $aliasInput   = $aliasLongInput
-              $aliasOutput  = $aliasLongOutput
-              $aliasConfig  = $aliasLongConfig
-              $aliasArch    = $aliasLongArch
-
-            end
+            #opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
+            #  $aliasInput   = $aliasLongInput              
+            #  $aliasOutput  = $aliasLongOutput  
+            #  $aliasConfig  = $aliasLongConfig  
+            #  $aliasArch    = $aliasLongArch      
+            #end
 
             opts.on("-a", "--auto-cost-options", "Automatically cost the option(s) set for this run.") do
               $cmdlineopts["auto_cost_options"] = true
@@ -6758,11 +6775,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
             end
 
-            opts.on("-t", "--test-json-export", "(debugging) Export the .options file as .json, and then re-import it (debugging)") do
+            #opts.on("-t", "--test-json-export", "(debugging) Export the .options file as .json, and then re-import it (debugging)") do
+            #  $gJasonTest = true
+            #end
 
-              $gJasonTest = true
-
-            end
 
 
 
@@ -6772,11 +6788,14 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           #       The parsing code above effects only those options that occur on the command line!
           optparse.parse!
 
+
           stream_out drawRuler("A wrapper for HOT2000")
 
-          if $gDebug
-            debug_out( $cmdlineopts )
-          end
+          #debug_on 
+          #debug_out( "options: #{$cmdlineopts.pretty_inspect}\n" )
+   
+
+          # valiate files, options
 
           if !$gBaseModelFile then
             $gBaseModelFile = "Not specified. Using archetype specified in .choice file"
@@ -6788,6 +6807,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             $h2k_src_path.sub!(/\\User/i, '')
             # Strip "User" (any case) from $h2k_src_path
           end
+
+
+          # if costing is requested, but costing file not included - stop!
+          if ( $autoEstimateCosts && ! $UnitCostFileSet ) then 
+            fatalerror ("Cost estimation requested via `--auto-cost-options`, but unit cost database not set via `--unit-cost-db FILE`\n")
+          end 
 
           $h2k_src_path = "C:\\H2K-CLI-Min"
           $run_path = $gMasterPath + "\\H2K"
@@ -7106,7 +7131,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             end
 
             # Replace choices in $gChoices with rule set choices in $ruleSetChoices
-            stream_out("\n Replacing user-defined choices with rule set choices where appropriate...\n")
+            stream_out("\n Changing `NA` choices (and empty choices) with values from rule set appropriate...\n")
             $ruleSetChoices.each do |attrib, choice|
               if choice.empty?
                 warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
@@ -7126,6 +7151,58 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           end
 
+
+
+
+
+
+
+          
+
+          debug_out("Checking for upgrade packages?\n")
+
+          if (  ! $gChoices["upgrade-package-list"].empty? &&  $gChoices["upgrade-package-list"] != "NA" ) then
+
+            package = $gChoices["upgrade-package-list"] 
+
+            if ( ! $RulesetFileSet ) then 
+              fatalerror(".choice file specifies upgrade-package-list = #{package}, but no rulset file provided via `--rulesets FILE`")
+            end 
+                   
+
+            stream_out ("\n")
+            stream_out (" Parsing package lists in file #{$rulesetsFileName}...")
+            # Check to see if the requested package is in the upgrade-packages 
+            rulesetHash = JSON.parse(File.read($rulesetsFileName))
+            stream_out ("done.\n")
+
+
+            ##debug_out ("rulesethash: #{rulesetHash.pretty_inspect}\n")
+
+            if ( rulesetHash["upgrade-packages"][package].empty? ) then 
+
+              err_out ("Could not find package #{package} in ruleset file #{rulesetsFileName}\n")
+
+            else 
+
+              debug_out ("Package #{package} found\n")
+              stream_out(" Applying upgrades from package #{package}:\n")
+              rulesetHash["upgrade-packages"][package].each do |thisAttrib,thisChoice|
+
+                stream_out ("   - #{thisAttrib} -> #{thisChoice}\n")
+                $gChoices[thisAttrib] = thisChoice
+                isSetbyRuleset[thisAttrib] = false 
+
+              end
+
+
+
+            end
+
+          end 
+
+         
+          # Determine if a house has been upgraded. 
           houseUpgraded = false
           houseSetByRuleset = false
           houseUpgradeList = ""
@@ -7139,12 +7216,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               houseUpgradeList += "#{thisAttrib}=>#{thisChoice};"
             end
 
-          end
+          end         
 
-
-
-
-
+          
           debug_out("Parsing parameters ...\n")
 
           $gCustomCostAdjustment = 0
@@ -7235,8 +7309,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           stream_out( "done.")
 
 
-
-
           # Orientation changes. For now, we assume the arrays must always point south.
           $angles = Hash.new()
           $angles[ "S" => 0 , "E" => 90, "N" => 180, "W" => 270 ]
@@ -7286,9 +7358,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $gAmtOil = 0
           $FloorArea = 0
 
-
           stream_out drawRuler('Running HOT2000 simulations')
-
 
           orientations.each do |direction|
 
