@@ -5726,12 +5726,14 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           stream_out( " done \n")
 
-
+          
           # Module for hourly analysis using load-shapes. 
+          # .............................................
           debug_on 
           debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit?"
           Hourly.analyze()
           debug_off
+          # .............................................
 
           stream_out drawRuler("Simulation Results")
 
