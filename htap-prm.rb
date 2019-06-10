@@ -622,7 +622,7 @@ def run_these_cases(current_task_files)
   $PIDS               = Array.new
   $FinishedTheseFiles = Hash.new
   $RunNumbers         = Array.new
-
+  lastCount = 0
   $CompletedRunCount = 0
   $FailedRunCount = 0
 
@@ -1110,8 +1110,8 @@ def run_these_cases(current_task_files)
 
       $gJSONAllData = Hash.new
       $gJSONAllData = {
-        "htap-configuration" => Hash.new,
-        "htap-results"=> Array.new
+        "htap-results"=> Array.new,
+        "htap-configuration"=> Array.new
       }
 
       $gJSONAllData["htap-configuration"] = {
@@ -1255,30 +1255,61 @@ def run_these_cases(current_task_files)
       stream_out ("done.\n")
 
       if ($gJSONize )
-        termLastBatch = ""
+      
+
 
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
+        debug_on
+
+        configStarted = false 
+        # When we append data to the current file on subsequent batches, 
+        # we need to overwrite the contents of the "htap-configuraton": {} 
+        # hash. To do so, save the contents of hash and compute its 
+        # length
+        configtxt = "  ],\n"
+        nextBatch.each_line  do | line  |
+          configStarted = true if ( line =~ /"htap-configuration": \{/ )
+          configtxt += line if ( configStarted ) 
+        end 
+        # add a line ending at the end
+        configtxt += "\n"
+        # Convert unix line-endings to windows, to match what we write out.
+        configtxt.gsub!(/\n/, "\r\n")
+
+        # Compute the length and save for 
+        thisCount = configtxt.length
+        
+        debug_out ("first line? #{firstJSONLine}\n")
+
 
         if ( ! firstJSONLine )
 
-          fJSONout.seek(-2, :CUR)
+          debug_out ("Rewinding #{lastCount} lines\n")
+          
+          fJSONout.seek(-lastCount, :CUR)
+          
           txtOut = ",\n"
-          nextBatch.each_line  do | line  |
-            next if (line =~ /^\[/ )
-              txtOut += line
-            end
+  
+          
+   
+          txtOut += nextBatch.gsub(/^\{\n^\s*\"htap-results\":\s*\[\n/, "")
 
-          else
-            termLastBatch = ""
-            txtOut = nextBatch
-          end
+        else 
+          
+          txtOut = nextBatch
 
-          firstJSONLine = false
-          fJSONout.write txtOut
-          fJSONout.flush
-          stream_out("done.\n")
         end
+
+
+        lastCount = thisCount 
+        debug_out ("setting rewind flag to #{lastCount}\n")
+        debug_off
+        firstJSONLine = false
+        fJSONout.write txtOut
+        fJSONout.flush
+        stream_out("done.\n")
+      end
 
 
 
