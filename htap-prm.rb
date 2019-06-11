@@ -2,7 +2,7 @@
 
 #!/usr/bin/env ruby
 # ************************************************************************************
-# This is a really rudamentary run-manager developed as a ...
+# This is a rudamentary run-manager developed as a ...
 # ************************************************************************************
 
 require 'optparse'
@@ -1260,8 +1260,7 @@ def run_these_cases(current_task_files)
 
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
-        debug_on
-
+        
         configStarted = false 
         # When we append data to the current file on subsequent batches, 
         # we need to overwrite the contents of the "htap-configuraton": {} 
