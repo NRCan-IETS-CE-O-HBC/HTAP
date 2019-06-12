@@ -10486,7 +10486,7 @@
           "proxy": "elec_storage_ef0.89"
         }
       },
-      "NBC-HotWater_oil4": {
+      "NBC-HotWater_oil": {
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "3",
