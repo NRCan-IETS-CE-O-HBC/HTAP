@@ -337,10 +337,6 @@ def parse_def_file(filepath)
   # What if archetypes are defined using a wildcard?
 
   
-
-
-
-
 end # def parse_def_file(filepath)
 
 
@@ -436,7 +432,7 @@ def create_mesh_cartisian_combos(optIndex)
 
   end
 
-end
+end 
 
 
 def create_parametric_combos()
@@ -924,8 +920,6 @@ def run_these_cases(current_task_files)
       #=====================================================================================
       # Multi-threaded runs - Step 3: Post-process and clean up.
 
-
-
       for thread3 in 0..$ThreadsNeeded-1
 
         count = thread3 + 1
@@ -933,7 +927,7 @@ def run_these_cases(current_task_files)
         Dir.chdir($gMasterPath)
         Dir.chdir($RunDirs[thread3])
 
-
+        # Save HTAP-prm run information
         $RunResults["run-#{thread3}"]["configuration"]["RunNumber"]      = "#{$RunNumbers[thread3].to_s}"
         $RunResults["run-#{thread3}"]["configuration"]["RunDirectory"]   = "#{$RunDirs[thread3].to_s}"
         $RunResults["run-#{thread3}"]["configuration"]["SaveDirectory"]  = "#{$SaveDirs[thread3].to_s}"
@@ -954,6 +948,8 @@ def run_these_cases(current_task_files)
 
         end
 
+
+        # if JSON output was generated, default to parsing that. 
         jsonParsed = false
         #debug_out "pp: \n#{$RunResults["run-#{thread3}"].pretty_inspect}\n"
         debug_out "Looking for #{$RunResultFilenameV2} ? \n"
@@ -995,6 +991,7 @@ def run_these_cases(current_task_files)
           stream_out (" done.\n")
         end
 
+        # if JSON output not found, attempt to parse summary-out file  
         if ( jsonParsed ) then
           # do nothing !
           debug_out "No futher file processing needed\n"
@@ -1002,6 +999,7 @@ def run_these_cases(current_task_files)
           debug_out "results from run-#{thread3}:\n"
           #debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
         elsif (  File.exist?($RunResultFilename)  ) then
+
           debug_out "processing old token/value file \n"
 
           contents = File.open($RunResultFilename, 'r')
@@ -1010,6 +1008,9 @@ def run_these_cases(current_task_files)
           wc=0
 
           lineCount = 0
+
+          tokenResults = Hash.new
+
           contents.each do |line|
             lineCount = lineCount + 1
             line_clean = line.gsub(/ /, '')
@@ -1032,19 +1033,23 @@ def run_these_cases(current_task_files)
                 token.concat("@#{wc}")
                 wc=wc+1
               end
-              $RunResults["run-#{thread3}"][token] = value
+              tokenResults[token] = value 
+              #$RunResults["run-#{thread3}"][token] = value
             end
 
           end
           contents.close
 
-          if $RunResults["run-#{thread3}"]["status.success"] == false then
+          if tokenResults["status.success"] =~ /false/ then
             $runFailed = true
+            $RunResults["run-#{thread3}"]["status"]["success"] = false
             stream_out (" done (with errors).\n")
           else
             stream_out (" done.\n")
           end
 
+          debug_off
+          
         else
             debug_out ("no output anywhere!\n")
             stream_out (" Output couldn't be found! \n")
@@ -1193,11 +1198,16 @@ def run_these_cases(current_task_files)
       batchSuccessCount = 0
       stream_out("        -> Writing csv output output to HTAP-prm-output.csv ... ")
 
+      #-Loop though all instances, and compute 
       $RunResults.each do |run,data|
+
+        debug_out "Run - #{run}\n"
         # Only write out data from successful runs - this helps prevent corrupted database
         next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
         batchSuccessCount += 1
-        debug_out "Run - #{run}\n"
+        debug_out "processing:\n"
+        debug_out "  #{data.pretty_inspect}\n\n"
+        debug_off
         data.keys.sort.each do | section |
           data[section].keys.sort.each do |subsection|
             debug_out " . location #{section} : #{subsection} \n"
@@ -1243,13 +1253,16 @@ def run_these_cases(current_task_files)
         if ( ! headerOut )
           headerLine.concat("\n")
           $fCSVout.write(headerLine)
-
           headerOut = true
         end
         outputlines.concat("\n")
 
 
+      # End of $RunResults.each do
+
       end
+
+      debug_off 
       $fCSVout.write(outputlines)
       $fCSVout.flush
       stream_out ("done.\n")
@@ -1551,7 +1564,7 @@ $failures = File.open($gFailFile, 'w')
 $gMeshRunDefs = Hash.new
 
 #==================================================================
-#
+# Parse definition file and compute run job
 #==================================================================
 runLength = 0
 if ( ! $gRunDefinitionsProvided )
@@ -1729,6 +1742,7 @@ end
 
 
 
+
 $batchCount = 0
 goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
@@ -1766,10 +1780,16 @@ else
   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 end
 
-
+#==================================================================
+# Process cases 
+#==================================================================
 run_these_cases($RunTheseFiles)
 
 
+
+#==================================================================
+# Report on progress
+#==================================================================
 if ( ! $GiveUp ) then
   stream_out (" - HTAP-prm: Run complete -----------------------\n\n")
 else

@@ -441,7 +441,7 @@ end
 # =========================================================================================
 def err_out(msg)
 
-  puts "\n\n ERROR: #{msg}\n\n"
+  stream_out "\n\n ERROR: #{msg}\n\n"
 
   if ($fLOG != nil )
     $fLOG.write("\n\n ERROR: #{msg}\n\n")

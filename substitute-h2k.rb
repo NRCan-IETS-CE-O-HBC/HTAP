@@ -6597,7 +6597,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           if ( ! costsOK )
             stream_out " - Costs could not be calculated correctly. See warning messages\n"
-            myCosts["costing-dimensions"] = "not provided."
+            myCosts["costing-dimensions"] = myH2KHouseInfo
           else
             debug_out "\n\n"
             debug_out drawRuler(" cost calculations complete; reporting "," / ")
