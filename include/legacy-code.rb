@@ -3,7 +3,8 @@ def LegacyProcessConditions()
      debug_off
 
      $gChoices.each do |attrib1, choice|
-
+       
+       next if ( $DoNotValidateOptions.include? attrib1 )
        debug_out " = Processing conditions for #{attrib1}-> #{choice} ...\n"
 
        $gOptions[attrib1]["options"][choice]["result"] = Hash.new

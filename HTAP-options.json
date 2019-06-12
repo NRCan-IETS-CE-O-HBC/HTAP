@@ -3937,7 +3937,22 @@
           ]
         }
       },
-      "UsrSpecR40": {
+      "CeilR80": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "80"
+          }
+        },
+        "costs": {
+          "components": [
+            "r80:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+	  "UsrSpecR40": {
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
@@ -4037,6 +4052,21 @@
           "components": [
 
           ]
+        }
+      },
+      "CeilR80": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "80"
+          }
+        },
+        "costs": {
+          "components": [
+            "r80:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
         }
       },
       "CeilR40": {
@@ -4748,6 +4778,21 @@
           "custom-costs": {
           },
           "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
+        }
+      },
+      "Main_Wall_R80": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "0.2432",
+            "OPT-H2K-EffRValue": "80"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
         }
       },
       "Main_Wall_R30": {
@@ -5639,7 +5684,7 @@
         "custom-costs": {
         }
       },
-		"NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
+	  "NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 32.81,
@@ -5745,7 +5790,7 @@
         "custom-costs": {
         }
       },
-		"NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb": {
+	  "NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb": {
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": 40,
@@ -10441,7 +10486,7 @@
           "proxy": "elec_storage_ef0.89"
         }
       },
-      "NBC-HotWater_oil4": {
+      "NBC-HotWater_oil": {
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "3",

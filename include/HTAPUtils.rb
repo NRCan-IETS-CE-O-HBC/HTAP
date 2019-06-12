@@ -408,7 +408,7 @@ module HTAPData
 
     debug_out (" Validating HTAP options\n")
 
-     debug_out ("I will skip: #{$LegacyOptionsToIgnore.pretty_inspect}\n")
+    debug_out ("I will skip: #{$LegacyOptionsToIgnore.pretty_inspect}\n")
 
     debug_out (" These choices were supplied:\n")
     choices.each do | choice, value |
@@ -427,6 +427,11 @@ module HTAPData
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
         next
       end
+
+      if ( $DoNotValidateOptions.include? option )
+        degug_out ("No need to validate #{option}\n")
+        next
+      end 
 
 
 
@@ -467,14 +472,14 @@ module HTAPData
 
     validatedChoices.each do |attrib, choice|
 
+
       if ( $LegacyOptionsToIgnore.include? attrib ) then
 
         warn_out ("Choice file includes legacy option (#{attrib}), which is no longer supported.")
-        next
 
       end
 
-      next if ( $LegacyOptionsToIgnore.include? attrib )
+      next if ( $LegacyOptionsToIgnore.include? attrib or $DoNotValidateOptions.include? attrib ) 
 
 
       debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
