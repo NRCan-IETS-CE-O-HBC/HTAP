@@ -11165,7 +11165,17 @@
           }
         }
       },
-      "equal-on-all-sides_9.36": {
+		"Proposed-9.36": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "NA",
+            "OPT-H2K-OVERHANG-WDTH": "NA",
+            "OPT-H2K-OVERHANG-HGHT": "NA",
+				"OPT-H2K-DISTRIBUTION": "NA"
+          }
+        }
+      },  
+      "Reference-9.36": {
         "h2kMap": {
           "base": {
             "OPT-H2K-FDWR": "NBC9.36",
@@ -11175,7 +11185,7 @@
           }
         }
       },
-		"equal-on-all-sides_mid-glazing": {
+		"Reference-mid-glazing": {
         "h2kMap": {
           "base": {
             "OPT-H2K-FDWR": "0.20",
@@ -11185,7 +11195,7 @@
           }
         }
       },
-		"equal-on-all-sides_high-glazing": {
+		"Reference-high-glazing": {
         "h2kMap": {
           "base": {
             "OPT-H2K-FDWR": "0.22",
@@ -11195,7 +11205,7 @@
           }
         }
       },
-		"proportional_mid-glazing": {
+		"Proposed-mid-glazing": {
         "h2kMap": {
           "base": {
             "OPT-H2K-FDWR": "0.20",
@@ -11205,7 +11215,7 @@
           }
         }
       },
-		"proportional_high-glazing": {
+		"Proposed-high-glazing": {
         "h2kMap": {
           "base": {
             "OPT-H2K-FDWR": "0.25",

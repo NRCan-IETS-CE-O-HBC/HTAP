@@ -962,8 +962,8 @@ def run_these_cases(current_task_files)
 
           # Delete audit data unless it is requested. 
           if ( 
-               ! thisRunResults["cost-estimates"].empty? and 
-               ! thisRunResults["cost-estimates"]["audit"].empty? and 
+               ! thisRunResults["cost-estimates"].nil? and 
+               ! thisRunResults["cost-estimates"]["audit"].nil? and 
                ! $gTest_params["audit-costs"] 
             ) then 
           
