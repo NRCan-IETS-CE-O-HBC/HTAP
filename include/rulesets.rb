@@ -266,6 +266,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    $ruleSetChoices["Opt-Baseloads"] = "NBC-Baseloads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
    $ruleSetChoices["Opt-Temperatures"] = "NBC_Temps"
+   $ruleSetChoices["Opt-WindowDistribution"] = "Reference-9.36"
    if ($PermafrostHash[cityName] == "continuous")
       $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Perma"
       applyPermafrostRules = true
