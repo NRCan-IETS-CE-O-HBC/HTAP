@@ -966,7 +966,7 @@ def run_these_cases(current_task_files)
                ! thisRunResults["cost-estimates"]["audit"].nil? and 
                ! $gTest_params["audit-costs"] 
             ) then 
-          
+
             thisRunResults["cost-estimates"]["audit"] = nil 
           end 
 
@@ -1145,7 +1145,6 @@ def run_these_cases(current_task_files)
         if ( ! $gTest_params["audit-costs"] ) then 
           thisRunHash["cost-estimates"]["audit"] = nil 
         end 
-
 
         # Pick up hot2000 version number for this run, and
         begin 
@@ -1379,8 +1378,10 @@ end
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
+
 $gOptionsFile = ""
 $gRulesetsFile = ""
+
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
@@ -1461,9 +1462,11 @@ optparse = OptionParser.new do |opts|
       $gJSONize = true
    end
 
+
    opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
                                          "output. Slows HTAP down, and make json output unwieldy on",
                                          "large runs.") do
+
       $cmdlineopts["audit_data"] = true
       $gTest_params["audit-costs"] = true
    end
