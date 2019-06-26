@@ -799,6 +799,7 @@ def run_these_cases(current_task_files)
             subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile}"
           end
 
+
           if ( ! $gRulesetsFile.empty? ) then 
             subRulesetsFlag = "--rulesets #{$gRulesetsFile}"
           end 
@@ -817,6 +818,7 @@ def run_these_cases(current_task_files)
           # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
           $cmdtxt.write "#{cmdscript} -v"
+
           $cmdtxt.close
 
           #debug_out(" ( cmd: #{cmdscript} |  \n")
