@@ -2,7 +2,7 @@
 
 #!/usr/bin/env ruby
 # ************************************************************************************
-# This is a really rudamentary run-manager developed as a ...
+# This is a rudamentary run-manager developed as a ...
 # ************************************************************************************
 
 require 'optparse'
@@ -91,7 +91,7 @@ $gDebug = false
 
 
 def parse_def_file(filepath)
-
+  #debug_on
   $runParamsOpen = false;
   $runScopeOpen  = false;
   $UpgradesOpen  = false;
@@ -109,6 +109,8 @@ def parse_def_file(filepath)
     $defline.gsub!(/\^/,  '')
 
     if ( $defline !~ /^\s*$/ )
+      
+      debug_out ("Parsing: #{$defline}\n")
 
       case
         # Section star/end in the file
@@ -136,6 +138,7 @@ def parse_def_file(filepath)
           $token_values = Array.new
           $token_values = $defline.split("=")
 
+          debug_out "Token:#{$token_values[0]} = #{$token_values[1]} \n"
 
 
           if ( $RunParamsOpen && $token_values[0] =~ /archetype-dir/i )
@@ -145,6 +148,39 @@ def parse_def_file(filepath)
 
 
           end
+
+
+
+          if ( $RunParamsOpen && $token_values[0] =~ /options-file/i )
+            # Where is our options file located?
+
+            $gOptionsFile = $token_values[1]
+
+            debug_out "$gOptionsFile? : #{$gOptionsFile}\n"
+
+
+          end
+
+
+         if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
+            # Where is our options file located?
+
+            $gCostingFile = $token_values[1]
+            $gComputeCosts = true 
+
+          end
+
+
+         if ( $RunParamsOpen && $token_values[0] =~ /rulesets-file/i )
+            # Where is our options file located?
+
+            $gRulesetsFile = $token_values[1]
+
+
+          end
+
+
+
 
 
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i )
@@ -240,11 +276,11 @@ def parse_def_file(filepath)
 
   if ( $WildCardsInUse ) then
 
-    if ( ! $gOptionFile =~ /\.json/i ) then
+    if ( ! $gOptionsFile =~ /\.json/i ) then
       fatalerror ("Wildcard matching is only supported with .json option files")
     end
 
-    fOPTIONS = File.new($gOptionFile, "r")
+    fOPTIONS = File.new($gOptionsFile, "r")
     if fOPTIONS == nil then
        fatalerror(" Could not read #{filename}.\n")
     end
@@ -300,11 +336,7 @@ def parse_def_file(filepath)
 
   # What if archetypes are defined using a wildcard?
 
-
-
-
-
-
+  
 end # def parse_def_file(filepath)
 
 
@@ -400,7 +432,7 @@ def create_mesh_cartisian_combos(optIndex)
 
   end
 
-end
+end 
 
 
 def create_parametric_combos()
@@ -586,7 +618,7 @@ def run_these_cases(current_task_files)
   $PIDS               = Array.new
   $FinishedTheseFiles = Hash.new
   $RunNumbers         = Array.new
-
+  lastCount = 0
   $CompletedRunCount = 0
   $FailedRunCount = 0
 
@@ -723,7 +755,8 @@ def run_these_cases(current_task_files)
           end
 
 
-          FileUtils.cp($gOptionFile,$RunDirectory)
+          FileUtils.cp($gOptionsFile,$RunDirectory)
+
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
 
           if ( $gComputeCosts ) then
@@ -732,7 +765,7 @@ def run_these_cases(current_task_files)
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]
-          $LocalOptionsFile = File.basename $gOptionFile
+          $LocalOptionsFile = File.basename $gOptionsFile
 
 
 
@@ -760,15 +793,32 @@ def run_these_cases(current_task_files)
             FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p1")
           end
 
-          $SubCostFlag = ""
+          subCostFlag = ""
+          subRulesetsFlag = ""
           if ($gComputeCosts ) then
-            $SubCostFlag = "--auto_cost_options"
+            subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile}"
           end
-          cmdscript =  "ruby #{$gSubstitutePath} -o #{$LocalOptionsFile} -c #{$LocalChoiceFile} -b #{$H2kFile} --prm #{$gExtendedOutputFlag} #{$SubCostFlag} "
+
+
+          if ( ! $gRulesetsFile.empty? ) then 
+            subRulesetsFlag = "--rulesets #{$gRulesetsFile}"
+          end 
+
+          cmdscript =  "ruby #{$gSubstitutePath} "+
+                           "-o #{$LocalOptionsFile} "+
+                           "-c #{$LocalChoiceFile} "+
+                           "-b #{$H2kFile} "+
+                           "#{subRulesetsFlag} "+
+                           "#{subCostFlag} "+ 
+                           "--no-debug "+
+                           "--prm "+
+                           "#{$gExtendedOutputFlag} "
+                           
 
           # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
-          $cmdtxt.write "#{cmdscript} -v "
+          $cmdtxt.write "#{cmdscript} -v"
+
           $cmdtxt.close
 
           #debug_out(" ( cmd: #{cmdscript} |  \n")
@@ -872,8 +922,6 @@ def run_these_cases(current_task_files)
       #=====================================================================================
       # Multi-threaded runs - Step 3: Post-process and clean up.
 
-
-
       for thread3 in 0..$ThreadsNeeded-1
 
         count = thread3 + 1
@@ -881,7 +929,7 @@ def run_these_cases(current_task_files)
         Dir.chdir($gMasterPath)
         Dir.chdir($RunDirs[thread3])
 
-
+        # Save HTAP-prm run information
         $RunResults["run-#{thread3}"]["configuration"]["RunNumber"]      = "#{$RunNumbers[thread3].to_s}"
         $RunResults["run-#{thread3}"]["configuration"]["RunDirectory"]   = "#{$RunDirs[thread3].to_s}"
         $RunResults["run-#{thread3}"]["configuration"]["SaveDirectory"]  = "#{$SaveDirs[thread3].to_s}"
@@ -902,6 +950,8 @@ def run_these_cases(current_task_files)
 
         end
 
+
+        # if JSON output was generated, default to parsing that. 
         jsonParsed = false
         #debug_out "pp: \n#{$RunResults["run-#{thread3}"].pretty_inspect}\n"
         debug_out "Looking for #{$RunResultFilenameV2} ? \n"
@@ -912,8 +962,13 @@ def run_these_cases(current_task_files)
           thisRunResults = Hash.new
           thisRunResults = JSON.parse(contents)
 
+          # Delete audit data unless it is requested. 
+          if ( 
+               ! thisRunResults["cost-estimates"].nil? and 
+               ! thisRunResults["cost-estimates"]["audit"].nil? and 
+               ! $gTest_params["audit-costs"] 
+            ) then 
 
-          if ( ! $gTest_params["audit-costs"] ) then 
             thisRunResults["cost-estimates"]["audit"] = nil 
           end 
 
@@ -938,6 +993,7 @@ def run_these_cases(current_task_files)
           stream_out (" done.\n")
         end
 
+        # if JSON output not found, attempt to parse summary-out file  
         if ( jsonParsed ) then
           # do nothing !
           debug_out "No futher file processing needed\n"
@@ -945,6 +1001,7 @@ def run_these_cases(current_task_files)
           debug_out "results from run-#{thread3}:\n"
           #debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
         elsif (  File.exist?($RunResultFilename)  ) then
+
           debug_out "processing old token/value file \n"
 
           contents = File.open($RunResultFilename, 'r')
@@ -953,6 +1010,9 @@ def run_these_cases(current_task_files)
           wc=0
 
           lineCount = 0
+
+          tokenResults = Hash.new
+
           contents.each do |line|
             lineCount = lineCount + 1
             line_clean = line.gsub(/ /, '')
@@ -975,19 +1035,23 @@ def run_these_cases(current_task_files)
                 token.concat("@#{wc}")
                 wc=wc+1
               end
-              $RunResults["run-#{thread3}"][token] = value
+              tokenResults[token] = value 
+              #$RunResults["run-#{thread3}"][token] = value
             end
 
           end
           contents.close
 
-          if $RunResults["run-#{thread3}"]["status.success"] == false then
+          if tokenResults["status.success"] =~ /false/ then
             $runFailed = true
+            $RunResults["run-#{thread3}"]["status"]["success"] = false
             stream_out (" done (with errors).\n")
           else
             stream_out (" done.\n")
           end
 
+          debug_off
+          
         else
             debug_out ("no output anywhere!\n")
             stream_out (" Output couldn't be found! \n")
@@ -1007,7 +1071,7 @@ def run_these_cases(current_task_files)
             #end
             #$RunResults["run-#{thread3}"]["status"]["errors"].push = " Run failed - no output generated"
 
-            $LocalChoiceFile = File.basename $gOptionFile
+            $LocalChoiceFile = File.basename $gOptionsFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
               warn_out("Could not delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
             end
@@ -1053,8 +1117,8 @@ def run_these_cases(current_task_files)
 
       $gJSONAllData = Hash.new
       $gJSONAllData = {
-        "htap-configuration" => Hash.new,
-        "htap-results"=> Array.new
+        "htap-results"=> Array.new,
+        "htap-configuration"=> Array.new
       }
 
       $gJSONAllData["htap-configuration"] = {
@@ -1076,24 +1140,28 @@ def run_these_cases(current_task_files)
           "configuration"          => $RunResults[run]["configuration"     ],
           "cost-estimates"         => $RunResults[run]["cost-estimates"]
         }
-   
+        
+        debug_out (" Result number = #{run} \n")
+        debug_out (" ARCH = #{thisRunHash["archetype"]["h2k-File"]} \n")
+        
         if ( ! $gTest_params["audit-costs"] ) then 
           thisRunHash["cost-estimates"]["audit"] = nil 
         end 
 
-
         # Pick up hot2000 version number for this run, and
+        begin 
+          h2kVersion = thisRunHash["configuration"]["version"]["HOT2000"]
+          if ( ! $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"].key?(h2kVersion) )
+            $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] = 0
+          end
 
-        h2kVersion = thisRunHash["configuration"]["version"]["HOT2000"]
-        if ( ! $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"].key?(h2kVersion) )
-          $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] = 0
-        end
+          $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] += 1
 
-        $gJSONAllData["htap-configuration"]["runs-by-h2kVersion"][h2kVersion] += 1
-
-        if ( ! $RunResults[run]["analysis_BCStepCode"].nil? ) then
-          thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
-        end
+          if ( ! $RunResults[run]["analysis_BCStepCode"].nil? ) then
+            thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
+          end
+        rescue 
+        end 
 
 
         $gJSONAllData["htap-results"].push thisRunHash
@@ -1131,11 +1199,16 @@ def run_these_cases(current_task_files)
       batchSuccessCount = 0
       stream_out("        -> Writing csv output output to HTAP-prm-output.csv ... ")
 
+      #-Loop though all instances, and compute 
       $RunResults.each do |run,data|
+
+        debug_out "Run - #{run}\n"
         # Only write out data from successful runs - this helps prevent corrupted database
         next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
         batchSuccessCount += 1
-        debug_out "Run - #{run}\n"
+        debug_out "processing:\n"
+        debug_out "  #{data.pretty_inspect}\n\n"
+        debug_off
         data.keys.sort.each do | section |
           data[section].keys.sort.each do |subsection|
             debug_out " . location #{section} : #{subsection} \n"
@@ -1181,42 +1254,75 @@ def run_these_cases(current_task_files)
         if ( ! headerOut )
           headerLine.concat("\n")
           $fCSVout.write(headerLine)
-
           headerOut = true
         end
         outputlines.concat("\n")
 
 
+      # End of $RunResults.each do
+
       end
+
+      debug_off 
       $fCSVout.write(outputlines)
       $fCSVout.flush
       stream_out ("done.\n")
 
       if ($gJSONize )
-        termLastBatch = ""
+      
+
 
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
+        
+        configStarted = false 
+        # When we append data to the current file on subsequent batches, 
+        # we need to overwrite the contents of the "htap-configuraton": {} 
+        # hash. To do so, save the contents of hash and compute its 
+        # length
+        configtxt = "  ],\n"
+        nextBatch.each_line  do | line  |
+          configStarted = true if ( line =~ /"htap-configuration": \{/ )
+          configtxt += line if ( configStarted ) 
+        end 
+        # add a line ending at the end
+        configtxt += "\n"
+        # Convert unix line-endings to windows, to match what we write out.
+        configtxt.gsub!(/\n/, "\r\n")
+
+        # Compute the length and save for 
+        thisCount = configtxt.length
+        
+        debug_out ("first line? #{firstJSONLine}\n")
+
 
         if ( ! firstJSONLine )
 
-          fJSONout.seek(-2, :CUR)
+          debug_out ("Rewinding #{lastCount} lines\n")
+          
+          fJSONout.seek(-lastCount, :CUR)
+          
           txtOut = ",\n"
-          nextBatch.each_line  do | line  |
-            next if (line =~ /^\[/ )
-              txtOut += line
-            end
+  
+          
+   
+          txtOut += nextBatch.gsub(/^\{\n^\s*\"htap-results\":\s*\[\n/, "")
 
-          else
-            termLastBatch = ""
-            txtOut = nextBatch
-          end
+        else 
+          
+          txtOut = nextBatch
 
-          firstJSONLine = false
-          fJSONout.write txtOut
-          fJSONout.flush
-          stream_out("done.\n")
         end
+
+
+        lastCount = thisCount 
+        debug_out ("setting rewind flag to #{lastCount}\n")
+        debug_off
+        firstJSONLine = false
+        fJSONout.write txtOut
+        fJSONout.flush
+        stream_out("done.\n")
+      end
 
 
 
@@ -1274,7 +1380,10 @@ end
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
-$gOptionFile = ""
+
+$gOptionsFile = ""
+$gRulesetsFile = ""
+
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
@@ -1302,10 +1411,10 @@ optparse = OptionParser.new do |opts|
    opts.separator " "
    opts.separator " Required inputs:"
 
-   opts.on("-o", "--options FILE", "Specified options file (mandatory).") do |o|
+   opts.on("-o", "--options FILE", "Specified options file.") do |o|
       $cmdlineopts["options"] = o
-      $gOptionFile = o
-      if ( !File.exist?($gOptionFile) )
+      $gOptionsFile = o
+      if ( !File.exist?($gOptionsFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
       end
    end
@@ -1327,14 +1436,9 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-   #   opts.on("-a", "--cost-assemblies FILE", "Estimate costs for assemblies using costing database.") do |o|
-   #      $gComputeCosts = true
-   #      $gCostingFile = o
-   #      if ( ! File.exist?($gRunDefinitionsFile) ) then
-   #        fatalerror("Costing file #{$gCostingFile} could not be found!")
-   #      end
-   #
-   #   end
+   opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
+      $gComputeCosts = true
+   end
 
    opts.on(
      "-c", "--confirm", "Prompt before proceeding with run. After estimating the size",
@@ -1351,8 +1455,8 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.on("-k", "--keep-all-files", "Preserve all files, including modified .h2k files, in HTAP-sim-X",
-                                     "directories. (otherwise, only files that generate errors will be
-                                      saved).") do
+                                     "directories. (otherwise, only files that generate errors will be",
+                                     "saved).") do
       $gSaveAllRuns = true
    end
 
@@ -1360,7 +1464,11 @@ optparse = OptionParser.new do |opts|
       $gJSONize = true
    end
 
-   opts.on("-a", "--include_audit_data", "Output progress to console.") do
+
+   opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
+                                         "output. Slows HTAP down, and make json output unwieldy on",
+                                         "large runs.") do
+
       $cmdlineopts["audit_data"] = true
       $gTest_params["audit-costs"] = true
    end
@@ -1461,7 +1569,7 @@ $failures = File.open($gFailFile, 'w')
 $gMeshRunDefs = Hash.new
 
 #==================================================================
-#
+# Parse definition file and compute run job
 #==================================================================
 runLength = 0
 if ( ! $gRunDefinitionsProvided )
@@ -1485,6 +1593,9 @@ else
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
 
   parse_def_file($gRunDefinitionsFile)
+
+  
+  debug_out("> Options file #{$gOptionsFile}")
 
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir
@@ -1636,6 +1747,7 @@ end
 
 
 
+
 $batchCount = 0
 goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
@@ -1673,10 +1785,16 @@ else
   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 end
 
-
+#==================================================================
+# Process cases 
+#==================================================================
 run_these_cases($RunTheseFiles)
 
 
+
+#==================================================================
+# Report on progress
+#==================================================================
 if ( ! $GiveUp ) then
   stream_out (" - HTAP-prm: Run complete -----------------------\n\n")
 else
