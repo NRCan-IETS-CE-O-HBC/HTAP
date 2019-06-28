@@ -809,8 +809,7 @@ def run_these_cases(current_task_files)
                            "-c #{$LocalChoiceFile} "+
                            "-b #{$H2kFile} "+
                            "#{subRulesetsFlag} "+
-                           "#{subCostFlag} "+ 
-                           "--no-debug "+
+                           "#{subCostFlag} "+                            
                            "--prm "+
                            "#{$gExtendedOutputFlag} "
                            
@@ -824,7 +823,7 @@ def run_these_cases(current_task_files)
           #debug_out(" ( cmd: #{cmdscript} |  \n")
 
 
-          pid = Process.spawn( cmdscript, :err => "substitute-h2k-errors.txt" )
+          pid = Process.spawn( "#{cmdscript} --no-debug ", :err => "substitute-h2k-errors.txt" )
           #pid = Process.spawn( cmdscript, :out => "substitute-h2k-errors.txt", :err => [:child, :out] )
 
 
