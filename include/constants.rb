@@ -207,8 +207,32 @@ AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
 
 
 
+MonthArrListAbbr = Set.new ["jan",
+                            "feb",
+                            "mar",
+                            "apr",
+                            "may",
+                            "jun",
+                            "jul",
+                            "aug",
+                            "sep",
+                            "oct",
+                            "nov",
+                            "dec"]
 
 
+MonthArrList     = Set.new ["january",
+                            "february",
+                            "march",
+                            "april",
+                            "may",
+                            "june",
+                            "july",
+                            "august",
+                            "september",
+                            "october",
+                            "november",
+                            "december"]
 
 
 

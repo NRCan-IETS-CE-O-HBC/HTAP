@@ -4,12 +4,17 @@
 module Hourly
 
   # Master function to manage creation of hourly load shapes from hot2000 results
-  def Hourly.analyze()
+  def Hourly.analyze(h2kBinResults)
 
-    stream_out (" Initializing hourly analysis\n")
-  	
+
+
+      	
   	debug_on 
-    debug_out("Tell Alex what data you need, and he will pass it in.")
+    debug_out("Tell Alex what data you need, and he will pass it in.\n")
+    
+    debug_out("Content currently parsed:\n")
+    debug_out(h2kBinResults.pretty_inspect)
+
 
     readClimateData()
     generateLoadShapes()

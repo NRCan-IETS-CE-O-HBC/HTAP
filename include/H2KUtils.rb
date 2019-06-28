@@ -1427,6 +1427,244 @@ module H2KFile
 end
 
 
+module H2KOutput 
+
+  def H2KOutput.parse_BrowseRpt(myBrowseRptFile)
+
+
+    myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new }
+    fBrowseRpt = File.new(myBrowseRptFile, "r")
+
+
+    flagACPerf = false 
+    flagSHPerf = false 
+    flagSRPerf = false 
+    flagBLPerf = false 
+    flagEPPerf = false 
+
+    while !fBrowseRpt.eof? do
+      line = fBrowseRpt.readline
+      # Sequentially read file lines
+      line.strip!
+      # Remove leading and trailing whitespace
+
+
+
+
+
+
+
+
+      # ==============================================================
+      # Heating section 
+      if ( line =~ /\*\*\* SPACE HEATING SYSTEM PERFORMANCE \*\*\*/ )
+        myBrowseData["monthly"]["heating"] = {"loadGJ" => Hash.new, 
+                                              "input_energyGJ" => Hash.new,
+                                              "COP" => Hash.new
+                                             }        
+        flagSHPerf = true 
+      end 
+
+      if ( flagSHPerf )
+
+        if ( line =~ /^Ann/i ) 
+          flagSHPerf = false 
+        else 
+
+
+
+          debug_out ("#{line}\n")
+
+          words = line.split(/\s+/)
+          
+          if (MonthArrListAbbr.include?("#{words[0]}".downcase) )        
+            
+            month = monthLong(words[0].downcase)
+            myBrowseData["monthly"]["heating"]["loadGJ"][month] = words[1].to_f/1000
+            myBrowseData["monthly"]["heating"]["input_energyGJ"][month] = words[6].to_f/1000
+            myBrowseData["monthly"]["heating"]["COP"][month] = words[7].to_f
+
+          end 
+   
+        end 
+
+      end 
+
+      # ==============================================================
+      # Cooling section 
+      if ( line =~ /\*\*\* AIR CONDITIONING SYSTEM PERFORMANCE \*\*\*/ )
+        myBrowseData["monthly"]["cooling"] = {"sensible_loadGJ" => Hash.new, 
+                                                "latent_loadGJ" => Hash.new,
+                                                "total_loadGJ" => Hash.new
+                                                }        
+        flagACPerf = true 
+      end 
+
+      if ( flagACPerf )
+
+        if ( line =~ /^Ann/i ) 
+          flagACPerf = false 
+        else 
+
+
+
+          debug_out ("#{line}\n")
+
+          words = line.split(/\s+/)
+          
+          if (MonthArrListAbbr.include?("#{words[0]}".downcase) )        
+            
+            month = monthLong(words[0].downcase)
+            myBrowseData["monthly"]["cooling"]["sensible_loadGJ"][month] = words[1].to_f/1000
+            myBrowseData["monthly"]["cooling"]["latent_loadGJ"][month] = words[2].to_f/1000
+            myBrowseData["monthly"]["cooling"]["total_loadGJ"][month] = (words[1].to_f + words[2].to_f)/1000
+
+          end 
+   
+        end 
+
+      end 
+
+
+
+
+
+      # ==============================================================
+      # Solar Radiation section 
+      if ( line =~ /\*\*\* Solar Radiation \(MJ\/m2\/day\) \*\*\*/ )
+        myBrowseData["monthly"]["solar_radiation"] = {"global_horizontal_MJ/M2/day" => Hash.new, 
+                                                      "diffuse_horizontal_MJ/M2/day" => Hash.new
+                                                       }        
+        flagSRPerf = true 
+      end 
+
+      if ( flagSRPerf )
+
+        if ( line =~ /^Ann/i ) 
+          flagSRPerf = false 
+        else 
+
+
+
+          debug_out ("#{line}\n")
+
+          words = line.split(/\s+/)
+          
+          if (MonthArrListAbbr.include?("#{words[0]}".downcase) )        
+            
+            month = monthLong(words[0].downcase)
+            myBrowseData["monthly"]["solar_radiation"]["global_horizontal_MJ/M2/day"][month] = words[1].to_f
+            myBrowseData["monthly"]["solar_radiation"]["diffuse_horizontal_MJ/M2/day"][month] = words[2].to_f
+
+          end 
+   
+        end 
+
+      end 
+
+
+
+
+      # ==============================================================
+      # EnergyProfile
+      if ( line =~ /\*\*\* MONTHLY ENERGY PROFILE \*\*\*/ )
+        myBrowseData["monthly"]["energy_profile"] = {"energy_loadGJ"     => Hash.new, 
+                                                     "internal_gainsGJ"  => Hash.new,
+                                                     "solar_gainsGJ"     => Hash.new,
+                                                     "aux_energy_GJ"     => Hash.new
+                                                       }        
+        flagEPPerf = true 
+      end 
+
+      if ( flagEPPerf )
+
+        if ( line =~ /^Annual/i ) 
+          flagEPPerf = false 
+        else 
+
+          debug_out ("#{line}\n")
+          words = line.split(/\s+/)
+
+          if (MonthArrListAbbr.include?("#{words[0]}".downcase) )        
+            
+            month = monthLong(words[0].downcase)
+            myBrowseData["monthly"]["energy_profile"]["energy_loadGJ"   ][month] = words[1].to_f/1000
+            myBrowseData["monthly"]["energy_profile"]["internal_gainsGJ"][month] = words[2].to_f/1000
+            myBrowseData["monthly"]["energy_profile"]["solar_gainsGJ"   ][month] = words[3].to_f/1000
+            myBrowseData["monthly"]["energy_profile"]["aux_energy_GJ"   ][month] = words[4].to_f/1000
+
+          end 
+   
+
+
+   
+        end 
+
+      end 
+
+
+
+      # ==============================================================
+      # Baseloads section
+      if ( line =~ /\*\*\* BASE LOADS SUMMARY \*\*\*/ )
+        myBrowseData["daily"]["baseloads"] = {"interior_lighting_kWh/day"   => nil, 
+                                              "interior_appliances_kWh/day" => nil,
+                                              "interior_other_kWh/day"      => nil,
+                                              "exterior_other_kWh/day"      => nil,
+                                                       }        
+        flagBLPerf = true 
+      end 
+
+      if ( flagBLPerf )
+
+        if ( line =~ /^Total Average Electrical Load/i ) 
+          flagBLPerf = false 
+        else 
+
+          debug_out ("#{line}\n")
+          words = line.split(/\s+/)
+
+          if ( line =~ /Interior Lighting/i ) then 
+            myBrowseData["daily"]["baseloads"]["interior_lighting_kWh/day"] = words[2].to_f
+          end 
+
+          if (line =~ /Appliances/i ) then 
+            myBrowseData["daily"]["baseloads"]["interior_appliances_kWh/day"] = words[1].to_f
+          end 
+
+          if (line =~ /Other/i ) then 
+            myBrowseData["daily"]["baseloads"]["interior_other_kWh/day"] = words[1].to_f
+          end           
+
+          if (line =~ /Exterior use/i ) then 
+            myBrowseData["daily"]["baseloads"]["exterior_other_kWh/day"] = words[2].to_f
+          end 
+
+
+   
+        end 
+
+      end 
+
+
+      if ( line =~ /Sensible Internal Heat Gain From Occupants/ ) then 
+        gain = line.split('=')[1].gsub(/kWh\/day/,"").gsub(/\s*/,"")
+        myBrowseData["daily"]["gains_from_occupants_kWh/day"] = gain.to_f
+      end 
+
+
+
+    end 
+
+    return myBrowseData
+
+  end 
+
+
+
+
+end 
+
 
 
 # =========================================================================================
