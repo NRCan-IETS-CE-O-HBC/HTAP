@@ -428,3 +428,308 @@ def parse_legacy_options_file(filename)
     stream_out ("  done.\n")
 
   end
+
+
+
+
+
+def write_summary_file()
+      
+      # code to write non-json output from substitute-h2k.rb. 
+
+      if $fSUMMARY == nil then
+        fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
+      end
+
+      $fSUMMARY.write( "#{$aliasConfig}.OptionsFile       =  #{$gOptionFile}\n")
+      $fSUMMARY.write( "#{$aliasConfig}.Recovered-results =  #{$outputHCode}\n")
+
+      if ($FlagHouseInfo)
+        $fSUMMARY.write( "#{$aliasArch}.House-Builder     =  #{$BuilderName}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.House-Type        =  #{$HouseType}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Front-Orientation =  #{$HouseFrontOrientation}\n")
+        $fSUMMARY.write( "#{$aliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Base-Locale       =  #{$gBaseLocale}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Ceiling-Type    =  #{$Ceilingtype}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Slab-m2    =  #{$FoundationArea["Slab"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Basement-m2    =  #{$FoundationArea["Basement"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-ExposedFloor-m2    =  #{$FoundationArea["Floor"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Walkout-m2    =  #{$FoundationArea["Walkout"].to_f.round(2)}\n" )
+        $fSUMMARY.write( "#{$aliasArch}.Area-Crawl-m2    =  #{$FoundationArea["Crawl"].to_f.round(2)}\n" )
+      end
+      $fSUMMARY.write( "#{$aliasOutput}.HDDs              =  #{$HDDs}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-Total-GJ   =  #{$gResults[$outputHCode]['avgEnergyTotalGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Ref-En-Total-GJ   =  #{$RefEnergy.round(1)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-gross   =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2)}   \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-PV-revenue   =  #{$gResults[$outputHCode]['avgPVRevenue'].round(2)}    \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Net     =  #{$gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Elec    =  #{$gResults[$outputHCode]['avgFuelCostsElec$'].round(2)}  \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Gas     =  #{$gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2)}  \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Prop    =  #{$gResults[$outputHCode]['avgFuelCostsPropane$'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Oil     =  #{$gResults[$outputHCode]['avgFuelCostsOil$'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Wood    =  #{$gResults[$outputHCode]['avgFuelCostsWood$'].round(2)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Util-Bill-Pellet  =  #{$gAvgCost_Pellet.round(2)} \n" )   # Not available separate from wood - set to 0
+
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Useful-Solar-Gain-GJ =  #{$gResults[$outputHCode]['avgSolarGainsUtilized'].round(1)} \n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
+
+      $fSUMMARY.write( "#{$aliasOutput}.AuxEnergyReq-HeatingGJ = #{$gAuxEnergyHeatingGJ.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.TotalAirConditioning-LoadGJ = #{$TotalAirConditioningLoad.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.AvgAirConditioning-COP = #{$AvgACCOP.round(1)} \n" )
+
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-CoolingGJ  =  #{$gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-VentGJ     =  #{$gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-DHWGJ      =  #{$gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Energy-PlugGJ     =  #{$gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.EnergyEleckWh     =  #{$gResults[$outputHCode]['avgFueluseEleckWh'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.EnergyGasM3       =  #{$gResults[$outputHCode]['avgFueluseNatGasM3'].round(1)}  \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.EnergyOil_l       =  #{$gResults[$outputHCode]['avgFueluseOilL'].round(1)}    \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.EnergyProp_L      =  #{$gResults[$outputHCode]['avgFuelusePropaneL'].round(1)}    \n" )
+      # includes pellets
+      $fSUMMARY.write( "#{$aliasOutput}.EnergyWood_cord   =  #{$gResults[$outputHCode]['avgFueluseWoodcord'].round(1)}    \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Upgrade-cost      =  #{($gTotalCost-$gIncBaseCosts).round(2)}\n" )
+      #$fSUMMARY.write( "#{$aliasOutput}.SimplePaybackYrs  =  #{$optCOProxy.round(1)} \n" )
+
+      if ($TsvOutput)
+        $fSUMMARY.write( "#{$AliasOutput}.ERS-RatingGJ/a  =  #{$gResults['TSV']['ERSRating']} \n" )
+        $fSUMMARY.write( "#{$AliasOutput}.ERS-RefHouseRatingGJ/a  =  #{$gResults['TSV']['ERSRefHouseRating']} \n" )
+        $fSUMMARY.write( "#{$AliasOutput}.ERS-GHGt/a  =  #{$gResults['TSV']['ERSGHG']} \n" )
+      end
+
+
+      # These #s are not yet averaged for orientations!
+      $fSUMMARY.write( "#{$aliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
+
+      $fSUMMARY.write( "#{$aliasInput}.PV-size-kW        =  #{$PVcapacity.round(1)}\n" )
+
+
+
+      $fSUMMARY.write( "#{$aliasArch}.Floor-Area-m2     =  #{$FloorArea.to_f.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasArch}.House-Volume-m3   =  #{$HouseVolume.to_f.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.TEDI_kWh_m2       =  #{$TEDI_kWh_m2.to_f.round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.MEUI_kWh_m2       =  #{$MEUI_kWh_m2.to_f.round(1)} \n" )
+
+      $fSUMMARY.write( "#{$aliasOutput}.ERS-Value         =  #{$gERSNum.to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.NumTries          =  #{$NumTries.to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasOutput}.LapsedTime        =  #{$runH2KTime.to_f.round(2)}\n" )
+      # Windows characteristics
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-S        =  #{$SHGCWin[1].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-S     =  #{$rValueWin[1].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-S     =  #{$AreaWin_sum[1].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-SE       =  #{$SHGCWin[2].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-SE    =  #{$rValueWin[2].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-SE    =  #{$AreaWin_sum[2].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-E        =  #{$SHGCWin[3].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-E     =  #{$rValueWin[3].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-E     =  #{$AreaWin_sum[3].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-NE       =  #{$SHGCWin[4].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-NE    =  #{$rValueWin[4].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-NE    =  #{$AreaWin_sum[4].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-N        =  #{$SHGCWin[5].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-N     =  #{$rValueWin[5].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-N     =  #{$AreaWin_sum[5].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-NW       =  #{$SHGCWin[6].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-NW    =  #{$rValueWin[6].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-NW    =  #{$AreaWin_sum[6].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-W        =  #{$SHGCWin[7].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-W     =  #{$rValueWin[7].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-W     =  #{$AreaWin_sum[7].to_f.round(1)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-SHGC-SW       =  #{$SHGCWin[8].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-R-value-SW    =  #{$rValueWin[8].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Win-Area-m2-SW    =  #{$AreaWin_sum[8].to_f.round(1)}\n" )
+      # House components
+      $fSUMMARY.write( "#{$aliasArch}.Area-Door-m2      =  #{$AreaComp['door'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-DoorWin-m2   =  #{$AreaComp['doorwin'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Windows-m2   =  #{$AreaComp['win'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Wall-m2      =  #{$AreaComp['wall'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Header-m2    =  #{$AreaComp['header'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-Ceiling-m2   =  #{$AreaComp['ceiling'].to_f.round(3)}\n" )
+      #$fSUMMARY.write( "#{$aliasArch}.Area-ExposedFloor-m2     =  #{$AreaComp['floor'].to_f.round(3)}\n" )
+      $fSUMMARY.write( "#{$aliasArch}.Area-House-m2     =  #{$AreaComp['house'].to_f.round(3)}\n" )
+      # House R-Value
+      $fSUMMARY.write( "#{$aliasOutput}.House-R-Value(SI) =  #{$RSI['house'].to_f.round(3)}\n" )
+
+      $fSUMMARY.write( "#{$aliasOutput}.Cost of options using unit costs = #{$optionCost.round(0)}\n")
+      for status_type in $gStatus.keys()
+        $fSUMMARY.write( "s.#{status_type} = #{$gStatus[status_type]}\n" )
+      end
+
+      if $ExtraOutput1 then
+        $fSUMMARY.write( "#{$aliasOutput}.EnvTotalHL-GJ     =  #{$gResults[$outputHCode]['EnvHLTotalGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvCeilHL-GJ      =  #{$gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvWallHL-GJ      =  #{$gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvWinHL-GJ       =  #{$gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvDoorHL-GJ      =  #{$gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvFloorHL-GJ     =  #{$gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvCrawlHL-GJ     =  #{$gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvSlabHL-GJ      =  #{$gResults[$outputHCode]['EnvHLSlabGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvBGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvAGBsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvBsemntFHHL-GJ  =  #{$gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvPonyWallHL-GJ  =  #{$gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvFABsemntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.EnvAirLkVntHL-GJ  =  #{$gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.AnnDHWLoad-GJ     =  #{$gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)}\n")
+
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatElec-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatGas-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatOil-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatProp-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatWood-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterElec-GJ c  =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterGas-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterOil-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterWood-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)} \n")
+      end
+
+
+      if ( $gChoices["Opt-Archetype"].nil? || $gChoices["Opt-Archetype"].empty? ) then
+
+        $gChoices["Opt-Archetype"] = $gBaseModelFile
+
+      end
+
+      if $gReportChoices then
+        $fSUMMARY.write( "#{$aliasInput}.Run-Region       =  #{$gRunRegion}\n" )
+        $fSUMMARY.write( "#{$aliasInput}.Run-Locale       =  #{$gRunLocale}\n" )
+        $fSUMMARY.write( "#{$aliasInput}.House-Upgraded   =  #{houseUpgraded}\n" )
+        $gChoices.sort.to_h
+        for attribute in $gChoices.keys()
+          choice = $gChoices[attribute]
+
+          $fSUMMARY.write("#{$aliasInput}.#{attribute} = #{choice}\n")
+        end
+
+
+      end
+
+
+
+
+      # Possibly report Binned data from diagnostics file
+      if ($gReadROutStrTxt) then
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+          $fSUMMARY.write("#{$aliasOutput}.BIN-data-HRS-#{binstr}   =  #{$binDatHrs[bin].round(4)}\n")
+
+        end
+
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+
+          $fSUMMARY.write("#{$aliasOutput}.BIN-data-TMP-#{binstr}   =  #{$binDatTmp[bin].round(4)}\n")
+
+
+        end
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+
+          $fSUMMARY.write("#{$aliasOutput}.BIN-data-HLR-#{binstr}   =  #{$binDatHLR[bin].round(4)}\n")
+
+
+
+        end
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+          $fSUMMARY.write("#{$aliasOutput}.BIN-data-T2cap-#{binstr} =  #{$binDatT2cap[bin].round(4)}\n")
+
+
+        end
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+
+          $fSUMMARY.write("#{$aliasOutput}.BIN-data-T2PLR-#{binstr} =  #{$binDatT2PLR[bin].round(4)}\n")
+
+
+
+        end
+
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+          #$fSUMMARY.write("BIN-data-T1cap-#{binstr} = #{$binDatT1cap[bin].round(4)}\n")
+
+
+        end
+
+        32.times do |n|
+          bin =n+1
+          if (bin<10)  then
+            pad = "0"
+          else
+            pad = ""
+          end
+
+          binstr = "#{pad}#{bin.to_i}"
+
+          $fSUMMARY.write("#{$aliasOutput}.BIN-data-T1PLR-#{binstr} =  #{$binDatT1PLR[bin].round(4)}\n")
+
+
+
+
+        end
+
+      end
+
+
+end 
