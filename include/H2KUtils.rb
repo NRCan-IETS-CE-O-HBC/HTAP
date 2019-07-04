@@ -1306,6 +1306,7 @@ module H2KFile
     myH2KHouseInfo["house-description"] = Hash.new
     myH2KHouseInfo["house-description"]["stories"] = H2KFile.getStoreys(elements)
     myH2KHouseInfo["house-description"]["type"] = H2KFile.getHouseType(elements)
+	 myH2KHouseInfo["house-description"]["frontOrient"] = H2KFile.getFrontOrientation(elements) 
 
     # Dimensions
     myH2KHouseInfo["dimensions"] = Hash.new
@@ -1353,7 +1354,7 @@ module H2KFile
   def H2KFile.addWin(elements, facingDirection, height, width, overhangW, overhangH, winCode)
     # Facing direction codes for HOT2000
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
-    useThisCodeID  = {  "S"  =>  191 ,    "SE" =>  192 ,    "E"  =>  193 ,    "NE" =>  194 ,    "N"  =>  195 ,    "NW" =>  196 ,    "W"  =>  197 ,    "SW" =>  198   }
+    useThisCodeID  = {  "S"  =>  291 ,    "SE" =>  292 ,    "E"  =>  293 ,    "NE" =>  294 ,    "N"  =>  295 ,    "NW" =>  296 ,    "W"  =>  297 ,    "SW" =>  298   }
     locationText = "HouseFile/House/Components/Wall"
     largestWallArea = 0.0
     idWall = "0"

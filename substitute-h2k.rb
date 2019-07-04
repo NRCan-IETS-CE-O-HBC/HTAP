@@ -242,6 +242,7 @@ costEstimates = Hash.new
 
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
+$gRulesetSpecs = Hash.new
 
 $HDDs = ""
 
@@ -3208,8 +3209,8 @@ def processFile(h2kElements)
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
 
-              (1..4).each do |winOrient|
-                if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
+            
+                if (frontOrientation == "S" || frontOrientation == "N" || frontOrientation == "W" || frontOrientation == "E")
                   newWinHeight[1] = equalWinSide
                   newWinHeight[3] = equalWinSide
                   newWinHeight[5] = equalWinSide
@@ -3229,7 +3230,7 @@ def processFile(h2kElements)
                   newWinWidth[8] = equalWinSide
                 end
 
-              end
+             
 
             elsif value == "PROPORTIONAL"
               #TBA
@@ -3244,7 +3245,7 @@ def processFile(h2kElements)
             # Obtain window codes
             h2kElements.each(locationTextWin) do |window|
               winOrient = window.elements["FacingDirection"].attributes["code"].to_i
-              tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+              tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f * window.attributes["number"].to_i
               if tempAreaWin[winOrient] > maxAreaWin[winOrient]
                 winCode[winOrient] = window.elements["Construction"].elements["Type"].attributes["idref"]
                 maxAreaWin[winOrient] = tempAreaWin[winOrient]
@@ -5869,6 +5870,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
           $HouseStoreys = H2KFile.getStoreys(elements)
+			 $HouseFrontOrientation = H2KFile.getFrontOrientation(elements)
 
           locationText = "HouseFile/House/Components/Ceiling"
           areaCeiling_temp = 0.0
@@ -7096,6 +7098,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             conditionString = ""
             $ruleSetSpecs.each do | cond, value |
               conditionString = "; #{cond}=#{value}"
+              $gRulesetSpecs["#{cond}"] = "#{value}"
             end
 
             stream_out("\n\n Applying Ruleset #{ruleSet}#{conditionString}:\n")
@@ -7431,6 +7434,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "House-Builder"       =>  "#{$BuilderName}",
             "House-Type"          =>  "#{$HouseType}",
             "House-Storeys"       =>  "#{$HouseStoreys}",
+			    	"Front-Orientation"   =>  "#{$HouseFrontOrientation}",
             "Weather-Locale"      =>  "#{$Locale_model}",
             "Base-Region"         =>  "#{$gBaseRegion}",
             "Base-Locale"         =>  "#{$gBaseLocale}",
@@ -7483,7 +7487,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             results[$aliasLongInput] = { "Run-Region" =>  "#{$gRunRegion}",
             "Run-Locale" =>  "#{$gRunLocale}",
             "House-Upgraded"   =>  "#{houseUpgraded}",
-            "House-ListOfUpgrades" => "#{houseUpgradeList}"
+            "House-ListOfUpgrades" => "#{houseUpgradeList}",
+            "Ruleset-Fuel-Source" => "#{$gRulesetSpecs["fuel"]}",
+            "Ruleset-Ventilation" => "#{$gRulesetSpecs["vent"]}"
           }
           $gChoices.sort.to_h
           for attribute in $gChoices.keys()
@@ -7607,6 +7613,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $fSUMMARY.write( "#{$aliasArch}.House-Builder     =  #{$BuilderName}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Type        =  #{$HouseType}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )
+		  $fSUMMARY.write( "#{$aliasArch}.Front-Orientation =  #{$HouseFrontOrientation}\n")
         $fSUMMARY.write( "#{$aliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Locale       =  #{$gBaseLocale}\n" )

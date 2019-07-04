@@ -156,7 +156,7 @@ $ProvArr = [ "BRITISH COLUMBIA",
              "NOVA SCOTIA",
              "PRINCE EDWARD ISLAND",
              "NEWFOUNDLAND AND LABRADOR",
-             "YUKON TERRITORY",
+             "YUKON",
              "NORTHWEST TERRITORY",
              "NUNAVUT",
              "OTHER" ]
