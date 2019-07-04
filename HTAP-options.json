@@ -9165,6 +9165,30 @@
           }
         }
       },
+	  "condensing-gas-furnace": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "96",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+       "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+            "ducting:central_forced_air"
+          ]
+        }
+      },
       "boiler-electric": {
         "h2kMap": {
           "base": {
@@ -9204,13 +9228,13 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-SysType1": "Furnace",
-            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
             "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
-            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1EffVal": "96",
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "true"
           }
