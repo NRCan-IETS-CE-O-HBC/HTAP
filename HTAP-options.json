@@ -9204,7 +9204,7 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-SysType1": "Furnace",
-            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
             "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
@@ -9228,7 +9228,7 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-SysType1": "Furnace",
-            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-SysType2": "AirConditioning",
             "Opt-H2K-Type1Fuel": "2",
             "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
