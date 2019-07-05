@@ -1286,6 +1286,21 @@
           }
         }
       },
+		"ACH_OBC": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "3.0",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "3",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
       "ACH_7": {
         "h2kMap": {
           "base": {
@@ -3222,6 +3237,20 @@
           ]
         }
       },
+		"OBC-door": {
+        "h2kMap": {
+          "base": {
+            "<Opt-R-value>": "3.97"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "NBC-zone4-door": {
         "h2kMap": {
           "base": {
@@ -3982,6 +4011,21 @@
           ]
         }
       },
+		"OBC_CathCeiling_RSI4.87": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "27.65"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+             "insulation:r27_batt"
+          ]
+        }
+      },
       "NBC_CathCeiling_RSI4.67": {
         "h2kMap": {
           "base": {
@@ -4081,6 +4125,21 @@
           },
           "components": [
 
+          ]
+        }
+      },
+		"OBC_FlatCeiling_RSI4.87": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "27.65"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+             "insulation:r27_batt"
           ]
         }
       },
@@ -6411,6 +6470,16 @@
           ]
         }
       },
+		"OBC_RSI3.35_int": {
+        "h2kMap": {
+          "base": {
+            "FloorHeaderIntIns_Eff_RValue": "19"
+          }
+        },
+        "costs": {
+          "proxy": "NC_R-18eff_5.5inBatt"
+        }
+      },
       "NBC_RSI2.78_int": {
         "h2kMap": {
           "base": {
@@ -6715,6 +6784,18 @@
             "insulation:eps_type_2:rigid:38mm",
             "fasteners_for_1in_thick_exterior_insulation"
           ]
+        }
+      },
+		"OBC_3.67RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "20.84"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "WoodFrame+intEpsEffR20"
         }
       },
       "NBC_936_1.99RSI": {
@@ -7111,6 +7192,18 @@
             "insulation:xps_type_4:rigid:51mm",
             "insulation:xps_type_4:rigid:38mm"
           ]
+        }
+      },
+		"OBC_1.76RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "9.99"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2inEffR10"
         }
       },
       "NBC_936_1.96RSI": {
@@ -8961,6 +9054,20 @@
           ]
         }
       },
+		"OBC_5.25RSI": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "29.81"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:r31_batt"
+          ]
+        }
+      },
       "NBC_936_4.67RSI": {
         "h2kMap": {
           "base": {
@@ -9674,6 +9781,29 @@
           ]
         }
       },
+		"OBC-gas-furnace-EF96": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "96",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "furnace:96%_afue_ecm_motor:30_mbtuh_input:8.75_kw_max_output",
+            "ducting:central_forced_air"
+        }
+      },
       "NBC-gas-furnace": {
         "h2kMap": {
           "base": {
@@ -10178,6 +10308,28 @@
           ]
         }
       },
+		"OBC_HRV": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "true",
+            "OPT-H2K-AirDistType": "1",
+            "OPT-H2K-OpSched": "480",
+            "OPT-FlowCalc": "1",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "75",
+            "OPT-H2K-Rating2": "55",
+            "OPT-H2K-Rating3": "0",
+            "OPT-H2K-FanPowerCalc": "NBC",
+            "OPT-H2K-FanPower1": "NA",
+            "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "HRV_sre_78"
+        }
+      },
       "NBC_HRV": {
         "h2kMap": {
           "base": {
@@ -10450,6 +10602,23 @@
           "components": [
 
           ]
+        }
+      },
+		"OBC-HotWater_gas": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "190.0",
+            "Opt-H2K-EF": "0.70",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "proxy": "gas_storagetank_w/powervent_ef0.67",
+          "custom-costs": {
+          }
         }
       },
       "NBC-HotWater_gas": {

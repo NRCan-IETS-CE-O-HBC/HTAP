@@ -5,6 +5,30 @@
   		"Opt-CasementWindows": "NC-3g-LG-u1.14"
   	}
   },
+  "OBC-17":{
+  		"Opt-ACH":                            "ACH_OBC",
+		"Opt-Baseloads":                      "ERS-Single-regular-19.5kWh&190_per_day",
+		"Opt-ResultHouseCode":                "General",
+		"Opt-Temperatures":                   "NBC_Temps",
+		"Opt-WindowDistribution":             "Proposed-9.36",
+		"Opt-GenericWall_1Layer_definitions": "NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb",
+		"Opt-FloorHeaderIntIns":              "OBC_RSI3.35_int",
+		"Opt-AtticCeilings":                  "CeilR60",
+		"Opt-CathCeilings":                   "OBC_CathCeiling_RSI4.87",
+		"Opt-FlatCeilings":                   "OBC_FlatCeiling_RSI4.87",
+		"Opt-ExposedFloor":                   "OBC_5.25RSI",
+  		"Opt-CasementWindows":                "NC-2g-MG-u1.65",
+		"Opt-Doors":                          "OBC-door",
+		"Opt-DoorWindows":                    "NBC-zone6-Doorwindow",
+		"Opt-FoundationWallIntIns":           "OBC_3.67RSI",
+		"Opt-FoundationWallExtIns":           "NBC_936_uninsulated_EffR0",
+		"Opt-FoundationSlabBelowGrade":       "NBC_936_1.96RSI",
+		"Opt-FoundationSlabOnGrade":          "OBC_1.76RSI",
+		"Opt-HVACSystem":                     "OBC-gas-furnace-EF96",
+		"Opt-DHWSystem":                      "OBC-HotWater_gas",
+		"Opt-HRVonly":                        "OBC_HRV"
+  	}
+  },
   "rulesets":{
 
   }
