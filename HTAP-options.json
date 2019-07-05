@@ -9802,6 +9802,7 @@
           "components": [
             "furnace:96%_afue_ecm_motor:30_mbtuh_input:8.75_kw_max_output",
             "ducting:central_forced_air"
+			 ]
         }
       },
       "NBC-gas-furnace": {

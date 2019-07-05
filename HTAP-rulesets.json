@@ -3,8 +3,7 @@
   	"test-a":{
   		"Opt-ACH": "New-Const-air_seal_to_1.00_ach",
   		"Opt-CasementWindows": "NC-3g-LG-u1.14"
-  	}
-  },
+   },
   "OBC-17":{
   		"Opt-ACH":                            "ACH_OBC",
 		"Opt-Baseloads":                      "ERS-Single-regular-19.5kWh&190_per_day",
