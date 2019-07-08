@@ -470,6 +470,33 @@ module H2KFile
 
   end
 
+  def H2KFile.getBuildingType(elements)
+
+    myBuildingType = elements["HouseFile/House/Specifications"].attributes["buildingType"]
+    if myBuildingType !=nil
+      myBuildingType.gsub!(/\s*/, '')    # Removes mid-line white space
+      myBuildingType.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+    end
+
+
+
+    return myBuildingType
+
+  end
+
+  def H2KFile.getMURBUnits(elements)
+
+
+    if (! elements["HouseFile/House/Specifications/NumberOf"].nil?)
+      myMURBUnits = elements["HouseFile/House/Specifications/NumberOf"].attributes["dwellingUnits"].to_i
+    end
+
+
+
+    return myMURBUnits
+
+  end
+
   def H2KFile.getStoreys(elements)
 
     myHouseStoreysInt = elements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_i
@@ -1305,8 +1332,10 @@ module H2KFile
 
     myH2KHouseInfo["house-description"] = Hash.new
     myH2KHouseInfo["house-description"]["stories"] = H2KFile.getStoreys(elements)
+    myH2KHouseInfo["house-description"]["buildingType"] = H2KFile.getBuildingType(elements)
     myH2KHouseInfo["house-description"]["type"] = H2KFile.getHouseType(elements)
-	 myH2KHouseInfo["house-description"]["frontOrient"] = H2KFile.getFrontOrientation(elements) 
+	  myH2KHouseInfo["house-description"]["frontOrient"] = H2KFile.getFrontOrientation(elements)
+    myH2KHouseInfo["house-description"]["MURBUnits"] = H2KFile.getMURBUnits(elements)
 
     # Dimensions
     myH2KHouseInfo["dimensions"] = Hash.new
