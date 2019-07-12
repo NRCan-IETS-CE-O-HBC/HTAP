@@ -1483,11 +1483,9 @@
           }
         },
         "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
+           "proxy": "New-Const-air_seal_to_2.50_ach",
+		   "custom-costs": {
+          }
         }
       },
       "ACH_1_75": {
@@ -1568,11 +1566,9 @@
           }
         },
         "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
+           "proxy": "New-Const-air_seal_to_1.00_ach",
+		   "custom-costs": {
+          }
         }
       },
       "ACH_0_1": {
@@ -9873,7 +9869,8 @@
           "custom-costs": {
           },
           "components": [
-
+            "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
+            "ducting:central_forced_air"
           ]
         }
       }
@@ -10434,7 +10431,7 @@
           "custom-costs": {
           },
           "components": [
-
+           "dhw_heater:gas_fuelled:on-demand:ef_0.94"
           ]
         }
       },
@@ -10472,7 +10469,7 @@
           "custom-costs": {
           },
           "components": [
-
+             "dhw_heat_pump_water_heater:50_gal:ef_2.35"
           ]
         }
       },
