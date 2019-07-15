@@ -180,6 +180,8 @@ $DoNotValidateOptions = Set.new [  "upgrade-package-list" ]
 
 CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-AtticCeilings",
+						   "Opt-FlatCeilings",
+						   "Opt-CathCeilings",
                            "Opt-ACH",
                            "Opt-CasementWindows",
                            "Opt-DWHRSystem",
@@ -192,7 +194,7 @@ CostingSupport = Set.new [ "Opt-Ceilings",
                            "Opt-FoundationSlabBelowGrade",
                            "Opt-FoundationSlabOnGrade",
                            "Opt-FloorHeaderIntIns",
-								           "Opt-ExposedFloor"
+						   "Opt-ExposedFloor"
                          ]
 
 AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
