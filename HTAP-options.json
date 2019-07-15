@@ -1466,11 +1466,9 @@
           }
         },
         "costs": {
+		  "proxy": "New-Const-air_seal_to_2.50_ach",
           "custom-costs": {
-          },
-          "components": [
-
-          ]
+          }
         }
       },
       "ACH_2_0": {
@@ -3974,7 +3972,7 @@
           "custom-costs": {
           },
           "components": [
-
+              "insulation:r40_dense-pack_cellulose"
           ]
         }
       },
@@ -4076,7 +4074,7 @@
           "custom-costs": {
           },
           "components": [
-
+              "insulation:r40_dense-pack_cellulose"
           ]
         }
       },
