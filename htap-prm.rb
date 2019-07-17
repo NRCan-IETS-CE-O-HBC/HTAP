@@ -162,6 +162,17 @@ def parse_def_file(filepath)
           end
 
 
+          if ( $RunParamsOpen && $token_values[0] =~ /substitute-file/i )
+            # Where is our options file located?
+
+            $gSubstitutePath = $token_values[1]
+
+            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n"
+
+
+          end
+
+
          if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
             # Where is our options file located?
 
@@ -1063,7 +1074,7 @@ def run_these_cases(current_task_files)
             $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb"
             $FailedRunCount = $FailedRunCount + 1
 
-            $RunResults["run-#{thread3}"]["status"]["success"] = "false"
+            $RunResults["run-#{thread3}"]["status"]["success"] = false
             #if ( $RunResults["run-#{thread3}"]["status"]["errors"].nil? ) then
             #  $RunResults["run-#{thread3}"]["status"]["errors"] = Array.new
             #end
@@ -1078,7 +1089,7 @@ def run_these_cases(current_task_files)
         end
 
         # Save files from runs that failed, or possibly all runs.
-        if ( $gSaveAllRuns || $runFailed )
+        if ( $gSaveAllRuns || $runFailed || ! $RunResults["run-#{thread3}"]["status"]["success"])
           Dir.chdir($gMasterPath)
           if ( ! Dir.exist?($SaveDirs[thread3]) )
 

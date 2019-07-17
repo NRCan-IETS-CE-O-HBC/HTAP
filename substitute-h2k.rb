@@ -2050,7 +2050,15 @@ def processFile(h2kElements)
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-HVACSystem/ )
 
-          if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
+       myHVACChoice = $gChoices["Opt-HVACSystem"]
+			 if myHVACChoice != "NA"
+            locationText = "HouseFile/House/HeatingCooling"
+            if (! h2kElements[locationText].elements["SupplementaryHeatingSystems"].nil?)
+              h2kElements[locationText].delete_element("SupplementaryHeatingSystems")
+            end
+       end
+
+			 if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
             locationText = "HouseFile/House/HeatingCooling/Type1"
 
 
