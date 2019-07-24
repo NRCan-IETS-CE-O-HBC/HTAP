@@ -1432,7 +1432,7 @@ module H2KOutput
   def H2KOutput.parse_BrowseRpt(myBrowseRptFile)
 
 
-    myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new }
+    myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new, "annual" => Hash.new }
     fBrowseRpt = File.new(myBrowseRptFile, "r")
 
 
@@ -1440,7 +1440,8 @@ module H2KOutput
     flagSHPerf = false 
     flagSRPerf = false 
     flagBLPerf = false 
-    flagEPPerf = false 
+    flagEPPerf = false
+    flagWTPref = false
 
     while !fBrowseRpt.eof? do
       line = fBrowseRpt.readline
@@ -1526,6 +1527,73 @@ module H2KOutput
       end 
 
 
+      # ==============================================================
+      # Weather file section
+      if ( line =~ /s\*\*\* Weather File Listing \*\*\*/)
+        myBrowseData["annual"]["weather"] = {"Annual_HDD_18C"   => nil,
+                                             "Avg_Deep_Ground_Temp_C" => nil
+        }
+
+        myBrowseData["annual"]["design_Temp"] = {"heating_C"   => nil,
+                                                 "cooling_dry_bulb_C" => nil,
+                                                 "cooling_wet_bulb_C" => nil
+
+        }
+
+        myBrowseData["monthly"]["weather"] = {"dry_bulb_C" => Hash.new,
+                                              "wet_bulb_C" => Hash.new,
+                                              "amplitude_C" => Hash.new,
+                                              "st_dev_C" => Hash.new,
+                                              "wind_speed_km/hr" => Hash.new
+        }
+
+
+        flagWTPerf = true
+      end
+
+      if ( flagWTPerf )
+
+        words = line.split(/\s+/)
+
+        if ( words[0] == "Annual" && words[1] != "Heating" )
+          flagWTPerf = false
+        else
+
+          words = line.split(/\s+/)
+
+
+           if ( line =~ /^Annual Heating Degree Days \(18 C\)/i ) then
+            myBrowseData["annual"]["weather"]["Annual_HDD_18C"] = words[7].to_f
+            flagWTPerf = true
+           end
+
+           if ( line =~ /Average Deep Ground Temperature \(C\)/i ) then
+             myBrowseData["annual"]["weather"]["Avg_Deep_Ground_Temp_C"] = words[6].to_f
+           end
+
+          if ( line =~ /Design Heating Temperature \(C\)/i ) then
+            myBrowseData["annual"]["design_Temp"]["heating_C"] = words[5].to_f
+          end
+
+          if ( line =~ /Design Cooling Dry Bulb Temp. \(C\)/i ) then
+            myBrowseData["annual"]["design_Temp"]["cooling_dry_bulb_C"] = words[7].to_f
+          end
+
+          if ( line =~ /Design Cooling Wet Bulb Temp. \(C\)/i ) then
+            myBrowseData["annual"]["design_Temp"]["cooling_wet_bulb_C"] = words[7].to_f
+          end
+
+
+          if (MonthArrListAbbr.include?("#{words[0]}".downcase) )
+            month = monthLong(words[0].downcase)
+            myBrowseData["monthly"]["weather"]["dry_bulb_C"][month] = words[1].to_f
+            myBrowseData["monthly"]["weather"]["wet_bulb_C"][month] = words[2].to_f
+            myBrowseData["monthly"]["weather"]["amplitude_C"][month] = words[3].to_f
+            myBrowseData["monthly"]["weather"]["st_dev_C"][month] = words[4].to_f
+            myBrowseData["monthly"]["weather"]["wind_speed_km/hr"][month] = words[5].to_f
+          end
+        end
+      end
 
 
 
@@ -1533,7 +1601,12 @@ module H2KOutput
       # Solar Radiation section 
       if ( line =~ /\*\*\* Solar Radiation \(MJ\/m2\/day\) \*\*\*/ )
         myBrowseData["monthly"]["solar_radiation"] = {"global_horizontal_MJ/M2/day" => Hash.new, 
-                                                      "diffuse_horizontal_MJ/M2/day" => Hash.new
+                                                      "diffuse_horizontal_MJ/M2/day" => Hash.new,
+                                                      "vertical_surface_South_MJ/M2/day" => Hash.new,
+                                                      "vertical_surface_SE/SW_MJ/M2/day" => Hash.new,
+                                                      "vertical_surface_East/West_MJ/M2/day" => Hash.new,
+                                                      "vertical_surface_NE/NW_MJ/M2/day" => Hash.new,
+                                                      "vertical_surface_North_MJ/M2/day" => Hash.new
                                                        }        
         flagSRPerf = true 
       end 
@@ -1555,6 +1628,11 @@ module H2KOutput
             month = monthLong(words[0].downcase)
             myBrowseData["monthly"]["solar_radiation"]["global_horizontal_MJ/M2/day"][month] = words[1].to_f
             myBrowseData["monthly"]["solar_radiation"]["diffuse_horizontal_MJ/M2/day"][month] = words[2].to_f
+            myBrowseData["monthly"]["solar_radiation"]["vertical_surface_South_MJ/M2/day"][month] = words[3].to_f
+            myBrowseData["monthly"]["solar_radiation"]["vertical_surface_SE/SW_MJ/M2/day"][month] = words[4].to_f
+            myBrowseData["monthly"]["solar_radiation"]["vertical_surface_East/West_MJ/M2/day"][month] = words[5].to_f
+            myBrowseData["monthly"]["solar_radiation"]["vertical_surface_NE/NW_MJ/M2/day"][month] = words[6].to_f
+            myBrowseData["monthly"]["solar_radiation"]["vertical_surface_North_MJ/M2/day"][month] = words[7].to_f
 
           end 
    

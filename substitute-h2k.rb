@@ -5562,7 +5562,8 @@ def postprocess( scaleData )
 
 
     #Append monthly result sets             
-    
+
+    $gResults[houseCode]["annual"] = dataFromBrowse["annual"]
     $gResults[houseCode]["daily"] = dataFromBrowse["daily"]
     $gResults[houseCode]["monthly"] = dataFromBrowse["monthly"]
 
