@@ -2070,6 +2070,9 @@ def processFile(h2kElements)
             else
               # System type 2 is already set to this value -- do nothing!
             end
+            # Set Cooling season: May to October
+            h2kElements["HouseFile/House/HeatingCooling/CoolingSeason/Start"].attributes["code"] = 5
+            h2kElements["HouseFile/House/HeatingCooling/CoolingSeason/End"].attributes["code"] = 10
 
           elsif ( tag =~ /Opt-H2K-Type1Fuel/ &&  value != "NA" )
             # Apply to all Type 1 systems except Baseboards, which are electric by definition!

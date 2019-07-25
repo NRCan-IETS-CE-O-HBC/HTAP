@@ -1442,6 +1442,7 @@ module H2KOutput
     flagBLPerf = false 
     flagEPPerf = false
     flagWTPref = false
+    flagENPref = false
 
     while !fBrowseRpt.eof? do
       line = fBrowseRpt.readline
@@ -1524,8 +1525,51 @@ module H2KOutput
    
         end 
 
-      end 
+      end
 
+      # ==============================================================
+      # HVAC/DHW/Appliance energy consumption section
+      if ( line =~ /\*\*\* MONTHLY ESTIMATED ENERGY CONSUMPTION BY DEVICE \( MJ \) \*\*\*/)
+        myBrowseData["monthly"]["energy"] = {"space_heating_primary_GJ" => Hash.new,
+                                             "space_heating_secondary_GJ" => Hash.new,
+                                             "DHW_heating_primary_GJ" => Hash.new,
+                                             "DHW_heating_secondary_GJ" => Hash.new,
+                                             "lights_appliances_GJ" => Hash.new,
+                                             "HRV_fans_GJ" => Hash.new,
+                                             "air_conditioner_GJ" => Hash.new
+        }
+
+        flagENPerf = true
+      end
+
+      if ( flagENPerf )
+
+        if ( line =~ /^Total/i )
+          flagENPerf = false
+        else
+
+
+
+          debug_out ("#{line}\n")
+
+          words = line.split(/\s+/)
+
+          if (MonthArrListAbbr.include?("#{words[0]}".downcase) )
+
+            month = monthLong(words[0].downcase)
+            myBrowseData["monthly"]["energy"]["space_heating_primary_GJ"][month] = words[1].to_f/1000
+            myBrowseData["monthly"]["energy"]["space_heating_secondary_GJ"][month] = words[2].to_f/1000
+            myBrowseData["monthly"]["energy"]["DHW_heating_primary_GJ"][month] = words[3].to_f/1000
+            myBrowseData["monthly"]["energy"]["DHW_heating_secondary_GJ"][month] = words[4].to_f/1000
+            myBrowseData["monthly"]["energy"]["lights_appliances_GJ"][month] = words[5].to_f/1000
+            myBrowseData["monthly"]["energy"]["HRV_fans_GJ"][month] = words[6].to_f/1000
+            myBrowseData["monthly"]["energy"]["air_conditioner_GJ"][month] = words[7].to_f/1000
+
+          end
+
+        end
+
+      end
 
       # ==============================================================
       # Weather file section
