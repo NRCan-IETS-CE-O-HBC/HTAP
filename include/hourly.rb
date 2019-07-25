@@ -126,6 +126,70 @@ module Hourly
      # htap_dhw[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["dhwGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
     end
 
+
+    hourly_conduction_losses=Array.new
+    hourly_solar_gains=Array.new
+    hourly_internal_gains=Array.new
+    hourly_total_heating=Array.new
+    hourly_electrical_demand=Array.new
+    hourly_dhw_demand=Array.new
+    #calculate hourly load profiles
+    for i in 0..8759
+      hourly_conduction_losses[i]=htap_conduction_losses[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
+      hourly_solar_gains[i]=htap_solar_gains[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]])
+      hourly_internal_gains[i]=htap_internal_gains[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
+      hourly_total_heating[i]=hourly_conduction_losses[i]-hourly_solar_gains[i]-hourly_internal_gains[i]
+      #hourly_electrical_demand[i]=htap_elec[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
+      #hourly_dhw_demand[i]=htap_dhw[month[i]-1].to_f*norm_dhw[time[i]-1].to_f
+    end
+
+
+    hourly_monthly_tot_heat=Hash.new
+    hourly_monthly_pos_heat=Hash.new
+    hourly_heat_ratio=Hash.new
+    for i in months
+      hourly_monthly_tot_heat[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).sum
+      hourly_monthly_pos_heat[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
+      hourly_heat_ratio[i]=hourly_monthly_tot_heat[i]/hourly_monthly_pos_heat[i]
+    end
+
+    hourly_total_heating_hash=Hash.new
+    for i in months
+      hourly_total_heating_hash[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).map{|n| [n*hourly_heat_ratio[i],0].max}
+    end
+    hourly_total_heating_mod=Array.new
+    for i in months
+      hourly_total_heating_mod=[hourly_total_heating_mod,hourly_total_heating_hash[i]].reduce([], :concat)
+    end
+
+
+
+    #output to csv
+    #Add headers to arrays
+    time.unshift("hour")
+    day.unshift("day")
+    month.unshift("month")
+    indoor_temp.unshift("Indoor Temperature - heating mode (degC)")
+    hourly_conduction_losses.unshift("Envelope Losses (W)")
+    hourly_solar_gains.unshift("Solar Gains (W)")
+    hourly_internal_gains.unshift("Internal Gains (W)")
+    hourly_total_heating_mod.unshift("Total Heating Load (W)")
+    db_temperature.unshift("Ambient Temperature (degC)")
+    rh.unshift("Ambient RH (%)")
+    #hourly_mains_temp.unshift("Mains Water Temperature (degC)")
+    #hourly_dhw_demand.unshift("DHW demand (W)")
+    #hourly_electrical_demand.unshift("Electrical Demand (W)")
+
+
+
+    printarray=[month,day,time,indoor_temp,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,db_temperature,rh].transpose
+
+    CSV.open("output.csv", "w") do |f|
+      printarray.each do |x|
+        f << x
+      end
+    end
+
     return
 
   end
