@@ -142,8 +142,15 @@ $PermafrostHash =  {
             "CORALHARBOUR" => "continuous",
             "HALLBEACH"    => "continuous"
             }
+$epwRemoteServer = "https://energyplus.net/weather-download/north_and_central_america_wmo_region_4/CAN/"
+
+$epwLocaleHash =  {
+    "CALGARY" => "AB/CAN_AB_Calgary.718770_CWEC/CAN_AB_Calgary.718770_CWEC.epw",
+    "EDMONTON"  => "AB/CAN_AB_Edmonton.711230_CWEC/CAN_AB_Edmonton.711230_CWEC.epw",
+    "GREENWOOD" => "NS/CAN_NS_Greenwood.713970_CWEC/CAN_NS_Greenwood.713970_CWEC.epw"
 
 
+}
 
 #Index of provinces, used by HOT2000 for region
 $ProvArr = [ "BRITISH COLUMBIA",

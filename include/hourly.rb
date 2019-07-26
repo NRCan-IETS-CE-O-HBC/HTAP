@@ -35,6 +35,8 @@ module Hourly
 
     #this requires csv class
     require 'csv'
+    require 'open-uri'
+    require_relative 'constants'
 
     db_temperature=Array.new
     month=Array.new
@@ -43,8 +45,11 @@ module Hourly
     time=Array.new
     day=Array.new
 
+
+    epwFile = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
+
     #reads epw to epq_array and removes the first 8 rows (drop(8))
-    epw_array = CSV.read("CAN_AB_EDMONTON-INTL-A_3012216_CWEC.epw").drop(8)
+    epw_array = CSV.read(epwFile).drop(8)
 
     for i in 0..8759
       month[i]=epw_array[i][1].to_i
@@ -184,7 +189,7 @@ module Hourly
 
     printarray=[month,day,time,indoor_temp,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,db_temperature,rh].transpose
 
-    CSV.open("output.csv", "w") do |f|
+    CSV.open("#{$gMasterPath}\\hourly_calculation_results.csv", "w") do |f|
       printarray.each do |x|
         f << x
       end
