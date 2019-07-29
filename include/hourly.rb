@@ -47,7 +47,7 @@ module Hourly
 
     epwFile = $epwLocaleHash["#{$gRunLocale}"].split('/')[2]
 
-    if (! "C:/HTAP/weatherfiles/#{epwFile}".nil?)
+    if (File.file?("C:\/HTAP\/weatherfiles\/#{epwFile}"))
       epwFilePath = "C:\/HTAP\/weatherfiles\/#{epwFile}"
     else
       epwFilePath = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
