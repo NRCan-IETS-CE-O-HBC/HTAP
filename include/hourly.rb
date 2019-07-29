@@ -45,11 +45,16 @@ module Hourly
     time=Array.new
     day=Array.new
 
+    epwFile = $epwLocaleHash["#{$gRunLocale}"].split('/')[2]
 
-    epwFile = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
+    if (! "C:/HTAP/weatherfiles/#{epwFile}".nil?)
+      epwFilePath = "C:\/HTAP\/weatherfiles\/#{epwFile}"
+    else
+      epwFilePath = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
+    end
 
     #reads epw to epq_array and removes the first 8 rows (drop(8))
-    epw_array = CSV.read(epwFile).drop(8)
+    epw_array = CSV.read(epwFilePath).drop(8)
 
     for i in 0..8759
       month[i]=epw_array[i][1].to_i
