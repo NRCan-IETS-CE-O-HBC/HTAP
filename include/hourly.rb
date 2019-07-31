@@ -160,7 +160,7 @@ module Hourly
     for i in months
       hourly_monthly_tot_heat[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).sum
       hourly_monthly_pos_heat[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
-      hourly_heat_ratio[i]=hourly_monthly_tot_heat[i]/hourly_monthly_pos_heat[i]
+      hourly_heat_ratio[i]=hourly_monthly_tot_heat[i].to_f/(hourly_monthly_pos_heat[i].to_f+0.00000000001)
     end
 
     hourly_total_heating_hash=Hash.new
