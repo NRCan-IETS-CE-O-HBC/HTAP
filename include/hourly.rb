@@ -125,7 +125,7 @@ module Hourly
     end
 
     #calculate mains temp at each hour
-    hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],h2kBinResults["monthly"]["weather"]["amplitude_C"],months,months_number)
+    hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],months,months_number)
 
     htap_conduction_losses=Array.new
     htap_solar_gains=Array.new
@@ -317,19 +317,7 @@ def temp_schedule(schedule,time)
 
 end
 
-def mains_temp(average_temp_month,annual_hdd,deep_ground_temp,air_temp_amplitude,months,months_number)
-
-
- # method found in literature (E+)
- # dt=(average_temp_month.values.max-average_temp_month.values.min)*(9.0/5.0)
- # average_year_temp=(average_temp_month.values.average)*(9.0/5.0)+32.0
- # hourly_mains_temp=Array.new
- # for i in 0..8759
-
-    #day_of_year=(i+1)/24.0
-
- #   hourly_mains_temp[i]=((average_year_temp+6)+(0.4+0.01*(average_year_temp-44))*(dt/2)*Math.sin((0.986*((day_of_year)-15-(35-1*(average_year_temp-44)))-90).to_radians)-32.0)*5.0/9.0
- # end
+def mains_temp(average_temp_month,annual_hdd,deep_ground_temp,months,months_number)
 
 
   #Method in HOT2000 as per Patrice Pinel email (he looked in code)
@@ -341,13 +329,21 @@ def mains_temp(average_temp_month,annual_hdd,deep_ground_temp,air_temp_amplitude
     iofs = 8.0
   end
 
-  monthly_mains_temp=Array.new
-  hourly_mains_temp=Array.new
-  dt=(average_temp_month.values.max-average_temp_month.values.min)
 
+  hourly_mains_temp=Array.new
+
+
+
+  ca1=0.0
+  ca2=0.0
+  for i in months
+    x0=average_temp_month[i]
+    ca1=ca1+x0*Math.sin((months_number.key(i)-0.5)*Math::PI/6.0)
+    ca2=ca2+x0*Math.cos((months_number.key(i)-0.5)*Math::PI/6.0)
+  end
+  dt=-Math.sqrt(ca1**2.0+ca2**2.0)/6.0 #ambient air annual amplitude - Not sure how this works, but that's what is done in H2K - so.. consistency
   amplitude=dt+0.00197*annual_hdd-7.8747
   mod_amplitude=(0.2+[0,[0.6,0.04*(deep_ground_temp-5.0)].min].max)*(amplitude.abs)
-
   for i in 0..8759
     hourly_mains_temp[i]=[4.3,deep_ground_temp+3+mod_amplitude*(Math.sin(Math::PI/6*((i/(24.0*365.0))*12.0+0.5+iofs)))].max
     #(i/(24*365))*12+0.5 converts hours of year i to months, where month 1 is roughly day 15, month 2 is roughly day 45
