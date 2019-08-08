@@ -124,8 +124,9 @@ module Hourly
       average_indoor_temp_month.merge!({i=>indoor_temp.slice(start_of_month_hour[i],hours_per_month[i]).average})
     end
 
-    #calculate mains temp at each hour
-    hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],months,months_number)
+
+
+
 
     htap_conduction_losses=Array.new
     htap_solar_gains=Array.new
@@ -139,7 +140,30 @@ module Hourly
       htap_internal_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["internal_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_cooling[months_number.key(i)-1]=h2kBinResults["monthly"]["cooling"]["total_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
      # htap_elec[months_number.key(i)-1]=(h2kBinResults["monthly"]["energy_profile"]["lights_appliancesGJ"][i].to_f*1000000000.0+h2kBinResults["monthly"]["energy_profile"]["hrv_fansGJ"][i].to_f*1000000000.0+h2kBinResults["monthly"]["energy_profile"]["acGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
-     # htap_dhw[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["dhwGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
+     htap_dhw[months_number.key(i)-1]=h2kBinResults["monthly"]["energy"]["DHW_heating_primary_GJ"][i].to_f
+    end
+
+
+    #calculate mains temp at each hour
+    hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],months,months_number)
+    #Need values for Daily Hot Water Consumption, seasonal efficiency- Ask Rasoul or Alex to pass values
+    daily_DHW_consumption=193.6
+    seasonal_efficiency_dhw=0.667
+    calc_hourly_DHW_heat_water=Array.new
+    for i in 0..8759
+      calc_hourly_DHW_heat_water[i]=daily_DHW_consumption*norm_dhw[time[i]-1]*4187*(55.0-hourly_mains_temp[i])/(24.0*3600.0)
+      calc_hourly_DHW_heat_water[i]=(3.0*(60.0-hourly_mains_temp[i])/(55.0-hourly_mains_temp[i])+1.0)*0.25*calc_hourly_DHW_heat_water[i] #weird H2K thing to account that seasonal efficiency is calculated at 60C and there are primary and secondary systems with 3:1 split of heat.
+    end
+
+    monthly_dhw_water_heat=Array.new
+    monthly_dhw_losses=Array.new
+    monthly_dhw_losses_W=Array.new
+    monthly_dhw_ratio=Array.new
+    for i in months
+      monthly_dhw_water_heat[months_number.key(i)-1]=calc_hourly_DHW_heat_water.slice(start_of_month_hour[i],hours_per_month[i]).sum*3600.0/(1.0E9) #in GJ, heat going to water, no losses
+      monthly_dhw_losses[months_number.key(i)-1]=htap_dhw[months_number.key(i)-1]*seasonal_efficiency_dhw-monthly_dhw_water_heat[months_number.key(i)-1] #in GJ, dhw losses, monthly
+      monthly_dhw_losses_W[months_number.key(i)-1]=monthly_dhw_losses[months_number.key(i)-1]*(1.0E9)/(hours_per_month[i]*3600.0)
+      #monthly_dhw_ratio[months_number.key(i)-1]=monthly_dhw_losses[months_number.key(i)-1]/monthly_dhw_water_heat[months_number.key(i)-1]
     end
 
     #cooling internal gains
