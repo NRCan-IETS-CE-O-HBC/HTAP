@@ -162,6 +162,17 @@ def parse_def_file(filepath)
           end
 
 
+          if ( $RunParamsOpen && $token_values[0] =~ /substitute-file/i )
+            # Where is our options file located?
+
+            $gSubstitutePath = $token_values[1]
+
+            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n"
+
+
+          end
+
+
          if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
             # Where is our options file located?
 
@@ -799,6 +810,7 @@ def run_these_cases(current_task_files)
             subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile}"
           end
 
+
           if ( ! $gRulesetsFile.empty? ) then 
             subRulesetsFlag = "--rulesets #{$gRulesetsFile}"
           end 
@@ -817,6 +829,7 @@ def run_these_cases(current_task_files)
           # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
           $cmdtxt.write "#{cmdscript} -v"
+
           $cmdtxt.close
 
           #debug_out(" ( cmd: #{cmdscript} |  \n")
@@ -966,7 +979,7 @@ def run_these_cases(current_task_files)
                ! thisRunResults["cost-estimates"]["audit"].nil? and 
                ! $gTest_params["audit-costs"] 
             ) then 
-          
+
             thisRunResults["cost-estimates"]["audit"] = nil 
           end 
 
@@ -1063,7 +1076,7 @@ def run_these_cases(current_task_files)
             $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb"
             $FailedRunCount = $FailedRunCount + 1
 
-            $RunResults["run-#{thread3}"]["status"]["success"] = "false"
+            $RunResults["run-#{thread3}"]["status"]["success"] = false
             #if ( $RunResults["run-#{thread3}"]["status"]["errors"].nil? ) then
             #  $RunResults["run-#{thread3}"]["status"]["errors"] = Array.new
             #end
@@ -1078,7 +1091,7 @@ def run_these_cases(current_task_files)
         end
 
         # Save files from runs that failed, or possibly all runs.
-        if ( $gSaveAllRuns || $runFailed )
+        if ( $gSaveAllRuns || $runFailed || ! $RunResults["run-#{thread3}"]["status"]["success"])
           Dir.chdir($gMasterPath)
           if ( ! Dir.exist?($SaveDirs[thread3]) )
 
@@ -1145,7 +1158,6 @@ def run_these_cases(current_task_files)
         if ( ! $gTest_params["audit-costs"] ) then 
           thisRunHash["cost-estimates"]["audit"] = nil 
         end 
-
 
         # Pick up hot2000 version number for this run, and
         begin 
@@ -1379,8 +1391,10 @@ end
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
+
 $gOptionsFile = ""
 $gRulesetsFile = ""
+
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
@@ -1461,9 +1475,11 @@ optparse = OptionParser.new do |opts|
       $gJSONize = true
    end
 
+
    opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
                                          "output. Slows HTAP down, and make json output unwieldy on",
                                          "large runs.") do
+
       $cmdlineopts["audit_data"] = true
       $gTest_params["audit-costs"] = true
    end

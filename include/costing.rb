@@ -729,8 +729,14 @@ module Costing
 
               if ( units == "ea" || units =="undefined"  )
 
-                measure = 1.0
-                measureDescription = "ea.   - Total component installation cost"
+                if ( myH2KHouseInfo["house-description"]["buildingType"] =~ /Multi-unit/)
+                  measure = myH2KHouseInfo["house-description"]["MURBUnits"]
+                  measureDescription = "ea.   - Total component installation cost"
+                else
+                  measure = 1.0
+                  measureDescription = "ea.   - Total component installation cost"
+                end
+
               elsif ( units == "sf heated floor area")
                 measure =  ( myH2KHouseInfo["dimensions"]["heatedFloorArea"] ) * SF_PER_SM
                 measureDescription = "sq.ft - Heated floor area from HOT2000 file"
