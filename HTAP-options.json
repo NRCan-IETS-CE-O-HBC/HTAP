@@ -1994,7 +1994,7 @@
       "NC-3g-LG-u0.85": {
         "costs": {
           "components": [
-            
+            "window:low-gain:u-value_0.8"
           ],
           "custom-costs": {
           }
