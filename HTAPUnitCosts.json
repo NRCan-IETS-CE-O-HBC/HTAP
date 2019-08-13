@@ -4113,6 +4113,30 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+	"window:high-gain:u-value_0.8": {
+      "LEEP": {
+        "category": "WINDOWS",
+        "description": "Window, Passive House Triple, HG, low-e, argon, insulated spacers",
+        "units": "sf applied",
+        "UnitCostMaterials": 42.13,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP Builders Costs Spreadsheet"
+      }
+    },
+	"window:low-gain:u-value_0.8": {
+      "LEEP": {
+        "category": "WINDOWS",
+        "description": "Window, Passive House Triple, LG, low-e, argon, insulated spacers",
+        "units": "sf applied",
+        "UnitCostMaterials": 44.12,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP Builders Costs Spreadsheet"
+      }
+    },	
     "window:shgc_0.46:u-value_1.36": {
       "MiscNRCanEstimates2019": {
         "category": "WINDOWS",

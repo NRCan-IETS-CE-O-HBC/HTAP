@@ -581,6 +581,26 @@ module Costing
               end
 
               # ........................................................................
+			when "Opt-FlatCeilings"
+
+              if ( units == "sf attic" || units == "sf applied" || units =="undefined" )
+                measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"] * SF_PER_SM
+                measureDescription = "sq.ft - Ceiling area, flat"
+              else
+                costsOK = false
+              end
+
+              # ........................................................................
+			when "Opt-CathCeilings"
+
+              if ( units == "sf attic" || units == "sf applied" || units =="undefined" )
+                measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"] * SF_PER_SM
+                measureDescription = "sq.ft - Ceiling area, cathedral"
+              else
+                costsOK = false
+              end
+
+              # ........................................................................
             when "Opt-GenericWall_1Layer_definitions"
 
               # Exterior board insulation: goes over header
@@ -869,7 +889,9 @@ module Costing
       myCosts["byAttribute"]["Opt-FoundationSlabOnGrade"] +
       myCosts["byAttribute"]["Opt-Ceilings"] +
       myCosts["byAttribute"]["Opt-AtticCeilings"]+
-		myCosts["byAttribute"]["Opt-ExposedFloor"]
+	  myCosts["byAttribute"]["Opt-FlatCeilings"]+
+	  myCosts["byAttribute"]["Opt-CathCeilings"]+
+	  myCosts["byAttribute"]["Opt-ExposedFloor"]
 
     myCosts["byBuildingComponent"]["mechanical"] =
       myCosts["byAttribute"]["Opt-HRVonly"] +

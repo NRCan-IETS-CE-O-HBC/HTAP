@@ -826,6 +826,7 @@ def run_these_cases(current_task_files)
          # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
           $cmdtxt.write "#{cmdscript} -v"
+
           $cmdtxt.close
 
           # disable debugging in live version for faster runs 
