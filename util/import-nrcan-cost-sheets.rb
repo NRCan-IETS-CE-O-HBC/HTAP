@@ -49,6 +49,8 @@ sheets = {
 
 
 
+
+
 sheets.keys.each do | set |
 
   file    = sheets[set]["filename"]
@@ -64,7 +66,7 @@ sheets.keys.each do | set |
 
   filepath = "'#{sheetPath}\\#{file}'"
 
-  cmd = "..\\coax-cost-data.rb"
+  cmd = ".\\coax-cost-data.rb"
   cmd += " --import #{filepath}"
   cmd += " --source '#{source}'"
   cmd += " --date '#{date}'"
