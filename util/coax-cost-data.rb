@@ -180,6 +180,7 @@ $ValidCatagories = { "oldLeep" => [   "AIR TIGHTNESS",
                                       "MICRO-COMBINED HEAT AND POWER TECHNOLOGY (ME06)",
                                       "INTEGRATED MECHANICAL SYSTEMS (ME16)",
                                       "CENTRALIZED ZONED FORCED AIR SYSTEMS (ME27)",
+                                      "AIR SOURCE HEAT PUMP",
                                       "ELECTRIC RESISTANCE BASEBOARDS",
 
 
@@ -365,7 +366,7 @@ $EncodeErrors = Hash.new
 
 $linecount = 0
 while !fInput.eof? do
-
+   
    $MyDescription = "";
    $MyUnits = "" ;
    $MyMaterialsUnitCost = nil;
