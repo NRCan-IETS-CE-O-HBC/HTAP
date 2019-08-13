@@ -790,7 +790,7 @@ def run_these_cases(current_task_files)
 
 
           # Possibly call another script to modify the .h2k and .choice files
-
+          # Perhaps these are depeciated? 
           case $Ruleset
           when /936_2015_AW_HRV/
             subcall = "perl C:\\HTAP\\NRC-scripts\\apply936-AW.pl #{$H2kFile} #{$LocalChoiceFile}  #{$LocalOptionsFile} #{$Location} 1 "
@@ -821,22 +821,21 @@ def run_these_cases(current_task_files)
                            "-b #{$H2kFile} "+
                            "#{subRulesetsFlag} "+
                            "#{subCostFlag} "+ 
-                           "--no-debug "+
                            "--prm "+
                            "#{$gExtendedOutputFlag} "
-                           
-
-          # Save command for invoking substitute [ useful in debugging ]
+         # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
           $cmdtxt.write "#{cmdscript} -v"
-
           $cmdtxt.close
 
-          #debug_out(" ( cmd: #{cmdscript} |  \n")
-
-
-          pid = Process.spawn( cmdscript, :err => "substitute-h2k-errors.txt" )
-          #pid = Process.spawn( cmdscript, :out => "substitute-h2k-errors.txt", :err => [:child, :out] )
+          # disable debugging in live version for faster runs 
+          # (debugging still enabled in run-cmd.ps1)
+          pid = Process.spawn( 
+            "#{cmdscript} --no-debug", 
+            :err => "substitute-h2k-errors.txt" 
+          )
+          
+          
 
 
 
@@ -1023,7 +1022,9 @@ def run_these_cases(current_task_files)
           lineCount = 0
 
           tokenResults = Hash.new
-
+          
+          # handling for old files. 
+          begin
           contents.each do |line|
             lineCount = lineCount + 1
             line_clean = line.gsub(/ /, '')
@@ -1052,6 +1053,9 @@ def run_these_cases(current_task_files)
 
           end
           contents.close
+          rescue 
+            tokenResults["status.success"] = "false"
+          end 
 
           if tokenResults["status.success"] =~ /false/ then
             $runFailed = true
@@ -1103,7 +1107,7 @@ def run_these_cases(current_task_files)
 
           end
 
-          FileUtils.mv( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
+          FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
           FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
         end
 
