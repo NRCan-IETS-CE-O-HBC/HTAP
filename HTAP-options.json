@@ -3992,6 +3992,22 @@
           ]
         }
       },
+      "CeilR60": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
+          }
+        },
+        "costs": {
+          "components": [
+            "r60:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+	  
       "CeilR40": {
         "h2kMap": {
           "base": {
@@ -4122,6 +4138,21 @@
           "components": [
               "insulation:r40_dense-pack_cellulose"
           ]
+        }
+      },
+      "CeilR60": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
+          }
+        },
+        "costs": {
+          "components": [
+            "r60:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
         }
       },
       "CeilR100": {
