@@ -3977,7 +3977,22 @@
           }
         }
       },
-	    "UsrSpecR40": {
+	  "CeilR70": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "70"
+          }
+        },
+        "costs": {
+          "components": [
+            "r70:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+	  "UsrSpecR40": {
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
@@ -4120,6 +4135,21 @@
         "costs": {
           "components": [
             "r80:cost_including_materials:labour:mark-up_and_taxes"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+	  "CeilR70": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "70"
+          }
+        },
+        "costs": {
+          "components": [
+            "r70:cost_including_materials:labour:mark-up_and_taxes"
           ],
           "custom-costs": {
           }
