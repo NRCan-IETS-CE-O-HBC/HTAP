@@ -13,8 +13,12 @@ require_relative '../include/msgs'
 require_relative '../include/constants'
 require_relative '../include/HTAPUtils'
 
+$program = "coax-cost-data.rb"
+
+HTAPInit()
+
  
-convertedDates = Hash.new
+$convertedDates = Hash.new
 
 $gDebugOutput = String.new
 
@@ -48,7 +52,7 @@ def get_unicode(char)
       return pos.to_s(16) if chr == char
     end
   rescue 
-    debug_on 
+    #debug_on 
     debug_out "Could not locate unicode equivlent for >#{char}<\n"
     return ""
   end 
@@ -57,7 +61,8 @@ end
 # Function that attempts to intrepret dates from a sting.
 # TODO: Normalize the date into a standard format
 def FindDateInString(string)
-
+    #debug_on
+    debug_out " searching for date in #{string}\n"
     $FoundDate = "#{string}"
     $Convertable = true
     if ( string =~ /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[^ ]*( |-)+2[0-9][0-9][0-9]/i ) then
@@ -90,11 +95,11 @@ def FindDateInString(string)
 
     if ( $Convertable ) then
 
-      if ( convertedDates[$FoundDate].nil? || convertedDates[$FoundDate].empty? ) then
-        convertedDates[$FoundDate] = Array.new
+      if ( $convertedDates[$FoundDate].nil? || $convertedDates[$FoundDate].empty? ) then
+        $convertedDates[$FoundDate] = Array.new
       end
 
-      convertedDates[$FoundDate].push string
+      $convertedDates[$FoundDate].push string
 
     end
 
@@ -102,65 +107,45 @@ def FindDateInString(string)
 
 end
 
-def parseHTAPSchemaLine(line)
-  debug_on
-  unitCostRecord = {"parsedOK" => false, "data" => Hash.new }
-  debug_out "passed line: #{line}\n"
-  cols = CSV.parse(line)
-  debug_out "Columns: #{cols.pretty_inspect}\n"
 
-  
-  unitCostRecord["data"] = { "category"           => (cols[0][1]), 
-                             "description"        => (cols[0][2]),
-                             "units"              => (cols[0][3]),
-                             "UnitCostMaterials"  => (cols[0][4]),
-                             "UnitCostLabour"     => (cols[0][5])
-  }
-    
-
-  
-
-  if ( emptyOrNilRecursive(unitCostRecord["data"] ) ) then 
-    unitCostRecord["parsedOK"]= false
-    # (actally defaulted to this value above...)
-  else 
-    unitCostRecord["data"].each do | key, value |
-      value = cleanString(value)
-    end 
-    unitCostRecord["data"]["UnitCostNote"] = cleanString(cols[0][6])
-    unitCostRecord["parsedOK"]= true
-  end
-
-  debug_out ("Unit cost record: #{unitCostRecord.pretty_inspect}\n")
-  return unitCostRecord
-end 
-
-def createKeyword(description)
-  keyword = "#{description}".downcase
-  keyword.gsub!(/ /,"_")
-  keyword.gsub!(/ /,"_")
-  keyword.gsub!(/_-_/,":")
-  keyword.gsub!(/,/,":")
-  keyword.gsub!(/:_/,":")
-  keyword.gsub!(/:_/,":")
-  keyword.gsub!(/__/,"_")
-  keyword.gsub!(/_$/,"")
-  keyword.gsub!(/_:/,":")
-  keyword.gsub!(/\(.+\)/,"")
-  return keyword
-end 
-
-
+# removes problematic spaces, standardizes degrees C/F 
 def cleanString(string)
+   
    return string if (! string.is_a?(String))
    return string if (emptyOrNil(string))
-   string.gsub!(/\(.*\)/,"")
+   string.gsub!(/ +$/,"")
+   #string.gsub!(/\(.*\)/,"")
    string.gsub!(/^\s+/,"")
    string.gsub!(/\s+$/,"")
+   string.gsub!(/\"/,"in")
+   string.gsub!(/([0-9]+o)c/,"\1C")
+   string.gsub!(/([0-9]+o)f/,"\1F")
+   string.gsub!(/o\.c$/, "o.c.")
    return string 
 end 
 
+# copes with common mispellings in leep sheets
+def fixMisspellings(string)
+  return string if (! string.is_a?(String))
+  return string if (emptyOrNil(string))
+  string.gsub!(/agregated/i,"aggregated")
+  string.gsub!(/maintain/i,"maintain")
+  string.gsub!(/drillin /i,"drilling ")
+  string.gsub!(/fmineral/i,"mineral")
+  return string
+end 
 
+# renames various unit alises with standard equivlents
+def standardizeUnits(string)
+  return string if (! string.is_a?(String))
+  return string if (emptyOrNil(string))
+  string.gsub!(/\s+$/,"")
+  string.gsub!(/^ea /,"ea")
+  string.gsub!(/sq\.ft\. floor/, "sf heated floor area")
+  return string 
+end 
+
+# Replaces spaces with another character (default: '-')
 def replaceSpaces(string, replacement="-")
    return string if (! string.is_a?(String))
    return string if (emptyOrNil(string))
@@ -168,24 +153,124 @@ def replaceSpaces(string, replacement="-")
    return string 
 end 
 
-
-
-
+# Converts string to lower case and deletes whitespace
 def lowerCaseNoWhitespace(string ) 
    # version for comparison
    return "#{string}".downcase.gsub(/\s/,"")
 end 
 
+# Placeholder for operations on comments / notes 
+def fixNotes(string)
+  return string   
+end 
+
+# Parse according to new HTAP format.
+def parseHTAPSchemaLine(line)
+
+  unitCostRecord = {"parsedOK" => false, "data" => Hash.new }
+  debug_out "passed line: #{line}\n"
+  cols = CSV.parse(line)
+  debug_out "Columns: #{cols.pretty_inspect}\n"
+
+  
+  unitCostRecord["data"] = { "category"           => cleanString((cols[0][1])), 
+                             "description"        => fixMisspellings( cleanString((cols[0][2])) ),
+                             "units"              => standardizeUnits( cleanString((cols[0][3])) ),
+                             "UnitCostMaterials"  => cleanString("#{(cols[0][4])}").delete(",").to_f,
+                             "UnitCostLabour"     => cleanString("#{(cols[0][5])}").delete(",").to_f,
+  }
+
+  if ( emptyOrNilRecursive(unitCostRecord["data"] ) ) then 
+    unitCostRecord["parsedOK"]= false
+    # (actally defaulted to this value above...)
+  else 
+    unitCostRecord["data"]["note"] = fixNotes( fixMisspellings( cleanString("#{cols[0][6]}") ) )
+    unitCostRecord["parsedOK"]= true
+  end
+
+  debug_out ("Unit cost record: #{unitCostRecord.pretty_inspect}\n")
+  return unitCostRecord
+end 
+
+# Parse according to old LEEP sheet format 
+def parseOldLEEPSchemaLine(line,category)
 
 
+  debug_out ("Passed Category: #{category}")
+  debug_out ("passed line: #{line}\n" )
+
+
+  unitCostRecord = {"parsedOK" => false, "data" => Hash.new }
+
+  cols = CSV.parse(line)
+  debug_out "Columns: #{cols.pretty_inspect}\n"
+
+
+  
+  unitCostRecord["data"] = { "category"           => cleanString( category.gsub(/\(.*\)/,"") ), 
+                             "description"        => fixMisspellings( cleanString("#{(cols[0][0])}") ),
+                             "units"              => standardizeUnits( cleanString((cols[0][2])) ),
+                             "UnitCostMaterials"  => cleanString("#{(cols[0][3])}").delete(",").to_f,
+                             "UnitCostLabour"     => cleanString("#{(cols[0][6])}").delete(",").to_f,
+  }
+
+  if ( emptyOrNilRecursive(unitCostRecord["data"] ) ) then 
+    unitCostRecord["parsedOK"]= false
+    # (actally defaulted to this value above...)
+  else 
+    unitCostRecord["data"]["note"] = fixNotes( fixMisspellings( cleanString("#{cols[0][10]}") ) )
+    unitCostRecord["parsedOK"]= true
+  end
+
+  debug_out ("Unit cost record: #{unitCostRecord.pretty_inspect}\n")
+  return unitCostRecord                             
+
+end 
+
+# Converts description into concise (but still readable) keyword
+def createKeyword(description)
+
+  return description if ( ! description.is_a?(String) )
+  return description if (emptyOrNil(description) ) 
+  keyword = "#{description}".downcase
+  
+  keyword.gsub!(/\(.+\)/,"")
+  keyword.gsub!(/ *$/, "")
+  keyword.gsub!(/ /,"_")
+
+  keyword.gsub!(/_-_/,":")
+  keyword.gsub!(/,/,":")
+  keyword.gsub!(/:_/,":")
+  keyword.gsub!(/_:/,":")
+  keyword.gsub!(/__/,"_")
+  keyword.gsub!(/_:/,":")
+  keyword.gsub!(/:_/,":")  
+  keyword.gsub!(/_$/,"")
+  #keyword.gsub!(/a/,"@")
+  return keyword
+  
+end 
+
+def minimalCat(string)
+  return string if (! string.is_a?(String))
+  return string if (emptyOrNil(string))
+  stest = "#{string}"
+  stest.downcase!
+  stest.gsub!(/\(.*\)/,"")
+  stest.gsub!(/\s*/,"")
+  return stest
+
+end 
+
+stream_out(drawRuler("A script for importing unit-cost-data into HTAP-friendly formats."))
 
 
 $DBFileName = "HTAPUnitCosts.json"
-
+validCatagories = Array.new
 
 $costFiles = Array.new
 
-validCatagories = Array.new [   "AIR TIGHTNESS",
+rawCatagories = Array.new [   "AIR TIGHTNESS",
                                "FRAMING",
                                "DRYWALL",
                                "SHEATHING",
@@ -241,21 +326,21 @@ validCatagories = Array.new [   "AIR TIGHTNESS",
                                "ELECTRIC RESISTANCE BASEBOARDS",
                               ]
 
-validCatagories.each do |catagory|
-  catagory.downcase!.gsub!(/\s*/,"").gsub!(/\(.*\)/,"")
+rawCatagories.each do |category|
+  #catagory.downcase!.gsub!(/\(.*\)/,"").gsub!(/\s*/,"")
+  validCatagories.push( minimalCat(category) )
 end 
 
 
 # text that can be safely ignored.
 knownBadCatagories = ["UNIT COSTS",
                       "GENERAL",
-                                      "Base case house with sub-optimal orientation",
-                                      "Upgraded house with optimal orientation",
-                                      "LAST ROW",
-                                      "CHANGE LOG AREA",
-                                      "Last edited by"
-                                     ]
-
+                      "Base case house with sub-optimal orientation",
+                      "Upgraded house with optimal orientation",
+                      "LAST ROW",
+                      "CHANGE LOG AREA",
+                      "Last edited by"
+]
 
 ## Handle all functional keywords in lower case
 #validCatagories.keys.each do |src|
@@ -317,6 +402,10 @@ optparse = OptionParser.new do |opts|
 
    end
 
+   opts.on("--hints", "Provide helpful hints for intrepreting output, if available") do
+     $gHelp = true
+   end
+
 
    opts.on("-d", "--debug [FILE.txt] ",
            "Print debugging messages to screen, or if ",
@@ -336,13 +425,6 @@ optparse = OptionParser.new do |opts|
 end
 
 optparse.parse!
-
-stream_out $ruler
-stream_out $header
-stream_out $ruler
-
-
-
 
 
 $linecount = 0
@@ -365,28 +447,35 @@ stream_out(" -> Preparing to parse cost database - #{$DBFileName}...")
 begin
   fDB = File.new($DBFileName, "r")
 rescue
-
+  
 end
+
 if fDB == nil then
    stream_out(" (File not found. Will be created.)\n")
    parsedDBCostData = { "sources" => Hash.new,
                         "data"    => Hash.new }
+   info_out("Costing database #{$DBFileName} was not found; new file created. ")
 else
 
    dbcontents = fDB.read
    parsedDBCostData = JSON.parse(dbcontents)
    fDB.close
+   info_out("Costing database #{$DBFileName} opened successfully; data will be appended.")
    stream_out("done.\n")
 end
 
 
-stream_out(" -> Parsing unit cost input file #{$file}...")
-
+stream_out(" -> Parsing unit cost input file #{$file}: line # 0\r")
+begin
 fInput = File.new($file, "r")
-if fInput== nil then
-   stream_out("\n\nFatal error: Could not read #{$file}.\n")
-   exit
-end
+rescue
+  if fInput== nil then
+    fatalerror("\n\nFatal error: Could not read #{$file}.\n")
+  end
+end 
+
+info_out("Cost data sheet #{$file} successfully opened.")
+
 
 encodings = Hash.new
 
@@ -395,9 +484,10 @@ importedCostData = { "sources" => Hash.new,
 
 encodeErrors = Hash.new
 
-debug_on
+
 
 linecount = 0
+parsedlines = 0 
 
 metadata = { "name"    => "unknown",
              "schema"   => "oldLeep",
@@ -417,7 +507,7 @@ while !fInput.eof? do
   linecount += 1
   
   debug_out " . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n"
-  
+  stream_out(" -> Parsing unit cost input file #{$file}: line #{linecount} \r")
   line.strip! 
   line.gsub!(/""/,"in")
 
@@ -480,58 +570,97 @@ while !fInput.eof? do
      
 
    if (recodeLine =~ /^meta,/ ) then 
-
+    #debug_on
     metaCols = Array.new
     metaCols = CSV.parse(recodeLine)
     debug_out "Parsing meta tag:   #{metaCols[0][1]} = #{metaCols[0][2]} \n"
     metadata[cleanString(metaCols[0][1])] = cleanString(metaCols[0][2])
-
+    debug_off
    else 
     # line is data. 
 
     if ( metadata["schema"] == "htap" )
       next if ( recodeLine !~ /^data/ ) 
-
-      debug_out ("Parsing with htap schema!\n")      
+      #debug_on
+      debug_out ("Parsing htap schema!\n")      
       costData = parseHTAPSchemaLine(recodeLine)
       debug_out ("Cost data returned: #{costData.pretty_inspect}\n")
       debug_out (" is category |#{costData["data"]["category"]}| valid ?\n")
-      if ( validCatagories.include?( lowerCaseNoWhitespace(costData["data"]["category"] ) ) &&  costData["parsedOK"] ) 
+      if ( validCatagories.include?( minimalCat(costData["data"]["category"] ) ) &&  costData["parsedOK"] ) 
         lineHasData = true 
       else 
-        $parsedOK = false 
-        warn_out "Unsupported catagory: #{costData["data"]["category"]}\n"
-        pp costData
+        tempCategory = "#{costData["data"]["category"]}".gsub(/Last edited by.*$/,"Last edited by ...")
+        if ( emptyOrNil(ignoredCatagories[tempCategory] ) ) then
+          ignoredCatagories[tempCategory] = { "count"=>0, "lines" =>""}
+        end 
+        ignoredCatagories[tempCategory]["count"] += 1
+        ignoredCatagories[tempCategory]["lines"] += "#{linecount}, "
+
       end 
-      
+      debug_off
 
     elsif  ( metadata["schema"].downcase == "oldleep" )
+      #debug_on
       debug_out ("Parsing old leep schema!\n")
-      tempCols = CSV.parse(recodeLine.gsub(/\"/,""))
+      tempCols = CSV.parse(recodeLine)
       firstCol = tempCols[0][0]
       thirdCol = tempCols[0][2]
       debug_out (" ... 1: #{firstCol}\n ... 3: #{thirdCol}\n")
 
       if ( ! emptyOrNil(firstCol) && emptyOrNil(thirdCol)  ) then 
+        tempCategory = firstCol 
+        #debug_on 
 
-        tempCatagory = firstCol 
+        if ( validCatagories.include?( minimalCat(tempCategory) ) ) then 
+           #debug_on 
+           debug_out ("Line: #{linecount}: #{recodeLine}\n")
+           debug_out "    parsing old leep catagory... 1: #{firstCol}\n ... 3: #{thirdCol}\n"
+           debug_off 
+        else
+           
+          tempCategory.gsub!(/Last edited by.*$/,"Last edited by ...")
+          if ( emptyOrNil(ignoredCatagories[tempCategory] ) ) then
+            ignoredCatagories[tempCategory] = { "count"=>0, "lines" =>""}
+          end 
+          ignoredCatagories[tempCategory]["count"] += 1
+          ignoredCatagories[tempCategory]["lines"] += "#{linecount}, "
+          
+          #debug_on 
+          debug_out ("Line: #{linecount}: #{recodeLine}\n")
+          debug_out ("CATAGORY - Line: #{linecount}: #{recodeLine}\n")
+          debug_out ("     Ignoring catagory #{minimalCat(tempCategory)} \n ")
+          debug_off
+        end 
+        
 
-      elsif (validCatagories.include?(lowerCaseNoWhitespace(tempCatagory) ) &&
-            ! knownBadCatagories.include?(lowerCaseNoWhitespace(tempCatagory) ) ) then 
-          debug_out "parsing line\n"
+      elsif (validCatagories.include?(minimalCat(tempCategory) ) &&
+            ! knownBadCatagories.include?(minimalCat(tempCategory) ) ) then 
+          
+          costData = costData = parseOldLEEPSchemaLine(recodeLine,tempCategory)
+
+          if ( costData["parsedOK"] ) then 
+            lineHasData = true
+            #debug_on 
+            debug_out ("Line: #{linecount}: #{recodeLine}\n")
+            debug_out ("Cost data returned: #{costData.pretty_inspect}\n")
+            debug_off
+          end 
+
       end 
- 
+
+    else 
+      fatalerror ("Unknown cost schema: #{metadata["schema"]}")
 
     end 
 
-
-   end 
+  end 
  
- 
+   # Save good data to importedCostData arrauy
    if ( $parsedOK && lineHasData && costData["parsedOK"] )
      #Saving data 
-     pp metadata
+
      keyword = createKeyword(costData["data"]["description"])
+     
      citation = replaceSpaces(metadata["name"])
      debug_out ">keyword: #{keyword} \n>citation: #{citation}\n"
 
@@ -541,29 +670,36 @@ while !fInput.eof? do
 
      importedCostData["data"][keyword][citation] = costData["data"]
      importedCostData["data"][keyword][citation]["date"] = FindDateInString(costData["data"]["note"])
+     importedCostData["data"][keyword][citation]["source"] = citation
+
+     #debug_on
+     debug_out ("Saved data - KEYWORD /#{keyword}/:\n")
+     debug_out ("  #{importedCostData["data"][keyword].pretty_inspect}\n")
+     debug_off
+     parsedlines += 1
      
-     
-#    {
-#                                                       "category"          => "#{$MyCatagory}",
-#                                                       "description"       => "#{$MyDescription}",
-#                                                       "units"             => "#{$MyUnits}",
-#                                                       "UnitCostMaterials" => $MyMaterialsUnitCost,
-#                                                       "UnitCostLabour"    => $MyLabourUnitCost,
-#                                                       "note"              => "#{$MyNote}",
-#                                                       "date"              => "#{$MyDate}",
-#                                                       "source"            => "#{citation}"
-#                                                     }
-#
+
+
    end 
 
     # lineCols = CSV.parse(recodeLine)
+  
 
-   exit if linecount > 15
+end 
+stream_out(" -> Parsed unit cost input file #{$file}: #{linecount} total lines.     \n")
 
+ignoredCatagories.keys.each do | badCat |
+  badCount = ignoredCatagories[badCat]["count"]
+  badLines = ignoredCatagories[badCat]["lines"]
+  warn_out("Ignored unrecognized catagory: \"#{badCat}\" (#{badCount} instances, at line #'s #{badLines}) \n")
+  help_out("byMsg","importing costs:categories")
 end 
 
 
-citation = replaceSpaces(metadata["origin"])
+info_out ("Imported #{linecount} lines.")
+info_out ("Parsed #{parsedlines} cost records.")
+
+citation = replaceSpaces(metadata["name"])
 
 importedCostData["sources"][citation] = { "filename"      => "#{$file}",
                                           "date_collated"   => "#{metadata["collated"]}" ,
@@ -575,20 +711,21 @@ importedCostData["sources"][citation] = { "filename"      => "#{$file}",
 
 
 
-
+#debug_on
 debug_out "Cost data: #{importedCostData["sources"].pretty_inspect}\n\n"
 debug_out "metadata: #{metadata.pretty_inspect}\n\n"
+debug_off
 
 
 
-
-
+#debug_on
 debug_out $ruler
 debug_out "    MERGING DATA..."
 debug_out $ruler
+debug_off 
 
-exit
 stream_out (" -> Merging imported data with contents of #{$file}...")
+
 
 
 newKeys = 0
@@ -706,7 +843,7 @@ importedCostData["sources"].keys.each do |source|
 end
 
 
-if $gDebug && ! $mergeDiag.empty?  then
+if $gDebug && ! emptyOrNil( $mergeDiag ) then
    if ( ! File.file?('./mergeDiag.csv') ) then
       diagfile = File.open('./mergeDiag.csv', 'w' )
       diagfile.puts "IMSRC, EXSRC, Keyword, unique, impUnits, parsedDBUnits, parsedDBCostMat, impCostMat, parsedDBCostLab,impCostLab\n"
@@ -780,32 +917,32 @@ end
 
 stream_out "done. \n"
 
-if ( ! ignoredCatagories.keys.empty? ) then
+#if ( ! ignoredCatagories.keys.empty? ) then
+#
+#  stream_out (" -> WARNING: The following #{ignoredCatagories.length.to_s} categories were ignored:\n")
+#  ignoredCatagories.keys.sort.each do |cat|
+#    stream_out( "     - \"#{cat}\"\n")
+#    stream_out( "         (lines: ")
+#    ignoredCatagories[cat].sort.each do | line |
+#      stream_out( "#{line}, ")
+#    end
+#    stream_out(")\n")
+#  end
+#
+#
+#end
 
-  stream_out (" -> WARNING: The following #{ignoredCatagories.length.to_s} categories were ignored:\n")
-  ignoredCatagories.keys.sort.each do |cat|
-    stream_out( "     - \"#{cat}\"\n")
-    stream_out( "         (lines: ")
-    ignoredCatagories[cat].sort.each do | line |
-      stream_out( "#{line}, ")
-    end
-    stream_out(")\n")
-  end
 
-
-end
-
-stream_out " -> Results: \n"
-stream_out "    Created #{newKeys.to_s} new records; \n"
-stream_out "    appended data to #{mergedKeys.to_s} records; \n"
-stream_out "    ignored #{inheretedKeys.to_s} records that were inherited.)\n"
+info_out( "Created #{newKeys.to_s} new records in #{$DBFileName}.")
+info_out( "Appended additional cost data to #{mergedKeys.to_s} existing records in #{$DBFileName}")
+info_out( "Logged #{inheretedKeys.to_s} records that were inherited from other sources already in #{$DBFileName}.\n")
 
 
 File.open("./#{$DBFileName}", 'w') do |file|
   file.puts JSON.pretty_generate(parsedDBportCostData)
   file.close
 end
-
+info_out("HTAP cost database #{$DBFileName} successfully saved with updated cost data.")
 
 #File.open('./HTAPUnitCostsLite.json', 'w') do |file|
 #  file.puts JSON.pretty_generate(parsedDBCostData["data"])
@@ -813,616 +950,41 @@ end
 #end
 
 
-if $gDebug then
+
 debug_out "............DatesConv.................."
-debug_out ""
-debug_out ( convertedDates.pretty_inspect )
-
-debug_out ("............Categories Encountered....")
-debug_out ("")
-debug_out ( loggedCatagories.pretty_inspect )
-
-debug_out ("............Categories Ignored....")
-debug_out ("")
-debug_out ( ignoredCatagories.pretty_inspect )
-
-
-debug_out ("............records merged.................")
-debug_out ("")
-debug_out ( mergedRecords.pretty_inspect )
-
-debug_out ("............records inhereted.................")
-debug_out ("")
-debug_out ( inheretedRecords.pretty_inspect )
-
-
-debug_out ("............records created.................")
-debug_out ("")
-debug_out ( newRecords.pretty_inspect )
-
-debug_out ("............Line Encoding...................")
-debug_out ("")
-debug_out ( encodings.pretty_inspect)
-
-debug_out ("............Encoding Changes ...................")
-debug_out ("")
-debug_out ( encodeErrors.pretty_inspect)
-
-
-end
-
-
-
-
-
-
-exit 
-
-while !fInput.eof? do
-  
-   $line = fInput.readline
-   $line.strip! 
-   
-   $line.gsub!(/""/,"in")
-
-   $MyDescription = "";
-   $MyUnits = "" ;
-   $MyMaterialsUnitCost = nil;
-   $MyLabourUnitCost = nil;
-   $MyNote = "";
-
-   $line = fInput.readline
-
-   $orig_encoding = $line.encoding
-
-   $line.strip!              # Removes leading and trailing whitespace
-   $line.gsub!(/""/,"in")
-   $LineCols = Array.new
-
-
-   $parsedOK = true
-
-   $linecount = $linecount + 1
-
-   debug_out " . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n"
-   debug_out " LINE (unrecoded) #{$linecount}: #{$line} "
-
-   begin :parse
-     $orig_encoding = "CP850"
-
-     $recodeLine = "#{$line.encode("UTF-8", $orig_encoding)}"
-     $searchLine = "#{$line}".encode($orig_encoding)
-
-     $stop=false
-
-     $encode_fixed = false
-     $encoding_alias.each do |search, replace|
-     #
-       $recodeLine.gsub!(/#{search}/, replace)
-
-       #$searchNative=search.encode!($orig_encoding,"UTF-8")
-     #  $recodeLine.gsub!(/$searchNative/, replace.encode!($orig_encoding,"UTF-8"))
-     #  $recodeLine.encode("UTF-8")
-     #
-     end
-     
-
-     if ( $searchLine.encode("UTF-8", $orig_encoding) =~ /[^\p{ASCII}]/   ) then
-
-
-       $searchLine.encode!("UTF-8").gsub!(/[\p{ASCII}]/, "".encode!("UTF-8"))
-
-       $cars = get_unicode($searchLine)
-
-       encodeErrors["Line:#{$linecount}"] =  { "encoding"       =>   $orig_encoding,
-                                                "Text"           =>   $recodeLine,
-                                                "bad_char"       =>   $searchLine.encode("UTF-8") ,
-                                                "unicode_cars"   =>   $cars,
-                                               # "fixed?"         =>   $fixed
-                                               }
-
-
-     end
-
-
-
-
-     $LineCols = CSV.parse($recodeLine)
-
-     $codeKey = "#{$orig_encoding}|-to->|#{$recodeLine.encoding}"
-
-     if (! encodings.keys.include? $codeKey ) then
-
-       encodings[$codeKey] = 0
-
-     end
-
-     encodings[$codeKey] = encodings[$codeKey] + 1
-
-   rescue
-     $parsedOK = false
-     next
-   end
-
-
-
-
-
-
-   $LineHasData = false
-
-   case $schema
-
-   when "oldLeep"
-
-      $col1temp = "#{$LineCols[0][0]}"
-      $col3temp = "#{$LineCols[0][2]}"
-
-
-
-      if (  ! $col1temp.gsub(/\s+/,"").empty? ) then
-
-        if (  $col3temp.gsub(/\s+/,"").empty? )  then
-
-          $MyCatagory = "#{$LineCols[0][0]}"
-          # version for writing
-          $MyCatagory.gsub!(/\(.*\)/,"")
-          $MyCatagory.gsub!(/^\s+/,"")
-          $MyCatagory.gsub!(/\s+$/,"")
-
-          # version for comparison
-          $MyCategoryComp = "#{$MyCatagory}".downcase.gsub(/\s/,"")
-
-          debug_out ( "___________________________________________________________\n")
-          debug_out ( " CATAGORY: #{$MyCategory} (#{$MyCategoryComp}) ? #{validCatagories[$schema].include?($MyCategoryComp)} \n" )
-          debug_out ( "    - based on [1] #{$col1temp} [3] #{$col3temp} !\n" )
-
-        else
-
-          $LineHasData = true
-          $MyDescription = "#{$LineCols[0][0]}"
-
-          $MyDescription.gsub!(/\"/,"in")
-          $MyDescription.gsub!(/([0-9]+o)c/,"\1C")
-          $MyDescription.gsub!(/([0-9]+o)f/,"\1F")
-
-
-
-
-          # Hard-coded work-rounds for UTF-16 characters  - need to do this in a more robust way
-          #$MyDescription.gsub!(/\(16.\)/,"(16in)")
-          #$MyDescription.gsub!(/\(24.\)/,"(24in)")
-          #$MyDescription.gsub!(/(0|O).F EWT/i,"0F EWT")
-
-          $MyDescription.gsub!(/o\.c$/, "o.c.")
-
-          $MyKeyword   = "#{$MyDescription.downcase}"
-
-          $MyKeyword.gsub!(/ /,"_")
-          $MyKeyword.gsub!(/ /,"_")
-          $MyKeyword.gsub!(/_-_/,":")
-          $MyKeyword.gsub!(/,/,":")
-          $MyKeyword.gsub!(/:_/,":")
-
-          $MyKeyword.gsub!(/\(.+\)/,"")
-          $MyKeyword.gsub!(/__/,"_")
-          $MyKeyword.gsub!(/_$/,"")
-          $MyKeyword.gsub!(/_:/,":")
-          $MyKeyword.gsub!(/:_/,":")
-
-          $MyUnits             = "#{$LineCols[0][2]}"
-          $MyMaterialsUnitCost = "#{$LineCols[0][3]}".delete(",").to_f
-          $MyLabourUnitCost    = "#{$LineCols[0][6]}".delete(",").to_f
-          $MyNote              = "#{$LineCols[0][10]}"
-
-          $MyUnits.gsub!(/\s+$/,"")
-          $MyUnits.gsub!(/^ea /,"ea")
-          $MyUnits.gsub!(/sq\.ft\. floor/, "sf heated floor area")
-
-                    # known misspellings
-          $MyNote.gsub!(/agregated/i,"aggregated")
-          $MyNote.gsub!(/maintain/i,"maintain")
-          $MyNote.gsub!(/drillin /i,"drilling ")
-          $MyNote.gsub!(/fmineral/i,"mineral")
-
-
-          # Try to extract date from note
-          $MyDate = FindDateInString($MyNote)
-
-
-
-        end
-
-      end
-
-   else
-     # Other schemas to go here.
-   end
-
-
-   # Create a list of catagories that that were encountered for debugging purposes.
-   if ( ! loggedCatagories.include?($MyCatagory) ) then
-        include = validCatagories[$schema].include?($MyCategoryComp)
-        loggedCatagories[$MyCatagory] = include
-   end
-
-
-   # Check to see if current catagory is valid,
-   # and store data in hash
-
-   if ( ! validCatagories[$schema].include?($MyCategoryComp) ) then
-
-     # Check to see if we know that this can be safely ignored.
-     $known = false
-
-     $KnownBadCatagories[$schema].each do |badCat|
-       if ( $MyCategoryComp =~ /#{badCat}/ ) then
-         $known = true
-       end
-     end
-
-     if $MyCategoryComp =~ ( /^\s*$/ ) then
-
-       $known = true
-
-     end
-
-     if ( !$known ) then
-       if ( ! ignoredCatagories.keys.include?($MyCatagory) ) then
-         ignoredCatagories[$MyCatagory] = Array.new
-       end
-       ignoredCatagories[$MyCatagory].push $linecount
-
-     end
-
-   elsif ( $LineHasData && validCatagories[$schema].include?($MyCategoryComp) ) then
-
-      # if so, include it in the list of catagories we encountered.
-
-      if ( ! loggedCatagories.include? $MyCatagory ) then
-
-        loggedCatagories.push $MyCatagory
-
-      end
-
-      # Try to interpret contents.
-
-      importedCostData["data"]["#{$MyKeyword}"] = Hash.new
-      importedCostData["data"]["#{$MyKeyword}"][citation] = {
-                                                        "category"          => "#{$MyCatagory}",
-                                                        "description"       => "#{$MyDescription}",
-                                                        "units"             => "#{$MyUnits}",
-                                                        "UnitCostMaterials" => $MyMaterialsUnitCost,
-                                                        "UnitCostLabour"    => $MyLabourUnitCost,
-                                                        "note"              => "#{$MyNote}",
-                                                        "date"              => "#{$MyDate}",
-                                                        "source"            => "#{citation}"
-                                                      }
-
-
-   end
-
-   if $gDebug then
-
-     debug_out ("col 1>  #{$col1temp}\n")
-     debug_out ("col 3>  #{$col3temp}\n")
-     debug_out "   --> parsed ? #{$parsedOK} \n"
-     if ( $parsedOK ) then
-
-      debug_out "   ---> has data? #{$LineHasData} \n"
-      if ( $LineHasData ) then
-        debug_out "   ----> valid category? #{validCatagories[$schema].include?($MyCategoryComp)} \n"
-
-        if (validCatagories[$schema].include?($MyCategoryComp)) then
-           debug_out "   -----> \"KEYWORD\"           => \"#{$MyKeyword}\"            "
-           debug_out "   -----> \"category\"          => \"#{$MyCatagory}\"          "
-           debug_out "   -----> \"description\"       => \"#{$MyDescription}\"       "
-           debug_out "   -----> \"units\"             => \"#{$MyUnits}\"             "
-           debug_out "   -----> \"UnitCostMaterials\" =>  #{$MyMaterialsUnitCost}    "
-           debug_out "   -----> \"UnitCostLabour\"    =>  #{$MyLabourUnitCost}       "
-           debug_out "   -----> \"note\"              => \"#{$MyNote}\"              "
-           debug_out "   -----> \"date\"              => \"#{$MyDate}\"              "
-           debug_out "   -----> \"source\"            => \"#{citation}\"            "
-
-
-
-
-
-
-
-        end
-
-      end
-     end
-   end
-
-
-end
-stream_out ("done.\n")
-
-importedCostData["sources"][citation] = { "filename"      => "#{$file}",
-                                        "date_collated" => "#{$date}" ,
-                                        "date_imported" => current_time.strftime("%Y-%m-%d %H:%M:%S"),
-                                        "schema_used"   => "#{$schema}",
-                                        "origin"        => "#{$source_description}",
-                                        "inherits"      => Hash.new
-                                  }
-
-
-
-# Next: Merge Imported data with database.
-
-
-debug_out $ruler
-debug_out "    MERGING DATA..."
-debug_out $ruler
-
-
-stream_out (" -> Merging imported data with contents of #{$file}...")
-
-
-newKeys = 0
-mergedKeys =0
-inheretedKeys = 0
-newRecords = Array.new
-mergedRecords = Array.new
-inheretedRecords = Array.new
-
-#Create merged set of data.
 debug_out "\n"
-$mergeDiag = ""
-
-importedCostData["data"].keys.each do |keyword|
-  # Check to see if it exists.
-
-  debug_out $thinruler
-  debug_out " KEYWORD: #{keyword} \n"
-
-  impCostMat = importedCostData["data"][keyword][citation]["UnitCostMaterials"].to_f
-  impCostLab = importedCostData["data"][keyword][citation]["UnitCostLabour"].to_f
-  impUnits   = importedCostData["data"][keyword][citation]["units"].to_s
-
-
-  if ( parsedDBCostData["data"].keys.include? keyword ) then
-    debug_out "  -> exists in existing DB! "
-    # Key appears in both sets. Let's determine if it is substantially different.
-    #  ( Different if a - units are different; b - material costs or labour costs are different; )
-    unique = true
-
-    inheretedSRC = ""
-
-    parsedDBCostData["data"][keyword].keys.each do | source |
-
-      parsedDBCostMat = parsedDBCostData["data"][keyword][source]["UnitCostMaterials"].to_f
-      parsedDBCostLab = parsedDBCostData["data"][keyword][source]["UnitCostLabour"].to_f
-      parsedDBUnits   = parsedDBCostData["data"][keyword][source]["units"].to_s
-
-      matCostSame =  impCostMat.to_f.approx( parsedDBCostMat.to_f )
-      labCostSame =  impCostLab.to_f.approx( parsedDBCostLab.to_f )
-
-      debug_out "    ? UNI .... ex:(#{parsedDBUnits }) | im:(#{impUnits })\n"
-      debug_out "    ? MAT .... ex:(#{parsedDBCostMat.to_s}) | im:( #{impCostMat})       -> pr:(#{matCostSame}) \n"
-      debug_out "    ? LAB .... ex:(#{parsedDBCostLab.to_s}) | im:( #{parsedDBCostLab.to_s})  -> pr:(#{labCostSame}) \n"
-
-
-
-      if ( (  impUnits =~ /#{parsedDBUnits}/ ) && matCostSame && labCostSame ) then
-
-        inheretedSRC = source
-        inheretedRecords.push "#{source}:#{keyword}"
-        unique = false
-        inheretedKeys = inheretedKeys + 1
-
-        if ( importedCostData["sources"][citation]["inherits"][source].nil? ||
-             importedCostData["sources"][citation]["inherits"][source].empty? ) then
-
-          importedCostData["sources"][citation]["inherits"][source] = Array.new
-
-        end
-
-        debug_out ("    = data is the same; must be inhereted. \n")
-
-        importedCostData["sources"][citation]["inherits"][source].push keyword
-
-        if (! $gDebug ) then
-          break
-        end
-
-      end
-
-      $mergeDiag << [citation, source, keyword, unique, impUnits, parsedDBUnits, parsedDBCostMat.to_f, impCostMat.to_f, parsedDBCostLab.to_f,impCostLab.to_f].to_csv
-
-    end
-
-    if ( unique ) then
-
-
-      importedCostData["data"][keyword].keys.each do | source |
-
-        parsedDBCostData["data"][keyword][source] = importedCostData["data"][keyword][source]
-      end
-
-      mergedKeys = mergedKeys + 1
-
-      mergedRecords.push "keyword"
-
-
-    end
-
-
-
-
-
-  else
-
-
-    parsedDBCostData["data"][keyword] = importedCostData["data"][keyword]
-    newKeys = newKeys + 1
-
-    newRecords.push keyword
-
-  end
-end
-
-
-
-# Create merged set of sources
-importedCostData["sources"].keys.each do |source|
-  # Check to see if it exists.
-  if ( parsedDBCostData["sources"].keys.include? source ) then
-    print "\n"
-    print $ruler
-    print " Fatal error: set #{source} already exists in #{$DBFileName} !!!\n"
-    print " (previously imported on #{parsedDBCostData["sources"][source]["date_imported"].to_s}.)\n"
-    print $ruler
-    exit
-  else
-    parsedDBCostData["sources"][source] = importedCostData["sources"][source]
-  end
-end
-
-
-if $gDebug && ! $mergeDiag.empty?  then
-   if ( ! File.file?('./mergeDiag.csv') ) then
-      diagfile = File.open('./mergeDiag.csv', 'w' )
-      diagfile.puts "IMSRC, EXSRC, Keyword, unique, impUnits, parsedDBUnits, parsedDBCostMat, impCostMat, parsedDBCostLab,impCostLab\n"
-   else
-      diagfile = File.open('./mergeDiag.csv', 'a')
-   end
-   diagfile.puts $mergeDiag
-   diagfile.close
-
-end
-
-
-parsedDBportCostData = Hash.new
-parsedDBportCostData = {"sources" => Hash.new,
-                   "data" =>Hash.new }
-
-
-# Append keys to sorted hash
-parsedDBCostData["sources"].keys.sort.each do |source|
-
-  parsedDBportCostData["sources"][source] = parsedDBCostData["sources"][source]
-
-end
-
-
-# Append to export hash, and optionally, flatten to csv.
-
-$flat_output = ""
-flat_header = " keyword, source, units, UnitCostMaterials($), UnitCostLabour($), date, category, description, note \n"
-
-
-
-
-parsedDBCostData["data"].keys.sort.each do |keyword|
-
-  parsedDBportCostData["data"][keyword] = parsedDBCostData["data"][keyword]
-
-  if ( $flatten_to_csv ) then
-
-    parsedDBCostData["data"][keyword].keys.sort.each do |source|
-
-        $flat_output << [ keyword,
-                          source,
-                          parsedDBCostData["data"][keyword][source]["units"],
-                          parsedDBCostData["data"][keyword][source]["UnitCostMaterials"],
-                          parsedDBCostData["data"][keyword][source]["UnitCostLabour"],
-                          parsedDBCostData["data"][keyword][source]["date"],
-                          parsedDBCostData["data"][keyword][source]["category"],
-                          parsedDBCostData["data"][keyword][source]["description"],
-                          parsedDBCostData["data"][keyword][source]["note"]
-                        ].to_csv
-
-    end
-
-  end
-
-end
-
-
-if ( $flatten_to_csv ) then
-
-  csv_outfile = File.open('./HTAPUnitCostsFlattened.csv', 'w')
-  csv_outfile.puts flat_header
-  csv_outfile.puts $flat_output
-  csv_outfile.close
-
-end
-
-
-
-
-stream_out "done. \n"
-
-if ( ! ignoredCatagories.keys.empty? ) then
-
-  stream_out (" -> WARNING: The following #{ignoredCatagories.length.to_s} categories were ignored:\n")
-  ignoredCatagories.keys.sort.each do |cat|
-    stream_out( "     - \"#{cat}\"\n")
-    stream_out( "         (lines: ")
-    ignoredCatagories[cat].sort.each do | line |
-      stream_out( "#{line}, ")
-    end
-    stream_out(")\n")
-  end
-
-
-end
-
-stream_out " -> Results: \n"
-stream_out "    Created #{newKeys.to_s} new records; \n"
-stream_out "    appended data to #{mergedKeys.to_s} records; \n"
-stream_out "    ignored #{inheretedKeys.to_s} records that were inherited.)\n"
-
-
-File.open("./#{$DBFileName}", 'w') do |file|
-  file.puts JSON.pretty_generate(parsedDBportCostData)
-  file.close
-end
-
-
-#File.open('./HTAPUnitCostsLite.json', 'w') do |file|
-#  file.puts JSON.pretty_generate(parsedDBCostData["data"])
-#  file.close
-#end
-
-
-if $gDebug then
-debug_out "............DatesConv.................."
-debug_out ""
-debug_out ( convertedDates.pretty_inspect )
+debug_out ( "#{$convertedDates.pretty_inspect}" )
 
 debug_out ("............Categories Encountered....")
-debug_out ("")
+debug_out ("\n")
 debug_out ( loggedCatagories.pretty_inspect )
 
 debug_out ("............Categories Ignored....")
-debug_out ("")
+debug_out ("\n")
 debug_out ( ignoredCatagories.pretty_inspect )
 
 
 debug_out ("............records merged.................")
-debug_out ("")
+debug_out ("\n")
 debug_out ( mergedRecords.pretty_inspect )
 
 debug_out ("............records inhereted.................")
-debug_out ("")
+debug_out ("\n")
 debug_out ( inheretedRecords.pretty_inspect )
 
 
 debug_out ("............records created.................")
-debug_out ("")
-debug_out ( newRecords.pretty_inspect )
+debug_out ("\n")
+debug_out ( "#{newRecords.pretty_inspect} \n" )
 
 debug_out ("............Line Encoding...................")
-debug_out ("")
+debug_out ("\n")
 debug_out ( encodings.pretty_inspect)
 
 debug_out ("............Encoding Changes ...................")
-debug_out ("")
+debug_out ("\n")
 debug_out ( encodeErrors.pretty_inspect)
+debug_off
 
 
-end
+ ReportMsgs()

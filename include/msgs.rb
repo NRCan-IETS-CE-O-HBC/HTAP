@@ -226,9 +226,8 @@ end
 # =======
 
 
-# =========================================================================================
+
 # Hook enabling debugging from within a routine
-# =========================================================================================
 def debug_on()
   return if ( $gNoDebug )
   callerID = caller_info()
@@ -253,10 +252,9 @@ def debug_off()
   return 0
 end
 
-# =========================================================================================
+
 # Check of debugging is active, and if so, call debug_out_now
 # to write out debugging messages.
-# =========================================================================================
 def debug_out(debmsg)
   return if ( $gNoDebug )
   callerID = caller_info()
@@ -382,7 +380,26 @@ end
 
 def help_out(catagory,topic)
   #require_relative 'helpMsgs'
-  return if (! $gHelp )
+  return if (emptyOrNil(catagory))
+  return if (emptyOrNil(topic))
+  if ( ! emptyOrNil( $gHelpMsgsSent[catagory] ) ) then 
+    return if ( ! emptyOrNil($gHelpMsgsSent[catagory][topic]) )
+  end 
+  $gHelpMsgsSent[catagory] = { topic => true }
+
+
+  if (! $gHelp ) then 
+    if ( ! $gHelpAvailableFlagged )
+      info_out (" Additional help messages are available. Run with --hints to see them.")
+      $gHelpAvailableFlagged = true 
+    end 
+    return
+  end 
+
+  
+  
+  
+
 
   myHelp = Help.new
   myHelpMsg = nil
@@ -400,7 +417,6 @@ def help_out(catagory,topic)
     end
   rescue
      myHelpMsg = nil
-
   end
 
   if ( myHelpMsg.nil? )
@@ -415,7 +431,7 @@ def help_out(catagory,topic)
     warn_out " Broken call to help_out() in #{routine} (#{file}:#{line}) - some developer should fix this! "
   end
   shortMsg = ""
-  myHelpMsg.gsub!(/^/,' ?')
+  myHelpMsg.gsub!(/^/,'    ')
   maxlen = 0
   myHelpMsg.each_line do | helpline |
     maxlen = helpline.length if ( helpline.length > maxlen)
@@ -423,13 +439,13 @@ def help_out(catagory,topic)
   boxlen = [$termWidth - 5, maxlen + 5 ].min
   myHelpMsg.each_line do | helpline |
     helpline.gsub!(/\n/,"")
-    shortMsg += shortenToTerm(helpline,30,"").ljust(boxlen)+"?\n"
+    shortMsg += shortenToTerm(helpline,30,"").ljust(boxlen)+"\n"
   end
-  stream_out "\n\n"
-  stream_out shortenToTerm(drawRuler("Hint - #{topic}",' ?'),$termWidth-boxlen-9,"")
+  stream_out "\n\n" 
+  stream_out shortenToTerm(drawRuler("Hint - #{topic}",'   ?'),$termWidth-boxlen-9,"")
   stream_out shortMsg
-
-  stream_out shortenToTerm(drawRuler(nil,' ?'),$termWidth-boxlen-9,"")
+  stream_out "\n"
+  stream_out shortenToTerm(drawRuler(nil,'   ?'),$termWidth-boxlen-9,"")
   stream_out "\n\n"
 
 

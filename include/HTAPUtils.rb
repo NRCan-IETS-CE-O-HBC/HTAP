@@ -1,9 +1,14 @@
 #!/usr/bin/env ruby
 
 def HTAPInit()
+  
+  #debug_on
   $startProcessTime = Time.now
-
   $gMasterPath = Dir.getwd()
+
+  $gHelp = false
+  $gHelpAvailableFlagged = false 
+  $gHelpMsgsSent = Hash.new 
 
   progShort = $program
   progShort.gsub!(/\.rb/,"")
@@ -12,7 +17,7 @@ def HTAPInit()
   $fLOG, $fSUMMARY = openLogFiles("#{progShort}_log.txt","#{progShort}_summary.out")
   log_out drawRuler("LOG FILE.",nil,80)
   log_out("Run started at #{$startProcessTime}\n")
-
+  debug_out ("done.\n")
   rescue
     fatalerror ("Could not open log files.")
   end
@@ -21,23 +26,53 @@ def HTAPInit()
   $scriptLocation = File.expand_path(File.dirname(__FILE__)+"\\..\\.")
 
   log_out ("#{$program} location: #{$scriptLocation}\n")
-
-  log_out ("Parsing configuration file\n")
+  debug_out ("Parsing configuration file...")
+  log_out ("Parsing HTAP configuration file")
   HTAPConfig.parseConfigData()
+  debug_out ("done.\n")
 
   # Get version information
+  debug_out("Recovering git version info...")
   log_out ("Recovering git version info\n")
   $branch_name, $revision_number = HTAPData.getGitInfo()
   log_out ("#{$program} source: Branch #{$branch_name}, revision #{$revision_number}\n")
+  debug_out ("done.\n")
 
   # Debug git info
   debug_out ("Git versioning: Branch      #{$branch_name}\n")
   debug_out ("Git versioning: Revision \# #{$revision_number}\n")
-
-
-
+ 
 
 end
+
+# Simple routine to test if variables contain null members
+
+def emptyOrNilRecursive(var)
+  return true if emptyOrNil(var)
+  return false if (var.is_a?(String) )
+  if ( var.is_a?(Array) ) then
+    var.each do | member | 
+      return true if (emptyOrNilRecursive(member) )
+    end 
+  end 
+
+  if ( var.is_a?(Hash) ) then
+    var.each do | key, val | 
+      return true if (emptyOrNilRecursive(val) )
+    end 
+  end   
+
+  return false 
+       
+end 
+
+
+def emptyOrNil(var)
+  return true if (var.nil?)
+  return true if (var.is_a?(String) && var.empty? )
+  return false
+  
+end 
 
 module HTAPData
 
