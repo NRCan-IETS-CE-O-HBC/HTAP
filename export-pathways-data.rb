@@ -15,56 +15,57 @@ $program = "export-pathways-data.rb"
 
 jsonSourceFile = nil
 
-GoodArchDataFields = [
+GoodArchFields = [
    "archID",
    "h2k-File",
+   "listOfLocations",
    "house-description:type", 
    "house-description:stories",
    "house-description:buildingType",
-   "house-description:frontOrient",  
-   "house-description:MURBUnits",
-   "locale:region",
-   "locale:weatherLoc",   
-   "dimensions:below-grade:basement:configuration",
-   "dimensions:below-grade:basement:exposed-perimeter",
+#   "house-description:frontOrient",  
+#   "house-description:MURBUnits",
+#   "locale:region",
+#   "locale:weatherLoc",   
+#   "dimensions:below-grade:basement:configuration",
+#   "dimensions:below-grade:basement:exposed-perimeter",
    "dimensions:below-grade:basement:floor-area",
-   "dimensions:below-grade:basement:total-perimeter",
-   "dimensions:below-grade:crawlspace:configuration",
-   "dimensions:below-grade:crawlspace:exposed-perimeter",
-   "dimensions:below-grade:crawlspace:floor-area",
-   "dimensions:below-grade:crawlspace:total-perimeter",
-   "dimensions:below-grade:slab:configuration",
-   "dimensions:below-grade:slab:exposed-perimeter",
-   "dimensions:below-grade:slab:floor-area",
-   "dimensions:below-grade:slab:total-perimeter",
+#   "dimensions:below-grade:basement:total-perimeter",
+  #  "dimensions:below-grade:crawlspace:configuration",
+  #  "dimensions:below-grade:crawlspace:exposed-perimeter",
+  #  "dimensions:below-grade:crawlspace:floor-area",
+  #  "dimensions:below-grade:crawlspace:total-perimeter",
+  #  "dimensions:below-grade:slab:configuration",
+  #  "dimensions:below-grade:slab:exposed-perimeter",
+  #  "dimensions:below-grade:slab:floor-area",
+  #  "dimensions:below-grade:slab:total-perimeter",
    "dimensions:below-grade:walls:below-grade-area:external",
-   "dimensions:below-grade:walls:below-grade-area:internal",
+  #  "dimensions:below-grade:walls:below-grade-area:internal",
    "dimensions:below-grade:walls:total-area:external",
-   "dimensions:below-grade:walls:total-area:internal",
-   "dimensions:ceilings:area:all",
+  #  "dimensions:below-grade:walls:total-area:internal",
+  #  "dimensions:ceilings:area:all",
    "dimensions:ceilings:area:attic",
-   "dimensions:ceilings:area:cathedral",
-   "dimensions:ceilings:area:flat",
-   "dimensions:exposed-floors:area:total",
+  #  "dimensions:ceilings:area:cathedral",
+  #  "dimensions:ceilings:area:flat",
+  #  "dimensions:exposed-floors:area:total",
    "dimensions:headers:area:above-grade",
-   "dimensions:headers:area:below-grade",
-   "dimensions:headers:area:total",
+  #  "dimensions:headers:area:below-grade",
+  #  "dimensions:headers:area:total",
    "dimensions:heatedFloorArea",
    "dimensions:walls:above-grade:area:doors",
-   "dimensions:walls:above-grade:area:gross",
+  #  "dimensions:walls:above-grade:area:gross",
    "dimensions:walls:above-grade:area:headers",
    "dimensions:walls:above-grade:area:net",
    "dimensions:walls:above-grade:area:windows",
-   "dimensions:walls:above-grade:count",
-   "dimensions:walls:above-grade:perimeter",
-   "dimensions:windows:area:byOrientation:1",
-   "dimensions:windows:area:byOrientation:2",
-   "dimensions:windows:area:byOrientation:3",
-   "dimensions:windows:area:byOrientation:4",
-   "dimensions:windows:area:byOrientation:5",
-   "dimensions:windows:area:byOrientation:6",
-   "dimensions:windows:area:byOrientation:7",
-   "dimensions:windows:area:byOrientation:8",
+  #  "dimensions:walls:above-grade:count",
+  #  "dimensions:walls:above-grade:perimeter",
+  #  "dimensions:windows:area:byOrientation:1",
+  #  "dimensions:windows:area:byOrientation:2",
+  #  "dimensions:windows:area:byOrientation:3",
+  #  "dimensions:windows:area:byOrientation:4",
+  #  "dimensions:windows:area:byOrientation:5",
+  #  "dimensions:windows:area:byOrientation:6",
+  #  "dimensions:windows:area:byOrientation:7",
+  #  "dimensions:windows:area:byOrientation:8",
    "dimensions:windows:area:total"
 ]
 
@@ -74,6 +75,13 @@ GoodECMFields = Array.new [
   "measure"
 ]
 
+GoodLocFields = Array.new [ 
+  "locID",
+  "WeatherCityName",
+  "Region",
+  "HDDs",
+  "ClimateZone"
+ ]
 
 GoodECMCatagories = Array.new [ 
   "Opt-ACH",
@@ -96,42 +104,15 @@ GoodECMCatagories = Array.new [
 
 ]
 
-GoodRunDataFields = Array.new [ 
+GoodRunFields = Array.new [ 
   "runID",
   "archID",
+  "locID",
   "listOfECMs",
   "version:git-branch",
   "version:git-revision",  
   "version:HOT2000",
   "version:h2kHouseFile",
-  "Recovered-results",
-  "Opt-Location",
-  "HDDs",
-  "Opt-Ruleset",
-  "Ruleset-Ventilation",
-  "Ruleset-Fuel-Source",
-  "Opt-Baseloads",
-  "Opt-Temperatures",  
-  "House-Upgraded",
-  "upgrade-package-list",
-  "Opt-ACH",
-  "Opt-CasementWindows",
-  "Opt-WindowDistribution",
-  "Opt-AtticCeilings",
-  "Opt-CathCeilings",
-  "Opt-FlatCeilings",
-  "Opt-GenericWall_1Layer_definitions",
-  "Opt-FloorHeaderIntIns",
-  "Opt-ExposedFloor",
-  "Opt-FoundationSlabBelowGrade", 
-  "Opt-FoundationSlabOnGrade", 
-  "Opt-FoundationWallExtIns", 
-  "Opt-FoundationWallIntIns", 
-  "Opt-HRVonly",
-  "Opt-HVACSystem",
-  "Opt-DHWSystem",
-  "Opt-DWHR-System",
-  "House-ListOfUpgrades",
   "Energy-Total-GJ",
   "Energy-HeatingGJ",
   "Energy-CoolingGJ",
@@ -148,25 +129,53 @@ GoodRunDataFields = Array.new [
   "PEAK-Heating-W",
   "TEDI_kWh_m2",
   "MEUI_kWh_m2",
-   "HVAC:ASHP:capacity_kW",
-   "HVAC:ASHP:count",
-   "HVAC:AirConditioner:capacity_kW",
-   "HVAC:AirConditioner:count",
-   "HVAC:Baseboards:capacity_kW",
-   "HVAC:Baseboards:count",
-   "HVAC:Boiler:capacity_kW",
-   "HVAC:Boiler:count",
-   "HVAC:Furnace:capacity_kW",
-   "HVAC:Furnace:count",
-   "HVAC:GSHP:capacity_kW",
-   "HVAC:GSHP:count",
-   "HVAC:Ventilator:capacity_l/s",
-   "HVAC:Ventilator:count",
-   "HVAC:designLoads:cooling_W",
-   "HVAC:designLoads:heating_W",
-   "HVAC:fansAndPump:count",
-   "HVAC:fansAndPump:powerHighW",
-   "HVAC:fansAndPump:powerLowW"
+  "House-Upgraded",
+  "upgrade-package-list",
+  "House-ListOfUpgrades",
+  "Recovered-results",
+#  "Opt-Location",
+#  "HDDs", 
+  "Opt-ACH",
+  "Opt-CasementWindows",
+  "Opt-WindowDistribution",
+  "Opt-AtticCeilings",
+  "Opt-CathCeilings",
+  "Opt-FlatCeilings",
+  "Opt-GenericWall_1Layer_definitions",
+  "Opt-FloorHeaderIntIns",
+#  "Opt-ExposedFloor",
+#  "Opt-FoundationSlabBelowGrade", 
+#  "Opt-FoundationSlabOnGrade", 
+#  "Opt-FoundationWallExtIns", 
+#  "Opt-FoundationWallIntIns", 
+  "Opt-HRVonly",
+  "Opt-HVACSystem",
+  "Opt-DHWSystem",
+  "Opt-DWHR-System",
+  #  "HVAC:ASHP:capacity_kW",
+  #  "HVAC:ASHP:count",
+  #  "HVAC:AirConditioner:capacity_kW",
+  #  "HVAC:AirConditioner:count",
+  #  "HVAC:Baseboards:capacity_kW",
+  #  "HVAC:Baseboards:count",
+  #  "HVAC:Boiler:capacity_kW",
+  #  "HVAC:Boiler:count",
+  #  "HVAC:Furnace:capacity_kW",
+  #  "HVAC:Furnace:count",
+  #  "HVAC:GSHP:capacity_kW",
+  #  "HVAC:GSHP:count",
+  #  "HVAC:Ventilator:capacity_l/s",
+  #  "HVAC:Ventilator:count",
+  #  "HVAC:designLoads:cooling_W",
+  #  "HVAC:designLoads:heating_W",
+  #  "HVAC:fansAndPump:count",
+  #  "HVAC:fansAndPump:powerHighW",
+  #  "HVAC:fansAndPump:powerLowW"
+  "Opt-Ruleset",
+  "Ruleset-Ventilation",
+  "Ruleset-Fuel-Source",
+  "Opt-Baseloads",
+  "Opt-Temperatures", 
 ]
 
 
@@ -258,6 +267,7 @@ info_out ("Parsed #{jsonSourceFile}")
 $archetypeData = Array.new
 $runData = Array.new 
 $ecmData = Array.new
+$locData = Array.new
 
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 # GetArchID - takes a HTAP run result, determines if it already exists in the archetype set, and 
@@ -265,6 +275,7 @@ $ecmData = Array.new
 def getArchID(result)
   foundArch = false 
   archID = nil
+  locID = getLocID(result)
   archCount = 0
   #debug_ 
   
@@ -275,7 +286,12 @@ def getArchID(result)
       if archetype["h2k-File"] == result["archetype"]["h2k-File"] then 
         archID = archetype["archID"]
         foundArch = true 
-        
+        #debug_on
+        debug_out "TEST: - #{locID} [#{archetype["listOfLocations"]}]\n"
+        if (! bListContainsID(locID, archetype["listOfLocations"])) then 
+          archetype["listOfLocations"] += "#{locID};"
+        end
+        break
       end 
       debug_out ("#{foundArch}\n")
     end 
@@ -288,6 +304,7 @@ def getArchID(result)
     thisArchetype = Hash.new 
     thisArchetype["archID"] = archID  
     thisArchetype["h2k-File"] = result["archetype"]["h2k-File"]
+    thisArchetype["listOfLocations"] = "#{locID};"
     dimensionData = flattenHash(result["cost-estimates"]["costing-dimensions"])
     
     debug_out "archID: #{archID}\n"
@@ -316,8 +333,57 @@ def getArchID(result)
 end 
 
 # . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-# GetArchID - takes a HTAP run result, determines if the selected options exist in the list of ecms,
+# GetLocID - takes a HTAP run result, determines if it already exists in the location set, and 
+# adds it if not. Returns the location ID
+def getLocID(result)
+  
+  #debug_on
+  locFound = false 
+  locID = nil
+  locCount = 0
+  #pp result 
+  # possibly search for id
+  if ( ! emptyOrNil($locData) )
+    $locData.each do | location |
+      locCount += 1
+      debug_out ("\n")
+      if location["WeatherCityName"] == result["input"]["Run-Locale"]
+        locFound = true 
+        locID = location["locID"]
+        break
+      end 
+    end 
+
+  end 
+  
+  if ( ! locFound )
+    locID = locCount + 1 
+    thisLoc = { "locID" => locID ,
+                "WeatherCityName" => result["input"]["Run-Locale"] ,
+                "Region" => result["input"]["Run-Region"] ,
+                "HDDs" => result["output"]["HDDs"].to_i,
+                "ClimateZone" => result["archetype"]["climate-zone"]
+    }
+    $locData.push(thisLoc)
+  end 
+
+  debug_out "Returning loc [#{locID}]\n"
+  return locID
+
+end   
+
+ 
+
+# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+# GetECMs - takes a HTAP run result, determines if the selected options exist in the list of ecms,
 # adds them it if not. Returns a ';' delimited string of selected ECMs.
+
+def bListContainsID(thisID, thisList)
+  #debug_on
+  thisArray = thisList.split(/;/)
+  #debug_out ("searching for #{thisID} in #{thisArray.pretty_inspect}\n")
+  return thisArray.include?(thisID.to_s)
+end 
 
 def getECMs(inputHash)
   debug_off
@@ -384,9 +450,13 @@ width = 20
 
 rule = " +" + "-".ljust(width,"-") + 
         "+" + "-".ljust(width,"-") + 
+        "+" + "-".ljust(width,"-") + 
         "+" + "-".ljust(width,"-") + "+\n"
 stream_out(rule)
-stream_out " "+spacer+"Archetypes".rjust(width)+spacer+"ECMs".rjust(width)+spacer+"Runs".rjust(width)+spacer+"\n"
+stream_out " "+spacer+"Archetypes".rjust(width)+
+               spacer+"Locations".rjust(width)+
+               spacer+"ECMs".rjust(width)+
+               spacer+"Runs".rjust(width)+spacer+"\n"
 stream_out(rule)
 
 countArchetypes = 0
@@ -400,11 +470,17 @@ allData["htap-results"].each do | result |
   if (result["status"]["success"] ) then 
 
     archID = getArchID(result)
+    locID = getLocID(result)
 
 
     thisRun = Hash.new 
     thisRun["runID"] = result["result-number"] 
     thisRun["archID"] = archID
+    thisRun["locID"] = locID
+
+    
+
+
 
     thisRun["version:git-branch"]= gitBranch
     thisRun["version:git-revision"] = gitRevision
@@ -413,7 +489,7 @@ allData["htap-results"].each do | result |
     thisRun.merge!( flattenHash( result["output"]) ) 
     thisRun.merge!( flattenHash( result["cost-estimates"]["costing-dimensions"]) ) 
 
-    thisRun["listOfECMs"] = "[#{getECMs(result["input"])}]" 
+    thisRun["listOfECMs"] = getECMs(result["input"]) 
 
     #stream_out("Reading result # #{result_count}...                     \r" )
   
@@ -425,9 +501,16 @@ allData["htap-results"].each do | result |
   end 
   #if ( emptyOrNil())
   countArchetypes = $archetypeData.length.to_s.rjust(width) 
+  countLocs = $locData.length.to_s.rjust(width) 
   countECMs = $ecmData.length.to_s.rjust(width) 
   countRUns = $runData.length.to_s.rjust(width)
-  stream_line = " "+spacer+countArchetypes+spacer+countECMs+spacer+countRUns+spacer
+
+  stream_line = " "+spacer+countArchetypes+
+                    spacer+countLocs+
+                    spacer+countECMs+
+                    spacer+countRUns+
+                    spacer
+  
   stream_out(stream_line+"\r")
   
   #stream_out(" Run results:     #{result_count},   Archetypes #{$archetypeData.length}, ECMs   \r")
@@ -443,10 +526,20 @@ stream_out ( stream_line+"\n" )
 stream_out rule
 
 listOfKeys = "List of available columns for HTAP pathways ([x] denotes columns to appear in output)\n"
-listOfKeys += "ARCHDATA:\n"
+listOfKeys += "\nArchetype Fields:\n"
 $archetypeData[0].keys.each do | key | 
   string = ""
-  if ( GoodArchDataFields.include?(key) )
+  if ( GoodArchFields.include?(key) )
+    string = " [x] #{key}\n"
+  else 
+    string = " [ ] #{key}\n"
+  end 
+  listOfKeys += string 
+end 
+listOfKeys += "\nLocation Fields:\n"
+$locData[0].keys.each do | key | 
+  string = ""
+  if ( GoodLocFields.include?(key) )
     string = " [x] #{key}\n"
   else 
     string = " [ ] #{key}\n"
@@ -454,12 +547,10 @@ $archetypeData[0].keys.each do | key |
   listOfKeys += string 
 end 
 
-
-
-listOfKeys += "\n\nRUNDATA:\n"
+listOfKeys += "\n\nRun Fieldss:\n"
 $runData[0].keys.each do | key | 
   string = ""
-  if ( GoodRunDataFields.include?(key) )
+  if ( GoodRunFields.include?(key) )
     string = " [x] #{key}\n"
   else 
     string = " [ ] #{key}\n"
@@ -513,6 +604,9 @@ def convertToCSV(arrToFlatten,headerArray=[])
     headerArray.each do | key |
       if ( ! emptyOrNil(line[key]) ) 
         value = line[key]
+        if ( key =~ /^listOf/ )
+          value = "[#{value.gsub(/;$/,"")}]"
+        end 
       else
         #warn_out ("Null data encontered!")
       end 
@@ -527,12 +621,17 @@ def convertToCSV(arrToFlatten,headerArray=[])
   return flatOutput 
 end
 
-flatOutput = convertToCSV($archetypeData, GoodArchDataFields)
+flatOutput = convertToCSV($archetypeData, GoodArchFields)
 csv_outfile = File.open('./Pathways_HTAPArchetypeData.csv', 'w')
 csv_outfile.puts flatOutput
 csv_outfile.close
 
-flatOutput = convertToCSV($runData,GoodRunDataFields)
+flatOutput = convertToCSV($locData, GoodLocFields)
+csv_outfile = File.open('./Pathways_HTAPLocationData.csv', 'w')
+csv_outfile.puts flatOutput
+csv_outfile.close
+
+flatOutput = convertToCSV($runData,GoodRunFields)
 csv_outfile = File.open('./Pathways_HTAPRunData.csv', 'w')
 csv_outfile.puts flatOutput
 csv_outfile.close
