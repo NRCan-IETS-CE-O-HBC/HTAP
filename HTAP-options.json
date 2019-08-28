@@ -1933,6 +1933,36 @@
           }
         }
       },
+      "NC-3g-LG-u1.36": {
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "LowE-LowGain",
+          "u-value": 1.36,
+          "SHGC": 0.165,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "NC-3g-LG-u1.36",
+            "<Opt-win-E-CON>":  "NC-3g-LG-u1.36",
+            "<Opt-win-N-CON>":  "NC-3g-LG-u1.36",
+            "<Opt-win-W-CON>":  "NC-3g-LG-u1.36",
+            "<Opt-win-SE-CON>": "NC-3g-LG-u1.36",
+            "<Opt-win-SW-CON>": "NC-3g-LG-u1.36",
+            "<Opt-win-NE-CON>": "NC-3g-LG-u1.36",
+            "<Opt-win-NW-CON>": "NC-3g-LG-u1.36"
+          }
+        },
+        "costs": {
+          "components": [
+            "window:shgc_0.46:u-value_1.36"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+
       "NC-3g-LG-u1.14": {
         "characteristics": {
           "panes": 3,
@@ -2049,7 +2079,35 @@
           "frame": "vinyl"
         }
       },
-
+      "NC-3g-LG-u1.08": {
+        "costs": {
+          "components": [
+            "window:shgc_0.44:u-value_1.08"
+          ],
+          "custom-costs": {
+          }
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "NC-3g-LG-u1.08",
+            "<Opt-win-E-CON>":  "NC-3g-LG-u1.08",
+            "<Opt-win-N-CON>":  "NC-3g-LG-u1.08",
+            "<Opt-win-W-CON>":  "NC-3g-LG-u1.08",
+            "<Opt-win-SE-CON>": "NC-3g-LG-u1.08",
+            "<Opt-win-SW-CON>": "NC-3g-LG-u1.08",
+            "<Opt-win-NE-CON>": "NC-3g-LG-u1.08",
+            "<Opt-win-NW-CON>": "NC-3g-LG-u1.08"
+          }
+        },
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "LowE-LowGain",
+          "u-value": 1.08,
+          "SHGC": 0.165,
+          "frame": "vinyl"
+        }
+      },
 
       "DoubleLowEHardCoatAirFill": {
         "h2kMap": {
