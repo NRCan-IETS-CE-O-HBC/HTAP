@@ -3724,7 +3724,34 @@
           </WindowLegacy>
         </Layers>
       </Code>
-    </UserDefined>
+      <Code id='Code 156' nominalRValue='0'>
+        <Label>NC-3g-LG-u1.08</Label>
+        <Description>3 pane; LowE-LowGain; argon fill; U=1.08</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.165' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+	  <Code id='Code 157' nominalRValue='0'>
+        <Label>NC-3g-LG-u1.36</Label>
+        <Description>3 pane; LowE-LowGain; argon fill; U=1.36</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.165' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+	  
+   </UserDefined>
   </Window>
   <FloorsAbove>
     <Favorite>
