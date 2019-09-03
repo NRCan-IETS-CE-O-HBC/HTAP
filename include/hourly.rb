@@ -132,14 +132,14 @@ module Hourly
     htap_solar_gains=Array.new
     htap_internal_gains=Array.new
     htap_cooling=Array.new
-    htap_elec=Array.new
+    htap_elec_plug=Array.new
     htap_dhw=Array.new
     for i in months
       htap_conduction_losses[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["energy_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_solar_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["solar_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_internal_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["internal_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_cooling[months_number.key(i)-1]=h2kBinResults["monthly"]["cooling"]["total_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
-     # htap_elec[months_number.key(i)-1]=(h2kBinResults["monthly"]["energy_profile"]["lights_appliancesGJ"][i].to_f*1000000000.0+h2kBinResults["monthly"]["energy_profile"]["hrv_fansGJ"][i].to_f*1000000000.0+h2kBinResults["monthly"]["energy_profile"]["acGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
+      htap_elec_plug[months_number.key(i)-1]=(h2kBinResults["monthly"]["energy"]["lights_appliances_GJ"][i].to_f*1000000000.0)/(hours_per_month[i]*3600.0)
      htap_dhw[months_number.key(i)-1]=h2kBinResults["monthly"]["energy"]["DHW_heating_primary_GJ"][i].to_f
     end
 
@@ -189,7 +189,7 @@ module Hourly
     hourly_solar_gains=Array.new
     hourly_internal_gains=Array.new
     hourly_total_heating=Array.new
-    hourly_electrical_demand=Array.new
+    hourly_electrical_demand_plug=Array.new
     hourly_dhw_demand=Array.new
     hourly_solar_gains_cooling=Array.new
     hourly_conduction_losses_cooling=Array.new
@@ -201,7 +201,7 @@ module Hourly
       hourly_solar_gains[i]=htap_solar_gains[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]])
       hourly_internal_gains[i]=htap_internal_gains[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       hourly_total_heating[i]=hourly_conduction_losses[i]-hourly_solar_gains[i]-hourly_internal_gains[i]
-      #hourly_electrical_demand[i]=htap_elec[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
+      hourly_electrical_demand_plug[i]=htap_elec_plug[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       #hourly_dhw_demand[i]=htap_dhw[month[i]-1].to_f*norm_dhw[time[i]-1].to_f
       hourly_solar_gains_cooling[i]=solar_load_cooling_htap[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]])
       hourly_conduction_losses_cooling[i]=envelope_gains_cooling_htap[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
@@ -263,6 +263,8 @@ module Hourly
     hourly_internal_gains_cooling.unshift("Cooling Gains (W)")
     hourly_total_cooling_mod.unshift("Cooling Total (W)")
 
+    hourly_electrical_demand_plug.unshift("Plug Load (W)")
+
     db_temperature.unshift("Ambient Temperature (degC)")
     rh.unshift("Ambient RH (%)")
     global_solar_hor.unshift("Global Horizontal Radiation W/m^2")
@@ -273,7 +275,7 @@ module Hourly
 
     #monthly_mains_temp.each {|temp| print temp,"\n"}
 
-    printarray=[month,day,time,indoor_temp,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp].transpose
+    printarray=[month,day,time,hourly_electrical_demand_plug,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp,indoor_temp].transpose
 
     CSV.open("#{$gMasterPath}\\hourly_calculation_results.csv", "w") do |f|
       printarray.each do |x|
