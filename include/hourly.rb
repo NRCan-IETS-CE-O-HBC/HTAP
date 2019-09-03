@@ -265,6 +265,7 @@ module Hourly
 
     db_temperature.unshift("Ambient Temperature (degC)")
     rh.unshift("Ambient RH (%)")
+    global_solar_hor.unshift("Global Horizontal Radiation W/m^2")
     hourly_mains_temp.unshift("Mains Water Temperature (degC)")
 
     #hourly_dhw_demand.unshift("DHW demand (W)")
@@ -272,7 +273,7 @@ module Hourly
 
     #monthly_mains_temp.each {|temp| print temp,"\n"}
 
-    printarray=[month,day,time,indoor_temp,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,hourly_mains_temp].transpose
+    printarray=[month,day,time,indoor_temp,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp].transpose
 
     CSV.open("#{$gMasterPath}\\hourly_calculation_results.csv", "w") do |f|
       printarray.each do |x|
