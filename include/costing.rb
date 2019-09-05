@@ -55,7 +55,7 @@ module Costing
     componentList = Array.new
     finalChoice = ""
     debug_out " recovering cost component list for  #{attribute} = #{choice} \n"
-    debug_out " contents of options at #{attribute}/#{choice}:#{myOptions[attribute]["options"][choice].pretty_inspect}\n"
+    #debug_out " contents of options at #{attribute}/#{choice}:#{myOptions[attribute]["options"][choice].pretty_inspect}\n"
 
     # Get proxy
     if ( ! myOptions[attribute]["options"][choice]["costProxy"].nil? ) then
@@ -85,7 +85,7 @@ module Costing
   # Functon that can deal with conditional costing statements -
   # such as hrv ducting costs that change if central forced air is available or not.
   def Costing.solveComponentConditionals(myOptions,myChoices,attribute,component,myH2KHouseInfo)
-
+    #debug_on
     if ( component.is_a?(String) ) then
       debug_out "retuning string  #{component}"
       return component
@@ -93,7 +93,7 @@ module Costing
       finalResult = nil
       #debug_off
       #debug_on if (attribute =~ /HVAC/ )
-      debug_out " Solving component conditionals for HASH:\n#{component.pretty_inspect}"
+      #debug_out " Solving component conditionals for HASH:\n#{component.pretty_inspect}"
 
       # Conditionals are defined as hashes
       #              { "if[Opt-HVAC.inc?]": {
@@ -138,7 +138,7 @@ module Costing
         end
         debug_out "Keysmap @ '#{thisKey}':\n"
         myMap = myMap[thisKey]
-        debug_out "#{myMap.pretty_inspect}\n"
+        #debug_out "#{myMap.pretty_inspect}\n"
         testVariable = myMap
       end
 
@@ -158,18 +158,41 @@ module Costing
       end
 
 
-      debug_out (" Queried #{dataSource} / #{dataKey} - Returned:\n> #{testVariable.pretty_inspect}\n")
+      #debug_out (" Queried #{dataSource} / #{dataKey} - Returned:\n> #{testVariable.pretty_inspect}\n")
 
       # Now, compare to conditionals.
 
       condResults.each do | query, result |
 
+
         queryType, queryValue = query.split(/\?/)
 
-        conditionMet = HTAPData.simpleConditional(testVariable, queryType,queryValue)
-        debug_out ("Q: is #{dataKey}=#{testVariable} #{queryType} #{queryValue}? #{conditionMet}\n")
+        if ( queryType =~ /per/ ) then 
+          warn_out ("Experimental costing feature \"per\" in use. Not yet supported.")
+          debug_out " costing per #{queryValue} / Counting required #{result} \n"
+          #debug_out "\n#{myMap.pretty_inspect}\n"
+          count = (testVariable.to_f / queryValue.to_f).to_i + 1
 
-        finalResult = result if ( conditionMet )
+          debug_out "computed: #{count}\n"
+
+          # Experimental code to add multiple items according to sizing. Disabled for time being
+          count = 1
+
+          retARR = Array.new
+          retARR.fill(result,0..count-1)
+          #debug_out ("#{retARR.pretty_inspect}")
+          condtionMet = true 
+          return retARR
+
+        else
+
+          conditionMet = HTAPData.simpleConditional(testVariable, queryType,queryValue)
+          debug_out ("Q: is #{dataKey}=#{testVariable} #{queryType} #{queryValue}? #{conditionMet}\n")
+          finalResult = result if ( conditionMet )
+
+        end
+
+
         break if ( conditionMet )
 
       end
@@ -217,21 +240,29 @@ module Costing
     end
 
     # Step 2: Resolve conditional logic
+     #  #  # debug_on
     debug_out drawRuler("Step 2: solving conditionals in cost lists\n"," .")
     rawCostLists.each do | attribute, list |
       finalCostList = Array.new
       choice = myChoices[attribute]
       # elements inside component Cost list can  be a hash, indicating embedded comditional logic
       list.each do | component |
+        debug_out "Component? #{component}\n"
         resolvedComponent = Costing.solveComponentConditionals(mySimplerCostTree,myChoices,attribute,component,myH2KHouseInfo)
-        finalCostList.push resolvedComponent
+        #debug_out " > #{resolvedComponent.pretty_inspect}\n"
+        if ( resolvedComponent.is_a?(Array) ) then 
+          finalCostList.concat resolvedComponent
+        else 
+          finalCostList.push resolvedComponent
+        end 
       end
       mySimplerCostTree[attribute]["options"][choice]["costComponents"] = finalCostList
       debug_out (" > summary for #{attribute} = #{choice} \n")
       debug_out (" > cost Data source #{  mySimplerCostTree[attribute]["options"][choice]["dataCameFrom"]}\n")
-      debug_out (" > cost Data array:\n #{  mySimplerCostTree[attribute]["options"][choice]["costComponents"].pretty_inspect}\n")
+      #debug_out (" > cost Data array:\n #{  mySimplerCostTree[attribute]["options"][choice]["costComponents"].pretty_inspect}\n")
 
     end
+    debug_off
     return mySimplerCostTree
 
   end
@@ -239,10 +270,10 @@ module Costing
   # Recovers costs associated with a given attribute, choices.
   def Costing.getCosts(myUnitCosts,myOptions,attrib,choice,useTheseSources)
 
+    debug_flag = false 
+    debug_flag = true  if (  attrib =~ /Opt-HVAC/)
 
-    #debug_on if ( choice != "NA" )
-
-
+     #  #  # debug_on if debug_flag
 
     debug_out(" [>] Costing.getCosts: searching cost data for #{attrib} = #{choice}\n")
 
@@ -260,7 +291,8 @@ module Costing
       myCosts["as_per_h2k_file"] = {
         "found"    => true,
         "data"     => Hash.new ,
-        "inherited"=> false
+        "inherited"=> false,
+        "count" => 0 
       }
       myCosts["as_per_h2k_file"]["data"] = {
         "source" => "default",
@@ -280,7 +312,7 @@ module Costing
     while ( ! customDone ) do
       # Get next valid cost source
       validSource = useTheseSources[sourceIndex]
-      debug_out ("  .  Looking for custom cost scenarios matching #{validSource}... \n")
+      #debug_out ("  .  Looking for custom cost scenarios matching #{validSource}... \n")
       # If custom costs didn't match, use component-by-component costs
 
       sourceIndex = sourceIndex + 1
@@ -297,7 +329,7 @@ module Costing
 
 
     if ( ! done ) then
-
+     
       debug_out ( " [x] No custom costs matched. Searching for component-by-component costs.\n")
 
       # loop through the cost-components that are associated with
@@ -310,14 +342,22 @@ module Costing
         proxy_choice = myOptions[attrib]["options"][choice]["costProxy"]
 
         debug_out "   Proxy cost specified. Will attempt to use cost data for #{proxy_choice} ...\n"
-        myCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,proxy_choice,useTheseSources)
+        myProxyCosts = Has
+        myProxyCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,proxy_choice,useTheseSources)
+        if ( myProxyCosts["found"] ) then 
+          myCosts["data"] = myProxyCosts["data"]
+          myCosts["inherited"] = myProxyCosts["inherited"]
+          myCosts["found"] = true 
+          myCosts["count"] += 1
+        end 
         return myCosts
       end
-
+#
       myOptions[attrib]["options"][choice]["costComponents"].each do | component |
-
         debug_out " . . . . . . . . . . . . . . . . . . . . . . . .  . . . . . . . . . . . .  \n"
         debug_out " [#] working with #{component}\n"
+        #debug_out myCosts.pretty_inspect
+
 
         # Cost data sets can inherit data from prior dbs.
         # Set default inheratence flag to zero.
@@ -325,16 +365,24 @@ module Costing
 
         # Define myCosts as a hash with cost component as key; initialize 'found'
         # attribut to false.
-        myCosts[component] = Hash.new
-        myCosts[component]["found"] = false
+        if ( emptyOrNil(myCosts[component])) then 
+          debug_out "Zeroing out my hash for this component!"
+          myCosts[component] = Hash.new
+          myCosts[component]["found"] = false
+          myCosts[component]["count"] = 0
 
+        else 
+          myCosts[component]["count"] += 1 
+          debug_out "Already processed - incrementing count to #{myCosts[component]["count"]}\n"
+
+        end 
         useTheseSources.each do | specdSource |
 
-          debug_out "  .  Source #{specdSource} was requested, does it exist in db?"
+          #debug_out "  .  Source #{specdSource} was requested, does it exist in db?"
           nomatch = false
           if ( ! myUnitCosts["sources"].keys.include? specdSource ) &&
             ( ! specdSource.eql? "*" ) then
-            debug_out " no. (moving on) \n"
+            #debug_out " no. (moving on) \n"
             nomatch = true
           end
 
@@ -343,7 +391,7 @@ module Costing
           # Either there is a match, or
           if ( specdSource.eql? "*" ) then
             # case 1: wild car.
-            debug_out " It's a wild card - use any record! \n"
+            #debug_out " It's a wild card - use any record! \n"
             # Wildcard - find any matching record
             if ( ! myUnitCosts["data"].keys.include? component ) then
               fatalerror "Could not find #{component} in unit cost data!"
@@ -352,20 +400,20 @@ module Costing
 
           else
 
-            debug_out " yes! \n"
+            #debug_out " yes! \n"
 
             source = specdSource
-            debug_out "  .  checking for inheratence:\n"
+            #debug_out "  .  checking for inheratence:\n"
             # Loop through all of the acestors
             myUnitCosts["sources"][specdSource]["inherits"].keys.each do | ancestor |
 
-              debug_out "  .   ?  was component inherited from #{ancestor}?"
+              #debug_out "  .   ?  was component inherited from #{ancestor}?"
 
               # Check to see if the comonent cost was inherited from this ancestor.
               if ( ! myUnitCosts["sources"][specdSource]["inherits"][ancestor].include? component ) then
-                debug_out " no.\n"
+                #debug_out " no.\n"
               else
-                debug_out " YES!\n"
+                #debug_out " YES!\n"
                 debug_out ("  .  [!] Inheritance detected! validSource data originates from #{ancestor}\n")
                 source = ancestor
                 inherited = true
@@ -380,7 +428,7 @@ module Costing
           # find the component in myUnitCosts, and determine if it has cost
           # data that matches our source (specd || ancestor if inherited = true || arbitrary source for wildcard. )
           debug_out ("  .  proceeding to process component cost using data from #{source}  \n")
-          debug_out ("    >#{component}<\n")
+          #debug_out ("    >#{component}<\n")
 
           myUnitCosts["data"][component].keys.each do | costset |
             debug_out "  .   .  found unit cost data from `#{costset}`"
@@ -390,14 +438,17 @@ module Costing
               debug_out " AND that's the one we need!\n"
               debug_out " [+] Setting myCost data using data from #{costset}.\n"
               myCosts[component]["found"] = true
+              myCosts[component]["count"] = myCosts[component]["count"] + 1
               myCosts[component]["data"] = Hash.new
               myCosts[component]["data"] = myUnitCosts["data"][component][source]
               myCosts[component]["inherited"] = inherited
+              debug_out ("    Resulting count? #{myCosts[component]["count"]}\n")
               found = true
               if (inherited) then
                 myCosts[component]["specified_source"] = specdSource
                 myCosts[component]["inherited_from"] = source
               end
+              #debug_out(myCosts.pretty_inspect)
             end
             #
           end # myUnitCosts["data"][component].keys.each do | costset |
@@ -416,7 +467,8 @@ module Costing
         myCosts["no_costs_defined"] = {
           "found"    => true,
           "data"     => Hash.new ,
-          "inherited"=> false
+          "inherited"=> false,
+          "count" => 0
         }
         myCosts["no_costs_defined"]["data"] = {
           "source" => "default",
@@ -426,7 +478,7 @@ module Costing
           "UnitCostsLabour" =>    0.0
         }
     end
-
+    #debug_out(myCosts.pretty_inspect)
     debug_out(" [<] Costing.getCosts: returning \n")
     return myCosts
   end
@@ -456,14 +508,15 @@ module Costing
     myCosts["byBuildingComponent"] = Hash.new
     myCosts["audit"] = Hash.new
     debug_out drawRuler(" Costing calculations ",'.')
-    debug_out ("Choices to be costed:\n#{myChoices.pretty_inspect}\n")
+    #debug_out ("Choices to be costed:\n#{myChoices.pretty_inspect}\n")
 
 
     debug_out "  Untangling costing logic via  Costing.resolveCostingLogic(myOptions,myChoices)\n"
 
     simpleCostTree = Costing.resolveCostingLogic(myOptions,myChoices,myH2KHouseInfo)
-    debug_out " GSHP costing components? \n"
-    debug_out (simpleCostTree.pretty_inspect)
+   
+    #debug_on
+    #debug_out (simpleCostTree.pretty_inspect)
 
     allCostsOK = true
     myChoices.each do | attrib, choice |
@@ -491,16 +544,21 @@ module Costing
         }
 
 
+        #debug_on if ( attrib =~ /Opt-HVAC/) 
 
-        debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
+        #debug_out ( simpleCostTree.pretty_inspect)
+        
+        #debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
 
         choiceCosts = Hash.new
+
         choiceCosts = Costing.getCosts(myUnitCosts,simpleCostTree,attrib,choice,costSourcesDBs)
 
+        
         costsOK = true
-
+        
         choiceCosts.keys.each do | costingElement |
-
+          
           debug_out " Computing costs for #{attrib}=#{choice}, \n+-> component [#{costingElement}]\n"
 
           catagory = choiceCosts[costingElement]["data"]["category"]
@@ -512,6 +570,8 @@ module Costing
           materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
           labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
           source = choiceCosts[costingElement]["data"]["source"]
+          count = choiceCosts[costingElement]["count"].to_f
+          
           measureDescription = ""
           measure = 0.0
 
@@ -522,6 +582,7 @@ module Costing
             measure   = 0.0
             materials = 0.0
             labour    = 0.0
+            count     = 1
             measureDescription = "Spec as defined in H2K file; costs cannot be computed"
           elsif ( costingElement == "no_costs_defined") then
             source    = "nil"
@@ -529,6 +590,7 @@ module Costing
             measure   = 0.0
             materials = 0.0
             labour    = 0.0
+            count     = 1
             measureDescription = "No costs have been defined; assume zero cost impact."
           else
 
@@ -795,17 +857,17 @@ module Costing
 
 
 
-
+          debug_out ("   Count     :   #{count}\n")
           debug_out ("   Source    :   #{source}\n")
           debug_out ("   Units     :   #{units}\n")
           debug_out ("   Measure   :   #{measure} (#{units})\n")
           debug_out ("   Materials : $ #{materials.round(2)} / #{units}\n")
           debug_out ("   Labour    : $ #{labour.round(2)} / #{units}\n")
-
+          
           # ===============================================================
           # Compute costs :
           if ( costsOK )
-            myCostsComponent = measure * ( materials + labour )
+            myCostsComponent = measure * ( materials + labour ) * count
 
             myCosts["total"] += myCostsComponent.round(2)
 
@@ -820,6 +882,7 @@ module Costing
               "source" => source,
               "quantity" => measure,
               "units"  => units,
+              "count"  => count, 
               "measureDescription"  => measureDescription,
               "unit-cost-materials" => materials.round(2),
               "unit-cost-labour"    => labour.round(2),
@@ -834,7 +897,7 @@ module Costing
             warn_out ("Can't cost #{attrib}/#{choice}/#{costingElement}")
             debug_out("Unknown unit of measure for #{attrib}/#{choice}/#{costingElement}!\n")
             warn_out ("Unknown units: \"#{units}\" for #{costingElement} [#{attrib} = #{choice}]")
-            debug_out("available measures\n#{myH2KHouseInfo.pretty_inspect}\n")
+            #debug_out("available measures\n#{myH2KHouseInfo.pretty_inspect}\n")
             allCostsOK = false
 
           end
@@ -855,7 +918,7 @@ module Costing
         debug_out "      _____________\n"
         total = '%.2f' % myCosts["byAttribute"][attrib].round(2)
         debug_out "      $ #{total.rjust(10)} : TOTAL \n"
-        #debug_off
+        debug_off
 
         if ( choice != simpleCostTree[attrib]["options"][choice]["dataCameFrom"] )
           proxyCosts = true
@@ -907,7 +970,7 @@ module Costing
       warn_out ("Costing calculations could not be computed correctly")
     end
 
-    debug_out "Compute-Costs: Returning \n#{myCosts.pretty_inspect}\n"
+    #debug_out "Compute-Costs: Returning \n#{myCosts.pretty_inspect}\n"
 
     return myCosts,allCostsOK
 
@@ -1052,7 +1115,7 @@ module Costing
 
         mySource = data["source"]
 
-        debug_out "> #{data.pretty_inspect}"
+        #debug_out "> #{data.pretty_inspect}"
         debug_out ": (#{mySource})\n"
         if ( mySource.nil? || mySource.to_s == "nil"  ||mySource.to_s == "NA" )
           componentNotes += "[^#{componentIndex}]: _#{component.gsub(/_/," ")}_: Computed using #{data["measureDescription"]}\n"
@@ -1142,7 +1205,7 @@ module Costing
       #  "component-costs"     => myCostsComponent.round(2)
       #}
       #debug_on
-      debug_out ("Component data:\n #{componentdata.pretty_inspect}\n")
+      #debug_out ("Component data:\n #{componentdata.pretty_inspect}\n")
 
       proxyRefTxt = ""
       if ( componentdata["providence"]["proxyCosts"] == true  ) then
