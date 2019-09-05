@@ -84,6 +84,11 @@ module HTAPData
     debug_out "CONDITIONAL : #{conditionalOperator}\n"
     debug_out "queryValue : #{queryValue}\n"
     case conditionalOperator
+    
+    when "per"
+      return true
+    
+    
     when "<"
       if (modelValue.to_f < queryValue.to_f )
         result = true
@@ -117,7 +122,7 @@ module HTAPData
     when /else/i
       result = true
     else
-      warn_out ("Unknown conditional operator #{condition}")
+      warn_out ("Unknown conditional operator #{conditionalOperator}")
       result = false
 
     end
