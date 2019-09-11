@@ -1586,6 +1586,33 @@
           ]
         }
       },
+      "New-Const-air_seal_to_0.60_ach": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "0.6",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "components": [
+            "upgrade_to_plastic_air_tight_electrical_boxes",
+            "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+            "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+            "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+            "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+            "all_poly_lapped_joints_located_over_solid_backing:sealed",
+            "preliminary_blower_door_test:single_home",
+            "sprayfoam_rim_joists;by_header_area",
+            "credit:elimination_of_vapor_barrier_at_floor_header",
+            "trades_training",
+            "trades_training",
+            "trades_training"
+          ],
+          "custom-costs": {}
+        }
+      },      
       "New-Const-air_seal_to_1.00_ach": {
         "h2kMap": {
           "base": {
