@@ -6716,7 +6716,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             opts.on("--unit-cost-db FILE", "Specified path to unit cost database (e.g. HTAPUnitCosts.json)") do |c|
               $cmdlineopts["unitCosts"] = c
               $unitCostFileName = c
-              if ( !File.exist?($gChoiceFile) )
+              if ( !File.exist?($unitCostFileName) )
+                err_out ("Could not find #{$unitCostFileName}")
                 fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
               end
               $UnitCostFileSet = true
@@ -6726,7 +6727,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $cmdlineopts["rulesets"] = c
               $rulesetsFileName  = c
               if ( !File.exist?($rulesetsFileName) )
-                fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
+                err_out ("Could not find #{$rulesetsFileName}")
+                fatalerror("Valid path to the rulesets file must be specified with the --rulesets option!")
               end
               $RulesetFileSet = true 
             end 
