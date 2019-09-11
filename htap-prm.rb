@@ -18,12 +18,16 @@ require 'rexml/document'
 require_relative 'include/msgs'
 require_relative 'include/constants'
 require_relative 'include/HTAPUtils.rb'
+require_relative 'include/application_modules.rb'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 
 $program = "htap-prm.rb"
 
 HTAPInit()
+
+log_out ("Recovering git version info\n")
+$branch_name, $revision_number = HTAPData.getGitInfo()
 
 $gRunUpgrades         = Hash.new
 $gOptionList          = Array.new
@@ -152,11 +156,12 @@ def parse_def_file(filepath)
 
 
           if ( $RunParamsOpen && $token_values[0] =~ /options-file/i )
+
             # Where is our options file located?
 
-            $gOptionsFile = $token_values[1]
+            $gHTAPOptionsFile = $token_values[1]
 
-            debug_out "$gOptionsFile? : #{$gOptionsFile}\n"
+            debug_out "$gHTAPOptionsFile? : #{$gHTAPOptionsFile}\n"
 
 
           end
@@ -287,19 +292,9 @@ def parse_def_file(filepath)
 
   if ( $WildCardsInUse ) then
 
-    if ( ! $gOptionsFile =~ /\.json/i ) then
-      fatalerror ("Wildcard matching is only supported with .json option files")
-    end
 
-    fOPTIONS = File.new($gOptionsFile, "r")
-    if fOPTIONS == nil then
-       fatalerror(" Could not read #{filename}.\n")
-    end
+    jsonRawOptions = HTAPData.getOptionsData()
 
-    optionsContents = fOPTIONS.read
-    fOPTIONS.close
-    jsonRawOptions = JSON.parse(optionsContents)
-    optionsContents = nil
 
 
 
@@ -765,8 +760,7 @@ def run_these_cases(current_task_files)
             FileUtils.cp($choicefiles[thread],$RunDirectory)
           end
 
-
-          FileUtils.cp($gOptionsFile,$RunDirectory)
+          FileUtils.cp($gHTAPOptionsFile,$RunDirectory)
 
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
 
@@ -776,7 +770,7 @@ def run_these_cases(current_task_files)
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]
-          $LocalOptionsFile = File.basename $gOptionsFile
+          $LocalOptionsFile = File.basename $gHTAPOptionsFile
 
 
 
@@ -901,7 +895,6 @@ def run_these_cases(current_task_files)
 
 
       # Multi-threaded runs - Step 2: Monitor thread progress
-
       #=====================================================================================
       # Wait for threads to complete
 
@@ -932,6 +925,8 @@ def run_these_cases(current_task_files)
 
       #=====================================================================================
       # Multi-threaded runs - Step 3: Post-process and clean up.
+
+      LEEPPathways.EmptyBuffers() if ($gLEEPPathwayExport )
 
       for thread3 in 0..$ThreadsNeeded-1
 
@@ -1001,6 +996,10 @@ def run_these_cases(current_task_files)
           end
           $runFailed = true if (! $RunResults["run-#{thread3}"]["status"]["success"] )
           jsonParsed = true
+
+          # Extract data for use in pathway tool 
+          LEEPPathways.ExtractPathwayData(thisRunResults) if ( $gLEEPPathwayExport )
+
           stream_out (" done.\n")
         end
 
@@ -1087,7 +1086,7 @@ def run_these_cases(current_task_files)
             #end
             #$RunResults["run-#{thread3}"]["status"]["errors"].push = " Run failed - no output generated"
 
-            $LocalChoiceFile = File.basename $gOptionsFile
+            $LocalChoiceFile = File.basename $gHTAPOptionsFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
               warn_out("Could not delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
             end
@@ -1213,9 +1212,9 @@ def run_these_cases(current_task_files)
       outputlines = ""
       headerLine = ""
       batchSuccessCount = 0
-      stream_out("        -> Writing csv output output to HTAP-prm-output.csv ... ")
+      stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
 
-      #-Loop though all instances, and compute 
+            #-Loop though all instances, and compute 
       $RunResults.each do |run,data|
 
         debug_out "Run - #{run}\n"
@@ -1285,9 +1284,6 @@ def run_these_cases(current_task_files)
       stream_out ("done.\n")
 
       if ($gJSONize )
-      
-
-
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
         
@@ -1340,7 +1336,11 @@ def run_these_cases(current_task_files)
         stream_out("done.\n")
       end
 
-
+      if ($gLEEPPathwayExport )
+        stream_out("        -> Exporting LEEP Pathway Data ... ")
+        LEEPPathways.ExportPathwayData()
+        stream_out ("done.\n")
+      end 
 
      $failures.flush
 
@@ -1369,6 +1369,7 @@ def run_these_cases(current_task_files)
     stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
   end
 
+  LEEPPathways.CloseOutputFiles() if ($gLEEPPathwayExport)
 
   if ( ! $gDebug ) then
      stream_out (" - Deleting working directories... ")
@@ -1397,7 +1398,7 @@ $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
 
-$gOptionsFile = ""
+$gHTAPOptionsFile = ""
 $gRulesetsFile = ""
 
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
@@ -1417,6 +1418,8 @@ $gNumberOfThreads = 3
 $promptBeforeProceeding = false
 $StopOnError = false
 
+$gLEEPPathwayExport = false 
+
 #=====================================================================================
 # Parse command-line switches.
 #=====================================================================================
@@ -1429,8 +1432,8 @@ optparse = OptionParser.new do |opts|
 
    opts.on("-o", "--options FILE", "Specified options file.") do |o|
       $cmdlineopts["options"] = o
-      $gOptionsFile = o
-      if ( !File.exist?($gOptionsFile) )
+      $gHTAPOptionsFile = o
+      if ( !File.exist?($gHTAPOptionsFile) )
          fatalerror("Valid path to option file must be specified with --options (or -o) option!")
       end
    end
@@ -1451,6 +1454,7 @@ optparse = OptionParser.new do |opts|
         $gNumberOfThreads = 1
       end
    end
+
 
    opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
       $gComputeCosts = true
@@ -1480,6 +1484,12 @@ optparse = OptionParser.new do |opts|
       $gJSONize = true
    end
 
+   opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool",
+                                         "output. Slows HTAP down, and make json output unwieldy on",
+                                         "large runs.") do
+      $gLEEPPathwayExport = true 
+     
+   end
 
    opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
                                          "output. Slows HTAP down, and make json output unwieldy on",
@@ -1611,7 +1621,7 @@ else
   parse_def_file($gRunDefinitionsFile)
 
   
-  debug_out("> Options file #{$gOptionsFile}")
+  debug_out("> Options file #{$gHTAPOptionsFile}")
 
   $archetypeFiles = Array.new
   $Folder = $gArchetypeDir
@@ -1801,11 +1811,17 @@ else
   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 end
 
+#Open LEEP pathways export files, if needed
+LEEPPathways.OpenOutputFiles() if ($gLEEPPathwayExport)
+
 #==================================================================
 # Process cases 
 #==================================================================
 run_these_cases($RunTheseFiles)
 
+#==================================================================
+#
+#==================================================================
 
 
 #==================================================================

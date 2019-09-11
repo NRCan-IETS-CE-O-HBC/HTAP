@@ -30,20 +30,37 @@ def HTAPInit()
   log_out ("Parsing HTAP configuration file")
   HTAPConfig.parseConfigData()
   debug_out ("done.\n")
-
-  # Get version information
-  debug_out("Recovering git version info...")
-  log_out ("Recovering git version info\n")
-  $branch_name, $revision_number = HTAPData.getGitInfo()
-  log_out ("#{$program} source: Branch #{$branch_name}, revision #{$revision_number}\n")
-  debug_out ("done.\n")
-
-  # Debug git info
-  debug_out ("Git versioning: Branch      #{$branch_name}\n")
-  debug_out ("Git versioning: Revision \# #{$revision_number}\n")
- 
-
 end
+
+
+
+
+
+
+
+# Function that can reduce a nested hash into a 'flat' verison
+def flattenHash(thisHash,breadCrumbs="")
+  debug_off
+
+  flatData = Hash.new 
+
+  thisHash.keys.sort.each do | key |
+    
+    currHeader = "#{breadCrumbs}:#{key}"
+    debug_out ("> #{breadCrumbs} > + #{key} = ")
+    if ( thisHash[key].is_a?(Hash) ) then 
+      debug_out ("( #{breadCrumbs} > + #{key} ) = ")
+      flatData.merge!( flattenHash(thisHash[key], currHeader ) )
+    else 
+      debug_out ("= #{currHeader} \n")
+      flatData.merge!( { "#{currHeader.gsub(/^:/,"")}" => thisHash[key] } ) 
+    end 
+  end 
+  debug_out ("<<returning\n#{flatData.pretty_inspect}\n<<end\n")
+  return flatData
+
+end 
+
 
 # Simple routine to test if variables contain null members
 
@@ -67,6 +84,8 @@ def emptyOrNilRecursive(var)
 end 
 
 
+
+
 def emptyOrNil(var)
   return true if (var.nil?)
   return true if (var.is_a?(String) && var.empty? )
@@ -74,15 +93,117 @@ def emptyOrNil(var)
   
 end 
 
+
+def convertToCSV(arrToFlatten,printHeader=true,headerArray=[])
+  log_out ("")
+  #debug_off
+  #debug_out ("Export csv - header status #{printHeader}\n ")
+  require 'csv'
+  flatOutput =""
+  # Generate header
+ 
+  return "" if (arrToFlatten.length == 0 )
+
+  #debug_on
+  if ( headerArray.empty? ) then 
+    #debug_out "Building headerRow:"
+    arrToFlatten[0].keys.sort_by{ |word| word.downcase }.each do | key |
+      #debug_out "> #{key}"
+      headerArray.push(key)
+    end 
+    #debug_out ("\n")
+  
+  else 
+    #debug_out ("using supplied header row. \n")
+  
+  end 
+  
+  
+  flatOutput << headerArray.to_csv if (printHeader )
+  
+  # add rows 
+  firstLine = true 
+  arrToFlatten.each do | line |
+    rowsArray = Array.new
+    value = ""
+  
+    headerArray.each do | key |
+      if ( ! emptyOrNil(line[key]) ) 
+        value = line[key]
+        if ( key =~ /^listOf/ )
+          value = "[#{value.gsub(/;$/,"")}]"
+        end 
+      else
+        #warn_out ("Null data encontered!")
+      end 
+
+      rowsArray.push(value)
+ 
+    end 
+
+    flatOutput << rowsArray.to_csv 
+      
+  end
+
+  return flatOutput
+
+  
+end
+
+
+
 module HTAPData
+
+  # Returns a hash containing the HTAP options data structure. Pareses the file and creates 
+  # the hash on first call. 
+  def HTAPData.getOptionsData()
+
+    if ( ! $gHTAPOptionsParsed ) then 
+
+      log_out ("Parsing options file - #{$gHTAPOptionsFile}...")
+
+
+      $gHTAPOptions = HTAPData.parse_json_options_file($gHTAPOptionsFile)
+
+      #fHTAPOptions = File.new($gHTAPOptionsFile, "r")
+      #if (fHTAPOptions == nil ) then 
+      #  fatalerror(" Could not read #{$gHTAPOptionsFile}.\n")
+      #end
+
+      #rawOptions = fHTAPOptions.read
+      #fHTAPOptions.close
+
+      #$gHTAPOptions = JSON.parse(rawOptions )
+      #rawOptions  = nil
+      #log_out("done.\n")
+
+      info_out ("Parsed options file #{$gHTAPOptionsFile}")
+      $gHTAPOptionsParsed = true
+
+    end 
+  
+    return $gHTAPOptions.clone 
+    
+  end 
+
+  def HTAPData.returnProxyIfExists(attribute, choice)
+    options = HTAPData.getOptionsData()
+    return choice if ( emptyOrNil(options[attribute] ) ) 
+    return choice if ( emptyOrNil(options[attribute]["options"] ) ) 
+    return choice if ( emptyOrNil(options[attribute]["options"][choice]["costs"] ) ) 
+    return choice if ( emptyOrNil(options[attribute]["options"][choice]["costs"]["proxy"]))
+    return options[attribute]["options"][choice]["costs"]["proxy"]
+  end 
+
+
 
   def HTAPData.simpleConditional( modelValue, conditionalOperator, queryValue)
     result = nil
 
     #debug_on
-    debug_out "ModelValue : #{modelValue.pretty_inspect}\n"
-    debug_out "CONDITIONAL : #{conditionalOperator}\n"
-    debug_out "queryValue : #{queryValue}\n"
+    #debug_out "ModelValue : #{modelValue.pretty_inspect}\n"
+    #debug_out "CONDITIONAL : #{conditionalOperator}\n"
+    #debug_out "queryValue : #{queryValue}\n"
     case conditionalOperator
     
     when "per"

@@ -258,3 +258,16 @@ $branch_name = ""
 $revision_number = ""
 
 $gMasterPath = ""
+
+
+# GLOBAL OPTIONS defintion - to replace local ones 
+$gHTAPOptionsFile   = nil 
+$gHTAPOptionsParsed = false 
+$gHTAPOptions       = Hash.new 
+
+# LEEP PARAMETER DATA
+$LEEParchetypeData = Array.new
+$LEEPrunData       = Array.new 
+$LEEPecmData       = Array.new
+$LEEPlocData       = Array.new
+
