@@ -1,4 +1,6 @@
 
+
+
 module HelpTxt
 
 attr_accessor :index
@@ -136,6 +138,14 @@ def initialize
    - Zone 8
 "
 
+@text["importing costs:categories"] = "
+ coax-cost-data.rb checks the catagory for each cost record 
+ against a hard-coded list, to make sure that the algorims 
+ in costing.rb understand how to calculate its associated 
+ costs. This list is maintaned as part of the 'rawCatagories' 
+ array in coax-coast.data.rb; make sure that your costing 
+ sheet entries match a catagory  in this list. 
+"
 
 end
 end

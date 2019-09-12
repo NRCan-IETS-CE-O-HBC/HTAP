@@ -36,7 +36,6 @@ require_relative 'include/application_modules'
 include REXML
 # This allows for no "REXML::" prefix to REXML methods
 
-
 $program = "substitute-h2k.rb"
 HTAPInit()
 # Parameters controlling timeout and re-try limits for HOT2000
@@ -3668,7 +3667,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Windows in walls elements
       locationText = "HouseFile/House/Components/Wall/Components/Window"
       h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
@@ -4892,7 +4890,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         Dir.chdir( $gMasterPath )
         debug_out ("\n Moved to path: #{Dir.getwd()}\n")
-
+        
+        # attempt to find results 
+        
         # Save output files
         $OutputFolder = "sim-output"
         if ( ! Dir.exist?($OutputFolder) )
@@ -4911,9 +4911,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Copy simulation results to sim-output folder in master (for ERS number)
         # Note that most of the output is contained in the HOT2000 file in XML!
         if ( Dir.exist?("sim-output") )
+          
           stream_out ("\n Copying results.")
+          begin 
           FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
-
+          rescue 
+            fatalerror ("Could not locate Browse.rpt file!")
+          end 
           if ( $gReadROutStrTxt )
             if ( File.file?("#{$run_path}\\ROutStr.txt")  )
               FileUtils.cp("#{$run_path}\\ROutStr.txt", ".\\sim-output\\")
@@ -6712,7 +6716,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             opts.on("--unit-cost-db FILE", "Specified path to unit cost database (e.g. HTAPUnitCosts.json)") do |c|
               $cmdlineopts["unitCosts"] = c
               $unitCostFileName = c
-              if ( !File.exist?($gChoiceFile) )
+              if ( !File.exist?($unitCostFileName) )
+                err_out ("Could not find #{$unitCostFileName}")
                 fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
               end
               $UnitCostFileSet = true
@@ -6722,7 +6727,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $cmdlineopts["rulesets"] = c
               $rulesetsFileName  = c
               if ( !File.exist?($rulesetsFileName) )
-                fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
+                err_out ("Could not find #{$rulesetsFileName}")
+                fatalerror("Valid path to the rulesets file must be specified with the --rulesets option!")
               end
               $RulesetFileSet = true 
             end 
@@ -7115,7 +7121,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
             elsif ( ruleSet =~ /^NBC_*9_*36$/ || ruleSet =~ /^NBC_*9_*36_noHRV$/ ||  ruleSet =~ /^NBC_*9_*36_noHRV$/ )
               stream_out ("  (b) NBC 936 pathway \n")
-              NBC_936_2010_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
+                NBC_936_2010_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
 
             elsif ( ruleSet =~ /936_2015_AW_HRV/ ||  ruleSet =~ /936_2015_AW_noHRV / )
               stream_out ("  (c) Protorype NBC Ruleset by Adam Wills.\n")
@@ -7186,12 +7192,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             rulesetHash = JSON.parse(File.read($rulesetsFileName))
             stream_out ("done.\n")
 
-
+            
             ##debug_out ("rulesethash: #{rulesetHash.pretty_inspect}\n")
+           debug_out ("> Looking for package: #{package}\n")
 
-            if ( rulesetHash["upgrade-packages"][package].empty? ) then 
+            if ( rulesetHash["upgrade-packages"][package].nil? or rulesetHash["upgrade-packages"][package].empty?  ) then 
 
-              err_out ("Could not find package #{package} in ruleset file #{rulesetsFileName}\n")
+              err_out ("Could not find package #{package} in ruleset file #{$rulesetsFileName}\n")
 
             else 
 
