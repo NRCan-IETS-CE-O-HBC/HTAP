@@ -8,6 +8,7 @@ module Hourly
 
     stream_out (" Initializing hourly analysis\n")
   	
+
   	#debug_on 
     debug_out("Tell Alex what data you need, and he will pass it in.")
 
@@ -26,7 +27,9 @@ module Hourly
   # Function to locate, parse CWEC data? 
   def self.readClimateData()
 
+
     #debug_on
+
 
     return
 
@@ -37,7 +40,9 @@ module Hourly
 
   def self.generateLoadShapes()
 
+
     #debug_on
+
 
     return
 
@@ -47,6 +52,7 @@ module Hourly
   def self.modelHourlyComponent()
 
     #debug_on
+
 
     return
 

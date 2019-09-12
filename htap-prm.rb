@@ -822,6 +822,10 @@ def run_these_cases(current_task_files)
           $cmdtxt.write "#{cmdscript} -v"
 
           $cmdtxt.close
+          #debug_out(" ( cmd: #{cmdscript} |  \n")
+
+
+          $cmdtxt.close
 
           # disable debugging in live version for faster runs 
           # (debugging still enabled in run-cmd.ps1)
@@ -1398,6 +1402,7 @@ $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
 
+
 $gHTAPOptionsFile = ""
 $gRulesetsFile = ""
 
@@ -1483,6 +1488,7 @@ optparse = OptionParser.new do |opts|
    opts.on("-j", "--json", "Provide output in JSON format (htap-prm-output.json),","in additon to .csv.") do
       $gJSONize = true
    end
+
 
    opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool",
                                          "output. Slows HTAP down, and make json output unwieldy on",
