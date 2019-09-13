@@ -6,23 +6,9 @@ module Hourly
   # Master function to manage creation of hourly load shapes from hot2000 results
   def Hourly.analyze(h2kBinResults)
 
-
-
-      	
-  	debug_on 
-    debug_out("Tell Alex what data you need, and he will pass it in.\n")
-    
-    debug_out("Content currently parsed:\n")
-    debug_out(h2kBinResults.pretty_inspect)
-
-
     climate_data=readClimateData()
     generateLoadShapes(h2kBinResults,climate_data)
     modelHourlyComponent()
-
-
-
-    debug_off()
 
     return
 
@@ -31,7 +17,7 @@ module Hourly
   # Function to locate, parse CWEC data? 
   def self.readClimateData()
 
-    debug_on
+    #debug_on
 
     #this requires csv class
     require 'csv'
@@ -79,7 +65,7 @@ module Hourly
 
 
 
-    debug_on
+    #debug_on
     month=climate_data[0]
     db_temperature=climate_data[1]
     rh=climate_data[2]
@@ -117,7 +103,7 @@ module Hourly
 
     indoor_design_temp=22 #for now. Need to get Alex or Rasoul to pass in this number.
     ua_val=h2kBinResults["PEAK-Heating-W"]/(indoor_design_temp-h2kBinResults["annual"]["design_Temp"]["heating_C"])
-
+  
     for i in months
       average_temp_month.merge!({i=>db_temperature.slice(start_of_month_hour[i],hours_per_month[i]).average})
       average_solar.merge!({i=>global_solar_hor.slice(start_of_month_hour[i],hours_per_month[i]).average})
@@ -126,7 +112,8 @@ module Hourly
 
 
 
-
+    #debug_on
+    #debug_out ("#{h2kBinResults.pretty_inspects}")
 
     htap_conduction_losses=Array.new
     htap_solar_gains=Array.new
@@ -138,7 +125,9 @@ module Hourly
       htap_conduction_losses[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["energy_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_solar_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["solar_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_internal_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["internal_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
-      htap_cooling[months_number.key(i)-1]=h2kBinResults["monthly"]["cooling"]["total_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
+
+      htap_cooling[months_number.key(i)-1]= 0 #h2kBinResults["monthly"]["cooling"]["total_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
+
       htap_elec_plug[months_number.key(i)-1]=(h2kBinResults["monthly"]["energy"]["lights_appliances_GJ"][i].to_f*1000000000.0)/(hours_per_month[i]*3600.0)
      htap_dhw[months_number.key(i)-1]=h2kBinResults["monthly"]["energy"]["DHW_heating_primary_GJ"][i].to_f
     end
@@ -290,7 +279,7 @@ module Hourly
 
   def self.modelHourlyComponent()
 
-    debug_on
+    #debug_on
 
     return
 
