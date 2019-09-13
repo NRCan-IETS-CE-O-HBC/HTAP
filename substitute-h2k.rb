@@ -87,6 +87,7 @@ $TsvOutput = false
 $keepH2KFolder = false
 $autoCostOptions = false
 $autoEstimateCosts = false 
+$hourlyCalcs = false 
 
 $gTotalCost          = 0
 $gIncBaseCosts       = 12000
@@ -5740,14 +5741,15 @@ def postprocess( scaleData )
   
   # Module for hourly analysis using load-shapes. 
   # .............................................
-  debug_on 
-  stream_out drawRuler(" Initializing hourly analysis")
-  stream_out ("\n")
+  if ($hourlyCalcs) then 
   
-  debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit location?"
-  Hourly.analyze($gResults[$outputHCode])
+    stream_out drawRuler(" Initializing hourly analysis")
+    stream_out ("\n")
+  
+    debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit location?"
+    Hourly.analyze($gResults[$outputHCode])
 
-  debug_off
+  end 
   # .............................................
 
   stream_out drawRuler("Simulation Results")
@@ -6773,6 +6775,11 @@ optparse = OptionParser.new do |opts|
   opts.on("-a", "--auto-cost-options", "Automatically cost the option(s) set for this run.") do
     $cmdlineopts["auto_cost_options"] = true
     $autoEstimateCosts = true
+  end
+
+  opts.on("--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
+    $cmdlineopts["hourly_output"] = true
+    $hourlyCalcs = true
   end
 
   opts.on("-j", "--export-options-to-json", "Export the .options file into JSON format and quit.") do
