@@ -260,7 +260,7 @@ $optionCost = 0.00
 # -----------------------------------------------------------------------------------------------------
 
 def exportOptionsToJson()
-
+  log_out("Exporting legacy data to JSON format")
   $gExportFormat = Hash.new
   $gOptions.each do |attribute, defs|
     # Ignore legacy tags that aren't supported anymore.
@@ -269,6 +269,7 @@ def exportOptionsToJson()
 
       next
     else
+      
       stream_out "    - exporting > #{attribute}\n"
 
     end
@@ -3316,16 +3317,19 @@ def processFile(h2kElements)
   # Save changes to the XML doc in existing working H2K file (overwrite original)
   begin
     debug_out (" Overwriting: #{$gWorkingModelFile} \n")
+    log_out ("saving processed h2k file  version (#{$gWorkingModelFile})")
     newXMLFile = File.open($gWorkingModelFile, "w")
     $XMLdoc.write(newXMLFile)
 
   rescue
     fatalerror("Could not overwrite #{$gWorkingModelFile}\n ")
   ensure
+
     newXMLFile.close
   end
 
   begin
+    log_out ("saving copy of the pre-h2k version (file-post-sub.h2k)")
     debug_out ("saving a copy of the pre-h2k version (file-post-sub.h2k)\n")
     newXMLFile = File.open("file-postsub.h2k", "w")
     $XMLdoc.write(newXMLFile)
@@ -3335,7 +3339,8 @@ def processFile(h2kElements)
   ensure
     newXMLFile.close
   end
-
+  #h2kElements.clear
+  #$XMLdoc.clear
   debug_out ("Returning from process...")
   #debug_pause
 
@@ -4934,6 +4939,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           #   debug_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
           #end
         end
+         
+        # Delete WMB file 
+
+        Dir.glob("./H2K/WMB_*").each do |file|
+          File.delete(file)
+        end
 
       end
       # runsims
@@ -5880,7 +5891,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
           $HouseStoreys = H2KFile.getStoreys(elements)
-			 $HouseFrontOrientation = H2KFile.getFrontOrientation(elements)
+			    $HouseFrontOrientation = H2KFile.getFrontOrientation(elements)
 
           locationText = "HouseFile/House/Components/Ceiling"
           areaCeiling_temp = 0.0
@@ -7118,7 +7129,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             if ( ruleSet =~ /as-found/ )
               # Do nothing!
               stream_out ("  (a) AS FOUND: no changes made to model\n")
-
+            
+            elsif ( ruleSet =~ /LEEP_Pathways/)
+                LEEP_pathways_ruleset()
             elsif ( ruleSet =~ /^NBC_*9_*36$/ || ruleSet =~ /^NBC_*9_*36_noHRV$/ ||  ruleSet =~ /^NBC_*9_*36_noHRV$/ )
               stream_out ("  (b) NBC 936 pathway \n")
                 NBC_936_2010_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
@@ -7611,11 +7624,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
         end
         fJsonOut.puts JSON.pretty_generate(results)
+        results.clear
         fJsonOut.close
       end
 
-
-      if $fSUMMARY == nil then
+      bNoSummary = true
+      if (not bNoSummary) then
+      if $fSUMMARY == nil    then
         fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
       end
 
@@ -7908,20 +7923,24 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
 
       end
+    end
+    
+    $gResults.clear
 
 
 
-
-
-      if ( ! $PRMcall )
-        if !$keepH2KFolder
-          FileUtils.rm_r ( "#{$gMasterPath}\\H2K" )
-        end
-      end
+if ( ! $PRMcall )
+  if !$keepH2KFolder
+    FileUtils.rm_r ( "#{$gMasterPath}\\H2K" )
+  end
+end
 
 
 
-      ReportMsgs()
+ReportMsgs()
 
-      $fSUMMARY.close()
-      $fLOG.close()
+log_out ("substitute-h2k.rb run complete.")
+log_out ("Closing log files")
+$fSUMMARY.close()
+$fLOG.close()
+     

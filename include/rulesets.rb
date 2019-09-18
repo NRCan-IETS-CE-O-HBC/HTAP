@@ -730,6 +730,22 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
 end
 
+def LEEP_pathways_ruleset()
+   $ruleSetChoices["Opt-GenericWall_1Layer_definitions"] = "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb"
+   $ruleSetChoices["Opt-FloorHeaderIntIns"]              = "NC_R-15eff_4.5inBatt"
+   $ruleSetChoices["Opt-AtticCeilings"]                  = "CeilR40"
+   $ruleSetChoices["Opt-CathCeilings"]                   = "CeilR40"
+   $ruleSetChoices["Opt-FlatCeilings"]                   = "CeilR40"
+   $ruleSetChoices["Opt-ExposedFloor"]                     = "NBC_936_5.02RSI"
+   $ruleSetChoices["Opt-HVACSystem"]                      = "gas-furnace-ecm"
+   $ruleSetChoices["Opt-FoundationWallIntIns"] = "WoodFrameEffR11"
+   $ruleSetChoices["Opt-FoundationWallExtIns"] = "uninsulated"
+   $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "uninsulated"
+   $ruleSetChoices["Opt-DHWSystem"]="gas_storagetank_w/powervent_ef0.67"
+   $ruleSetChoices["Opt-CasementWindows"]="NC-2g-MG-u1.82"
+   $ruleSetChoices["Opt-ACH"]="New-Const-air_seal_to_3.50_ach"
+   $ruleSetChoices["Opt-HRVonly"]="HRV_sre_60"
+end
 #===============================================================================
 def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
 
