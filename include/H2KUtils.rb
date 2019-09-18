@@ -1741,20 +1741,26 @@ end
 # Compute a checksum for directory, ignoring files that HOT2000 commonly alters during ar run
 # Can this be put inside the module?
 def self.checksum(dir)
-  md5 = Digest::MD5.new
-  searchLoc = dir.gsub(/\\/, "/")
+  begin
+    md5 = Digest::MD5.new
+    searchLoc = dir.gsub(/\\/, "/")
 
-  files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||
-    f =~ /Browse\.Rpt/i ||
-    f =~ /WINMB\.H2k/i  ||
-    f =~ /ROutStr\.H2k/i ||
-    f =~ /ROutStr\.Txt/i ||
-    f =~ /WMB_.*\.Txt/i ||
-    f =~ /HOT2000\.ini/i ||
-    f =~ /wizdefs.h2k/i
-  }
-  content = files.map{|f| File.read(f)}.join
-  md5result = md5.update content
-  content.clear
-  return md5.update content
+    files = Dir["#{searchLoc}/**/*"].reject{|f|  File.directory?(f) ||
+      f =~ /Browse\.Rpt/i ||
+      f =~ /WINMB\.H2k/i  ||
+      f =~ /ROutStr\.H2k/i ||
+      f =~ /ROutStr\.Txt/i ||
+      f =~ /WMB_.*\.Txt/i ||
+      f =~ /HOT2000\.ini/i ||
+      f =~ /wizdefs.h2k/i
+    }
+    content = files.map{|f| File.read(f)}.join
+    md5result = md5.update content
+    files.clear
+    content.clear
+    return md5.update content
+  rescue 
+    warn_out ("Could not checksum h2k directory")
+    return nil 
+  end
 end
