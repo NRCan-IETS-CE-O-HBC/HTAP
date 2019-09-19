@@ -95,6 +95,7 @@ module LEEPPathways
     "Opt-ACH:+:New-Const-air_seal_to_2.50_ach"  => "lpACH_02",
     "Opt-ACH:+:New-Const-air_seal_to_1.50_ach"  => "lpACH_03",
     "Opt-ACH:+:New-Const-air_seal_to_0.60_ach"  => "lpACH_04",
+    "Opt-ACH:+:New-Const-air_seal_to_1.00_ach"  => "lpACH_05",
 
 
     "Opt-CasementWindows:+:NC-2g-MG-u1.82"   => "lpWIN_01",
@@ -102,11 +103,12 @@ module LEEPPathways
     "Opt-CasementWindows:+:NC-2g-LG-u1.65"   => "lpWIN_03",
     "Opt-CasementWindows:+:NC-3g-HG-u1.08"   => "lpWIN_04",
     "Opt-CasementWindows:+:NC-3g-LG-u1.08"   => "lpWIN_05",  
-    
-
+    "Opt-CasementWindows:+:NC-3g-LG-u0.85"   => "lpWIN_06",  
 
     "Opt-FoundationWallExtIns:+:uninsulated"       => "lpFDe_01" ,
     "Opt-FoundationWallExtIns:+:xps3inEffR15"      => "lpFDe_02" , 
+    "Opt-FoundationWallExtIns:+:xps4inEffR20"      => "lpFDe_03" , 
+  
     "Opt-FoundationWallExtIns:+:xps1.5inEffR7.5"   => "lpFDe_03" ,    
 
     "Opt-FoundationWallIntIns:+:WoodFrameEffR11"  => "lpFDi_01" ,    
@@ -124,13 +126,12 @@ module LEEPPathways
     "Opt-HVACSystem:+:ASHP"  => "lpH&C_05", 
     "Opt-HVACSystem:+:elec-baseboard"  => "lpH&C_06", 
 
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb" => "lpMWL_01",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" =>  "lpMWL_02",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" =>  "lpMWL_03",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb" =>  "lpMWL_04",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" =>  "lpMWL_05",
-    "R-36(eff)" =>  "lpMWL_06",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" =>  "lpMWL_07",
+    "Opt-GenericWall_1Layer_definitions:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
+    "Opt-GenericWall_1Layer_definitions:+:NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb" => "lpMWL_02",
+    "Opt-GenericWall_1Layer_definitions:+:NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb" => "lpMWL_03",
+    "Opt-GenericWall_1Layer_definitions:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" => "lpMWL_04",
+    "Opt-GenericWall_1Layer_definitions:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" => "lpMWL_05",
+
 
     "Opt-DHWSystem:+:gas_storagetank_w/powervent_ef0.67" => "lpDHW_01",
     "Opt-DHWSystem:+:GasInstantaneous" => "lpDHW_02",
