@@ -631,7 +631,12 @@ def run_these_cases(current_task_files)
   ## Create working directories
 
   $headerline = ""
-  $outputHeaderPrinted = false
+
+  if ( $bReadyToResume )
+    headerOut = true 
+  else 
+    headerOut= false
+  end 
 
 
   current_task_files.each do |choicefile|
@@ -652,17 +657,18 @@ def run_these_cases(current_task_files)
   # Loop until all files have been processed.
   $GiveUp = false
 
-  # flag for CSV header file.
-  headerOut = false
-
   startRunsTime= Time.now
 
   fJSONout  = File.open("#{$gOutputJSON}", 'w')
   firstJSONLine = true
 
+  batchStatusUpdate = Array.new
+
   while  ! $RunsDone
 
       $batchCount = $batchCount + 1
+
+      batchStatusUpdate.clear 
 
       batchStartTime = Time.now
       fracCompleted = $choicefileIndex.to_f/numberOfFiles.to_f
@@ -740,12 +746,27 @@ def run_these_cases(current_task_files)
             end
 
           else
+            bCPDone = false
+            cptries = 0              
+                      
+            while ! bCPDone
               # Delete contents, but not H2K folder
               begin
-              FileUtils.rm_r Dir.glob("#{$RunDirectory}/*.*")
+                FileUtils.rm_r Dir.glob("#{$RunDirectory}/*.*")
+                bCPDone = true 
               rescue
-                fatalerror ("Could not delete the contents of #{$RunDirectory}\n")
+                
+                cptries += 1
+                 warn_out ("Could not delete files from within #{$RunDirectory} (Try # #{cptries}/3)\n")
+                if ( cpTries == 3 )
+                  bCPDone = true 
+                  warn_out ( "Trying to run simulation without deleting files in #{$RunDirectory}")
+                else 
+                  sleep 5 
+                end 
+               
               end
+            end 
           end
 
 
@@ -1115,6 +1136,7 @@ def run_these_cases(current_task_files)
 
         #Update status of this thread.
         $FinishedTheseFiles[$choicefiles[thread3]] = true
+        batchStatusUpdate.push $choicefiles[thread3]
 
 
       end
@@ -1283,6 +1305,9 @@ def run_these_cases(current_task_files)
       $fCSVout.flush
       stream_out ("done.\n")
 
+
+
+
       if ($gJSONize )
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
@@ -1339,8 +1364,19 @@ def run_these_cases(current_task_files)
       if ($gLEEPPathwayExport )
         stream_out("        -> Exporting LEEP Pathway Data ... ")
         LEEPPathways.ExportPathwayData()
-        stream_out ("done.\n")
+        stream_out("done.\n")
       end 
+
+
+      stream_out("        -> updating HTAP-prm.resume ... ")
+      list = ""
+      batchStatusUpdate.each do | run |
+        list += "#{run}\n"
+      end 
+      $fResume.write list 
+      batchStatusUpdate.clear 
+      stream_out("done.\n")
+      $fResume.flush 
 
      $failures.flush
 
@@ -1352,6 +1388,7 @@ def run_these_cases(current_task_files)
 
      HTAPConfig.countSuccessfulEvals(batchSuccessCount)
      HTAPConfig.writeConfigData()
+
      if ( ! $FinishedTheseFiles.has_value?(false) )
 
        $RunsDone = true
@@ -1404,10 +1441,13 @@ $gRulesetsFile = ""
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
+$gResumeFile = "HTAP-prm.resume"
 $gOutputJSON = "HTAP-prm-output.json"
 $gFailFile = "HTAP-prm-failures.txt"
 $gSaveAllRuns = false
-
+$bResume = false 
+$bReadyToResume = false 
+$gRunsAleadyCompleted = Array.new 
 
 $gTest_params["audit-costs"] = false
 
@@ -1499,6 +1539,12 @@ optparse = OptionParser.new do |opts|
       $gTest_params["audit-costs"] = true
    end
 
+   opts.on( "--resume", "Attempt to resume prior interrupted run (experimental) ",
+) do
+
+      $cmdlineopts["resume"] = true
+      $bResume = true 
+   end   
 
    opts.on("-v", "--verbose", "Output progress to console.") do
       $cmdlineopts["verbose"] = true
@@ -1544,6 +1590,8 @@ optparse = OptionParser.new do |opts|
 
 end
 
+
+
 if ARGV.empty? then
    ARGV.push "-h"
 end
@@ -1551,7 +1599,6 @@ optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does 
 
 stream_out(drawRuler("A simple parallel run manager for HTAP"))
 reportSRC($branch_name, $revision_number)
-
 
 $RunNumber = 0
 $processed_file_count = 0
@@ -1566,7 +1613,7 @@ $RunResultFilename = "substitute-h2k_summary.out"
 
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
 
-
+$RunsNeeded = Array.new
 $RunTheseFiles = Array.new
 $FinishedTheseFiles = Hash.new
 
@@ -1575,10 +1622,59 @@ $FinishedTheseFiles = Hash.new
 #stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
 stream_out("\n Initialization: \n")
 
-begin
-  $fCSVout = File.open($gOutputFile, 'w')
-rescue
-  fatalerror( "Could not open CSV output file ($gOutputFile)\n")
+if ( $bResume ) then 
+  warn_out("Option `--resume` is experimental. Talk to Alex Ferguson before putting to use.")
+  info_out("Resuming prior HTAP run")
+  log_out("Attempting to resume prior run")
+  
+  # Read resume file, and then re-open it for appending more data to
+  begin   
+    $fResume = File.open($gResumeFile, 'r')
+    $fResume.each do | line | 
+      line.strip!       
+      $gRunsAleadyCompleted.push line  
+    end 
+    $fResume.close 
+    $fResume = File.open($gResumeFile, 'a')
+  rescue
+    fatalerror ("`--resume` option invoked, but could not parse #{$gResumeFile}.")
+  end 
+  
+  # Open CSV file for writing. 
+  begin
+    $fCSVout= File.open($gOutputFile, 'a') 
+  rescue 
+    fatalerror( "Could not open CSV output ($gOutputFile) for appending data.\n")
+  end 
+  
+  # If LEEP-pathway data is to be exported, try to parse existing files.
+  if ( $gLEEPPathwayExport ) then 
+    LEEPPathways.OpenOutputFiles("append")
+  end 
+
+  $bReadyToResume = true 
+  stream_out("    - Attempting to resume prior run\n")
+else 
+ 
+  # Open csv file for writing 
+  begin
+    $fCSVout = File.open($gOutputFile, 'w') 
+  rescue
+    fatalerror( "Could not open CSV output file ($gOutputFile)\n")
+  end 
+
+  # Open resume file for writing 
+  begin 
+    $fResume = File.open($gResumeFile, 'w')
+    $fResume.write ("List of runs previously completed:\n")
+  rescue
+    warn_out( "Could not open resume file  ($gResumeFile) - runs cannot be resumed.\n")
+  end 
+
+  #Open LEEP pathways export files, if needed
+  LEEPPathways.OpenOutputFiles("overwrite") if ($gLEEPPathwayExport)
+
+  $bReadyToResume = false
 end
 
 
@@ -1603,7 +1699,7 @@ if ( ! $gRunDefinitionsProvided )
   #  - load choice files into array for now
   ARGV.each do |choicefile|
     if ( choicefile =~ /.*choices$/ )
-      $RunTheseFiles.push choicefile
+      $RunsNeeded.push choicefile
     else
       stream_out "    ! Skipping: #{choicefile} ( not a '.choice' file? ) \n"
     end
@@ -1678,7 +1774,7 @@ else
 
 
     if ($gRunDefMode == "mesh" ) then
-      $RunTheseFiles = $gGenChoiceFileList
+      $RunsNeeded = $gGenChoiceFileList
     else
 
       $pop_size= $gGenChoiceFileList.count
@@ -1700,13 +1796,13 @@ else
 
       if ( $sample_seeded ) then
 
-        $RunTheseFiles = $gGenChoiceFileList.shuffle(random: Random.new($sample_seed_val.to_i)).first($sample_size.to_i)
+        $RunsNeeded = $gGenChoiceFileList.shuffle(random: Random.new($sample_seed_val.to_i)).first($sample_size.to_i)
 
       else
-        $RunTheseFiles = $gGenChoiceFileList.shuffle.first($sample_size.to_i)
+        $RunsNeeded = $gGenChoiceFileList.shuffle.first($sample_size.to_i)
       end
 
-      debug_out ($RunTheseFiles.pretty_inspect)
+      debug_out ($RunsNeeded.pretty_inspect)
 
       stream_out ("    - Sampled #{$sample_size.to_i} combinations for run\n")
 
@@ -1749,12 +1845,10 @@ else
 
     create_parametric_combos()
     stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
-    $RunTheseFiles = $gGenChoiceFileList
+    $RunsNeeded = $gGenChoiceFileList
 
 
   end
-
-
 
 
 
@@ -1770,10 +1864,23 @@ else
 
 end
 
+if ( $bResume )  
+  $RunsNeeded.each do | run | 
+     $RunTheseFiles.push run unless ( $gRunsAleadyCompleted.include?(run) ) 
+  end 
+  numOfRunsRequired = $RunTheseFiles.length
+  numOfRunsPrevCompleted = $RunsNeeded.length - numOfRunsRequired
+  info_out(" Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining")
+  stream_out ( "    - [RESUMING] Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining\n")
+else 
+  $RunTheseFiles = $RunsNeeded
+  numOfRunsRequired = $RunTheseFiles.length
+end 
 
 
-
-
+if ( numOfRunsRequired <= 0  ) then 
+  fatalerror "No runs to be completed!"
+end 
 $batchCount = 0
 goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
@@ -1811,17 +1918,13 @@ else
   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
 end
 
-#Open LEEP pathways export files, if needed
-LEEPPathways.OpenOutputFiles() if ($gLEEPPathwayExport)
+
 
 #==================================================================
 # Process cases 
 #==================================================================
 run_these_cases($RunTheseFiles)
 
-#==================================================================
-#
-#==================================================================
 
 
 #==================================================================
@@ -1856,6 +1959,7 @@ if ( HTAPConfig.checkOddities() ) then
 end
 # Close output files (JSON output dumped in a single write - already closed at this point.
 $fCSVout.close
+$fResume.close 
 $failures.close
 HTAPConfig.setCreationDate()
 HTAPConfig.writeConfigData()
