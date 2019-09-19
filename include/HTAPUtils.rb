@@ -25,7 +25,7 @@ def HTAPInit()
 
   $scriptLocation = File.expand_path(File.dirname(__FILE__)+"\\..\\.")
 
-  log_out ("#{$program} location: #{$scriptLocation}\n")
+  log_out ("#{$program} location: #{$scriptLocation}")
   debug_out ("Parsing configuration file...")
   log_out ("Parsing HTAP configuration file")
   HTAPConfig.parseConfigData()
@@ -95,7 +95,7 @@ end
 
 
 def convertToCSV(arrToFlatten,printHeader=true,headerArray=[])
-  log_out ("")
+  log_out ("Exporting data in csv format")
   #debug_off
   #debug_out ("Export csv - header status #{printHeader}\n ")
   require 'csv'
@@ -160,7 +160,7 @@ module HTAPData
 
     if ( ! $gHTAPOptionsParsed ) then 
 
-      log_out ("Parsing options file - #{$gHTAPOptionsFile}...")
+      log_out ("Parsing options file - #{$gHTAPOptionsFile}")
 
 
       $gHTAPOptions = HTAPData.parse_json_options_file($gHTAPOptionsFile)
@@ -175,7 +175,7 @@ module HTAPData
 
       #$gHTAPOptions = JSON.parse(rawOptions )
       #rawOptions  = nil
-      #log_out("done.\n")
+
 
       info_out ("Parsed options file #{$gHTAPOptionsFile}")
       $gHTAPOptionsParsed = true
@@ -260,7 +260,7 @@ module HTAPData
 
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
-    stream_out("\n\n Reading available options (#{filename})...")
+    log_out("Reading available options (#{filename})")
 
     debug_off
     debug_out("Parsing JSON Options file #{filename}\n")
@@ -277,8 +277,9 @@ module HTAPData
 
     optionsContents = fOPTIONS.read
     fOPTIONS.close
+    
     jsonRawOptions = JSON.parse(optionsContents)
-
+    optionsContents.clear
     for attribute in jsonRawOptions.keys()
 
 
@@ -418,8 +419,8 @@ module HTAPData
 
 
 
-    stream_out("done.\n\n")
-
+    #stream_out("done.\n\n")
+    jsonRawOptions.clear
     return parsedOptions
 
   end
@@ -567,24 +568,24 @@ module HTAPData
 
     #debug_on
 
-    debug_out (" Validating HTAP options\n")
+    #debug_out (" Validating HTAP options\n")
+    # log_out ("Ignoring #{$LegacyOptionsToIgnore.pretty_inspect}\n")
+    #debug_out ("I will skip: #{$LegacyOptionsToIgnore.pretty_inspect}\n")
 
-    debug_out ("I will skip: #{$LegacyOptionsToIgnore.pretty_inspect}\n")
-
-    debug_out (" These choices were supplied:\n")
+    log_out (" supplied choices:")
     choices.each do | choice, value |
-
-      debug_out ("  #{choice} = #{value}\n")
-
+    #
+      log_out ("  #{choice} = #{value}")
+    #
     end
 
     # Search through options and determine if they are used in Choices file (warn if not).
 
 
     options.each do |option, ignore|
-      debug_out drawRuler("Option #{option}","  .")
+      #debug_out drawRuler("Option #{option}","  .")
       if ( $LegacyOptionsToIgnore.include? option ) then
-        debug_out (" skipped legacy option #{option}\n")
+        #debug_out (" skipped legacy option #{option}\n")
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
         next
       end
@@ -597,7 +598,7 @@ module HTAPData
 
 
      if ( !choices.has_key?(option)  )
-        debug_out " #{option} was not defined in the choice file\n"
+        #debug_out " #{option} was not defined in the choice file\n"
         thisMsg = "Option #{option} was not specified in Choices file OR rule set; "
 
 
@@ -975,7 +976,7 @@ module HTAPConfig
       configContent = File.read("#{$scriptLocation}/#{ConfigDataFile}")
       $gConfigData = JSON.parse(configContent)
     rescue
-      log_out("could not parse configuration file:  #{$scriptLocation}/#{ConfigDataFile} \n")
+      log_out("could not parse configuration file:  #{$scriptLocation}/#{ConfigDataFile}")
     end
   end
 
