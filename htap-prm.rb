@@ -157,6 +157,7 @@ def parse_def_file(filepath)
 
           if ( $RunParamsOpen && $token_values[0] =~ /options-file/i )
 
+
             # Where is our options file located?
 
             $gHTAPOptionsFile = $token_values[1]
@@ -1306,8 +1307,6 @@ def run_these_cases(current_task_files)
       stream_out ("done.\n")
 
 
-
-
       if ($gJSONize )
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
@@ -1435,6 +1434,8 @@ $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
 $gTest_params["verbosity"] = "quiet"
 
+
+
 $gHTAPOptionsFile = ""
 $gRulesetsFile = ""
 
@@ -1523,6 +1524,8 @@ optparse = OptionParser.new do |opts|
    opts.on("-j", "--json", "Provide output in JSON format (htap-prm-output.json),","in additon to .csv.") do
       $gJSONize = true
    end
+
+
 
    opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool",
                                          "output. Slows HTAP down, and make json output unwieldy on",
@@ -1919,12 +1922,14 @@ else
 end
 
 
-
 #==================================================================
 # Process cases 
 #==================================================================
 run_these_cases($RunTheseFiles)
 
+#==================================================================
+#
+#==================================================================
 
 
 #==================================================================

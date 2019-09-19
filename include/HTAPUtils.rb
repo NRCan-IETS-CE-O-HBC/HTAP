@@ -25,16 +25,14 @@ def HTAPInit()
 
   $scriptLocation = File.expand_path(File.dirname(__FILE__)+"\\..\\.")
 
+
   log_out ("#{$program} location: #{$scriptLocation}")
+
   debug_out ("Parsing configuration file...")
   log_out ("Parsing HTAP configuration file")
   HTAPConfig.parseConfigData()
   debug_out ("done.\n")
 end
-
-
-
-
 
 
 
@@ -160,6 +158,7 @@ module HTAPData
 
     if ( ! $gHTAPOptionsParsed ) then 
 
+
       log_out ("Parsing options file - #{$gHTAPOptionsFile}")
 
 
@@ -175,7 +174,6 @@ module HTAPData
 
       #$gHTAPOptions = JSON.parse(rawOptions )
       #rawOptions  = nil
-
 
       info_out ("Parsed options file #{$gHTAPOptionsFile}")
       $gHTAPOptionsParsed = true
