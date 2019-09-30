@@ -55,8 +55,8 @@ HTAP consists of two parts:
 3. Before you can run HTAP simulations, you must first copy the archetype files to the  `C:\H2K-CLI-Min\User\` directory. HTAP includes a ruby script to do this for you:
 
 ```powershell
-PS C:\> cd .\HTAP\Archetypes\
-PS C:\HTAP\Archetypes> ruby .\CopyToH2K.rb
+C:\> cd .\HTAP\Archetypes\
+C:\HTAP\Archetypes> ruby .\CopyToH2K.rb
 >C:/HTAP/Archetypes
 >> Copying ./1218N00240.h2k to C:\H2K-CLI-Min\User\... done.
 >> Copying ./1218N00263.h2k to C:\H2K-CLI-Min\User\... done.
