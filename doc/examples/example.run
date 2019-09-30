@@ -3,7 +3,7 @@
 ! Run-Mode: Parameters that affect how htap-prm is configured.
 RunParameters_START
   run-mode                           = parametric
-  archetype-dir                      = C:/HTAP/Archetypes
+  archetype-dir                      = C:/HTAP/doc/examples/h2k-files
   unit-costs-db                      = C:/HTAP/HTAPUnitCosts.json
   options-file                       = C:/HTAP/HTAP-options.json
 RunParameters_END
