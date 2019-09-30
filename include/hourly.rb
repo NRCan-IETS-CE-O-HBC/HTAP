@@ -26,8 +26,6 @@ module Hourly
   # Function to locate, parse CWEC data? 
   def self.readClimateData()
 
-    #debug_on
-
     return
 
   end 
@@ -36,8 +34,6 @@ module Hourly
   # Fuction to 
 
   def self.generateLoadShapes()
-
-    #debug_on
 
     return
 

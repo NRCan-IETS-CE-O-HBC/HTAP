@@ -97,7 +97,6 @@ module LEEPPathways
     "Opt-ACH:+:New-Const-air_seal_to_0.60_ach"  => "lpACH_04",
     "Opt-ACH:+:New-Const-air_seal_to_1.00_ach"  => "lpACH_05",
 
-
     "Opt-CasementWindows:+:NC-2g-MG-u1.82"   => "lpWIN_01",
     "Opt-CasementWindows:+:NC-2g-HG-u1.65"   => "lpWIN_02",
     "Opt-CasementWindows:+:NC-2g-LG-u1.65"   => "lpWIN_03",
@@ -142,6 +141,7 @@ module LEEPPathways
     "Opt-HRVonly:+:HRV_sre_60"         => "lpHRV_01",  
     "Opt-HRVonly:+:HRV_sre_78"         => "lpHRV_02",
     "Opt-DWHRSystem:+:NA"     => "lpDWHR_00",
+
     "Opt-DWHRSystem:+:DWHR-eff-55"     => "lpDWHR_01"
   }
   GoodArchFields = [
@@ -201,7 +201,7 @@ module LEEPPathways
   GoodECMFields = Array.new [
     "ecmID",
     "attribute",
-    "measure", 
+    "measure"
   ]
 
   GoodLocFields = Array.new [ 
@@ -230,7 +230,6 @@ module LEEPPathways
     "Opt-HVACSystem",
     "Opt-DHWSystem",
     "Opt-DWHRSystem",
-
   ]
 
   GoodRunFields = Array.new [ 
@@ -361,6 +360,7 @@ module LEEPPathways
 
   end 
 
+
   def self.ReconstituteDataStructure(txt)
     firstRow = true 
     header = Array.new 
@@ -428,6 +428,7 @@ module LEEPPathways
     else
       fatalerror ("Logic error - unknown mode #{mode}")
     end
+
   end   
 
   def LEEPPathways.ExportPathwayData()
@@ -481,10 +482,12 @@ module LEEPPathways
           archID = archetype["archID"]
           foundArch = true 
           #debug_on
+
           #debug_out "TEST: - #{locID} [#{archetype["listOfLocations"]}]\n"
           #if (! bListContainsID(locID, archetype["listOfLocations"])) then 
           #  archetype["listOfLocations"] += "#{locID};"
           #end
+
           break
         end 
         debug_out ("#{foundArch}\n")
