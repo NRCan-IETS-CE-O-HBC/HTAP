@@ -22,7 +22,7 @@ def initialize
   "Opt-CathCeilings" => nil,
   "Opt-FlatCeilings" => nil,
   "Opt-MainWall" => nil,
-  "Opt-GenericWall_1Layer_definitions" => nil,
+  "Opt-AboveGradeWall" => nil,
   "Opt-ExposedFloor" => "Opt-ExposedFloor",
   "Opt-CasementWindows" => nil,
   "Opt-Skylights" => nil,

@@ -96,7 +96,7 @@ def stream_out(msg)
   if ($gTest_params["verbosity"] != "quiet")
     print msg
   end
-  log_out(msg, true)
+  #log_out(msg, true)
   if ( msg =~ /\n/ )
     $newLine = true
   else
@@ -116,9 +116,9 @@ def log_out(msg,fromScreen=false)
       logmsg = msg
     end
 
-    $fLOG.write("#{logmsg}")
-    if ( $logBufferCount > 10 )
-      $fLOG.flush
+    $fLOG.write("#{logmsg}\n")
+    if ( $logBufferCount > 20 )
+      $fLOG.flush      
       $logBufferCount = 0
     end
   end
@@ -346,7 +346,7 @@ def info_out(msg)
   #msg += " (message reported by #{routine} - #{file}:#{line})"
 
   if ($gTest_params["logfile"])
-    $fLOG.write("Info: #{msg}")
+    $fLOG.write("Info: #{msg}\n")
   end
 
   $gInfoMsgs << msg
@@ -622,6 +622,7 @@ def ReportMsgs()
   stream_out " STATUS: #{status} \n"
   stream_out drawRuler
 
+  $fLOG.flush
 
   #if ($fLOG != nil )
   #  $fLOG.write("\n\n ERROR: #{msg}\n\n")

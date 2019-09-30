@@ -143,7 +143,7 @@ $PermafrostHash =  {
             "HALLBEACH"    => "continuous"
             }
 
-
+            
 
 #Index of provinces, used by HOT2000 for region
 $ProvArr = [ "BRITISH COLUMBIA",
@@ -170,8 +170,15 @@ $LegacyOptionsToIgnore = Set.new [
   "Opt-DHWLoadScale",
   "Opt-HRVduct",
   "Opt-FloorAboveCrawl",
-  "Opt-FloorHeader"
+  "Opt-FloorHeader",
+  "Opt-MainWall"
 ]
+
+
+AliasesForAttributes = {
+  "Opt-GenericWall_1Layer_definitions" => "Opt-AboveGradeWall",
+  "Opt-FloorAboveCrawl" => "Opt-ExposedFloor"
+}
 
 $DoNotValidateOptions = Set.new [  "upgrade-package-list" ]
 
@@ -179,23 +186,23 @@ $DoNotValidateOptions = Set.new [  "upgrade-package-list" ]
 
 
 CostingSupport = Set.new [ "Opt-Ceilings",
-                           "Opt-AtticCeilings",
-						   "Opt-FlatCeilings",
-						   "Opt-CathCeilings",
-                           "Opt-ACH",
-                           "Opt-CasementWindows",
-                           "Opt-DWHRSystem",
-                           "Opt-GenericWall_1Layer_definitions",
-                           "Opt-HVACSystem",
-                           "Opt-HRVonly",
-                           "Opt-DHWSystem",
-                           "Opt-FoundationWallExtIns",
-                           "Opt-FoundationWallIntIns",
-                           "Opt-FoundationSlabBelowGrade",
-                           "Opt-FoundationSlabOnGrade",
-                           "Opt-FloorHeaderIntIns",
-						   "Opt-ExposedFloor"
-                         ]
+              "Opt-AtticCeilings",
+						  "Opt-FlatCeilings",
+						  "Opt-CathCeilings",
+              "Opt-ACH",
+              "Opt-CasementWindows",
+              "Opt-DWHRSystem",
+              "Opt-AboveGradeWall",
+              "Opt-HVACSystem",
+              "Opt-HRVonly",
+              "Opt-DHWSystem",
+              "Opt-FoundationWallExtIns",
+              "Opt-FoundationWallIntIns",
+              "Opt-FoundationSlabBelowGrade",
+              "Opt-FoundationSlabOnGrade",
+              "Opt-FloorHeaderIntIns",
+					    "Opt-ExposedFloor"
+          ]
 
 AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
                                      "Opt-FuelCost",

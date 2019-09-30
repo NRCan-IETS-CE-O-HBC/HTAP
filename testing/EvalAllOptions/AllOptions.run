@@ -22,7 +22,7 @@ RunScope_END
 Upgrades_START
 
    Opt-FuelCost         = *
-   Opt-DBFiles          = *
+   Opt-DBFiles          = H2KCodeLibFile
    Opt-ResultHouseCode  = *
  
    Opt-Specifications   = *
@@ -39,7 +39,7 @@ Upgrades_START
   
    Opt-MainWall         = * 
    Opt-GenericWall_1Layer_definitions = * 
-   Opt-FloorHeader      = *   
+   Opt-FloorHeaderIntIns    = *   
   
    Opt-H2KFoundation    = *
   

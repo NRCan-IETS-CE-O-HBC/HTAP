@@ -1,4 +1,4 @@
-
+ 
 # file for holding functions related to specific applications - e.g. BC step code
 
 
@@ -95,19 +95,21 @@ module LEEPPathways
     "Opt-ACH:+:New-Const-air_seal_to_2.50_ach"  => "lpACH_02",
     "Opt-ACH:+:New-Const-air_seal_to_1.50_ach"  => "lpACH_03",
     "Opt-ACH:+:New-Const-air_seal_to_0.60_ach"  => "lpACH_04",
-
+    "Opt-ACH:+:New-Const-air_seal_to_1.00_ach"  => "lpACH_05",
 
     "Opt-CasementWindows:+:NC-2g-MG-u1.82"   => "lpWIN_01",
     "Opt-CasementWindows:+:NC-2g-HG-u1.65"   => "lpWIN_02",
     "Opt-CasementWindows:+:NC-2g-LG-u1.65"   => "lpWIN_03",
     "Opt-CasementWindows:+:NC-3g-HG-u1.08"   => "lpWIN_04",
     "Opt-CasementWindows:+:NC-3g-LG-u1.08"   => "lpWIN_05",  
-    
-
+    "Opt-CasementWindows:+:NC-3g-LG-u0.85"   => "lpWIN_06",  
 
     "Opt-FoundationWallExtIns:+:uninsulated"       => "lpFDe_01" ,
-    "Opt-FoundationWallExtIns:+:xps3inEffR15"      => "lpFDe_02" , 
-    "Opt-FoundationWallExtIns:+:xps1.5inEffR7.5"   => "lpFDe_03" ,    
+    "Opt-FoundationWallExtIns:+:xps1.5inEffR7.5"   => "lpFDe_02" ,        
+    "Opt-FoundationWallExtIns:+:xps2.5inEffR12.5"  => "lpFDe_03" ,        
+    "Opt-FoundationWallExtIns:+:xps3inEffR15"      => "lpFDe_04" , 
+    "Opt-FoundationWallExtIns:+:xps4inEffR20"      => "lpFDe_05" , 
+
 
     "Opt-FoundationWallIntIns:+:WoodFrameEffR11"  => "lpFDi_01" ,    
     "Opt-FoundationWallIntIns:+:WoodFrameEffR15"  => "lpFDi_02" ,    
@@ -117,27 +119,28 @@ module LEEPPathways
     "Opt-FoundationSlabBelowGrade:+:xps4inEffR20" => "lpSBG_02" , 
     "Opt-FoundationSlabBelowGrade:+:xps2inEffR10" => "lpSBG_03" , 
 
-
-
-
-
     "Opt-HVACSystem:+:gas-furnace-psc"     => "lpH&C_01", 
     "Opt-HVACSystem:+:gas-furnace-ecm"     => "lpH&C_02", 
     "Opt-HVACSystem:+:gas-furnace-ecm+AC"  => "lpH&C_03", 
+    "Opt-HVACSystem:+:CCASHP"  => "lpH&C_04", 
+    "Opt-HVACSystem:+:ASHP"  => "lpH&C_05", 
+    "Opt-HVACSystem:+:elec-baseboard"  => "lpH&C_06", 
 
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb" => "lpMWL_01",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" =>  "lpMWL_02",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" =>  "lpMWL_03",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb" =>  "lpMWL_04",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" =>  "lpMWL_05",
-    "R-36(eff)" =>  "lpMWL_06",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" =>  "lpMWL_07",
+    "Opt-AboveGradeWall:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
+    "Opt-AboveGradeWall:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" => "lpMWL_02",
+    
+    "Opt-AboveGradeWall:+:NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb" => "lpMWL_03",
+    "Opt-AboveGradeWall:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" => "lpMWL_04",
+    "Opt-AboveGradeWall:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" => "lpMWL_05",
+
 
     "Opt-DHWSystem:+:gas_storagetank_w/powervent_ef0.67" => "lpDHW_01",
     "Opt-DHWSystem:+:GasInstantaneous" => "lpDHW_02",
-
+    "Opt-DHWSystem:+:HPHotWater" => "lpDHW_03",
+    "Opt-DHWSystem:+:elec_storage_ef0.89" => "lpDHW_04",
     "Opt-HRVonly:+:HRV_sre_60"         => "lpHRV_01",  
     "Opt-HRVonly:+:HRV_sre_78"         => "lpHRV_02",
+    "Opt-DWHRSystem:+:NA"     => "lpDWHR_00",
 
     "Opt-DWHRSystem:+:DWHR-eff-55"     => "lpDWHR_01"
   }
@@ -216,7 +219,7 @@ module LEEPPathways
     "Opt-AtticCeilings",
     "Opt-CathCeilings",
     "Opt-FlatCeilings",
-    "Opt-GenericWall_1Layer_definitions",
+    "Opt-AboveGradeWall",
     "Opt-FloorHeaderIntIns",
     "Opt-ExposedFloor",
     "Opt-FoundationSlabBelowGrade", 
@@ -226,8 +229,7 @@ module LEEPPathways
     "Opt-HRVonly",
     "Opt-HVACSystem",
     "Opt-DHWSystem",
-    "Opt-DWHR-System",
-
+    "Opt-DWHRSystem",
   ]
 
   GoodRunFields = Array.new [ 
@@ -268,7 +270,7 @@ module LEEPPathways
   #  "Opt-AtticCeilings",
   #  "Opt-CathCeilings",
   #  "Opt-FlatCeilings",
-  #  "Opt-GenericWall_1Layer_definitions",
+  #  "Opt-AboveGradeWall",
   #  "Opt-FloorHeaderIntIns",
   #  "Opt-ExposedFloor",
   #  "Opt-FoundationSlabBelowGrade", 
@@ -278,7 +280,7 @@ module LEEPPathways
   #  "Opt-HRVonly",
   #  "Opt-HVACSystem",
   #  "Opt-DHWSystem",
-  #  "Opt-DWHR-System",
+  #  "Opt-DWHRSystem",
     #  "HVAC:ASHP:capacity_kW",
     #  "HVAC:ASHP:count",
     #  "HVAC:AirConditioner:capacity_kW",
@@ -359,14 +361,74 @@ module LEEPPathways
   end 
 
 
-  def LEEPPathways.OpenOutputFiles()
-    log_out("Opening LEEP output files\n")
-    $ECM_outfile = File.open('./Pathways_ListOfECMs.csv', 'w')
-    $ARC_outfile = File.open('./Pathways_HTAPArchetypeData.csv', 'w')
-    $LOC_outfile = File.open('./Pathways_HTAPLocationData.csv', 'w')
-    $RUN_outfile = File.open('./Pathways_HTAPRunData.csv', 'w')
-    $LEEPprintHeader = true 
-    $LEEPRunID = 0 
+  def self.ReconstituteDataStructure(txt)
+    firstRow = true 
+    header = Array.new 
+    data = Array.new
+    dataStructure = Array.new 
+    txt.split("\n").each do | line |
+      
+      if firstRow then 
+        header = line.split(",")
+        firstRow = false 
+      else 
+        data = line.split(",")
+        record = Hash.new 
+        i = 0 
+        until i == header.length do 
+          record[header[i]] = data[i]
+          i+=1       
+        end 
+        dataStructure.push record    
+      end 
+ 
+    end 
+    data.clear
+    header.clear
+    txt.clear 
+    return dataStructure
+  end 
+
+  def LEEPPathways.OpenOutputFiles(mode="overwrite")
+
+    log_out("Opening LEEP output files [mode=#{mode}\n")
+    if (mode == "overwrite")
+      $ECM_outfile = File.open('./Pathways_ListOfECMs.csv', 'w')
+      $ARC_outfile = File.open('./Pathways_HTAPArchetypeData.csv', 'w')
+      $LOC_outfile = File.open('./Pathways_HTAPLocationData.csv', 'w')
+      $RUN_outfile = File.open('./Pathways_HTAPRunData.csv', 'w')
+      $LEEPprintHeader = true 
+      $LEEPRunID = 0 
+    elsif ( mode =="append")
+      #begin 
+        # Parse ECM output file, and reconsititute data hash
+
+        log_out ("Rebuilding LEEP pathways data structures from prior runs")
+        previousData = File.read('./Pathways_ListOfECMs.csv')
+        $LEEPecmData = self.ReconstituteDataStructure(previousData)
+        previousData.clear
+        $LEEPecmData.each do | ecmRecord |
+          ecmRecord["searchTextKey"] = "#{ecmRecord["attribute"]}:+:#{ecmRecord["measure"]}"
+        end 
+        previousData = File.read('./Pathways_HTAPLocationData.csv')
+        $LEEPlocData = self.ReconstituteDataStructure(previousData)
+        previousData.clear 
+
+        previousData = File.read('./Pathways_HTAPArchetypeData.csv')
+        $LEEParchetypeData = self.ReconstituteDataStructure(previousData)
+        previousData.clear
+
+        $LEEPRunID = File.read('./Pathways_HTAPRunData.csv').split("\n").length
+
+        $ECM_outfile = File.open('./Pathways_ListOfECMs.csv', 'a')
+        $ARC_outfile = File.open('./Pathways_HTAPArchetypeData.csv', 'a')
+        $LOC_outfile = File.open('./Pathways_HTAPLocationData.csv', 'a')
+        $RUN_outfile = File.open('./Pathways_HTAPRunData.csv', 'a')
+        $LEEPprintHeader = false 
+    else
+      fatalerror ("Logic error - unknown mode #{mode}")
+    end
+
   end   
 
   def LEEPPathways.ExportPathwayData()
@@ -420,10 +482,12 @@ module LEEPPathways
           archID = archetype["archID"]
           foundArch = true 
           #debug_on
-          debug_out "TEST: - #{locID} [#{archetype["listOfLocations"]}]\n"
-          if (! bListContainsID(locID, archetype["listOfLocations"])) then 
-            archetype["listOfLocations"] += "#{locID};"
-          end
+
+          #debug_out "TEST: - #{locID} [#{archetype["listOfLocations"]}]\n"
+          #if (! bListContainsID(locID, archetype["listOfLocations"])) then 
+          #  archetype["listOfLocations"] += "#{locID};"
+          #end
+
           break
         end 
         debug_out ("#{foundArch}\n")
