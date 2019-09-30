@@ -106,10 +106,11 @@ module LEEPPathways
     "Opt-CasementWindows:+:NC-3g-LG-u0.85"   => "lpWIN_06",  
 
     "Opt-FoundationWallExtIns:+:uninsulated"       => "lpFDe_01" ,
-    "Opt-FoundationWallExtIns:+:xps3inEffR15"      => "lpFDe_02" , 
-    "Opt-FoundationWallExtIns:+:xps4inEffR20"      => "lpFDe_03" , 
-  
-    "Opt-FoundationWallExtIns:+:xps1.5inEffR7.5"   => "lpFDe_03" ,    
+    "Opt-FoundationWallExtIns:+:xps1.5inEffR7.5"   => "lpFDe_02" ,        
+    "Opt-FoundationWallExtIns:+:xps2.5inEffR12.5"  => "lpFDe_03" ,        
+    "Opt-FoundationWallExtIns:+:xps3inEffR15"      => "lpFDe_04" , 
+    "Opt-FoundationWallExtIns:+:xps4inEffR20"      => "lpFDe_05" , 
+
 
     "Opt-FoundationWallIntIns:+:WoodFrameEffR11"  => "lpFDi_01" ,    
     "Opt-FoundationWallIntIns:+:WoodFrameEffR15"  => "lpFDi_02" ,    
@@ -127,7 +128,8 @@ module LEEPPathways
     "Opt-HVACSystem:+:elec-baseboard"  => "lpH&C_06", 
 
     "Opt-GenericWall_1Layer_definitions:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb" => "lpMWL_02",
+    "Opt-GenericWall_1Layer_definitions:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" => "lpMWL_02",
+    
     "Opt-GenericWall_1Layer_definitions:+:NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb" => "lpMWL_03",
     "Opt-GenericWall_1Layer_definitions:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" => "lpMWL_04",
     "Opt-GenericWall_1Layer_definitions:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" => "lpMWL_05",

@@ -738,7 +738,7 @@ def LEEP_pathways_ruleset()
    $ruleSetChoices["Opt-FlatCeilings"]                   = "CeilR40"
    $ruleSetChoices["Opt-ExposedFloor"]                     = "NBC_936_5.02RSI"
    $ruleSetChoices["Opt-HVACSystem"]                      = "gas-furnace-ecm"
-   $ruleSetChoices["Opt-FoundationWallIntIns"] = "WoodFrameEffR11"
+   $ruleSetChoices["Opt-FoundationWallIntIns"] = "WoodFrameEffR15"
    $ruleSetChoices["Opt-FoundationWallExtIns"] = "uninsulated"
    $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "uninsulated"
    $ruleSetChoices["Opt-DHWSystem"]="gas_storagetank_w/powervent_ef0.67"
