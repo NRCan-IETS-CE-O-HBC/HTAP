@@ -9,9 +9,9 @@ require 'pp'
 require 'date'
 require 'set'
 
-require_relative '../include/msgs'
-require_relative '../include/constants'
-require_relative '../include/HTAPUtils'
+require_relative '../inc/msgs'
+require_relative '../inc/constants'
+require_relative '../inc/HTAPUtils'
 
 $program = "coax-cost-data.rb"
 

@@ -104,9 +104,7 @@ def parse_def_file(filepath)
   $WildCardsInUse = false;
 
   rundefs = File.open(filepath, 'r')
-
-  jsonRawOptions = HTAPData.getOptionsData()
-
+  jsonRawOptions = Hash.new
   rundefs.each do | line |
 
     $defline = line
@@ -167,6 +165,7 @@ def parse_def_file(filepath)
 
             debug_out "$gHTAPOptionsFile? : #{$gHTAPOptionsFile}\n"
 
+            jsonRawOptions = HTAPData.getOptionsData()
 
           end
 
@@ -300,7 +299,7 @@ def parse_def_file(filepath)
       end  #Case
 
     end # if ( $defline !~ /^\s*$/ )
-
+ 
   end # rundefs.each do | line |
 
 

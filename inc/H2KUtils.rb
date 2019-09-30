@@ -1686,7 +1686,7 @@ module H2KUtils
   def H2KUtils.write_h2k_magic_files(path)
 
     # Text in these vaiables are space-sensitive - saved elsewhere.
-    require_relative '../include/h2kConfigFiles.rb'
+    require_relative '../inc/h2kConfigFiles.rb'
 
     $WinMBFile = "#{path}\\H2K\\WINMB.H2k"
     $ROutFile  = "#{path}\\H2K\\ROutstr.H2k"
@@ -1721,7 +1721,7 @@ module H2KUtils
   # =========================================================================================
   def H2KUtils.fix_H2K_INI(path)
 
-    require_relative '../include/h2kConfigFiles.rb'
+    require_relative '../inc/h2kConfigFiles.rb'
     # Rewrite INI file with updated location !
     fH2K_ini_file_OUT = File.new("#{path}\\H2K\\HOT2000.ini", "w")
 
