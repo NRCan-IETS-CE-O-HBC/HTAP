@@ -1160,7 +1160,6 @@ def run_these_cases(current_task_files)
 
         #Update status of this thread.
         $FinishedTheseFiles[$choicefiles[thread3]] = true
-        batchStatusUpdate.push $choicefiles[thread3]
 
 
       end
@@ -1237,7 +1236,9 @@ def run_these_cases(current_task_files)
           $FailedRunCount = $FailedRunCount + 1
 
         else
-
+          
+          thread = run.gsub(/run-/,"").to_i
+          batchStatusUpdate.push $choicefiles[thread]
           $CompletedRunCount = $CompletedRunCount + 1
 
         end
@@ -1565,8 +1566,7 @@ optparse = OptionParser.new do |opts|
       $gTest_params["audit-costs"] = true
    end
 
-   opts.on( "--resume", "Attempt to resume prior interrupted run (experimental) ",
-) do
+   opts.on( "--resume", "Attempt to resume prior interrupted run (experimental) ",) do
 
       $cmdlineopts["resume"] = true
       $bResume = true 
