@@ -9,13 +9,13 @@ require 'set'
 require 'pp'
 
 require 'csv'
-require_relative '../include/constants'
-require_relative '../include/msgs'
-require_relative '../include/H2KUtils'
-require_relative '../include/HTAPUtils'
+require_relative '../inc/constants'
+require_relative '../inc/msgs'
+require_relative '../inc/H2KUtils'
+require_relative '../inc/HTAPUtils'
 
-require_relative '../include/costing'
-require_relative '../include/legacy-code'
+require_relative '../inc/costing'
+require_relative '../inc/legacy-code'
 
 $program = "wall-def-import.rb"
 
