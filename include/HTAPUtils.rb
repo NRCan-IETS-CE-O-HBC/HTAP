@@ -427,7 +427,7 @@ module HTAPData
   # list. Should be able to directly access this through options,
   # but legacy data map obscures it.
   def HTAPData.getResultsForChoice(options,attribute,choice)
-    #debug_on
+    debug_on
     result = Hash.new
     debug_out ("Att: #{attribute}\n")
     debug_out ("Choice: #{choice}\n")
@@ -545,10 +545,50 @@ module HTAPData
 
   end
 
+  # Checks to see if an attribute matches entries in the options file
+  def HTAPData.isAttribValid(options, attrib)
+    debug_off
+    if ( options[attrib].nil? || options[attrib]["options"].empty? ) then 
+      return false
+    else 
+      return true 
+    end 
+
+  end 
+
+  # Checks to see if an attribute should be ignored 
+  def HTAPData.isAttribIgnored( attrib)
+    debug_off
+    if ($LegacyOptionsToIgnore.include?(attrib)) then 
+      return true 
+    else 
+      return false
+    end 
+
+  end 
+
+
+  # checks attribute against list of known alises, and returns prefereed name 
+  # if a match is found. also issues a warning for the user
+  def HTAPData.queryAttribAliases(attrib)
+    if (AliasesForAttributes.keys.include?(attrib) )
+      newName = AliasesForAttributes[attrib]
+      warn_out("Attribute name '#{attrib}' is depreciated; mapped to '#{newName}'.")
+      return newName
+      
+    else  
+      return attrib
+    end 
+    
+
+  end 
+
+
+
   def HTAPData.isChoiceValid(options, attrib, choice)
     debug_off # if (attrib =~ /DHW/ )
-    debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
-    debug_out "options[#{attrib}] contains #{choice}?"
+    #debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
+    #debug_out "options[#{attrib}] contains #{choice}?"
     if ( options[attrib]["options"][choice].nil? ||
          options[attrib]["options"][choice].empty?  ) then
       debug_out " FALSE\n "

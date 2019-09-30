@@ -96,6 +96,7 @@ $gDebug = false
 
 def parse_def_file(filepath)
   #debug_on
+  bError = false 
   $runParamsOpen = false;
   $runScopeOpen  = false;
   $UpgradesOpen  = false;
@@ -103,6 +104,8 @@ def parse_def_file(filepath)
   $WildCardsInUse = false;
 
   rundefs = File.open(filepath, 'r')
+
+  jsonRawOptions = HTAPData.getOptionsData()
 
   rundefs.each do | line |
 
@@ -261,21 +264,34 @@ def parse_def_file(filepath)
           end
 
           if ( $UpgradesOpen )
+            
+            # Check if option has an alias? 
+            option  = HTAPData.queryAttribAliases( $token_values[0] ) 
+  
+            
 
-            option  = $token_values[0]
-            choices = $token_values[1].to_s.split(",")
+            # Check if option should be ignored 
+            if ( HTAPData.isAttribIgnored(option) )
+              warn_out ("Legacy option #{option} will be ignored.")
 
-            debug_out " #{option} len = #{choices.grep(/\*/).length} \n"
-
-            if ( choices.grep(/\*/).length > 0  ) then
-
-              $WildCardsInUse = true
-
-            end
-
-            $gRunUpgrades[option] = choices
-
-            $gOptionList.push option
+            elsif (not HTAPData.isAttribValid(jsonRawOptions,option)  ) then 
+               err_out("Attribute #{option} does not match any entry from the in options file.")
+               bError = true 
+            else  
+              choices = $token_values[1].to_s.split(",")
+  
+              debug_out " #{option} len = #{choices.grep(/\*/).length} \n"
+  
+              if ( choices.grep(/\*/).length > 0  ) then
+  
+                $WildCardsInUse = true
+  
+              end
+  
+              $gRunUpgrades[option] = choices
+  
+              $gOptionList.push option
+            end 
 
 
           end
@@ -294,11 +310,6 @@ def parse_def_file(filepath)
   if ( $WildCardsInUse ) then
 
 
-    jsonRawOptions = HTAPData.getOptionsData()
-
-
-
-
     debug_out ("Locations\n")
     locationIndex = 0
     $gLocations.clone.each do | choice |
@@ -313,29 +324,41 @@ def parse_def_file(filepath)
 
 
     $gRunUpgrades.keys.each do |key|
+ 
       debug_out( " Wildcard search for #{key} => \n" )
-      $gRunUpgrades[key].clone.each do |choice|
-
-        debug_out (" ? #{choice} \n")
-
-        if ( choice =~ /\*/ ) then
-
-          pattern = choice.gsub(/\*/, ".*")
-          debug_out "              Wildcard matching on #{key} =~ /#{pattern}/\n"
-          # Matching
-          superSet = jsonRawOptions[key]["options"].keys
-          $gRunUpgrades[key].delete(choice)
-          $gRunUpgrades[key].concat superSet.grep(/#{pattern}/)
-
-
+      if ( not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
+        err_out("Attribute #{key} does not match any entry from the in options file.")
+        bError = true 
+      else 
+        $gRunUpgrades[key].clone.each do |choice|
+  
+          debug_out (" ? #{choice} \n")
+  
+          if ( choice =~ /\*/ ) then
+  
+            pattern = choice.gsub(/\*/, ".*")
+            debug_out "              Wildcard matching on #{key} =~ /#{pattern}/\n"
+            # Matching
+            superSet = jsonRawOptions[key]["options"].keys
+            $gRunUpgrades[key].delete(choice)
+            $gRunUpgrades[key].concat superSet.grep(/#{pattern}/)
+  
+  
+          end
+  
         end
-
-      end
+      end 
 
     end
     jsonRawOptions = nil
 
   end
+
+  if bError 
+    fatalerror("Could not parse run file (#{filepath})")
+  end 
+
+  return
 
   #debug_out ("Final locations: #{$gLocations.pretty_inspect}")
   #debug_out ("Final Upgrades: #{$gRunUpgrades.pretty_inspect}")

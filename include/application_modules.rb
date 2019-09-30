@@ -126,12 +126,12 @@ module LEEPPathways
     "Opt-HVACSystem:+:ASHP"  => "lpH&C_05", 
     "Opt-HVACSystem:+:elec-baseboard"  => "lpH&C_06", 
 
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" => "lpMWL_02",
+    "Opt-AboveGradeWall:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
+    "Opt-AboveGradeWall:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" => "lpMWL_02",
     
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb" => "lpMWL_03",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" => "lpMWL_04",
-    "Opt-GenericWall_1Layer_definitions:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" => "lpMWL_05",
+    "Opt-AboveGradeWall:+:NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb" => "lpMWL_03",
+    "Opt-AboveGradeWall:+:NC_R-30(eff)_2x6-16inOC_R24-batt+3inMineralWool_poly_vb" => "lpMWL_04",
+    "Opt-AboveGradeWall:+:NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb" => "lpMWL_05",
 
 
     "Opt-DHWSystem:+:gas_storagetank_w/powervent_ef0.67" => "lpDHW_01",
@@ -219,7 +219,7 @@ module LEEPPathways
     "Opt-AtticCeilings",
     "Opt-CathCeilings",
     "Opt-FlatCeilings",
-    "Opt-GenericWall_1Layer_definitions",
+    "Opt-AboveGradeWall",
     "Opt-FloorHeaderIntIns",
     "Opt-ExposedFloor",
     "Opt-FoundationSlabBelowGrade", 
@@ -270,7 +270,7 @@ module LEEPPathways
   #  "Opt-AtticCeilings",
   #  "Opt-CathCeilings",
   #  "Opt-FlatCeilings",
-  #  "Opt-GenericWall_1Layer_definitions",
+  #  "Opt-AboveGradeWall",
   #  "Opt-FloorHeaderIntIns",
   #  "Opt-ExposedFloor",
   #  "Opt-FoundationSlabBelowGrade", 

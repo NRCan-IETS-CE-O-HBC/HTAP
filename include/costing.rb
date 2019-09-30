@@ -663,7 +663,7 @@ module Costing
               end
 
               # ........................................................................
-            when "Opt-GenericWall_1Layer_definitions"
+            when "Opt-AboveGradeWall"
 
               # Exterior board insulation: goes over header
               if Costing.isExteriorInsulaiton( costingElement) then
@@ -944,7 +944,7 @@ module Costing
     myCosts["byBuildingComponent"]["envelope"] =
       myCosts["byAttribute"]["Opt-ACH"] +
       myCosts["byAttribute"]["Opt-CasementWindows"] +
-      myCosts["byAttribute"]["Opt-GenericWall_1Layer_definitions"] +
+      myCosts["byAttribute"]["Opt-AboveGradeWall"] +
       myCosts["byAttribute"]["Opt-FloorHeaderIntIns"] +
       myCosts["byAttribute"]["Opt-FoundationWallExtIns"] +
       myCosts["byAttribute"]["Opt-FoundationWallIntIns"] +

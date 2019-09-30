@@ -346,7 +346,7 @@ def info_out(msg)
   #msg += " (message reported by #{routine} - #{file}:#{line})"
 
   if ($gTest_params["logfile"])
-    $fLOG.write("Info: #{msg}")
+    $fLOG.write("Info: #{msg}\n")
   end
 
   $gInfoMsgs << msg
