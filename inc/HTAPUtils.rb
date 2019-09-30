@@ -160,7 +160,12 @@ module HTAPData
 
 
       log_out ("Parsing options file - #{$gHTAPOptionsFile}")
+      if ( ! File.exist? ($gHTAPOptionsFile) )
+        err_out "Options file '#{$gHTAPOptionsFile}' does not exist.  "
+        err_out "Options file must be specified with the -o option, or via the .run file."
+        fatalerror("Could not find options file")
 
+      end 
 
       $gHTAPOptions = HTAPData.parse_json_options_file($gHTAPOptionsFile)
 

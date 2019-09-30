@@ -3,7 +3,7 @@ require 'optparse'
 require 'rexml/document'
 require 'pp'
 
-require_relative 'include/H2KUtils'
+require_relative 'inc/H2KUtils'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 

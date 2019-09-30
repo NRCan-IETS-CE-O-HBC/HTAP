@@ -15,10 +15,10 @@ require 'set'
 require 'rexml/document'
 
 
-require_relative 'include/msgs'
-require_relative 'include/constants'
-require_relative 'include/HTAPUtils.rb'
-require_relative 'include/application_modules.rb'
+require_relative 'inc/msgs'
+require_relative 'inc/constants'
+require_relative 'inc/HTAPUtils.rb'
+require_relative 'inc/application_modules.rb'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 
