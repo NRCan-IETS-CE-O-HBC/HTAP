@@ -9,13 +9,13 @@ Before following this guide, you must first install HTAP using the instructions 
 
 ##### Running HTAP
 
-1. [Using `htap-prm.rb` for HOT2000 batch processing](#batchProcessing)
-2. [The `.run` file](#runFile)
-3. [The `.options` file](#optionsFile)
-4. [Changing the house models (.h2k files)](#changingh2k)
-5. [Adding other locations](#addingLoc)
-6. [Specifying different upgrades]()
-7. [Analyzing results]()
+3. [Using `htap-prm.rb` for HOT2000 batch processing](#batchProcessing)
+4. [The `.run` file](#runFile)
+5. [The `.options` file](#optionsFile)
+6. [Changing the house models (.h2k files)](#changingh2k)
+7. [Adding other locations](#addingLoc)
+8. [Specifying different upgrades]()
+9. [Analyzing results]()
 
 ##### Troubleshooting
 
@@ -63,7 +63,7 @@ Once you have started the shell, navigate to the HTAP directory.
 
 <a name="batchProcessing"></a>
 
-## 1. Using  `htap-prm.rb` for batch HOT2000 processing
+## 3. Using  `htap-prm.rb` for batch HOT2000 processing
 
 `HTAP-prm.rb` is a parallel run manager that can configure and dispatch multiple HOT2000 
 simulations over parallel threads, and recover their output. For input, you must 
@@ -203,7 +203,8 @@ ________________________________________________________________________________
 ```
 <a name="runFile"></a>
 
-## 2. The `.run` file
+## 4. The `.run` file
+
 The `.run` file defines which HOT2000 files that HTAP should work with, and the changes to be made to those files. The `.run` file has three sections:
 - The `RunParameters` section describes where input files and databases are found, as well as the type of run that HTAP will perform
 - The `RunScope` section describes which house models (.h2k files), locations and rulesets will be used in the run
@@ -213,7 +214,7 @@ You will frequently change the the `.run` file while working with HTAP. Many pro
 
 <a name="optionsFile"></a>
 
-## 3. The options file (`HTAP-options.json`)
+## 5. The options file (`HTAP-options.json`)
 
 The options file is a database. It defines all of the attributes within a HOT2000 model that HTAP can change, and rules for how those attributes can be changed. 
 
@@ -227,7 +228,7 @@ The options file is stored in JSON format. You can inspect its contents using a 
 
 <a name="changingh2k"></a>
 
-##4. Changing the house models (.h2k files)
+## 6. Changing the house models (.h2k files)
 
 HTAP will work with most recent HOT2000 models. To change the HOT2000 files used in an HTAP run, you need to make two changes to the `.run` file:
 
@@ -262,7 +263,7 @@ RunScope_END
 
  <a name="addingLoc"></a>
 
-##5. Adding other locations
+## 7. Adding other locations
 
 HTAP supports all of the HOT2000 weather locations.  To change the locations used in the HTAP run, you must change the `RunScope` / `locations` entry. 
 
