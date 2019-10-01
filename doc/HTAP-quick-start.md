@@ -1,6 +1,6 @@
-# A Quick start guide for using HTAP #
+# HTAP: A quick start guide #
 
-Before following this guide, you must first install HTAP using the instructions in `HTAP-installation.md`. All examples in this guide use the files located in `HTAP\doc\examples\`.
+Before following this guide, you must first install HTAP using the instructions in `HTAP-installation.md`. All examples in this guide use the files located in `HTAP\doc\examples\`. #
 
 ##### Working with HTAP files 
 
@@ -10,10 +10,10 @@ Before following this guide, you must first install HTAP using the instructions 
 ##### Running HTAP
 
 1. [Using `htap-prm.rb` for HOT2000 batch processing](#batchProcessing)
-2. The `.run` file
-3. The `.options` file
-4. [Changing the house models (.h2k files)]()
-5. [Adding other locations]()
+2. [The `.run` file](#runFile)
+3. [The `.options` file](#optionsFile)
+4. [Changing the house models (.h2k files)](#changingh2k)
+5. [Adding other locations](#addingLoc)
 6. [Specifying different upgrades]()
 7. [Analyzing results]()
 
@@ -201,29 +201,91 @@ ________________________________________________________________________________
 ===============================================================================================
 
 ```
-<a name="changingh2k"></a>
+<a name="runFile"></a>
+
 ## 2. The `.run` file
 The `.run` file defines which HOT2000 files that HTAP should work with, and the changes to be made to those files. The `.run` file has three sections:
 - The `RunParameters` section describes where input files and databases are found, as well as the type of run that HTAP will perform
 - The `RunScope` section describes which house models (.h2k files), locations and rulesets will be used in the run
 - The `RunUpgrades` section describes how each .h2k file will be changed during the run. 
 
+You will frequently change the the `.run` file while working with HTAP. Many projects will require a unique `.run` file, some may require several dedicated `.run` files.
 
+<a name="optionsFile"></a>
 
-## 3. The `.options` file
+## 3. The options file (`HTAP-options.json`)
+
+The options file is a database. It defines all of the attributes within a HOT2000 model that HTAP can change, and rules for how those attributes can be changed. 
+
+HTAP includes a single options file (`C:\HTAP\HTAP-options.json`). This is the file you will use for most of your HTAP work. You will frequently refer to the options file, but will rarely need to edit it. 
+
+The options file is stored in JSON format. You can inspect its contents using a editor like Notepad++. It may seem overwhelming at first, but is easy to navigate using a code-folding feature (*View; fold-all* in Notepad++)
+
+| ![1569896813694](img/json-folded.png)            |
+| ------------------------------------------------ |
+| Inspecting `HTAP-options.json` file in Notepad++ |
 
 <a name="changingh2k"></a>
-##2. Changing the house models (.h2k files)
+
+##4. Changing the house models (.h2k files)
+
+HTAP will work with most recent HOT2000 models. To change the HOT2000 files used in an HTAP run, you need to make two changes to the `.run` file:
+
+1. Edit the `RunParameters` / `archetype-dir` entry to point to the directory containing the .h2k files you wish to run.
+2. Edit the `RunScope` / `archetypes` entry to list the specific .h2k files  
+
+Note that the `RunScope` / `archetypes`  entry can be a single .h2k file name (e.g. `rowhouse_1.h2k` ), a list of .h2k files (e.g. `rowhouse_1.h2k, rowhouse_2.h2k` ), or a wildcard string for searching (e.g. `rowhouse_*.h2k`). If you specify more than one .h2k file, HTAP will run analysis on all of those locations.
+
+#### Example:
+
+```
+RunParameters_START
+
+  run-mode          = parametric
+  archetype-dir     = C:/my-h2k-file-location
+  unit-costs-db     = C:/HTAP/HTAPUnitCosts.json
+  options-file      = C:/HTAP/HTAP-options.json
+  
+RunParameters_END
+
+
+RunScope_START
+
+  archetypes     = rowhouse_*.h2k
+  locations      = VANCOUVER, TORONTO
+  rulesets       = as-found
+
+RunScope_END
+```
 
 
 
-<a name="addingLoc"></a>
-##3. Adding other locations
+ <a name="addingLoc"></a>
+
+##5. Adding other locations
+
+HTAP supports all of the HOT2000 weather locations.  To change the locations used in the HTAP run, you must change the `RunScope` / `locations` entry. 
+
+#### Example
+
+```
+RunScope_START
+
+  archetypes     = rowhouse_*.h2k
+  locations      = HALIFAX, TRURO, GREENWOOD, YARMOUTH
+  rulesets       = as-found
+
+RunScope_END
+```
+
+You can find a complete list of supported locations by inspecting the `Opt-Locations/options` entry in `HTAP-options.json`
 
 <a name="specUpg"></a>
+
 ##4. Specifying different upgrades
 
 <a name="analysingResults"></a>
+
 ##5. Analyzing results
 
 
