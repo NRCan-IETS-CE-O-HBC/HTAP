@@ -1,11 +1,69 @@
 # A Quick start guide for using HTAP #
 
-Before following this guide, you must first install HTAP using the 
-instructions in `HTAP-installation.md`. All examples in this guide use the files located in `HTAP\doc\examples\`.
+Before following this guide, you must first install HTAP using the instructions in `HTAP-installation.md`. All examples in this guide use the files located in `HTAP\doc\examples\`.
 
-[TOC]
+##### Working with HTAP files 
 
-## HOW TO: use `htap-prm.rb` for batch HOT2000 processing
+1. [Editing text files](#editingFiles)
+2. [Using the command line](#commandLine)
+
+##### Running HTAP
+
+1. [Using `htap-prm.rb` for HOT2000 batch processing](#batchProcessing)
+2. The `.run` file
+3. The `.options` file
+4. [Changing the house models (.h2k files)]()
+5. [Adding other locations]()
+6. [Specifying different upgrades]()
+7. [Analyzing results]()
+
+##### Troubleshooting
+
+8. [Interpreting HTAP PRM output]()
+9. [Reading simulation log files]()
+
+##### Advanced topics
+
+10. [Multi-threaded runs]()
+11. [Capital cost calculations]()
+12. [Retaining simulation files]()
+13. [Resuming interrupted runs]()
+14. [`.json` output]()
+
+##### Developing with HTAP
+15. TBD
+
+<a name="editingFiles"></a>
+
+## 1. Editing HTAP files
+
+HTAP doesn't have a user interface. To work with HTAP, you must use a text editor to change ascii input files. While most windows computers include a free notepad application, we recommend using a program specifically designed to edit ascii files. 
+
+If you don't already have such a program, you can download Notepad++ for free at <https://notepad-plus-plus.org/>
+
+| ![1569895034153](img/notepadapp.png) |
+| ------------------------------------ |
+| Editing HTAP files in Notepad ++     |
+
+<a name="batchProcessing"></a>
+
+## 2. Using the command line 
+
+To invoke HTAP,  you will enter commands in the windows command line console. Look for a program called Windows PowerShell. 
+
+Once you have started the shell, navigate to the HTAP directory.
+
+- Type `C:\HTAP`  to navigate to the root HTAP directory
+- Type `C:\HTAP\doc\examples` to navigate to the example directory used in this guide.
+- Type `C:\HTAP\htap-prm.rb --help` to learn more about invoking HTAP's parallel run manager.
+
+| ![1569894949825](img/cmdLine.png)            |
+| -------------------------------------------- |
+| Invoking `htap-prm.rb` from the command line |
+
+<a name="batchProcessing"></a>
+
+## 1. Using  `htap-prm.rb` for batch HOT2000 processing
 
 `HTAP-prm.rb` is a parallel run manager that can configure and dispatch multiple HOT2000 
 simulations over parallel threads, and recover their output. For input, you must 
@@ -143,8 +201,45 @@ ________________________________________________________________________________
 ===============================================================================================
 
 ```
+<a name="changingh2k"></a>
+## 2. The `.run` file
+The `.run` file defines which HOT2000 files that HTAP should work with, and the changes to be made to those files. The `.run` file has three sections:
+- The `RunParameters` section describes where input files and databases are found, as well as the type of run that HTAP will perform
+- The `RunScope` section describes which house models (.h2k files), locations and rulesets will be used in the run
+- The `RunUpgrades` section describes how each .h2k file will be changed during the run. 
 
 
 
-## HOW TO: change the  ##
+## 3. The `.options` file
+
+<a name="changingh2k"></a>
+##2. Changing the house models (.h2k files)
+
+
+
+<a name="addingLoc"></a>
+##3. Adding other locations
+
+<a name="specUpg"></a>
+##4. Specifying different upgrades
+
+<a name="analysingResults"></a>
+##5. Analyzing results
+
+
+
+
+6. [Interpreting HTAP PRM output]()
+7. [Reading simulation log files]()
+
+##### Advanced topics
+
+8. [Multi-threaded runs]()
+9. [Capital cost calculations]()
+10. [Retaining simulation files]()
+11. [Resuming interrupted runs]()
+12. [`.json` output]()
+
+##### Developing with HTAP
+13. TBD
 
