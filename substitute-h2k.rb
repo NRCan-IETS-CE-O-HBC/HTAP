@@ -1296,7 +1296,7 @@ def processFile(h2kElements)
 
           # Windows (by facing direction)
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-CasementWindows/ )
+        elsif ( choiceEntry =~ /Opt-Windows/ )
           if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
             ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
             ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
@@ -1978,7 +1978,7 @@ def processFile(h2kElements)
           # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
           # changes made here will be overwritten by the Base Loads user inputs for Water Usage.
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
+        elsif ( choiceEntry =~ /Opt-DWHR/ )
           if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
             locationText = "HouseFile/House/Components/HotWater/Primary"
             if ( value == "true" )
@@ -2049,9 +2049,9 @@ def processFile(h2kElements)
 
           # Heating & Cooling Systems (Type 1 & 2)
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-HVACSystem/ )
+        elsif ( choiceEntry =~ /Opt-Heating-Cooling/ )
 
-       myHVACChoice = $gChoices["Opt-HVACSystem"]
+       myHVACChoice = $gChoices["Opt-Heating-Cooling"]
 			 if myHVACChoice != "NA"
             locationText = "HouseFile/House/HeatingCooling"
             if (! h2kElements[locationText].elements["SupplementaryHeatingSystems"].nil?)
@@ -2601,7 +2601,7 @@ def processFile(h2kElements)
           # HRV Ventilation System
           # Note: This option will remove all other ventilation systems
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-HRVonly/ )
+        elsif ( choiceEntry =~ /Opt-VentSystem/ )
           if(valHash["1"] == "false")
             # Option not active, skip
             break
@@ -2643,7 +2643,7 @@ def processFile(h2kElements)
               # The flow rate is calculated using F326
               calcFlow = getF326FlowRates(h2kElements)
               if(calcFlow < 1)
-                fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 flow rates!\n")
+                fatalerror("ERROR: For Opt-VentSystem, could not calculate F326 flow rates!\n")
               else
                 h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = calcFlow.to_s
                 # L/s supply
@@ -2651,7 +2651,7 @@ def processFile(h2kElements)
                 # Exhaust = Supply
               end
             else
-              fatalerror("ERROR: For Opt-HRVonly, invalid flow calculation input  #{valHash["4"]}!\n")
+              fatalerror("ERROR: For Opt-VentSystem, invalid flow calculation input  #{valHash["4"]}!\n")
             end
 
             # Update the HRV efficiency
@@ -2687,10 +2687,10 @@ def processFile(h2kElements)
               h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  fanPower
               # Supply the fan power at operating point 2 [W]
             else
-              fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
+              fatalerror("ERROR: For Opt-VentSystem, unknown fan power calculation input  #{valHash["9"]}!\n")
             end
           else
-            fatalerror("ERROR: For Opt-HRVonly, unknown active input  #{valHash["1"]}!\n")
+            fatalerror("ERROR: For Opt-VentSystem, unknown active input  #{valHash["1"]}!\n")
           end
 
           break
@@ -6460,7 +6460,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               unitCost = 0
             end
             cost = unitCost * H2KFile.getHeatedFloorArea(elements)
-          when "Opt-CasementWindows"
+          when "Opt-Windows"
             #.................................................................................
             if optValue == "NA"
               unitCost = 0
@@ -6533,7 +6533,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               unitCost = 0
             end
             cost = unitCost * H2KFile.getHeatedFloorArea(elements)
-          when "Opt-DWHRSystem"
+          when "Opt-DWHR"
             #.................................................................................
             if optValue == "NA"
               unitCost = 0
@@ -6541,7 +6541,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               unitCost = 0
             end
             cost = unitCost * H2KFile.getHeatedFloorArea(elements)
-          when "Opt-HVACSystem"
+          when "Opt-Heating-Cooling"
             #.................................................................................
             if optValue == "NA"
               unitCost = 0

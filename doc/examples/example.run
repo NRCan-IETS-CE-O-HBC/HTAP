@@ -22,41 +22,35 @@ RunScope_END
 ! Parameters controlling the design of the building
 Upgrades_START
 
-   Opt-FuelCost         = rates2016
 
    Opt-ResultHouseCode  = General
 
-   Opt-Specifications   = NA
+   Opt-ACH         = NA 
 
-   Opt-Baseloads        = NA
-   Opt-Temperatures     = NA
-
-   Opt-ACH              = NA 
-
-   Opt-CasementWindows  = NA, NC-2g-LG-u1.65, NC-2g-HG-u1.65, NC-3g-LG-u1.08 , NC-3g-HG-u1.08
-   Opt-Skylights        = NA
-   Opt-DoorWindows      = NA
-   Opt-Doors            = NA
+   Opt-Windows     = NA, NC-2g-LG-u1.65, NC-2g-HG-u1.65
+   Opt-Skylights   = NA
+   Opt-DoorWindows = NA
+   Opt-Doors       = NA
 
    Opt-AboveGradeWall = NA
 
-   Opt-FoundationWallExtIns =      NA
-   Opt-FoundationWallIntIns =      NA
+   Opt-FoundationWallExtIns     =  NA
+   Opt-FoundationWallIntIns     =  NA
    Opt-FoundationSlabBelowGrade =  NA
-   Opt-FoundationSlabOnGrade =     NA
+   Opt-FoundationSlabOnGrade    =  NA
 
 
-   Opt-ExposedFloor      = NA
+   Opt-ExposedFloor     = NA
 
    Opt-Ceilings         = NA
    Opt-AtticCeilings    = NA
    Opt-CathCeilings     = NA
    Opt-FlatCeilings     = NA
 
-   Opt-HRVonly          = NA
+   Opt-VentSystem       = NA
    Opt-DHWSystem        = NA
-   Opt-HVACSystem       = NA
-   Opt-DWHRSystem       = NA
+   Opt-Heating-Cooling  = NA
+   Opt-DWHR             = NA
    Opt-H2K-PV           = NA
 
 

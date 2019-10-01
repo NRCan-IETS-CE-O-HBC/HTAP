@@ -274,7 +274,7 @@ def parse_def_file(filepath)
               warn_out ("Legacy option #{option} will be ignored.")
 
             elsif (not HTAPData.isAttribValid(jsonRawOptions,option)  ) then 
-               err_out("Attribute #{option} does not match any entry from the in options file.")
+               err_out("Attribute #{option} does not match any attribute entry in the options file.")
                bError = true 
             else  
               choices = $token_values[1].to_s.split(",")
@@ -326,7 +326,7 @@ def parse_def_file(filepath)
  
       debug_out( " Wildcard search for #{key} => \n" )
       if ( not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
-        err_out("Attribute #{key} does not match any entry from the in options file.")
+        err_out("Attribute #{key} does not match any attribute entry in the options file.")
         bError = true 
       else 
         $gRunUpgrades[key].clone.each do |choice|
@@ -1455,7 +1455,7 @@ end
 
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
-$gTest_params["verbosity"] = "quiet"
+$gTest_params["verbosity"] = "verbose"
 
 
 
@@ -1669,7 +1669,7 @@ if ( $bResume ) then
   begin
     $fCSVout= File.open($gOutputFile, 'a') 
   rescue 
-    fatalerror( "Could not open CSV output ($gOutputFile) for appending data.\n")
+    fatalerror( "Could not open CSV output (#{$gOutputFile}) for appending data.\n")
   end 
   
   # If LEEP-pathway data is to be exported, try to parse existing files.
@@ -1685,7 +1685,7 @@ else
   begin
     $fCSVout = File.open($gOutputFile, 'w') 
   rescue
-    fatalerror( "Could not open CSV output file ($gOutputFile)\n")
+    fatalerror( "Could not open CSV output file (#{$gOutputFile})\n")
   end 
 
   # Open resume file for writing 
@@ -1693,7 +1693,7 @@ else
     $fResume = File.open($gResumeFile, 'w')
     $fResume.write ("List of runs previously completed:\n")
   rescue
-    warn_out( "Could not open resume file  ($gResumeFile) - runs cannot be resumed.\n")
+    warn_out( "Could not open resume file  (#{$gResumeFile}) - runs cannot be resumed.\n")
   end 
 
   #Open LEEP pathways export files, if needed
@@ -1741,7 +1741,38 @@ else
 
   parse_def_file($gRunDefinitionsFile)
 
-  
+  options = HTAPData.getOptionsData()
+  bErr = false 
+  $gRunUpgrades.keys.each do | attribute |
+    next if HTAPData.isAttribIgnored( attribute )
+    if ( not HTAPData.isAttribValid(options, attribute) ) then 
+      bErr = true 
+      err_out ("Unknown attribute '#{attribute}'")
+    else 
+      choices = $gRunUpgrades[attribute]
+      choices.each do | choice | 
+        if ( not HTAPData.isChoiceValid(options, attribute, choice) ) 
+          err_out( "Unknown choice '#{choice}' for attribute '#{attribute}'")
+          bErr = true 
+        end
+      end 
+    end 
+  end 
+
+  $gLocations.each do | location | 
+     if ( not HTAPData.isChoiceValid(options, "Opt-Location", location) ) 
+        err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")
+        bErr = true 
+     end
+  end 
+
+
+
+
+  fatalerror("Attributes and choices do not match those in options file") if bErr
+  options.clear
+
+
   debug_out("> Options file #{$gHTAPOptionsFile}")
 
   $archetypeFiles = Array.new
@@ -1966,12 +1997,13 @@ stream_out ("    + #{$CompletedRunCount} files were evaluated successfully.\n\n"
 stream_out ("    + #{$FailedRunCount} files failed to run \n")
 
 if ( $FailedRunCount > 0 )
+
   stream_out ("\n ** The following files failed to run: ** \n")
 
   $FailedRuns.each do |errorfile|
     stream_out ("     + #{errorfile} \n")
   end
-
+  err_out ("#{$FailedRunCount} files failed to run.")
 end
 
 if ( $CompletedRunCount> 0  &&  $ThreadsNeeded > 0  )

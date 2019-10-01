@@ -280,8 +280,11 @@ module HTAPData
 
     optionsContents = fOPTIONS.read
     fOPTIONS.close
-    
-    jsonRawOptions = JSON.parse(optionsContents)
+    begin 
+      jsonRawOptions = JSON.parse(optionsContents)
+    rescue 
+      fatalerror("Options file (#{filename}) is incorrectly formmatted, can not be interpreted as json")
+    end 
     optionsContents.clear
     for attribute in jsonRawOptions.keys()
 

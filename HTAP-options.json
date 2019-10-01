@@ -1733,7 +1733,7 @@
       "Opt-FlueShield"
     ]
   },
-  "Opt-CasementWindows": {
+  "Opt-Windows": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -8737,7 +8737,7 @@
       "OPT-H2K-EffRValue"
     ]
   },
-  "Opt-HVACSystem": {
+  "Opt-Heating-Cooling": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -9900,7 +9900,7 @@
       "OPT-H2K-Rating2"
     ]
   },
-  "Opt-HRVonly": {
+  "Opt-VentSystem": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -9950,7 +9950,7 @@
           "components": [
             "hrv:conventional_sre_60%_@_0:55%_@_-25",
             {
-              "HTAPOptions.Opt-HVACSystem/options/[choice]/costComponents": {
+              "HTAPOptions.Opt-Heating-Cooling/options/[choice]/costComponents": {
                 "inc?ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
                 "else": "ducting:direct-duct_hrv"
               }
@@ -10390,7 +10390,7 @@
       "Opt-H2K-FlueDiameter"
     ]
   },
-  "Opt-DWHRSystem": {
+  "Opt-DWHR": {
     "structure": "tree",
     "costed": true,
     "options": {

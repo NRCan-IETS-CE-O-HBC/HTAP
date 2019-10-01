@@ -328,7 +328,7 @@ wallDefs = parseWallDefs()
 
 
 windowDefs = Hash.new
-windowDefs = parsedDefs["Opt-CasementWindows"]["options"]
+windowDefs = parsedDefs["Opt-Windows"]["options"]
 
 debug_off
 
@@ -343,7 +343,7 @@ stream_out drawRuler("processing window definitions", "=")
 windowDefs.keys.each do | window |
 
    thisWindowData = Hash.new
-   thisWindowData = parsedDefs["Opt-CasementWindows"]["options"][window]
+   thisWindowData = parsedDefs["Opt-Windows"]["options"][window]
    # Does window have characteristics defined?
    if ( ! thisWindowData["characteristics"].nil? ) then
      stream_out "Syncing window definitions for #{window}\n"
