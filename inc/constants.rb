@@ -179,9 +179,9 @@ AliasesForAttributes = {
   "Opt-GenericWall_1Layer_definitions" => "Opt-AboveGradeWall",
   "Opt-FloorAboveCrawl" => "Opt-ExposedFloor",
   "Opt-HRVonly" => "Opt-VentSystem",
-  "Opt-CasmentWindows" => "Opt-Windows", 
+  "Opt-CasementWindows" => "Opt-Windows", 
   "Opt-HVACSystem" => "Opt-Heating-Cooling",
-  "Opt-DWHRSystem" => "OptDWHR"
+  "Opt-DWHRSystem" => "Opt-DWHR"
 }
 
 $DoNotValidateOptions = Set.new [  "upgrade-package-list" ]

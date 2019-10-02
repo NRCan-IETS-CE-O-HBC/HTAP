@@ -556,6 +556,9 @@ module HTAPData
   # Checks to see if an attribute matches entries in the options file
   def HTAPData.isAttribValid(options, attrib)
     debug_off
+    if $DoNotValidateOptions.include?(attrib) then 
+      return true
+    end 
     if ( options[attrib].nil? || options[attrib]["options"].empty? ) then 
       return false
     else 
@@ -594,15 +597,17 @@ module HTAPData
 
 
   def HTAPData.isChoiceValid(options, attrib, choice)
-    debug_off # if (attrib =~ /DHW/ )
+    #debug_on # if (attrib =~ /DHW/ )
     #debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
+    if $DoNotValidateOptions.include?(attrib) then 
+      return true
+    end 
     #debug_out "options[#{attrib}] contains #{choice}?"
     if ( options[attrib]["options"][choice].nil? ||
          options[attrib]["options"][choice].empty?  ) then
-      debug_out " FALSE\n "
       return false
     else
-      debug_out "true\n"
+      
       return true
     end
 
