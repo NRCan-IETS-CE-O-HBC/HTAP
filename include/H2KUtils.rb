@@ -1642,6 +1642,52 @@ module H2KOutput
 
 
       # ==============================================================
+      # Domestic Hot Water Heating Summary
+		if ( line =~ /\*\*\* ANNUAL DOMESTIC WATER HEATING SUMMARY \*\*\*/ )
+			myBrowseData["annual"]["DHW_heating"] = {"Daily_DHW_Consumption_L/day"   => nil,
+                                                 "DHW_Temperature_C" => nil,
+                                                 "DHW_Heating_Load_MJ" => nil,
+																 "Primary_DHW_Energy_Use_MJ" => nil,
+																 "Primary_DHW_Efficiency" => nil
+
+        }
+		  
+		  flagDHWPref = true
+		 end
+		 
+		 if (flagDHWPref)
+		 
+			if ( line =~ /\*\*\* BASE LOADS SUMMARY \*\*\*/ )
+				flagDHWPref = false
+			else
+				
+				words = line.split(/\s+/)
+			
+				if ( line =~ /Daily Hot Water Consumption/i ) then
+					myBrowseData["annual"]["DHW_heating"]["Daily_DHW_Consumption_L/day"] = words[5].to_f
+				end
+
+				if ( line =~ /Hot Water Temperature/i ) then
+					myBrowseData["annual"]["DHW_heating"]["DHW_Temperature_C"] = words[4].to_f
+				end
+				
+				if ( line =~ /Estimated Domestic Water Heating Load/i ) then
+					myBrowseData["annual"]["DHW_heating"]["DHW_Heating_Load_MJ"] = words[6].to_f
+				end
+				
+				if ( line =~ /PRIMARY Domestic Water Heating Energy Consumption/i ) then
+					myBrowseData["annual"]["DHW_heating"]["Primary_DHW_Energy_Use_MJ"] = words[7].to_f
+				end
+				
+				if ( line =~ /PRIMARY System Seasonal Efficiency/i ) then
+					myBrowseData["annual"]["DHW_heating"]["Primary_DHW_Efficiency"] = words[5].to_f
+				end
+				
+			end
+		end
+	
+		
+		# ==============================================================
       # Solar Radiation section 
       if ( line =~ /\*\*\* Solar Radiation \(MJ\/m2\/day\) \*\*\*/ )
         myBrowseData["monthly"]["solar_radiation"] = {"global_horizontal_MJ/M2/day" => Hash.new, 
