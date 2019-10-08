@@ -1685,8 +1685,30 @@ module H2KOutput
 				
 			end
 		end
-	
-		
+      # ==============================================================
+      # Ventilation Summary Section
+      if ( line =~ /\*\*\* AIR LEAKAGE AND VENTILATION SUMMARY \*\*\*/ )
+        myBrowseData["daily"]["ventilation"] = {"F326_Required_Flow_Rate_L/s"   => nil
+
+        }
+
+        flagVENTPref = true
+      end
+
+      if (flagVENTPref)
+
+        if ( line =~ /\*\*\* SPACE HEATING SYSTEM \*\*\*/ )
+          flagVENTPref = false
+        else
+
+          words = line.split(/\s+/)
+
+          if ( line =~ /F326 Required continuous ventilation rate/i ) then
+            myBrowseData["daily"]["ventilation"]["F326_Required_Flow_Rate_L/s"] = words[6].to_f
+          end
+
+        end
+      end
 		# ==============================================================
       # Solar Radiation section 
       if ( line =~ /\*\*\* Solar Radiation \(MJ\/m2\/day\) \*\*\*/ )

@@ -136,11 +136,13 @@ module Hourly
     #calculate mains temp at each hour
     hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],months,months_number)
     #Need values for Daily Hot Water Consumption, seasonal efficiency- Ask Rasoul or Alex to pass values
-    daily_DHW_consumption=193.6
-    seasonal_efficiency_dhw=0.667
+    daily_DHW_consumption=h2kBinResults["annual"]["DHW_heating"]["Daily_DHW_Consumption_L/day"]
+    seasonal_efficiency_dhw=h2kBinResults["annual"]["DHW_heating"]["Primary_DHW_Efficiency"]/100.0
     calc_hourly_DHW_heat_water=Array.new
+    hourly_DHW_consumption=Array.new
     for i in 0..8759
-      calc_hourly_DHW_heat_water[i]=daily_DHW_consumption*norm_dhw[time[i]-1]*4187*(55.0-hourly_mains_temp[i])/(24.0*3600.0)
+      hourly_DHW_consumption[i]=daily_DHW_consumption*norm_dhw[time[i]-1]/24.0
+      calc_hourly_DHW_heat_water[i]=hourly_DHW_consumption[i]*4187*(55.0-hourly_mains_temp[i])/(3600.0)
       calc_hourly_DHW_heat_water[i]=(3.0*(60.0-hourly_mains_temp[i])/(55.0-hourly_mains_temp[i])+1.0)*0.25*calc_hourly_DHW_heat_water[i] #weird H2K thing to account that seasonal efficiency is calculated at 60C and there are primary and secondary systems with 3:1 split of heat.
     end
 
@@ -233,9 +235,11 @@ module Hourly
 
       hourly_total_cooling_mod=[hourly_total_cooling_mod,hourly_total_cooling_hash[i]].reduce([], :concat)
     end
-
-
-
+    peakHeating=Array.new
+    peakCooling=Array.new
+    peakHeating[0]=h2kBinResults["PEAK-Heating-W"]
+    peakCooling[0]=h2kBinResults["PEAK-Cooling-W"]
+    time=time.map { |i| i - 1 } #remove 1 from all elements of array
     #output to csv
     #Add headers to arrays
     time.unshift("hour")
@@ -247,6 +251,9 @@ module Hourly
     hourly_internal_gains.unshift("Internal Gains (W)")
     hourly_total_heating_mod.unshift("Total Heating Load (W)")
 
+    hourly_DHW_consumption.unshift("DHW Consumption (L)")
+    hourly_mains_temp.unshift("Mains Water Temperature (degC)")
+
     hourly_solar_gains_cooling.unshift("Cooling Solar (W)")
     hourly_conduction_losses_cooling.unshift("Cooling Envelope (W)")
     hourly_internal_gains_cooling.unshift("Cooling Gains (W)")
@@ -254,20 +261,27 @@ module Hourly
 
     hourly_electrical_demand_plug.unshift("Plug Load (W)")
 
+
     db_temperature.unshift("Ambient Temperature (degC)")
     rh.unshift("Ambient RH (%)")
     global_solar_hor.unshift("Global Horizontal Radiation W/m^2")
-    hourly_mains_temp.unshift("Mains Water Temperature (degC)")
+    peakHeating.unshift("Design Heating Load (W)")
+    peakCooling.unshift("Design Cooling Load (W)")
+
 
     #hourly_dhw_demand.unshift("DHW demand (W)")
     #hourly_electrical_demand.unshift("Electrical Demand (W)")
 
     #monthly_mains_temp.each {|temp| print temp,"\n"}
 
-    printarray=[month,day,time,hourly_electrical_demand_plug,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp,indoor_temp].transpose
-
+    printarray=[month,day,time,hourly_electrical_demand_plug,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp,indoor_temp,hourly_DHW_consumption].transpose
+    printarray2=[peakHeating,peakCooling].transpose
     CSV.open("#{$gMasterPath}\\hourly_calculation_results.csv", "w") do |f|
       printarray.each do |x|
+        f << x
+      end
+      f << ["\n"]
+      printarray2.each do |x|
         f << x
       end
     end
