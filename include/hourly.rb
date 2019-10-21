@@ -24,6 +24,7 @@ module Hourly
     require 'open-uri'
     require_relative 'constants'
 
+
     db_temperature=Array.new
     month=Array.new
     rh=Array.new
@@ -39,6 +40,9 @@ module Hourly
       epwFilePath = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
     end
 
+
+
+
     #reads epw to epq_array and removes the first 8 rows (drop(8))
     epw_array = CSV.read(epwFilePath).drop(8)
 
@@ -51,10 +55,47 @@ module Hourly
       day[i]=epw_array[i][2].to_i
     end
 
+    file=File.open(epwFilePath,"r")
+
+
+    4.times {file.gets} # get to the fourth line on CWEC file
+    ground_array=$_.chomp
+    ground_array=ground_array.split(",").reject(&:empty?)
+    amount_depths=ground_array[1].to_i
+    ground_hours=[372,1080,1788,2520,3252,3984,4716,5460,6192,6924,7656,8388]
+    ground_temperatures=Array.new(amount_depths){Array.new(12)}
+    ground_parameters=Array.new(amount_depths){Array.new(3)}
+    ground_temp=Array.new(amount_depths){Array.new(8760)}
+    depth=Array.new
+
+    for i in 0..amount_depths-1
+      depth[i]=ground_array[i*13+2]
+
+      for ii in 0..11
+        ground_temperatures[i][ii]=ground_array[3+(13*i)+(ii)].to_f
+      end
+      ground_parameters[i][0]=ground_temperatures[i].average
+      ground_parameters[i][1]=(ground_temperatures[i].max-ground_temperatures[i].min)/2.0
+
+      y1=ground_hours[ground_temperatures[i].bsearch_index{|x| x>=ground_parameters[i][0]}-1]
+      y2=ground_hours[ground_temperatures[i].bsearch_index{|x| x>=ground_parameters[i][0]}]
+      x2=ground_temperatures[i].bsearch{|x| x>=ground_parameters[i][0]}
+      x1=ground_temperatures[i][ground_temperatures[i].bsearch_index{|x| x>=ground_parameters[i][0]}-1]
+      x=ground_parameters[i][0]
+      ground_parameters[i][2]=y1+(y2-y1)*(x-x1)/(x2-x1)
+
+      for iii in 0..8759
+        ground_temp[i][iii]=ground_parameters[i][0]+ground_parameters[i][1]*Math.sin((iii.to_f-ground_parameters[i][2])*2*Math::PI/8760)
+      end
+
+    end
 
 
 
-    return [month,db_temperature,rh,global_solar_hor,time,day]
+
+
+    file.close
+    return [month,db_temperature,rh,global_solar_hor,time,day,ground_temp,depth]
 
   end 
 
@@ -72,7 +113,8 @@ module Hourly
     global_solar_hor=climate_data[3]
     time=climate_data[4]
     day=climate_data[5]
-
+    ground=climate_data[6]
+    depth=climate_data[7]
 
 
     #Ask Alex to send over setpoint, setback, and hours of setback.
@@ -126,7 +168,7 @@ module Hourly
       htap_solar_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["solar_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
       htap_internal_gains[months_number.key(i)-1]=h2kBinResults["monthly"]["energy_profile"]["internal_gainsGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
 
-      htap_cooling[months_number.key(i)-1]= 0 #h2kBinResults["monthly"]["cooling"]["total_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
+      htap_cooling[months_number.key(i)-1]=h2kBinResults["monthly"]["cooling"]["total_loadGJ"][i].to_f*1000000000.0/(hours_per_month[i]*3600.0)
 
       htap_elec_plug[months_number.key(i)-1]=(h2kBinResults["monthly"]["energy"]["lights_appliances_GJ"][i].to_f*1000000000.0)/(hours_per_month[i]*3600.0)
      htap_dhw[months_number.key(i)-1]=h2kBinResults["monthly"]["energy"]["DHW_heating_primary_GJ"][i].to_f
@@ -135,7 +177,6 @@ module Hourly
 
     #calculate mains temp at each hour
     hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],months,months_number)
-    #Need values for Daily Hot Water Consumption, seasonal efficiency- Ask Rasoul or Alex to pass values
     daily_DHW_consumption=h2kBinResults["annual"]["DHW_heating"]["Daily_DHW_Consumption_L/day"]
     seasonal_efficiency_dhw=h2kBinResults["annual"]["DHW_heating"]["Primary_DHW_Efficiency"]/100.0
     calc_hourly_DHW_heat_water=Array.new
@@ -186,6 +227,7 @@ module Hourly
     hourly_conduction_losses_cooling=Array.new
     hourly_internal_gains_cooling=Array.new
     hourly_total_cooling=Array.new
+    hourly_ventilation=Array.new
     #calculate hourly load profiles
     for i in 0..8759
       hourly_conduction_losses[i]=htap_conduction_losses[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
@@ -198,6 +240,7 @@ module Hourly
       hourly_conduction_losses_cooling[i]=envelope_gains_cooling_htap[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
       hourly_internal_gains_cooling[i]=internal_gains_cooling_htap[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       hourly_total_cooling[i]=hourly_solar_gains_cooling[i]+hourly_conduction_losses_cooling[i]+hourly_internal_gains_cooling[i]
+      hourly_ventilation[i]=h2kBinResults["daily"]["ventilation"]["F326_Required_Flow_Rate_L/s"]
     end
 
 
@@ -260,11 +303,11 @@ module Hourly
     hourly_total_cooling_mod.unshift("Cooling Total (W)")
 
     hourly_electrical_demand_plug.unshift("Plug Load (W)")
-
+    hourly_ventilation.unshift("Ventilation Rate (L/s)")
 
     db_temperature.unshift("Ambient Temperature (degC)")
     rh.unshift("Ambient RH (%)")
-    global_solar_hor.unshift("Global Horizontal Radiation W/m^2")
+    global_solar_hor.unshift("Global Horizontal Radiation (W/m^2)")
     peakHeating.unshift("Design Heating Load (W)")
     peakCooling.unshift("Design Cooling Load (W)")
 
@@ -274,12 +317,20 @@ module Hourly
 
     #monthly_mains_temp.each {|temp| print temp,"\n"}
 
-    printarray=[month,day,time,hourly_electrical_demand_plug,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp,indoor_temp,hourly_DHW_consumption].transpose
+
+    for i in 0..depth.length-1
+      ground[i]=ground[i].unshift(depth[i])
+    end
+    printarray3=ground
+    printarray=[month,day,time,hourly_electrical_demand_plug,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp,indoor_temp,hourly_DHW_consumption,hourly_ventilation].concat(printarray3).transpose
+
     printarray2=[peakHeating,peakCooling].transpose
+
     CSV.open("#{$gMasterPath}\\hourly_calculation_results.csv", "w") do |f|
       printarray.each do |x|
         f << x
       end
+
       f << ["\n"]
       printarray2.each do |x|
         f << x
@@ -320,6 +371,17 @@ class Numeric
     self * Math::PI / 180
   end
 end
+
+
+
+class ::Hash
+  def deep_merge(second)
+    merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : Array === v1 && Array === v2 ? v1 | v2 : [:undefined, nil, :nil].include?(v2) ? v1 : v2 }
+    self.merge(second.to_h, &merger)
+  end
+end
+
+
 #{occ_temp_heating: 22,unocc_temp_heating: 18,occ_time_start: time_unoccupied_end,occ_time_end: time_unoccupied_start ,temp_cooling: 25}
 def temp_schedule(schedule,time)
   #this function takes parameters and outputs hourly indoor temperatures. It includes nightime setbacks.
