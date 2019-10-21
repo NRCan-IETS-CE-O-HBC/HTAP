@@ -117,7 +117,7 @@ module Hourly
     depth=climate_data[7]
 
 
- 
+
 
     #schedule is hardcoded for now.
     time_unoccupied=h2kBinResults["daily"]["setpoint_temperature"]["Nightime_Setback_Duration_hr"]
@@ -238,7 +238,7 @@ module Hourly
       hourly_conduction_losses_cooling[i]=envelope_gains_cooling_htap[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
       hourly_internal_gains_cooling[i]=internal_gains_cooling_htap[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       hourly_total_cooling[i]=hourly_solar_gains_cooling[i]+hourly_conduction_losses_cooling[i]+hourly_internal_gains_cooling[i]
-      hourly_ventilation[i]=h2kBinResults["daily"]["ventilation"]["F326_Required_Flow_Rate_L/s"]
+      hourly_ventilation[i]=h2kBinResults["daily"]["ventilation"]["F326_Required_Flow_Rate_L/s"]/3.0 #divided by three to provide 8 hours of ventilation per day
     end
 
 
