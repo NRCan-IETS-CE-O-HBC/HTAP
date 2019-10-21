@@ -1709,6 +1709,49 @@ module H2KOutput
 
         end
       end
+	  # ==============================================================
+      # Setpoint Temperatures Section
+      if ( line =~ /\*\*\* HOUSE TEMPERATURES \*\*\*/ )
+        myBrowseData["daily"]["setpoint_temperature"] = {"Daytime_Setpoint_degC"   => nil,
+                                                 "Nightime_Setpoint_degC" => nil,
+                                                 "Nightime_Setback_Duration_hr" => nil,
+																 "Cooling_Setpoint_degC" => nil,
+																 "Indoor_Design_Temp_Heat_degC" => nil,
+																 "Indoor_Design_Temp_Cool_degC" => nil
+																 }
+
+        flagSETPOINTPref = true
+      end
+
+      if (flagSETPOINTPref)
+
+        if ( line =~ /\*\*\* WINDOW CHARACTERISTICS \*\*\*/ )
+          flagSETPOINTPref = false
+        else
+
+          words = line.split(/\s+/)
+
+          if ( line =~ /Daytime Setpoint/i ) then
+            myBrowseData["daily"]["setpoint_temperature"]["Daytime_Setpoint_degC"] = words[5].to_f
+          end
+		  if ( line =~ /Nightime Setpoint/i ) then
+            myBrowseData["daily"]["setpoint_temperature"]["Nightime_Setpoint_degC"] = words[3].to_f
+          end
+		  if ( line =~ /Nightime Setback Duration/i ) then
+            myBrowseData["daily"]["setpoint_temperature"]["Nightime_Setback_Duration_hr"] = words[4].to_f
+          end
+		  if ( line =~ /Cooling Temperature/i ) then
+            myBrowseData["daily"]["setpoint_temperature"]["Cooling_Setpoint_degC"] = words[words.length-2].to_f #second from last
+          end
+		  if ( line =~ /Heating/i ) then
+            myBrowseData["daily"]["setpoint_temperature"]["Indoor_Design_Temp_Heat_degC"] = words[2].to_f
+          end
+		  if ( line =~ /Cooling/i ) then
+            myBrowseData["daily"]["setpoint_temperature"]["Indoor_Design_Temp_Cool_degC"] = words[2].to_f
+          end
+		  
+        end
+      end
 		# ==============================================================
       # Solar Radiation section 
       if ( line =~ /\*\*\* Solar Radiation \(MJ\/m2\/day\) \*\*\*/ )

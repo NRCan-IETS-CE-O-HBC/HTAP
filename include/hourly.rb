@@ -117,15 +117,13 @@ module Hourly
     depth=climate_data[7]
 
 
-    #Ask Alex to send over setpoint, setback, and hours of setback.
-    #cooling setpoint (it's constant).
-    #HDD, deep ground temperature, design heating temp, design cooling db temp, design cooling wb temp
+ 
 
     #schedule is hardcoded for now.
-    time_unoccupied=5.0
+    time_unoccupied=h2kBinResults["daily"]["setpoint_temperature"]["Nightime_Setback_Duration_hr"]
     time_unoccupied_end=7.0
     time_unoccupied_start=(time_unoccupied_end-time_unoccupied<0 ? time_unoccupied_end-time_unoccupied+24:time_unoccupied_end-time_unoccupied)
-    schedule={occ_temp_heating: 22,unocc_temp_heating: 18,occ_time_start: time_unoccupied_end,occ_time_end: time_unoccupied_start ,temp_cooling: 24}
+    schedule={occ_temp_heating: h2kBinResults["daily"]["setpoint_temperature"]["Daytime_Setpoint_degC"] ,unocc_temp_heating: h2kBinResults["daily"]["setpoint_temperature"]["Nightime_Setpoint_degC"] ,occ_time_start: time_unoccupied_end,occ_time_end: time_unoccupied_start ,temp_cooling: h2kBinResults["daily"]["setpoint_temperature"]["Cooling_Setpoint_degC"] }
     indoor_temp=temp_schedule(schedule,time)
 
 
@@ -143,7 +141,7 @@ module Hourly
     hours_per_month={"january"=>744,"february"=>672,"march"=>744,"april"=>720,"may"=>744,"june"=>720,"july"=>744,"august"=>744,"september"=>720,"october"=>744,"november"=>720,"december"=>744}
 
 
-    indoor_design_temp=22 #for now. Need to get Alex or Rasoul to pass in this number.
+    indoor_design_temp=h2kBinResults["daily"]["setpoint_temperature"]["Indoor_Design_Temp_Heat_degC"]
     ua_val=h2kBinResults["PEAK-Heating-W"]/(indoor_design_temp-h2kBinResults["annual"]["design_Temp"]["heating_C"])
   
     for i in months
