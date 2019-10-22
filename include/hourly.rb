@@ -31,7 +31,7 @@ module Hourly
     global_solar_hor=Array.new
     time=Array.new
     day=Array.new
-
+    wind_speed=Array.new
     epwFile = $epwLocaleHash["#{$gRunLocale}"].split('/')[2]
 
     if (File.file?("C:\/HTAP\/weatherfiles\/#{epwFile}"))
@@ -53,6 +53,7 @@ module Hourly
       global_solar_hor[i]=epw_array[i][13].to_f #horizontal global solar Wh/m^2
       time[i]=epw_array[i][3].to_i
       day[i]=epw_array[i][2].to_i
+      wind_speed[i]=epw_array[i][21].to_f #m/s
     end
 
     file=File.open(epwFilePath,"r")
@@ -95,7 +96,7 @@ module Hourly
 
 
     file.close
-    return [month,db_temperature,rh,global_solar_hor,time,day,ground_temp,depth]
+    return [month,db_temperature,rh,global_solar_hor,time,day,wind_speed,ground_temp,depth]
 
   end 
 
@@ -113,8 +114,9 @@ module Hourly
     global_solar_hor=climate_data[3]
     time=climate_data[4]
     day=climate_data[5]
-    ground=climate_data[6]
-    depth=climate_data[7]
+    wind_speed=climate_data[6]
+    ground=climate_data[7]
+    depth=climate_data[8]
 
 
 
@@ -226,6 +228,8 @@ module Hourly
     hourly_internal_gains_cooling=Array.new
     hourly_total_cooling=Array.new
     hourly_ventilation=Array.new
+    timestep=Array.new
+    indoor_temp_cooling=Array.new
     #calculate hourly load profiles
     for i in 0..8759
       hourly_conduction_losses[i]=htap_conduction_losses[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
@@ -239,6 +243,8 @@ module Hourly
       hourly_internal_gains_cooling[i]=internal_gains_cooling_htap[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       hourly_total_cooling[i]=hourly_solar_gains_cooling[i]+hourly_conduction_losses_cooling[i]+hourly_internal_gains_cooling[i]
       hourly_ventilation[i]=h2kBinResults["daily"]["ventilation"]["F326_Required_Flow_Rate_L/s"]/3.0 #divided by three to provide 8 hours of ventilation per day
+      timestep[i]=i
+      indoor_temp_cooling[i]=schedule[:temp_cooling]
     end
 
 
@@ -283,10 +289,12 @@ module Hourly
     time=time.map { |i| i - 1 } #remove 1 from all elements of array
     #output to csv
     #Add headers to arrays
+    timestep.unshift("timestep (hour)")
     time.unshift("hour")
     day.unshift("day")
     month.unshift("month")
     indoor_temp.unshift("Indoor Temperature - heating mode (degC)")
+    indoor_temp_cooling.unshift("Indoor Temperature - cooling mode (degC)")
     hourly_conduction_losses.unshift("Envelope Losses (W)")
     hourly_solar_gains.unshift("Solar Gains (W)")
     hourly_internal_gains.unshift("Internal Gains (W)")
@@ -298,7 +306,7 @@ module Hourly
     hourly_solar_gains_cooling.unshift("Cooling Solar (W)")
     hourly_conduction_losses_cooling.unshift("Cooling Envelope (W)")
     hourly_internal_gains_cooling.unshift("Cooling Gains (W)")
-    hourly_total_cooling_mod.unshift("Cooling Total (W)")
+    hourly_total_cooling_mod.unshift("Total Cooling Load (W)")
 
     hourly_electrical_demand_plug.unshift("Plug Load (W)")
     hourly_ventilation.unshift("Ventilation Rate (L/s)")
@@ -308,6 +316,7 @@ module Hourly
     global_solar_hor.unshift("Global Horizontal Radiation (W/m^2)")
     peakHeating.unshift("Design Heating Load (W)")
     peakCooling.unshift("Design Cooling Load (W)")
+    wind_speed.unshift("Wind Speed (m/s)")
 
 
     #hourly_dhw_demand.unshift("DHW demand (W)")
@@ -317,10 +326,10 @@ module Hourly
 
 
     for i in 0..depth.length-1
-      ground[i]=ground[i].unshift(depth[i])
+      ground[i]=ground[i].unshift("Ground Temperature at #{'%.2f' % depth[i]} m depth (degC)")
     end
     printarray3=ground
-    printarray=[month,day,time,hourly_electrical_demand_plug,hourly_conduction_losses,hourly_solar_gains,hourly_internal_gains,hourly_total_heating_mod,hourly_solar_gains_cooling,hourly_conduction_losses_cooling,hourly_internal_gains_cooling,hourly_total_cooling_mod,db_temperature,rh,global_solar_hor,hourly_mains_temp,indoor_temp,hourly_DHW_consumption,hourly_ventilation].concat(printarray3).transpose
+    printarray=[timestep,month,day,time,hourly_electrical_demand_plug,hourly_total_heating_mod,hourly_total_cooling_mod,hourly_ventilation,hourly_DHW_consumption,hourly_mains_temp,indoor_temp,indoor_temp_cooling,db_temperature,rh,global_solar_hor,wind_speed].concat(printarray3).transpose
 
     printarray2=[peakHeating,peakCooling].transpose
 
