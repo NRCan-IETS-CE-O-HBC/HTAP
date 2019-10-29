@@ -1752,8 +1752,83 @@ module H2KOutput
 		  
         end
       end
+      # ==============================================================
+      # Building Parameters Section
+      if ( line =~ /\*\*\* BUILDING PARAMETERS SUMMARY \*\*\*/ )
+        #myBrowseData["annual"]["volume"]={"house_volume_m^3"=> 0.0}
+
+
+
+        flagBLDPARPref = true
+      end
+
+      if (flagBLDPARPref)
+
+        if ( line =~ /\*\*\* AIR LEAKAGE AND VENTILATION \*\*\*/ )
+          flagBLDPARPref = false
+        else
+
+          words = line.split(/\s+/)
+
+          if ( line =~ /m3/i ) then
+            myBrowseData["annual"]["volume"]["house_volume_m^3"] = words[0].to_f
+          end
+
+        end
+      end
+      # ==============================================================
+      # Foundation Section
+      if ( line =~ /\*\*\* FOUNDATIONS \*\*\*/ )
+        myBrowseData["annual"]["volume"]={"basement_volume_m^3" => 0.0}
+
+
+
+        flagFOUNDPARPref = true
+      end
+
+      if (flagFOUNDPARPref)
+
+        if ( line =~ /\*\*\* Foundation Floor Header Code Schedule \*\*\*/ )
+          flagFOUNDPARPref = false
+        else
+
+          words = line.split(/\s+/)
+
+          if ( line =~ /Foundation type/i ) then
+            myBrowseData["annual"]["volume"]["basement_volume_m^3"] = words[6].to_f
+          end
+
+        end
+      end
+      # ==============================================================
+      # General House Characteristics
+      if ( line =~ /\*\*\* GENERAL HOUSE CHARACTERISTICS \*\*\*/ )
+        myBrowseData["annual"]["mass"] = {"thermal_mass_level"   => nil,
+                                          "effective_mass_fraction"   => nil
+        }
+
+        flagHOUSECHARref = true
+      end
+
+      if (flagHOUSECHARref)
+
+        if ( line =~ /\*\*\* HOUSE TEMPERATURES \*\*\*/ )
+          flagHOUSECHARref = false
+        else
+
+          words = line.split(/\s+/)
+
+          if ( line =~ /House Thermal Mass Level/i ) then
+            myBrowseData["annual"]["mass"]["thermal_mass_level"] = words[4]
+          end
+          if ( line =~ /Effective mass fraction/i ) then
+            myBrowseData["annual"]["mass"]["effective_mass_fraction"] = words[3].to_f
+          end
+
+        end
+      end
 		# ==============================================================
-      # Solar Radiation section 
+      # Solar Radiation section
       if ( line =~ /\*\*\* Solar Radiation \(MJ\/m2\/day\) \*\*\*/ )
         myBrowseData["monthly"]["solar_radiation"] = {"global_horizontal_MJ/M2/day" => Hash.new, 
                                                       "diffuse_horizontal_MJ/M2/day" => Hash.new,
