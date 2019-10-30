@@ -32,6 +32,9 @@ module Hourly
     time=Array.new
     day=Array.new
     wind_speed=Array.new
+
+
+
     epwFile = $epwLocaleHash["#{$gRunLocale}"].split('/')[2]
 
     if (File.file?("C:\/HTAP\/weatherfiles\/#{epwFile}"))
@@ -40,20 +43,22 @@ module Hourly
       epwFilePath = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
     end
 
-
+      #epwFilePath="C:\/HTAP\/testing\/hourly\/HTAP-sim-3\/CAN_AB_EDMONTON-INTL-A_3012216_CWEC.epw" #temporary for testing. REMOVE
 
 
     #reads epw to epq_array and removes the first 8 rows (drop(8))
     epw_array = CSV.read(epwFilePath).drop(8)
 
+
     for i in 0..8759
       month[i]=epw_array[i][1].to_i
       db_temperature[i]=epw_array[i][6].to_f
       rh[i]=epw_array[i][8].to_f
-      global_solar_hor[i]=epw_array[i][13].to_f #horizontal global solar Wh/m^2
+      global_solar_hor[i]=epw_array[i][14].to_f #direct global solar Wh/m^2
       time[i]=epw_array[i][3].to_i
       day[i]=epw_array[i][2].to_i
       wind_speed[i]=epw_array[i][21].to_f #m/s
+
     end
 
     file=File.open(epwFilePath,"r")
@@ -247,6 +252,51 @@ module Hourly
       indoor_temp_cooling[i]=schedule[:temp_cooling]
     end
 
+    floor_area=(h2kBinResults["annual"]["volume"]["house_volume_m^3"]-h2kBinResults["annual"]["volume"]["basement_volume_m^3"])/2.5
+    eff_mass_f=h2kBinResults["annual"]["mass"]["effective_mass_fraction"]
+
+    if  h2kBinResults["annual"]["mass"]["thermal_mass_level"] =~ /A/i
+      mcp_per_area=0.06 #MJ/K/m^2
+    elsif  line =~ /B/i
+      mcp_per_area=0.153 #MJ/K/m^2
+    elsif line =~ /C/i
+      mcp_per_area=0.415 #MJ/K/m^2
+    elsif line =~ /D/i
+      mcp_per_area=0.810 #MJ/K/m^2
+    else
+      mcp_per_area=0.0 #MJ/K/m^2
+    end
+
+
+    # Model with Mass - heating (lumped capacitance)
+    t_bld=Array.new
+    t_bld_cooling=Array.new
+    mcp=mcp_per_area*1000000.0*floor_area #220.0 is estimate of floor area. 0.06 is value found in H2K manual
+    dt=3600.0
+    htc=2.0 #convective heat transfer coefficient for lump capacitance model. 2 W/(m^2 K) seems reasonable average for buildings. It generally ranges between ~ 1.5 - 4.5 depending on air flow regime.
+    lump_capacitance_area= floor_area+h2kBinResults["annual"]["area"]["ceiling_m^2"]+h2kBinResults["annual"]["area"]["walls_net_m^2"]# this is total surface area
+    hourly_heating_mass=Array.new
+    hourly_cooling_mass=Array.new
+    #thermal mass calculations
+    for i in 0..8759
+
+      if i==0
+        t_bld[i]=5.85
+        t_bld_cooling[i]=22.0
+        hourly_heating_mass[i]=hourly_total_heating[i]
+        hourly_cooling_mass[i]=hourly_total_cooling[i]
+      else
+        t_air=indoor_temp[i]
+        t_air_cooling=indoor_temp_cooling[i]
+        t_bld[i]=(t_air*lump_capacitance_area*htc-hourly_total_heating[i]+(mcp/(dt))*t_bld[i-1])/(mcp/(dt)+lump_capacitance_area*htc)
+        t_bld_cooling[i]=(t_air_cooling*lump_capacitance_area*htc+hourly_total_cooling[i]+(mcp/(dt))*t_bld_cooling[i-1])/(mcp/(dt)+lump_capacitance_area*htc)
+        hourly_heating_mass[i]=lump_capacitance_area*htc*(t_air-t_bld[i])
+        hourly_cooling_mass[i]=lump_capacitance_area*htc*(t_bld_cooling[i]-t_air_cooling)
+      end
+
+
+    end
+
 
 
 
@@ -259,21 +309,21 @@ module Hourly
     hourly_monthly_pos_cool=Hash.new
     hourly_cool_ratio=Hash.new
     for i in months
-      hourly_monthly_tot_heat[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).sum
-      hourly_monthly_pos_heat[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
+      hourly_monthly_tot_heat[i]=hourly_heating_mass.slice(start_of_month_hour[i],hours_per_month[i]).sum
+      hourly_monthly_pos_heat[i]=hourly_heating_mass.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
       hourly_heat_ratio[i]=hourly_monthly_tot_heat[i].to_f/(hourly_monthly_pos_heat[i].to_f+0.00000000001)
 
-      hourly_monthly_tot_cool[i]=hourly_total_cooling.slice(start_of_month_hour[i],hours_per_month[i]).sum
-      hourly_monthly_pos_cool[i]=hourly_total_cooling.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
+      hourly_monthly_tot_cool[i]=hourly_cooling_mass.slice(start_of_month_hour[i],hours_per_month[i]).sum
+      hourly_monthly_pos_cool[i]=hourly_cooling_mass.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
       hourly_cool_ratio[i]=hourly_monthly_tot_cool[i]/hourly_monthly_pos_cool[i]
     end
 
     hourly_total_heating_hash=Hash.new
     hourly_total_cooling_hash=Hash.new
     for i in months
-      hourly_total_heating_hash[i]=hourly_total_heating.slice(start_of_month_hour[i],hours_per_month[i]).map{|n| [n*hourly_heat_ratio[i],0].max}
+      hourly_total_heating_hash[i]=hourly_heating_mass.slice(start_of_month_hour[i],hours_per_month[i]).map{|n| [n*hourly_heat_ratio[i],0].max}
 
-      hourly_total_cooling_hash[i]=hourly_total_cooling.slice(start_of_month_hour[i],hours_per_month[i]).map{|n| [n*hourly_cool_ratio[i],0].max}
+      hourly_total_cooling_hash[i]=hourly_cooling_mass.slice(start_of_month_hour[i],hours_per_month[i]).map{|n| [n*hourly_cool_ratio[i],0].max}
     end
     hourly_total_heating_mod=Array.new
     hourly_total_cooling_mod=Array.new

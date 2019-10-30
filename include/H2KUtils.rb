@@ -1756,6 +1756,9 @@ module H2KOutput
       # Building Parameters Section
       if ( line =~ /\*\*\* BUILDING PARAMETERS SUMMARY \*\*\*/ )
         #myBrowseData["annual"]["volume"]={"house_volume_m^3"=> 0.0}
+        myBrowseData["annual"]["area"]={"walls_net_m^2"=> nil,
+                                        "ceiling_m^2" => nil
+        }
 
 
 
@@ -1772,6 +1775,12 @@ module H2KOutput
 
           if ( line =~ /m3/i ) then
             myBrowseData["annual"]["volume"]["house_volume_m^3"] = words[0].to_f
+                      end
+          if ( line =~ /Main Walls/i ) then
+            myBrowseData["annual"]["area"]["walls_net_m^2"] = words[3].to_f
+          end
+          if ( line =~ /Ceiling/i ) then
+            myBrowseData["annual"]["area"]["ceiling_m^2"] = words[2].to_f
           end
 
         end
