@@ -383,7 +383,8 @@ module Hourly
 
     printarray2=[peakHeating,peakCooling].transpose
 
-    CSV.open("#{$gMasterPath}\\hourly_calculation_results.csv", "w") do |f|
+    h2kfilename="#{$h2kFileName}".delete_suffix('.h2k')
+    CSV.open("#{$gMasterPath}\\"+"#{$gRunLocale}"+"_"+h2kfilename+".csv", "w") do |f|
       printarray.each do |x|
         f << x
       end
