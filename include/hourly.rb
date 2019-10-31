@@ -54,7 +54,7 @@ module Hourly
       month[i]=epw_array[i][1].to_i
       db_temperature[i]=epw_array[i][6].to_f
       rh[i]=epw_array[i][8].to_f
-      global_solar_hor[i]=epw_array[i][14].to_f #direct global solar Wh/m^2
+      global_solar_hor[i]=epw_array[i][13].to_f #direct global solar Wh/m^2
       time[i]=epw_array[i][3].to_i
       day[i]=epw_array[i][2].to_i
       wind_speed[i]=epw_array[i][21].to_f #m/s
