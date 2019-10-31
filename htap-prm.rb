@@ -41,6 +41,7 @@ $gArchetypeHash = Hash.new
 $gRulesetHash   = Hash.new
 $gLocationHash  = Hash.new
 $gExtendedOutputFlag = ""
+$gHourlySimulationFlag = ""
 
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
@@ -811,7 +812,8 @@ def run_these_cases(current_task_files)
                            "#{subRulesetsFlag} "+
                            "#{subCostFlag} "+                            
                            "--prm "+
-                           "#{$gExtendedOutputFlag} "
+                           "#{$gExtendedOutputFlag} "+
+						   									"#{$gHourlySimulationFlag}"
                            
 
           # Save command for invoking substitute [ useful in debugging ]
@@ -1453,6 +1455,11 @@ optparse = OptionParser.new do |opts|
       $gExtendedOutputFlag = "-e"
    end
 
+	opts.on("-g", "--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
+      $cmdlineopts["hourly_output"] = true
+      $gHourlySimulationFlag = "-g"
+   end
+   
    opts.on("-k", "--keep-all-files", "Preserve all files, including modified .h2k files, in HTAP-sim-X",
                                      "directories. (otherwise, only files that generate errors will be",
                                      "saved).") do
