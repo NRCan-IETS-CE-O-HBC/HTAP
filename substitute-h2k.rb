@@ -6777,7 +6777,7 @@ optparse = OptionParser.new do |opts|
     $autoEstimateCosts = true
   end
 
-  opts.on("-g", "--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
+  opts.on("--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
     $cmdlineopts["hourly_output"] = true
     $hourlyCalcs = true
   end
