@@ -41,7 +41,7 @@ HTAPInit()
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # Typical H2K run < 10 seconds, but may much take longer in ERS mode
-$maxRunTime = 50
+$maxRunTime = 20
 # JTB 05-10-2016: Also setting maximum retries within timeout period
 $maxTries   = 3
 
@@ -3111,11 +3111,11 @@ def processFile(h2kElements)
           # Note: The XML file does not contain a "mode" parameter. It uses the presence or
           #       absence of the <Program> section to indicate the mode.
           #--------------------------------------------------------------------------------
+        
         elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
           if value == "NA"
             # Don't change the run mode but use the "General" output section!
             $outputHCode = "General"
-
           elsif value == "General"
             # Change run mode and set output section
             $outputHCode = "General"
@@ -3126,9 +3126,11 @@ def processFile(h2kElements)
           else
             # Change run mode to ERS and set output section
             $outputHCode = value
-            if h2kElements["HouseFile/Program"] == nil
-              createProgramXMLSection( h2kElements )
-            end
+            h2kElements["HouseFile"].delete_element("Program")
+            createProgramXMLSection( h2kElements )
+            #if h2kElements["HouseFile/Program"] == nil  
+            #  createProgramXMLSection( h2kElements )
+            #end
           end
 
         # Change window distribution
@@ -3319,7 +3321,7 @@ def processFile(h2kElements)
     debug_out (" Overwriting: #{$gWorkingModelFile} \n")
     log_out ("saving processed h2k file  version (#{$gWorkingModelFile})")
     newXMLFile = File.open($gWorkingModelFile, "w")
-    $XMLdoc.write(newXMLFile)
+    $XMLdoc.write(newXMLFile,2)
 
   rescue
     fatalerror("Could not overwrite #{$gWorkingModelFile}\n ")
@@ -3458,8 +3460,11 @@ end
 #  Function to create the Program XML section that contains the ERS program mode data
 # =========================================================================================
 def createProgramXMLSection( houseElements )
+
   loc = "HouseFile"
-  houseElements[loc].add_element("Program")
+  houseElements[loc].add_element("AllResults")
+  
+
 
   loc = "HouseFile/Program"
   houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
@@ -3482,17 +3487,17 @@ def createProgramXMLSection( houseElements )
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
   houseElements[loc].attributes["major"] = "15"
-  houseElements[loc].attributes["minor"] = "1"
-  houseElements[loc].attributes["build"] = "19"
+  houseElements[loc].attributes["minor"] = "6"
+  houseElements[loc].attributes["build"] = "18345"
   houseElements[loc].add_element("Labels")
   loc = "HouseFile/Program/Version/Labels"
   houseElements[loc].add_element("English")
-  loc = "HouseFile/Program/Labels/English"
-  houseElements[loc].add_text("v15.1b19")
+  loc = "HouseFile/Program/Version/Labels/English"
+  houseElements[loc].add_text("v15.6b18345")
   loc = "HouseFile/Program/Version/Labels"
   houseElements[loc].add_element("French")
-  loc = "HouseFile/Program/Labels/French"
-  houseElements[loc].add_text("v15.1b19")
+  loc = "HouseFile/Program/Version/Labels/French"
+  houseElements[loc].add_text("v15.6b18345")
 
   loc = "HouseFile/Program"
   houseElements[loc].add_element("SdkVersion")
@@ -3500,16 +3505,17 @@ def createProgramXMLSection( houseElements )
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
   houseElements[loc].attributes["major"] = "1"
-  houseElements[loc].attributes["minor"] = "11"
+  houseElements[loc].attributes["minor"] = "16"
+  houseElements[loc].attributes["build"] = "18345"
   houseElements[loc].add_element("Labels")
   loc = "HouseFile/Program/SdkVersion/Labels"
   houseElements[loc].add_element("English")
-  loc = "HouseFile/Program/Labels/English"
-  houseElements[loc].add_text("v1.11")
+  loc = "HouseFile/Program/SdkVersion/Labels/English"
+  houseElements[loc].add_text("v1.16b18345")
   loc = "HouseFile/Program/SdkVersion/Labels"
   houseElements[loc].add_element("French")
-  loc = "HouseFile/Program/Labels/French"
-  houseElements[loc].add_text("v1.11")
+  loc = "HouseFile/Program/SdkVersion/Labels/French"
+  houseElements[loc].add_text("v1.16b18345")
 
   loc = "HouseFile/Program"
   houseElements[loc].add_element("Options")
@@ -4945,7 +4951,11 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Delete WMB file 
 
         Dir.glob("./H2K/WMB_*").each do |file|
-          File.delete(file)
+          begin
+            File.delete(file)
+          rescue 
+            warn_out ("Could not delete WMB file (#{file})")
+          end 
         end
 
       end
@@ -5760,7 +5770,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           
           # Module for hourly analysis using load-shapes. 
           # .............................................
-          debug_on 
+          #debug_on 
           debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit?"
           Hourly.analyze()
           debug_off
@@ -7220,10 +7230,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               debug_out ("Package #{package} found\n")
               stream_out(" Applying upgrades from package #{package}:\n")
               rulesetHash["upgrade-packages"][package].each do |thisAttrib,thisChoice|
-
-                stream_out ("   - #{thisAttrib} -> #{thisChoice}\n")
-                $gChoices[thisAttrib] = thisChoice
-                isSetbyRuleset[thisAttrib] = false 
+                attrib  = HTAPData.queryAttribAliases( thisAttrib )
+                stream_out ("   - #{attrib} -> #{thisChoice}\n")
+                $gChoices[attrib] = thisChoice
+                isSetbyRuleset[attrib] = false 
 
               end
 

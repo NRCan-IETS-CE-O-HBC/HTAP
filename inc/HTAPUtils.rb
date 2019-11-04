@@ -435,7 +435,7 @@ module HTAPData
   # list. Should be able to directly access this through options,
   # but legacy data map obscures it.
   def HTAPData.getResultsForChoice(options,attribute,choice)
-    debug_on
+    #debug_on
     result = Hash.new
     debug_out ("Att: #{attribute}\n")
     debug_out ("Choice: #{choice}\n")
@@ -457,7 +457,7 @@ module HTAPData
 
   # Parse configuration / choice file
   def HTAPData.parse_choice_file(filename)
-    #debug_on
+   # debug_on
 
     blk = lambda { |h,k| h[k] = Hash.new(&blk) }
     choices = Hash.new(&blk)
@@ -682,7 +682,7 @@ module HTAPData
 
 
     # Search through choices and determine if they match options in the Options file (error if not).
-
+    #debug_on
     validatedChoices.each do |attrib, choice|
 
 

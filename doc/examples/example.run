@@ -14,7 +14,7 @@ RunParameters_END
 RunScope_START
 
   archetypes                        = NRCan-arch4_2100sf_2storey_fullBsmt.h2k
-  locations                         = VANCOUVER, TORONTO
+  locations                         = HALIFAX, GREENWOOD, YARMOUTH
   rulesets                          = as-found
 
 RunScope_END
@@ -25,7 +25,7 @@ Upgrades_START
 
    Opt-ResultHouseCode  = General
 
-   Opt-ACH         = NA 
+   Opt-ACH         = New-Const-air_seal_to_1.50_ach, New-Const-air_seal_to_1.00_ach, New-Const-air_seal_to_0.60_ach 
 
    Opt-Windows     = NA, NC-2g-LG-u1.65, NC-2g-HG-u1.65
    Opt-Skylights   = NA
