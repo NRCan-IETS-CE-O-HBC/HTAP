@@ -1017,6 +1017,7 @@ module Costing
     colPad = 2
     colSep = "   "
     reportTxt = ""
+
     myChoices.each do | attribute, choice |
       next if ( ! CostingSupport.include? attribute  )
       debug_out drawRuler(nil, "  .  ")
@@ -1102,7 +1103,8 @@ module Costing
         lineTxt += sep
         lineTxt += "$\\ #{'%.2f' % data["unit-cost-total"].to_f}\\ /\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
-        lineTxt += "#{'%.2f' % data["quantity"].to_f}\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+        quantityNet = data["quantity"].to_f * data["count"].to_f
+        lineTxt += "#{'%.2f' % quantityNet}\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
         lineTxt += "$\\ #{'%.2f' % data["component-costs"].to_f}".rjust(colWidth-colPad)+" "*colPad
         #lineTxt += sep
