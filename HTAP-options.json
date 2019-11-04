@@ -9092,7 +9092,8 @@
                 "per?14": "ashp:conventional"
               }
             },            
-            "ducting:central_forced_air"
+            "ducting:central_forced_air", 
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },      
@@ -9272,7 +9273,8 @@
           },
           "components": [
             "traditional_electric_resistance_baseboard_heaters",
-            "ducting:direct-duct_hrv"
+            "ducting:direct-duct_hrv",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },
@@ -9388,7 +9390,8 @@
                 "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
               }
             },            
-            "ducting:central_forced_air"
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },
@@ -9428,7 +9431,8 @@
                 "else"  : "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
               }
             },
-            "ducting:central_forced_air"
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },
@@ -9702,7 +9706,8 @@
           },
           "components": [
             "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
-            "ducting:central_forced_air"
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       }
