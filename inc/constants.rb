@@ -177,7 +177,11 @@ $LegacyOptionsToIgnore = Set.new [
 
 AliasesForAttributes = {
   "Opt-GenericWall_1Layer_definitions" => "Opt-AboveGradeWall",
-  "Opt-FloorAboveCrawl" => "Opt-ExposedFloor"
+  "Opt-FloorAboveCrawl" => "Opt-ExposedFloor",
+  "Opt-HRVonly" => "Opt-VentSystem",
+  "Opt-CasementWindows" => "Opt-Windows", 
+  "Opt-HVACSystem" => "Opt-Heating-Cooling",
+  "Opt-DWHRSystem" => "Opt-DWHR"
 }
 
 $DoNotValidateOptions = Set.new [  "upgrade-package-list" ]
@@ -190,11 +194,11 @@ CostingSupport = Set.new [ "Opt-Ceilings",
 						  "Opt-FlatCeilings",
 						  "Opt-CathCeilings",
               "Opt-ACH",
-              "Opt-CasementWindows",
-              "Opt-DWHRSystem",
+              "Opt-Windows",
+              "Opt-DWHR",
               "Opt-AboveGradeWall",
-              "Opt-HVACSystem",
-              "Opt-HRVonly",
+              "Opt-Heating-Cooling",
+              "Opt-VentSystem",
               "Opt-DHWSystem",
               "Opt-FoundationWallExtIns",
               "Opt-FoundationWallIntIns",

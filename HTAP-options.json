@@ -1733,7 +1733,7 @@
       "Opt-FlueShield"
     ]
   },
-  "Opt-CasementWindows": {
+  "Opt-Windows": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -8737,7 +8737,7 @@
       "OPT-H2K-EffRValue"
     ]
   },
-  "Opt-HVACSystem": {
+  "Opt-Heating-Cooling": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -9092,7 +9092,8 @@
                 "per?14": "ashp:conventional"
               }
             },            
-            "ducting:central_forced_air"
+            "ducting:central_forced_air", 
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },      
@@ -9272,7 +9273,8 @@
           },
           "components": [
             "traditional_electric_resistance_baseboard_heaters",
-            "ducting:direct-duct_hrv"
+            "ducting:direct-duct_hrv",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },
@@ -9388,7 +9390,8 @@
                 "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
               }
             },            
-            "ducting:central_forced_air"
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },
@@ -9428,7 +9431,8 @@
                 "else"  : "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
               }
             },
-            "ducting:central_forced_air"
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       },
@@ -9702,7 +9706,8 @@
           },
           "components": [
             "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
-            "ducting:central_forced_air"
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
           ]
         }
       }
@@ -9900,7 +9905,7 @@
       "OPT-H2K-Rating2"
     ]
   },
-  "Opt-HRVonly": {
+  "Opt-VentSystem": {
     "structure": "tree",
     "costed": true,
     "options": {
@@ -9950,7 +9955,7 @@
           "components": [
             "hrv:conventional_sre_60%_@_0:55%_@_-25",
             {
-              "HTAPOptions.Opt-HVACSystem/options/[choice]/costComponents": {
+              "HTAPOptions.Opt-Heating-Cooling/options/[choice]/costComponents": {
                 "inc?ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
                 "else": "ducting:direct-duct_hrv"
               }
@@ -10390,7 +10395,7 @@
       "Opt-H2K-FlueDiameter"
     ]
   },
-  "Opt-DWHRSystem": {
+  "Opt-DWHR": {
     "structure": "tree",
     "costed": true,
     "options": {

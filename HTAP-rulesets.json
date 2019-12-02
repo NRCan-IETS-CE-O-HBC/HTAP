@@ -2,7 +2,7 @@
   "upgrade-packages":{
   	"test-a":{
   		"Opt-ACH": "New-Const-air_seal_to_1.00_ach",
-  		"Opt-CasementWindows": "NC-3g-LG-u1.14"
+  		"Opt-Windows": "NC-3g-LG-u1.14"
   	}
   },
   "rulesets":{

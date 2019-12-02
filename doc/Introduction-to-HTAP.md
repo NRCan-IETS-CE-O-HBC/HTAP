@@ -21,11 +21,11 @@ HTAP consists of two parts:
 1. HOT2000 v11.3 (including command-line client) 
 2. HTAP scripts and configuration files.
 
-**a)** To download HOT2000 v11.3, visit <https://drive.google.com/drive/folders/1DY1Oae9-d9U8U-jxvRBB54EUM8Df8y-u>, and install these files in the following order:
+The HOT2000 tools command line clients should be installed as follows:
 
 1. vc_redist.x86.exe (install this one first)
 2. HOT2000 v11.3b90 Setup.exe (if you don't already have it)
-3. HOT2000-CLI v11.3b90 Setup.exe - **When prompted, set the destination location to C:\H2K-CLI-Min (as below)**  
+3. HOT2000-CLI v11 Setup.exe - **When prompted, set the destination location to C:\H2K-CLI-Min (as below)**  
 
 ![](img/img-1-HOT2000-setup.png)
 
@@ -55,8 +55,8 @@ HTAP consists of two parts:
 3. Before you can run HTAP simulations, you must first copy the archetype files to the  `C:\H2K-CLI-Min\User\` directory. HTAP includes a ruby script to do this for you:
 
 ```powershell
-PS C:\> cd .\HTAP\Archetypes\
-PS C:\HTAP\Archetypes> ruby .\CopyToH2K.rb
+C:\> cd .\HTAP\Archetypes\
+C:\HTAP\Archetypes> ruby .\CopyToH2K.rb
 >C:/HTAP/Archetypes
 >> Copying ./1218N00240.h2k to C:\H2K-CLI-Min\User\... done.
 >> Copying ./1218N00263.h2k to C:\H2K-CLI-Min\User\... done.

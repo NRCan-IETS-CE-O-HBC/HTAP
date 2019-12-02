@@ -36,7 +36,12 @@ module Costing
 
     unitCostFile = File.read(unitCostFileName)
 
-    unitCostDataHash = JSON.parse(unitCostFile)
+    begin 
+      unitCostDataHash = JSON.parse(unitCostFile)
+    rescue
+      fatalerror("Unit costs file (#{unitCostFileName}) is incorrectly formmatted, can not be interpreted as json")
+    end 
+    unitCostFile.clear
 
     return unitCostDataHash
 
@@ -686,7 +691,9 @@ module Costing
               end
 
               # ........................................................................
-            when "Opt-CasementWindows"
+
+            when "Opt-Windows"
+
 
               if ( (units == "sf applied" &&  catagory == "WINDOWS") || units =="undefined")
 
@@ -760,7 +767,9 @@ module Costing
 
               end
               # ..................................................................
-            when "Opt-DWHRSystem"
+
+            when "Opt-DWHR"
+
 
               if ( units == "ea"  || units =="undefined")
 
@@ -787,7 +796,9 @@ module Costing
 
 
               # ..................................................................
-            when "Opt-HVACSystem"
+
+            when "Opt-Heating-Cooling"
+
 
               if ( units == "ea" || units =="undefined"  )
 
@@ -828,7 +839,9 @@ module Costing
 
               end
               # ..................................................................
-            when "Opt-HRVonly"
+
+            when "Opt-VentSystem"
+
 
               if ( units == "ea" || units =="undefined" )
 
@@ -943,7 +956,7 @@ module Costing
 
     myCosts["byBuildingComponent"]["envelope"] =
       myCosts["byAttribute"]["Opt-ACH"] +
-      myCosts["byAttribute"]["Opt-CasementWindows"] +
+      myCosts["byAttribute"]["Opt-Windows"] +
       myCosts["byAttribute"]["Opt-AboveGradeWall"] +
       myCosts["byAttribute"]["Opt-FloorHeaderIntIns"] +
       myCosts["byAttribute"]["Opt-FoundationWallExtIns"] +
@@ -961,6 +974,7 @@ module Costing
       myCosts["byAttribute"]["Opt-DHWSystem"] +
       myCosts["byAttribute"]["Opt-HVACSystem"] +
       myCosts["byAttribute"]["Opt-DWHRSystem"]
+
 
     # Not supported yet.
     myCosts["byBuildingComponent"]["renewable"] = 0
@@ -1014,6 +1028,7 @@ module Costing
     colPad = 2
     colSep = "   "
     reportTxt = ""
+
     myChoices.each do | attribute, choice |
       next if ( ! CostingSupport.include? attribute  )
       debug_out drawRuler(nil, "  .  ")
@@ -1099,7 +1114,10 @@ module Costing
         lineTxt += sep
         lineTxt += "$\\ #{'%.2f' % data["unit-cost-total"].to_f}\\ /\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
-        lineTxt += "#{'%.2f' % data["quantity"].to_f}\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+
+        quantityNet = data["quantity"].to_f * data["count"].to_f
+        lineTxt += "#{'%.2f' % quantityNet}\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+
         lineTxt += sep
         lineTxt += "$\\ #{'%.2f' % data["component-costs"].to_f}".rjust(colWidth-colPad)+" "*colPad
         #lineTxt += sep

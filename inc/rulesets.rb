@@ -11,60 +11,72 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-07-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR20"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-Pre-1946-Gas"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-Pre-1946-Gas"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-1-RSI_0.66"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_10"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-1-Gas-AC"#"ghg-hvac-1-Gas"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-1-Gas-AC"#"ghg-hvac-1-Gas"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "Pre-1946-Gas-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
       elsif  $gChoices["Opt-Archetype"] =~ /1946-1983/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-11-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1946-1983-Gas"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1946-1983-Gas"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-4-RSI_0.83"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_6_2"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-4-Gas-AC" #"ghg-hvac-4-Gas"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-4-Gas-AC" #"ghg-hvac-4-Gas"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1946-1983-Gas-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
       elsif  $gChoices["Opt-Archetype"] =~ /1984-1995/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-14-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1984-1995-Gas"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1984-1995-Gas"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-7-RSI_1.66"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_4_4"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-7-Gas-AC" #"ghg-hvac-7-Gas"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-7-Gas-AC" #"ghg-hvac-7-Gas"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1984-1995-Gas-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
       elsif  $gChoices["Opt-Archetype"] =~ /1996-2005/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-15-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1996-2005-Gas"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1996-2005-Gas"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-10-RSI_1.72"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_3_2"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-10-Gas-AC" #"ghg-hvac-10-Gas"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-10-Gas-AC" #"ghg-hvac-10-Gas"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1996-2005-Gas-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
       elsif  $gChoices["Opt-Archetype"] =~ /2006-2011/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-15-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2006-2011-Gas"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-2006-2011-Gas"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-13-RSI_1.75"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_2_6"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-13-Gas-AC" #"ghg-hvac-13-Gas"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-13-Gas-AC" #"ghg-hvac-13-Gas"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "2006-2011-Gas-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       elsif  $gChoices["Opt-Archetype"] =~ /2012-2019/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-17-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR50"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2012-2019-Gas"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-2012-2019-Gas"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-16-RSI_2.95"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-16-Gas-AC" #"ghg-hvac-16-Gas"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-16-Gas-AC" #"ghg-hvac-16-Gas"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Gas-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       end
@@ -74,60 +86,72 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-09-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR20"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-Pre-1946-Elect"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-Pre-1946-Elect"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-2-RSI_0.68"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_10_3"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-2-Elect-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-2-Elect-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "Pre-1946-Elect-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
     elsif  $gChoices["Opt-Archetype"] =~ /1946-1983/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-12-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1946-1983-Elect"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1946-1983-Elect"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-5-RSI_0.86"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_6_1"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-5-Elect-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-5-Elect-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1946-1983-Elect-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
     elsif  $gChoices["Opt-Archetype"] =~ /1984-1995/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-15-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1984-1995-Elect"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1984-1995-Elect"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-8-RSI_1.66"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_4_1"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-8-Elect-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-8-Elect-AC"
+v
          $ruleSetChoices["Opt-DHWSystem"]                      = "1984-1995-Elect-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
       elsif  $gChoices["Opt-Archetype"] =~ /1996-2005/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-16-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1996-2005-Elect"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1996-2005-Elect"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-11-RSI_1.67"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_3_1"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-11-Elect-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-11-Elect-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1996-2005-Elect-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       elsif  $gChoices["Opt-Archetype"] =~ /2006-2011/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-16-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2006-2011-Elect"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-2006-2011-Elect"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-14-RSI_1.8"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_2_5"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-14-Elect-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-14-Elect-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "2006-2011-Elect-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       elsif  $gChoices["Opt-Archetype"] =~ /2012-2019/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-17-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR50"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2012-2019-Elect"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-2012-2019-Elect"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-17-RSI_2.95"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-17-Elect-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-17-Elect-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Elect-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       end
@@ -137,60 +161,72 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-08-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR20"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-Pre-1946-Oil"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-Pre-1946-Oil"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-3-RSI_0.58"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_10"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-3-Oil-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-3-Oil-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "Pre-1946-Oil-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
      elsif  $gChoices["Opt-Archetype"] =~ /1946-1983/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-11-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1946-1983-Oil"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1946-1983-Oil"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-6-RSI_0.77"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_6_3"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-6-Oil-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-6-Oil-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1946-1983-Oil-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
      elsif  $gChoices["Opt-Archetype"] =~ /1984-1995/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-14-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR30"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1984-1995-Oil"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1984-1995-Oil"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-9-RSI_1.53"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_4_9"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-9-Oil-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-9-Oil-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1984-1995-Oil-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-exh-fan"
      elsif  $gChoices["Opt-Archetype"] =~ /1996-2005/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-16-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-1996-2005-Oil"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-1996-2005-Oil"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-12-RSI_1.69"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_3_4"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-12-Oil-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-12-Oil-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "1996-2005-Oil-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       elsif  $gChoices["Opt-Archetype"] =~ /2006-2011/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-16-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR40"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2006-2011-Oil"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-2006-2011-Oil"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-15-RSI_1.98"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-15-Oil-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-15-Oil-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "2006-2011-Oil-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       elsif  $gChoices["Opt-Archetype"] =~ /2012-2019/
          $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-17-eff"
          $ruleSetChoices["Opt-Ceilings"]                       = "CeilR50"
          $ruleSetChoices["Opt-ExposedFloor"]                   = "BaseExpFloor-R31"
-         $ruleSetChoices["Opt-CasementWindows"]                = "win-Canada-2012-2019-Oil"
+
+         $ruleSetChoices["Opt-Windows"]                = "win-Canada-2012-2019-Oil"
          $ruleSetChoices["Opt-H2KFoundation"]                  = "GHG-bsm-18-RSI_2.95"
          $ruleSetChoices["Opt-ACH"]                            = "ACH_2_4"
-         $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-18-Oil-AC"
+         $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-18-Oil-AC"
+
          $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Oil-dhw"
          $ruleSetChoices["Opt-HRVspec"]                        = "ghg-hrv-55sre"
       end
@@ -204,10 +240,12 @@ def NorthTesting_RuleSet( ruleType, elements )
 
         $ruleSetChoices["Opt-AboveGradeWall"] = "Generic_Wall_R-30-eff"
         $ruleSetChoices["Opt-Ceilings"]                       = "CeilR80"
-        $ruleSetChoices["Opt-CasementWindows"]                = "ghg-ER-34"
+
+        $ruleSetChoices["Opt-Windows"]                = "ghg-ER-34"
         $ruleSetChoices["Opt-H2KFoundation"]                  = "north-test-fnd"
         $ruleSetChoices["Opt-ACH"]                            = "ACH_0_6"
-        $ruleSetChoices["Opt-HVACSystem"]                     = "ghg-hvac-5-Elect"
+        $ruleSetChoices["Opt-Heating-Cooling"]                     = "ghg-hvac-5-Elect"
+
         $ruleSetChoices["Opt-DHWSystem"]                      = "2012-2019-Elect-dhw"
         $ruleSetChoices["Opt-HRVspec"]                        = "HRV_81"
      end
@@ -276,14 +314,16 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    debug_out " >>> primary heating type: #{primHeatFuelName} \n"
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/i ) != nil        # value is "Natural gas"
-      $ruleSetChoices["Opt-HVACSystem"] = "NBC-gas-furnace"
+
+      $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
-      $ruleSetChoices["Opt-HVACSystem"] = "NBC-oil-heat"
+      $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-oil-heat"
    elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
       if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
-         $ruleSetChoices["Opt-HVACSystem"] = "NBC-CCASHP"
+         $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-CCASHP"
       else
-         $ruleSetChoices["Opt-HVACSystem"] = "NBC-elec-heat"
+         $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-elec-heat"
+
       end
    end
 
@@ -301,7 +341,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    if ventSpec == "noHRV"
 
       # Implement reference ventilation system (HRV with 0% recovery efficiency)
-      $ruleSetChoices["Opt-HRVonly"]                        =  "NBC_noHRV"
+
+      $ruleSetChoices["Opt-VentSystem"]                        =  "NBC_noHRV"
+
 
       # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000
@@ -314,7 +356,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+
+         $ruleSetChoices["Opt-Windows"] = "NBC-zone4-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
 
@@ -349,7 +393,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                      = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone5-window"
+
+         $ruleSetChoices["Opt-Windows"] = "NBC-zone5-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
 
@@ -380,7 +426,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
+
+         $ruleSetChoices["Opt-Windows"]                = "NBC-zone6-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
 
@@ -410,7 +458,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
+
+         $ruleSetChoices["Opt-Windows"]                = "NBC-zone7A-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
          # Effective thermal resistance of assemblies below-grade or in contact with the ground (Table 9.36.2.8.A&B)
@@ -451,7 +501,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7B-window"
+
+         $ruleSetChoices["Opt-Windows"]                = "NBC-zone7B-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
 
@@ -496,7 +548,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
+
+         $ruleSetChoices["Opt-Windows"]                =  "NBC-zone8-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
 
@@ -524,7 +578,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    elsif ventSpec == "HRV"
 
       # Performance of Heat/Energy-Recovery Ventilator (Section 9.36.3.9.3)
-  		$ruleSetChoices["Opt-HRVonly"]                        =  "NBC_HRV"
+
+  		$ruleSetChoices["Opt-VentSystem"]                        =  "NBC_HRV"
+
 
      # Zone 4 ( HDD < 3000) without an HRV
       if locale_HDD < 3000
@@ -538,7 +594,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"] = "NBC-zone4-window"
+
+         $ruleSetChoices["Opt-Windows"] = "NBC-zone4-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
 
@@ -570,7 +628,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone5-window"
+
+         $ruleSetChoices["Opt-Windows"]                = "NBC-zone5-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
 
@@ -601,7 +661,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_4.67RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone6-window"
+
+         $ruleSetChoices["Opt-Windows"]                = "NBC-zone6-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
 
@@ -632,7 +694,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                = "NBC-zone7A-window"
+
+         $ruleSetChoices["Opt-Windows"]                = "NBC-zone7A-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
 
@@ -662,7 +726,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone7B-window"
+
+         $ruleSetChoices["Opt-Windows"]                =  "NBC-zone7B-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
 
@@ -697,7 +763,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-ExposedFloor"]                   = "NBC_936_5.02RSI"
 
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
-         $ruleSetChoices["Opt-CasementWindows"]                =  "NBC-zone8-window"
+
+         $ruleSetChoices["Opt-Windows"]                =  "NBC-zone8-window"
+
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
 
@@ -737,14 +805,18 @@ def LEEP_pathways_ruleset()
    $ruleSetChoices["Opt-CathCeilings"]                   = "CeilR40"
    $ruleSetChoices["Opt-FlatCeilings"]                   = "CeilR40"
    $ruleSetChoices["Opt-ExposedFloor"]                     = "NBC_936_5.02RSI"
-   $ruleSetChoices["Opt-HVACSystem"]                      = "gas-furnace-ecm"
+
+   $ruleSetChoices["Opt-Heating-Cooling"]                      = "gas-furnace-ecm"
+
    $ruleSetChoices["Opt-FoundationWallIntIns"] = "WoodFrameEffR15"
    $ruleSetChoices["Opt-FoundationWallExtIns"] = "uninsulated"
    $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "uninsulated"
    $ruleSetChoices["Opt-DHWSystem"]="gas_storagetank_w/powervent_ef0.67"
-   $ruleSetChoices["Opt-CasementWindows"]="NC-2g-MG-u1.82"
+
+   $ruleSetChoices["Opt-Windows"]="NC-2g-MG-u1.82"
    $ruleSetChoices["Opt-ACH"]="New-Const-air_seal_to_3.50_ach"
-   $ruleSetChoices["Opt-HRVonly"]="HRV_sre_60"
+   $ruleSetChoices["Opt-VentSystem"]="HRV_sre_60"
+
 end
 #===============================================================================
 def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
@@ -753,7 +825,9 @@ def R2000_NZE_Pilot_RuleSet( ruleType, elements, cityName )
    if ruleType =~ /R2000_NZE_Pilot_Env/
 
       # R-2000 Standard Mechanical Conditions. (Table 2)
-      $ruleSetChoices["Opt-HVACSystem"] = "R2000-elec-baseboard"
+
+      $ruleSetChoices["Opt-Heating-Cooling"] = "R2000-elec-baseboard"
+
       $ruleSetChoices["Opt-DHWSystem"] = "R2000-HotWater-elec"
       $ruleSetChoices["Opt-HRVspec"] = "R2000_HRV"
 
