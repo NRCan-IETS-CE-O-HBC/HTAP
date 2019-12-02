@@ -97,12 +97,14 @@ module LEEPPathways
     "Opt-ACH:+:New-Const-air_seal_to_0.60_ach"  => "lpACH_04",
     "Opt-ACH:+:New-Const-air_seal_to_1.00_ach"  => "lpACH_05",
 
+
     "Opt-Windows:+:NC-2g-MG-u1.82"   => "lpWIN_01",
     "Opt-Windows:+:NC-2g-HG-u1.65"   => "lpWIN_02",
     "Opt-Windows:+:NC-2g-LG-u1.65"   => "lpWIN_03",
     "Opt-Windows:+:NC-3g-HG-u1.08"   => "lpWIN_04",
     "Opt-Windows:+:NC-3g-LG-u1.08"   => "lpWIN_05",  
     "Opt-Windows:+:NC-3g-LG-u0.85"   => "lpWIN_06",  
+
 
     "Opt-FoundationWallExtIns:+:uninsulated"       => "lpFDe_01" ,
     "Opt-FoundationWallExtIns:+:xps1.5inEffR7.5"   => "lpFDe_02" ,        
@@ -119,12 +121,14 @@ module LEEPPathways
     "Opt-FoundationSlabBelowGrade:+:xps4inEffR20" => "lpSBG_02" , 
     "Opt-FoundationSlabBelowGrade:+:xps2inEffR10" => "lpSBG_03" , 
 
+
     "Opt-Heating-Cooling:+:gas-furnace-psc"     => "lpH&C_01", 
     "Opt-Heating-Cooling:+:gas-furnace-ecm"     => "lpH&C_02", 
     "Opt-Heating-Cooling:+:gas-furnace-ecm+AC"  => "lpH&C_03", 
     "Opt-Heating-Cooling:+:CCASHP"  => "lpH&C_04", 
     "Opt-Heating-Cooling:+:ASHP"  => "lpH&C_05", 
     "Opt-Heating-Cooling:+:elec-baseboard"  => "lpH&C_06", 
+
 
     "Opt-AboveGradeWall:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
     "Opt-AboveGradeWall:+:NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb" => "lpMWL_02",
@@ -138,11 +142,13 @@ module LEEPPathways
     "Opt-DHWSystem:+:GasInstantaneous" => "lpDHW_02",
     "Opt-DHWSystem:+:HPHotWater" => "lpDHW_03",
     "Opt-DHWSystem:+:elec_storage_ef0.89" => "lpDHW_04",
+
     "Opt-VentSystem:+:HRV_sre_60"         => "lpHRV_01",  
     "Opt-VentSystem:+:HRV_sre_78"         => "lpHRV_02",
     "Opt-DWHR:+:NA"     => "lpDWHR_00",
 
     "Opt-DWHR:+:DWHR-eff-55"     => "lpDWHR_01"
+
   }
   GoodArchFields = [
     "archID",
@@ -230,6 +236,7 @@ module LEEPPathways
     "Opt-Heating-Cooling",
     "Opt-DHWSystem",
     "Opt-DWHR",
+
   ]
 
   GoodRunFields = Array.new [ 
@@ -265,7 +272,9 @@ module LEEPPathways
   #  "Opt-Location",
   #  "HDDs", 
   #  "Opt-ACH",
+
   #  "Opt-Windows",
+
   #  "Opt-WindowDistribution",
   #  "Opt-AtticCeilings",
   #  "Opt-CathCeilings",

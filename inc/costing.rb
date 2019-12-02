@@ -35,12 +35,14 @@ module Costing
     unitCostDataHash = Hash.new
 
     unitCostFile = File.read(unitCostFileName)
+
     begin 
       unitCostDataHash = JSON.parse(unitCostFile)
     rescue
       fatalerror("Unit costs file (#{unitCostFileName}) is incorrectly formmatted, can not be interpreted as json")
     end 
     unitCostFile.clear
+
     return unitCostDataHash
 
   end
@@ -689,7 +691,9 @@ module Costing
               end
 
               # ........................................................................
+
             when "Opt-Windows"
+
 
               if ( (units == "sf applied" &&  catagory == "WINDOWS") || units =="undefined")
 
@@ -763,7 +767,9 @@ module Costing
 
               end
               # ..................................................................
+
             when "Opt-DWHR"
+
 
               if ( units == "ea"  || units =="undefined")
 
@@ -790,7 +796,9 @@ module Costing
 
 
               # ..................................................................
+
             when "Opt-Heating-Cooling"
+
 
               if ( units == "ea" || units =="undefined"  )
 
@@ -831,7 +839,9 @@ module Costing
 
               end
               # ..................................................................
+
             when "Opt-VentSystem"
+
 
               if ( units == "ea" || units =="undefined" )
 
@@ -960,10 +970,11 @@ module Costing
 	  myCosts["byAttribute"]["Opt-ExposedFloor"]
 
     myCosts["byBuildingComponent"]["mechanical"] =
-      myCosts["byAttribute"]["Opt-VentSystem"] +
+      myCosts["byAttribute"]["Opt-HRVonly"] +
       myCosts["byAttribute"]["Opt-DHWSystem"] +
-      myCosts["byAttribute"]["Opt-Heating-Cooling"] +
-      myCosts["byAttribute"]["Opt-DWHR"]
+      myCosts["byAttribute"]["Opt-HVACSystem"] +
+      myCosts["byAttribute"]["Opt-DWHRSystem"]
+
 
     # Not supported yet.
     myCosts["byBuildingComponent"]["renewable"] = 0
@@ -1103,8 +1114,10 @@ module Costing
         lineTxt += sep
         lineTxt += "$\\ #{'%.2f' % data["unit-cost-total"].to_f}\\ /\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
         lineTxt += sep
+
         quantityNet = data["quantity"].to_f * data["count"].to_f
         lineTxt += "#{'%.2f' % quantityNet}\\ #{unitShort}".rjust(colWidth-colPad)+" "*colPad
+
         lineTxt += sep
         lineTxt += "$\\ #{'%.2f' % data["component-costs"].to_f}".rjust(colWidth-colPad)+" "*colPad
         #lineTxt += sep

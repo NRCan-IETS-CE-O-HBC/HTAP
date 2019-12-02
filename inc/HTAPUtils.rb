@@ -280,11 +280,14 @@ module HTAPData
 
     optionsContents = fOPTIONS.read
     fOPTIONS.close
+
     begin 
       jsonRawOptions = JSON.parse(optionsContents)
     rescue 
       fatalerror("Options file (#{filename}) is incorrectly formmatted, can not be interpreted as json")
     end 
+
+
     optionsContents.clear
     for attribute in jsonRawOptions.keys()
 
@@ -435,7 +438,9 @@ module HTAPData
   # list. Should be able to directly access this through options,
   # but legacy data map obscures it.
   def HTAPData.getResultsForChoice(options,attribute,choice)
+
     #debug_on
+
     result = Hash.new
     debug_out ("Att: #{attribute}\n")
     debug_out ("Choice: #{choice}\n")
@@ -457,7 +462,7 @@ module HTAPData
 
   # Parse configuration / choice file
   def HTAPData.parse_choice_file(filename)
-   # debug_on
+
 
     blk = lambda { |h,k| h[k] = Hash.new(&blk) }
     choices = Hash.new(&blk)
@@ -556,9 +561,11 @@ module HTAPData
   # Checks to see if an attribute matches entries in the options file
   def HTAPData.isAttribValid(options, attrib)
     debug_off
+
     if $DoNotValidateOptions.include?(attrib) then 
       return true
     end 
+
     if ( options[attrib].nil? || options[attrib]["options"].empty? ) then 
       return false
     else 
@@ -597,6 +604,7 @@ module HTAPData
 
 
   def HTAPData.isChoiceValid(options, attrib, choice)
+
     #debug_on # if (attrib =~ /DHW/ )
     #debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
     if $DoNotValidateOptions.include?(attrib) then 
@@ -607,7 +615,7 @@ module HTAPData
          options[attrib]["options"][choice].empty?  ) then
       return false
     else
-      
+           
       return true
     end
 
@@ -682,7 +690,7 @@ module HTAPData
 
 
     # Search through choices and determine if they match options in the Options file (error if not).
-    #debug_on
+
     validatedChoices.each do |attrib, choice|
 
 

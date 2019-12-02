@@ -15,12 +15,14 @@ module MDRpts
       secTxt +="#".ljust(sectionLevel,"#")+" #{sectionName} \n"
     end
 
+
     return secTxt+"\n"
   end
 
   def MDRpts.newParagraph(txt)
     return txt+ "\n\n"
   end
+
 
     def MDRpts.newLine(txt)
     return txt+ "\n"
@@ -96,6 +98,7 @@ module MDRpts
 
 
     tableTxt = "\n"
+
     tableTxt += tableHeader
     tableTxt += tableRule
     tableRows.each do | row |
