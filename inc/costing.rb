@@ -965,15 +965,15 @@ module Costing
       myCosts["byAttribute"]["Opt-FoundationSlabOnGrade"] +
       myCosts["byAttribute"]["Opt-Ceilings"] +
       myCosts["byAttribute"]["Opt-AtticCeilings"]+
-	  myCosts["byAttribute"]["Opt-FlatCeilings"]+
-	  myCosts["byAttribute"]["Opt-CathCeilings"]+
-	  myCosts["byAttribute"]["Opt-ExposedFloor"]
+	    myCosts["byAttribute"]["Opt-FlatCeilings"]+
+	    myCosts["byAttribute"]["Opt-CathCeilings"]+
+	    myCosts["byAttribute"]["Opt-ExposedFloor"]
 
     myCosts["byBuildingComponent"]["mechanical"] =
-      myCosts["byAttribute"]["Opt-HRVonly"] +
+      myCosts["byAttribute"]["Opt-VentSystem"] +
       myCosts["byAttribute"]["Opt-DHWSystem"] +
-      myCosts["byAttribute"]["Opt-HVACSystem"] +
-      myCosts["byAttribute"]["Opt-DWHRSystem"]
+      myCosts["byAttribute"]["Opt-Heating-Cooling"] +
+      myCosts["byAttribute"]["Opt-DWHR"]
 
 
     # Not supported yet.
