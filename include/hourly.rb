@@ -241,12 +241,12 @@ module Hourly
     for i in 0..8759
       indoor_temp_cooling[i]=schedule[:temp_cooling]
       hourly_conduction_losses[i]=htap_conduction_losses[month[i]-1].to_f*(indoor_temp[i]-db_temperature[i])/(average_indoor_temp_month[months_number[month[i]]]-average_temp_month[months_number[month[i]]])
-      hourly_solar_gains[i]=htap_solar_gains[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]])
+      hourly_solar_gains[i]=htap_solar_gains[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]]+0.0000000001)
       hourly_internal_gains[i]=htap_internal_gains[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       hourly_total_heating[i]=hourly_conduction_losses[i]-hourly_solar_gains[i]-hourly_internal_gains[i]
       hourly_electrical_demand_plug[i]=htap_elec_plug[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       #hourly_dhw_demand[i]=htap_dhw[month[i]-1].to_f*norm_dhw[time[i]-1].to_f
-      hourly_solar_gains_cooling[i]=solar_load_cooling_htap[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]])
+      hourly_solar_gains_cooling[i]=solar_load_cooling_htap[month[i]-1].to_f*(global_solar_hor[i])/(average_solar[months_number[month[i]]]+0.0000000001)
       hourly_conduction_losses_cooling[i]=envelope_gains_cooling_htap[month[i]-1].to_f*(indoor_temp_cooling[i]-db_temperature[i])/(schedule[:temp_cooling]-average_temp_month[months_number[month[i]]])
       hourly_internal_gains_cooling[i]=internal_gains_cooling_htap[month[i]-1].to_f*norm_int_gains[time[i]-1].to_f
       hourly_total_cooling[i]=hourly_solar_gains_cooling[i]+hourly_conduction_losses_cooling[i]+hourly_internal_gains_cooling[i]
@@ -320,7 +320,7 @@ module Hourly
       hourly_monthly_tot_cool[i]=hourly_cooling_mass.slice(start_of_month_hour[i],hours_per_month[i]).sum
 
       hourly_monthly_pos_cool[i]=hourly_cooling_mass.slice(start_of_month_hour[i],hours_per_month[i]).select(&:positive?).sum
-      hourly_cool_ratio[i]=hourly_monthly_tot_cool[i]/hourly_monthly_pos_cool[i]
+      hourly_cool_ratio[i]=hourly_monthly_tot_cool[i]/(hourly_monthly_pos_cool[i].to_f+0.000000001)
 
     end
 
