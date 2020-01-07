@@ -1258,6 +1258,7 @@ def run_these_cases(current_task_files)
       outputlines = ""
       headerLine = ""
       batchSuccessCount = 0
+
       stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
 
             #-Loop though all instances, and compute 
@@ -1265,7 +1266,7 @@ def run_these_cases(current_task_files)
 
         debug_out "Run - #{run}\n"
         # Only write out data from successful runs - this helps prevent corrupted database
-        next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
+        next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ || data["status"]["success"] == false )
         batchSuccessCount += 1
         debug_out "processing:\n"
         debug_out "  #{data.pretty_inspect}\n\n"
