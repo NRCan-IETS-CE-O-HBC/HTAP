@@ -41,7 +41,7 @@ HTAPInit()
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # Typical H2K run < 10 seconds, but may much take longer in ERS mode
-$maxRunTime = 20
+$maxRunTime = 30
 # JTB 05-10-2016: Also setting maximum retries within timeout period
 $maxTries   = 3
 
