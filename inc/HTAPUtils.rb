@@ -442,8 +442,8 @@ module HTAPData
     #debug_on
 
     result = Hash.new
-    debug_out ("Att: #{attribute}\n")
-    debug_out ("Choice: #{choice}\n")
+    #debug_out ("Att: #{attribute}\n")
+    #debug_out ("Choice: #{choice}\n")
     debug_out( "contents of options[#{attribute}][`options`][#{choice}][`values`] ") #{}"=\n#{options[attribute]["options"][choice]["values"].pretty_inspect}")
 
     options[attribute]["tags"].each do |tagIndex, tagName|
@@ -455,7 +455,7 @@ module HTAPData
        result[tagName] = nil
      end
     end
-    debug_out ("returning: \n#{result.pretty_inspect}\n")
+    #debug_out ("returning: \n#{result.pretty_inspect}\n")
     return result
 
   end
@@ -539,6 +539,14 @@ module HTAPData
            end
 
            choices[attribute] = value
+           if ( attribute =~ /Opt-Ceilings/ ) then 
+
+            choices["Opt-AtticCeilings"] = value 
+            choices["Opt-CathCeilings"] = value 
+            choices["Opt-FlatCeilings"] = value 
+
+
+           end 
 
            debug_out ("  parsed: #{attribute} -> #{value} \n")
 
@@ -642,7 +650,7 @@ module HTAPData
 
 
     options.each do |option, ignore|
-      #debug_out drawRuler("Option #{option}","  .")
+      debug_out drawRuler("Option #{option}","  .")
       if ( $LegacyOptionsToIgnore.include? option ) then
         #debug_out (" skipped legacy option #{option}\n")
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
@@ -723,6 +731,7 @@ module HTAPData
           err_out( thisMsg )
         else
           # Do nothing
+          warn_out("Choice #{choice} for attribute #{attrib} is not defined in options file. ")
           debug_out ( "   - found $gOptions[\"#{attrib}\"][\"options\"][\"#{choice}\"} \n")
 
         end
