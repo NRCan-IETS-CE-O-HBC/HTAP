@@ -548,7 +548,7 @@ module HTAPData
 
            end 
 
-           debug_out ("  parsed: #{attribute} -> #{value} \n")
+           # debug_out ("  parsed: #{attribute} -> #{value} \n")
 
 
            # Save order of choices to make sure we apply them correctly.
@@ -650,7 +650,7 @@ module HTAPData
 
 
     options.each do |option, ignore|
-      debug_out drawRuler("Option #{option}","  .")
+      # debug_out drawRuler("Option #{option}","  .")
       if ( $LegacyOptionsToIgnore.include? option ) then
         #debug_out (" skipped legacy option #{option}\n")
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
