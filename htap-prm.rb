@@ -1490,18 +1490,19 @@ $gLEEPPathwayExport = false
 #=====================================================================================
 optparse = OptionParser.new do |opts|
 
-
-   opts.separator " USAGE: htap-prm.rb -o path\\to\\htap-options.json -r path\\to\\runfile.run -v "
+   opts.separator " "
+   opts.separator " Example: htap-prm.rb -o path\\to\\htap-options.json -r path\\to\\runfile.run -v "
    opts.separator " "
    opts.separator " Required inputs:"
+   opts.separator " "
 
-   opts.on("-o", "--options FILE", "Specified options file.") do |o|
-      $cmdlineopts["options"] = o
-      $gHTAPOptionsFile = o
-      if ( !File.exist?($gHTAPOptionsFile) )
-         fatalerror("Valid path to option file must be specified with --options (or -o) option!")
-      end
-   end
+   #opts.on("-o", "--options FILE", "Specified options file.") do |o|
+   #   $cmdlineopts["options"] = o
+   #   $gHTAPOptionsFile = o
+   #   if ( !File.exist?($gHTAPOptionsFile) )
+   #      fatalerror("Valid path to option file must be specified with --options (or -o) option!")
+   #   end
+   #end
 
    opts.on("-r", "--run-def FILE", "Specified run definitions file (.run)") do |o|
       $gRunDefinitionsProvided = true
@@ -1512,6 +1513,7 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.separator "\n Configuration options: "
+   opts.separator " "
 
    opts.on("-t", "--threads X", "Number of threads to use") do |o|
       $gNumberOfThreads = o.to_i
@@ -1520,65 +1522,69 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-
-   opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
+   opts.separator " "
+   opts.on("--compute-costs", "Estimate costs for assemblies using","costing database.") do |o|
       $gComputeCosts = true
    end
 
+   opts.separator " "
    opts.on(
-     "-c", "--confirm", "Prompt before proceeding with run. After estimating the size",
-     "and duration of the run, HTAP will ask for conformation before.",
-     "coninuing."
+     "-c", "--confirm", "Prompt before proceeding with run. After ","estimating the size and duration of the run, ","HTAP will ask for conformation before continuing.",
    ) do
 
      $promptBeforeProceeding = true
    end
 
-   opts.on("-e", "--extra-output", "Report additional data on archetype and part-load characteristics") do
+   opts.separator " "
+   opts.on("-e", "--extra-output", "Report additional data on archetype and part-load","characteristics") do
       $cmdlineopts["extra-output"] = true
       $gExtendedOutputFlag = "-e"
    end
 
-   opts.on("-k", "--keep-all-files", "Preserve all files, including modified .h2k files, in HTAP-sim-X",
-                                     "directories. (otherwise, only files that generate errors will be",
-                                     "saved).") do
+   opts.separator " "
+   opts.on("-k", "--keep-all-files", "Preserve all files (including modified .h2k ","files) in HTAP-sim-X directories. Otherwise, only",
+                                     "files that generate errors will be saved.",
+                                     ) do
       $gSaveAllRuns = true
    end
 
-   opts.on("-j", "--json", "Provide output in JSON format (htap-prm-output.json),","in additon to .csv.") do
+  opts.separator " "
+   opts.on("-j", "--json", "Provide output in JSON format","(htap-prm-output.json) in additon to .csv output.",
+                                            "Slows HTAP down, and make json output from", "large runs unwieldly."
+                                         ) do
+   
       $gJSONize = true
    end
 
 
+ opts.separator " "
+   opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool.") do
 
-   opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool",
-                                         "output. Slows HTAP down, and make json output unwieldy on",
-                                         "large runs.") do
       $gLEEPPathwayExport = true 
      
    end
-
-   opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
-                                         "output. Slows HTAP down, and make json output unwieldy on",
+opts.separator " "
+   opts.on("-a", "--include_audit_data", "Include detailed audit data for costing ", "calculations in JSON output. Slows HTAP down,",
+                                         "and make json output unwieldy on",
                                          "large runs.") do
 
       $cmdlineopts["audit_data"] = true
       $gTest_params["audit-costs"] = true
    end
-
-   opts.on( "--resume", "Attempt to resume prior interrupted run (experimental) ",) do
+opts.separator " "
+   opts.on( "--resume", "Attempt to resume prior interrupted run","(experimental feature)") do
 
       $cmdlineopts["resume"] = true
       $bResume = true 
    end   
 
-   opts.on("-v", "--verbose", "Output progress to console.") do
-      $cmdlineopts["verbose"] = true
-      $gTest_params["verbosity"] = "verbose"
-   end
+   #opts.on("-v", "--verbose", "Output progress to console.") do
+   #   $cmdlineopts["verbose"] = true
+   #   $gTest_params["verbosity"] = "verbose"
+   #end
 
    opts.separator "\n Debugging options: "
-
+opts.separator " "
    opts.on("--stop-on-error", "Terminate run upon first error encountered.") do
 
       $StopOnError = true
