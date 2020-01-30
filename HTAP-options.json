@@ -9152,7 +9152,7 @@
           },
           "components": [
             {
-              "H2KHouseInfo.HVAC/furnace/capacity_kW": {
+              "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
                 "per?14": "furnace_94%_afue:14kw_output:psc_motor"
               }
             },
