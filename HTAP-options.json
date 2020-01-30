@@ -9273,7 +9273,6 @@
           },
           "components": [
             "traditional_electric_resistance_baseboard_heaters",
-            "ducting:direct-duct_hrv",
             "install_200a_service_instead_of_100a_service"
           ]
         }
@@ -9933,6 +9932,28 @@
           ]
         }
       },
+      "ZeroCostHRV_sre_60": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "true",
+            "OPT-H2K-AirDistType": "1",
+            "OPT-H2K-OpSched": "480",
+            "OPT-FlowCalc": "1",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "60",
+            "OPT-H2K-Rating2": "55",
+            "OPT-H2K-Rating3": "0",
+            "OPT-H2K-FanPowerCalc": "NBC",
+            "OPT-H2K-FanPower1": "NA",
+            "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+          ]
+        }
+      },      
       "HRV_sre_60": {
         "h2kMap": {
           "base": {
