@@ -104,6 +104,7 @@ def parse_def_file(filepath)
   $WildCardsInUse = false;
 
   rundefs = File.open(filepath, 'r')
+  rulesetsHASH = Hash.new
   jsonRawOptions = Hash.new
   rundefs.each do | line |
 
@@ -195,7 +196,10 @@ def parse_def_file(filepath)
 
             $gRulesetsFile = $token_values[1]
 
-
+            # Test to see if rulesets file can be parsed
+            rulesetsHASH = HTAPData.parse_upgrade_file($gRulesetsFile)
+            debug_out "Rulesets file #{$gRulesetsFile} parsed ok.\n"
+     
           end
 
 
@@ -325,7 +329,11 @@ def parse_def_file(filepath)
     $gRunUpgrades.keys.each do |key|
  
       debug_out( " Wildcard search for #{key} => \n" )
-      if ( not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
+
+      # `upgrade-package-list` does not get tested against the options file. 
+
+
+      if ( key !~ /upgrade-package-list/ and not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
         err_out("Attribute #{key} does not match any attribute entry in the options file.")
         bError = true 
       else 
@@ -338,7 +346,12 @@ def parse_def_file(filepath)
             pattern = choice.gsub(/\*/, ".*")
             debug_out "              Wildcard matching on #{key} =~ /#{pattern}/\n"
             # Matching
-            superSet = jsonRawOptions[key]["options"].keys
+            if ( key =~ /upgrade-package-list/ ) then 
+
+              superSet = rulesetsHASH["upgrade-packages"].keys
+            else 
+              superSet = jsonRawOptions[key]["options"].keys
+            end 
             $gRunUpgrades[key].delete(choice)
             $gRunUpgrades[key].concat superSet.grep(/#{pattern}/)
   
@@ -1824,17 +1837,6 @@ else
       fatalerror ( " No combinations to run.")
     end
 
-    $combosRequired = runningProduct
-    $combosGenerated = 0
-    $combosSinceLastUpdate = 0
-    $comboInterval = 1000
-
-    create_mesh_cartisian_combos(-3)
-
-
-    stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
-
-
 
     if ($gRunDefMode == "mesh" ) then
       $RunsNeeded = $gGenChoiceFileList
@@ -1896,21 +1898,6 @@ else
     stream_out "          ----------------------------------------------------------\n"
     stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
 
-    $combosRequired = runningProduct
-    $combosGenerated = 0
-    $combosSinceLastUpdate = 0
-    $comboInterval = 1000
-    if ( runningProduct <  1 ) then
-      fatalerror ( " No combinations to run.")
-    end
-
-    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
-
-    create_parametric_combos()
-    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
-    $RunsNeeded = $gGenChoiceFileList
-
-
   end
 
 
@@ -1927,27 +1914,10 @@ else
 
 end
 
-if ( $bResume )  
-  $RunsNeeded.each do | run | 
-     $RunTheseFiles.push run unless ( $gRunsAleadyCompleted.include?(run) ) 
-  end 
-  numOfRunsRequired = $RunTheseFiles.length
-  numOfRunsPrevCompleted = $RunsNeeded.length - numOfRunsRequired
-  info_out(" Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining")
-  stream_out ( "    - [RESUMING] Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining\n")
-else 
-  $RunTheseFiles = $RunsNeeded
-  numOfRunsRequired = $RunTheseFiles.length
-end 
-
-
-if ( numOfRunsRequired <= 0  ) then 
-  fatalerror "No runs to be completed!"
-end 
 $batchCount = 0
 goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
-estDuration = $RunTheseFiles.length.to_f * evalSpeed / [$gNumberOfThreads, $RunTheseFiles.length].min
+estDuration = runningProduct * evalSpeed / [$gNumberOfThreads, runningProduct].min
 
 stream_out("    - Guesstimated time requirements ~ #{formatTimeInterval(estDuration)} (including pre- & post-processing)\n")
 $waitTime = 0
@@ -1966,6 +1936,57 @@ if ( $promptBeforeProceeding )
   $waitTime = waitend - waitstart
   log_out ("Waited for #{formatTimeInterval($waitTime)}\n")
 end
+
+case $gRunDefMode
+when  "mesh", "sample"
+  $combosRequired = runningProduct
+  $combosGenerated = 0
+  $combosSinceLastUpdate = 0
+  $comboInterval = 1000
+
+  create_mesh_cartisian_combos(-3)
+
+
+  stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+
+when "parametric"
+
+    $combosRequired = runningProduct
+    $combosGenerated = 0
+    $combosSinceLastUpdate = 0
+    $comboInterval = 1000
+    if ( runningProduct <  1 ) then
+      fatalerror ( " No combinations to run.")
+    end
+
+    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
+
+    create_parametric_combos()
+    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+    $RunsNeeded = $gGenChoiceFileList
+
+end 
+
+if ( $bResume )  
+  $RunsNeeded.each do | run | 
+     $RunTheseFiles.push run unless ( $gRunsAleadyCompleted.include?(run) ) 
+  end 
+  numOfRunsRequired = $RunTheseFiles.length
+  numOfRunsPrevCompleted = $RunsNeeded.length - numOfRunsRequired
+  info_out(" Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining")
+  stream_out ( "    - [RESUMING] Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining\n")
+else 
+  $RunTheseFiles = $RunsNeeded
+  numOfRunsRequired = $RunTheseFiles.length
+end 
+
+
+if ( numOfRunsRequired <= 0  ) then 
+  fatalerror "No runs to be completed!"
+end 
+
+
+
 
 stream_out("    - Deleting prior HTAP-work directories... ")
 FileUtils.rm_rf Dir.glob("HTAP-work-*")

@@ -261,6 +261,7 @@ module HTAPData
   end
 
 
+
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
     log_out("Reading available options (#{filename})")
@@ -433,6 +434,27 @@ module HTAPData
     return parsedOptions
 
   end
+
+  def HTAPData.parse_upgrade_file(filename)
+    # Simple funciton to parse HTAP-upgrade-packages file in json format. 
+    begin 
+      rulesetContents = File.read(filename)
+    rescue 
+      fatalerror("Could not read ruleset  #{filename}.")
+    end 
+#
+    begin 
+      rulesetHash =  JSON.parse(rulesetContents) 
+    rescue 
+      fatalerror("Ruleset file (#{filename}) is incorrectly formmatted, can not be interpreted as json.")
+    end 
+
+    rulesetContents = "" 
+
+    return rulesetHash
+
+  end 
+
 
   # Simple function that returns the tags/values as a token-value
   # list. Should be able to directly access this through options,

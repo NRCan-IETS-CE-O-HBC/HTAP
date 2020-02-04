@@ -7214,7 +7214,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             stream_out ("\n")
             stream_out (" Parsing package lists in file #{$rulesetsFileName}...")
             # Check to see if the requested package is in the upgrade-packages 
-            rulesetHash = JSON.parse(File.read($rulesetsFileName))
+
+            rulesetHash = HTAPData.parse_upgrade_file($rulesetsFileName)
+
             stream_out ("done.\n")
 
             
