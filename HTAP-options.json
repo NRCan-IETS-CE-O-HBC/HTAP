@@ -8581,6 +8581,23 @@
 
           ]
         }
+      },
+      "SCB_R17_WithSkirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_33_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
       }
     },
     "default": "NA",
