@@ -1395,7 +1395,7 @@
           }
         }
       },
-      "WHISTLER -W19": {
+      "WHISTLER-W19": {
         "h2kMap": {
           "base": {
             "OPT-H2K-WTH-FILE": "Wth119.dir",
@@ -1539,7 +1539,7 @@
           }
         }
       },
-      "THUNDER BAY-W19": {
+      "THUNDERBAY-W19": {
         "h2kMap": {
           "base": {
             "OPT-H2K-WTH-FILE": "Wth119.dir",
@@ -1566,7 +1566,7 @@
           }
         }
       },
-      "NORTH BAY-W19": {
+      "NORTHBAY-W19": {
         "h2kMap": {
           "base": {
             "OPT-H2K-WTH-FILE": "Wth119.dir",
@@ -1746,7 +1746,7 @@
           }
         }
       },
-      "ST.JOHN'S-W19": {
+      "STJOHNS-W19": {
         "h2kMap": {
           "base": {
             "OPT-H2K-WTH-FILE": "Wth119.dir",

@@ -584,8 +584,12 @@ def processFile(h2kElements)
             h2kElements[locationText].attributes["code"] = value
             # Match Client Information Region with this Region to avoid H2K PreCheck dialog!
             locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-
-            h2kElements[locationText].text = $ProvArr[value.to_i - 1]
+				
+				if (h2kElements["HouseFile/ProgramInformation/Weather"].attributes["library"] =~ /Wth119.dir/ &&  $ProvArr[value.to_i - 1] =~/NORTHWEST TERRITORIES/)
+					h2kElements[locationText].text = "NORTHWEST TERRITORY"	
+				else
+					h2kElements[locationText].text = $ProvArr[value.to_i - 1]
+				end
             $gRunRegion = $ProvArr[value.to_i - 1]
           elsif ( tag =~ /OPT-H2K-Location/ && value != "NA" )
             # Weather location to use for HOT2000 run
