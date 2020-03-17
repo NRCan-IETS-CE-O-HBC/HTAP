@@ -9394,6 +9394,171 @@
           ]
         }
       },
+	  "ASHP-central-split": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirHeatPump",
+            "Opt-H2K-Type1Fuel": "NA",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "1",
+            "Opt-H2K-Type2CapVal": "9.4",
+            "Opt-H2K-Type2HeatCOP": "3.6",
+            "Opt-H2K-Type2CoolCOP": "NA",
+            "Opt-H2K-Type2CutoffType": "2",
+            "Opt-H2K-Type2CutoffTemp": "-20",
+            "Opt-H2K-CoolOperWindow": "25"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            {
+              "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
+              }
+            },            
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
+          ]
+        }
+      },
+	  "ASHP-central-single": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirHeatPump",
+            "Opt-H2K-Type1Fuel": "NA",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Type": "2",
+            "Opt-H2K-Type2CapOpt": "1",
+            "Opt-H2K-Type2CapVal": "9.4",
+            "Opt-H2K-Type2HeatCOP": "3.6",
+            "Opt-H2K-Type2CoolCOP": "NA",
+            "Opt-H2K-Type2CutoffType": "2",
+            "Opt-H2K-Type2CutoffTemp": "-20",
+            "Opt-H2K-CoolOperWindow": "25"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            {
+              "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
+              }
+            },            
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
+          ]
+        }
+      },
+	  "ASHP-mini-split": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirHeatPump",
+            "Opt-H2K-Type1Fuel": "NA",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Type": "3",
+            "Opt-H2K-Type2CapOpt": "1",
+            "Opt-H2K-Type2CapVal": "9.4",
+            "Opt-H2K-Type2HeatCOP": "3.6",
+            "Opt-H2K-Type2CoolCOP": "NA",
+            "Opt-H2K-Type2CutoffType": "2",
+            "Opt-H2K-Type2CutoffTemp": "-20",
+            "Opt-H2K-CoolOperWindow": "25"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            {
+              "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
+              }
+            },            
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
+          ]
+        }
+      }, 
+	  "condensing-propane-furnace": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "4",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "96",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+       "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+            "ducting:central_forced_air"
+          ]
+        }
+      },
+	  "mid-efficiency-oil-furnace": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "3",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "85",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+       "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+            "ducting:central_forced_air"
+          ]
+        }
+      },
       "GSHP": {
         "h2kMap": {
           "base": {
@@ -10100,6 +10265,30 @@
           "custom-costs": {
           },
           "proxy": "VentFans_sre_0"
+        }
+      },
+	  "Yukon_HRV": {
+        "h2kMap": {
+          "base": {
+		    "Opt-IsActive": "true",
+            "OPT-H2K-AirDistType": "2",
+            "OPT-H2K-OpSched": "480",
+            "OPT-FlowCalc": "1",
+            "OPT-H2K-HRVSupply": "NA",
+            "OPT-H2K-Rating1": "75",
+            "OPT-H2K-Rating2": "64",
+            "OPT-H2K-Rating3": "0",
+            "OPT-H2K-FanPowerCalc": "specified",
+            "OPT-H2K-FanPower1": "26",
+            "OPT-H2K-FanPower2": "40"			
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "hrv:conventional_sre_70%_@_0:61%_@_-25"
+          ]
         }
       }
     },
@@ -11016,6 +11205,25 @@
           },
           "components": [
 
+          ]
+        }
+      },
+	  "Yukon_PV": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Area": "47",
+            "Opt-H2K-Slope": "18.4",
+            "Opt-H2K-Azimuth": "195",
+            "Opt-H2K-PVModuleType": "1",
+            "Opt-H2K-GridAbsRate": "90",
+            "Opt-H2K-InvEff": "99"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+             "solar_photovoltaic_system:installed_on_roof:5_kw"
           ]
         }
       }
