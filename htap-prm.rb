@@ -104,6 +104,7 @@ def parse_def_file(filepath)
   $WildCardsInUse = false;
 
   rundefs = File.open(filepath, 'r')
+  rulesetsHASH = Hash.new
   jsonRawOptions = Hash.new
   rundefs.each do | line |
 
@@ -195,7 +196,10 @@ def parse_def_file(filepath)
 
             $gRulesetsFile = $token_values[1]
 
-
+            # Test to see if rulesets file can be parsed
+            rulesetsHASH = HTAPData.parse_upgrade_file($gRulesetsFile)
+            debug_out "Rulesets file #{$gRulesetsFile} parsed ok.\n"
+     
           end
 
 
@@ -325,7 +329,11 @@ def parse_def_file(filepath)
     $gRunUpgrades.keys.each do |key|
  
       debug_out( " Wildcard search for #{key} => \n" )
-      if ( not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
+
+      # `upgrade-package-list` does not get tested against the options file. 
+
+
+      if ( key !~ /upgrade-package-list/ and not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
         err_out("Attribute #{key} does not match any attribute entry in the options file.")
         bError = true 
       else 
@@ -338,7 +346,12 @@ def parse_def_file(filepath)
             pattern = choice.gsub(/\*/, ".*")
             debug_out "              Wildcard matching on #{key} =~ /#{pattern}/\n"
             # Matching
-            superSet = jsonRawOptions[key]["options"].keys
+            if ( key =~ /upgrade-package-list/ ) then 
+
+              superSet = rulesetsHASH["upgrade-packages"].keys
+            else 
+              superSet = jsonRawOptions[key]["options"].keys
+            end 
             $gRunUpgrades[key].delete(choice)
             $gRunUpgrades[key].concat superSet.grep(/#{pattern}/)
   
@@ -1258,6 +1271,7 @@ def run_these_cases(current_task_files)
       outputlines = ""
       headerLine = ""
       batchSuccessCount = 0
+
       stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
 
             #-Loop though all instances, and compute 
@@ -1265,7 +1279,7 @@ def run_these_cases(current_task_files)
 
         debug_out "Run - #{run}\n"
         # Only write out data from successful runs - this helps prevent corrupted database
-        next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ )
+        next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ || data["status"]["success"] == false )
         batchSuccessCount += 1
         debug_out "processing:\n"
         debug_out "  #{data.pretty_inspect}\n\n"
@@ -1489,18 +1503,19 @@ $gLEEPPathwayExport = false
 #=====================================================================================
 optparse = OptionParser.new do |opts|
 
-
-   opts.separator " USAGE: htap-prm.rb -o path\\to\\htap-options.json -r path\\to\\runfile.run -v "
+   opts.separator " "
+   opts.separator " Example: htap-prm.rb -o path\\to\\htap-options.json -r path\\to\\runfile.run -v "
    opts.separator " "
    opts.separator " Required inputs:"
+   opts.separator " "
 
-   opts.on("-o", "--options FILE", "Specified options file.") do |o|
-      $cmdlineopts["options"] = o
-      $gHTAPOptionsFile = o
-      if ( !File.exist?($gHTAPOptionsFile) )
-         fatalerror("Valid path to option file must be specified with --options (or -o) option!")
-      end
-   end
+   #opts.on("-o", "--options FILE", "Specified options file.") do |o|
+   #   $cmdlineopts["options"] = o
+   #   $gHTAPOptionsFile = o
+   #   if ( !File.exist?($gHTAPOptionsFile) )
+   #      fatalerror("Valid path to option file must be specified with --options (or -o) option!")
+   #   end
+   #end
 
    opts.on("-r", "--run-def FILE", "Specified run definitions file (.run)") do |o|
       $gRunDefinitionsProvided = true
@@ -1511,6 +1526,7 @@ optparse = OptionParser.new do |opts|
    end
 
    opts.separator "\n Configuration options: "
+   opts.separator " "
 
    opts.on("-t", "--threads X", "Number of threads to use") do |o|
       $gNumberOfThreads = o.to_i
@@ -1519,65 +1535,69 @@ optparse = OptionParser.new do |opts|
       end
    end
 
-
-   opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
+   opts.separator " "
+   opts.on("--compute-costs", "Estimate costs for assemblies using","costing database.") do |o|
       $gComputeCosts = true
    end
 
+   opts.separator " "
    opts.on(
-     "-c", "--confirm", "Prompt before proceeding with run. After estimating the size",
-     "and duration of the run, HTAP will ask for conformation before.",
-     "coninuing."
+     "-c", "--confirm", "Prompt before proceeding with run. After ","estimating the size and duration of the run, ","HTAP will ask for conformation before continuing.",
    ) do
 
      $promptBeforeProceeding = true
    end
 
-   opts.on("-e", "--extra-output", "Report additional data on archetype and part-load characteristics") do
+   opts.separator " "
+   opts.on("-e", "--extra-output", "Report additional data on archetype and part-load","characteristics") do
       $cmdlineopts["extra-output"] = true
       $gExtendedOutputFlag = "-e"
    end
 
-   opts.on("-k", "--keep-all-files", "Preserve all files, including modified .h2k files, in HTAP-sim-X",
-                                     "directories. (otherwise, only files that generate errors will be",
-                                     "saved).") do
+   opts.separator " "
+   opts.on("-k", "--keep-all-files", "Preserve all files (including modified .h2k ","files) in HTAP-sim-X directories. Otherwise, only",
+                                     "files that generate errors will be saved.",
+                                     ) do
       $gSaveAllRuns = true
    end
 
-   opts.on("-j", "--json", "Provide output in JSON format (htap-prm-output.json),","in additon to .csv.") do
+  opts.separator " "
+   opts.on("-j", "--json", "Provide output in JSON format","(htap-prm-output.json) in additon to .csv output.",
+                                            "Slows HTAP down, and make json output from", "large runs unwieldly."
+                                         ) do
+   
       $gJSONize = true
    end
 
 
+ opts.separator " "
+   opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool.") do
 
-   opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool",
-                                         "output. Slows HTAP down, and make json output unwieldy on",
-                                         "large runs.") do
       $gLEEPPathwayExport = true 
      
    end
-
-   opts.on("-a", "--include_audit_data", "Include detailed audit data for costing calculations in .json ",
-                                         "output. Slows HTAP down, and make json output unwieldy on",
+opts.separator " "
+   opts.on("-a", "--include_audit_data", "Include detailed audit data for costing ", "calculations in JSON output. Slows HTAP down,",
+                                         "and make json output unwieldy on",
                                          "large runs.") do
 
       $cmdlineopts["audit_data"] = true
       $gTest_params["audit-costs"] = true
    end
-
-   opts.on( "--resume", "Attempt to resume prior interrupted run (experimental) ",) do
+opts.separator " "
+   opts.on( "--resume", "Attempt to resume prior interrupted run","(experimental feature)") do
 
       $cmdlineopts["resume"] = true
       $bResume = true 
    end   
 
-   opts.on("-v", "--verbose", "Output progress to console.") do
-      $cmdlineopts["verbose"] = true
-      $gTest_params["verbosity"] = "verbose"
-   end
+   #opts.on("-v", "--verbose", "Output progress to console.") do
+   #   $cmdlineopts["verbose"] = true
+   #   $gTest_params["verbosity"] = "verbose"
+   #end
 
    opts.separator "\n Debugging options: "
-
+opts.separator " "
    opts.on("--stop-on-error", "Terminate run upon first error encountered.") do
 
       $StopOnError = true
@@ -1817,17 +1837,6 @@ else
       fatalerror ( " No combinations to run.")
     end
 
-    $combosRequired = runningProduct
-    $combosGenerated = 0
-    $combosSinceLastUpdate = 0
-    $comboInterval = 1000
-
-    create_mesh_cartisian_combos(-3)
-
-
-    stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
-
-
 
     if ($gRunDefMode == "mesh" ) then
       $RunsNeeded = $gGenChoiceFileList
@@ -1889,21 +1898,6 @@ else
     stream_out "          ----------------------------------------------------------\n"
     stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
 
-    $combosRequired = runningProduct
-    $combosGenerated = 0
-    $combosSinceLastUpdate = 0
-    $comboInterval = 1000
-    if ( runningProduct <  1 ) then
-      fatalerror ( " No combinations to run.")
-    end
-
-    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
-
-    create_parametric_combos()
-    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
-    $RunsNeeded = $gGenChoiceFileList
-
-
   end
 
 
@@ -1920,27 +1914,10 @@ else
 
 end
 
-if ( $bResume )  
-  $RunsNeeded.each do | run | 
-     $RunTheseFiles.push run unless ( $gRunsAleadyCompleted.include?(run) ) 
-  end 
-  numOfRunsRequired = $RunTheseFiles.length
-  numOfRunsPrevCompleted = $RunsNeeded.length - numOfRunsRequired
-  info_out(" Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining")
-  stream_out ( "    - [RESUMING] Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining\n")
-else 
-  $RunTheseFiles = $RunsNeeded
-  numOfRunsRequired = $RunTheseFiles.length
-end 
-
-
-if ( numOfRunsRequired <= 0  ) then 
-  fatalerror "No runs to be completed!"
-end 
 $batchCount = 0
 goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
-estDuration = $RunTheseFiles.length.to_f * evalSpeed / [$gNumberOfThreads, $RunTheseFiles.length].min
+estDuration = runningProduct * evalSpeed / [$gNumberOfThreads, runningProduct].min
 
 stream_out("    - Guesstimated time requirements ~ #{formatTimeInterval(estDuration)} (including pre- & post-processing)\n")
 $waitTime = 0
@@ -1959,6 +1936,57 @@ if ( $promptBeforeProceeding )
   $waitTime = waitend - waitstart
   log_out ("Waited for #{formatTimeInterval($waitTime)}\n")
 end
+
+case $gRunDefMode
+when  "mesh", "sample"
+  $combosRequired = runningProduct
+  $combosGenerated = 0
+  $combosSinceLastUpdate = 0
+  $comboInterval = 1000
+
+  create_mesh_cartisian_combos(-3)
+
+
+  stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+
+when "parametric"
+
+    $combosRequired = runningProduct
+    $combosGenerated = 0
+    $combosSinceLastUpdate = 0
+    $comboInterval = 1000
+    if ( runningProduct <  1 ) then
+      fatalerror ( " No combinations to run.")
+    end
+
+    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
+
+    create_parametric_combos()
+    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+    $RunsNeeded = $gGenChoiceFileList
+
+end 
+
+if ( $bResume )  
+  $RunsNeeded.each do | run | 
+     $RunTheseFiles.push run unless ( $gRunsAleadyCompleted.include?(run) ) 
+  end 
+  numOfRunsRequired = $RunTheseFiles.length
+  numOfRunsPrevCompleted = $RunsNeeded.length - numOfRunsRequired
+  info_out(" Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining")
+  stream_out ( "    - [RESUMING] Found #{numOfRunsPrevCompleted} runs were already done; #{numOfRunsRequired} remaining\n")
+else 
+  $RunTheseFiles = $RunsNeeded
+  numOfRunsRequired = $RunTheseFiles.length
+end 
+
+
+if ( numOfRunsRequired <= 0  ) then 
+  fatalerror "No runs to be completed!"
+end 
+
+
+
 
 stream_out("    - Deleting prior HTAP-work directories... ")
 FileUtils.rm_rf Dir.glob("HTAP-work-*")

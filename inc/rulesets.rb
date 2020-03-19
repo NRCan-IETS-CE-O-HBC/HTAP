@@ -258,7 +258,7 @@ end
 def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
    #debug_on
-   debug_out "Applying ruleset for HDD #{locale_HDD}\n"
+   #debug_out "Applying ruleset #{ruleType}[#{ruleSpecs}] for HDD #{locale_HDD}\n"
    primHeatFuelName = ""
    secSysType = ""
    primDHWFuelName = ""
@@ -280,7 +280,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
    if ( ! ruleSpecs["vent"].nil? )
      ventSpec = ruleSpecs["vent"]
-   elsif ( ruleType =~ "NBC_*9_*36_.+")
+   elsif ( ruleType =~ /NBC_?9_?36.\[+/)
      ventSpec = ruleType.clone
      ventSpec.gsub!(/NBC_*9_*36_/,"")
    else

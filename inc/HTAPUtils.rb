@@ -261,6 +261,7 @@ module HTAPData
   end
 
 
+
   def HTAPData.parse_json_options_file(filename)
     # New parsing method for json format
     log_out("Reading available options (#{filename})")
@@ -434,6 +435,27 @@ module HTAPData
 
   end
 
+  def HTAPData.parse_upgrade_file(filename)
+    # Simple funciton to parse HTAP-upgrade-packages file in json format. 
+    begin 
+      rulesetContents = File.read(filename)
+    rescue 
+      fatalerror("Could not read ruleset  #{filename}.")
+    end 
+#
+    begin 
+      rulesetHash =  JSON.parse(rulesetContents) 
+    rescue 
+      fatalerror("Ruleset file (#{filename}) is incorrectly formmatted, can not be interpreted as json.")
+    end 
+
+    rulesetContents = "" 
+
+    return rulesetHash
+
+  end 
+
+
   # Simple function that returns the tags/values as a token-value
   # list. Should be able to directly access this through options,
   # but legacy data map obscures it.
@@ -442,8 +464,8 @@ module HTAPData
     #debug_on
 
     result = Hash.new
-    debug_out ("Att: #{attribute}\n")
-    debug_out ("Choice: #{choice}\n")
+    #debug_out ("Att: #{attribute}\n")
+    #debug_out ("Choice: #{choice}\n")
     debug_out( "contents of options[#{attribute}][`options`][#{choice}][`values`] ") #{}"=\n#{options[attribute]["options"][choice]["values"].pretty_inspect}")
 
     options[attribute]["tags"].each do |tagIndex, tagName|
@@ -455,7 +477,7 @@ module HTAPData
        result[tagName] = nil
      end
     end
-    debug_out ("returning: \n#{result.pretty_inspect}\n")
+    #debug_out ("returning: \n#{result.pretty_inspect}\n")
     return result
 
   end
@@ -539,8 +561,16 @@ module HTAPData
            end
 
            choices[attribute] = value
+           if ( attribute =~ /Opt-Ceilings/ ) then 
 
-           debug_out ("  parsed: #{attribute} -> #{value} \n")
+            choices["Opt-AtticCeilings"] = value 
+            choices["Opt-CathCeilings"] = value 
+            choices["Opt-FlatCeilings"] = value 
+
+
+           end 
+
+           # debug_out ("  parsed: #{attribute} -> #{value} \n")
 
 
            # Save order of choices to make sure we apply them correctly.
@@ -642,7 +672,7 @@ module HTAPData
 
 
     options.each do |option, ignore|
-      #debug_out drawRuler("Option #{option}","  .")
+      # debug_out drawRuler("Option #{option}","  .")
       if ( $LegacyOptionsToIgnore.include? option ) then
         #debug_out (" skipped legacy option #{option}\n")
         warn_out ("Options file includes legacy option (#{option}), which is no longer supported.")
@@ -723,6 +753,7 @@ module HTAPData
           err_out( thisMsg )
         else
           # Do nothing
+          warn_out("Choice #{choice} for attribute #{attrib} is not defined in options file. ")
           debug_out ( "   - found $gOptions[\"#{attrib}\"][\"options\"][\"#{choice}\"} \n")
 
         end
