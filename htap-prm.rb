@@ -781,7 +781,7 @@ def run_these_cases(current_task_files)
                 
                 cptries += 1
                  warn_out ("Could not delete files from within #{$RunDirectory} (Try # #{cptries}/3)\n")
-                if ( cpTries == 3 )
+                if ( cptries == 3 )
                   bCPDone = true 
                   warn_out ( "Trying to run simulation without deleting files in #{$RunDirectory}")
                 else 

@@ -3292,7 +3292,10 @@ def processFile(h2kElements)
       # end of tag loop
     end
   end
-
+  # Match region in weather and client address
+  loc = "HouseFile/ProgramInformation/Weather/Region"
+  loc2 = "HouseFile/ProgramInformation/Client/StreetAddress"
+  h2kElements[loc2].elements["Province"].text = h2kElements[loc].elements["English"].text
   # Delete energy upgrades --- it messes everything up!
   h2kElements["HouseFile"].delete_element("EnergyUpgrades")
 
@@ -7478,7 +7481,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "Base-Locale"         =>  "#{$gBaseLocale}",
             "climate-zone"        =>  "#{climateZone}",
             "fuel-heating-presub"  =>  "#{$ArchetypeData["pre-substitution"]["fuelHeating"]}",
-            "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelHDHW"]}",
+            "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelDHW"]}",
             "Ceiling-Type"        =>  "#{$Ceilingtype}",
             "Area-Slab-m2"        =>  "#{$FoundationArea["Slab"].round(2)}",
             "Area-Basement-m2"    => "#{$FoundationArea["Basement"].round(2)}",
@@ -7578,7 +7581,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "LapsedTime"        => $runH2KTime.round(2) ,
           "PEAK-Heating-W"    => $gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1) ,
           "PEAK-Cooling-W"    => $gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1) ,
-          "House-R-Value(SI)" => $RSI['house'].round(3)
+#          "House-R-Value(SI)" => $RSI['house'].round(3)
         }
 
         if $ExtraOutput1 then

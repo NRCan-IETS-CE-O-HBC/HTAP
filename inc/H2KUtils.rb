@@ -597,7 +597,7 @@ module H2KFile
     if buildingType.include? "Multi-unit" then
       # For multis using the "new" MURB method assume that heated area comes from a valid user input (not an estimate form ceiling/basement areas)
       heatedFloorArea = areaUserInputTotal
-    elsif areaRatio > 0.50 && areaRatio < 2.0 then
+    elsif (areaRatio > 0.50 && areaRatio < 2.0) || areaEstimateTotal == 0 then
       # Accept user input area if it's between 50% and 200% of the estimated area!
       heatedFloorArea = areaUserInputTotal
     else
