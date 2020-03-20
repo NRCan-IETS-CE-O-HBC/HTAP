@@ -5497,6 +5497,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             if $ExtraOutput1 then
               # Annual SpaceHeating and HotWater energy by fuel type [GJ]
               $gResults[houseCode]["AnnSpcHeatElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData
+              $gResults[houseCode]["AnnSpcHeatHPGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f * scaleData
               $gResults[houseCode]["AnnSpcHeatGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["spaceHeating"].to_f * scaleData
               $gResults[houseCode]["AnnSpcHeatOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f * scaleData
               $gResults[houseCode]["AnnSpcHeatPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f * scaleData
@@ -7601,6 +7602,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           results[$aliasLongOutput]["AnnDHWLoad-GJ"]     =  $gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)
 
           results[$aliasLongOutput]["SpcHeatElec-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)
+          results[$aliasLongOutput]["SpcHeatHP-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatHPGJ'].round(1)
           results[$aliasLongOutput]["SpcHeatGas-GJ"]     = $gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)
           results[$aliasLongOutput]["SpcHeatOil-GJ"]     = $gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)
           results[$aliasLongOutput]["SpcHeatProp-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)
@@ -7785,11 +7787,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $fSUMMARY.write( "#{$aliasOutput}.AnnDHWLoad-GJ     =  #{$gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)}\n")
 
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatElec-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatHP-GJ      =  #{$gResults[$outputHCode]['AnnSpcHeatHPGJ'].round(1)}\n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatGas-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatOil-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatProp-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatWood-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)} \n")
-        $fSUMMARY.write( "#{$aliasOutput}.HotWaterElec-GJ c  =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterElec-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.HotWaterGas-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.HotWaterOil-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
