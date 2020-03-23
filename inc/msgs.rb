@@ -267,6 +267,7 @@ def debug_out(debmsg)
   if (lDebug || $gDebug ) then
      debugCaller = Array.new
      debug_out_now( debmsg, callerID)
+     log_out(debmsg)
   end
 end
 
