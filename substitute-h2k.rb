@@ -454,6 +454,7 @@ end
 # =========================================================================================
 def processFile(h2kElements)
   #debug_off
+
   # Load all XML elements from HOT2000 code library file. This file is specified
   # in option Opt-DBFiles
   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
@@ -565,6 +566,7 @@ def processFile(h2kElements)
         if ( choiceEntry =~ /Opt-Location/ )
           $Locale = $gChoices["Opt-Location"]
           $gRunLocale = $Locale
+          # debug_on 
           # changing the soil condition to permafrost if the location is within
           # continuous permafrost zone
           set_permafrost_by_location(h2kElements,$Locale)
@@ -584,9 +586,10 @@ def processFile(h2kElements)
             h2kElements[locationText].attributes["code"] = value
             # Match Client Information Region with this Region to avoid H2K PreCheck dialog!
             locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-
-            h2kElements[locationText].text = $ProvArr[value.to_i - 1]
             $gRunRegion = $ProvArr[value.to_i - 1]
+            h2kElements[locationText].text = $ProvArr[value.to_i - 1]
+            debug_out ("Run Region: #{$gRunRegion}\n")
+            
           elsif ( tag =~ /OPT-H2K-Location/ && value != "NA" )
             # Weather location to use for HOT2000 run
             locationText = "HouseFile/ProgramInformation/Weather/Location"
@@ -606,7 +609,7 @@ def processFile(h2kElements)
             end
           end
 
-
+          debug_off 
           # Fuel Costs
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-FuelCost/ )
@@ -3293,9 +3296,10 @@ def processFile(h2kElements)
     end
   end
   # Match region in weather and client address
+
   loc = "HouseFile/ProgramInformation/Weather/Region"
   loc2 = "HouseFile/ProgramInformation/Client/StreetAddress"
-  h2kElements[loc2].elements["Province"].text = h2kElements[loc].elements["English"].text
+  h2kElements[loc2].elements["Province"].text = $gRunRegion 
   # Delete energy upgrades --- it messes everything up!
   h2kElements["HouseFile"].delete_element("EnergyUpgrades")
 
@@ -3346,6 +3350,7 @@ def processFile(h2kElements)
   end
   #h2kElements.clear
   #$XMLdoc.clear
+
   debug_out ("Returning from process...")
   #debug_pause
 
@@ -4767,7 +4772,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # Save rotation angle for reporting
         $gRotationAngle = $RotationAngle
-
+        # debug_on 
         Dir.chdir( $run_path )
         debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n")
 
@@ -4801,8 +4806,11 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $gStatus["H2KExecutionAttempts"] = tries
           
           FileUtils.cp("..\\file-postsub.h2k", "..\\run_file_file_#{tries}.h2k")
+          
+
 
           runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
+          debug_out ("Command: #{runThis}\n")
 
           begin
 
@@ -7347,7 +7355,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           # Process the working file by replacing all existing values with the values
           # specified in the attributes $gChoices and corresponding $gOptions
-
+          # debug_on 
           stream_out drawRuler(' Manipulating HOT2000 file ')
           stream_out (" Performing substitutions on H2K file...")
 
