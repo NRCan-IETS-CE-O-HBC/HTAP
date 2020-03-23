@@ -9023,7 +9023,7 @@
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
-            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1EffVal": "96",
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "true",
             "Opt-H2K-Type2CCaseH": "60",
@@ -9096,7 +9096,7 @@
             "install_200a_service_instead_of_100a_service"
           ]
         }
-      },      
+      },    
       "gas-furnace-psc": {
         "h2kMap": {
           "base": {

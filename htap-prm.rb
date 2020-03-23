@@ -182,6 +182,17 @@ def parse_def_file(filepath)
           end
 
 
+          if ( $RunParamsOpen && $token_values[0] =~ /substitute-file/i )
+            # Where is our options file located?
+
+            $gSubstitutePath = $token_values[1]
+
+            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n"
+
+
+          end
+
+
          if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
             # Where is our options file located?
 
