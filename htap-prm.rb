@@ -887,14 +887,24 @@ def run_these_cases(current_task_files)
                            "#{$gExtendedOutputFlag} "
          # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
-          $cmdtxt.write "#{cmdscript} -v"
+          $cmdtxt.write "#{cmdscript} -v "
 
           $cmdtxt.close
+
+          if  ( ! $gLogDebugMsgs ) then
+
+            debugflag = "--no-debug"
+
+          else 
+
+            debug_flag = ""
+          
+          end 
 
           # disable debugging in live version for faster runs 
           # (debugging still enabled in run-cmd.ps1)
           pid = Process.spawn( 
-            "#{cmdscript} --no-debug", 
+            "#{cmdscript} #{debugflag}", 
             :err => "substitute-h2k-errors.txt" 
           )
           
@@ -1500,6 +1510,8 @@ $gRunsAleadyCompleted = Array.new
 
 $gTest_params["audit-costs"] = false
 
+$gLogDebugMsgs = false 
+
 $gRunDefinitionsProvided = false
 $gRunDefinitionsFile = ""
 
@@ -1614,6 +1626,14 @@ opts.separator " "
       $StopOnError = true
 
    end
+
+
+   opts.on("--log-debug-msgs", "Log debugging messages from programs. Use with --keep-all-files to see",
+                               "substiture-h2k.rb debugging output too.") do
+
+    $gLogDebugMsgs = true
+
+   end   
 
    #opts.on("-w", "--warnings", "Report warning messages") do
    #   $gWarn = true
