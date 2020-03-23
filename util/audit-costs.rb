@@ -23,15 +23,15 @@ require 'pp'
 
 
 
-require_relative '../include/msgs'
-require_relative '../include/markdown-reports.rb'
-require_relative '../include/H2KUtils'
-require_relative '../include/HTAPUtils'
-require_relative '../include/constants'
-#require_relative 'include/rulesets'
-require_relative '../include/costing'
-#require_relative 'include/legacy-code'
-#require_relative 'include/application_modules'
+require_relative '../inc/msgs'
+require_relative '../inc/markdown-reports.rb'
+require_relative '../inc/H2KUtils'
+require_relative '../inc/HTAPUtils'
+require_relative '../inc/constants'
+#require_relative 'inc/rulesets'
+require_relative '../inc/costing'
+#require_relative 'inc/legacy-code'
+#require_relative 'inc/application_modules'
 
 include REXML
 # This allows for no "REXML::" prefix to REXML methods
@@ -204,37 +204,37 @@ reportTxt = MDRpts.newSection("HTAP batch run - Cost Audit Report", 1)
 
 reportTxt += MDRpts.newParagraph("[TOC]")
 
-reportTxt += MDRpts.newSection("Run Information", 2)
-# more information should be added here.
+bRunInfo = false 
 
-tableData = Array.new
-tableData = [
-  [ "Total number of HOT2000 runs",
-    "Total number of base cases",
-    "Number of cases in report",
-    "Number of asscoiated cases"
-  ],[allCases.length.to_i,
-    baseCases.length.to_i,
-    requestedRuns.length.to_i,
-    associatedBaseCases.length.to_i,
+if ( bRunInfo ) then 
+  reportTxt += MDRpts.newSection("Run Information", 2)
+  # more information should be added here.
+
+  tableData = Array.new
+  tableData = [
+    [ "Total number of HOT2000 runs",
+      "Total number of base cases",
+      "Number of cases in report",
+      "Number of associated cases"
+    ],[allCases.length.to_i,
+      baseCases.length.to_i,
+      requestedRuns.length.to_i,
+      associatedBaseCases.length.to_i,
+    ]
   ]
-]
 
-reportTxt += MDRpts.newTable(tableData)
+  reportTxt += MDRpts.newTable(tableData)
 
-reportTxt += MDRpts.newList([
-  "List of reported cases: #{MDRpts.shortenArrList(requestedRuns)}",
-  "List of base cases: #{MDRpts.shortenArrList(associatedBaseCases)}"
-])
+  reportTxt += MDRpts.newList([
+    "List of reported cases: #{MDRpts.shortenArrList(requestedRuns)}",
+    "List of base cases: #{MDRpts.shortenArrList(associatedBaseCases)}"
+  ])
+
+  
+end
 
 topologyTxt = ""
 baseCaseCount = 0
-
-
-
-
-
-
 associatedBaseCases.each do | id |
   baseCase = baseCases.select{ | someCase | someCase["id"] == id }[0]
   baseCaseCount += 1
@@ -285,7 +285,7 @@ associatedBaseCases.each do | id |
   reportTxt += MDRpts.newParagraph(
    "Benchmark costs reflect a baseline cost estimate when archetype _#{archetypeAlias}_ " +
    "is constructed to ruleset _#{rulesetAlias.gsub(/_/,"\\_")}_. This estimate does "+
-   "not represent the cost to construct the home, or the costs of all energy-related"+
+   "not represent the cost to construct the home, or the costs of all energy-related "+
    "components. It merely represents the estimated costs of all measures that are in "+
    "HTAP's unit costs database, for housing components that are also described in the model."
    )
@@ -297,8 +297,8 @@ associatedBaseCases.each do | id |
   reportTxt += "#{summaryOfCosts}\n"
   reportTxt += " \n\n"
 
-  reportTxt += MDRpts.newSection("Benchmark Costs: detailed audit ##{baseCaseCount}",4)
-
+  #reportTxt += MDRpts.newSection("Benchmark Costs: detailed audit ##{baseCaseCount}",4)
+  #reportTxt += baseCaseAuditTxt
 
   reportTxt += MDRpts.newSection("Upgrades for Scenario #{baseCaseCount}",3)
   upgradeIndex = 0
@@ -452,13 +452,13 @@ associatedBaseCases.each do | id |
         else
           oper = "-"
         end
-        rreportTxt += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
+        reportTxt += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
 
       end
       reportTxt += "   | **TOTAL** | **$\\ #{'%.2f' % netCostChange}** \n"
 
-
     end
+
 
     # Check if costs have changed for items that are not upgrades.
 
@@ -467,7 +467,7 @@ associatedBaseCases.each do | id |
         thisCase["costs"]["byAttribute"][attribute] != baseCase["costs"]["byAttribute"][attribute] &&
         ! upgradeChoices.keys.include?(attribute)
       )then
-        reportTxt += "###### Secondard cost impact: #{attribute} -> #{choice}\n"
+        reportTxt += "###### Secondary cost impact: #{attribute} -> #{choice}\n"
         reportTxt += "NOTE: "
         reportTxt += "Specified upgrades have affected the costs of #{attribute} as well \n"
 
@@ -601,10 +601,15 @@ end
 
 
 #debug_out "BASE CASES:\n#{baseCases.pretty_inspect}\n"
-reportTxt.gsub!(/\$/,"\$")
+reportTxt.gsub!(/:([^\s-])/,": \\1")
+reportTxt.gsub!(/\$/,"\\$")
 reportTxt.gsub!(/ft\^2/,"ft^2^")
 reportTxt.gsub!(/m\^2/,"m^2^")
 reportTxt.gsub!(/sq\.ft\.?/,"ft^2^")
 reportTxt.gsub!(/\\ /,"&nbsp;")
+reportTxt.gsub!(/14kw output:/,"")
+reportTxt.gsub!(/afue/,"AFUE")
+reportTxt.gsub!(/AFUE vs 2 stage:/,"AFUE 2 stage:")
+reportTxt.gsub!(/70 mbtuh input: 19.5 kw max output:/,":")
 File.write("HTAP-batch-run-cost-audit.md", reportTxt)
 ReportMsgs()
