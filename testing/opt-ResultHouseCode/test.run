@@ -2,7 +2,7 @@
 
 ! Run-Mode: Parameters that affect how htap-prm is configured.
 RunParameters_START
-  run-mode                           = parametric
+  run-mode                           = mesh
   archetype-dir                      = C:/HTAP/testing/h2k-files
   unit-costs-db                      = C:/HTAP/HTAPUnitCosts.json
   options-file                       = C:/HTAP/HTAP-options.json
@@ -13,7 +13,7 @@ RunParameters_END
 ! run in mesh, even if an optimization mode is added in the future.
 RunScope_START
 
-  archetypes                        = NRCan-arch4_2100sf_2storey_fullBsmt-v117b23-General.h2k, NRCan-arch4_2100sf_2storey_fullBsmt-v117b23-ERS.h2k
+  archetypes                        = NRCan-arch4_2100sf_2storey_fullBsmt-v117b23-General.h2k
   locations                         = NA
   rulesets                          = as-found
 
@@ -52,6 +52,9 @@ Upgrades_START
    Opt-Heating-Cooling  = NA
    Opt-DWHR             = NA
    Opt-H2K-PV           = NA
+
+
+   Opt-Baseloads        = NBC-Baseloads, ERS-Single-regular-19.5kWh&190_per_day, ERS-Single-reduced-16kWh&160_per_day, ERS-Single-vEfficient-14kWh&160_per_day
 
 
 Upgrades_END
