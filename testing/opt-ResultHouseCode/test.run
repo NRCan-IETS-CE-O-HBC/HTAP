@@ -1,0 +1,57 @@
+! Definitions file for HTAP-PRM RUN
+
+! Run-Mode: Parameters that affect how htap-prm is configured.
+RunParameters_START
+  run-mode                           = parametric
+  archetype-dir                      = C:/HTAP/testing/h2k-files
+  unit-costs-db                      = C:/HTAP/HTAPUnitCosts.json
+  options-file                       = C:/HTAP/HTAP-options.json
+RunParameters_END
+
+
+! Parameters controlling archetypes, locations, reference rulests. (these will always be
+! run in mesh, even if an optimization mode is added in the future.
+RunScope_START
+
+  archetypes                        = NRCan-arch4_2100sf_2storey_fullBsmt-v117b23-General.h2k, NRCan-arch4_2100sf_2storey_fullBsmt-v117b23-ERS.h2k
+  locations                         = NA
+  rulesets                          = as-found
+
+RunScope_END
+
+! Parameters controlling the design of the building
+Upgrades_START
+
+
+   Opt-ResultHouseCode  = NA, General, SOC, ROC, HCV
+
+   Opt-ACH         = NA ! New-Const-air_seal_to_1.50_ach, New-Const-air_seal_to_1.00_ach, New-Const-air_seal_to_0.60_ach 
+
+   Opt-Windows     = NA ! , NC-2g-LG-u1.65, NC-2g-HG-u1.65
+   Opt-Skylights   = NA
+   Opt-DoorWindows = NA
+   Opt-Doors       = NA
+
+   Opt-AboveGradeWall = NA
+
+   Opt-FoundationWallExtIns     =  NA
+   Opt-FoundationWallIntIns     =  NA
+   Opt-FoundationSlabBelowGrade =  NA
+   Opt-FoundationSlabOnGrade    =  NA
+
+
+   Opt-ExposedFloor     = NA
+
+   Opt-Ceilings         = NA
+   Opt-AtticCeilings    = NA
+   Opt-CathCeilings     = NA
+   Opt-FlatCeilings     = NA
+
+   Opt-VentSystem       = NA
+   Opt-DHWSystem        = NA
+   Opt-Heating-Cooling  = NA
+   Opt-DWHR             = NA
+   Opt-H2K-PV           = NA
+
+
+Upgrades_END

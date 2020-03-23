@@ -1112,7 +1112,7 @@ def processFile(h2kElements)
             achCostComponents = Hash.new
             achCostComponents = Costing.getCostComponentList($gOptions,$gChoices,"Opt-ACH",achChoice)
 
-            debug_out ("Cost components for OPT-ACH = #{achChoice}:\n #{achCostComponents.pretty_inspect}")
+            #debug_out ("Cost components for OPT-ACH = #{achChoice}:\n #{achCostComponents.pretty_inspect}")
 
 
 
@@ -3116,6 +3116,9 @@ def processFile(h2kElements)
           #--------------------------------------------------------------------------------
         
         elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
+          #debug_on 
+          #debug_out "Parsing result code\n "
+         
           if value == "NA"
             # Don't change the run mode but use the "General" output section!
             $outputHCode = "General"
@@ -3130,12 +3133,13 @@ def processFile(h2kElements)
             # Change run mode to ERS and set output section
             $outputHCode = value
             h2kElements["HouseFile"].delete_element("Program")
+
             createProgramXMLSection( h2kElements )
             #if h2kElements["HouseFile/Program"] == nil  
             #  createProgramXMLSection( h2kElements )
             #end
           end
-
+          debug_off 
         # Change window distribution
         # Delete all windows and redistribute according to the choices
         #-----------------------------------------------------------------------------------
@@ -3468,16 +3472,16 @@ end
 #  Function to create the Program XML section that contains the ERS program mode data
 # =========================================================================================
 def createProgramXMLSection( houseElements )
+  #debug_on 
 
   loc = "HouseFile"
   houseElements[loc].add_element("AllResults")
-  
+  houseElements[loc].add_element("Program")
 
-
-  loc = "HouseFile/Program"
+  loc = "HouseFile/Program" 
   houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
   houseElements[loc].add_element("Labels")
-
+  
   loc = "HouseFile/Program/Labels"
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
@@ -6628,7 +6632,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
           myH2KHouseInfo["h2kFile"] = $gWorkingModelFile
           debug_out ( "Data from #{$gWorkingModelFile}\n")
-          debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+          #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
 
           specdCostSources = Hash.new
           specdCostSources = {
@@ -6658,7 +6662,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
 
           #debug_on
-          debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+          #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
           debug_off
 
           return myCosts
@@ -7138,8 +7142,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
             ruleSet = $ruleSetName
 
-            debug_out "Pre-ruleset choices:\n #{$gChoices.pretty_inspect}\n"
-            debug_out ("RULESET #{ruleSet} with conditions:#{$ruleSetSpecs.pretty_inspect}\n")
+            #debug_out "Pre-ruleset choices:\n #{$gChoices.pretty_inspect}\n"
+            #debug_out ("RULESET #{ruleSet} with conditions:#{$ruleSetSpecs.pretty_inspect}\n")
 
             conditionString = ""
             $ruleSetSpecs.each do | cond, value |
