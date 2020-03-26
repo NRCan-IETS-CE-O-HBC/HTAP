@@ -1241,6 +1241,582 @@
             "OPT-H2K-Location": "1"
           }
         }
+      },
+	  "WHITEHORSE-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "11",
+            "OPT-H2K-Location": "492"
+          }
+        }
+      },
+      "TORONTOCITY-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "352"
+          }
+        }
+      },
+      "OTTAWAINTL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "337"
+          }
+        }
+      },
+      "EDMONTONINTL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "31"
+          }
+        }
+      },
+      "CALGARY-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "16"
+          }
+        }
+      },
+      "MONTREALINTL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "418"
+          }
+        }
+      },
+      "QUEBECITL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "433"
+          }
+        }
+      },
+      "HALIFAXINTL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "8",
+            "OPT-H2K-Location": "266"
+          }
+        }
+      },
+      "FREDERICTON-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "7",
+            "OPT-H2K-Location": "219"
+          }
+        }
+      },
+      "WINNIPEG-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "4",
+            "OPT-H2K-Location": "213"
+          }
+        }
+      },
+      "REGINAINTL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "3",
+            "OPT-H2K-Location": "474"
+          }
+        }
+      },
+      "VANCOUVERINTL-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "165"
+          }
+        }
+      },
+      "PRINCEGEORGE-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "144"
+          }
+        }
+      },
+      "KAMLOOPS-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "127"
+          }
+        }
+      },
+      "YELLOWKNIFE-NW": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth118.dir",
+            "OPT-H2K-Region": "12",
+            "OPT-H2K-Location": "290"
+          }
+        }
+      },
+      "VICTORIA-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "101"
+          }
+        }
+      },
+      "PRINCERUPERT-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "83"
+          }
+        }
+      },
+      "WHISTLER-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "104"
+          }
+        }
+      },
+      "VANCOUVER-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "98"
+          }
+        }
+      },
+      "KAMLOOPS-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "1",
+            "OPT-H2K-Location": "67"
+          }
+        }
+      },
+      "EDMONTON-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "14"
+          }
+        }
+      },
+      "REDDEERREGIONAL-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "35"
+          }
+        }
+      },
+      "CALGARY-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "5"
+          }
+        }
+      },
+      "FORTMCMURRAY-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "18"
+          }
+        }
+      },
+      "COLDLAKE-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "2",
+            "OPT-H2K-Location": "9"
+          }
+        }
+      },
+      "MOOSEJAW-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "3",
+            "OPT-H2K-Location": "372"
+          }
+        }
+      },
+      "REGINA-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "3",
+            "OPT-H2K-Location": "377"
+          }
+        }
+      },
+      "PRINCEALBERT-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "3",
+            "OPT-H2K-Location": "376"
+          }
+        }
+      },
+      "SASKATOON-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "3",
+            "OPT-H2K-Location": "380"
+          }
+        }
+      },
+      "WINNIPEG-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "4",
+            "OPT-H2K-Location": "138"
+          }
+        }
+      },
+      "THEPAS-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "4",
+            "OPT-H2K-Location": "134"
+          }
+        }
+      },
+      "THOMPSON-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "4",
+            "OPT-H2K-Location": "135"
+          }
+        }
+      },
+      "KENORA-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "253"
+          }
+        }
+      },
+      "THUNDERBAY-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "273"
+          }
+        }
+      },
+      "SUDBURY-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "272"
+          }
+        }
+      },
+      "TIMMINS-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "274"
+          }
+        }
+      },
+      "NORTHBAY-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "262"
+          }
+        }
+      },
+      "OTTAWA-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "263"
+          }
+        }
+      },
+      "WINDSOR-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "282"
+          }
+        }
+      },
+      "LONDON-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "257"
+          }
+        }
+      },
+      "TORONTOCITYCENTRE-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "277"
+          }
+        }
+      },
+      "TORONTO-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "5",
+            "OPT-H2K-Location": "276"
+          }
+        }
+      },
+      "QUEBEC-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "341"
+          }
+        }
+      },
+      "MONTREAL-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "329"
+          }
+        }
+      },
+      "BAIE-COMEAU-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "289"
+          }
+        }
+      },
+      "SEPT-ILES-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "347"
+          }
+        }
+      },
+      "MONTJOLI-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "328"
+          }
+        }
+      },
+      "VAL-D'OR-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "6",
+            "OPT-H2K-Location": "353"
+          }
+        }
+      },
+      "FREDERICTON-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "7",
+            "OPT-H2K-Location": "141"
+          }
+        }
+      },
+      "MONCTON-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "7",
+            "OPT-H2K-Location": "143"
+          }
+        }
+      },
+      "SAINTJOHN-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "7",
+            "OPT-H2K-Location": "145"
+          }
+        }
+      },
+      "HALIFAX-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "8",
+            "OPT-H2K-Location": "168"
+          }
+        }
+      },
+      "SYDNEY-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "8",
+            "OPT-H2K-Location": "172"
+          }
+        }
+      },
+      "YARMOUTH-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "8",
+            "OPT-H2K-Location": "174"
+          }
+        }
+      },
+      "CHARLOTTETOWN-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "9",
+            "OPT-H2K-Location": "283"
+          }
+        }
+      },
+      "GANDER-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "10",
+            "OPT-H2K-Location": "155"
+          }
+        }
+      },
+      "STJOHNS-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "10",
+            "OPT-H2K-Location": "160"
+          }
+        }
+      },
+      "GOOSE-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "10",
+            "OPT-H2K-Location": "156"
+          }
+        }
+      },
+      "WABUSH-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "10",
+            "OPT-H2K-Location": "163"
+          }
+        }
+      },
+      "WHITEHORSE-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "12",
+            "OPT-H2K-Location": "203"
+          }
+        }
+      },
+      "INUVIK-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "12",
+            "OPT-H2K-Location": "186"
+          }
+        }
+      },
+      "YELLOWKNIFE-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "12",
+            "OPT-H2K-Location": "204"
+          }
+        }
+      },
+      "IQALUIT-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "13",
+            "OPT-H2K-Location": "225"
+          }
+        }
+      },
+      "RESOLUTE-W19": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-WTH-FILE": "Wth119.dir",
+            "OPT-H2K-Region": "13",
+            "OPT-H2K-Location": "236"
+          }
+        }
       }
     },
     "default": "Ottawa",
