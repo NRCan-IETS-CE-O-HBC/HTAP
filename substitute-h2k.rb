@@ -86,6 +86,8 @@ $keepH2KFolder = false
 $autoCostOptions = false
 $autoEstimateCosts = false 
 
+$hourlyCalcs = false 
+
 $gTotalCost          = 0
 $gIncBaseCosts       = 12000
 # Note: This is dependent on model!
@@ -140,6 +142,11 @@ $PVTarrifDollarsPerkWh = 0.10
 $gPeakCoolingLoadW    = 0
 $gPeakHeatingLoadW    = 0
 $gPeakElecLoadW    = 0
+
+
+# Maybe needed for hourly model? 
+$gPeakCoolingW    = 0
+$gPeakHeatingW    = 0
 
 # Variables for saving part-load data from hourly-bins
 $binDatHrs    = Array.new
@@ -2096,6 +2103,9 @@ def processFile(h2kElements)
             else
               # System type 2 is already set to this value -- do nothing!
             end
+            # Set Cooling season: May to October
+            h2kElements["HouseFile/House/HeatingCooling/CoolingSeason/Start"].attributes["code"] = 5
+            h2kElements["HouseFile/House/HeatingCooling/CoolingSeason/End"].attributes["code"] = 10
 
           elsif ( tag =~ /Opt-H2K-Type1Fuel/ &&  value != "NA" )
             # Apply to all Type 1 systems except Baseboards, which are electric by definition!
@@ -5299,6 +5309,16 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           bReadOldERSValue = true
         end
 
+        # Parse Rpt file ?
+        begin  
+          debug_on 
+          debug_out "Parsing browse.rpt"
+          dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
+          debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
+          debug_off 
+        rescue 
+          warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
+        end 
 
         # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
         if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
@@ -5625,8 +5645,32 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
               $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData
 
-              break
+              
               # break out of the element loop to avoid further processing
+
+              #Append monthly result sets             
+ 
+
+              $gResults[houseCode]["annual"] = dataFromBrowse["annual"]
+              $gResults[houseCode]["daily"] = dataFromBrowse["daily"]
+              $gResults[houseCode]["monthly"] = dataFromBrowse["monthly"]
+              # do these belong here? ???
+              # Open output file here so we can log errors too!
+              #$gResults[houseCode]["monthly"]["GrossThermalLoad"] = Hash.new 
+              #$gResults[houseCode]["monthly"]["UtilizedInternalGains"] = Hash.new 
+              #$gResults[houseCode]["monthly"]["UtilizedSolarGains"] = Hash.new 
+              #$gResults[houseCode]["monthly"]["FractionOfTimeHeatingSystemNotOperating"]= Hash.new 
+              #$gResults[houseCode]["monthly"]["UtilizedAuxiliaryHeatRequired"] = Hash.new 
+              #$gResults[houseCode]["monthly"][""] = Hash.new 
+              # $gResults[houseCode]["monthly"][""] = Hash.new 
+              
+              #monthArr.each do |mth|
+              #  $gResults[houseCode]["monthly"]["UtilizedAuxiliaryHeatRequired"][mth] = h2kPostElements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["GrossThermalLoad"][mth] = h2kPostElements[".//Monthly/FractionOfTimeHeatingSystemNotOperating"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["GrossThermalLoad"][mth] = h2kPostElements[".//Monthly/Load/GrossThermal"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["UtilizedInternalGains"][mth] = h2kPostElements[".//Monthly/Gains/UtilizedInternal"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["UtilizedSolarGains"][mth] = h2kPostElements[".//Monthly/Gains/UtilizedSolar"].attributes[mth].to_f
+              #end 
 
             end
 
@@ -5782,15 +5826,20 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           stream_out( " done \n")
 
-          
           # Module for hourly analysis using load-shapes. 
           # .............................................
-          #debug_on 
-          debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit?"
-          Hourly.analyze()
-          debug_off
+          if ($hourlyCalcs) then 
+            debug_on 
+            stream_out drawRuler(" Initializing hourly analysis")
+            stream_out ("\n")
+          
+            debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit location?\n"
+            debug_out " house code: #{$outputHCode}\n"
+            Hourly.analyze($gResults[$outputHCode])
+          
+          end 
           # .............................................
-
+          
           stream_out drawRuler("Simulation Results")
 
           stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
@@ -5988,6 +6037,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # =========================================================================================
         # Get the average characteristics of building facade by orientation
+        # Maybe this belongs in h2kutils? 
         # =========================================================================================
         def getEnvelopeSpecs(elements)
           # ====================================================================================
@@ -6669,6 +6719,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         end
 
+
+############## SUBSTITUTE-H2K.rb-Routine
         $allok = true
 
         $gChoiceOrder = Array.new
@@ -6684,19 +6736,18 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Help text. Dumped if help requested, or if no arguments supplied.
         #-------------------------------------------------------------------
         $help_msg = "
+ This script searches through a suite of model input files
+ and substitutes values from a specified input file.
 
-        This script searches through a suite of model input files
-        and substitutes values from a specified input file.
+ use: ruby substitute-h2k.rb --options Filename.options
+ --choices Filename.choices
+ --base_file 'Base model path & file name'
 
-        use: ruby substitute-h2k.rb --options Filename.options
-        --choices Filename.choices
-        --base_file 'Base model path & file name'
+ example use for optimization work:
 
-        example use for optimization work:
+ ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
 
-        ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
-
-        Command line options:
+ Command line options:
 
         "
 
@@ -6821,6 +6872,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $cmdlineopts["auto_cost_options"] = true
               $autoEstimateCosts = true
             end
+
+            opts.on("-g", "--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
+              $cmdlineopts["hourly_output"] = true
+              $hourlyCalcs = true
+            end
+
 
             opts.on("-j", "--export-options-to-json", "Export the .options file into JSON format and quit.") do
 
