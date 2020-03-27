@@ -5311,11 +5311,11 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # Parse Rpt file ?
         begin  
-          debug_on 
+
           debug_out "Parsing browse.rpt"
           dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
-          debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
-          debug_off 
+          #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
+           
         rescue 
           warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
         end 
@@ -5829,7 +5829,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           # Module for hourly analysis using load-shapes. 
           # .............................................
           if ($hourlyCalcs) then 
-            debug_on 
+
             stream_out drawRuler(" Initializing hourly analysis")
             stream_out ("\n")
           

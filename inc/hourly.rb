@@ -6,10 +6,13 @@ module Hourly
   # Master function to manage creation of hourly load shapes from hot2000 results
   def Hourly.analyze(h2kBinResults)
     require 'pp'
-    debug_on
-    debug_out "input\n #{h2kBinResults.pretty_inspect}"
+    #debug_on
+    
+    stream_out (" - Reading Climate data ... ")
     climate_data=readClimateData()
+    stream_out ("done.\n - Generating hourly load shapes ...")
     generateLoadShapes(h2kBinResults,climate_data)
+    stream_out ("done.\n")
     modelHourlyComponent()
 
     return
@@ -31,20 +34,38 @@ module Hourly
     day=Array.new
     wind_speed=Array.new
     
-    
-    
+
+    epwOpenTries = 1
+    epwOpenMaxTries = 5
+    epwOpenDone = false 
+    epwOpenedOk = false 
+
     epwFile = $epwLocaleHash["#{$gRunLocale}"].split('/')[2]
-    
+     
     if (File.file?("C:\/HTAP\/weatherfiles\/#{epwFile}"))
       epwFilePath = "C:\/HTAP\/weatherfiles\/#{epwFile}"
     else
-      dataURI = $epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"]
-      begin
-        epwFilePath = open($epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"])
-      rescue 
-        fatal_error ("Could not open climate data at #{dataURI}\n")
+      
+      dataURI =  $epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"]
+      debug_out ("Fetching EPW data fom #{dataURI}\n")
+      while ( not epwOpenDone ) do 
+        begin
+          epwFilePath = open(dataURI)
+          epwOpenedOk = true
+            
+        rescue 
+          epwOpenTries += 1 
+        end 
+        if ( epwOpenedOk or epwOpenTries == epwOpenMaxTries ) then 
+          epwOpenDone = true 
+        end 
+        debug_out ("Try # #{epwOpenTries} succeeded? #{epwOpenedOk}\n")
       end 
     end
+
+    if ( not epwOpenedOk ) then 
+      fatalerror ("Could not open climate data at #{dataURI}\n")
+    end 
     
       #epwFilePath="C:\/HTAP\/testing\/hourly\/HTAP-sim-3\/CAN_AB_EDMONTON-INTL-A_3012216_CWEC.epw" #temporary for testing. REMOVE
     
@@ -128,7 +149,7 @@ module Hourly
    
     time_unoccupied=h2kBinResults["daily"]["setpoint_temperature"]["Nightime_Setback_Duration_hr"]
    
-    pp time_unoccupied 
+ 
     time_unoccupied_end=7.0
     time_unoccupied_start=(time_unoccupied_end-time_unoccupied<0 ? time_unoccupied_end-time_unoccupied+24 : time_unoccupied_end-time_unoccupied)
     schedule={occ_temp_heating: h2kBinResults["daily"]["setpoint_temperature"]["Daytime_Setpoint_degC"] ,unocc_temp_heating: h2kBinResults["daily"]["setpoint_temperature"]["Nightime_Setpoint_degC"] ,occ_time_start: time_unoccupied_end,occ_time_end: time_unoccupied_start ,temp_cooling: h2kBinResults["daily"]["setpoint_temperature"]["Cooling_Setpoint_degC"] }
@@ -158,11 +179,8 @@ module Hourly
       average_indoor_temp_month.merge!({i=>indoor_temp.slice(start_of_month_hour[i],hours_per_month[i]).average})
     end
     
-    
-    
-    debug_on
-    debug_out ("#{h2kBinResults["monthly"]["cooling"].pretty_inspect}")
 
+    
     htap_conduction_losses=Array.new
     htap_solar_gains=Array.new
     htap_internal_gains=Array.new
@@ -186,7 +204,7 @@ module Hourly
      end 
     end
     
-    
+
     #calculate mains temp at each hour
     hourly_mains_temp=mains_temp(average_temp_month,h2kBinResults["annual"]["weather"]["Annual_HDD_18C"],h2kBinResults["annual"]["weather"]["Avg_Deep_Ground_Temp_C"],months,months_number)
     daily_DHW_consumption=h2kBinResults["annual"]["DHW_heating"]["Daily_DHW_Consumption_L/day"]
@@ -210,6 +228,8 @@ module Hourly
       #monthly_dhw_ratio[months_number.key(i)-1]=monthly_dhw_losses[months_number.key(i)-1]/monthly_dhw_water_heat[months_number.key(i)-1]
     end
     
+    
+
     #cooling internal gains
     internal_gains_cooling_htap=Array.new
     for i in 0..11
@@ -239,7 +259,7 @@ module Hourly
 
       end 
     end
-    
+
     hourly_conduction_losses=Array.new
     hourly_solar_gains=Array.new
     hourly_internal_gains=Array.new
@@ -293,8 +313,8 @@ module Hourly
       mcp_per_area=0.0 #MJ/K/m^2
     end
     
-    debug_on
     
+
     # Model with Mass - heating (lumped capacitance)
     t_bld=Array.new
     t_bld_cooling=Array.new
@@ -433,7 +453,8 @@ module Hourly
     printarray2=[peakHeating,peakCooling].transpose
     
     h2kfilename="#{$h2kFileName}"#.delete_suffix('.h2k')
-    CSV.open("#{$gMasterPath}\\"+"#{$gRunLocale}"+"_"+h2kfilename+".csv", "w") do |f|
+    csvFileName = $gRunLocale+"_"+h2kfilename+".csv"
+    CSV.open("#{$gMasterPath}\\"+csvFileName, "w") do |f|
       printarray.each do |x|
         f << x
       end
@@ -443,6 +464,7 @@ module Hourly
         f << x
       end
     end
+    info_out ("Hourly data saved to #{csvFileName}\n")
      
          return
 

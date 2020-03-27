@@ -1582,6 +1582,8 @@ optparse = OptionParser.new do |opts|
  	 opts.on( "--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
        $cmdlineopts["hourly_output"] = true
        $gHourlySimulationFlag = "-g"
+       warn_out("Hourly results will saved in HTAP-Sim-X folders. Activating --keep-all-files option to make sure results are preserved.")
+       $gSaveAllRuns = true
    end
 
    opts.separator " "
