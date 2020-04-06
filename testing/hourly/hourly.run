@@ -3,7 +3,9 @@
 ! Run-Mode: Parameters that affect how htap-prm is configured. 
 RunParameters_START
   run-mode                           = mesh
-  archetype-dir                      = C:/HTAP/Archetypes
+  archetype-dir                      = C:/HTAP/testing/h2k-files
+  unit-costs-db                      = C:/HTAP/HTAPUnitCosts.json
+  options-file                       = C:/HTAP/HTAP-options.json
 RunParameters_END 
 
 
@@ -11,7 +13,7 @@ RunParameters_END
 ! run in mesh, even if an optimization mode is added in the future. 
 RunScope_START
 
-  archetypes                        = BC-Step-MediumSFD.h2k
+  archetypes                        = NRCan-arch4_2100sf_2storey_fullBsmt-v117b23-General.h2k
   locations                         = CALGARY
   rulesets                          = as-found
     
@@ -30,34 +32,28 @@ Upgrades_START
    
    Opt-ACH              = NA 
    
-   Opt-CasementWindows  = NA
+   Opt-Windows          =  NC-2g-HG-u1.65
    Opt-Skylights        = NA
    Opt-DoorWindows      = NA 
    Opt-Doors            = NA     
   
-   Opt-MainWall         = NA 
-   Opt-GenericWall_1Layer_definitions = NA 
-   Opt-FloorHeader      = NA   
+   
+   Opt-AboveGradeWall   = NA 
   
-   Opt-H2KFoundation    = NA
-  
-   Opt-H2KFoundationSlabCrawl = NA 
+
   
    Opt-ExposedFloor     = NA
-   Opt-ExposedFloor      = NA
-  
-   Opt-FloorAboveCrawl  = NA 
 
    Opt-Ceilings         = NA
    Opt-AtticCeilings    = NA
    Opt-CathCeilings     = NA
    Opt-FlatCeilings     = NA
    
-   Opt-HRVonly          = NA
-   Opt-HRVspec          = NA
+   Opt-VentSystem       = NA
+
    Opt-DHWSystem        = NA
-   Opt-HVACSystem       = NA 
-   Opt-DWHRSystem       = NA
+   Opt-Heating-Cooling  = gas-furnace-ecm+AC
+   Opt-DWHR             = NA
    Opt-H2K-PV           = NA
     
     
