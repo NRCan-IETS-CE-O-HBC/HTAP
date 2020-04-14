@@ -1948,6 +1948,10 @@ end
 $batchCount = 0
 goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
+
+if ( runningProduct.to_i == 0 ) then 
+  fatalerror("No combinations to run")
+end 
 estDuration = runningProduct * evalSpeed / [$gNumberOfThreads, runningProduct].min
 
 stream_out("    - Guesstimated time requirements ~ #{formatTimeInterval(estDuration)} (including pre- & post-processing)\n")

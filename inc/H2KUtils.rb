@@ -9,7 +9,7 @@ module HTAP2H2K
 
   def HTAP2H2K.conf_foundations(myFdnData,myOptions,h2kElements)
 
-    #debug_on
+    debug_on
 
     debug_out "Setting up foundations for this config:\n#{myFdnData.pretty_inspect}\n"
 
@@ -52,7 +52,7 @@ module HTAP2H2K
       debug_out ("'NA' spec'd for Int/Ext walls and below-grade slabs. No changes needed\n")
     else
 
-      debug_out (">>> FDN CHOICE: #{myFdnData["FoundationSlabBelowGrade"]}\n")
+      debug_out (" Foundation - slab below grade CHOICE: #{myFdnData["FoundationSlabBelowGrade"]}\n")
 
       bExtWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallExtIns",myFdnData["FoundationWallExtIns"])["H2K-Fdn-ExtWallReff"].to_f > 0.01 )
       bIntWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallIntIns",myFdnData["FoundationWallIntIns"])["H2K-Fdn-IntWallReff"].to_f > 0.01 )
@@ -81,12 +81,13 @@ module HTAP2H2K
 
         # [ X ] exterior     [   ] Interior      [  ] Slab  ( full height exterior)
       elsif  ( bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
+
         basementConfig = "BCEN_2"
-        crawlSpaceConfig = "SCN_1"
+        crawlSpaceConfig = "SCN_3"
         h2kFdnData["?bgSlabIns"]  = false
         h2kFdnData["?IntWallIns"] = false
         h2kFdnData["?ExtWallIns"] = true
-
+        debug_out ("Ext insulation only. CONFIGS [] basement = #{basementConfig}; crawl-space: #{crawlSpaceConfig} \n")
         # [   ] exterior     [  X ] Interior      [  ] Slab   ( full height interior )
       elsif  ( ! bExtWallInsul &&  bIntWallInsul && ! bBGSlabInsul ) then
 
@@ -100,7 +101,7 @@ module HTAP2H2K
       elsif  ( bExtWallInsul && bIntWallInsul && ! bBGSlabInsul ) then
 
         basementConfig = "BCCN_5"
-        crawlSpaceConfig = "SCN_1"
+        crawlSpaceConfig = "SCN_3"
         h2kFdnData["?bgSlabIns"]  = false
         h2kFdnData["?IntWallIns"] = true
         h2kFdnData["?ExtWallIns"] = true
@@ -109,7 +110,8 @@ module HTAP2H2K
       elsif  (  bExtWallInsul && ! bIntWallInsul &&  bBGSlabInsul ) then
 
         basementConfig = "BCEB_4"
-        crawlSpaceConfig = slabConfigInsulated
+        crawlSpaceConfig = "SCB_29"
+        slabConfigInsulated = "SCB_29"
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
 
         h2kFdnData["?bgSlabIns"]  = true
@@ -121,7 +123,8 @@ module HTAP2H2K
       elsif  ( ! bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
 
         basementConfig = "BCIB_1"
-        crawlSpaceConfig = slabConfigInsulated
+        crawlSpaceConfig = "SCB_25"
+        slabConfigInsulated = "SCB_25"
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
 
         h2kFdnData["?bgSlabIns"]  = true
@@ -133,8 +136,8 @@ module HTAP2H2K
       elsif  (  bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
 
         basementConfig = "BCCB_9"
-        crawlSpaceConfig = slabConfigInsulated
-        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+        crawlSpaceConfig = "SCB_29"
+        slabConfigInsulated = "SCB_29"
 
         h2kFdnData["?bgSlabIns"]  = true
         h2kFdnData["?IntWallIns"] = true
@@ -145,7 +148,7 @@ module HTAP2H2K
         fatalerror ("Unsupported foundation configuration!!!")
       end
 
-      debug_out " Basement/crawlspace configuration : #{basementConfig}\n"
+      debug_out " Basement/crawlspace configuration : #{basementConfig} / #{crawlSpaceConfig}\n"
       h2kFdnData["BasementConfig"] = basementConfig
       h2kFdnData["CrawlConfig"] = crawlSpaceConfig
       h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
@@ -154,6 +157,7 @@ module HTAP2H2K
 
       debug_out "Processing basements/crawlspaces with following specs:\n#{h2kFdnData.pretty_inspect}"
 
+      
       H2KFile.updBsmCrawlDef(h2kFdnData,h2kElements)
 
 
@@ -177,7 +181,7 @@ module HTAP2H2K
 
       h2kSlabData["rEff_SlabOG"] = myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["values"]["1"]["conditions"]["all"].to_f
       h2kSlabData["SlabConfig"] = slabConfig
-
+      
       H2KFile.updSlabDef(h2kSlabData,h2kElements)
 
 
@@ -194,13 +198,14 @@ module H2KFile
   def H2KFile.heatedCrawlspace(h2kElements)
     isCrawlHeated = false
 
+    debug_on 
 
     if h2kElements["HouseFile/House/Components/Crawlspace"] != nil
       if h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
         isCrawlHeated = true
       end
     end
-
+    debug_out "query - is crawlspace heated? #{isCrawlHeated} \n"
     return isCrawlHeated
   end
 
@@ -257,15 +262,19 @@ module H2KFile
   # Update a basement definition to reflect new data.
   def H2KFile.updBsmCrawlDef(fdnData,h2kElements)
 
-    #debug_on
+    debug_on
 
     looplocation = "HouseFile/House/Components"
 
     h2kElements[looplocation].elements.each do | node |
-
+      
       # Only work if basements, heated crawlspaces
+
+      debug_out ("Q: node is: #{node.name}  \n")
       next if ( node.name != "Basement"   && node.name != "Crawlspace"               )
       next if ( node.name == "Crawlspace" && ! H2KFile.heatedCrawlspace(h2kElements) )
+  
+      
 
       label = node.elements[".//Label"].text
 
@@ -277,10 +286,10 @@ module H2KFile
         config_subtype= fdnData["BasementConfig"].split(/_/)[1]
 
       elsif ( node.name == "Crawlspace" ) then
-        debug_out(" ... crawlspace code \n")
+        debug_out(" ... crawlspace type/sub-type")
         config_type = fdnData["CrawlConfig"].split(/_/)[0]
         config_subtype= fdnData["CrawlConfig"].split(/_/)[1]
-
+        debug_out("#{config_type},#{config_subtype}\n")
       end
 
       debug_out(" setting configuration to #{config_type}, subtype #{config_subtype}\n")
