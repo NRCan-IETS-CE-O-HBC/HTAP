@@ -104,6 +104,8 @@ module LEEPPathways
     "Opt-Windows:+:NC-3g-HG-u1.08"   => "lpWIN_04",
     "Opt-Windows:+:NC-3g-LG-u1.08"   => "lpWIN_05",  
     "Opt-Windows:+:NC-3g-LG-u0.85"   => "lpWIN_06",  
+    "Opt-Windows:+:NC-2g-MG-u1.65"   => "lpWIN_07",
+    "Opt-Windows:+:NC-3g-MG-u1.08"   => "lpWIN_08",
 
 
     "Opt-FoundationWallExtIns:+:uninsulated"       => "lpFDe_01" ,
@@ -125,9 +127,10 @@ module LEEPPathways
     "Opt-Heating-Cooling:+:gas-furnace-psc"     => "lpH&C_01", 
     "Opt-Heating-Cooling:+:gas-furnace-ecm"     => "lpH&C_02", 
     "Opt-Heating-Cooling:+:gas-furnace-ecm+AC"  => "lpH&C_03", 
-    "Opt-Heating-Cooling:+:CCASHP"  => "lpH&C_04", 
-    "Opt-Heating-Cooling:+:ASHP"  => "lpH&C_05", 
-    "Opt-Heating-Cooling:+:elec-baseboard"  => "lpH&C_06", 
+    "Opt-Heating-Cooling:+:CCASHP"              => "lpH&C_04", 
+    "Opt-Heating-Cooling:+:ASHP"                => "lpH&C_05", 
+    "Opt-Heating-Cooling:+:elec-baseboard"      => "lpH&C_06", 
+    "Opt-Heating-Cooling:+:elec-baseboard+AC"   => "lpH&C_07",
 
 
     "Opt-AboveGradeWall:+:NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb" => "lpMWL_01",
@@ -207,7 +210,8 @@ module LEEPPathways
   GoodECMFields = Array.new [
     "ecmID",
     "attribute",
-    "measure"
+    "measure",
+    "longName"
   ]
 
   GoodLocFields = Array.new [ 
@@ -635,8 +639,9 @@ module LEEPPathways
           record = { 
               "ecmID" => ecmID, 
               "searchTextKey" => searchTextKey, 
-              "attribute" => key, 
-              "measure" => finalValue
+              "attribute"     => key, 
+              "measure"       => finalValue,
+              "longName"      => searchTextKey
             }
           # . check if this ECM is linked to LEEP reserved set. 
           $LEEPecmData.push( record ) 
