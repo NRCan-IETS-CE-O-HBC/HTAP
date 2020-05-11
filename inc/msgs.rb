@@ -29,6 +29,25 @@ def openLogFiles( logFile, summaryFile )
 end
 
 
+
+def monthLong(month)
+
+  match = "error"
+  MonthArrList.each do | longMonth |
+
+    if ( longMonth =~ /#{month}/i ) then 
+      match = longMonth
+      return match 
+    end 
+
+  end 
+
+  return match 
+
+end 
+
+
+
 def input(prompt="", newline=false)
   require 'readline'
   prompt += "\n" if newline
