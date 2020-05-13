@@ -5310,15 +5310,15 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
 
         # Parse Rpt file ?
-        begin  
-
+        #begin  
+          # debug_on
           debug_out "Parsing browse.rpt"
           dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
-          #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
+          # debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
            
-        rescue 
-          warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
-        end 
+       # rescue 
+       #   warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
+       # end 
 
         # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
         if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
@@ -5469,9 +5469,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $ThisMsg +=" Reporting result set \"#{$outputHCode}\" result instead. \n"
           warn_out($ThisMsg)
         end
-
+        
         h2kPostElements["HouseFile/AllResults"].elements.each do |element|
-
+          debug_out ("Set ...\n")
           houseCode =  element.attributes["houseCode"]
 
           if (houseCode == nil && element.attributes["sha256"] != nil)
@@ -5482,7 +5482,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           if (houseCode =~ /#{$outputHCode}/)
 
             stream_out( "\n Parsing results from set: #{$outputHCode} ...")
-
             # Energy Consumption (Annual GJ)
             $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
             $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
@@ -5512,7 +5511,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               # Annual DHW heating load [GJ] -- heating load (or demand) on DHW system (before efficiency applied)
               $gResults[houseCode]["AnnHotWaterLoadGJ"] = element.elements[".//Annual/HotWaterDemand"].attributes["base"].to_f * scaleData
             end
-
+            debug_out ("Parsing design loads\n")
             # Design loads, other data
             $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
             $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
@@ -5585,10 +5584,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             $gResults[houseCode]['avgEnergyCoolingGJ'].to_f +
             $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f
 
-
+          
 
             monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
-            # Picking up  AUX energy requirement from each result set.
+            debug_out (" Picking up  AUX energy requirement from each result set. \n")
 
             $gAuxEnergyHeatingGJ = 0
             $MonthlyAuxHeatingMJ = 0
@@ -5650,10 +5649,14 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
               #Append monthly result sets             
  
-
+              debug_out ("parsing dataFromBrowse objects: annual ")
               $gResults[houseCode]["annual"] = dataFromBrowse["annual"]
-              $gResults[houseCode]["daily"] = dataFromBrowse["daily"]
+              debug_out (" / monthly ")
               $gResults[houseCode]["monthly"] = dataFromBrowse["monthly"]
+              debug_out (" / daily ")
+              $gResults[houseCode]["daily"] = dataFromBrowse["daily"]
+
+              debug_out ("done.\n")
               # do these belong here? ???
               # Open output file here so we can log errors too!
               #$gResults[houseCode]["monthly"]["GrossThermalLoad"] = Hash.new 
@@ -5822,6 +5825,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             else
               $gResults[$outputHCode]["avgPVRevenue"] = 0
             end
+            debug_out ("set done.\n")
           end
 
           stream_out( " done \n")
@@ -5963,7 +5967,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # =========================================================================================
         def getHouseInfo (elements)
 
-
+          $YearBuilt    = H2KFile.getYearBuilt(elements)
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
           $HouseStoreys = H2KFile.getStoreys(elements)
@@ -7416,7 +7420,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           # Process the working file by replacing all existing values with the values
           # specified in the attributes $gChoices and corresponding $gOptions
-          # debug_on 
+
           stream_out drawRuler(' Manipulating HOT2000 file ')
           stream_out (" Performing substitutions on H2K file...")
 
@@ -7542,8 +7546,11 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                 "version" => $gResults["version"]
               }
 
+            $YearBuilt               = 
+
               results[$aliasLongArch] = {   "h2k-File"            =>  "#{$h2kFileName}",
             "House-Builder"       =>  "#{$BuilderName}",
+            "Year-Built"          =>  "#{$YearBuilt}",
             "House-Type"          =>  "#{$HouseType}",
             "House-Storeys"       =>  "#{$HouseStoreys}",
 			    	"Front-Orientation"   =>  "#{$HouseFrontOrientation}",
@@ -7709,6 +7716,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         if ( fJsonOut.nil? )then
           fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
         end
+
         fJsonOut.puts JSON.pretty_generate(results)
         results.clear
         fJsonOut.close
@@ -7724,6 +7732,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       $fSUMMARY.write( "#{$aliasConfig}.Recovered-results =  #{$outputHCode}\n")
 
       if ($FlagHouseInfo)
+        $fSUMMARY.write( "#{$aliasArch}.Year-Built        =   #{$gResults[$outputHCode]['yearbuilt']}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Builder     =  #{$BuilderName}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Type        =  #{$HouseType}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )

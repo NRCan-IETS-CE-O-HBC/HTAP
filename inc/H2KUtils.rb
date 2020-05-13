@@ -443,6 +443,21 @@ module H2KFile
   end
 
   # =========================================================================================
+  # Returns Year home was built
+  # =========================================================================================
+  def H2KFile.getYearBuilt(elements)
+
+    myYearBuilt = elements["HouseFile/House/Specifications/YearBuilt"].attributes["value"].to_i
+    #if myYearBuilt !=nil
+    #  myBuilderName.gsub!(/\s*/, '')    # Removes mid-line white space
+    # myBuilderName.gsub!(',', '-')    # Replace ',' with '-'. Necessary for CSV reporting
+    # end
+
+    return myYearBuilt
+  end
+
+
+  # =========================================================================================
   # Returns Name of a builder
   # =========================================================================================
   def H2KFile.getBuilderName(elements)
@@ -556,23 +571,35 @@ module H2KFile
     end
 
     # Get house area estimates from the first XML <results> section - these are totals of multiple surfaces
-    if  ( elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"]!= nil ) then
-      ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
-    else
-      ceilingAreaOut = 0
-    end
+    begin 
+      if  ( elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"]!= nil ) then
+        ceilingAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_i
+      else
+        ceilingAreaOut = 0
+      end
+    rescue 
+      ceilingAreaOut = 0 
+    end 
 
-    if  ( elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"]!= nil ) then
-      slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
-    else
+    begin
+      if  ( elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"]!= nil ) then
+        slabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
+      else
+        slabAreaOut = 0
+      end
+    rescue
       slabAreaOut = 0
-    end
+    end 
 
-    if  ( elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"] != nil ) then
-      basementSlabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
-    else
+    begin 
+      if  ( elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"] != nil ) then
+        basementSlabAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
+      else
+        basementSlabAreaOut  = 0
+      end
+    rescue 
       basementSlabAreaOut  = 0
-    end
+    end 
 
     if numStoreysInput == 1 then
       # Single storey house -- avoid counting a basement heated area
@@ -1170,11 +1197,19 @@ module H2KFile
     wallExtBG    = 0.0
     wallIntTOtal = 0.0
     wallIntBG    = 0.0
-
+    
+    debug_out("wallCornerCount: #{wallCornerCount}\n")
     wallDims.each do |wall|
 
       #how many corners belong to this wall?
-      fracOfCorners = wall["corners"]/wallCornerCount
+      if ( wallCornerCount < 1 )
+
+        fracOfCorners = 0 
+        wallCornerCount = 1 
+      
+      else 
+        fracOfCorners = wall["corners"]/wallCornerCount
+      end 
 
       # assume 8" wall
       fdnWallWidth = 8.0 * 2.54 / 100.0
@@ -1186,7 +1221,7 @@ module H2KFile
 
     end
 
-    debug_out ("Below-grade dimensions:\n#{bgDims.pretty_inspect}\n")
+    #debug_out ("Below-grade dimensions:\n#{bgDims.pretty_inspect}\n")
 
     return bgDims
 
@@ -1742,7 +1777,8 @@ end
 module H2KOutput 
 
   def H2KOutput.parse_BrowseRpt(myBrowseRptFile)
-
+    
+    #debug_on
 
     myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new, "annual" => Hash.new }
     fBrowseRpt = File.new(myBrowseRptFile, "r")
@@ -1757,9 +1793,11 @@ module H2KOutput
     flagENPref = false
 
     $hourlyFoundACData = false 
-
+    lineNo = 0
     while !fBrowseRpt.eof? do
+      lineNo = lineNo+ 1
       line = fBrowseRpt.readline
+      debug_out ("Browse #{lineNo}: #{line}\n")
       # Sequentially read file lines
       line.strip!
       # Remove leading and trailing whitespace
@@ -2074,7 +2112,7 @@ module H2KOutput
       # ==============================================================
       # Building Parameters Section
       if ( line =~ /\*\*\* BUILDING PARAMETERS SUMMARY \*\*\*/ )
-        #myBrowseData["annual"]["volume"]={"house_volume_m^3"=> 0.0}
+        myBrowseData["annual"]["volume"]={"house_volume_m^3"=> 0.0}
         myBrowseData["annual"]["area"]={"walls_net_m^2"=> nil,
                                         "ceiling_m^2" => nil
         }
@@ -2093,8 +2131,9 @@ module H2KOutput
           words = line.split(/\s+/)
 
           if ( line =~ /m3/i ) then
+            debug_out ("Volume: #{words[0]}\n")
             myBrowseData["annual"]["volume"]["house_volume_m^3"] = words[0].to_f
-                      end
+          end
           if ( line =~ /Main Walls/i ) then
             myBrowseData["annual"]["area"]["walls_net_m^2"] = words[3].to_f
           end
