@@ -5317,7 +5317,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
            
         rescue 
-          warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
+          warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt. Trying again!\n")
+          sleep 2.0
+          dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
         end 
 
         # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
