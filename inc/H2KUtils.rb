@@ -1773,6 +1773,10 @@ module H2KOutput
 
       # ==============================================================
       # Heating section 
+
+      debug_on
+      debug_out ("E3 line: #{line} \n")
+     debug_off
       if ( line =~ /\*\*\* SPACE HEATING SYSTEM PERFORMANCE \*\*\*/ )
         myBrowseData["monthly"]["heating"] = {"loadGJ" => Hash.new, 
                                               "input_energyGJ" => Hash.new,
