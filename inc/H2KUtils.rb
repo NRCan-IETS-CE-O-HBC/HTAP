@@ -1745,9 +1745,8 @@ module H2KOutput
 
 
     myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new, "annual" => Hash.new }
-    fBrowseRpt = File.new(myBrowseRptFile, "r")
-
-
+    fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'Windows 1252' )
+   
     flagACPerf = false 
     flagSHPerf = false 
     flagSRPerf = false 
@@ -1774,9 +1773,6 @@ module H2KOutput
       # ==============================================================
       # Heating section 
 
-      debug_on
-      debug_out ("E3 line: #{line} \n")
-     debug_off
       if ( line =~ /\*\*\* SPACE HEATING SYSTEM PERFORMANCE \*\*\*/ )
         myBrowseData["monthly"]["heating"] = {"loadGJ" => Hash.new, 
                                               "input_energyGJ" => Hash.new,
