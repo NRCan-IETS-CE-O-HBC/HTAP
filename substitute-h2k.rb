@@ -5310,24 +5310,30 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
 
         # Parse Rpt file ?
+        debug_on
         begin  
 
-          debug_out "Parsing browse.rpt"
+          debug_out "Parsing browse.rpt - 1 \n "
           dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
           #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
            
         rescue 
           warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt. Trying again!\n")
           sleep 2.0
+          debug_out("Parsing browse.rpt - 2 \n ")
           dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
         end 
-
+        debug_off
         # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
         if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
           begin
+            debug_on
+            debug_out "Parsing browse.rpt - 3 \n"
+            debug_off
             fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r")
             while !fBrowseRpt.eof? do
-              lineIn = fBrowseRpt.readline
+
+              lineIn = fBrowseRpt.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" ) 
               # Sequentially read file lines
               lineIn.strip!
               # Remove leading and trailing whitespace
