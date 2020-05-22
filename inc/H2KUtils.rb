@@ -1746,8 +1746,9 @@ module H2KOutput
 
     myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new, "annual" => Hash.new }
     fBrowseRpt = File.new(myBrowseRptFile, "r")
-
-
+    # fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'UTF-8', :invalid=>:replace, :replace=>"?" )
+    # fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'UTF-16BE', :invalid=>:replace, :replace=>"?" )
+   
     flagACPerf = false 
     flagSHPerf = false 
     flagSRPerf = false 
@@ -1759,7 +1760,11 @@ module H2KOutput
     $hourlyFoundACData = false 
 
     while !fBrowseRpt.eof? do
-      line = fBrowseRpt.readline
+      #line = fBrowseRpt.readline
+
+      #line = fBrowseRpt.readline.encode("UTF-8", :invalid=>:replace, :replace=>"?")
+      line = fBrowseRpt.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" )      
+
       # Sequentially read file lines
       line.strip!
       # Remove leading and trailing whitespace
@@ -1773,6 +1778,7 @@ module H2KOutput
 
       # ==============================================================
       # Heating section 
+
       if ( line =~ /\*\*\* SPACE HEATING SYSTEM PERFORMANCE \*\*\*/ )
         myBrowseData["monthly"]["heating"] = {"loadGJ" => Hash.new, 
                                               "input_energyGJ" => Hash.new,

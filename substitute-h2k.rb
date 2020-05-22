@@ -5025,7 +5025,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $lineNo = 0
         if ( $gReadROutStrTxt  )
           #begin
-          stream_out("\nParsing diagnostics from #{$OutputFolder}\\Routstr.txt ...")
+          stream_out("\n Parsing diagnostics from #{$OutputFolder}\\Routstr.txt ...")
           fRoutStr = File.new("#{$OutputFolder}\\Routstr.txt", "r")
 
           $SOCparse     = false
@@ -5310,22 +5310,30 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
 
         # Parse Rpt file ?
+
         begin  
 
-          debug_out "Parsing browse.rpt"
+          debug_out "Parsing browse.rpt - 1 \n "
           dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
+          log_out("Parsed Browse.Rpt produced error.")
           #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
            
         rescue 
           warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
+          log_out("Parsing Browse.Rpt produced error. Check encoding.")
         end 
 
         # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
+        # This code should be migrated inside parse_BrowseRPT. 
         if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
           begin
+
+            debug_out "Parsing browse.rpt - 3 \n"
+            debug_off
             fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r")
             while !fBrowseRpt.eof? do
-              lineIn = fBrowseRpt.readline
+
+              lineIn = fBrowseRpt.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" ) 
               # Sequentially read file lines
               lineIn.strip!
               # Remove leading and trailing whitespace
