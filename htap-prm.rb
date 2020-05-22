@@ -1938,6 +1938,10 @@ else
     stream_out "          ----------------------------------------------------------\n"
     stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
 
+    if ( runningProduct < 1) then
+      fatalerror ( " No combinations to run.")
+    end
+
   end
 
 
