@@ -1174,8 +1174,16 @@ module H2KFile
     wallDims.each do |wall|
 
       #how many corners belong to this wall?
-      fracOfCorners = wall["corners"]/wallCornerCount
+#      fracOfCorners = wall["corners"]/wallCornerCount
+      if ( wallCornerCount < 1 )
 
+        fracOfCorners = 0 
+        wallCornerCount = 1 
+      
+      else 
+        fracOfCorners = wall["corners"]/wallCornerCount
+      end 
+	  
       # assume 8" wall
       fdnWallWidth = 8.0 * 2.54 / 100.0
       # exposed perimiter,
