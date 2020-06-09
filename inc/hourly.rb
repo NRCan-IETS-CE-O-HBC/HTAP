@@ -1,19 +1,34 @@
-
+$hourlyModules = { 
+  "calcs" => false,
+  "submodules" => [ ]
+ }
 
 
 module Hourly
 
   # Master function to manage creation of hourly load shapes from hot2000 results
   def Hourly.analyze(h2kBinResults)
-    require 'pp'
-    #debug_on
+    debug_on 
+
+    timestepData = Hash.new 
     
     stream_out (" - Reading Climate data ... ")
     climate_data=readClimateData()
-    stream_out ("done.\n - Generating hourly load shapes ...")
-    generateLoadShapes(h2kBinResults,climate_data)
     stream_out ("done.\n")
-    modelHourlyComponent()
+
+
+    stream_out (" - Generating hourly load shapes ...")
+    timestepData = generateLoadShapes(h2kBinResults,climate_data)
+    stream_out ("done.\n")
+ 
+
+    $hourlyModules["submodules"].push "HPcalcs"
+    timestepData = modelHourlyComponents(timestepData)
+
+
+    stream_out (" - Saving data ...")
+    saveHourlyData(timestepData)
+    stream_out ("done.\n") 
 
     return
 
@@ -127,7 +142,7 @@ module Hourly
   end 
 
 
-  # Fuction to 
+  # Fuction to interpolate data 
 
   def self.generateLoadShapes(h2kBinResults,climate_data)
       
@@ -447,13 +462,18 @@ module Hourly
     for i in 0..depth.length-1
       ground[i]=ground[i].unshift("Ground Temperature at #{'%.2f' % depth[i]} m depth (degC)")
     end
-    printarray3=ground
-    printarray=[timestep,month,day,time,hourly_electrical_demand_plug,hourly_total_heating_mod,hourly_total_cooling_mod,hourly_ventilation,hourly_DHW_consumption,hourly_mains_temp,indoor_temp,indoor_temp_cooling,db_temperature,rh,global_solar_hor,wind_speed].concat(printarray3).transpose
+    saveArray = Array.new
+    saveArray = [timestep,month,day,time,hourly_electrical_demand_plug,hourly_total_heating_mod,hourly_total_cooling_mod,hourly_ventilation,hourly_DHW_consumption,hourly_mains_temp,indoor_temp,indoor_temp_cooling,db_temperature,rh,global_solar_hor,wind_speed].concat(ground)
     
+
+    # printarray3=ground
+    printarray= saveArray.transpose
     printarray2=[peakHeating,peakCooling].transpose
     
     h2kfilename="#{$h2kFileName}"#.delete_suffix('.h2k')
-    csvFileName = $gRunLocale+"_"+h2kfilename+".csv"
+    csvFileName = "../hourly_output/"+$gRunLocale+"_"+h2kfilename+".csv"
+
+    debug_on 
     CSV.open("#{$gMasterPath}\\"+csvFileName, "w") do |f|
       printarray.each do |x|
         f << x
@@ -465,23 +485,113 @@ module Hourly
       end
     end
     info_out ("Hourly data saved to #{csvFileName}\n")
+    
+    # Traspose SB.'s print array into a friendly hash for further calculations. 
+    tsData = Hash.new
+    saveArray.each do | myCol | 
+    #  
+    
+      header = myCol[0]
+      debug_out "Saving header #{header} (0->#{myCol.length})\n"
+      tsData[header] = Array.new 
+      tsData[header] =  myCol.drop(1)
+    #  
+    end 
+
+    return tsData 
+
+  end
+
+  
+
+
+
+  def self.modelHourlyComponents(timestepData)
+
+    componentResult = Hash.new 
      
-         return
+    debug_on
+
+    debug_out "Modules: #{$hourlyModules.pretty_inspect}"
+
+    $hourlyModules["submodules"].each do | submodule |
+
+      debug_out "Processing submodule: #{submodule} \n"
+
+      if ( submodule == "HPcalcs" ) then 
+        timestepData = HourlyHP.calc(timestepData) 
+      end 
+
+    end  
+
+    return timestepData
 
   end
 
+  def self.saveHourlyData(ts)
+    csvFileName2 = $gRunLocale+"_mydata2.csv"
 
-  def self.modelHourlyComponent()
+    row = 0 
+    headerRow = Array.new
+    dataRows = Array.new 
+    outputArray = Array.new 
+  
 
-    #debug_on
+    debug_on
+    dataCol = Array.new
+    ts.keys.each do | header |
+      dataCol = []
+      dataCol.push header
+      debug_out header
+      dataCol.concat ts[header]
+      outputArray.push dataCol 
 
-    return
 
-  end
+    end 
 
 
+
+   #myFile = File.open("#{$gMasterPath}\\"+csvFileName2, "w")
+
+   #outputArray.transpose.each do | myRow |
+
+   #  myFile.write (myRow.to_csv)
+
+   #end
+
+   #myFile.close 
+ 
+    
+    info_out ("Hourly data saved to #{csvFileName2}\n")
+
+
+
+  end 
 
 end
+
+
+module HourlyHP 
+  
+  def HourlyHP.calc(timestepData) 
+
+    debug_on
+
+    row = 0 
+    timestepData["HP-row"] = Array.new(8760)
+    timestepData["timestep (hour)"].each do 
+      
+      timestepData["HP-row"][row] = row 
+      row = row + 1 
+      
+    end 
+
+
+    return timestepData
+
+  end   
+
+end 
 
 
 class Array
