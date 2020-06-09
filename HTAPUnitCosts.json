@@ -5277,6 +5277,18 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "window:low-gain:u-value_0.8": {
+      "LEEP": {
+        "category": "WINDOWS",
+        "description": "Window, Passive House Triple, LG, low-e, argon, insulated spacers",
+        "units": "sf applied",
+        "UnitCostMaterials": 44.12,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP Builders Costs Spreadsheet"
+      }
+    },
     "wood_stove:65%_efficiency:yukon": {
       "Northern-costs": {
         "category": "FURNACES",
