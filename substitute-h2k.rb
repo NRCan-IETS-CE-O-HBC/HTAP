@@ -5840,11 +5840,11 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
             stream_out drawRuler(" Initializing hourly analysis")
             stream_out ("\n")
-          
+            debug_on
             debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit location?\n"
             debug_out " house code: #{$outputHCode}\n"
             Hourly.analyze($gResults[$outputHCode])
-          
+            debug_off
           end 
           # .............................................
           
