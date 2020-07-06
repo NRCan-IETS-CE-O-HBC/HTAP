@@ -9,13 +9,13 @@ require 'json'
 require 'set'
 require 'pp'
 require 'csv'
-require_relative '../include/constants'
-require_relative '../include/msgs'
-require_relative '../include/H2KUtils'
-require_relative '../include/HTAPUtils'
+require_relative '../inc/constants'
+require_relative '../inc/msgs'
+require_relative '../inc/H2KUtils'
+require_relative '../inc/HTAPUtils'
 
-require_relative '../include/costing'
-require_relative '../include/legacy-code'
+require_relative '../inc/costing'
+require_relative '../inc/legacy-code'
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 CWCdefsName = "wall-defs.txt"
 def parseWallDefs()
@@ -328,7 +328,7 @@ wallDefs = parseWallDefs()
 
 
 windowDefs = Hash.new
-windowDefs = parsedDefs["Opt-CasementWindows"]["options"]
+windowDefs = parsedDefs["Opt-Windows"]["options"]
 
 debug_off
 
@@ -343,7 +343,7 @@ stream_out drawRuler("processing window definitions", "=")
 windowDefs.keys.each do | window |
 
    thisWindowData = Hash.new
-   thisWindowData = parsedDefs["Opt-CasementWindows"]["options"][window]
+   thisWindowData = parsedDefs["Opt-Windows"]["options"][window]
    # Does window have characteristics defined?
    if ( ! thisWindowData["characteristics"].nil? ) then
      stream_out "Syncing window definitions for #{window}\n"

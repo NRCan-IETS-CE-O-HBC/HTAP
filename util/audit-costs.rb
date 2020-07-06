@@ -23,15 +23,15 @@ require 'pp'
 
 
 
-require_relative '../include/msgs'
-require_relative '../include/markdown-reports.rb'
-require_relative '../include/H2KUtils'
-require_relative '../include/HTAPUtils'
-require_relative '../include/constants'
-#require_relative 'include/rulesets'
-require_relative '../include/costing'
-#require_relative 'include/legacy-code'
-#require_relative 'include/application_modules'
+require_relative '../inc/msgs'
+require_relative '../inc/markdown-reports.rb'
+require_relative '../inc/H2KUtils'
+require_relative '../inc/HTAPUtils'
+require_relative '../inc/constants'
+#require_relative 'inc/rulesets'
+require_relative '../inc/costing'
+#require_relative 'inc/legacy-code'
+#require_relative 'inc/application_modules'
 
 include REXML
 # This allows for no "REXML::" prefix to REXML methods
@@ -103,7 +103,8 @@ stream_out ("audit-costs.rb: \n")
 stream_out ("  - ResultsFile: #{$resultsFile} \n \n")
 
 stream_out (drawRuler("Parsing HTAP result file"))
-results = HTAPData.parse_results($resultsFile)
+parsedData = HTAPData.parse_results($resultsFile)
+results = parsedData["htap-results"]
 stream_out (" \n - #{$resultsFile} parsed.\n")
 
 # Loop through each result, find unmodified home, by
@@ -112,9 +113,9 @@ baseCases = Array.new
 allCases = Array.new
 
 # Catagorize data in easy-to-handle arrays.
-#debug_on
+
 results.each do | result |
-debug_out " #{result["result-number"].to_s.ljust(3)} #{result["input"]["Opt-Location"].ljust(20)} #{result["input"]["Opt-Ruleset"].ljust(10)} #{result["archetype"]["h2k-File"][0..15]} #{result["input"]["House-Upgraded"]}\n"
+  debug_out " #{result["result-number"].to_s.ljust(3)} #{result["input"]["Opt-Location"].ljust(20)} #{result["input"]["Opt-Ruleset"].ljust(10)} #{result["archetype"]["h2k-File"][0..15]} #{result["input"]["House-Upgraded"]}\n"
 end
 
 results.each do | result |
@@ -197,40 +198,43 @@ stream_out (" - Number of records included in report: #{requestedRuns.length}\n"
 stream_out (drawRuler("Compiling Audit Data"))
 stream_out " \n"
 #debug_on
+
 reportTxt =""
 reportTxt = MDRpts.newSection("HTAP batch run - Cost Audit Report", 1)
 
-reportTxt += MDRpts.newSection("Run Information", 2)
-# more information should be added here.
+reportTxt += MDRpts.newParagraph("[TOC]")
 
-tableData = Array.new
-tableData = [
-  [ "Total number of HOT2000 runs",
-    "Total number of base cases",
-    "Number of cases in report",
-    "Number of asscoiated cases"
-  ],[allCases.length.to_i,
-    baseCases.length.to_i,
-    requestedRuns.length.to_i,
-    associatedBaseCases.length.to_i,
+bRunInfo = false 
+
+if ( bRunInfo ) then 
+  reportTxt += MDRpts.newSection("Run Information", 2)
+  # more information should be added here.
+
+  tableData = Array.new
+  tableData = [
+    [ "Total number of HOT2000 runs",
+      "Total number of base cases",
+      "Number of cases in report",
+      "Number of associated cases"
+    ],[allCases.length.to_i,
+      baseCases.length.to_i,
+      requestedRuns.length.to_i,
+      associatedBaseCases.length.to_i,
+    ]
   ]
-]
 
-reportTxt += MDRpts.newTable(tableData)
+  reportTxt += MDRpts.newTable(tableData)
 
-reportTxt += MDRpts.newList([
-  "List of reported cases: #{MDRpts.shortenArrList(requestedRuns)}",
-  "List of base cases: #{MDRpts.shortenArrList(associatedBaseCases)}"
-])
+  reportTxt += MDRpts.newList([
+    "List of reported cases: #{MDRpts.shortenArrList(requestedRuns)}",
+    "List of base cases: #{MDRpts.shortenArrList(associatedBaseCases)}"
+  ])
+
+  
+end
 
 topologyTxt = ""
 baseCaseCount = 0
-
-
-
-
-
-
 associatedBaseCases.each do | id |
   baseCase = baseCases.select{ | someCase | someCase["id"] == id }[0]
   baseCaseCount += 1
@@ -281,7 +285,7 @@ associatedBaseCases.each do | id |
   reportTxt += MDRpts.newParagraph(
    "Benchmark costs reflect a baseline cost estimate when archetype _#{archetypeAlias}_ " +
    "is constructed to ruleset _#{rulesetAlias.gsub(/_/,"\\_")}_. This estimate does "+
-   "not represent the cost to construct the home, or the costs of all energy-related"+
+   "not represent the cost to construct the home, or the costs of all energy-related "+
    "components. It merely represents the estimated costs of all measures that are in "+
    "HTAP's unit costs database, for housing components that are also described in the model."
    )
@@ -293,8 +297,8 @@ associatedBaseCases.each do | id |
   reportTxt += "#{summaryOfCosts}\n"
   reportTxt += " \n\n"
 
-  reportTxt += MDRpts.newSection("Benchmark Costs: detailed audit ##{baseCaseCount}",4)
-
+  #reportTxt += MDRpts.newSection("Benchmark Costs: detailed audit ##{baseCaseCount}",4)
+  #reportTxt += baseCaseAuditTxt
 
   reportTxt += MDRpts.newSection("Upgrades for Scenario #{baseCaseCount}",3)
   upgradeIndex = 0
@@ -314,7 +318,9 @@ associatedBaseCases.each do | id |
   #reportTxt += "Total number of upgrades processed:#{scenarioCases.length}\n "
 
   scenarioCases.each do | thisCase |
+
     upgradeIndex += 1
+    debug_out "Scenario CASE: ? #{upgradeIndex} \n"
     reportTxt +=  MDRpts.newSection("Upgrade ##{upgradeIndex}",4)
     upgrades = thisCase["input"]["House-ListOfUpgrades"].split(/;/)
 
@@ -329,7 +335,11 @@ associatedBaseCases.each do | id |
     scenarioCostImpacts = Hash.new
     upgradeChoices = Hash.new
     costComponentsDiff= Hash.new
+    countOfUpgrades = 0
     upgrades.each do | upgrade |
+      countOfUpgrades += 1
+
+      debug_out "   case upgrades: ? #{countOfUpgrades}\n"
 
       attribute, choice = upgrade.split(/=>/)
       baseChoice = baseCase["input"][attribute]
@@ -338,6 +348,8 @@ associatedBaseCases.each do | id |
       tableData["Upgrade Choice"].push choice
 
       upgradeChoices[attribute] = choice
+
+      debug_out ("   #{attribute}: #{baseChoice} -> #{choice} \n")
 
     end
     reportTxt += MDRpts.newTable(tableData)
@@ -351,13 +363,30 @@ associatedBaseCases.each do | id |
     costComponentsDiff= Hash.new
     upgrades.each do | upgrade |
 
+
+
+      debug_out "Crash?\n"
+
       attribute, choice = upgrade.split(/=>/)
+
+
+      next if ( baseCase["costs"]["byAttribute"][attribute].nil? || 
+                thisCase["costs"]["byAttribute"][attribute].nil? )
+
+
+      baseChoice = baseCase["input"][attribute]
+      debug_out ("   #{attribute}: #{baseChoice} -> #{choice} \n")
+      debug_out ("       >base> #{baseCase["costs"]["byAttribute"][attribute]}\n")
+      debug_out ("       >upgr> #{thisCase["costs"]["byAttribute"][attribute]}\n")
+
+
+
       scenarioCostImpacts[attribute] = {
          "type" => "specified upgrade",
          "base" => baseCase["costs"]["byAttribute"][attribute] ,
          "upgrade" => thisCase["costs"]["byAttribute"][attribute] ,
-         "net" =>thisCase["costs"]["byAttribute"][attribute]  - baseCase["costs"]["byAttribute"][attribute]
-       }
+         "net" => thisCase["costs"]["byAttribute"][attribute]  - baseCase["costs"]["byAttribute"][attribute]
+      }
       reportTxt += MDRpts.newSection("Upgrade: #{attribute} -> #{choice}",6)
 
       costComponentsDiff["common"] = baseCase["costs"]["audit"][attribute]["elements"].select{ |component, data|
@@ -423,13 +452,13 @@ associatedBaseCases.each do | id |
         else
           oper = "-"
         end
-        rreportTxt += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
+        reportTxt += " *No Change* | *#{component.gsub(/_/," ")} #{softwrap} (#{quantity.round(1)} #{units})* | --- \n"
 
       end
       reportTxt += "   | **TOTAL** | **$\\ #{'%.2f' % netCostChange}** \n"
 
-
     end
+
 
     # Check if costs have changed for items that are not upgrades.
 
@@ -438,7 +467,7 @@ associatedBaseCases.each do | id |
         thisCase["costs"]["byAttribute"][attribute] != baseCase["costs"]["byAttribute"][attribute] &&
         ! upgradeChoices.keys.include?(attribute)
       )then
-        reportTxt += "###### Secondard cost impact: #{attribute} -> #{choice}\n"
+        reportTxt += "###### Secondary cost impact: #{attribute} -> #{choice}\n"
         reportTxt += "NOTE: "
         reportTxt += "Specified upgrades have affected the costs of #{attribute} as well \n"
 
@@ -572,10 +601,15 @@ end
 
 
 #debug_out "BASE CASES:\n#{baseCases.pretty_inspect}\n"
-
+reportTxt.gsub!(/:([^\s-])/,": \\1")
+reportTxt.gsub!(/\$/,"\\$")
 reportTxt.gsub!(/ft\^2/,"ft^2^")
 reportTxt.gsub!(/m\^2/,"m^2^")
 reportTxt.gsub!(/sq\.ft\.?/,"ft^2^")
 reportTxt.gsub!(/\\ /,"&nbsp;")
+reportTxt.gsub!(/14kw output:/,"")
+reportTxt.gsub!(/afue/,"AFUE")
+reportTxt.gsub!(/AFUE vs 2 stage:/,"AFUE 2 stage:")
+reportTxt.gsub!(/70 mbtuh input: 19.5 kw max output:/,":")
 File.write("HTAP-batch-run-cost-audit.md", reportTxt)
 ReportMsgs()

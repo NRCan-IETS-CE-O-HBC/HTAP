@@ -1,11 +1,11 @@
 {
   "sources": {
     "LEEP-BC-KamloopsChesnut": {
-      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_Sept_2016_Chesnut.csv",
+      "filename": "LEEP_COSTING_Sept_2016_Chesnut.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2019-02-01 11:48:17",
+      "date_imported": "2020-04-24 09:42:09",
       "schema_used": "oldLeep",
-      "origin": "",
+      "origin": "LEEP costing data reviewed and updated by Kamloops-BC Builders - September 2016",
       "inherits": {
         "LEEP-ON-Ottawa": [
           "electricity_generated:microfit:rooftop_solar",
@@ -86,7 +86,7 @@
           "dhw_heater:gas_fuelled:on-demand:ef_0.95",
           "ac_2.5_ton:13_seer",
           "ac_2.5_ton:14_seer",
-          "gshp:4_ton:11_kw:incl._pump_ass.:drillin_&_piping:ethanol:aux._heaters_&_collateral_costs.",
+          "gshp:4_ton:11_kw:incl._pump_ass.:drilling_&_piping:ethanol:aux._heaters_&_collateral_costs.",
           "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
           "ccashp:ductless_mini-splits:mitsubishi_msz-fe12na",
           "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor:circ._pump:and_electrical",
@@ -166,11 +166,11 @@
       }
     },
     "LEEP-BC-Vancouver": {
-      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_BC-vancouver_V1.0.csv",
+      "filename": "LEEP_COSTING_BC-vancouver_V1.0.csv",
       "date_collated": "2016-09-01",
-      "date_imported": "2019-02-01 11:48:15",
+      "date_imported": "2020-04-24 09:42:08",
       "schema_used": "oldLeep",
-      "origin": "",
+      "origin": "LEEP costing data reviewed and updated by Vancouver-area Builders - September 2016",
       "inherits": {
         "LEEP-ON-Ottawa": [
           "natural_gas_savings",
@@ -256,7 +256,7 @@
           "dhw_heater:gas_fuelled:on-demand:ef_0.95",
           "ac_2.5_ton:13_seer",
           "ac_2.5_ton:14_seer",
-          "gshp:4_ton:11_kw:incl._pump_ass.:drillin_&_piping:ethanol:aux._heaters_&_collateral_costs.",
+          "gshp:4_ton:11_kw:incl._pump_ass.:drilling_&_piping:ethanol:aux._heaters_&_collateral_costs.",
           "ccashp:11.7_kw_incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
           "ccashp:ductless_mini-splits:mitsubishi_msz-fe12na",
           "air_handler:1-zone:17.5_kw_@_140of_ewt_incl._ecm_motor:circ._pump:and_electrical",
@@ -302,11 +302,11 @@
       }
     },
     "LEEP-MB-Winnipeg": {
-      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_Costing_MB_winnipeg.csv",
+      "filename": "LEEP_Costing_MB_winnipeg.csv",
       "date_collated": "2014-09-01",
-      "date_imported": "2019-02-01 11:48:12",
+      "date_imported": "2020-04-24 09:42:07",
       "schema_used": "oldLeep",
-      "origin": "",
+      "origin": "LEEP costing data reviewed and updated by MB Builders - September 2014",
       "inherits": {
         "LEEP-ON-Ottawa": [
           "upgrading_from_3.57ach_to_1.75",
@@ -349,18 +349,27 @@
       }
     },
     "LEEP-ON-Ottawa": {
-      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\LEEP_COSTING_ottawa_V1.4.csv",
+      "filename": "LEEP_COSTING_ottawa_V1.4.csv",
       "date_collated": "2013-09-01",
-      "date_imported": "2019-02-01 11:48:09",
+      "date_imported": "2020-04-24 09:42:05",
       "schema_used": "oldLeep",
-      "origin": "",
+      "origin": "LEEP costing data reviewed and updated by ON Builders - Summer 2013",
+      "inherits": {
+      }
+    },
+    "LEEP-costing-tool-2019-windows": {
+      "filename": "LEEP_costing-tool-windows-may2019.csv",
+      "date_collated": "2019-05-01",
+      "date_imported": "2020-04-24 09:42:13",
+      "schema_used": "htap",
+      "origin": "LEEP costing tool v01a Remi Charron",
       "inherits": {
       }
     },
     "MiscNRCanEstimates2019": {
-      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\misc-cost-data.csv",
+      "filename": "misc-cost-data.csv",
       "date_collated": "2019-01-04",
-      "date_imported": "2019-02-01 11:48:23",
+      "date_imported": "2020-04-24 09:42:12",
       "schema_used": "oldLeep",
       "origin": "NRCan - collected cost estimates from in-house research",
       "inherits": {
@@ -370,10 +379,19 @@
         ]
       }
     },
+    "Northern-costs": {
+      "filename": "northern-costs-march2020.csv",
+      "date_collated": "2020-03-18",
+      "date_imported": "2020-04-24 09:42:14",
+      "schema_used": "htap",
+      "origin": "Northern work via James Wigmore",
+      "inherits": {
+      }
+    },
     "VancouverAirSealData": {
-      "filename": "C:\\Users\\aferguso\\Google Drive\\NRCan work\\NRCan-Optimization-Results\\Cost-data-sheets\\Unit-Costs\\E3-air-sealing.csv",
+      "filename": "E3-air-sealing.csv",
       "date_collated": "2015-01-15",
-      "date_imported": "2019-02-01 11:48:20",
+      "date_imported": "2020-04-24 09:42:11",
       "schema_used": "oldLeep",
       "origin": "Halbig 2015, Air-Barrier details, Report for NRCan. E3 Consulting",
       "inherits": {
@@ -409,7 +427,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "FRAMING",
         "description": "2x12 engineered i-joists- Hanscomb",
-        "units": "linear feet",
+        "units": "LF",
         "UnitCostMaterials": 1.9,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -421,7 +439,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "FRAMING",
         "description": "2x16 engineered i-joists - Hanscomb",
-        "units": "linear feet",
+        "units": "LF",
         "UnitCostMaterials": 2.83,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -429,11 +447,71 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "3_ton_mini-split_system_with_two_zones:in_a_home_with_ducting:detached:elec_heat": {
+      "Northern-costs": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "3 ton mini-split system with two zones, in a home with ducting - detached, elec heat  (any vintage)",
+        "units": "ea",
+        "UnitCostMaterials": 10000.0,
+        "UnitCostLabour": 1000.0,
+        "note": "11000",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "3_ton_mini-split_system_with_two_zones:in_a_home_with_ducting_-apt_suites:electric_heat": {
+      "Northern-costs": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "3 ton mini-split system with two zones, in a home with ducting -apt suites, electric heat",
+        "units": "ea",
+        "UnitCostMaterials": 6375.0,
+        "UnitCostLabour": 1875.0,
+        "note": "8250",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "3_ton_mini-split_system_with_two_zones:in_a_home_with_ducting_-attached:electric_heat": {
+      "Northern-costs": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "3 ton mini-split system with two zones, in a home with ducting -attached, electric heat  (any vintage)",
+        "units": "ea",
+        "UnitCostMaterials": 8000.0,
+        "UnitCostLabour": 800.0,
+        "note": "8800",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "3_ton_mini-split_system_with_two_zones:in_a_home_with_ducting_-attached:non-electric_heat": {
+      "Northern-costs": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "3 ton mini-split system with two zones, in a home with ducting -attached, non-electric heat  (any vintage)",
+        "units": "ea",
+        "UnitCostMaterials": 8500.0,
+        "UnitCostLabour": 2500.0,
+        "note": "11000",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "3_ton_mini-split_system_with_two_zones:in_a_home_with_ducting_-detached:non-electric_heat": {
+      "Northern-costs": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "3 ton mini-split system with two zones, in a home with ducting -detached, non-electric heat (any vintage)",
+        "units": "ea",
+        "UnitCostMaterials": 10625.0,
+        "UnitCostLabour": 3125.0,
+        "note": "13750",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "ac_2.5_ton:13_seer": {
       "LEEP-ON-Ottawa": {
         "category": "AIRCONDITIONING",
         "description": "AC 2.5 ton, 13 SEER (2.5 ton)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2550.0,
         "UnitCostLabour": 340.4,
         "note": "Hanscomb - Final Report",
@@ -445,7 +523,7 @@
       "LEEP-ON-Ottawa": {
         "category": "AIRCONDITIONING",
         "description": "AC 2.5 ton, 14 SEER (2 ton)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2125.0,
         "UnitCostLabour": 340.4,
         "note": "Hanscomb - Final Report",
@@ -456,8 +534,8 @@
     "ac_4_ton:14.5_seer": {
       "LEEP-BC-KamloopsChesnut": {
         "category": "AIRCONDITIONING",
-        "description": "AC 4 ton, 14.5 SEER ",
-        "units": "each",
+        "description": "AC 4 ton, 14.5 SEER",
+        "units": "ea",
         "UnitCostMaterials": 2535.0,
         "UnitCostLabour": 340.4,
         "note": "Odessa Homes base AC Vancouver",
@@ -469,7 +547,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "AIRCONDITIONING",
         "description": "AC unit, 2 ton 13 SEER R410A c/w A coil, disconnect, 50 ft line, pad, insulation, whip & Tstat",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1430.0,
         "UnitCostLabour": 500.0,
         "note": "",
@@ -525,10 +603,58 @@
         "source": "LEEP-BC-Vancouver"
       }
     },
+    "additional_1.5in_rigid_extruded_poly_on_exterior:strapping:cladding_and_skirting:including_demo": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "additional 1.5in rigid extruded poly on exterior, strapping, cladding and skirting, including demo",
+        "units": "sf wall",
+        "UnitCostMaterials": 30.9,
+        "UnitCostLabour": 18.39,
+        "note": "49.29",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_2in_rigid_extruded_poly_on_exterior:strapping:cladding_and_skirting:including_demo": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "additional 2in rigid extruded poly on exterior, strapping, cladding and skirting, including demo",
+        "units": "sf wall",
+        "UnitCostMaterials": 31.33,
+        "UnitCostLabour": 18.39,
+        "note": "49.72",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_3in_rigid_extruded_poly_on_exterior:strapping:cladding_and_skirting:including_demo": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "additional 3in rigid extruded poly on exterior, strapping, cladding and skirting, including demo",
+        "units": "sf wall",
+        "UnitCostMaterials": 32.15,
+        "UnitCostLabour": 18.39,
+        "note": "50.54",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_4in_rigid_extruded_poly_on_exterior:strapping:cladding_and_skirting:including_demo": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "additional 4in rigid extruded poly on exterior, strapping, cladding and skirting, including demo",
+        "units": "sf wall",
+        "UnitCostMaterials": 32.59,
+        "UnitCostLabour": 18.39,
+        "note": "50.98",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "additional_foundation_wall": {
       "LEEP-ON-Ottawa": {
         "category": "ADDITIVE COMPONENTS FOR THICKER WALL SYSTEMS",
-        "description": "Additional foundation wall ",
+        "description": "Additional foundation wall",
         "units": "sf applied",
         "UnitCostMaterials": 7.36,
         "UnitCostLabour": 1.46,
@@ -553,12 +679,72 @@
       "LEEP-ON-Ottawa": {
         "category": "OTHER",
         "description": "Additional plug in garage, 240V, 40A, excluding charging station (ME20)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 200.0,
         "UnitCostLabour": 140.0,
         "note": "In-house estimate",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "additional_r-12_batt_insulation:nwthc": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "additional R-12 batt insulation, NWTHC",
+        "units": "sf attic",
+        "UnitCostMaterials": 0.4,
+        "UnitCostLabour": 1.27,
+        "note": "1.67",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_r-20:6in_insulation_on_exposed_floor": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "additional R-20, 6in insulation on exposed floor",
+        "units": "sf applied",
+        "UnitCostMaterials": 3.69,
+        "UnitCostLabour": 0.0,
+        "note": "3.69",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_r-20_batt_insulation:nwtc": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "additional R-20 batt insulation, NWTC",
+        "units": "sf attic",
+        "UnitCostMaterials": 0.64,
+        "UnitCostLabour": 1.27,
+        "note": "1.91",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_r-28_batt_insulation:nwthc": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "additional R-28 batt insulation, NWTHC",
+        "units": "sf attic",
+        "UnitCostMaterials": 1.89,
+        "UnitCostLabour": 1.27,
+        "note": "3.16",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "additional_r-40_batt_insulation:nwthc": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "additional R-40 batt insulation, NWTHC",
+        "units": "sf attic",
+        "UnitCostMaterials": 1.25,
+        "UnitCostLabour": 1.27,
+        "note": "2.52",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     },
     "air_barrier_membrane": {
@@ -576,11 +762,11 @@
     "air_conditioner:dx_3_ton": {
       "MiscNRCanEstimates2019": {
         "category": "AIR CONDITIONING",
-        "description": "Air Conditioner: DX 3 ton ",
+        "description": "Air Conditioner: DX 3 ton",
         "units": "ea",
         "UnitCostMaterials": 2025.0,
         "UnitCostLabour": 810.0,
-        "note": "Enbridge estimate ",
+        "note": "Enbridge estimate",
         "date": "n.d.",
         "source": "MiscNRCanEstimates2019"
       }
@@ -589,7 +775,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor, circ. Pump, and electrical",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1410.0,
         "UnitCostLabour": 474.97,
         "note": "Ottawa LEEP builders - July 2014",
@@ -601,7 +787,7 @@
       "LEEP-ON-Ottawa": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 1 thermostat",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1567.93,
         "UnitCostLabour": 474.97,
         "note": "Hanscomb - Final Report",
@@ -611,7 +797,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 1-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 1 thermostat (ME27)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1846.0,
         "UnitCostLabour": 500.0,
         "note": "",
@@ -623,7 +809,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "Air handler, 1-zone, ECM motor, circ. Pump, and electrical (P9 Rated System, TPF 95)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1161.6,
         "UnitCostLabour": 474.97,
         "note": "Tempco Heating & Sheet Metal, May 13th 2014",
@@ -633,7 +819,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "Air handler, 1-zone, ECM motor, circ. Pump, and electrical (P9 Rated System, TPF 92)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1500.0,
         "UnitCostLabour": 474.97,
         "note": "",
@@ -645,7 +831,7 @@
       "LEEP-ON-Ottawa": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 3-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 3 thermostats",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1959.6,
         "UnitCostLabour": 474.97,
         "note": "Hanscomb final report - unit +pumps+electrical",
@@ -655,7 +841,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Air handler, 3-zone, 17.5 kW @ 140oF EWT incl. ECM motor & 3 thermostats (ME27)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 3406.0,
         "UnitCostLabour": 600.0,
         "note": "",
@@ -703,7 +889,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "AIR TIGHTNESS",
         "description": "Air Sealing Vancouver Row 5.0 ACH to 1.5 ACH",
-        "units": " each",
+        "units": "each",
         "UnitCostMaterials": 588.0,
         "UnitCostLabour": 0.0,
         "note": "E3 ECO Group Report",
@@ -723,6 +909,18 @@
         "source": "VancouverAirSealData"
       }
     },
+    "ashp:conventional": {
+      "MiscNRCanEstimates2019": {
+        "category": "AIR SOURCE HEAT PUMP",
+        "description": "ASHP:conventional",
+        "units": "ea",
+        "UnitCostMaterials": 5300.0,
+        "UnitCostLabour": 2000.0,
+        "note": "ASHP, 13 kW, ECM air handler w/coil, HSPF 7.1, COP 3.45",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
     "ashphalt_shingles": {
       "LEEP-MB-Winnipeg": {
         "category": "ROOF",
@@ -739,12 +937,24 @@
       "LEEP-ON-Ottawa": {
         "category": "SWITCHING",
         "description": "Automated switches",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 20.0,
         "UnitCostLabour": 0.0,
         "note": "In-house estimate",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "auxiliary_plenum_heater": {
+      "MiscNRCanEstimates2019": {
+        "category": "AIR SOURCE HEAT PUMP",
+        "description": "Auxiliary Plenum heater",
+        "units": "ea",
+        "UnitCostMaterials": 800.0,
+        "UnitCostLabour": 400.0,
+        "note": "Auxiliary plenum heater for HPs, furnaces (may already be in HP estimates)",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "base-cost": {
@@ -775,7 +985,7 @@
       "LEEP-ON-Ottawa": {
         "category": "WIRING",
         "description": "Base case wiring, includes all switches, receptacles, cable and labour",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2361.99,
         "UnitCostLabour": 2063.09,
         "note": "Terry Strack Report",
@@ -787,7 +997,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Boiler, condensing, 90% AFUE (ME27)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 3399.5,
         "UnitCostLabour": 1500.0,
         "note": "",
@@ -823,7 +1033,7 @@
       "LEEP-ON-Ottawa": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, 11.7 kW incl. ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 7556.63,
         "UnitCostLabour": 512.43,
         "note": "Hanscomb - Final Report",
@@ -835,7 +1045,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, 3 ton, 13.5 kW @ -25oC,  incl. ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 12675.0,
         "UnitCostLabour": 2000.0,
         "note": "",
@@ -843,11 +1053,23 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "ccashp:3ton:13.5kw@-25░c:incl_ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat": {
+      "Northern-costs": {
+        "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
+        "description": "CCASHP, 3ton, 13.5kW@-25░C, incl ECM air handler w/coil, staging controls, tank, aux. heater & Tstat",
+        "units": "ea",
+        "UnitCostMaterials": 12675.0,
+        "UnitCostLabour": 2000.0,
+        "note": "14675",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "ccashp:40:000_bth_cooling:ecm_air_handler:electrical_work": {
       "LEEP-MB-Winnipeg": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
         "description": "CCASHP, 40,000 BTH (11.7kW) heating and 34000BTU (10kW) cooling, ECM air handler, electrical work",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 8157.0,
         "UnitCostLabour": 935.27,
         "note": "",
@@ -858,8 +1080,8 @@
     "ccashp:ductless_mini-splits:mitsubishi_msz-fe12na": {
       "LEEP-ON-Ottawa": {
         "category": "COLD CLIMATE AIR SOURCE HEAT PUMP",
-        "description": "CCASHP, Ductless Mini-splits, Mitsubishi MSZ-FE12NA ",
-        "units": "each",
+        "description": "CCASHP, Ductless Mini-splits, Mitsubishi MSZ-FE12NA",
+        "units": "ea",
         "UnitCostMaterials": 2676.48,
         "UnitCostLabour": 417.37,
         "note": "Hanscomb Final Report - 6.14",
@@ -871,7 +1093,7 @@
       "LEEP-ON-Ottawa": {
         "category": "LIGHTING",
         "description": "CFL",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 4.08,
         "UnitCostLabour": 0.0,
         "note": "Terry Strack report",
@@ -883,7 +1105,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "LIGHTING",
         "description": "Compact fluorescent lighting",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 3.2,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -954,7 +1176,7 @@
         "units": "sf header area",
         "UnitCostMaterials": -0.11,
         "UnitCostLabour": -0.28,
-        "note": "Data estimated form LEEP ON, MB; confirmed with E3 air-seal data ",
+        "note": "Data estimated form LEEP ON, MB; confirmed with E3 air-seal data",
         "date": "n.d.",
         "source": "MiscNRCanEstimates2019"
       }
@@ -975,7 +1197,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW electric tank",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 500.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -987,7 +1209,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW electric tankless",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 860.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -999,7 +1221,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heat pump water heater",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2600.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -1011,7 +1233,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heat pump water heater, 50 gal, EF 2.3",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2130.86,
         "UnitCostLabour": 319.22,
         "note": "",
@@ -1023,7 +1245,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heat pump water heater, 50 gal, EF 2.35 (Rheem)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1999.0,
         "UnitCostLabour": 319.22,
         "note": "",
@@ -1031,11 +1253,47 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "dhw_heat_recovery:48in:yukon": {
+      "Northern-costs": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DHW heat recovery, 48in, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 765.0,
+        "UnitCostLabour": 150.0,
+        "note": "915",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "dhw_heat_recovery:60in:yukon": {
+      "Northern-costs": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DHW heat recovery, 60in, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 850.0,
+        "UnitCostLabour": 150.0,
+        "note": "1000",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "dhw_heat_recovery_optimized_distribution_using_maniform_and_parallel_runs:yukon": {
+      "Northern-costs": {
+        "category": "DRAIN WATER HEAT RECOVERY",
+        "description": "DHW heat recovery optimized distribution using maniform and parallel runs, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 1560.0,
+        "UnitCostLabour": 0.0,
+        "note": "1560",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "dhw_heater:gas_fuelled:on-demand:ef_0.94": {
       "LEEP-ON-Ottawa": {
         "category": "COMBINED SPACE AND WATER HEATING SYSTEMS",
         "description": "DHW heater, gas fuelled, on-demand, EF 0.94",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1492.07,
         "UnitCostLabour": 251.02,
         "note": "Hanscomb - Final Report",
@@ -1047,7 +1305,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW heater, gas fuelled, on-demand, EF 0.95 (P9 Rated System, TPF 95)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2037.6,
         "UnitCostLabour": 251.02,
         "note": "Tempco Heating & Sheet Metal, May 13th 2014",
@@ -1059,7 +1317,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW heater, gas fuelled, on-demand, EF 0.96, 225 L/day @ 55oC - ME19",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1775.0,
         "UnitCostLabour": 500.0,
         "note": "",
@@ -1071,7 +1329,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW tank, electric, 246 L (65 USG),EF 0.89",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 490.0,
         "UnitCostLabour": 170.39,
         "note": "Hanscomb - Received Quotes and Cost Analysis",
@@ -1083,7 +1341,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DHW",
         "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.60, 225 L/day @ 55oC, incl vent kit",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1030.0,
         "UnitCostLabour": 250.0,
         "note": "",
@@ -1095,7 +1353,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.62",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 893.67,
         "UnitCostLabour": 323.82,
         "note": "Hanscomb - Final Report",
@@ -1107,7 +1365,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR DOMESTIC HOT WATER",
         "description": "DHW tank, gas fuelled, 190 L (50 USG), power vented, EF 0.67",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 916.77,
         "UnitCostLabour": 323.82,
         "note": "Hanscomb - Final Report",
@@ -1119,7 +1377,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DHW",
         "description": "DHW tank, NG, 246 litres (65 USG), power vented, EF 0.60",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 914.91,
         "UnitCostLabour": 323.82,
         "note": "Hanscomb - Final Report",
@@ -1153,7 +1411,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DUCTING",
         "description": "Ducting, central forced air",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2730.0,
         "UnitCostLabour": 800.0,
         "note": "",
@@ -1168,7 +1426,7 @@
         "units": "ea",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0,
-        "note": "This is a place holder; central air system costs carry HRV interlock installation; HRV installation costs include connection to central ducts. ",
+        "note": "This is a place holder; central air system costs carry HRV interlock installation; HRV installation costs include connection to central ducts.",
         "date": "n.d.",
         "source": "MiscNRCanEstimates2019"
       }
@@ -1177,7 +1435,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DUCTING",
         "description": "Ducting - direct-duct HRV",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1000.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -1189,7 +1447,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DUCTING",
         "description": "Ducting - Exhaust fan vent",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 500.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -1213,19 +1471,29 @@
       "LEEP-MB-Winnipeg": {
         "category": "DUCTLESS MINISPLIT",
         "description": "Ductless Mini Split, 13600 BTU heating, 12000 BTU colling, SEER 23.0, HSPF 10.6 (cond&evap) w/ backup",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 5636.04,
         "UnitCostLabour": 1598.7,
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      },
+      "Northern-costs": {
+        "category": "DUCTLESS MINISPLIT",
+        "description": "Ductless Mini Split, 13600 BTU heating, 12000 BTU colling, SEER 23.0, HSPF 10.6 (cond&evap) w/ backup",
+        "units": "ea",
+        "UnitCostMaterials": 5640.0,
+        "UnitCostLabour": 1600.0,
+        "note": "7240",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     },
     "dwhr_unit:152cm_supply": {
       "LEEP-MB-Winnipeg": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 152cm (60in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 717.2,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -1235,7 +1503,7 @@
       "LEEP-BC-Vancouver": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 152cm (60in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 717.2,
         "UnitCostLabour": 37.65,
         "note": "Manitoba LEEP - Watercycles pricing",
@@ -1247,7 +1515,7 @@
       "LEEP-ON-Ottawa": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 91cm (36in), 102mm (4in) drain, 13mm (1/2in) supply",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 700.0,
         "UnitCostLabour": 37.65,
         "note": "Hanscomb final report",
@@ -1257,7 +1525,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 91cm (36in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 531.0,
         "UnitCostLabour": 175.0,
         "note": "",
@@ -1267,12 +1535,24 @@
       "LEEP-BC-Vancouver": {
         "category": "DRAIN WATER HEAT RECOVERY",
         "description": "DWHR unit, 91cm (36in), 76mm (3in) drain, 13mm (1/2in) supply",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 531.0,
         "UnitCostLabour": 37.65,
         "note": "Manitoba LEEP - Watercycles pricing",
         "date": "n.d.",
         "source": "LEEP-BC-Vancouver"
+      }
+    },
+    "electric:tankless:24kw:yukon": {
+      "Northern-costs": {
+        "category": "DHW",
+        "description": "electric, tankless, 24kW, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 940.0,
+        "UnitCostLabour": 320.0,
+        "note": "1260",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     },
     "electricity_generated:microfit:rooftop_solar": {
@@ -1393,7 +1673,7 @@
       "LEEP-BC-Vancouver": {
         "category": "HRV",
         "description": "Exhaust fans and controls",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 500.0,
         "UnitCostLabour": 280.0,
         "note": "",
@@ -1509,6 +1789,30 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "foundation:pads&wedges:fully_house_approx_19_piles": {
+      "Northern-costs": {
+        "category": "OTHER",
+        "description": "foundation, pads&wedges, fully house approx 19 piles",
+        "units": "sf applied",
+        "UnitCostMaterials": 19360.0,
+        "UnitCostLabour": 8640.0,
+        "note": "28000",
+        "date": "2800",
+        "source": "Northern-costs"
+      }
+    },
+    "foundation:screw-jack": {
+      "Northern-costs": {
+        "category": "OTHER",
+        "description": "foundation, screw-jack",
+        "units": "sf applied",
+        "UnitCostMaterials": 3557.52,
+        "UnitCostLabour": 8640.0,
+        "note": "12197.52",
+        "date": "2197",
+        "source": "Northern-costs"
+      }
+    },
     "framing:advanced:38x140mm_o.c.": {
       "LEEP-ON-Ottawa": {
         "category": "FRAMING",
@@ -1612,7 +1916,7 @@
     "framing:exterior:vip_wall_assembly_#1": {
       "LEEP-MB-Winnipeg": {
         "category": "FRAMING",
-        "description": "Framing, exterior, VIP wall assembly #1 ",
+        "description": "Framing, exterior, VIP wall assembly #1",
         "units": "sf wall",
         "UnitCostMaterials": 0.33,
         "UnitCostLabour": 4.01,
@@ -1719,7 +2023,7 @@
       "LEEP-ON-Ottawa": {
         "category": "FURNACES",
         "description": "Furnace, 94% AFUE VS 2 stage, 70 Mbtuh input, 19.5 kW max output, incl. vent kit & HRV interlock",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2149.33,
         "UnitCostLabour": 191.45,
         "note": "",
@@ -1729,7 +2033,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "FURNACES",
         "description": "Furnace, 94% AFUE VS 2 stage, 70 Mbtuh input, 19.5 kW max output, incl. vent kit & HRV interlock",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2149.33,
         "UnitCostLabour": 1000.0,
         "note": "",
@@ -1741,7 +2045,7 @@
       "LEEP-BC-KamloopsChesnut": {
         "category": "FURNACES",
         "description": "Furnace, 95% AFUE ECM single stage motor, 90 Mbtuh, 13 kW min output",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1825.0,
         "UnitCostLabour": 191.45,
         "note": "Odessa Homes base furnace Vancouver",
@@ -1753,7 +2057,7 @@
       "LEEP-ON-Ottawa": {
         "category": "FURNACES",
         "description": "Furnace, 96% AFUE ECM motor, 30 Mbtuh input, 8.75 kW max output",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1980.0,
         "UnitCostLabour": 191.45,
         "note": "Doug Tarry Homes May 13th, Dettson Industries presentation to LEEP builders",
@@ -1761,11 +2065,167 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
+    "furnace:electric:ecm_motor:yukon": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Furnace, electric, ECM motor, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 2500.0,
+        "UnitCostLabour": 0.0,
+        "note": "2500",
+        "date": "2500",
+        "source": "Northern-costs"
+      }
+    },
+    "furnace:natural_gas": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Natural Gas (highest efficiency available)",
+        "units": "ea",
+        "UnitCostMaterials": 2588.0,
+        "UnitCostLabour": 1035.0,
+        "note": "Enbridge estimate",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:oil-fired:95%_afue:ecm_motor:yukon": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Furnace, oil-fired, 95% AFUE, ECM motor, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 7500.0,
+        "UnitCostLabour": 0.0,
+        "note": "7500",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "furnace:oil-fired:mid-efficiency:85%:yukon": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Furnace, oil-fired, mid-efficiency, 85%, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 6400.0,
+        "UnitCostLabour": 0.0,
+        "note": "6400",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "furnace:oil:90+%_efficiency": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Oil, 90+% efficiency",
+        "units": "ea",
+        "UnitCostMaterials": 3500.0,
+        "UnitCostLabour": 1500.0,
+        "note": "NS quotes - Oct 2018",
+        "date": "Oct 2018",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:oil_fired:olsen_wtl100": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Furnace, oil fired, Olsen WTL100",
+        "units": "ea",
+        "UnitCostMaterials": 5900.0,
+        "UnitCostLabour": 0.0,
+        "note": "5900",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "furnace:propane:95%_efficiency:two_stage": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Propane - 95% efficiency - two stage",
+        "units": "ea",
+        "UnitCostMaterials": 2999.0,
+        "UnitCostLabour": 639.0,
+        "note": "Dettson Chinook - NS quotes - Oct 2018",
+        "date": "Oct 2018",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:propane:condensing:96%_afue:ecm_motor:2_stage_burner:yukon": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Furnace, propane, condensing, 96% AFUE, ECM motor, 2 stage burner, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 5500.0,
+        "UnitCostLabour": 0.0,
+        "note": "5500",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "furnace:propane:install_propane_tanks": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Propane - install propane tanks",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 600.0,
+        "note": "Installation only - purchase costs deferred as rental",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:propane:single_stage:93%_eff": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Propane - single stage, 93% eff",
+        "units": "ea",
+        "UnitCostMaterials": 3100.0,
+        "UnitCostLabour": 1500.0,
+        "note": "NS quotes - Oct 2018",
+        "date": "Oct 2018",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:propane_98%_eff_modulating:lennox_slp98uh090xv36c": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Propane 98% eff modulating - Lennox SLP98UH090XV36C",
+        "units": "ea",
+        "UnitCostMaterials": 5900.0,
+        "UnitCostLabour": 1500.0,
+        "note": "NS quotes - Oct 2018",
+        "date": "Oct 2018",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:remove_old_oil_tank": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Remove old oil tank",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 1500.0,
+        "note": "NS quotes - Oct 2018",
+        "date": "Oct 2018",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "furnace:supply_and_install_new_fuel_oil_tank": {
+      "MiscNRCanEstimates2019": {
+        "category": "FURNACES",
+        "description": "Furnace: Supply and install new fuel oil tank",
+        "units": "ea",
+        "UnitCostMaterials": 1500.0,
+        "UnitCostLabour": 0.0,
+        "note": "NS quotes - Oct 2018",
+        "date": "Oct 2018",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
     "furnace_94%_afue:14kw_output:psc_motor": {
       "LEEP-ON-Ottawa": {
         "category": "FURNACES",
         "description": "Furnace 94% AFUE, 14kW output, PSC motor",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 750.0,
         "UnitCostLabour": 191.45,
         "note": "Ottawa LEEP builders - July 2014",
@@ -1800,7 +2260,7 @@
     "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists": {
       "VancouverAirSealData": {
         "category": "AIR TIGHTNESS",
-        "description": "greater attention to taping electrical boxes; create better seal around stairs and mechanical penetrations; caulk between joists ",
+        "description": "greater attention to taping electrical boxes; create better seal around stairs and mechanical penetrations; caulk between joists",
         "units": "sf wall area (gross)",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0875,
@@ -1813,7 +2273,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 3 ton, 8.5 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 17108.0,
         "UnitCostLabour": 3000.0,
         "note": "",
@@ -1821,11 +2281,11 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
-    "gshp:4_ton:11_kw:incl._pump_ass.:drillin_&_piping:ethanol:aux._heaters_&_collateral_costs.": {
+    "gshp:4_ton:11_kw:incl._pump_ass.:drilling_&_piping:ethanol:aux._heaters_&_collateral_costs.": {
       "LEEP-ON-Ottawa": {
         "category": "GROUND SOURCE HEAT PUMP",
-        "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., drillin & piping, ethanol, aux. heaters & collateral costs.",
-        "units": "each",
+        "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., drilling & piping, ethanol, aux. heaters & collateral costs.",
+        "units": "ea",
         "UnitCostMaterials": 18469.67,
         "UnitCostLabour": 15085.45,
         "note": "Hanscomb - Final Report",
@@ -1837,7 +2297,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 4 ton, 11 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 20637.5,
         "UnitCostLabour": 3000.0,
         "note": "",
@@ -1849,7 +2309,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "GROUND SOURCE HEAT PUMP",
         "description": "GSHP, 5 ton, 14 kW,  incl. pump ass., trenching & piping, ethanol & aux. heaters",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 23777.0,
         "UnitCostLabour": 3000.0,
         "note": "",
@@ -1857,11 +2317,23 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "hpwh:yukon": {
+      "Northern-costs": {
+        "category": "DHW",
+        "description": "HPWH, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 2600.0,
+        "UnitCostLabour": 175.0,
+        "note": "2775",
+        "date": "2775",
+        "source": "Northern-costs"
+      }
+    },
     "hrv:conventional_sre_60%_@_0:55%_@_-25": {
       "LEEP-ON-Ottawa": {
         "category": "HRV",
         "description": "HRV, conventional SRE 60% @ 0, 55% @ -25",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1079.0,
         "UnitCostLabour": 280.98,
         "note": "Hanscomb - Final Report",
@@ -1873,7 +2345,7 @@
       "LEEP-ON-Ottawa": {
         "category": "HRV",
         "description": "HRV, conventional SRE 70% @ 0, 61% @ -25",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 979.0,
         "UnitCostLabour": 280.98,
         "note": "Hanscomb - Final Report",
@@ -1885,7 +2357,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "HRV",
         "description": "HRV, Energy Star, incl. ducting",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1235.0,
         "UnitCostLabour": 1500.0,
         "note": "",
@@ -1897,7 +2369,7 @@
       "LEEP-ON-Ottawa": {
         "category": "HRV",
         "description": "HRV, high performer, 78% @ 0, 72% @ -25 with ECM",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1823.0,
         "UnitCostLabour": 280.98,
         "note": "Hanscomb - Final Report",
@@ -1905,16 +2377,64 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
+    "hrv:including_seasonal_controller:nwthc": {
+      "Northern-costs": {
+        "category": "HRV",
+        "description": "HRV, including seasonal controller, NWTHC",
+        "units": "ea",
+        "UnitCostMaterials": 1415.0,
+        "UnitCostLabour": 1240.0,
+        "note": "2655",
+        "date": "2655",
+        "source": "Northern-costs"
+      }
+    },
+    "hrv:including_seasonal_controller:venmar_e15_ecm_hrv:yukon": {
+      "Northern-costs": {
+        "category": "HRV",
+        "description": "HRV, including seasonal controller, Venmar E15 ECM HRV, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 1900.0,
+        "UnitCostLabour": 0.0,
+        "note": "1900",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "hrv_/_erv:high_performance:incl._ducting": {
       "LEEP-MB-Winnipeg": {
         "category": "HRV",
         "description": "HRV / ERV, high performance, incl. ducting",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1852.5,
         "UnitCostLabour": 1800.0,
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "hrv_ductwork:existing_home:dedicated_low-volume_hrv_ductwork": {
+      "Northern-costs": {
+        "category": "HRV",
+        "description": "HRV ductwork, existing home,dedicated low-volume HRV ductwork",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 8000.0,
+        "note": "8000",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "hrv_ductwork:existing_home:tie_in_to_existing_furnace_ductwork": {
+      "Northern-costs": {
+        "category": "HRV",
+        "description": "HRV ductwork, existing home, tie in to existing furnace ductwork",
+        "units": "ea",
+        "UnitCostMaterials": 0.0,
+        "UnitCostLabour": 4000.0,
+        "note": "4000",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     },
     "icf_wall:152mm": {
@@ -1993,7 +2513,7 @@
       "LEEP-ON-Ottawa": {
         "category": "LIGHTING",
         "description": "Incandescent bulb",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1.12,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -2005,7 +2525,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "LIGHTING",
         "description": "Incandescent lighting",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1.12,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -2023,6 +2543,18 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "install_200a_service_instead_of_100a_service": {
+      "MiscNRCanEstimates2019": {
+        "category": "WIRING",
+        "description": "Install 200A service instead of 100A service",
+        "units": "ea",
+        "UnitCostMaterials": 1200.0,
+        "UnitCostLabour": 0.0,
+        "note": "New construciton - premium over 100 A service installation",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:basement_slab:xps:38mm": {
@@ -2065,7 +2597,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
         "description": "Insulation, cellulose (dense pack wall application (3lbs/ft3) , material only) $8.07 / 9ft2",
-        "units": "cubic feet",
+        "units": "cu. Ft",
         "UnitCostMaterials": 0.9,
         "UnitCostLabour": 0.99,
         "note": "",
@@ -2101,7 +2633,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
         "description": "Insulation, cellulose dense-pack, 1ft3 - Hanscomb",
-        "units": "cubic feet",
+        "units": "cu.ft.",
         "UnitCostMaterials": 3.94,
         "UnitCostLabour": 0.99,
         "note": "",
@@ -2378,7 +2910,7 @@
     "insulation:r12_batt:hanscomb": {
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
-        "description": "Insulation, R12 batt - Hanscomb (need to update labour) ",
+        "description": "Insulation, R12 batt - Hanscomb (need to update labour)",
         "units": "sf applied",
         "UnitCostMaterials": 0.36,
         "UnitCostLabour": 0.0,
@@ -2475,6 +3007,16 @@
         "note": "Hanscomb - aggregated average of material and labour for base case walls",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      },
+      "MiscNRCanEstimates2019": {
+        "category": "INSULATION",
+        "description": "insulation:r20_batt",
+        "units": "sf applied",
+        "UnitCostMaterials": 0.79,
+        "UnitCostLabour": 0.33,
+        "note": "Interpolated data for hypothetical insulation thicknesses, based on MB LEEP data for r12, r 20, r28 batts",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
       }
     },
     "insulation:r21_batt": {
@@ -2570,7 +3112,7 @@
     "insulation:r28_batt": {
       "LEEP-MB-Winnipeg": {
         "category": "INSULATION",
-        "description": "Insulation, R28 batt (fmineral wool, for 2x8 stud walls 16inOC)",
+        "description": "Insulation, R28 batt (mineral wool, for 2x8 stud walls 16inOC)",
         "units": "sf applied",
         "UnitCostMaterials": 1.13,
         "UnitCostLabour": 0.43,
@@ -3147,7 +3689,7 @@
       "LEEP-ON-Ottawa": {
         "category": "INTEGRATED MECHANICAL SYSTEMS",
         "description": "Integrated mechanical system, CSA P.10, OTFP 0.91, incl. space heating, DHW, and HRV",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 7393.53,
         "UnitCostLabour": 675.47,
         "note": "Hanscomb - Final Report",
@@ -3157,7 +3699,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "INTEGRATED MECHANICAL SYSTEMS",
         "description": "Integrated mechanical system, CSA P.10, OTFP 0.91, incl. space heating, DHW, and HRV",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 7995.0,
         "UnitCostLabour": 1750.0,
         "note": "",
@@ -3169,7 +3711,7 @@
       "LEEP-ON-Ottawa": {
         "category": "LIGHTING",
         "description": "LED",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 18.97,
         "UnitCostLabour": 0.0,
         "note": "Terry Strack report",
@@ -3193,24 +3735,12 @@
       "LEEP-ON-Ottawa": {
         "category": "MICRO-COMBINED HEAT AND POWER TECHNOLOGY",
         "description": "Micro-CHP system, backup furnace (95% AFUE) incl. vent kit, indirect DHW tank & HRV interlock",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 22620.0,
         "UnitCostLabour": 2250.0,
         "note": "In-house estimate",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
-      }
-    },
-    "natural_gas_furnace": {
-      "MiscNRCanEstimates2019": {
-        "category": "FURNACES",
-        "description": "Natural Gas Furnace (highest efficiency available)",
-        "units": "ea",
-        "UnitCostMaterials": 2588.0,
-        "UnitCostLabour": 1035.0,
-        "note": "Enbridge estimate",
-        "date": "n.d.",
-        "source": "MiscNRCanEstimates2019"
       }
     },
     "natural_gas_savings": {
@@ -3251,7 +3781,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR READY",
         "description": "No accomodation for solar",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -3263,12 +3793,36 @@
       "LEEP-ON-Ottawa": {
         "category": "PHOTOVOLTAIC SYSTEMS",
         "description": "No renewable energy system installed",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 0.0,
         "UnitCostLabour": 0.0,
         "note": "0",
         "date": "n.d.",
         "source": "LEEP-ON-Ottawa"
+      }
+    },
+    "oil-fired:40_gallon_tank:nwthc": {
+      "Northern-costs": {
+        "category": "DHW",
+        "description": "oil-fired, 40 gallon tank, NWTHC",
+        "units": "ea",
+        "UnitCostMaterials": 1118.0,
+        "UnitCostLabour": 237.5,
+        "note": "1355.5",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "oil-fired:50_gallon_tank:nwthc": {
+      "Northern-costs": {
+        "category": "DHW",
+        "description": "oil-fired, 50 gallon tank, NWTHC",
+        "units": "ea",
+        "UnitCostMaterials": 1590.0,
+        "UnitCostLabour": 237.5,
+        "note": "1827.5",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     },
     "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor": {
@@ -3321,7 +3875,7 @@
       "LEEP-ON-Ottawa": {
         "category": "PASSIVE SOLAR DESIGN",
         "description": "Passive solar design (RC03)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 22660.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -3329,10 +3883,22 @@
         "source": "LEEP-ON-Ottawa"
       }
     },
+    "pellet_stove:78%:yukon": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Pellet stove, 78%, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 6000.0,
+        "UnitCostLabour": 0.0,
+        "note": "6000",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "pex_pipe_to_and_from_dwhr_and_dhw_systems": {
       "MiscNRCanEstimates2019": {
         "category": "DRAIN WATER HEAT RECOVERY",
-        "description": "PEX pipe to and from DWHR and DHW systems ",
+        "description": "PEX pipe to and from DWHR and DHW systems",
         "units": "linear feet",
         "UnitCostMaterials": 0.27,
         "UnitCostLabour": 5.02,
@@ -3344,7 +3910,7 @@
     "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run": {
       "MiscNRCanEstimates2019": {
         "category": "DRAIN WATER HEAT RECOVERY",
-        "description": "PEX pipe to and from DWHR and DHW systems:15 ft run ",
+        "description": "PEX pipe to and from DWHR and DHW systems:15 ft run",
         "units": "ea",
         "UnitCostMaterials": 4.05,
         "UnitCostLabour": 75.3,
@@ -3375,6 +3941,30 @@
         "note": "",
         "date": "n.d.",
         "source": "VancouverAirSealData"
+      }
+    },
+    "pv:whitehorse:47m2:includes_installation": {
+      "Northern-costs": {
+        "category": "PHOTOVOLTAIC SYSTEMS",
+        "description": "PV, Whitehorse, 47m2, includes installation",
+        "units": "ea",
+        "UnitCostMaterials": 19000.0,
+        "UnitCostLabour": 0.0,
+        "note": "19000",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "pv:yellowknife:5000w:includes_installation": {
+      "Northern-costs": {
+        "category": "PHOTOVOLTAIC SYSTEMS",
+        "description": "PV, Yellowknife, 5000W, includes installation",
+        "units": "ea",
+        "UnitCostMaterials": 5000.0,
+        "UnitCostLabour": 0.0,
+        "note": "5000",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     },
     "pv_complete_system": {
@@ -3485,11 +4075,239 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "replace_exisiting_electric_service_with_200a": {
+      "MiscNRCanEstimates2019": {
+        "category": "WIRING",
+        "description": "Replace exisiting electric service with 200A",
+        "units": "ea",
+        "UnitCostMaterials": 2000.0,
+        "UnitCostLabour": 840.0,
+        "note": "Retrofit: Replacement of 100A service installation. Data from Enbridge Hybrids study",
+        "date": "n.d.",
+        "source": "MiscNRCanEstimates2019"
+      }
+    },
+    "retrofit:80:cost_including_materials:labour:mark-up_and_taxes:yukon": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "retrofit: 80 - cost including materials (insulation and 21in raised-heel truss), labour, mark-up and taxes, Yukon",
+        "units": "sf attic",
+        "UnitCostMaterials": 3.25,
+        "UnitCostLabour": 0.5,
+        "note": "3.75",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:add_caulking_around_basement_concrete_floor_perimeter_to_ensure_basement_air_change_tightness_to_achieve_1_ac_per_hr_from_approx._3_ac_per_hr:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Add caulking around basement concrete floor perimeter to ensure Basement Air Change Tightness to achieve 1 AC per hr from approx. 3 AC per hr, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 132.0,
+        "UnitCostLabour": 0.0,
+        "note": "132",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:air_seal_mechanical_ductwork_for_r2000:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Air Seal Mechanical Ductwork for R2000 (from no air seal), Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 350.0,
+        "UnitCostLabour": 0.0,
+        "note": "350",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:flash_joist_cavities_with_r12_2lb_polyurethane_spray_foam:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Flash joist cavities with R12 2lb polyurethane spray foam (no flame retarder nec), Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 246.0,
+        "UnitCostLabour": 0.0,
+        "note": "246",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:flash_joist_cavities_with_r12_2lb_polyurethane_spray_foam_c/w_flame_retarder:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Flash joist cavities with R12 2lb polyurethane spray foam c/w flame retarder, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 340.0,
+        "UnitCostLabour": 0.0,
+        "note": "340",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:foundation_slab_r10:4in_terrafoam:yukon": {
+      "Northern-costs": {
+        "category": "BASEMENT FLOOR",
+        "description": "retrofit: foundation slab R10, 4in Terrafoam, Yukon",
+        "units": "sf applied",
+        "UnitCostMaterials": 2.85,
+        "UnitCostLabour": 2.25,
+        "note": "5.1",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:foundation_slab_r20:6in_terrafoam:yukon": {
+      "Northern-costs": {
+        "category": "BASEMENT FLOOR",
+        "description": "retrofit: foundation slab R20, 6in Terrafoam, Yukon",
+        "units": "sf applied",
+        "UnitCostMaterials": 5.75,
+        "UnitCostLabour": 2.25,
+        "note": "8",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:main_wall_to_r-20:yukon": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "retrofit: main wall to R-20, Yukon",
+        "units": "sf wall",
+        "UnitCostMaterials": 2.79,
+        "UnitCostLabour": 2.25,
+        "note": "5.040",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:main_wall_to_r-28:yukon": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "retrofit: main wall to R-28, Yukon",
+        "units": "sf wall",
+        "UnitCostMaterials": 5.51,
+        "UnitCostLabour": 2.25,
+        "note": "7.760",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:main_wall_to_r-35:yukon": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "retrofit: main wall to R-35, Yukon",
+        "units": "sf wall",
+        "UnitCostMaterials": 8.58,
+        "UnitCostLabour": 2.25,
+        "note": "10.830",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:main_wall_to_r-42:yukon": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "retrofit: main wall to R-42, Yukon",
+        "units": "sf wall",
+        "UnitCostMaterials": 11.73,
+        "UnitCostLabour": 2.25,
+        "note": "13.980",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:main_wall_to_r-49:yukon": {
+      "Northern-costs": {
+        "category": "INSULATION",
+        "description": "retrofit: main wall to R-49, Yukon",
+        "units": "sf wall",
+        "UnitCostMaterials": 14.37,
+        "UnitCostLabour": 2.25,
+        "note": "16.620",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:r40:cost_including_materials:labour:mark-up_and_taxes:yukon": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "retrofit: R40 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes,Yukon",
+        "units": "sf attic",
+        "UnitCostMaterials": 0.79,
+        "UnitCostLabour": 0.46,
+        "note": "1.25",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:r50:cost_including_materials:labour:mark-up_and_taxes:yukon": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "retrofit: R50 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes,Yukon",
+        "units": "sf attic",
+        "UnitCostMaterials": 1.78,
+        "UnitCostLabour": 0.0,
+        "note": "1.78",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:r60:cost_including_materials:labour:mark-up_and_taxes:yukon": {
+      "Northern-costs": {
+        "category": "CEILING INSULATION",
+        "description": "retrofit: R60 - cost including materials (insulation and raised-heel truss), labour, mark-up and taxes,Yukon",
+        "units": "sf attic",
+        "UnitCostMaterials": 2.04,
+        "UnitCostLabour": 0.46,
+        "note": "2.5",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:upgrade_all_rim_joist_area_to_emercor_for_better_air_seal_for_r2000:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Upgrade All Rim Joist area to Emercor for better Air Seal for R2000, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 675.0,
+        "UnitCostLabour": 0.0,
+        "note": "675",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:upgrade_to_airtight_electrical_boxes_for_r2000:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Upgrade to Airtight Electrical Boxes for R2000 (from regular boxes), Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 250.0,
+        "UnitCostLabour": 0.0,
+        "note": "250",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "retrofit:upgrade_to_construction_super_seal_caulking_to_help_achieve_1_ac_per_hr_by_framer:yukon": {
+      "Northern-costs": {
+        "category": "AIR TIGHTNESS",
+        "description": "retrofit:Upgrade to Construction Super Seal Caulking to help achieve 1 AC per hr by Framer (from none), Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 1056.0,
+        "UnitCostLabour": 0.0,
+        "note": "1056",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
     "roof-mounted_wind_turbine:3.5_kw_@_12.5_m/s": {
       "LEEP-ON-Ottawa": {
         "category": "OTHER",
         "description": "Roof-mounted wind turbine, 3.5 kW @ 12.5 m/s (RC10)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 29362.1,
         "UnitCostLabour": 2867.37,
         "note": "Hanscomb - Final Report",
@@ -3499,7 +4317,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Roof-mounted wind turbine, 3.5 kW @ 12.5 m/s (RC10)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 20000.0,
         "UnitCostLabour": 0.0,
         "note": "",
@@ -3535,7 +4353,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, 1 flat plate colelctor, 270L tank, electric water heater",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 4846.0,
         "UnitCostLabour": 1658.84,
         "note": "",
@@ -3547,7 +4365,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, 2 flat plate colelctors, 270L tank, electric water heater",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 5840.0,
         "UnitCostLabour": 1951.58,
         "note": "",
@@ -3559,7 +4377,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, 2 flat plate colelctors, 270L tank, gas fired water heater",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 6617.61,
         "UnitCostLabour": 2020.72,
         "note": "",
@@ -3571,7 +4389,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, one 4'x8' collector, solar boiler w. pump, mounting kit, no install, no solar storage tank",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 3935.0,
         "UnitCostLabour": 816.0,
         "note": "",
@@ -3583,7 +4401,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar DHW, two 4'x8' collector, solar boiler w. pump, mounting kit, no install, no solar storage tank",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 4929.0,
         "UnitCostLabour": 960.0,
         "note": "",
@@ -3595,7 +4413,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR DOMESTIC HOT WATER",
         "description": "Solar DHW system, two 1.2mx2.4m collectors, solar boiler, 270 litre tank, controls and pumps",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 5464.45,
         "UnitCostLabour": 2035.89,
         "note": "",
@@ -3607,7 +4425,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar domestic hot water system, two 1.2mx2.4m (4'x8') collectors (RC06)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 6831.5,
         "UnitCostLabour": 960.0,
         "note": "",
@@ -3619,7 +4437,7 @@
       "LEEP-ON-Ottawa": {
         "category": "OTHER",
         "description": "Solar light tube kit, including roof unit, flashing, ceiling fixture & 3m (10') of tubing (RC07)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 1000.0,
         "UnitCostLabour": 0.0,
         "note": "Missing labour and any framing costs.",
@@ -3630,8 +4448,8 @@
     "solar_photovoltaic_system:installed_on_roof:1_kw": {
       "LEEP-ON-Ottawa": {
         "category": "PHOTOVOLTAIC SYSTEMS",
-        "description": "Solar photovoltaic system, installed on roof, 1 kW ",
-        "units": "each",
+        "description": "Solar photovoltaic system, installed on roof, 1 kW",
+        "units": "ea",
         "UnitCostMaterials": 11749.0,
         "UnitCostLabour": 2710.9,
         "note": "Hanscomb - Final Report",
@@ -3641,7 +4459,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar photovoltaic system, installed on roof, 1 kW (RC04)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 6000.0,
         "UnitCostLabour": 2500.0,
         "note": "",
@@ -3652,8 +4470,8 @@
     "solar_photovoltaic_system:installed_on_roof:5_kw": {
       "LEEP-ON-Ottawa": {
         "category": "PHOTOVOLTAIC SYSTEMS",
-        "description": "Solar photovoltaic system, installed on roof, 5 kW ",
-        "units": "each",
+        "description": "Solar photovoltaic system, installed on roof, 5 kW",
+        "units": "ea",
         "UnitCostMaterials": 14950.0,
         "UnitCostLabour": 6550.0,
         "note": "Langevin recent estimate",
@@ -3664,8 +4482,8 @@
     "solar_photovoltaic_system:installed_on_roof:9.88_kw": {
       "LEEP-BC-KamloopsChesnut": {
         "category": "PHOTOVOLTAIC SYSTEMS",
-        "description": "Solar photovoltaic system, installed on roof, 9.88 kW ",
-        "units": "each",
+        "description": "Solar photovoltaic system, installed on roof, 9.88 kW",
+        "units": "ea",
         "UnitCostMaterials": 21373.0,
         "UnitCostLabour": 12021.0,
         "note": "Vancounver LEEP session Spring 2015 (Riverside Energy and SolarMax)",
@@ -3677,7 +4495,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SOLAR READY",
         "description": "Solar Ready conduit supply and install",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 215.0,
         "UnitCostLabour": 225.0,
         "note": "In-house estimate",
@@ -3689,7 +4507,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar Ready home design (RC08)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 227.5,
         "UnitCostLabour": 135.0,
         "note": "",
@@ -3713,7 +4531,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "RENEWABLE ENERGY AND COMMUNITY SYSTEMS",
         "description": "Solar storage tank, 270L",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 270.0,
         "UnitCostLabour": 150.0,
         "note": "",
@@ -3764,7 +4582,7 @@
         "units": "sf header area",
         "UnitCostMaterials": 3.2,
         "UnitCostLabour": 1.72,
-        "note": "Data extrapolated from E3 - 50% higher than Leep estimates, possibly b/c foaming header only is more expensive? ",
+        "note": "Data extrapolated from E3 - 50% higher than Leep estimates, possibly b/c foaming header only is more expensive?",
         "date": "n.d.",
         "source": "VancouverAirSealData"
       }
@@ -3773,7 +4591,7 @@
       "LEEP-ON-Ottawa": {
         "category": "SWITCHING",
         "description": "Standard manual switches",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2.0,
         "UnitCostLabour": 0.0,
         "note": "In-house estimate",
@@ -3881,7 +4699,7 @@
       "LEEP-ON-Ottawa": {
         "category": "WIRING",
         "description": "Structured Wiring, includes all switches, receptacles, cable and labour",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 2541.99,
         "UnitCostLabour": 2153.09,
         "note": "Tartan Homes July 2014",
@@ -3893,7 +4711,7 @@
       "LEEP-MB-Winnipeg": {
         "category": "CENTRALIZED ZONED FORCED AIR SYSTEMS",
         "description": "Tank, storage NO SPECS AVAILABLE (ME27)",
-        "units": "each",
+        "units": "ea",
         "UnitCostMaterials": 955.5,
         "UnitCostLabour": 250.0,
         "note": "",
@@ -3904,7 +4722,7 @@
     "trades_training": {
       "VancouverAirSealData": {
         "category": "AIR TIGHTNESS",
-        "description": "trades training ",
+        "description": "trades training",
         "units": "ea",
         "UnitCostMaterials": 800.0,
         "UnitCostLabour": 0.0,
@@ -4022,7 +4840,7 @@
     "ventilation_fan_controls": {
       "MiscNRCanEstimates2019": {
         "category": "HRV",
-        "description": "Ventilation fan controls ",
+        "description": "Ventilation fan controls",
         "units": "ea",
         "UnitCostMaterials": 100.0,
         "UnitCostLabour": 0.0,
@@ -4245,6 +5063,90 @@
         "source": "LEEP-MB-Winnipeg"
       }
     },
+    "windows:energystar_double_glazed:argon:low-e:yukon": {
+      "Northern-costs": {
+        "category": "WINDOWS",
+        "description": "Windows, EnergyStar double glazed, argon, low-e, Yukon",
+        "units": "sf applied",
+        "UnitCostMaterials": 56.0,
+        "UnitCostLabour": 15.0,
+        "note": "71",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "windows:northerm-3800_series:triple_1_low-e:argon:u-1.17:er_31:shgc_0.28": {
+      "Northern-costs": {
+        "category": "WINDOWS",
+        "description": "Windows, Northerm-3800 series, triple 1 low-e, argon, U-1.17, ER 31, SHGC 0.28",
+        "units": "sf applied",
+        "UnitCostMaterials": 45.06,
+        "UnitCostLabour": 15.0,
+        "note": "60.06",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "windows:northerm-3800_series:triple_2_low-e:argon:u-0.96:er_31:shgc_0.20": {
+      "Northern-costs": {
+        "category": "WINDOWS",
+        "description": "Windows, Northerm-3800 series, triple 2 low-e, argon, U-0.96, ER 31, SHGC 0.20",
+        "units": "sf applied",
+        "UnitCostMaterials": 47.526,
+        "UnitCostLabour": 15.0,
+        "note": "62.526",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "windows:northerm-4000_series:quad_1_low-e:argon:u-1.03:er_32:shgc_0.26": {
+      "Northern-costs": {
+        "category": "WINDOWS",
+        "description": "Windows, Northerm-4000 series, quad 1 low-e, argon,U-1.03, ER 32, SHGC 0.26",
+        "units": "sf applied",
+        "UnitCostMaterials": 59.035,
+        "UnitCostLabour": 15.0,
+        "note": "74.035",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "windows:northerm-4000_series:quad_2_low-e:argon:u-1.0:er_29:shgc_0.20": {
+      "Northern-costs": {
+        "category": "WINDOWS",
+        "description": "Windows, Northerm-4000 series, quad 2 low-e, argon, U-1.0, ER 29, SHGC 0.20",
+        "units": "sf applied",
+        "UnitCostMaterials": 61.431,
+        "UnitCostLabour": 15.0,
+        "note": "76.431",
+        "date": "n.d.",
+        "source": "Northern-costs"
+      }
+    },
+    "windows:passive_house_triple:u=0.8:high_shgc:low-e:argon:insulating_spacers": {
+      "LEEP-costing-tool-2019-windows": {
+        "category": "WINDOWS",
+        "description": "Windows, Passive House Triple,U=0.8, high SHGC, low-e, argon, Insulating spacers",
+        "units": "sf applied",
+        "UnitCostMaterials": 41.23,
+        "UnitCostLabour": 0.0,
+        "note": "41.23",
+        "date": "n.d.",
+        "source": "LEEP-costing-tool-2019-windows"
+      }
+    },
+    "windows:passive_house_triple:u=0.8:low_shgc:low-e:argon:insulating_spacers": {
+      "LEEP-costing-tool-2019-windows": {
+        "category": "WINDOWS",
+        "description": "Windows, Passive House Triple,U=0.8, low SHGC, low-e, argon, Insulating spacers",
+        "units": "sf applied",
+        "UnitCostMaterials": 43.18,
+        "UnitCostLabour": 0.0,
+        "note": "43.18",
+        "date": "n.d.",
+        "source": "LEEP-costing-tool-2019-windows"
+      }
+    },
     "windows:tg:vinyl:low-e_hard:argon:insulating_spacers:casement": {
       "LEEP-ON-Ottawa": {
         "category": "WINDOWS",
@@ -4373,6 +5275,30 @@
         "note": "",
         "date": "n.d.",
         "source": "LEEP-MB-Winnipeg"
+      }
+    },
+    "window:low-gain:u-value_0.8": {
+      "LEEP": {
+        "category": "WINDOWS",
+        "description": "Window, Passive House Triple, LG, low-e, argon, insulated spacers",
+        "units": "sf applied",
+        "UnitCostMaterials": 44.12,
+        "UnitCostLabour": 0.0,
+        "note": "",
+        "date": "n.d.",
+        "source": "LEEP Builders Costs Spreadsheet"
+      }
+    },
+    "wood_stove:65%_efficiency:yukon": {
+      "Northern-costs": {
+        "category": "FURNACES",
+        "description": "Wood stove, 65% efficiency, Yukon",
+        "units": "ea",
+        "UnitCostMaterials": 7000.0,
+        "UnitCostLabour": 0.0,
+        "note": "7000",
+        "date": "n.d.",
+        "source": "Northern-costs"
       }
     }
   }

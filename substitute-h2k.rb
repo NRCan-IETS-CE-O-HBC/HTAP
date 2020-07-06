@@ -23,25 +23,25 @@ require 'pp'
 
 
 
-require_relative 'include/msgs'
-require_relative 'include/H2KUtils'
-require_relative 'include/HTAPUtils'
-require_relative 'include/constants'
-require_relative 'include/rulesets'
-require_relative 'include/costing'
-require_relative 'include/legacy-code'
-require_relative 'include/application_modules'
+require_relative 'inc/msgs'
+require_relative 'inc/H2KUtils'
+require_relative 'inc/HTAPUtils'
+require_relative 'inc/constants'
+require_relative 'inc/rulesets'
+require_relative 'inc/costing'
+require_relative 'inc/legacy-code'
+require_relative 'inc/hourly'
+require_relative 'inc/application_modules'
 
 include REXML
 # This allows for no "REXML::" prefix to REXML methods
-
 
 $program = "substitute-h2k.rb"
 HTAPInit()
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # Typical H2K run < 10 seconds, but may much take longer in ERS mode
-$maxRunTime = 50
+$maxRunTime = 60
 # JTB 05-10-2016: Also setting maximum retries within timeout period
 $maxTries   = 3
 
@@ -84,7 +84,9 @@ $ExtraOutput1 = false
 $TsvOutput = false
 $keepH2KFolder = false
 $autoCostOptions = false
-$autoEstimateCosts = true
+$autoEstimateCosts = false 
+
+$hourlyCalcs = false 
 
 $gTotalCost          = 0
 $gIncBaseCosts       = 12000
@@ -141,6 +143,11 @@ $gPeakCoolingLoadW    = 0
 $gPeakHeatingLoadW    = 0
 $gPeakElecLoadW    = 0
 
+
+# Maybe needed for hourly model? 
+$gPeakCoolingW    = 0
+$gPeakHeatingW    = 0
+
 # Variables for saving part-load data from hourly-bins
 $binDatHrs    = Array.new
 $binDatTmp    = Array.new
@@ -177,7 +184,8 @@ $aliasArch    = $aliasLongArch
 
 # Not sure why, but substiture-h2k.rb fails without this converison.
 $gMasterPath.gsub!(/\//, '\\')
-$unitCostFileName = "C:/HTAP/HTAPUnitCosts.json"
+#$unitCostFileName = "C:/HTAP/HTAPUnitCosts.json"
+#$rulesetsFileName = "C:/HTAP/HTAP-rulesets.json"
 
 #Variables that store the average utility costs, energy amounts.
 $gAvgEnergy_Total   = 0
@@ -221,6 +229,10 @@ $Locale = ""
 # Weather location for current run
 $gWarn = false
 
+
+$UnitCostFileSet = false 
+$RulesetFileSet = false 
+
 $gNoDebug = false
 
 $PVInt = "NA"
@@ -238,6 +250,7 @@ costEstimates = Hash.new
 
 $ruleSetChoices = Hash.new
 $ruleSetName = ""
+$gRulesetSpecs = Hash.new
 
 $HDDs = ""
 
@@ -255,7 +268,7 @@ $optionCost = 0.00
 # -----------------------------------------------------------------------------------------------------
 
 def exportOptionsToJson()
-
+  log_out("Exporting legacy data to JSON format")
   $gExportFormat = Hash.new
   $gOptions.each do |attribute, defs|
     # Ignore legacy tags that aren't supported anymore.
@@ -264,6 +277,7 @@ def exportOptionsToJson()
 
       next
     else
+      
       stream_out "    - exporting > #{attribute}\n"
 
     end
@@ -448,6 +462,7 @@ end
 # =========================================================================================
 def processFile(h2kElements)
   #debug_off
+
   # Load all XML elements from HOT2000 code library file. This file is specified
   # in option Opt-DBFiles
   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
@@ -460,7 +475,7 @@ def processFile(h2kElements)
     h2kCodeElements = H2KFile.get_elements_from_filename(h2kCodeFile)
   end
   begin
-    debug_out ("saving a copy of the pre-substitute version (filepresub.h2k)\n")
+    debug_out ("saving a copy of the pre-substitute version (file-presub.h2k)\n")
     newXMLFile = File.open("file-presub.h2k", "w")
     $XMLdoc.write(newXMLFile)
 
@@ -530,7 +545,7 @@ def processFile(h2kElements)
   baseOptionCost = 0
   #debug_on
   $gChoiceOrder.each do |choiceEntry|
-
+    next if ( $DoNotValidateOptions.include? choiceEntry )
     debug_out drawRuler("By ChoiceOrder : #{choiceEntry}",".  ")
     debug_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} = #{$gChoices[choiceEntry]}\n")
 
@@ -540,9 +555,9 @@ def processFile(h2kElements)
 
       tagHash = $gOptions[choiceEntry]["tags"]
       valHash = $gOptions[choiceEntry]["options"][choiceVal]["result"]
-      debug_out "choice val = #{choiceVal}\n"
-      debug_out "contents of tagHash:\n#{tagHash.pretty_inspect}\n"
-      debug_out "contents of valHash:\n#{valHash.pretty_inspect}\n"
+      #debug_out "choice val = #{choiceVal}\n"
+      #debug_out "contents of tagHash:\n#{tagHash.pretty_inspect}\n"
+      #debug_out "contents of valHash:\n#{valHash.pretty_inspect}\n"
       for tagIndex in tagHash.keys()
         debug_out "tagIndex: #{tagIndex}\n"
         tag = tagHash[tagIndex]
@@ -559,6 +574,7 @@ def processFile(h2kElements)
         if ( choiceEntry =~ /Opt-Location/ )
           $Locale = $gChoices["Opt-Location"]
           $gRunLocale = $Locale
+          # debug_on 
           # changing the soil condition to permafrost if the location is within
           # continuous permafrost zone
           set_permafrost_by_location(h2kElements,$Locale)
@@ -578,9 +594,10 @@ def processFile(h2kElements)
             h2kElements[locationText].attributes["code"] = value
             # Match Client Information Region with this Region to avoid H2K PreCheck dialog!
             locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-
-            h2kElements[locationText].text = $ProvArr[value.to_i - 1]
             $gRunRegion = $ProvArr[value.to_i - 1]
+            h2kElements[locationText].text = $ProvArr[value.to_i - 1]
+            debug_out ("Run Region: #{$gRunRegion}\n")
+            
           elsif ( tag =~ /OPT-H2K-Location/ && value != "NA" )
             # Weather location to use for HOT2000 run
             locationText = "HouseFile/ProgramInformation/Weather/Location"
@@ -600,7 +617,7 @@ def processFile(h2kElements)
             end
           end
 
-
+          debug_off 
           # Fuel Costs
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-FuelCost/ )
@@ -1080,7 +1097,7 @@ def processFile(h2kElements)
 
           # Generic wall insulation thickness settings: - one layer
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-GenericWall_1Layer_definitions/ )
+        elsif ( choiceEntry =~ /Opt-AboveGradeWall/ )
           if ( tag =~ /OPT-H2K-EffRValue/i && value != "NA" )
             # Change ALL existing wall codes to User Specified R-value
             locationText = "HouseFile/House/Components/Wall/Construction/Type"
@@ -1104,10 +1121,10 @@ def processFile(h2kElements)
             headerIntInsReff = value.to_f
 
             # Check to see if wall insulation definitions include R value for exterior sheathing
-            wallChoice = $gChoices["Opt-GenericWall_1Layer_definitions"]
+            wallChoice = $gChoices["Opt-AboveGradeWall"]
             debug_out "Checking to see if wall def #{wallChoice} sets header R value\n"
 
-            wallResults =  HTAPData.getResultsForChoice($gOptions,"Opt-GenericWall_1Layer_definitions",wallChoice)
+            wallResults =  HTAPData.getResultsForChoice($gOptions,"Opt-AboveGradeWall",wallChoice)
 
             headerExtInsReff = 0.0
             if ( ! wallResults["HeaderExtInsRValue"].nil? &&  wallResults["HeaderExtInsRValue"].to_f > 0.01 )
@@ -1127,7 +1144,7 @@ def processFile(h2kElements)
             achCostComponents = Hash.new
             achCostComponents = Costing.getCostComponentList($gOptions,$gChoices,"Opt-ACH",achChoice)
 
-            debug_out ("Cost components for OPT-ACH = #{achChoice}:\n #{achCostComponents.pretty_inspect}")
+            #debug_out ("Cost components for OPT-ACH = #{achChoice}:\n #{achCostComponents.pretty_inspect}")
 
 
 
@@ -1314,7 +1331,7 @@ def processFile(h2kElements)
 
           # Windows (by facing direction)
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-CasementWindows/ )
+        elsif ( choiceEntry =~ /Opt-Windows/ )
           if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
             ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
             ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
@@ -1930,6 +1947,13 @@ def processFile(h2kElements)
           # DHW System
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-DHWSystem/ )
+          myDHWChoice = $gChoices["Opt-DHWSystem"]
+          if myDHWChoice != "NA"
+            locationText = "HouseFile/House/Components/HotWater"
+            if (! h2kElements[locationText].elements["Secondary"].nil?)
+              h2kElements[locationText].delete_element("Secondary")
+            end
+          end
           if ( tag =~ /Opt-H2K-Fuel/ &&  value != "NA" )
             locationText = "HouseFile/House/Components/HotWater/Primary"
             if ( h2kElements[locationText].attributes["pilotEnergy"] == nil )
@@ -1989,7 +2013,7 @@ def processFile(h2kElements)
           # "User Specified Electrical and Water Usage" input is checked. If this is not checked, then
           # changes made here will be overwritten by the Base Loads user inputs for Water Usage.
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-DWHRSystem/ )
+        elsif ( choiceEntry =~ /Opt-DWHR/ )
           if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
             locationText = "HouseFile/House/Components/HotWater/Primary"
             if ( value == "true" )
@@ -2060,9 +2084,17 @@ def processFile(h2kElements)
 
           # Heating & Cooling Systems (Type 1 & 2)
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-HVACSystem/ )
+        elsif ( choiceEntry =~ /Opt-Heating-Cooling/ )
 
-          if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
+       myHVACChoice = $gChoices["Opt-Heating-Cooling"]
+			 if myHVACChoice != "NA"
+            locationText = "HouseFile/House/HeatingCooling"
+            if (! h2kElements[locationText].elements["SupplementaryHeatingSystems"].nil?)
+              h2kElements[locationText].delete_element("SupplementaryHeatingSystems")
+            end
+       end
+
+			 if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
             locationText = "HouseFile/House/HeatingCooling/Type1"
 
 
@@ -2096,6 +2128,9 @@ def processFile(h2kElements)
             else
               # System type 2 is already set to this value -- do nothing!
             end
+            # Set Cooling season: May to October
+            h2kElements["HouseFile/House/HeatingCooling/CoolingSeason/Start"].attributes["code"] = 5
+            h2kElements["HouseFile/House/HeatingCooling/CoolingSeason/End"].attributes["code"] = 10
 
           elsif ( tag =~ /Opt-H2K-Type1Fuel/ &&  value != "NA" )
             # Apply to all Type 1 systems except Baseboards, which are electric by definition!
@@ -2604,7 +2639,7 @@ def processFile(h2kElements)
           # HRV Ventilation System
           # Note: This option will remove all other ventilation systems
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-HRVonly/ )
+        elsif ( choiceEntry =~ /Opt-VentSystem/ )
           if(valHash["1"] == "false")
             # Option not active, skip
             break
@@ -2646,7 +2681,7 @@ def processFile(h2kElements)
               # The flow rate is calculated using F326
               calcFlow = getF326FlowRates(h2kElements)
               if(calcFlow < 1)
-                fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 flow rates!\n")
+                fatalerror("ERROR: For Opt-VentSystem, could not calculate F326 flow rates!\n")
               else
                 h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = calcFlow.to_s
                 # L/s supply
@@ -2654,7 +2689,7 @@ def processFile(h2kElements)
                 # Exhaust = Supply
               end
             else
-              fatalerror("ERROR: For Opt-HRVonly, invalid flow calculation input  #{valHash["4"]}!\n")
+              fatalerror("ERROR: For Opt-VentSystem, invalid flow calculation input  #{valHash["4"]}!\n")
             end
 
             # Update the HRV efficiency
@@ -2690,7 +2725,7 @@ def processFile(h2kElements)
               h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  fanPower
               # Supply the fan power at operating point 2 [W]
             else
-              fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
+              fatalerror("ERROR: For Opt-VentSystem, unknown fan power calculation input  #{valHash["9"]}!\n")
             end
           elsif(valHash["1"] == "utility") # Option is active, and instead of HRV, an exhaust-side only utility fan is used (TODO: refactor. This isn't elegant)
             # Delete all existing systems
@@ -2748,7 +2783,7 @@ def processFile(h2kElements)
                 fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
             end
           else
-            fatalerror("ERROR: For Opt-HRVonly, unknown active input  #{valHash["1"]}!\n")
+            fatalerror("ERROR: For Opt-VentSystem, unknown active input  #{valHash["1"]}!\n")
           end
 
           break
@@ -3169,11 +3204,14 @@ def processFile(h2kElements)
           # Note: The XML file does not contain a "mode" parameter. It uses the presence or
           #       absence of the <Program> section to indicate the mode.
           #--------------------------------------------------------------------------------
+        
         elsif ( choiceEntry =~ /Opt-ResultHouseCode/ )
+          #debug_on 
+          #debug_out "Parsing result code\n "
+         
           if value == "NA"
             # Don't change the run mode but use the "General" output section!
             $outputHCode = "General"
-
           elsif value == "General"
             # Change run mode and set output section
             $outputHCode = "General"
@@ -3184,11 +3222,14 @@ def processFile(h2kElements)
           else
             # Change run mode to ERS and set output section
             $outputHCode = value
-            if h2kElements["HouseFile/Program"] == nil
-              createProgramXMLSection( h2kElements )
-            end
-          end
+            h2kElements["HouseFile"].delete_element("Program")
 
+            createProgramXMLSection( h2kElements )
+            #if h2kElements["HouseFile/Program"] == nil  
+            #  createProgramXMLSection( h2kElements )
+            #end
+          end
+          debug_off 
         # Change window distribution
         # Delete all windows and redistribute according to the choices
         #-----------------------------------------------------------------------------------
@@ -3276,8 +3317,8 @@ def processFile(h2kElements)
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
 
-              (1..4).each do |winOrient|
-                if (frontOrientation =~ /S/ || frontOrientation =~ /N/ || frontOrientation =~ /W/ || frontOrientation =~ /E/)
+            
+                if (frontOrientation == "S" || frontOrientation == "N" || frontOrientation == "W" || frontOrientation == "E")
                   newWinHeight[1] = equalWinSide
                   newWinHeight[3] = equalWinSide
                   newWinHeight[5] = equalWinSide
@@ -3297,7 +3338,7 @@ def processFile(h2kElements)
                   newWinWidth[8] = equalWinSide
                 end
 
-              end
+             
 
             elsif value == "PROPORTIONAL"
               #TBA
@@ -3312,7 +3353,7 @@ def processFile(h2kElements)
             # Obtain window codes
             h2kElements.each(locationTextWin) do |window|
               winOrient = window.elements["FacingDirection"].attributes["code"].to_i
-              tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f
+              tempAreaWin[winOrient] = window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f * window.attributes["number"].to_i
               if tempAreaWin[winOrient] > maxAreaWin[winOrient]
                 winCode[winOrient] = window.elements["Construction"].elements["Type"].attributes["idref"]
                 maxAreaWin[winOrient] = tempAreaWin[winOrient]
@@ -3348,7 +3389,11 @@ def processFile(h2kElements)
       # end of tag loop
     end
   end
+  # Match region in weather and client address
 
+  loc = "HouseFile/ProgramInformation/Weather/Region"
+  loc2 = "HouseFile/ProgramInformation/Client/StreetAddress"
+  h2kElements[loc2].elements["Province"].text = $gRunRegion 
   # Delete energy upgrades --- it messes everything up!
   h2kElements["HouseFile"].delete_element("EnergyUpgrades")
 
@@ -3375,16 +3420,19 @@ def processFile(h2kElements)
   # Save changes to the XML doc in existing working H2K file (overwrite original)
   begin
     debug_out (" Overwriting: #{$gWorkingModelFile} \n")
+    log_out ("saving processed h2k file  version (#{$gWorkingModelFile})")
     newXMLFile = File.open($gWorkingModelFile, "w")
-    $XMLdoc.write(newXMLFile)
+    $XMLdoc.write(newXMLFile,2)
 
   rescue
     fatalerror("Could not overwrite #{$gWorkingModelFile}\n ")
   ensure
+
     newXMLFile.close
   end
 
   begin
+    log_out ("saving copy of the pre-h2k version (file-post-sub.h2k)")
     debug_out ("saving a copy of the pre-h2k version (file-post-sub.h2k)\n")
     newXMLFile = File.open("file-postsub.h2k", "w")
     $XMLdoc.write(newXMLFile)
@@ -3394,6 +3442,8 @@ def processFile(h2kElements)
   ensure
     newXMLFile.close
   end
+  #h2kElements.clear
+  #$XMLdoc.clear
 
   debug_out ("Returning from process...")
   #debug_pause
@@ -3512,13 +3562,16 @@ end
 #  Function to create the Program XML section that contains the ERS program mode data
 # =========================================================================================
 def createProgramXMLSection( houseElements )
+  #debug_on 
+
   loc = "HouseFile"
+  houseElements[loc].add_element("AllResults")
   houseElements[loc].add_element("Program")
 
-  loc = "HouseFile/Program"
+  loc = "HouseFile/Program" 
   houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
   houseElements[loc].add_element("Labels")
-
+  
   loc = "HouseFile/Program/Labels"
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
@@ -3536,17 +3589,17 @@ def createProgramXMLSection( houseElements )
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
   houseElements[loc].attributes["major"] = "15"
-  houseElements[loc].attributes["minor"] = "1"
-  houseElements[loc].attributes["build"] = "19"
+  houseElements[loc].attributes["minor"] = "6"
+  houseElements[loc].attributes["build"] = "18345"
   houseElements[loc].add_element("Labels")
   loc = "HouseFile/Program/Version/Labels"
   houseElements[loc].add_element("English")
-  loc = "HouseFile/Program/Labels/English"
-  houseElements[loc].add_text("v15.1b19")
+  loc = "HouseFile/Program/Version/Labels/English"
+  houseElements[loc].add_text("v15.6b18345")
   loc = "HouseFile/Program/Version/Labels"
   houseElements[loc].add_element("French")
-  loc = "HouseFile/Program/Labels/French"
-  houseElements[loc].add_text("v15.1b19")
+  loc = "HouseFile/Program/Version/Labels/French"
+  houseElements[loc].add_text("v15.6b18345")
 
   loc = "HouseFile/Program"
   houseElements[loc].add_element("SdkVersion")
@@ -3554,16 +3607,17 @@ def createProgramXMLSection( houseElements )
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
   houseElements[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
   houseElements[loc].attributes["major"] = "1"
-  houseElements[loc].attributes["minor"] = "11"
+  houseElements[loc].attributes["minor"] = "16"
+  houseElements[loc].attributes["build"] = "18345"
   houseElements[loc].add_element("Labels")
   loc = "HouseFile/Program/SdkVersion/Labels"
   houseElements[loc].add_element("English")
-  loc = "HouseFile/Program/Labels/English"
-  houseElements[loc].add_text("v1.11")
+  loc = "HouseFile/Program/SdkVersion/Labels/English"
+  houseElements[loc].add_text("v1.16b18345")
   loc = "HouseFile/Program/SdkVersion/Labels"
   houseElements[loc].add_element("French")
-  loc = "HouseFile/Program/Labels/French"
-  houseElements[loc].add_text("v1.11")
+  loc = "HouseFile/Program/SdkVersion/Labels/French"
+  houseElements[loc].add_text("v1.16b18345")
 
   loc = "HouseFile/Program"
   houseElements[loc].add_element("Options")
@@ -3726,7 +3780,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Windows in walls elements
       locationText = "HouseFile/House/Components/Wall/Components/Window"
       h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
         if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
@@ -4834,7 +4887,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       
         # Save rotation angle for reporting
         $gRotationAngle = $RotationAngle
-
+        # debug_on 
         Dir.chdir( $run_path )
         debug_out ("\n Changed path to path: #{Dir.getwd()} for simulation.\n")
 
@@ -4864,10 +4917,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           startH2Krun = Time.now
 
           $gStatus["H2KExecutionAttempts"] = tries
+          
+          FileUtils.cp("..\\file-postsub.h2k", "..\\run_file_file_#{tries}.h2k")
+          
 
-          FileUtils.cp("..\\#{$h2kFileName}", "..\\run_file_file_#{tries}.h2k")
 
           runThis = "HOT2000.exe -inp ..\\run_file_file_#{tries}.h2k"
+          debug_out ("Command: #{runThis}\n")
 
           begin
 
@@ -4901,13 +4957,15 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           if status == -1
             warn_out("\n\n Attempt ##{tries}: Timeout on H2K call after #{$maxRunTime} seconds." )
             keepTrying = true
+
             # Successful run - don't try agian
 
           elsif status == 0
 
 
             stream_out( " The run was successful (#{$runH2KTime.round(2).to_s} seconds)!\n" )
-            keepTrying = false
+            keepTrying = false 
+            
             # Successful run - don't try agian
 
             FileUtils.cp("..\\run_file_file_#{tries}.h2k", "..\\#{$h2kFileName}")
@@ -4917,7 +4975,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
             warn_out( " The run completed but had pre-check messages (#{$runH2KTime.round(2).to_s} seconds)!" )
-            keepTrying = false
+            keepTrying = true
             # Successful run - don't try agian
 
             FileUtils.cp("..\\run_file_file_#{tries}.h2k", "..\\#{$h2kFileName}")
@@ -4959,9 +5017,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
 
 
-
-
-
         end
 
         $gStatus["H2KExecutionTime"] = $runH2KTime
@@ -4972,7 +5027,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         Dir.chdir( $gMasterPath )
         debug_out ("\n Moved to path: #{Dir.getwd()}\n")
-
+        
+        # attempt to find results 
+        
         # Save output files
         $OutputFolder = "sim-output"
         if ( ! Dir.exist?($OutputFolder) )
@@ -4991,9 +5048,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Copy simulation results to sim-output folder in master (for ERS number)
         # Note that most of the output is contained in the HOT2000 file in XML!
         if ( Dir.exist?("sim-output") )
+          
           stream_out ("\n Copying results.")
+          begin 
           FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
-
+          rescue 
+            fatalerror ("Could not locate Browse.rpt file!")
+          end 
           if ( $gReadROutStrTxt )
             if ( File.file?("#{$run_path}\\ROutStr.txt")  )
               FileUtils.cp("#{$run_path}\\ROutStr.txt", ".\\sim-output\\")
@@ -5009,6 +5070,16 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           #else
           #   debug_out( "\n\n Copied output file Browse.rpt to #{$gMasterPath}\\sim-output.\n" )
           #end
+        end
+         
+        # Delete WMB file 
+
+        Dir.glob("./H2K/WMB_*").each do |file|
+          begin
+            File.delete(file)
+          rescue 
+            warn_out ("Could not delete WMB file (#{file})")
+          end 
         end
 
       end
@@ -5053,7 +5124,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $lineNo = 0
         if ( $gReadROutStrTxt  )
           #begin
-          stream_out("\nParsing diagnostics from #{$OutputFolder}\\Routstr.txt ...")
+          stream_out("\n Parsing diagnostics from #{$OutputFolder}\\Routstr.txt ...")
           fRoutStr = File.new("#{$OutputFolder}\\Routstr.txt", "r")
 
           $SOCparse     = false
@@ -5332,27 +5403,36 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         end
 
-
-
-
-
-
-
-
-
-
         # Determine if need to read old ERS number based on existence of file Set_EGH.h2k in H2K folder
         if File.exist?("#{$run_path}\\Set_EGH.h2k") then
           bReadOldERSValue = true
         end
 
+        # Parse Rpt file ?
+
+        begin  
+
+          debug_out "Parsing browse.rpt - 1 \n "
+          dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
+          log_out("Parsed Browse.Rpt produced error.")
+          #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
+           
+        rescue 
+          warn_out ("Could not parse #{$OutputFolder}\\Browse.Rpt!\n")
+          log_out("Parsing Browse.Rpt produced error. Check encoding.")
+        end 
 
         # Read from Browse.rpt ASCII file *if* data not available in XML (.h2k file)!
+        # This code should be migrated inside parse_BrowseRPT. 
         if bReadOldERSValue || bReadAirConditioningLoad || $PVIntModel
           begin
+
+            debug_out "Parsing browse.rpt - 3 \n"
+            debug_off
             fBrowseRpt = File.new("#{$OutputFolder}\\Browse.Rpt", "r")
             while !fBrowseRpt.eof? do
-              lineIn = fBrowseRpt.readline
+
+              lineIn = fBrowseRpt.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" ) 
               # Sequentially read file lines
               lineIn.strip!
               # Remove leading and trailing whitespace
@@ -5672,8 +5752,32 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               $gResults[houseCode]["avgEnergyPVUtilizedGJ"]) - $gResults[houseCode]["avgEnergyTotalGJ"].to_f
               $gResults[houseCode]["zH2K-debug-Energy"] = diff.to_f * scaleData
 
-              break
+              
               # break out of the element loop to avoid further processing
+
+              #Append monthly result sets             
+ 
+
+              $gResults[houseCode]["annual"] = dataFromBrowse["annual"]
+              $gResults[houseCode]["daily"] = dataFromBrowse["daily"]
+              $gResults[houseCode]["monthly"] = dataFromBrowse["monthly"]
+              # do these belong here? ???
+              # Open output file here so we can log errors too!
+              #$gResults[houseCode]["monthly"]["GrossThermalLoad"] = Hash.new 
+              #$gResults[houseCode]["monthly"]["UtilizedInternalGains"] = Hash.new 
+              #$gResults[houseCode]["monthly"]["UtilizedSolarGains"] = Hash.new 
+              #$gResults[houseCode]["monthly"]["FractionOfTimeHeatingSystemNotOperating"]= Hash.new 
+              #$gResults[houseCode]["monthly"]["UtilizedAuxiliaryHeatRequired"] = Hash.new 
+              #$gResults[houseCode]["monthly"][""] = Hash.new 
+              # $gResults[houseCode]["monthly"][""] = Hash.new 
+              
+              #monthArr.each do |mth|
+              #  $gResults[houseCode]["monthly"]["UtilizedAuxiliaryHeatRequired"][mth] = h2kPostElements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["GrossThermalLoad"][mth] = h2kPostElements[".//Monthly/FractionOfTimeHeatingSystemNotOperating"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["GrossThermalLoad"][mth] = h2kPostElements[".//Monthly/Load/GrossThermal"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["UtilizedInternalGains"][mth] = h2kPostElements[".//Monthly/Gains/UtilizedInternal"].attributes[mth].to_f
+              #  $gResults[houseCode]["monthly"]["UtilizedSolarGains"][mth] = h2kPostElements[".//Monthly/Gains/UtilizedSolar"].attributes[mth].to_f
+              #end 
 
             end
 
@@ -5829,6 +5933,20 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           stream_out( " done \n")
 
+          # Module for hourly analysis using load-shapes. 
+          # .............................................
+          if ($hourlyCalcs) then 
+
+            stream_out drawRuler(" Initializing hourly analysis")
+            stream_out ("\n")
+          
+            debug_out " Call to Sebastian's hourly analysis located here for now. Maybe revisit location?\n"
+            debug_out " house code: #{$outputHCode}\n"
+            Hourly.analyze($gResults[$outputHCode])
+          
+          end 
+          # .............................................
+          
           stream_out drawRuler("Simulation Results")
 
           stream_out  "\n Peak Heating Load (W): #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}  \n"
@@ -5956,6 +6074,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
           $HouseStoreys = H2KFile.getStoreys(elements)
+			    $HouseFrontOrientation = H2KFile.getFrontOrientation(elements)
 
           locationText = "HouseFile/House/Components/Ceiling"
           areaCeiling_temp = 0.0
@@ -6025,6 +6144,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         # =========================================================================================
         # Get the average characteristics of building facade by orientation
+        # Maybe this belongs in h2kutils? 
         # =========================================================================================
         def getEnvelopeSpecs(elements)
           # ====================================================================================
@@ -6489,7 +6609,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             # Get house main wall area from the first XML <results> section - these are totals of multiple surfaces
             wallAreaOut = elements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
             cost = unitCost * wallAreaOut
-          when "Opt-GenericWall_1Layer_definitions"
+          when "Opt-AboveGradeWall"
             #.................................................................
             if optValue == "NA"
               unitCost = 0
@@ -6522,7 +6642,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               unitCost = 0
             end
             cost = unitCost * H2KFile.getHeatedFloorArea(elements)
-          when "Opt-CasementWindows"
+          when "Opt-Windows"
             #.................................................................................
             if optValue == "NA"
               unitCost = 0
@@ -6595,7 +6715,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               unitCost = 0
             end
             cost = unitCost * H2KFile.getHeatedFloorArea(elements)
-          when "Opt-DWHRSystem"
+          when "Opt-DWHR"
             #.................................................................................
             if optValue == "NA"
               unitCost = 0
@@ -6603,7 +6723,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               unitCost = 0
             end
             cost = unitCost * H2KFile.getHeatedFloorArea(elements)
-          when "Opt-HVACSystem"
+          when "Opt-Heating-Cooling"
             #.................................................................................
             if optValue == "NA"
               unitCost = 0
@@ -6716,7 +6836,7 @@ end
           myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
           myH2KHouseInfo["h2kFile"] = $gWorkingModelFile
           debug_out ( "Data from #{$gWorkingModelFile}\n")
-          debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+          #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
 
           specdCostSources = Hash.new
           specdCostSources = {
@@ -6731,6 +6851,7 @@ end
 
           if ( ! costsOK )
             stream_out " - Costs could not be calculated correctly. See warning messages\n"
+            myCosts["costing-dimensions"] = myH2KHouseInfo
           else
             debug_out "\n\n"
             debug_out drawRuler(" cost calculations complete; reporting "," / ")
@@ -6745,13 +6866,15 @@ end
           end
 
           #debug_on
-          debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+          #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
           debug_off
 
           return myCosts
 
         end
 
+
+############## SUBSTITUTE-H2K.rb-Routine
         $allok = true
 
         $gChoiceOrder = Array.new
@@ -6767,19 +6890,18 @@ end
         # Help text. Dumped if help requested, or if no arguments supplied.
         #-------------------------------------------------------------------
         $help_msg = "
+ This script searches through a suite of model input files
+ and substitutes values from a specified input file.
 
-        This script searches through a suite of model input files
-        and substitutes values from a specified input file.
+ use: ruby substitute-h2k.rb --options Filename.options
+ --choices Filename.choices
+ --base_file 'Base model path & file name'
 
-        use: ruby substitute-h2k.rb --options Filename.options
-        --choices Filename.choices
-        --base_file 'Base model path & file name'
+ example use for optimization work:
 
-        example use for optimization work:
+ ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
 
-        ruby substitute-h2k.rb -c HOT2000.choices -o HOT2000.options -b C:\\H2K-CLI-Min\\MyModel.h2k -v
-
-        Command line options:
+ Command line options:
 
         "
 
@@ -6806,28 +6928,6 @@ end
               exit()
             end
 
-            opts.on("-v", "--verbose", "Run verbosely") do
-              $cmdlineopts["verbose"] = true
-              $gTest_params["verbosity"] = "verbose"
-            end
-
-            opts.on("--hints", "Provide helpful hints for intrepreting output") do
-              $gHelp = true
-
-            end
-
-
-            opts.on("-d", "--no-debug", "Disable all debugging") do
-              #$cmdlineopts["verbose"] = true
-              #{$gTest_params["verbosity"] = "debug"}
-              $gNoDebug = true
-            end
-
-            opts.on("-r", "--report-choices", "Report .choice file input as part of output") do
-              $cmdlineopts["report-choices"] = true
-              $gReportChoices = true
-            end
-
             opts.on("-c", "--choices FILE", "Specified choice file (mandatory)") do |c|
               $cmdlineopts["choices"] = c
               $gChoiceFile = c
@@ -6836,23 +6936,13 @@ end
               end
             end
 
-            opts.on("-p", "--prm", "Run as a slave to htap-prm") do
-              $cmdlineopts["prm"] = true
-              $PRMcall = true
-            end
-
-            opts.on("-w", "--warnings", "Report warning messages") do
-              $cmdlineopts["warnings"] = true
-              $gWarn = true
-            end
-
             opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
               $cmdlineopts["options"] = o
               $gOptionFile = o
               if ( !File.exist?($gOptionFile) )
                 fatalerror("Valid path to option file must be specified with --options (or -o) option!")
               end
-            end
+            end            
 
             opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
               $cmdlineopts["base_model"] = b
@@ -6866,6 +6956,54 @@ end
               $gLookForArchetype = 0;
             end
 
+            opts.on("--unit-cost-db FILE", "Specified path to unit cost database (e.g. HTAPUnitCosts.json)") do |c|
+              $cmdlineopts["unitCosts"] = c
+              $unitCostFileName = c
+              if ( !File.exist?($unitCostFileName) )
+                err_out ("Could not find #{$unitCostFileName}")
+                fatalerror("Valid path to unit costs file must be specified with --unit-cost-db option!")
+              end
+              $UnitCostFileSet = true
+            end 
+
+            opts.on("--rulesets FILE", "Specified path to rulesets file (e.g. HTAP-rulesets.json)") do |c|
+              $cmdlineopts["rulesets"] = c
+              $rulesetsFileName  = c
+              if ( !File.exist?($rulesetsFileName) )
+                err_out ("Could not find #{$rulesetsFileName}")
+                fatalerror("Valid path to the rulesets file must be specified with the --rulesets option!")
+              end
+              $RulesetFileSet = true 
+            end 
+
+
+            opts.on("-v", "--verbose", "Run verbosely") do
+              $cmdlineopts["verbose"] = true
+              $gTest_params["verbosity"] = "verbose"
+            end
+
+            opts.on("--hints", "Provide helpful hints for intrepreting output") do
+              $gHelp = true
+            end
+
+
+            opts.on("-d", "--no-debug", "Disable all debugging") do
+              #$cmdlineopts["verbose"] = true
+              #{$gTest_params["verbosity"] = "debug"}
+              $gNoDebug = true
+            end
+
+            opts.on("-p", "--prm", "Run as a slave to htap-prm") do
+              $cmdlineopts["prm"] = true
+              $PRMcall = true
+            end
+
+            opts.on("-w", "--warnings", "Report warning messages") do
+              $cmdlineopts["warnings"] = true
+              $gWarn = true
+            end
+
+
             opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
               $cmdlineopts["extra_output1"] = true
               $gReadROutStrTxt = true
@@ -6877,19 +7015,23 @@ end
               $keepH2KFolder = true
             end
 
-            opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
-
-              $aliasInput   = $aliasLongInput
-              $aliasOutput  = $aliasLongOutput
-              $aliasConfig  = $aliasLongConfig
-              $aliasArch    = $aliasLongArch
-
-            end
+            #opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
+            #  $aliasInput   = $aliasLongInput              
+            #  $aliasOutput  = $aliasLongOutput  
+            #  $aliasConfig  = $aliasLongConfig  
+            #  $aliasArch    = $aliasLongArch      
+            #end
 
             opts.on("-a", "--auto-cost-options", "Automatically cost the option(s) set for this run.") do
               $cmdlineopts["auto_cost_options"] = true
               $autoEstimateCosts = true
             end
+
+            opts.on("-g", "--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
+              $cmdlineopts["hourly_output"] = true
+              $hourlyCalcs = true
+            end
+
 
             opts.on("-j", "--export-options-to-json", "Export the .options file into JSON format and quit.") do
 
@@ -6897,11 +7039,10 @@ end
 
             end
 
-            opts.on("-t", "--test-json-export", "(debugging) Export the .options file as .json, and then re-import it (debugging)") do
+            #opts.on("-t", "--test-json-export", "(debugging) Export the .options file as .json, and then re-import it (debugging)") do
+            #  $gJasonTest = true
+            #end
 
-              $gJasonTest = true
-
-            end
 
 
    end
@@ -6910,11 +7051,14 @@ end
           #       The parsing code above effects only those options that occur on the command line!
           optparse.parse!
 
+
           stream_out drawRuler("A wrapper for HOT2000")
 
-          if $gDebug
-            debug_out( $cmdlineopts )
-          end
+          #debug_on 
+          #debug_out( "options: #{$cmdlineopts.pretty_inspect}\n" )
+   
+
+          # valiate files, options
 
           if !$gBaseModelFile then
             $gBaseModelFile = "Not specified. Using archetype specified in .choice file"
@@ -6926,6 +7070,12 @@ end
             $h2k_src_path.sub!(/\\User/i, '')
             # Strip "User" (any case) from $h2k_src_path
           end
+
+
+          # if costing is requested, but costing file not included - stop!
+          if ( $autoEstimateCosts && ! $UnitCostFileSet ) then 
+            fatalerror ("Cost estimation requested via `--auto-cost-options`, but unit cost database not set via `--unit-cost-db FILE`\n")
+          end 
 
           $h2k_src_path = "C:\\H2K-CLI-Min"
           $run_path = $gMasterPath + "\\H2K"
@@ -7202,12 +7352,13 @@ end
 
             ruleSet = $ruleSetName
 
-            debug_out "Pre-ruleset choices:\n #{$gChoices.pretty_inspect}\n"
-            debug_out ("RULESET #{ruleSet} with conditions:#{$ruleSetSpecs.pretty_inspect}\n")
+            #debug_out "Pre-ruleset choices:\n #{$gChoices.pretty_inspect}\n"
+            #debug_out ("RULESET #{ruleSet} with conditions:#{$ruleSetSpecs.pretty_inspect}\n")
 
             conditionString = ""
             $ruleSetSpecs.each do | cond, value |
               conditionString = "; #{cond}=#{value}"
+              $gRulesetSpecs["#{cond}"] = "#{value}"
             end
 
             stream_out("\n\n Applying Ruleset #{ruleSet}#{conditionString}:\n")
@@ -7215,10 +7366,12 @@ end
             if ( ruleSet =~ /as-found/ )
               # Do nothing!
               stream_out ("  (a) AS FOUND: no changes made to model\n")
-
+            
+            elsif ( ruleSet =~ /LEEP_Pathways/)
+                LEEP_pathways_ruleset()
             elsif ( ruleSet =~ /^NBC_*9_*36$/ || ruleSet =~ /^NBC_*9_*36_noHRV$/ ||  ruleSet =~ /^NBC_*9_*36_noHRV$/ )
               stream_out ("  (b) NBC 936 pathway \n")
-              NBC_936_2010_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
+                NBC_936_2010_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
 
             elsif ( ruleSet =~ /936_2015_AW_HRV/ ||  ruleSet =~ /936_2015_AW_noHRV / )
               stream_out ("  (c) Protorype NBC Ruleset by Adam Wills.\n")
@@ -7244,7 +7397,7 @@ end
             end
 
             # Replace choices in $gChoices with rule set choices in $ruleSetChoices
-            stream_out("\n Replacing user-defined choices with rule set choices where appropriate...\n")
+            stream_out("\n Changing `NA` choices (and empty choices) with values from rule set appropriate...\n")
             $ruleSetChoices.each do |attrib, choice|
               if choice.empty?
                 warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
@@ -7281,6 +7434,53 @@ end
             end
 	      end
 
+          debug_out("Checking for upgrade packages?\n")
+
+          if (  ! $gChoices["upgrade-package-list"].empty? &&  $gChoices["upgrade-package-list"] != "NA" ) then
+
+            package = $gChoices["upgrade-package-list"] 
+
+            if ( ! $RulesetFileSet ) then 
+              fatalerror(".choice file specifies upgrade-package-list = #{package}, but no rulset file provided via `--rulesets FILE`")
+            end 
+                   
+
+            stream_out ("\n")
+            stream_out (" Parsing package lists in file #{$rulesetsFileName}...")
+            # Check to see if the requested package is in the upgrade-packages 
+
+            rulesetHash = HTAPData.parse_upgrade_file($rulesetsFileName)
+
+            stream_out ("done.\n")
+
+            
+            ##debug_out ("rulesethash: #{rulesetHash.pretty_inspect}\n")
+           debug_out ("> Looking for package: #{package}\n")
+
+            if ( rulesetHash["upgrade-packages"][package].nil? or rulesetHash["upgrade-packages"][package].empty?  ) then 
+
+              err_out ("Could not find package #{package} in ruleset file #{$rulesetsFileName}\n")
+
+            else 
+
+              debug_out ("Package #{package} found\n")
+              stream_out(" Applying upgrades from package #{package}:\n")
+              rulesetHash["upgrade-packages"][package].each do |thisAttrib,thisChoice|
+                attrib  = HTAPData.queryAttribAliases( thisAttrib )
+                stream_out ("   - #{attrib} -> #{thisChoice}\n")
+                $gChoices[attrib] = thisChoice
+                isSetbyRuleset[attrib] = false 
+
+              end
+
+
+
+            end
+
+          end 
+
+         
+          # Determine if a house has been upgraded. 
           houseUpgraded = false
           houseSetByRuleset = false
           houseUpgradeList = ""
@@ -7294,12 +7494,9 @@ end
               houseUpgradeList += "#{thisAttrib}=>#{thisChoice};"
             end
 
-          end
+          end         
 
-
-
-
-
+          
           debug_out("Parsing parameters ...\n")
 
           $gCustomCostAdjustment = 0
@@ -7381,15 +7578,13 @@ end
 
           # Process the working file by replacing all existing values with the values
           # specified in the attributes $gChoices and corresponding $gOptions
-
+          # debug_on 
           stream_out drawRuler(' Manipulating HOT2000 file ')
           stream_out (" Performing substitutions on H2K file...")
 
           processFile( h2kElements )
 
           stream_out( "done.")
-
-
 
 
           # Orientation changes. For now, we assume the arrays must always point south.
@@ -7441,9 +7636,7 @@ end
           $gAmtOil = 0
           $FloorArea = 0
 
-
           stream_out drawRuler('Running HOT2000 simulations')
-
 
           orientations.each do |direction|
 
@@ -7515,12 +7708,13 @@ end
             "House-Builder"       =>  "#{$BuilderName}",
             "House-Type"          =>  "#{$HouseType}",
             "House-Storeys"       =>  "#{$HouseStoreys}",
+			    	"Front-Orientation"   =>  "#{$HouseFrontOrientation}",
             "Weather-Locale"      =>  "#{$Locale_model}",
             "Base-Region"         =>  "#{$gBaseRegion}",
             "Base-Locale"         =>  "#{$gBaseLocale}",
             "climate-zone"        =>  "#{climateZone}",
             "fuel-heating-presub"  =>  "#{$ArchetypeData["pre-substitution"]["fuelHeating"]}",
-            "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelHDHW"]}",
+            "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelDHW"]}",
             "Ceiling-Type"        =>  "#{$Ceilingtype}",
             "Area-Slab-m2"        =>  "#{$FoundationArea["Slab"].round(2)}",
             "Area-Basement-m2"    => "#{$FoundationArea["Basement"].round(2)}",
@@ -7567,7 +7761,9 @@ end
             results[$aliasLongInput] = { "Run-Region" =>  "#{$gRunRegion}",
             "Run-Locale" =>  "#{$gRunLocale}",
             "House-Upgraded"   =>  "#{houseUpgraded}",
-            "House-ListOfUpgrades" => "#{houseUpgradeList}"
+            "House-ListOfUpgrades" => "#{houseUpgradeList}",
+            "Ruleset-Fuel-Source" => "#{$gRulesetSpecs["fuel"]}",
+            "Ruleset-Ventilation" => "#{$gRulesetSpecs["vent"]}"
           }
           $gChoices.sort.to_h
           for attribute in $gChoices.keys()
@@ -7618,7 +7814,7 @@ end
           "LapsedTime"        => $runH2KTime.round(2) ,
           "PEAK-Heating-W"    => $gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1) ,
           "PEAK-Cooling-W"    => $gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1) ,
-          "House-R-Value(SI)" => $RSI['house'].round(3)
+#          "House-R-Value(SI)" => $RSI['house'].round(3)
         }
 
         if $ExtraOutput1 then
@@ -7676,11 +7872,13 @@ end
           fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
         end
         fJsonOut.puts JSON.pretty_generate(results)
+        results.clear
         fJsonOut.close
       end
 
-
-      if $fSUMMARY == nil then
+      bNoSummary = true
+      if (not bNoSummary) then
+      if $fSUMMARY == nil    then
         fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
       end
 
@@ -7691,6 +7889,7 @@ end
         $fSUMMARY.write( "#{$aliasArch}.House-Builder     =  #{$BuilderName}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Type        =  #{$HouseType}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )
+		  $fSUMMARY.write( "#{$aliasArch}.Front-Orientation =  #{$HouseFrontOrientation}\n")
         $fSUMMARY.write( "#{$aliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Locale       =  #{$gBaseLocale}\n" )
@@ -7972,20 +8171,24 @@ end
         end
 
       end
+    end
+    
+    $gResults.clear
 
 
 
-
-
-      if ( ! $PRMcall )
-        if !$keepH2KFolder
-          FileUtils.rm_r ( "#{$gMasterPath}\\H2K" )
-        end
-      end
+if ( ! $PRMcall )
+  if !$keepH2KFolder
+    FileUtils.rm_r ( "#{$gMasterPath}\\H2K" )
+  end
+end
 
 
 
-      ReportMsgs()
+ReportMsgs()
 
-      $fSUMMARY.close()
-      $fLOG.close()
+log_out ("substitute-h2k.rb run complete.")
+log_out ("Closing log files")
+$fSUMMARY.close()
+$fLOG.close()
+     
