@@ -10935,6 +10935,25 @@
           ]
         }
       },
+	  "NBC-HotWater_hp": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.22",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+             "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+          ]
+        }
+      },
       "R2000-HotWater-elec": {
         "h2kMap": {
           "base": {
@@ -10996,7 +11015,7 @@
       "none": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-HasDWHR": "NA",
+            "Opt-H2K-HasDWHR": "false",
             "Opt-H2K-DWHR-preheatShowerTank": "NA",
             "Opt-H2K-DWHR-Manufacturer": "NA",
             "Opt-H2K-DWHR-Model": "NA",
@@ -11431,6 +11450,24 @@
             "Opt-H2K-SoilCondition": "1",
             "Opt-H2K-RoofColour": "0.4",
             "Opt-H2K-WaterLevel": "2"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "NBC_Specs_Normal_Proposed": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-ThermalMass": "NA",
+            "Opt-H2K-WallColour": "NA",
+            "Opt-H2K-SoilCondition": "1",
+            "Opt-H2K-RoofColour": "NA",
+            "Opt-H2K-WaterLevel": "NA"
           }
         },
         "costs": {
