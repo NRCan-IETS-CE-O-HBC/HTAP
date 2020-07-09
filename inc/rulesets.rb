@@ -335,12 +335,12 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    elsif (primDHWFuelName =~ /Elect/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
    elsif (primDHWFuelName =~ /Oil/i) != nil
-      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil4"
+      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
    else # ADW 3/7/2019: Probably solar, use same fuel as heating system
       if (primHeatFuelName =~ /gas/i ) != nil        # value is "Natural gas"
          $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
       elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
-         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil4"
+         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
       elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
 	     $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
 	  else # Assume gas
