@@ -9,7 +9,7 @@ SF_PER_SM = 10.7639
 
 # Setting Heating Degree Days
 $HDDHash =  {
-            "WHITEHORSE" => 6580 ,
+             "WHITEHORSE" => 6580 ,
             "TORONTO" => 3520 ,
             "OTTAWA" => 4500 ,
             "EDMONTON" => 5120 ,
@@ -91,13 +91,13 @@ $HDDHash =  {
             "SCHEFFERVILLE" => 8550 ,
             "SEPTILES" => 6200 ,
             "SHERBROOKE" => 4700 ,
-            "VALDOR" => 6180 ,
-            "BAIECOMEAU" => 6020 ,
+            "VALD'OR" => 6180 ,
+            "BAIE-COMEAU" => 6020 ,
             "LAGRANDERIVIERE" => 8100 ,
-            "MONTJOLI" => 5370 ,
+            "MONT-JOLI" => 5370 ,
             "MONTREALMIRABEL" => 4500   ,
-            "STHUBERT" => 4490    ,
-            "STEAGATHEDESMONTS" => 5390 ,
+            "ST-HUBERT" => 4490    ,
+            "STE-AGATHE-DES-MONTS" => 5390 ,
             "CHATHAM" => 4950 ,
             "MONCTON" => 4680 ,
             "SAINTJOHN" => 4570 ,
