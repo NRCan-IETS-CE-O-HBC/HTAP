@@ -5535,6 +5535,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             $gResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f * scaleData
             $gResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f * scaleData
             $gResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f * scaleData
+			monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+            $gResults[houseCode]["avgInternalGainsUtilized"]=0.0
+            monthArr.each do |mth|
+              $gResults[houseCode]["avgInternalGainsUtilized"] += element.elements[".//Monthly/Gains/UtilizedInternal"].attributes[mth].to_f / 1000.0
+            end
+			$gResults[houseCode]["avgInternalGainsUtilized"] = $gResults[houseCode]["avgInternalGainsUtilized"]* scaleData
 
             $gResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f * scaleData
             $gResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f * scaleData
@@ -5598,10 +5604,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             $gResults[houseCode]['avgEnergyCoolingGJ'].to_f +
             $gResults[houseCode]['avgEnergyEquipmentGJ'].to_f
 
-          
-
-            monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
             debug_out (" Picking up  AUX energy requirement from each result set. \n")
+            # ADW 14-Jul-2020: This is initialized earlier now
+            # monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
 
             $gAuxEnergyHeatingGJ = 0
             $MonthlyAuxHeatingMJ = 0
@@ -6740,7 +6745,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         end
 
-
 ############## SUBSTITUTE-H2K.rb-Routine
         $allok = true
 
@@ -7669,6 +7673,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "Energy-PV-kWh"     => $gResults[$outputHCode]['avgElecPVGenkWh'].round(0),
           "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
           "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
+          "Useful-Internal-Gain-GJ" => $gResults[$outputHCode]['avgInternalGainsUtilized'].round(1),
           "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
           "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),
           "TotalAirConditioning-LoadGJ" => $TotalAirConditioningLoad.round(1) ,
@@ -7795,6 +7800,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       $fSUMMARY.write( "#{$aliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Useful-Solar-Gain-GJ =  #{$gResults[$outputHCode]['avgSolarGainsUtilized'].round(1)} \n" )
+      $fSUMMARY.write( "#{$aliasOutput}.Useful-Internal-Gain-GJ =  #{$gResults[$outputHCode]['avgInternalGainsUtilized'].round(1)} \n" )
       #$fSUMMARY.write( "#{$aliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
 
