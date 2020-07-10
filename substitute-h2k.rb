@@ -7554,7 +7554,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                 "version" => $gResults["version"]
               }
 
-            $YearBuilt               = 
+
 
               results[$aliasLongArch] = {   "h2k-File"            =>  "#{$h2kFileName}",
             "House-Builder"       =>  "#{$BuilderName}",
