@@ -1799,23 +1799,11 @@ module H2KOutput
     while !fBrowseRpt.eof? do
 
       lineNo = lineNo+ 1
-      #line = fBrowseRpt.readline
-      #debug_out ("Browse #{lineNo}: #{line}\n")
-
-      #line = fBrowseRpt.readline
-
-      #line = fBrowseRpt.readline.encode("UTF-8", :invalid=>:replace, :replace=>"?")
       line = fBrowseRpt.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" )      
 
       # Sequentially read file lines
       line.strip!
       # Remove leading and trailing whitespace
-
-
-
-
-
-
 
 
       # ==============================================================
