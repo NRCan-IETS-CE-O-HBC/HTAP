@@ -6014,6 +6014,21 @@
         },
         "custom-costs": {
         }
+      },
+	  "retrofit-main-wall-to-R-20-Yukon": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": 20,
+            "HeaderExtInsRValue": 20
+          }
+        },
+        "costs": {
+          "components": [
+            "retrofit: main wall to R-20, Yukon"
+          ]
+        },
+        "custom-costs": {
+        }
       }
     },
     "default": "Stud_2x6_R20",
@@ -8192,6 +8207,96 @@
 
           ]
         }
+      },	  
+	  "wood-foundation-uninsulated": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "BWNN_1_ALL",
+            "OPT-H2K-IntWallCode": "NA",
+            "OPT-H2K-IntWall-RValue": "NA",
+            "OPT-H2K-ExtWall-RVal": "NA",
+            "OPT-H2K-BelowSlab-RVal": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "wood-foundation-interior-r10": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "BWIN_1_ALL",
+            "OPT-H2K-IntWallCode": "NA",
+            "OPT-H2K-IntWall-RValue": "10",
+            "OPT-H2K-ExtWall-RVal": "NA",
+            "OPT-H2K-BelowSlab-RVal": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "wood-foundation-interior-r20": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "BWIN_1_ALL",
+            "OPT-H2K-IntWallCode": "NA",
+            "OPT-H2K-IntWall-RValue": "20",
+            "OPT-H2K-ExtWall-RVal": "NA",
+            "OPT-H2K-BelowSlab-RVal": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "wood-foundation-interior-r50": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "BWIN_1_ALL",
+            "OPT-H2K-IntWallCode": "NA",
+            "OPT-H2K-IntWall-RValue": "50",
+            "OPT-H2K-ExtWall-RVal": "NA",
+            "OPT-H2K-BelowSlab-RVal": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "wood-foundation-exterior-r10": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "BWEN_1_ALL",
+            "OPT-H2K-IntWallCode": "NA",
+            "OPT-H2K-IntWall-RValue": "NA",
+            "OPT-H2K-ExtWall-RVal": "10",
+            "OPT-H2K-BelowSlab-RVal": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
       }
     },
     "default": "NA",
@@ -8581,7 +8686,263 @@
 
           ]
         }
+      },
+	  "SCA21_R17_WithSkirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_21_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "SCB34_R17_WithSkirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_34_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "SCA23_R17_WithSkirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_23_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "16.87",
+            "OPT-H2K-BelowSlab-RVal": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },	 
+	  "SCA21_R17_R10Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_21_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "SCA21_R30_R20Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_21_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "20"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "SCA23_R17_R10Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_23_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },	
+      "SCA23_R30_R20Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_23_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "20"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },		  
+  	  "north-r30wall-r10slab-SCA21": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_21_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "north-r30wall-r10slab-SCA23": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_23_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },	 
+	  "SCB25_R17_R10Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_25_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "SCB25_R30_R20Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_25_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "20"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "SCA17_R17_R10Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_17_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "17",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },	
+      "SCA17_R30_R20Skirt": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_17_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "20"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },		  
+  	  "north-r30wall-r10slab-SCB25": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCB_25_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "north-r30wall-r10slab-SCA17": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-ConfigType": "SCA_17_ALL",
+            "OPT-H2K-CrawlWallCode": "NA",
+            "OPT-H2K-CrawlWall-RValue": "30",
+            "OPT-H2K-BelowSlab-RVal": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
       }
+
     },
     "default": "NA",
     "stop-on-error": false,

@@ -5315,7 +5315,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
           debug_out "Parsing browse.rpt - 1 \n "
           dataFromBrowse = H2KOutput.parse_BrowseRpt("#{$OutputFolder}\\Browse.Rpt")
+
           log_out("Parsed Browse.Rpt.")
+
           #debug_out "RESULT-> \n #{dataFromBrowse.pretty_inspect}\n"
            
         rescue 
