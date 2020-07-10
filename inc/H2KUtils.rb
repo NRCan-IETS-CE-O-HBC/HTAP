@@ -1201,7 +1201,7 @@ module H2KFile
     debug_out("wallCornerCount: #{wallCornerCount}\n")
     wallDims.each do |wall|
 
-      #how many corners belong to this wall?
+      how many corners belong to this wall?
       if ( wallCornerCount < 1 )
 
         fracOfCorners = 0 
@@ -1211,6 +1211,7 @@ module H2KFile
         fracOfCorners = wall["corners"]/wallCornerCount
       end 
 
+	  
       # assume 8" wall
       fdnWallWidth = 8.0 * 2.54 / 100.0
       # exposed perimiter,
@@ -1782,8 +1783,9 @@ module H2KOutput
 
     myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new, "annual" => Hash.new }
     fBrowseRpt = File.new(myBrowseRptFile, "r")
-
-
+    # fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'UTF-8', :invalid=>:replace, :replace=>"?" )
+    # fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'UTF-16BE', :invalid=>:replace, :replace=>"?" )
+   
     flagACPerf = false 
     flagSHPerf = false 
     flagSRPerf = false 
@@ -1795,9 +1797,17 @@ module H2KOutput
     $hourlyFoundACData = false 
     lineNo = 0
     while !fBrowseRpt.eof? do
+<<<<<<< HEAD
       lineNo = lineNo+ 1
       line = fBrowseRpt.readline
       debug_out ("Browse #{lineNo}: #{line}\n")
+=======
+      #line = fBrowseRpt.readline
+
+      #line = fBrowseRpt.readline.encode("UTF-8", :invalid=>:replace, :replace=>"?")
+      line = fBrowseRpt.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" )      
+
+>>>>>>> 991a09ab48f110dbfb92d0da24582fc4ecce120e
       # Sequentially read file lines
       line.strip!
       # Remove leading and trailing whitespace
@@ -1811,6 +1821,7 @@ module H2KOutput
 
       # ==============================================================
       # Heating section 
+
       if ( line =~ /\*\*\* SPACE HEATING SYSTEM PERFORMANCE \*\*\*/ )
         myBrowseData["monthly"]["heating"] = {"loadGJ" => Hash.new, 
                                               "input_energyGJ" => Hash.new,
