@@ -686,6 +686,8 @@ def processFile(h2kElements)
             # Set the blower door test value in airChangeRate field
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
             h2kElements[locationText].attributes["airChangeRate"] = value
+				#		$ACHRate = h2kElements[locationText].attributes["airChangeRate"].to_f
+
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
@@ -6042,6 +6044,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             areaWalkout_temp = walkout.elements["Measurements"].attributes["l1"].to_f*walkout.elements["Measurements"].attributes["l2"].to_f
             $FoundationArea["Walkout"] += areaWalkout_temp
           end
+			 
+	      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+          $ACHRate = elements[locationText].attributes["airChangeRate"].to_f 
 
 
         end
@@ -7611,7 +7616,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "Ceiling-RSI"       => "#{$RSI['ceiling'].round(2)}" ,
             "ExposedFloor-RSI"          => "#{$RSI["floor"].round(2)}" ,
 			
-			"Archetype-ACH"   => "#{$ACHRate}",		
+			"Archetype-ACH"   => "#{$ACHRate.round(1)}",
+
 
             "Area-Door-m2"      => "#{$AreaComp['door'].round(3)}",
             "Area-DoorWin-m2"   => "#{$AreaComp['doorwin'].round(3)}",
