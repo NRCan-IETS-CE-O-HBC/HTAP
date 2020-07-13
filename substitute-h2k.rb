@@ -2646,6 +2646,12 @@ def processFile(h2kElements)
         elsif ( choiceEntry =~ /Opt-VentSystem/ )
           if(valHash["1"] == "false")
             # Option not active, skip
+            # Delete all existing systems
+            locationText = "HouseFile/House/Ventilation/"
+            h2kElements[locationText].delete_element("WholeHouseVentilatorList")
+            h2kElements[locationText].delete_element("SupplementalVentilatorList")
+            h2kElements[locationText].add_element("WholeHouseVentilatorList")
+            h2kElements[locationText].add_element("SupplementalVentilatorList")
             break
           elsif(valHash["1"] == "true")
             # Option is active
