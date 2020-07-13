@@ -2652,6 +2652,16 @@ def processFile(h2kElements)
             h2kElements[locationText].delete_element("SupplementalVentilatorList")
             h2kElements[locationText].add_element("WholeHouseVentilatorList")
             h2kElements[locationText].add_element("SupplementalVentilatorList")
+            h2kElements[locationText + "Requirements"].attributes["ach"] = "0.00"
+            h2kElements[locationText + "Requirements"].attributes["supply"] = "0.00"
+            h2kElements[locationText + "Requirements"].attributes["exhaust"] = "0.00"
+            h2kElements[locationText + "Requirements/Use"].attributes["code"] = "4"
+            h2kElements[locationText + "Requirements/Use"].delete_element("English")
+            h2kElements[locationText + "Requirements/Use"].delete_element("French")
+            h2kElements[locationText + "Requirements/Use"].add_element("English")
+            h2kElements[locationText + "Requirements/Use"].add_element("French")
+            h2kElements[locationText + "Requirements/Use/English"].add_text("Not applicable")
+            h2kElements[locationText + "Requirements/Use/French"].add_text("Sans objet")
             break
           elsif(valHash["1"] == "true")
             # Option is active
