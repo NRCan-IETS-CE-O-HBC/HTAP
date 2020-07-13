@@ -10628,6 +10628,18 @@
           "proxy": "VentFans_sre_0"
         }
       },
+      "NBC_noVNT": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "VentFans_sre_0"
+        }
+      },
 	  "Yukon_HRV": {
         "h2kMap": {
           "base": {
