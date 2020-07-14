@@ -314,7 +314,6 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    debug_out " >>> primary heating type: #{primHeatFuelName} \n"
    # Heating Equipment performance requirements (Table 9.36.3.10) - No dependency on ruleType!
    if (primHeatFuelName =~ /gas/i ) != nil        # value is "Natural gas"
-
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-oil-heat"
@@ -325,6 +324,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-elec-heat"
 
       end
+   elsif (primHeatFuelName =~ /Propane/i ) != nil
+      $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-propane-furnace"
    end
    # Remove any secondary HVAC systems
    elements["HouseFile/House/HeatingCooling"].delete_element("SupplementaryHeatingSystems")
