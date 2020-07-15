@@ -10932,6 +10932,61 @@
           }
         }
       },
+      "NBC-HotWater_inst_gas": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.80",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+           "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+          ]
+        }
+      },
+      "NBC-HotWater_prop": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "4",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.575",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "proxy": "gas_storagetank_w/powervent_ef0.67",
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC-HotWater_inst_prop": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "4",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.80",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+           "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+          ]
+        }
+      },
       "NBC-HotWater_elec": {
         "h2kMap": {
           "base": {
@@ -10947,6 +11002,25 @@
           "custom-costs": {
           },
           "proxy": "elec_storage_ef0.89"
+        }
+      },
+      "NBC-HotWater_inst_elec": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "4",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.936",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
         }
       },
       "NBC-HotWater_oil": {

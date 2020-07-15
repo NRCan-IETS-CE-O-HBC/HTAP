@@ -262,6 +262,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    primHeatFuelName = ""
    secSysType = ""
    primDHWFuelName = ""
+   primDHWSysType = ""
    ventSpec = ""
 
    # Should test for this type somewhere
@@ -270,12 +271,27 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
      primHeatFuelName = ruleSpecs["fuel"]
      secSysType = "Baseboard"
      primDHWFuelName = ruleSpecs["fuel"]
+     if (primDHWFuelName =~ /gas/i) != nil || (primDHWFuelName =~ /Oil/i) != nil
+        primDHWSysType = "Conventional tank"
+     elsif (primDHWFuelName =~ /Elect/i) != nil
+        primDHWSysType = "Conserver tank"
+     else # Probably solar. Use same fuel as space heating system
+     # TODO: Warn user
+      if (primHeatFuelName =~ /gas/i ) != nil || (primHeatFuelName =~ /Oil/i) != nil
+         primDHWSysType = "Conventional tank"
+      elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
+	     primDHWSysType = "Conserver tank"
+	  else # Assume gas
+	     primDHWSysType = "Conventional tank"
+	  end
+   end
    else
      debug_out ( " Fuel not specified, obtain from h2k file contnets \n")
      # Use system data
      primHeatFuelName = H2KFile.getPrimaryHeatSys( elements )
      secSysType = H2KFile.getSecondaryHeatSys( elements )
      primDHWFuelName = H2KFile.getPrimaryDHWSys( elements )
+     primDHWSysType = H2KFile.getPrimaryDHWSysTankType( elements )
    end
 
    if ( ! ruleSpecs["vent"].nil? )
@@ -322,7 +338,6 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-CCASHP"
       else
          $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-elec-heat"
-
       end
    elsif (primHeatFuelName =~ /Propane/i ) != nil
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-propane-furnace"
@@ -334,19 +349,17 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    if (primDHWFuelName =~ /gas/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
    elsif (primDHWFuelName =~ /Elect/i) != nil
-      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
+      if (primDHWSysType =~ /\AHeat pump/i) != nil || (primDHWSysType =~ /\AIntegrated heat/i) != nil
+         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_hp"
+      else
+         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
+      end
    elsif (primDHWFuelName =~ /Oil/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
-   else # ADW 3/7/2019: Probably solar, use same fuel as heating system
-      if (primHeatFuelName =~ /gas/i ) != nil        # value is "Natural gas"
-         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
-      elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
-         $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"
-      elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
-	     $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
-	  else # Assume gas
-	     $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
-	  end
+   elsif (primDHWFuelName =~ /Propane/i) != nil
+      $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_prop"
+   else # ADW 7/15/2020: If it's solar or wood, use gas per Table 9.36.5.16
+	  $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
    end
    
    # Remove any secondary fuel systems
