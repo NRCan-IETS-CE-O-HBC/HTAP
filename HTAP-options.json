@@ -11567,24 +11567,6 @@
           ]
         }
       },
-	  "NBC_Specs_Normal_Proposed": {
-        "h2kMap": {
-          "base": {
-            "Opt-H2K-ThermalMass": "NA",
-            "Opt-H2K-WallColour": "NA",
-            "Opt-H2K-SoilCondition": "1",
-            "Opt-H2K-RoofColour": "NA",
-            "Opt-H2K-WaterLevel": "NA"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
       "NBC_Specs_Perma": {
         "h2kMap": {
           "base": {
