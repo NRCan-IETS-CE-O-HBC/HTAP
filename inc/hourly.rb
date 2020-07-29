@@ -44,6 +44,8 @@ module Hourly
      
     if (File.file?("C:\/HTAP\/weatherfiles\/#{epwFile}"))
       epwFilePath = "C:\/HTAP\/weatherfiles\/#{epwFile}"
+	  epwOpenedOk = true
+	  debug_out ("Fetching EPW data fom #{epwFilePath}\n")
     else
       
       dataURI =  $epwRemoteServer+$epwLocaleHash["#{$gRunLocale}"]
