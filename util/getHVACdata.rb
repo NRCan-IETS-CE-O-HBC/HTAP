@@ -17,6 +17,7 @@ sPrimaryHeatType = Array.new
 sSecondaryHeatType = Array.new
 sPrimaryDHWFuel = Array.new
 sPrimaryDHWType = Array.new
+fACH = Array.new
 
 # Process the directory input
 if ARGV.empty? then
@@ -43,6 +44,13 @@ Dir.glob(sPattern) {|file|
   sPrimaryDHWFuel << H2KFile.getPrimaryDHWSys(elements).to_s
   sPrimaryDHWType << H2KFile.getPrimaryDHWSysTankType(elements).to_s
   sSecondaryHeatType << H2KFile.getSecondaryHeatSys(elements).to_s
+  if elements["HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"] == nil
+     puts filename
+     fACH << "-9999"
+  else
+     fACH << elements["HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"].attributes["airChangeRate"].to_s
+  end
+  
 
   if elements["HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"] != nil
      bHasHRV << "true"
@@ -52,7 +60,7 @@ Dir.glob(sPattern) {|file|
 }
 
 # Write the output
-File.open("HTAP_HVAC_Summary.csv", "w") { |f| f.write "filename,primary_space_heating_fuel,primary_space_heating_type,secondary_space_heating_type,primary_DHW_fuel,primary_DHW_type,HRV_present\n" }
+File.open("HTAP_HVAC_Summary.csv", "w") { |f| f.write "filename,primary_space_heating_fuel,primary_space_heating_type,secondary_space_heating_type,primary_DHW_fuel,primary_DHW_type,HRV_present,ACH_50\n" }
 sFiles.each_with_index do |thisFile, index|
-  File.write("HTAP_HVAC_Summary.csv", "#{thisFile},#{sPrimaryHeatFuel[index]},#{sPrimaryHeatType[index]},#{sSecondaryHeatType[index]},#{sPrimaryDHWFuel[index]},#{sPrimaryDHWType[index]},#{bHasHRV[index]}\n", mode: "a")
+  File.write("HTAP_HVAC_Summary.csv", "#{thisFile},#{sPrimaryHeatFuel[index]},#{sPrimaryHeatType[index]},#{sSecondaryHeatType[index]},#{sPrimaryDHWFuel[index]},#{sPrimaryDHWType[index]},#{bHasHRV[index]},#{fACH[index]}\n", mode: "a")
 end
