@@ -686,6 +686,8 @@ def processFile(h2kElements)
             # Set the blower door test value in airChangeRate field
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
             h2kElements[locationText].attributes["airChangeRate"] = value
+				#		$ACHRate = h2kElements[locationText].attributes["airChangeRate"].to_f
+
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
@@ -6043,6 +6045,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             areaWalkout_temp = walkout.elements["Measurements"].attributes["l1"].to_f*walkout.elements["Measurements"].attributes["l2"].to_f
             $FoundationArea["Walkout"] += areaWalkout_temp
           end
+			 
+	      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+          $ACHRate = elements[locationText].attributes["airChangeRate"].to_f 
 
 
         end
@@ -7576,30 +7581,45 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "Area-Crawl-m2"       =>  "#{$FoundationArea["Crawl"].round(2)}",
             "Floor-Area-m2"     => "#{$FloorArea.round(1)}",
             "House-Volume-m3"   => "#{$HouseVolume.round(1)}",
-            "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
-            "Win-R-value-S"     => "#{$rValueWin[1].round(3)}",
+
+#            "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
+#            "Win-R-value-S"     => "#{$rValueWin[1].round(3)}",
             "Win-Area-m2-S"     => "#{$AreaWin_sum[1].round(1)}",
-            "Win-SHGC-SE"       => "#{$SHGCWin[2].round(3)}",
-            "Win-R-value-SE"    => "#{$rValueWin[2].round(3)}",
+#            "Win-SHGC-SE"       => "#{$SHGCWin[2].round(3)}",
+#            "Win-R-value-SE"    => "#{$rValueWin[2].round(3)}",
             "Win-Area-m2-SE"    => "#{$AreaWin_sum[2].round(1)}",
-            "Win-SHGC-E"        => "#{$SHGCWin[3].round(3)}",
-            "Win-R-value-E"     => "#{$rValueWin[3].round(3)}",
+#            "Win-SHGC-E"        => "#{$SHGCWin[3].round(3)}",
+#            "Win-R-value-E"     => "#{$rValueWin[3].round(3)}",
             "Win-Area-m2-E"     => "#{$AreaWin_sum[3].round(1)}",
-            "Win-SHGC-NE"       => "#{$SHGCWin[4].round(3)}",
-            "Win-R-value-NE"    => "#{$rValueWin[4].round(3)}",
+#            "Win-SHGC-NE"       => "#{$SHGCWin[4].round(3)}",
+#            "Win-R-value-NE"    => "#{$rValueWin[4].round(3)}",
             "Win-Area-m2-NE"    => "#{$AreaWin_sum[4].round(1)}",
-            "Win-SHGC-N"        => "#{$SHGCWin[5].round(3)}",
-            "Win-R-value-N"     => "#{$rValueWin[5].round(3)}",
+#            "Win-SHGC-N"        => "#{$SHGCWin[5].round(3)}",
+#            "Win-R-value-N"     => "#{$rValueWin[5].round(3)}",
             "Win-Area-m2-N"     => "#{$AreaWin_sum[5].round(1)}",
-            "Win-SHGC-NW"       => "#{$SHGCWin[6].round(3)}",
-            "Win-R-value-NW"    => "#{$rValueWin[6].round(3)}",
+#            "Win-SHGC-NW"       => "#{$SHGCWin[6].round(3)}",
+#            "Win-R-value-NW"    => "#{$rValueWin[6].round(3)}",
             "Win-Area-m2-NW"    => "#{$AreaWin_sum[6].round(1)}",
-            "Win-SHGC-W"        => "#{$SHGCWin[7].round(3)}",
-            "Win-R-value-W"     => "#{$rValueWin[7].round(3)}",
+#            "Win-SHGC-W"        => "#{$SHGCWin[7].round(3)}",
+#            "Win-R-value-W"     => "#{$rValueWin[7].round(3)}",
             "Win-Area-m2-W"     => "#{$AreaWin_sum[7].round(1)}",
-            "Win-SHGC-SW"       => "#{$SHGCWin[8].round(3)}",
-            "Win-R-value-SW"    => "#{$rValueWin[8].round(3)}",
+#            "Win-SHGC-SW"       => "#{$SHGCWin[8].round(3)}",
+#            "Win-R-value-SW"    => "#{$rValueWin[8].round(3)}",
             "Win-Area-m2-SW"    => "#{$AreaWin_sum[8].round(1)}",
+
+
+            "Wall-UAValue"      => "#{$UAValue["wall"].round(2)}" ,
+            "Window-UAValue"    => "#{$UAValue['win'].round(2)}", 
+            "ExposedFloor-UAValue"      => "#{$UAValue['floor'].round(2)}" ,
+            "Ceiling-UAValue"      => "#{$UAValue['ceiling'].round(2)}" ,
+			
+            "Wall-RSI"          => "#{$RSI['wall'].round(2)}" ,
+            "Ceiling-RSI"       => "#{$RSI['ceiling'].round(2)}" ,
+            "ExposedFloor-RSI"          => "#{$RSI["floor"].round(2)}" ,
+			
+			"Archetype-ACH"   => "#{$ACHRate.round(1)}",
+
+
             "Area-Door-m2"      => "#{$AreaComp['door'].round(3)}",
             "Area-DoorWin-m2"   => "#{$AreaComp['doorwin'].round(3)}",
             "Area-Windows-m2"   => "#{$AreaComp['win'].round(3)}",
