@@ -274,6 +274,7 @@ def parse_def_file(filepath)
 
             # locations -
             $gLocations = $token_values[1].to_s.split(",")
+
             $WildCardsInUse = true if ($gLocations.grep(/\*/).length > 0 )
 
           end
@@ -324,10 +325,10 @@ def parse_def_file(filepath)
 
   if ( $WildCardsInUse ) then
 
-
     debug_out ("Locations\n")
     locationIndex = 0
     $gLocations.clone.each do | choice |
+      next unless  ( choice =~ /\*/ ) 
       pattern = choice.gsub(/\./, "\.")
       pattern.gsub!(/\*/, ".*")
       debug_out( " Wildcard Query /#{pattern}/ \n" )
@@ -337,7 +338,7 @@ def parse_def_file(filepath)
       locationIndex += 1
     end
 
-
+    
     $gRunUpgrades.keys.each do |key|
  
       debug_out( " Wildcard search for #{key} => \n" )
@@ -386,9 +387,6 @@ def parse_def_file(filepath)
 
   #debug_out ("Final locations: #{$gLocations.pretty_inspect}")
   #debug_out ("Final Upgrades: #{$gRunUpgrades.pretty_inspect}")
-
-
-  # What if archetypes are defined using a wildcard?
 
   
 end # def parse_def_file(filepath)
@@ -508,7 +506,7 @@ def create_parametric_combos()
 
   end
 
-  debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
+  #debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
 
 
   $gArchetypes.each do | archetype |
