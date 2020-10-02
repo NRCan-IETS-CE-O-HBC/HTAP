@@ -29,6 +29,25 @@ def openLogFiles( logFile, summaryFile )
 end
 
 
+
+def monthLong(month)
+
+  match = "error"
+  MonthArrList.each do | longMonth |
+
+    if ( longMonth =~ /#{month}/i ) then 
+      match = longMonth
+      return match 
+    end 
+
+  end 
+
+  return match 
+
+end 
+
+
+
 def input(prompt="", newline=false)
   require 'readline'
   prompt += "\n" if newline
@@ -267,6 +286,7 @@ def debug_out(debmsg)
   if (lDebug || $gDebug ) then
      debugCaller = Array.new
      debug_out_now( debmsg, callerID)
+     log_out(debmsg)
   end
 end
 

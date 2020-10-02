@@ -45,6 +45,7 @@ $gArchetypeHash = Hash.new
 $gRulesetHash   = Hash.new
 $gLocationHash  = Hash.new
 $gExtendedOutputFlag = ""
+$gHourlySimulationFlag = ""
 
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
@@ -182,6 +183,17 @@ def parse_def_file(filepath)
           end
 
 
+          if ( $RunParamsOpen && $token_values[0] =~ /substitute-file/i )
+            # Where is our options file located?
+
+            $gSubstitutePath = $token_values[1]
+
+            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n"
+
+
+          end
+
+
          if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
             # Where is our options file located?
 
@@ -262,6 +274,7 @@ def parse_def_file(filepath)
 
             # locations -
             $gLocations = $token_values[1].to_s.split(",")
+
             $WildCardsInUse = true if ($gLocations.grep(/\*/).length > 0 )
 
           end
@@ -312,10 +325,10 @@ def parse_def_file(filepath)
 
   if ( $WildCardsInUse ) then
 
-
     debug_out ("Locations\n")
     locationIndex = 0
     $gLocations.clone.each do | choice |
+      next unless  ( choice =~ /\*/ ) 
       pattern = choice.gsub(/\./, "\.")
       pattern.gsub!(/\*/, ".*")
       debug_out( " Wildcard Query /#{pattern}/ \n" )
@@ -325,7 +338,7 @@ def parse_def_file(filepath)
       locationIndex += 1
     end
 
-
+    
     $gRunUpgrades.keys.each do |key|
  
       debug_out( " Wildcard search for #{key} => \n" )
@@ -374,9 +387,6 @@ def parse_def_file(filepath)
 
   #debug_out ("Final locations: #{$gLocations.pretty_inspect}")
   #debug_out ("Final Upgrades: #{$gRunUpgrades.pretty_inspect}")
-
-
-  # What if archetypes are defined using a wildcard?
 
   
 end # def parse_def_file(filepath)
@@ -496,7 +506,7 @@ def create_parametric_combos()
 
   end
 
-  debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
+  #debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
 
 
   $gArchetypes.each do | archetype |
@@ -798,7 +808,7 @@ def run_these_cases(current_task_files)
                 
                 cptries += 1
                  warn_out ("Could not delete files from within #{$RunDirectory} (Try # #{cptries}/3)\n")
-                if ( cpTries == 3 )
+                if ( cptries == 3 )
                   bCPDone = true 
                   warn_out ( "Trying to run simulation without deleting files in #{$RunDirectory}")
                 else 
@@ -877,17 +887,28 @@ def run_these_cases(current_task_files)
                            "#{subRulesetsFlag} "+
                            "#{subCostFlag} "+ 
                            "--prm "+
-                           "#{$gExtendedOutputFlag} "
+                           "#{$gExtendedOutputFlag} "+ 
+                           "#{$gHourlySimulationFlag}"
          # Save command for invoking substitute [ useful in debugging ]
           $cmdtxt = File.open("run-cmd.ps1", 'w')
-          $cmdtxt.write "#{cmdscript} -v"
+          $cmdtxt.write "#{cmdscript} -v "
 
           $cmdtxt.close
+
+          if  ( ! $gLogDebugMsgs ) then
+
+            debugflag = "--no-debug"
+
+          else 
+
+            debug_flag = ""
+          
+          end 
 
           # disable debugging in live version for faster runs 
           # (debugging still enabled in run-cmd.ps1)
           pid = Process.spawn( 
-            "#{cmdscript} --no-debug", 
+            "#{cmdscript} #{debugflag}", 
             :err => "substitute-h2k-errors.txt" 
           )
           
@@ -1493,6 +1514,8 @@ $gRunsAleadyCompleted = Array.new
 
 $gTest_params["audit-costs"] = false
 
+$gLogDebugMsgs = false 
+
 $gRunDefinitionsProvided = false
 $gRunDefinitionsFile = ""
 
@@ -1558,6 +1581,13 @@ optparse = OptionParser.new do |opts|
       $gExtendedOutputFlag = "-e"
    end
 
+ 	 opts.on( "--hourly-output", "Extrapolate hourly output from HOT2000's binned data.") do
+       $cmdlineopts["hourly_output"] = true
+       $gHourlySimulationFlag = "-g"
+       warn_out("Hourly results will saved in HTAP-Sim-X folders. Activating --keep-all-files option to make sure results are preserved.")
+       $gSaveAllRuns = true
+   end
+
    opts.separator " "
    opts.on("-k", "--keep-all-files", "Preserve all files (including modified .h2k ","files) in HTAP-sim-X directories. Otherwise, only",
                                      "files that generate errors will be saved.",
@@ -1607,6 +1637,14 @@ opts.separator " "
       $StopOnError = true
 
    end
+
+
+   opts.on("--log-debug-msgs", "Log debugging messages from programs. Use with --keep-all-files to see",
+                               "substiture-h2k.rb debugging output too.") do
+
+    $gLogDebugMsgs = true
+
+   end   
 
    #opts.on("-w", "--warnings", "Report warning messages") do
    #   $gWarn = true

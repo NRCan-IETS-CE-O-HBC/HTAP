@@ -106,8 +106,7 @@ KeepTheseColumns =
  "input|House-ListOfUpgrades",
  "input|House-Upgraded",
  "input|Opt-ACH",
-# "input|Opt-AtticCeilings",
- "input|Opt-Baseloads",
+ "input|Opt-AtticCeilings",
  "input|Opt-CasementWindows",
 # "input|Opt-CathCeilings",
  "input|Opt-Ceilings",
@@ -141,6 +140,8 @@ KeepTheseColumns =
  "input|Ruleset-Ventilation",
  "input|Run-Locale",
  "input|Run-Region",
+ "input|Opt-VentSystem",
+ "input|Opt-Windows",
  "input|upgrade-package-list",
  "output|AuxEnergyReq-HeatingGJ",
  "output|AnnDHWLoad-GJ",
@@ -159,6 +160,7 @@ KeepTheseColumns =
  "output|EnergyProp_L",
  "output|EnergyWood_cord",
  "output|Gross-HeatLoss-GJ",
+ "output|Infil-VentHeatLoss-GJ",
  "output|HDDs",
 # "output|House-R-Value(SI)",
 # "output|LapsedTime",
@@ -265,6 +267,7 @@ def rebuildCSV(masterfile,files)
           colHeaders.each do | foundColumn | 
             if ( keepColumn == foundColumn ) then 
               foundIndex = index
+              # print " KEEPING: #{foundColumn}\n"
             end 
             index = index+ 1 
           end 
