@@ -542,6 +542,10 @@ def create_parametric_combos()
 
             debug_out ("PARAMETRIC: #{attribute} has #{parameterSpace[attribute].length} entries\n")
 
+            if ( parameterSpace[attribute].length < 1  ) then 
+              fatalerror " #{attribute} has #{parameterSpace[attribute].length} entries"
+            end 
+
             parameterSpace[attribute][1..-1].each do | choice |
 
               debug_out ("      + #{choice} \n")

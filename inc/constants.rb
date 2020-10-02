@@ -184,7 +184,7 @@ AliasesForAttributes = {
   "Opt-DWHRSystem" => "Opt-DWHR"
 }
 
-$DoNotValidateOptions = Set.new [  "upgrade-package-list" ]
+$DoNotValidateOptions = Set.new [  "upgrade-package-list", "Opt-Archetype" ]
 
 
 

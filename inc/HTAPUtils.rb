@@ -399,8 +399,11 @@ module HTAPData
           valuesWithConditions = Hash.new
 
           for tagname,value in $values["base"]
-
-            tagindex = jsonRawOptions[attribute]["h2kSchema"].index(tagname) + 1
+            begin 
+              tagindex = jsonRawOptions[attribute]["h2kSchema"].index(tagname) + 1
+            rescue 
+              fatalerror("Could not locate tag \"#{tagname}\" in h2k schema for option \"#{attribute}\". Check definition of #{attribute} = #{optionEntry} ")
+            end 
             if ( ! tagindex.nil? )
               valuesWithConditions[tagindex.to_s] = Hash.new
               valuesWithConditions[tagindex.to_s] = { "conditions" => Hash.new }
@@ -680,7 +683,7 @@ module HTAPData
       end
 
       if ( $DoNotValidateOptions.include? option )
-        degug_out ("No need to validate #{option}\n")
+        debug_out ("No need to validate #{option}\n")
         next
       end 
 
@@ -731,7 +734,6 @@ module HTAPData
       end
 
       next if ( $LegacyOptionsToIgnore.include? attrib or $DoNotValidateOptions.include? attrib ) 
-
 
       debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
 

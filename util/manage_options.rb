@@ -286,7 +286,7 @@ end
 setTermSize
 
 filename = "C:\\HTAP\\HTAP-options.json"
-h2kCodeFile = "C:\\HTAP\\Archetypes\\codeLib.cod"
+h2kCodeFile = "C:\\HTAP\\lib\\codeLib.cod"
 
 $program = "manage_options.rb"
 $info    = "
@@ -296,7 +296,7 @@ $info    = "
     - Reads through the options file to find Windows
       with the performance data defined via
       the characteristic data field, and creates similar
-      records in the code library (at location
+      reclsords in the code library (at location
        #{h2kCodeFile}  )
 
   With these modifications, it creates a new version of
@@ -360,7 +360,7 @@ end
 
 stream_out "\n\n"
 stream_out drawRuler("Opt-H2KFoundation: definitions")
-debug_on
+debug_off
 parsedDefs["Opt-H2KFoundation"]["options"].each do | name, data |
 
 
