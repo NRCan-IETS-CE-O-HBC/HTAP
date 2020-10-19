@@ -5439,7 +5439,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
 
-
+                                          
         # Make sure that the code we want is available
         h2kPostElements["HouseFile/AllResults"].elements.each do |element|
 
@@ -5495,6 +5495,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             # Energy Consumption (Annual GJ)
             $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
             $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
+            $gResults[houseCode]["avgEnergyHeatingGJ-secondary"]    = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["secondary"].to_f * scaleData    
+            $gResults[houseCode]["avgEnergyHeatingGJ-primary"]      = $gResults[houseCode]["avgEnergyHeatingGJ"]  - $gResults[houseCode]["avgEnergyHeatingGJ-secondary"]
+
+
             $gResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
             $gResults[houseCode]["avgVentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f * scaleData
             $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
@@ -5524,6 +5528,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             end
             debug_out ("Parsing design loads\n")
             # Design loads, other data
+       
             $gResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f * scaleData
             $gResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f * scaleData
 
@@ -7669,6 +7674,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "Infil-VentHeatLoss-GJ" => $gResults[$outputHCode]["avgVentAndInfilGJ"].round(1),
           "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
           "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
+          "Energy-HeatingGJ-primary"  => $gResults[$outputHCode]['avgEnergyHeatingGJ-primary'].round(1),
+          "Energy-HeatingGJ-secondary"  => $gResults[$outputHCode]['avgEnergyHeatingGJ-secondary'].round(1),
           "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),
           "TotalAirConditioning-LoadGJ" => $TotalAirConditioningLoad.round(1) ,
           "AvgAirConditioning-COP" => $AvgACCOP.round(1) ,
@@ -7688,6 +7695,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "ERS-Value"         => $gERSNum.round(1) ,
           "NumTries"          => $NumTries.round(1) ,
           "LapsedTime"        => $runH2KTime.round(2) ,
+          "DesignTemp-Heating-oC" => $gResults[$outputHCode]["annual"]["design_Temp"]["heating_C"].round(1) ,
           "PEAK-Heating-W"    => $gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1) ,
           "PEAK-Cooling-W"    => $gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1) ,
 #          "House-R-Value(SI)" => $RSI['house'].round(3)
@@ -7826,6 +7834,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
       # These #s are not yet averaged for orientations!
+
       $fSUMMARY.write( "#{$aliasOutput}.PEAK-Heating-W    =  #{$gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1)}\n" )
       $fSUMMARY.write( "#{$aliasOutput}.PEAK-Cooling-W    =  #{$gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1)}\n" )
 
