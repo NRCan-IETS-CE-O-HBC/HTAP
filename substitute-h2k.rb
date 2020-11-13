@@ -5983,7 +5983,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Get the general information about the house
         # =========================================================================================
         def getHouseInfo (elements)
-
+          $EvalDate     = H2KFile.getEvalDate(elements)
           $YearBuilt    = H2KFile.getYearBuilt(elements)
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
@@ -7571,6 +7571,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               results[$aliasLongArch] = {   "h2k-File"            =>  "#{$h2kFileName}",
             "House-Builder"       =>  "#{$BuilderName}",
             "Year-Built"          =>  "#{$YearBuilt}",
+            "EvaluationDate"      =>  "#{$EvalDate}",
             "House-Type"          =>  "#{$HouseType}",
             "House-Storeys"       =>  "#{$HouseStoreys}",
 			    	"Front-Orientation"   =>  "#{$HouseFrontOrientation}",
