@@ -672,6 +672,21 @@ module H2KFile
     return myRegionName
 
   end
+  
+  # =========================================================================================
+  # Get the name of the base file address city
+  # =========================================================================================
+  def H2KFile.getAddress(elements)
+
+    myCityAddress = elements["HouseFile/ProgramInformation/Client/StreetAddress/City"].text
+	 
+	 if myCityAddress != nil
+		myCityAddress.gsub!(/\s*/, '')
+	 end
+
+    return myCityAddress
+
+  end
 
   # =========================================================================================
   #  Function to create the Program XML section that contains the ERS program mode data
@@ -1365,6 +1380,7 @@ module H2KFile
     myH2KHouseInfo["locale"] = Hash.new
     myH2KHouseInfo["locale"]["weatherLoc"] = H2KFile.getWeatherCity( elements )
     myH2KHouseInfo["locale"]["region"]     = H2KFile.getRegion( elements )
+	 myH2KHouseInfo["locale"]["city"]     = H2KFile.getAddress( elements )
 
     myH2KHouseInfo["house-description"] = Hash.new
     myH2KHouseInfo["house-description"]["stories"] = H2KFile.getStoreys(elements)

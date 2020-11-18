@@ -7170,6 +7170,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           # Base location from original H2K file.
           $gBaseLocale = H2KFile.getWeatherCity( h2kElements )
           $gBaseRegion = H2KFile.getRegion( h2kElements )
+			    $gBaseCity   = H2KFile.getAddress( h2kElements )
 
           if $Locale.empty? || $Locale == "NA"
             # from base model file
@@ -7570,6 +7571,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "Weather-Locale"      =>  "#{$Locale_model}",
             "Base-Region"         =>  "#{$gBaseRegion}",
             "Base-Locale"         =>  "#{$gBaseLocale}",
+				    "Base-City"           =>  "#{$gBaseCity}",
             "climate-zone"        =>  "#{climateZone}",
             "fuel-heating-presub"  =>  "#{$ArchetypeData["pre-substitution"]["fuelHeating"]}",
             "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelDHW"]}",
@@ -7768,6 +7770,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $fSUMMARY.write( "#{$aliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Locale       =  #{$gBaseLocale}\n" )
+		  $fSUMMARY.write( "#{$aliasArch}.Base-City       =  #{$gBaseCity}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Ceiling-Type    =  #{$Ceilingtype}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Area-Slab-m2    =  #{$FoundationArea["Slab"].to_f.round(2)}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Area-Basement-m2    =  #{$FoundationArea["Basement"].to_f.round(2)}\n" )
