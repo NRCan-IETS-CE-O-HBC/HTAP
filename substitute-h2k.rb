@@ -2366,7 +2366,7 @@ def processFile(h2kElements)
                 end
               end
             end
-
+            
           elsif ( tag =~ /Opt-H2K-Type2CutoffTemp/ && value != "NA"  && "#{value}" != "" )
             sysType2.each do |sysType2Name|
               if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
@@ -5496,6 +5496,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             $gResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f * scaleData
             $gResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f * scaleData
             $gResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f * scaleData
+            $gResults[houseCode]["avgVentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f * scaleData
             $gResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f * scaleData
             $gResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f * scaleData
             $gResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f * scaleData
@@ -5541,6 +5542,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             if $ExtraOutput1 then
               # Annual SpaceHeating and HotWater energy by fuel type [GJ]
               $gResults[houseCode]["AnnSpcHeatElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f * scaleData
+              $gResults[houseCode]["AnnSpcHeatHPGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f * scaleData
               $gResults[houseCode]["AnnSpcHeatGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["spaceHeating"].to_f * scaleData
               $gResults[houseCode]["AnnSpcHeatOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f * scaleData
               $gResults[houseCode]["AnnSpcHeatPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f * scaleData
@@ -7583,28 +7585,28 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             "Floor-Area-m2"     => "#{$FloorArea.round(1)}",
             "House-Volume-m3"   => "#{$HouseVolume.round(1)}",
 
-#            "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
+            "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
 #            "Win-R-value-S"     => "#{$rValueWin[1].round(3)}",
             "Win-Area-m2-S"     => "#{$AreaWin_sum[1].round(1)}",
-#            "Win-SHGC-SE"       => "#{$SHGCWin[2].round(3)}",
+            "Win-SHGC-SE"       => "#{$SHGCWin[2].round(3)}",
 #            "Win-R-value-SE"    => "#{$rValueWin[2].round(3)}",
             "Win-Area-m2-SE"    => "#{$AreaWin_sum[2].round(1)}",
-#            "Win-SHGC-E"        => "#{$SHGCWin[3].round(3)}",
+            "Win-SHGC-E"        => "#{$SHGCWin[3].round(3)}",
 #            "Win-R-value-E"     => "#{$rValueWin[3].round(3)}",
             "Win-Area-m2-E"     => "#{$AreaWin_sum[3].round(1)}",
-#            "Win-SHGC-NE"       => "#{$SHGCWin[4].round(3)}",
+            "Win-SHGC-NE"       => "#{$SHGCWin[4].round(3)}",
 #            "Win-R-value-NE"    => "#{$rValueWin[4].round(3)}",
             "Win-Area-m2-NE"    => "#{$AreaWin_sum[4].round(1)}",
-#            "Win-SHGC-N"        => "#{$SHGCWin[5].round(3)}",
+            "Win-SHGC-N"        => "#{$SHGCWin[5].round(3)}",
 #            "Win-R-value-N"     => "#{$rValueWin[5].round(3)}",
             "Win-Area-m2-N"     => "#{$AreaWin_sum[5].round(1)}",
-#            "Win-SHGC-NW"       => "#{$SHGCWin[6].round(3)}",
+            "Win-SHGC-NW"       => "#{$SHGCWin[6].round(3)}",
 #            "Win-R-value-NW"    => "#{$rValueWin[6].round(3)}",
             "Win-Area-m2-NW"    => "#{$AreaWin_sum[6].round(1)}",
-#            "Win-SHGC-W"        => "#{$SHGCWin[7].round(3)}",
+            "Win-SHGC-W"        => "#{$SHGCWin[7].round(3)}",
 #            "Win-R-value-W"     => "#{$rValueWin[7].round(3)}",
             "Win-Area-m2-W"     => "#{$AreaWin_sum[7].round(1)}",
-#            "Win-SHGC-SW"       => "#{$SHGCWin[8].round(3)}",
+            "Win-SHGC-SW"       => "#{$SHGCWin[8].round(3)}",
 #            "Win-R-value-SW"    => "#{$rValueWin[8].round(3)}",
             "Win-Area-m2-SW"    => "#{$AreaWin_sum[8].round(1)}",
 
@@ -7666,6 +7668,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           "Util-Bill-Wood"    => $gResults[$outputHCode]['avgFuelCostsWood$'].round(2),
           "Energy-PV-kWh"     => $gResults[$outputHCode]['avgElecPVGenkWh'].round(0),
           "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
+          "Infil-VentHeatLoss-GJ" => $gResults[$outputHCode]["avgVentAndInfilGJ"].round(1),
           "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
           "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
           "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),
@@ -7710,6 +7713,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           results[$aliasLongOutput]["AnnDHWLoad-GJ"]     =  $gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)
 
           results[$aliasLongOutput]["SpcHeatElec-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)
+          results[$aliasLongOutput]["SpcHeatHP-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatHPGJ'].round(1)
           results[$aliasLongOutput]["SpcHeatGas-GJ"]     = $gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)
           results[$aliasLongOutput]["SpcHeatOil-GJ"]     = $gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)
           results[$aliasLongOutput]["SpcHeatProp-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)
@@ -7766,7 +7770,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $fSUMMARY.write( "#{$aliasArch}.House-Builder     =  #{$BuilderName}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Type        =  #{$HouseType}\n" )
         $fSUMMARY.write( "#{$aliasArch}.House-Storeys     =  #{$HouseStoreys}\n" )
-		  $fSUMMARY.write( "#{$aliasArch}.Front-Orientation =  #{$HouseFrontOrientation}\n")
+	  	  $fSUMMARY.write( "#{$aliasArch}.Front-Orientation =  #{$HouseFrontOrientation}\n")
         $fSUMMARY.write( "#{$aliasArch}.Weather-Locale    =  #{$Locale_model}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Region       =  #{$gBaseRegion}\n" )
         $fSUMMARY.write( "#{$aliasArch}.Base-Locale       =  #{$gBaseLocale}\n" )
@@ -7793,6 +7797,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
       $fSUMMARY.write( "#{$aliasOutput}.Energy-PV-kWh     =  #{$gResults[$outputHCode]['avgElecPVGenkWh'].round(0)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Gross-HeatLoss-GJ =  #{$gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1)} \n" )
+
+      $fSUMMARY.write( "#{$aliasOutput}.InfilAndVent-HeatLoss-GJ =  #{$gResults[$outputHCode]["avgVentAndInfilGJ"].round(1)} \n" )
+
       $fSUMMARY.write( "#{$aliasOutput}.Useful-Solar-Gain-GJ =  #{$gResults[$outputHCode]['avgSolarGainsUtilized'].round(1)} \n" )
       #$fSUMMARY.write( "#{$aliasOutput}.Energy-SDHW      =  #{$gEnergySDHW.round(1)} \n" )
       $fSUMMARY.write( "#{$aliasOutput}.Energy-HeatingGJ  =  #{$gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1)} \n" )
@@ -7897,11 +7904,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $fSUMMARY.write( "#{$aliasOutput}.AnnDHWLoad-GJ     =  #{$gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)}\n")
 
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatElec-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)}\n")
+        $fSUMMARY.write( "#{$aliasOutput}.SpcHeatHP-GJ      =  #{$gResults[$outputHCode]['AnnSpcHeatHPGJ'].round(1)}\n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatGas-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatOil-GJ     =  #{$gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatProp-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.SpcHeatWood-GJ    =  #{$gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)} \n")
-        $fSUMMARY.write( "#{$aliasOutput}.HotWaterElec-GJ c  =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
+        $fSUMMARY.write( "#{$aliasOutput}.HotWaterElec-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.HotWaterGas-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.HotWaterOil-GJ    =  #{$gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)} \n")
         $fSUMMARY.write( "#{$aliasOutput}.HotWaterProp-GJ   =  #{$gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)} \n")
