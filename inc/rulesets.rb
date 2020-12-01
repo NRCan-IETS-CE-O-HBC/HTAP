@@ -4,6 +4,7 @@
 # =========================================================================================
 # Rule Set: OEE Equipment Windows Roadmapping modelling
 # =========================================================================================
+
 def ArchetypeRoadmapping_RuleSet( rule, elements )
 
    debug_off
@@ -215,6 +216,7 @@ def ArchetypeRoadmapping_RuleSet( rule, elements )
          $ruleSetChoices["Opt-DHWSystem"]       = "vintageOilEF0.57"
       
       end 
+
 
 
    end 

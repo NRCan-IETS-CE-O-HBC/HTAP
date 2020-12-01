@@ -123,7 +123,7 @@
       "ArchetypeRoadmapping_oil": "ArchetypeRoadmapping_oil",
       "ArchetypeRoadmapping_gas": "ArchetypeRoadmapping_gas",
       "ArchetypeRoadmapping_elec": "ArchetypeRoadmapping_elec", 
-       "ArchetypeRoadmapping_auto": "ArchetypeRoadmapping_auto"
+      "ArchetypeRoadmapping_auto": "ArchetypeRoadmapping_auto"
     },
     "default": "NA",
     "stop-on-error": true
@@ -1319,7 +1319,6 @@
           "components": []
         }
       },
-      
       "ACH_7": {
         "h2kMap": {
           "base": {
@@ -9475,6 +9474,81 @@
           ]
         }
       },
+      "VintageR30": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "32"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      
+      
+      "BaseExpFloor-R31": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "31"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:r31_batt"
+          ]
+        }
+      },
+      "ExpFloorFlash&Batt-R36": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "36"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:spray_foam_2pd_urethane:5.5in_thickness"
+          ]
+        }
+      },
+      "ExpFloorFoamed-R52": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "Foamed-R52",
+            "OPT-H2K-EffRValue": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:spray_foam:2pound_urethane:7.5in_thickness",
+				"insulation:spray_foam:38mm:r6/inch"
+          ]
+        }
+      },
+      "NWTCrawlFlr": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "30"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "NBC_936_4.67RSI": {
         "h2kMap": {
           "base": {
@@ -9819,7 +9893,7 @@
             "Opt-H2K-Type2CCaseH": "60",
             "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
-            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapOpt": "3",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2HeatCOP": "3.66",
             "Opt-H2K-Type2RatingTemp": "8.3",            

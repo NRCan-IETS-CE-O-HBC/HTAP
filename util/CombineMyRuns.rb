@@ -33,6 +33,7 @@ KeepTheseColumns =
  "archetype|Area-Wall-m2",
  "archetype|Area-Windows-m2",
  "archetype|Base-Locale",
+ "archetype|Base-City",
 # "archetype|Base-Region",
 # "archetype|Ceiling-Type",
  "archetype|Floor-Area-m2",

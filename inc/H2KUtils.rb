@@ -681,6 +681,21 @@ module H2KFile
     return myRegionName
 
   end
+  
+  # =========================================================================================
+  # Get the name of the base file address city
+  # =========================================================================================
+  def H2KFile.getAddress(elements)
+
+    myCityAddress = elements["HouseFile/ProgramInformation/Client/StreetAddress/City"].text
+	 
+	 if myCityAddress != nil
+		myCityAddress.gsub!(/\s*/, '')
+	 end
+
+    return myCityAddress
+
+  end
 
   # =========================================================================================
   #  Function to create the Program XML section that contains the ERS program mode data
@@ -1374,6 +1389,7 @@ module H2KFile
     myH2KHouseInfo["locale"] = Hash.new
     myH2KHouseInfo["locale"]["weatherLoc"] = H2KFile.getWeatherCity( elements )
     myH2KHouseInfo["locale"]["region"]     = H2KFile.getRegion( elements )
+	 myH2KHouseInfo["locale"]["city"]     = H2KFile.getAddress( elements )
 
     myH2KHouseInfo["house-description"] = Hash.new
     myH2KHouseInfo["house-description"]["stories"] = H2KFile.getStoreys(elements)
@@ -1783,7 +1799,9 @@ module H2KUtils
 
 end
 
-
+# =========================================================================================
+# H2Kutilis : Parse H2k File 
+# =========================================================================================
 module H2KOutput 
 
   def H2KOutput.parse_BrowseRpt(myBrowseRptFile)
@@ -2342,6 +2360,249 @@ module H2KOutput
 
   end 
 
+  def H2KOutput.parse_results(myResultCode,myElements)
+
+    myResults = Hash.new(&$blk)
+    myResults[myResultCode] = Hash.new 
+    myResults[myResultCode]["found"] = false  
+
+    log_out("Querying HOT2000 file for result set #{myResultCode}.\n")
+
+    # Make sure that the code we want is available
+    myElements["HouseFile/AllResults"].elements.each do |element|
+
+      houseCode =  element.attributes["houseCode"]
+
+      
+
+      # 05-Feb-2018 JTB: Note that in Non-Program (ERS) mode there is no "houseCode" attribute in the single element results set!
+      # When in Program mode there are multiple element results sets (7). The first set has no houseCode attribute, the next six (6)
+      # do have a value for the houseCode attribute. The last set has the houseCode attribute of "UserHouse", which almost exactly
+      # matches the first results set (General mode results).
+      if (houseCode == nil && element.attributes["sha256"] != nil)
+        houseCode = "General"
+      end
+
+      if (houseCode == "#{myResultCode}" )
+        $HCRequestedfoundfound = true
+        myResults[myResultCode]["found"] = true        
+      end
+
+    end
+
+    if ( ! myResults["myResultCode"]["found"]  ) then 
+      log_out("Could not find result set #{myResultCode}.\n")
+      return myResults[myResultCode] 
+    end 
+    
+    myElements["HouseFile/AllResults"].elements.each do |element|
+      debug_out ("Set ...\n")
+      houseCode =  element.attributes["houseCode"]
+
+      if (houseCode == nil && element.attributes["sha256"] != nil)
+        houseCode = "General"
+      end
+
+      # JTB 31-Jan-2018: Limiting results parsing to 1 set specified by user in choice file and saved in myResultCode
+      if (houseCode =~ /#{myResultCode}/)
+
+        stream_out( "\n Parsing results from set: #{myResultCode} ...")
+        # Energy Consumption (Annual GJ)
+        myResults[houseCode]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  
+        myResults[houseCode]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f  
+        myResults[houseCode]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+        myResults[houseCode]["avgVentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
+        myResults[houseCode]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f  
+        myResults[houseCode]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f  
+        myResults[houseCode]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f  
+        myResults[houseCode]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f  
+
+        if $ExtraOutput1 then
+          # Total Heat Loss of all zones by component (GJ)
+          myResults[houseCode]["EnvHLTotalGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+          myResults[houseCode]["EnvHLCeilingGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ceiling"].to_f  
+          myResults[houseCode]["EnvHLMainWallsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["mainWalls"].to_f  
+          myResults[houseCode]["EnvHLWindowsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["windows"].to_f  
+          myResults[houseCode]["EnvHLDoorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["doors"].to_f  
+          myResults[houseCode]["EnvHLExpFloorsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["exposedFloors"].to_f  
+          myResults[houseCode]["EnvHLCrawlspaceGJ"] = element.elements[".//Annual/HeatLoss"].attributes["crawlspace"].to_f  
+          myResults[houseCode]["EnvHLSlabGJ"] = element.elements[".//Annual/HeatLoss"].attributes["slab"].to_f  
+          myResults[houseCode]["EnvHLBasementBGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementBelowGradeWall"].to_f  
+          myResults[houseCode]["EnvHLBasementAGWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementAboveGradeWall"].to_f  
+          myResults[houseCode]["EnvHLBasementFlrHdrsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["basementFloorHeaders"].to_f  
+          myResults[houseCode]["EnvHLPonyWallGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ponyWall"].to_f  
+          myResults[houseCode]["EnvHLFlrsAbvBasementGJ"] = element.elements[".//Annual/HeatLoss"].attributes["floorsAboveBasement"].to_f  
+          myResults[houseCode]["EnvHLAirLkVentGJ"] = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
+
+          # Annual DHW heating load [GJ] -- heating load (or demand) on DHW system (before efficiency applied)
+          myResults[houseCode]["AnnHotWaterLoadGJ"] = element.elements[".//Annual/HotWaterDemand"].attributes["base"].to_f  
+        end
+        debug_out ("Parsing design loads\n")
+        # Design loads, other data
+        myResults[houseCode]["avgOthPeakHeatingLoadW"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f  
+        myResults[houseCode]["avgOthPeakCoolingLoadW"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f  
+
+        myResults[houseCode]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f  
+        myResults[houseCode]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f  
+        myResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f  
+        myResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f  
+        myResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f  
+
+        myResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f  
+        myResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f  
+        myResults[houseCode]["avgFuelCostsOil$"]     = element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f  
+        myResults[houseCode]["avgFuelCostsPropane$"] = element.elements[".//Annual/ActualFuelCosts"].attributes["propane"].to_f  
+        myResults[houseCode]["avgFuelCostsWood$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["wood"].to_f  
+
+        if $ExtraOutput1 then
+          # Annual SpaceHeating and HotWater energy by fuel type [GJ]
+          myResults[houseCode]["AnnSpcHeatElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f  
+          myResults[houseCode]["AnnSpcHeatHPGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f  
+          myResults[houseCode]["AnnSpcHeatGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["spaceHeating"].to_f  
+          myResults[houseCode]["AnnSpcHeatOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["spaceHeating"].to_f  
+          myResults[houseCode]["AnnSpcHeatPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["spaceHeating"].to_f  
+          myResults[houseCode]["AnnSpcHeatWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["spaceHeating"].to_f  
+          myResults[houseCode]["AnnHotWaterElecGJ"] = element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f  
+          myResults[houseCode]["AnnHotWaterGasGJ"] = element.elements[".//Annual/Consumption/NaturalGas"].attributes["hotWater"].to_f  
+          myResults[houseCode]["AnnHotWaterOilGJ"] = element.elements[".//Annual/Consumption/Oil"].attributes["hotWater"].to_f  
+          myResults[houseCode]["AnnHotWaterPropGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["hotWater"].to_f  
+          myResults[houseCode]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f  
+        end
+
+        myResults[houseCode]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f  
+
+        # Bug in v11.3b90: The annual electrical energy total is 0 even though its components are not. Workaround below.
+        # 07-APR-2018 JTB: This should only be checked when there is NO internal PV model in use!
+        if !$PVIntModel && myResults[houseCode]["avgFueluseElecGJ"] == 0 then
+          myResults[houseCode]["avgFueluseElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["appliance"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["lighting"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["spaceCooling"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f   +
+          element.elements[".//Annual/Consumption/Electrical/HotWater"].attributes["dhw"].to_f  
+        end
+        myResults[houseCode]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f  
+        myResults[houseCode]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f  
+        myResults[houseCode]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f  
+        myResults[houseCode]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f  
+
+        myResults[houseCode]["avgFueluseEleckWh"]  = myResults[houseCode]["avgFueluseElecGJ"] * 277.77777778
+        myResults[houseCode]["avgFueluseNatGasM3"] = myResults[houseCode]["avgFueluseNatGasGJ"] * 26.853
+        myResults[houseCode]["avgFueluseOilL"]     = myResults[houseCode]["avgFueluseOilGJ"]  * 25.9576
+        myResults[houseCode]["avgFuelusePropaneL"] = myResults[houseCode]["avgFuelusePropaneGJ"] / 25.23 * 1000
+        myResults[houseCode]["avgFueluseWoodcord"] = myResults[houseCode]["avgFueluseWoodGJ"] / 18.30
+        # estimated GJ/cord for wood/pellet burning from YHC Fuel Cost Comparison.xls
+
+        myResults[houseCode]["avgFuelCostsTotal$"] = myResults[houseCode]["avgFuelCostsElec$"] +
+        myResults[houseCode]["avgFuelCostsNatGas$"] +
+        myResults[houseCode]["avgFuelCostsOil$"] +
+        myResults[houseCode]["avgFuelCostsPropane$"] +
+        myResults[houseCode]["avgFuelCostsWood$"]
+
+        # JTB 10-Nov-2016: Changed variable name from avgEnergyTotalGJ to "..Gross.." and uncommented
+        # the reading of avgEnergyTotalGJ above. This value does NOT include utilized PV energy and
+        # avgEnergyTotalGJ does when there is an internal H2K PV model.
+        myResults[houseCode]["avgEnergyGrossGJ"]  = myResults[houseCode]['avgEnergyHeatingGJ'].to_f +
+        myResults[houseCode]['avgEnergyWaterHeatingGJ'].to_f +
+        myResults[houseCode]['avgEnergyVentilationGJ'].to_f +
+        myResults[houseCode]['avgEnergyCoolingGJ'].to_f +
+        myResults[houseCode]['avgEnergyEquipmentGJ'].to_f
+
+      
+
+        monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+        debug_out (" Picking up  AUX energy requirement from each result set. \n")
+
+        $gAuxEnergyHeatingGJ = 0
+        $MonthlyAuxHeatingMJ = 0
+        monthArr.each do |mth|
+          $gAuxEnergyHeatingGJ += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
+        end
+
+        # ASF 03-Oct-2016 - picking up PV generation from each individual result set.
+        if ( $PVIntModel )
+          pvAvailable = 0
+          pvUtilized  = 0
+          #monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+          monthArr.each do |mth|
+            # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsistent with convention used
+            #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
+            # ASF: 05-Oct-2016: I suspect this loop is really expensive.
+            pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f
+            # GJ
+            pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f
+            # GJ
+          end
+          # 10-Nov-2016 JTB: Use annual PV values only! HOT2000 redistributes the monthly excesses, if available!
+          myResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable
+          # GJ
+          myResults[houseCode]["avgEnergyPVUtilizedGJ"]  = pvUtilized
+          # GJ
+          myResults[houseCode]["avgElecPVGenkWh"] = myResults[houseCode]["avgEnergyPVAvailableGJ"] * 277.777778
+          # kWh
+          myResults[houseCode]["avgElecPVUsedkWh"] = myResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
+          # kWh
+
+          # ***** Calculation of NET PV Revenue using HOT2000 model *****
+          # 10-Nov-2016 JTB: Assumes that all annual PV energy available is used to reduce house electricity
+          # to zero first, the balance is sold to utility at the rate PVTarrifDollarsPerkWh,
+          # which is specified in the options file (defaulted at top if not in Options file!).
+          netAnnualPV = myResults[houseCode]["avgElecPVGenkWh"] - myResults[houseCode]["avgElecPVUsedkWh"]
+          if ( netAnnualPV > 0 )
+            myResults[houseCode]["avgPVRevenue"] = netAnnualPV  * $PVTarrifDollarsPerkWh
+          else
+            myResults[houseCode]["avgPVRevenue"] = 0
+          end
+        else
+          # Calculate and reset these values below if external PV model used
+          myResults[houseCode]["avgEnergyPVAvailableGJ"] = 0.0
+          myResults[houseCode]["avgEnergyPVUtilizedGJ"]  = 0.0
+          myResults[houseCode]["avgElecPVGenkWh"] = 0.0
+          myResults[houseCode]["avgElecPVUsedkWh"] = 0.0
+          myResults[houseCode]["avgPVRevenue"] =  0.0
+        end
+
+        # This is used for debugging only.
+        diff =  ( myResults[houseCode]["avgFueluseElecGJ"].to_f +
+          myResults[houseCode]["avgFueluseNatGasGJ"].to_f -
+          myResults[houseCode]["avgEnergyPVUtilizedGJ"]) - myResults[houseCode]["avgEnergyTotalGJ"].to_f
+          myResults[houseCode]["zH2K-debug-Energy"] = diff.to_f  
+
+          
+        # break out of the element loop to avoid further processing
+
+        #Append monthly result sets             
+ 
+
+        # do these belong here? ???
+        # Open output file here so we can log errors too!
+        #myResults[houseCode]["monthly"]["GrossThermalLoad"] = Hash.new 
+        #myResults[houseCode]["monthly"]["UtilizedInternalGains"] = Hash.new 
+        #myResults[houseCode]["monthly"]["UtilizedSolarGains"] = Hash.new 
+        #myResults[houseCode]["monthly"]["FractionOfTimeHeatingSystemNotOperating"]= Hash.new 
+        #myResults[houseCode]["monthly"]["UtilizedAuxiliaryHeatRequired"] = Hash.new 
+        #myResults[houseCode]["monthly"][""] = Hash.new 
+        # myResults[houseCode]["monthly"][""] = Hash.new 
+        
+        #monthArr.each do |mth|
+        #  myResults[houseCode]["monthly"]["UtilizedAuxiliaryHeatRequired"][mth] = h2kPostElements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f
+        #  myResults[houseCode]["monthly"]["GrossThermalLoad"][mth] = h2kPostElements[".//Monthly/FractionOfTimeHeatingSystemNotOperating"].attributes[mth].to_f
+        #  myResults[houseCode]["monthly"]["GrossThermalLoad"][mth] = h2kPostElements[".//Monthly/Load/GrossThermal"].attributes[mth].to_f
+        #  myResults[houseCode]["monthly"]["UtilizedInternalGains"][mth] = h2kPostElements[".//Monthly/Gains/UtilizedInternal"].attributes[mth].to_f
+        #  myResults[houseCode]["monthly"]["UtilizedSolarGains"][mth] = h2kPostElements[".//Monthly/Gains/UtilizedSolar"].attributes[mth].to_f
+        #end 
+
+      end
+
+    end
+    # h2kPostElements |element| loop (and scope of local variable houseCode!)
+
+    return myResults[myResultCode]  
+    
+  end 
 end 
 
 
