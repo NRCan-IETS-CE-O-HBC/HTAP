@@ -456,6 +456,15 @@ module H2KFile
     return myYearBuilt
   end
 
+  # =========================================================================================
+  # Returns Year home was built
+  # =========================================================================================
+  def H2KFile.getEvalDate(elements)
+
+    myEvalDate = elements["HouseFile/ProgramInformation/File"].attributes["evaluationDate"].to_s
+
+    return myEvalDate
+  end  
 
   # =========================================================================================
   # Returns Name of a builder

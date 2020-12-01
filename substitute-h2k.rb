@@ -5414,13 +5414,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $gResults["version"]["HOT2000"] = "v#{h2kPostElements["HouseFile/Application/Version"].attributes["major"]}"+
                                           ".#{h2kPostElements["HouseFile/Application/Version"].attributes["minor"]}"+
                                           "b#{h2kPostElements["HouseFile/Application/Version"].attributes["build"]}"
-
-
         
         $gResults[$outputHCode] = H2KOutput.parse_results($outputHCode,h2kPostElements)
 
-        debug_on 
+        debug_off
         debug_out "Query: #{$outputHCode} ? > #{$gResults[$outputHCode]["found"]}\n"
+
 
         # Start with ERS mode results:
         if (  ! $outputHCode =~ /General/ ) then 
@@ -5662,7 +5661,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Get the general information about the house
         # =========================================================================================
         def getHouseInfo (elements)
-
+          $EvalDate     = H2KFile.getEvalDate(elements)
           $YearBuilt    = H2KFile.getYearBuilt(elements)
           $BuilderName  = H2KFile.getBuilderName(elements)
           $HouseType    = H2KFile.getHouseType(elements)
@@ -7209,12 +7208,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             $gResults[$outputHCode]['avgEnergyCoolingGJ'] +
             $gResults[$outputHCode]['avgEnergyVentilationGJ'] +
             $gResults[$outputHCode]['avgEnergyWaterHeatingGJ']  ) * 277.78 / $FloorArea
+            if ( $gResults['Reference'].empty? ) then
+              $RefEnergy = 0.0
 
-          if ( $gResults['Reference'].empty? ) then
-            $RefEnergy = 0.0
-          else
-            $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
-          end
+            else
+              $RefEnergy = $gResults['Reference']['avgEnergyTotalGJ']
+            end
 
           json_output = true
           if ( json_output ) then
