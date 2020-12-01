@@ -4,12 +4,64 @@
 # =========================================================================================
 # Rule Set: OEE Equipment Windows Roadmapping modelling
 # =========================================================================================
-def ArchetypeRoadmapping_RuleSet( ruleType, elements )
+def ArchetypeRoadmapping_RuleSet( rule, elements )
 
-   debug_on 
-   debug_out "h2k file : #{$h2kFileName}\n"
+   debug_off
+   debug_out "h2k file : #{$h2kFileName} \n"
+   debug_out "rule     : #{rule} \n"
    
-   if $h2kFileName =~ /pre-1946/
+   if ( rule =~ /auto/ ) then 
+
+      primHeatFuelName = H2KFile.getPrimaryHeatSys( elements )
+      
+      secSysType = H2KFile.getSecondaryHeatSys( elements )
+      yearbuilt = H2KFile.getYearBuilt(elements)
+
+      debug_out ( "1st heating system: #{primHeatFuelName}\n") 
+      debug_out ( "2nd heating system: #{secSysType}\n")
+      debug_out ( "Yearbuilt:          #{yearbuilt}\n")
+
+      debug_out ("ChecFuel\n")
+      if ( primHeatFuelName =~ /electric/i ) then 
+        ruleType = "Roadmapping_elec"
+      elsif  ( primHeatFuelName =~ /Natural gas/i ) then 
+        ruleType = "Roadmapping_gas"
+      elsif  ( primHeatFuelName =~ /Oil/i ) then 
+        ruleType = "Roadmapping_oil"
+      elsif  ( primHeatFuelName =~ /Propane/i ) then 
+        ruleType = "Roadmapping_oil"
+      elsif  ( primHeatFuelName =~ /wood/i ) then 
+        ruleType = "Roadmapping_oil"
+      else 
+        err_out("unknown fuel type: #{primHeatFuelName} (secondary: #{secSysType})")
+        fatalerror("Roadmapping_auto ruleset could not intrepret fuel")
+      end 
+
+      debug_out ("CheckYear\n")
+      if ( yearbuilt < 1946 ) then 
+         vintage = "pre-1946"
+      elsif ( yearbuilt < 1984) then 
+         vintage = "1946-1983"
+      elsif ( yearbuilt < 1996) then 
+         vintage = "1984-1995"         
+      elsif ( yearbuilt < 2006) then 
+         vintage = "1996-2005"      
+      elsif ( yearbuilt < 2012) then 
+         vintage = "2006-2011"      
+      else 
+         vintage = "2012-2019"   
+      end 
+   
+
+   else 
+      vintage = $h2kFileName
+      ruleType = rule 
+   end 
+   
+   debug_out ("Vintage / Fuel: #{vintage} / #{ruleType} ")
+
+   debug_off 
+   if vintage =~ /pre-1946/
       $ruleSetChoices["Opt-ACH"]            = "ACH_10"
       if ruleType =~ /Roadmapping_elec/
          $ruleSetChoices["Opt-Windows"]     = "dbl-clear-u3.33"
@@ -37,7 +89,7 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
       
       end 
 
-   elsif  $h2kFileName =~ /1946-1983/
+   elsif  vintage =~ /1946-1983/
 
       if ruleType =~ /Roadmapping_elec/
          $ruleSetChoices["Opt-Windows"]     = "dbl-clear-u2.94"
@@ -66,7 +118,7 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
       end 
 
 
-   elsif  $h2kFileName =~ /1984-1995/
+   elsif  vintage =~ /1984-1995/
 
       if ruleType =~ /Roadmapping_elec/
          $ruleSetChoices["Opt-Windows"]     = "dbl-clear-u2.94"
@@ -94,7 +146,7 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
       
       end 
 
-   elsif  $h2kFileName =~ /1996-2005/
+   elsif  vintage =~ /1996-2005/
       $ruleSetChoices["Opt-ACH"]            = "ACH_3_5"
       $ruleSetChoices["Opt-Ceilings"]             = "CeilR40"
       $ruleSetChoices["Opt-Windows"]     = "dbl-clear-u2.13"
@@ -118,7 +170,7 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
       
       end 
 
-   elsif  $h2kFileName =~ /2006-2011/
+   elsif  vintage =~ /2006-2011/
       $ruleSetChoices["Opt-ACH"]            = "ACH_2_5"
 
       $ruleSetChoices["Opt-Windows"]     = "dbl-clear-u2.13"
@@ -142,7 +194,7 @@ def ArchetypeRoadmapping_RuleSet( ruleType, elements )
       
       end       
 
-   elsif  $h2kFileName =~ /2012-2019/
+   elsif  vintage =~ /2012-2019/
       $ruleSetChoices["Opt-ACH"]            = "ACH_2_5"
       $ruleSetChoices["Opt-Ceilings"]             = "CeilR50"
       $ruleSetChoices["Opt-Windows"]     = "dbl-clear-u1.8"

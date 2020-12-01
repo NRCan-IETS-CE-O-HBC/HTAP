@@ -122,7 +122,8 @@
       "NBC9_36_HRV": "NBC9_36_HRV",
       "ArchetypeRoadmapping_oil": "ArchetypeRoadmapping_oil",
       "ArchetypeRoadmapping_gas": "ArchetypeRoadmapping_gas",
-      "ArchetypeRoadmapping_elec": "ArchetypeRoadmapping_elec"
+      "ArchetypeRoadmapping_elec": "ArchetypeRoadmapping_elec", 
+       "ArchetypeRoadmapping_auto": "ArchetypeRoadmapping_auto"
     },
     "default": "NA",
     "stop-on-error": true
@@ -1303,7 +1304,22 @@
           "custom-costs": {},
           "components": []
         }
-      },      
+      },
+      "ACH_8": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "8.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      
       "ACH_7": {
         "h2kMap": {
           "base": {
@@ -3691,7 +3707,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "20"
+            "OPT-H2K-EffRValue": "30"
           }
         },
         "costs": {
@@ -9793,7 +9809,7 @@
             "Opt-H2K-SysType1": "Furnace",             
             "Opt-H2K-SysType2": "AirHeatPump",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1EqpType": "5",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
@@ -9803,7 +9819,7 @@
             "Opt-H2K-Type2CCaseH": "60",
             "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
-            "Opt-H2K-Type2CapOpt": "3",
+            "Opt-H2K-Type2CapOpt": "2",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2HeatCOP": "3.66",
             "Opt-H2K-Type2RatingTemp": "8.3",            
@@ -10638,6 +10654,26 @@
           ]
         }
       },
+      "oil-high-efficiency-noAC": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "94",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },      
       "oil-high-efficiency": {
         "h2kMap": {
           "base": {
@@ -10657,14 +10693,14 @@
             "Opt-H2K-Type2CapOpt": "2",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2CoolCOP": "4.27",
-            "Opt-H2K-CoolOperWindow": "4"            
+            "Opt-H2K-CoolOperWindow": "4"
           }
         },
         "costs": {
           "custom-costs": {},
           "components": []
         }
-      },      
+      },
       "R2000-elec-baseboard": {
         "h2kMap": {
           "base": {
@@ -10729,7 +10765,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "false",
@@ -10749,7 +10785,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "false",
@@ -10769,7 +10805,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1EqpType": "2",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "false",
@@ -10809,7 +10845,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1EqpType": "5",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
@@ -10829,7 +10865,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1EqpType": "5",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
@@ -10849,7 +10885,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "3",
-            "Opt-H2K-Type1EqpType": "4",
+            "Opt-H2K-Type1EqpType": "1",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "false",
@@ -10869,7 +10905,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "3",
-            "Opt-H2K-Type1EqpType": "4",
+            "Opt-H2K-Type1EqpType": "1",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "false",
