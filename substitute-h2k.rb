@@ -767,6 +767,18 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+            h2kElements.each(locationText) do |element|
+              element.text = "User specified"
+              existingInsulation = element.attributes["rValue"].to_f
+              element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+              if element.attributes["idref"] != nil then
+                # Must delete attribute for User Specified!
+                element.delete_attribute("idref")
+              end
+            end
           else
             if ( value == "NA" )
               # Don't change anything
@@ -828,6 +840,21 @@ def processFile(h2kElements)
                 end
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction"
+            h2kElements.each(locationText) do |element|
+              if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+                element[3].text = "User specified"
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element[3].attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element[3].delete_attribute("idref")
+                end
+              end
+            end
+
           elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
             locationText = "HouseFile/House/Components/Ceiling/Measurements"
             h2kElements[locationText].attributes["heelHeight"] = value
@@ -892,6 +919,20 @@ def processFile(h2kElements)
                 end
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction"
+            h2kElements.each(locationText) do |element|
+              if element[1].attributes["code"] == "4"
+                element[3].text = "User specified"
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element[3].attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element[3].delete_attribute("idref")
+                end
+              end
+            end
           else
             if ( value == "NA" )
               # Don't change anything
@@ -947,6 +988,20 @@ def processFile(h2kElements)
               if element[1].attributes["code"] == "5"
                 element[3].text = "User specified"
                 element[3].attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
+                if element[3].attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element[3].delete_attribute("idref")
+                end
+              end
+            end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction"
+            h2kElements.each(locationText) do |element|
+              if element[1].attributes["code"] == "5"
+                element[3].text = "User specified"
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
                 if element[3].attributes["idref"] != nil then
                   # Must delete attribute for User Specified!
                   element[3].delete_attribute("idref")
@@ -1080,17 +1135,24 @@ def processFile(h2kElements)
             locationText = "HouseFile/House/Components/Wall/Construction/Type"
             h2kElements.each(locationText) do |element|
               element.text = "User specified"
-              if value[0]=="+" then
-                additionalRvalue = value[1..value.length].to_f + element.attributes["rValue"].to_f * R_PER_RSI
-              else
-                additionalRvalue = value.to_f
-              end
-              element.attributes["rValue"] = (additionalRvalue.to_f / R_PER_RSI).to_s
+              element.attributes["rValue"] = (value.to_f / R_PER_RSI).to_s
               if element.attributes["idref"] != nil then
                 # Must delete attribute for User Specified!
                 element.delete_attribute("idref")
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+              # Change ALL existing wall codes to User Specified R-value
+              locationText = "HouseFile/House/Components/Wall/Construction/Type"
+              h2kElements.each(locationText) do |element|
+                element.text = "User specified"
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element.attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element.delete_attribute("idref")
+                end
+              end
           end
 
           # Floor header User-Specified R-values

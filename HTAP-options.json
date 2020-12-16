@@ -3972,7 +3972,21 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "59.22"
+            "OPT-H2K-EffRValue": "NA"
+          }
+        },
+        "costs": {
+          "proxy": "CeilR60",
+          "custom-costs": {
+          }
+        }
+      },
+      "retrofit-ceiling-Additional-R10": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 10
           }
         },
         "costs": {
@@ -3986,7 +4000,8 @@
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
-      "OPT-H2K-EffRValue"
+      "OPT-H2K-EffRValue",
+		"OPT-H2K-AdditionalRValue-Retrofit"
     ]
   },
   "Opt-AtticCeilings": {
@@ -6319,6 +6334,21 @@
         },
         "custom-costs": {
         }
+      },
+		"retrofit-main-wall-Additional-R10": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 10
+            
+          }
+        },
+        "costs": {
+          "components": [
+          ]
+        },
+        "custom-costs": {
+        }
       }
     },
     "default": "Stud_2x6_R20",
@@ -6326,7 +6356,8 @@
     "h2kSchema": [
       "<Opt-GenInsulLayerInboard-a>",
       "OPT-H2K-EffRValue",
-      "HeaderExtInsRValue"
+      "HeaderExtInsRValue",
+		"OPT-H2K-AdditionalRValue-Retrofit"
     ]
   },
   "Opt-FloorHeaderIntIns": {
