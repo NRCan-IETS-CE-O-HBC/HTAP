@@ -767,7 +767,7 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
-          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
             # Change ALL existing wall codes to User Specified R-value
             locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
             h2kElements.each(locationText) do |element|
@@ -840,7 +840,7 @@ def processFile(h2kElements)
                 end
               end
             end
-          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
             # Change ALL existing wall codes to User Specified R-value
             locationText = "HouseFile/House/Components/Ceiling/Construction"
             h2kElements.each(locationText) do |element|
@@ -919,7 +919,7 @@ def processFile(h2kElements)
                 end
               end
             end
-          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
             # Change ALL existing wall codes to User Specified R-value
             locationText = "HouseFile/House/Components/Ceiling/Construction"
             h2kElements.each(locationText) do |element|
@@ -994,7 +994,7 @@ def processFile(h2kElements)
                 end
               end
             end
-          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
             # Change ALL existing wall codes to User Specified R-value
             locationText = "HouseFile/House/Components/Ceiling/Construction"
             h2kElements.each(locationText) do |element|
@@ -1141,7 +1141,7 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
-          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" )
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
               # Change ALL existing wall codes to User Specified R-value
               locationText = "HouseFile/House/Components/Wall/Construction/Type"
               h2kElements.each(locationText) do |element|
@@ -1157,7 +1157,7 @@ def processFile(h2kElements)
 
           # Floor header User-Specified R-values
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-FloorHeaderIntIns/ )
+        elsif ( choiceEntry =~ /Opt-FloorHeaderIntIns/)
 
           debug_out ("Opt-FloorHeaderIntIns: Header insulation - internal only  = #{value} \n")
           if ( tag =~ /FloorHeaderIntIns_Eff_RValue/ && value != "NA" )
@@ -1354,7 +1354,39 @@ def processFile(h2kElements)
               #
             end
 
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+            # Change ALL existing wall codes to User Specified R-value
 
+            # 1) Exposed floors - Overhangs, floors above garages, ect...
+            locationText = "HouseFile/House/Components/Floor/Construction/Type"
+            h2kElements.each(locationText) do |element|
+              element.text = "User specified"
+              existingInsulation = element.attributes["rValue"].to_f
+              element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+              if element.attributes["idref"] != nil then
+                # Must delete attribute for User Specified!
+                element.delete_attribute("idref")
+              end
+            end
+
+            # 2) Floors above unheated / vented / open crawlspaces
+            if ( h2kElements["HouseFile/House/Components/Crawlspace"] != nil &&
+                ! H2KFile.heatedCrawlspace(h2kElements) )
+
+              locationText = "HouseFile/House/Components/Crawlspace/Floor/Construction/FloorsAbove"
+              h2kElements.each(locationText) do |element|
+                element.text = "User specified"
+                # Description tag
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element.attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element.delete_attribute("idref")
+                end
+              end
+              #
+              #
+            end
 
           elsif ( choiceEntry =~ /Opt-FloorAboveCrawl/ )
             # If there is a crawlspace and an R-value has been specified for the floor above the crawlspace, update
@@ -7963,4 +7995,3 @@ log_out ("substitute-h2k.rb run complete.")
 log_out ("Closing log files")
 $fSUMMARY.close()
 $fLOG.close()
-     

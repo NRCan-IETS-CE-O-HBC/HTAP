@@ -3633,7 +3633,8 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": "NA"
           }
         },
         "costs": {
@@ -4012,7 +4013,8 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": "NA"
           }
         },
         "costs": {
@@ -4276,13 +4278,28 @@
           },
           "proxy": "CeilR60"
         }
+      },
+		"retrofit-AtticCeiling-Additional-R10": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 10
+          }
+        },
+        "costs": {
+          "proxy": "CeilR60",
+          "custom-costs": {
+          }
+        }
       }
     },
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
-      "OPT-H2K-EffRValue"
+      "OPT-H2K-EffRValue",
+		"OPT-H2K-AdditionalRValue-Retrofit"
     ]
   },
   "Opt-CathCeilings": {
@@ -4293,7 +4310,8 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": "NA"
           }
         },
         "costs": {
@@ -4424,13 +4442,28 @@
              "insulation:r29_batt"
           ]
         }
+      },
+		"retrofit-CathCeiling-Additional-R10": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 10
+          }
+        },
+        "costs": {
+          "proxy": "CeilR60",
+          "custom-costs": {
+          }
+        }
       }
     },  
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
-      "OPT-H2K-EffRValue"
+      "OPT-H2K-EffRValue",
+		"OPT-H2K-AdditionalRValue-Retrofit"
     ]
   },
   "Opt-FlatCeilings": {
@@ -4441,7 +4474,8 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": "NA"
           }
         },
         "costs": {
@@ -4571,13 +4605,28 @@
              "insulation:r29_batt"
           ]
         }
+      },
+		"retrofit-FlatCeiling-Additional-R10": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 10
+          }
+        },
+        "costs": {
+          "proxy": "CeilR60",
+          "custom-costs": {
+          }
+        }
       }
     },
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-Ceiling>",
-      "OPT-H2K-EffRValue"
+      "OPT-H2K-EffRValue",
+		"OPT-H2K-AdditionalRValue-Retrofit"
     ]
   },
   "Opt-AboveGradeWall": {
@@ -4588,7 +4637,8 @@
         "h2kMap": {
           "base": {
             "<Opt-GenInsulLayerInboard-a>": "NA",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": "NA"
           }
         },
         "costs": {
@@ -6335,11 +6385,26 @@
         "custom-costs": {
         }
       },
-		"retrofit-main-wall-Additional-R10": {
+		"retrofit-main-wall-Additional-R12": {
         "h2kMap": {
           "base": {
             "OPT-H2K-EffRValue": "NA",
-				"OPT-H2K-AdditionalRValue-Retrofit": 10
+				"OPT-H2K-AdditionalRValue-Retrofit": 12
+            
+          }
+        },
+        "costs": {
+          "components": [
+          ]
+        },
+        "custom-costs": {
+        }
+      },
+		"retrofit-main-wall-Additional-R20": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 20
             
           }
         },
@@ -9341,7 +9406,8 @@
         "h2kMap": {
           "base": {
             "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": "NA"
           }
         },
         "costs": {
@@ -9532,13 +9598,30 @@
 
           ]
         }
+      },
+		"retrofit-ExposedFloor-Additional-R10": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "NA",
+				"OPT-H2K-AdditionalRValue-Retrofit": 10
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
       }
     },
     "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "OPT-H2K-CodeName",
-      "OPT-H2K-EffRValue"
+      "OPT-H2K-EffRValue",
+		"OPT-H2K-AdditionalRValue-Retrofit"
     ]
   },
   "Opt-Heating-Cooling": {
