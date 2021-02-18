@@ -1076,6 +1076,7 @@ module HTAPData
     results[$aliasLongArch] = {   
       "h2k-File"            =>  "#{$h2kFileName}",
       "House-Builder"       =>  "#{$BuilderName}",
+      "EvaluationDate"      =>  "#{$EvalDate}",
       "Year-Built"          =>  "#{$YearBuilt}",
       "House-Type"          =>  "#{$HouseType}",
       "House-Storeys"       =>  "#{$HouseStoreys}",
@@ -1205,6 +1206,7 @@ module HTAPData
       "LapsedTime"        => $runH2KTime.round(2) ,
       "PEAK-Heating-W"    => $gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1) ,
       "PEAK-Cooling-W"    => $gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1) ,
+      "DesignTemp-Heating-oC" => $gResults[$outputHCode]["annual"]["design_Temp"]["heating_C"].round(1)
 #      "House-R-Value(SI)" => $RSI['house'].round(3)
     }
 
