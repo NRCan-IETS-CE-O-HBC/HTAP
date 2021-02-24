@@ -835,9 +835,14 @@ def run_these_cases(current_task_files)
 
           FileUtils.cp("#{$gArchetypeDir}\\#{$H2kFile}",$RunDirectory)
 
-          if ( $gComputeCosts ) then
-            # Think about error handling.
-            FileUtils.cp($gCostingFile,$RunDirectory)
+          if ( $gComputeCosts || $gLEEPPathwayExport ) then
+            # Unit cost DB required for cost calcs and LEEP-pathaways export; issue fatal error if not found.
+            begin
+              FileUtils.cp($gCostingFile,$RunDirectory)
+            rescue 
+              err_out("Unit cost database ('#{$gCostingFile}') was not copied successfully.")
+              fatalerror("Failed to copy unit-cost DB")
+            end 
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]
