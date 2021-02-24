@@ -125,6 +125,7 @@ $HDDHash =  {
             "RESOLUTE" => 12360 ,
             "CORALHARBOUR" => 10720 ,
             "HALLBEACH" => 10720 ,
+				"KELOWNA" => 3715,
             "XXXXX" => 1
             }
 

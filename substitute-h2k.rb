@@ -1773,6 +1773,72 @@ def processFile(h2kElements)
               end
             end
 
+          elsif ( tag =~ /OPT-H2K-Retrofit-IntWall-RValue/ &&  value != "NA" && value != "" )
+            # Change ALL existing interior wall codes to User Specified R-value
+            locHouseStr = [ "", "" ]
+            if ( fndTypes == "B" )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+            elsif ( fndTypes == "W" )
+              locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+            elsif ( fndTypes == "C" || ( fndTypes == "ALL" && configType =~ /^S/ ) )
+              locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+            elsif ( fndTypes == "ALL" && configType =~ /^B/ )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+              locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+            end
+            locHouseStr.each do |locationString|
+              if ( locationString != "" )
+                h2kElements.each(locationString) do |element|
+                  if element.attributes["idref"] != nil then
+                    # Must delete attribute for User Specified!
+                    element.delete_attribute("idref")
+                  end
+                end
+                h2kElements.each(locationString+"/Description") do |element|
+                  element.text = "User specified"
+                  # Description tag
+                end
+                h2kElements.each(locationString+"/Composite/Section") do |element|
+                  existingInsulation = element.attributes["rsi"].to_f
+                  element.attributes["rsi"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                  element.attributes["rank"] = "1"
+                  element.attributes["percentage"] = "100"
+                end
+              end
+            end
+
+          elsif ( tag =~ /OPT-H2K-Retrofit-ExtWall-RVal/ &&  value != "NA" && value != "" )
+            # Change ALL existing exterior wall codes to User Specified R-value
+            locHouseStr = [ "", "" ]
+            if ( fndTypes == "B" )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
+            elsif ( fndTypes == "W" )
+              locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
+            elsif ( fndTypes == "ALL" && configType =~ /^B/ )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
+              locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
+            end
+            locHouseStr.each do |locationString|
+              if ( locationString != "" )
+                h2kElements.each(locationString) do |element|
+                  if element.attributes["idref"] != nil then
+                    # Must delete attribute for User Specified!
+                    element.delete_attribute("idref")
+                  end
+                end
+                h2kElements.each(locationString+"/Description") do |element|
+                  element.text = "User specified"
+                  # Description tag
+                end
+                h2kElements.each(locationString+"/Composite/Section") do |element|
+                  existingInsulation = element.attributes["rsi"].to_f
+                  element.attributes["rsi"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                  element.attributes["rank"] = "1"
+                  element.attributes["percentage"] = "100"
+                end
+              end
+            end
+
           elsif ( tag =~ /OPT-H2K-BelowSlab-RVal/ &&  value != "NA" )
             locHouseStr = [ "", "", "", "" ]
             if ( fndTypes == "B" )
