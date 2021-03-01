@@ -545,24 +545,28 @@ def processFile(h2kElements)
 
 
   baseOptionCost = 0
-  #debug_on
+
   $gChoiceOrder.each do |choiceEntry|
+    #debug_on
     next if ( $DoNotValidateOptions.include? choiceEntry )
     debug_out drawRuler("By ChoiceOrder : #{choiceEntry}",".  ")
     debug_out("Processing: #{choiceEntry} | #{$gOptions[choiceEntry]["type"]} = #{$gChoices[choiceEntry]}\n")
 
 
     if ( $gOptions[choiceEntry]["type"] == "internal" )
+      
       choiceVal =  $gChoices[choiceEntry]
-
       tagHash = $gOptions[choiceEntry]["tags"]
       valHash = $gOptions[choiceEntry]["options"][choiceVal]["result"]
       #debug_out "choice val = #{choiceVal}\n"
       #debug_out "contents of tagHash:\n#{tagHash.pretty_inspect}\n"
       #debug_out "contents of valHash:\n#{valHash.pretty_inspect}\n"
       for tagIndex in tagHash.keys()
-        debug_out "tagIndex: #{tagIndex}\n"
         tag = tagHash[tagIndex]
+        #debug_on
+        debug_out "tagIndex: #{tagIndex}: #{tag}\n"
+
+
         value = valHash[tagIndex.to_s]
 
         if ( value == "" || value.nil? )
@@ -2046,7 +2050,7 @@ def processFile(h2kElements)
             # ASF 05-10-2016- this tag controls effectiveness
           elsif ( tag =~ /Opt-H2K-DWHR-Effectiveness9p5/ &&  value != "NA" )
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
-            h2kElements[locationText].attributes["effectivenessAt9.5"] = value
+            h2kElements[locationText].attributes["effectivenessAt9.5"] = value  
             # P.55 test result (0->100)
 
           elsif ( tag =~ /Opt-H2K-DWHR-ShowerTemperature_code/ &&  value != "NA" )
@@ -2615,10 +2619,43 @@ def processFile(h2kElements)
 
           end
           # END of elsif under HVACSystem section
+        
+        elsif( choiceEntry =~ /Opt-VentSched/ )
+          # debug_on
+          
+          debug_out " Start of Vent-schedule-code \n"
+          locationText = "HouseFile/House/Ventilation"
 
-          # HRV Ventilation System
-          # Note: This option will remove all other ventilation systems
-          #--------------------------------------------------------------------------
+          h2kElements[locationText].elements.each do | myElement | 
+            debug_out "NAME: #{myElement.name}\n"
+            #debug_pause
+          end 
+
+
+          if ( tag =~ /WH_sched_code/ && value !~ /NA/  )
+              debug_out "setting whole house vent schedule code to  #{value} \n"
+              h2kElements[locationText + "/WholeHouse/OperationSchedule"].attributes["code"] = value 
+          end 
+
+
+          
+          if ( tag =~ /WH_sched_rate/ && value !~ /NA/ )
+            debug_out "setting whole house scheduled rate to #{value} l/s\n"
+            h2kElements[locationText + "/WholeHouse/OperationSchedule"].attributes["value"] = value 
+          end 
+
+
+
+          #h2kElements.each(locationTextWin) do |window|
+
+          debug_off 
+
+
+        # HRV Ventilation System
+        # Note: This option will remove all other ventilation systems
+        #--------------------------------------------------------------------------
+        
+        
         elsif ( choiceEntry =~ /Opt-VentSystem/ )
           if(valHash["1"] == "false")
             # Option not active, skip
@@ -4959,7 +4996,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           begin 
           FileUtils.cp("#{$run_path}\\Browse.rpt", ".\\sim-output\\")
           rescue 
-            fatalerror ("Could not locate Browse.rpt file!")
+            warn_out ("Could not locate Browse.rpt file!")
           end 
           if ( $gReadROutStrTxt )
             if ( File.file?("#{$run_path}\\ROutStr.txt")  )
@@ -5060,8 +5097,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           while !fRoutStr.eof? do
 
             $lineNo = $lineNo + 1
-
-            $lineIn = fRoutStr.readline
+            $lineIn = fRoutStr.readline.encode("UTF-8",  :invalid=>:replace, :replace=>"?" ) 
+            #$lineIn = fRoutStr.readline
+    
             $lineIn.strip!
 
             if ( $lineIn =~ /^\s*$/ ||  $bHeatingDone ) then
@@ -5385,7 +5423,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             end
             fBrowseRpt.close()
           rescue
-            fatalerror("Could not read Browse.Rpt.\n")
+            warn_out("Could not read Browse.Rpt.\n")
           end
         end
 
