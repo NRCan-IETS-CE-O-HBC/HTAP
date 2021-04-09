@@ -2646,22 +2646,6 @@ def processFile(h2kElements)
         elsif ( choiceEntry =~ /Opt-VentSystem/ )
           if(valHash["1"] == "false")
             # Option not active, skip
-            # Delete all existing systems
-            locationText = "HouseFile/House/Ventilation/"
-            h2kElements[locationText].delete_element("WholeHouseVentilatorList")
-            h2kElements[locationText].delete_element("SupplementalVentilatorList")
-            h2kElements[locationText].add_element("WholeHouseVentilatorList")
-            h2kElements[locationText].add_element("SupplementalVentilatorList")
-            h2kElements[locationText + "Requirements"].attributes["ach"] = "0.00"
-            h2kElements[locationText + "Requirements"].attributes["supply"] = "0.00"
-            h2kElements[locationText + "Requirements"].attributes["exhaust"] = "0.00"
-            h2kElements[locationText + "Requirements/Use"].attributes["code"] = "4"
-            h2kElements[locationText + "Requirements/Use"].delete_element("English")
-            h2kElements[locationText + "Requirements/Use"].delete_element("French")
-            h2kElements[locationText + "Requirements/Use"].add_element("English")
-            h2kElements[locationText + "Requirements/Use"].add_element("French")
-            h2kElements[locationText + "Requirements/Use/English"].add_text("Not applicable")
-            h2kElements[locationText + "Requirements/Use/French"].add_text("Sans objet")
             break
           elsif(valHash["1"] == "true")
             # Option is active
@@ -2802,6 +2786,23 @@ def processFile(h2kElements)
             else
                 fatalerror("ERROR: For Opt-HRVonly, unknown fan power calculation input  #{valHash["9"]}!\n")
             end
+		  elsif(valHash["1"] == "delete")
+			# Special call, delete the ventilation pre-existing system
+            locationText = "HouseFile/House/Ventilation/"
+            h2kElements[locationText].delete_element("WholeHouseVentilatorList")
+            h2kElements[locationText].delete_element("SupplementalVentilatorList")
+            h2kElements[locationText].add_element("WholeHouseVentilatorList")
+            h2kElements[locationText].add_element("SupplementalVentilatorList")
+            h2kElements[locationText + "Requirements"].attributes["ach"] = "0.00"
+            h2kElements[locationText + "Requirements"].attributes["supply"] = "0.00"
+            h2kElements[locationText + "Requirements"].attributes["exhaust"] = "0.00"
+            h2kElements[locationText + "Requirements/Use"].attributes["code"] = "4"
+            h2kElements[locationText + "Requirements/Use"].delete_element("English")
+            h2kElements[locationText + "Requirements/Use"].delete_element("French")
+            h2kElements[locationText + "Requirements/Use"].add_element("English")
+            h2kElements[locationText + "Requirements/Use"].add_element("French")
+            h2kElements[locationText + "Requirements/Use/English"].add_text("Not applicable")
+            h2kElements[locationText + "Requirements/Use/French"].add_text("Sans objet")
           else
             fatalerror("ERROR: For Opt-VentSystem, unknown active input  #{valHash["1"]}!\n")
           end

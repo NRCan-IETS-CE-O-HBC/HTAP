@@ -10652,7 +10652,7 @@
       "NBC_noVNT": {
         "h2kMap": {
           "base": {
-            "Opt-IsActive": "false"
+            "Opt-IsActive": "delete"
           }
         },
         "costs": {
