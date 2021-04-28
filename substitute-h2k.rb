@@ -2681,9 +2681,14 @@ def processFile(h2kElements)
               h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = valHash["5"]
               # Exhaust = Supply
               calcFlow = valHash["5"].to_f
-            elsif(valHash["4"] == "1")
-              # The flow rate is calculated using F326
-              calcFlow = getF326FlowRates(h2kElements)
+            elsif(valHash["4"] == "1" || valHash["4"] == "3")
+                if(valHash["4"] == "1")
+                    # The flow rate is calculated using F326
+                    calcFlow = getF326FlowRates(h2kElements)
+                elsif(valHash["4"] == "3")
+                    # Flow is calculated using Table 9.32.3.3 of the 2015 NBC
+                    calcFlow = getNBCprincipalVent(h2kElements)
+                end
               if(calcFlow < 1)
                 fatalerror("ERROR: For Opt-VentSystem, could not calculate F326 flow rates!\n")
               else
@@ -2757,10 +2762,16 @@ def processFile(h2kElements)
                 h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["supplyFlowrate"] = "0"    # L/s supply
                 h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["exhaustFlowrate"] = valHash["5"]   # Exhaust 
                 calcFlow = valHash["5"].to_f
-            elsif(valHash["4"] == "1") # The flow rate is calculated using F326
-                calcFlow = getF326FlowRates(h2kElements)
+            elsif(valHash["4"] == "1" || valHash["4"] == "3")
+                if(valHash["4"] == "1")
+                    # The flow rate is calculated using F326
+                    calcFlow = getF326FlowRates(h2kElements)
+                elsif(valHash["4"] == "3")
+                    # Flow is calculated using Table 9.32.3.3 of the 2015 NBC
+                    calcFlow = getNBCprincipalVent(h2kElements)
+                end
                 if(calcFlow < 1)
-                    fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 flow rates!\n")
+                    fatalerror("ERROR: For Opt-HRVonly, could not calculate F326 or 2015 NBC flow rates!\n")
                 else
                     h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["supplyFlowrate"] = "0"   # L/s supply
                     h2kElements[locationText + "WholeHouseVentilatorList/BaseVentilator"].attributes["exhaustFlowrate"] = calcFlow.to_s   # Exhaust
@@ -4292,6 +4303,30 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           #print "Room is basement. Total vent required is ", ventRequired, "\n"
         end
         #print "Final total vent required is ", ventRequired, "\n"
+        return ventRequired
+      end
+
+      # =========================================================================================
+      # Determine the flow rate for a house using 2015 NBC Table 9.32.3.3
+      # =========================================================================================
+      def getNBCprincipalVent( elements)
+        locationText = "HouseFile/House/Ventilation/Rooms"
+        ventRequired = 0.0
+        numRooms = elements[locationText].attributes["bedrooms"].to_f
+               # Pull from Table 9.32.3.3. (use mid value between max and min)
+               if(numRooms == 1)
+                       ventRequired = 20.0
+               elsif(numRooms == 2)
+                       ventRequired = 23.0
+               elsif(numRooms == 3)
+                       ventRequired = 27.0
+                elsif(numRooms == 4)
+                       ventRequired = 32.0
+               elsif(numRooms == 5)
+                       ventRequired = 37.5
+               else
+                       ventRequired = getF326FlowRates( elements )
+               end
         return ventRequired
       end
 
