@@ -240,6 +240,7 @@ module LEEPPathways
     "Opt-Heating-Cooling",
     "Opt-DHWSystem",
     "Opt-DWHR",
+    "Opt-H2KFoundation",
 
   ]
 

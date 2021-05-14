@@ -609,7 +609,7 @@ def processFile(h2kElements)
           elsif ( tag =~ /OPT-Longitude/ )
             # Do nothing
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -657,7 +657,7 @@ def processFile(h2kElements)
             SetFuelCostRates( "Wood", h2kElements, h2kFuelElements, value )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -691,6 +691,28 @@ def processFile(h2kElements)
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
+          elsif ( tag =~ /Opt-Reduction/ && value != "NA" )
+            # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
+            h2kElements[locationText].attributes["code"] = "x"
+            # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
+            locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
+            if ( h2kElements[locationText] != nil )
+              # Need to remove this section!
+              locationText = "HouseFile/House/NaturalAirInfiltration"
+              h2kElements[locationText].delete_element("AirLeakageTestData")
+              # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
+              locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+              h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            end
+            # Set the blower door test value in airChangeRate field
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+            currentACHRate = h2kElements[locationText].attributes["airChangeRate"].to_f
+            h2kElements[locationText].attributes["airChangeRate"] = ((1-(value.to_f/100))*currentACHRate).to_s
+            #		$ACHRate = h2kElements[locationText].attributes["airChangeRate"].to_f
+            h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            h2kElements[locationText].attributes["isCalculated"] = "true"
+
           elsif( tag =~ /Opt-BuildingSite/ && value != "NA" )
             if(value.to_f < 1 || value.to_f > 8)
               fatalerror("In #{choiceEntry}, invalid building site input #{value}")
@@ -780,7 +802,7 @@ def processFile(h2kElements)
               end
             end
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -846,8 +868,8 @@ def processFile(h2kElements)
             h2kElements.each(locationText) do |element|
               if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
                 element[3].text = "User specified"
-                existingInsulation = element.attributes["rValue"].to_f
-                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                existingInsulation = element[3].attributes["rValue"].to_f
+                element[3].attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
                 if element[3].attributes["idref"] != nil then
                   # Must delete attribute for User Specified!
                   element[3].delete_attribute("idref")
@@ -859,7 +881,7 @@ def processFile(h2kElements)
             locationText = "HouseFile/House/Components/Ceiling/Measurements"
             h2kElements[locationText].attributes["heelHeight"] = value
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -925,8 +947,8 @@ def processFile(h2kElements)
             h2kElements.each(locationText) do |element|
               if element[1].attributes["code"] == "4"
                 element[3].text = "User specified"
-                existingInsulation = element.attributes["rValue"].to_f
-                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                existingInsulation = element[3].attributes["rValue"].to_f
+                element[3].attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
                 if element[3].attributes["idref"] != nil then
                   # Must delete attribute for User Specified!
                   element[3].delete_attribute("idref")
@@ -934,7 +956,7 @@ def processFile(h2kElements)
               end
             end
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1000,8 +1022,8 @@ def processFile(h2kElements)
             h2kElements.each(locationText) do |element|
               if element[1].attributes["code"] == "5"
                 element[3].text = "User specified"
-                existingInsulation = element.attributes["rValue"].to_f
-                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                existingInsulation = element[3].attributes["rValue"].to_f
+                element[3].attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
                 if element[3].attributes["idref"] != nil then
                   # Must delete attribute for User Specified!
                   element[3].delete_attribute("idref")
@@ -1009,7 +1031,7 @@ def processFile(h2kElements)
               end
             end
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1119,7 +1141,7 @@ def processFile(h2kElements)
           elsif ( tag =~ /Opt-MainWall-Dry/ )
             # Do nothing
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1442,7 +1464,7 @@ def processFile(h2kElements)
             ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1478,7 +1500,7 @@ def processFile(h2kElements)
             ChangeSkylightCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1514,7 +1536,7 @@ def processFile(h2kElements)
             ChangeDoorWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1870,7 +1892,7 @@ def processFile(h2kElements)
             end
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "" )
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -2062,7 +2084,7 @@ def processFile(h2kElements)
             end
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -2350,6 +2372,7 @@ def processFile(h2kElements)
                   h2kElements[locationText].attributes["spaceHeatingCapacity"] = baseHeatSysCap.to_s if ( h2kElements[locationText] != nil )
                 else
                   h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
+						h2kElements[locationText].attributes["numberOfSystems"] = ((baseHeatSysCap / value.to_f).to_i).to_s
                 end
               end
 
@@ -2703,7 +2726,15 @@ def processFile(h2kElements)
               end
             end
 
-          elsif ( tag =~ /Opt-H2K-P9-netEff15/ &&  value != "NA" )
+           elsif ( tag =~ /Opt-H2K-P9-oneHourRatingConc/ &&  value != "NA" )
+            sysType1.each do |sysType1Name|
+              if ( sysType1Name == "P9" )
+                locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+                h2kElements[locationText].attributes["oneHourRatingConcurrent"] = value if ( h2kElements[locationText] != nil )
+              end
+            end
+			 
+			 elsif ( tag =~ /Opt-H2K-P9-netEff15/ &&  value != "NA" )
             sysType1.each do |sysType1Name|
               if ( sysType1Name == "P9" )
                 locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
