@@ -616,7 +616,7 @@ def processFile(h2kElements)
           elsif ( tag =~ /OPT-Longitude/ )
             # Do nothing
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -664,7 +664,7 @@ def processFile(h2kElements)
             SetFuelCostRates( "Wood", h2kElements, h2kFuelElements, value )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -698,6 +698,28 @@ def processFile(h2kElements)
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
+          elsif ( tag =~ /Opt-Reduction/ && value != "NA" )
+            # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
+            h2kElements[locationText].attributes["code"] = "x"
+            # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
+            locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
+            if ( h2kElements[locationText] != nil )
+              # Need to remove this section!
+              locationText = "HouseFile/House/NaturalAirInfiltration"
+              h2kElements[locationText].delete_element("AirLeakageTestData")
+              # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
+              locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+              h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            end
+            # Set the blower door test value in airChangeRate field
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+            currentACHRate = h2kElements[locationText].attributes["airChangeRate"].to_f
+            h2kElements[locationText].attributes["airChangeRate"] = ((1-(value.to_f/100))*currentACHRate).to_s
+            #		$ACHRate = h2kElements[locationText].attributes["airChangeRate"].to_f
+            h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            h2kElements[locationText].attributes["isCalculated"] = "true"
+
           elsif( tag =~ /Opt-BuildingSite/ && value != "NA" )
             if(value.to_f < 1 || value.to_f > 8)
               fatalerror("In #{choiceEntry}, invalid building site input #{value}")
@@ -774,8 +796,20 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction/CeilingType"
+            h2kElements.each(locationText) do |element|
+              element.text = "User specified"
+              existingInsulation = element.attributes["rValue"].to_f
+              element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+              if element.attributes["idref"] != nil then
+                # Must delete attribute for User Specified!
+                element.delete_attribute("idref")
+              end
+            end
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -835,11 +869,26 @@ def processFile(h2kElements)
                 end
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction"
+            h2kElements.each(locationText) do |element|
+              if element[1].attributes["code"] == "2" || element[1].attributes["code"] == "3" || element[1].attributes["code"] == "6"
+                element[3].text = "User specified"
+                existingInsulation = element[3].attributes["rValue"].to_f
+                element[3].attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element[3].attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element[3].delete_attribute("idref")
+                end
+              end
+            end
+
           elsif (tag =~ /OPT-H2K-HeelHeight/ && value != "NA")
             locationText = "HouseFile/House/Components/Ceiling/Measurements"
             h2kElements[locationText].attributes["heelHeight"] = value
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -899,8 +948,22 @@ def processFile(h2kElements)
                 end
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction"
+            h2kElements.each(locationText) do |element|
+              if element[1].attributes["code"] == "4"
+                element[3].text = "User specified"
+                existingInsulation = element[3].attributes["rValue"].to_f
+                element[3].attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element[3].attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element[3].delete_attribute("idref")
+                end
+              end
+            end
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -960,8 +1023,22 @@ def processFile(h2kElements)
                 end
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+            # Change ALL existing wall codes to User Specified R-value
+            locationText = "HouseFile/House/Components/Ceiling/Construction"
+            h2kElements.each(locationText) do |element|
+              if element[1].attributes["code"] == "5"
+                element[3].text = "User specified"
+                existingInsulation = element[3].attributes["rValue"].to_f
+                element[3].attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element[3].attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element[3].delete_attribute("idref")
+                end
+              end
+            end
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1071,7 +1148,7 @@ def processFile(h2kElements)
           elsif ( tag =~ /Opt-MainWall-Dry/ )
             # Do nothing
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1093,11 +1170,23 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+              # Change ALL existing wall codes to User Specified R-value
+              locationText = "HouseFile/House/Components/Wall/Construction/Type"
+              h2kElements.each(locationText) do |element|
+                element.text = "User specified"
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element.attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element.delete_attribute("idref")
+                end
+              end
           end
 
           # Floor header User-Specified R-values
           #--------------------------------------------------------------------------
-        elsif ( choiceEntry =~ /Opt-FloorHeaderIntIns/ )
+        elsif ( choiceEntry =~ /Opt-FloorHeaderIntIns/)
 
           debug_out ("Opt-FloorHeaderIntIns: Header insulation - internal only  = #{value} \n")
           if ( tag =~ /FloorHeaderIntIns_Eff_RValue/ && value != "NA" )
@@ -1294,7 +1383,39 @@ def processFile(h2kElements)
               #
             end
 
+          elsif ( tag =~ /OPT-H2K-AdditionalRValue-Retrofit/i && value != "NA" && value != "" )
+            # Change ALL existing wall codes to User Specified R-value
 
+            # 1) Exposed floors - Overhangs, floors above garages, ect...
+            locationText = "HouseFile/House/Components/Floor/Construction/Type"
+            h2kElements.each(locationText) do |element|
+              element.text = "User specified"
+              existingInsulation = element.attributes["rValue"].to_f
+              element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+              if element.attributes["idref"] != nil then
+                # Must delete attribute for User Specified!
+                element.delete_attribute("idref")
+              end
+            end
+
+            # 2) Floors above unheated / vented / open crawlspaces
+            if ( h2kElements["HouseFile/House/Components/Crawlspace"] != nil &&
+                ! H2KFile.heatedCrawlspace(h2kElements) )
+
+              locationText = "HouseFile/House/Components/Crawlspace/Floor/Construction/FloorsAbove"
+              h2kElements.each(locationText) do |element|
+                element.text = "User specified"
+                # Description tag
+                existingInsulation = element.attributes["rValue"].to_f
+                element.attributes["rValue"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                if element.attributes["idref"] != nil then
+                  # Must delete attribute for User Specified!
+                  element.delete_attribute("idref")
+                end
+              end
+              #
+              #
+            end
 
           elsif ( choiceEntry =~ /Opt-FloorAboveCrawl/ )
             # If there is a crawlspace and an R-value has been specified for the floor above the crawlspace, update
@@ -1350,7 +1471,7 @@ def processFile(h2kElements)
             ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1386,7 +1507,7 @@ def processFile(h2kElements)
             ChangeSkylightCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1422,7 +1543,7 @@ def processFile(h2kElements)
             ChangeDoorWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1681,6 +1802,72 @@ def processFile(h2kElements)
               end
             end
 
+          elsif ( tag =~ /OPT-H2K-Retrofit-IntWall-RValue/ &&  value != "NA" && value != "" )
+            # Change ALL existing interior wall codes to User Specified R-value
+            locHouseStr = [ "", "" ]
+            if ( fndTypes == "B" )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+            elsif ( fndTypes == "W" )
+              locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+            elsif ( fndTypes == "C" || ( fndTypes == "ALL" && configType =~ /^S/ ) )
+              locHouseStr[0] = "HouseFile/House/Components/Crawlspace/Wall/Construction/Type"
+            elsif ( fndTypes == "ALL" && configType =~ /^B/ )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/InteriorAddedInsulation"
+              locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/InteriorAddedInsulation"
+            end
+            locHouseStr.each do |locationString|
+              if ( locationString != "" )
+                h2kElements.each(locationString) do |element|
+                  if element.attributes["idref"] != nil then
+                    # Must delete attribute for User Specified!
+                    element.delete_attribute("idref")
+                  end
+                end
+                h2kElements.each(locationString+"/Description") do |element|
+                  element.text = "User specified"
+                  # Description tag
+                end
+                h2kElements.each(locationString+"/Composite/Section") do |element|
+                  existingInsulation = element.attributes["rsi"].to_f
+                  element.attributes["rsi"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                  element.attributes["rank"] = "1"
+                  element.attributes["percentage"] = "100"
+                end
+              end
+            end
+
+          elsif ( tag =~ /OPT-H2K-Retrofit-ExtWall-RVal/ &&  value != "NA" && value != "" )
+            # Change ALL existing exterior wall codes to User Specified R-value
+            locHouseStr = [ "", "" ]
+            if ( fndTypes == "B" )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
+            elsif ( fndTypes == "W" )
+              locHouseStr[0] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
+            elsif ( fndTypes == "ALL" && configType =~ /^B/ )
+              locHouseStr[0] = "HouseFile/House/Components/Basement/Wall/Construction/ExteriorAddedInsulation"
+              locHouseStr[1] = "HouseFile/House/Components/Walkout/Wall/Construction/ExteriorAddedInsulation"
+            end
+            locHouseStr.each do |locationString|
+              if ( locationString != "" )
+                h2kElements.each(locationString) do |element|
+                  if element.attributes["idref"] != nil then
+                    # Must delete attribute for User Specified!
+                    element.delete_attribute("idref")
+                  end
+                end
+                h2kElements.each(locationString+"/Description") do |element|
+                  element.text = "User specified"
+                  # Description tag
+                end
+                h2kElements.each(locationString+"/Composite/Section") do |element|
+                  existingInsulation = element.attributes["rsi"].to_f
+                  element.attributes["rsi"] = ((value.to_f / R_PER_RSI )+ existingInsulation).to_s
+                  element.attributes["rank"] = "1"
+                  element.attributes["percentage"] = "100"
+                end
+              end
+            end
+
           elsif ( tag =~ /OPT-H2K-BelowSlab-RVal/ &&  value != "NA" )
             locHouseStr = [ "", "", "", "" ]
             if ( fndTypes == "B" )
@@ -1712,7 +1899,7 @@ def processFile(h2kElements)
             end
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "" )
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -1904,7 +2091,7 @@ def processFile(h2kElements)
             end
 
           else
-            if ( value == "NA" )
+            if ( value == "NA" || value == "")
               # Don't change anything
             else
               fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
@@ -2192,6 +2379,7 @@ def processFile(h2kElements)
                   h2kElements[locationText].attributes["spaceHeatingCapacity"] = baseHeatSysCap.to_s if ( h2kElements[locationText] != nil )
                 else
                   h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
+						h2kElements[locationText].attributes["numberOfSystems"] = ((baseHeatSysCap / value.to_f).to_i).to_s
                 end
               end
 
@@ -2545,7 +2733,15 @@ def processFile(h2kElements)
               end
             end
 
-          elsif ( tag =~ /Opt-H2K-P9-netEff15/ &&  value != "NA" )
+           elsif ( tag =~ /Opt-H2K-P9-oneHourRatingConc/ &&  value != "NA" )
+            sysType1.each do |sysType1Name|
+              if ( sysType1Name == "P9" )
+                locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
+                h2kElements[locationText].attributes["oneHourRatingConcurrent"] = value if ( h2kElements[locationText] != nil )
+              end
+            end
+			 
+			 elsif ( tag =~ /Opt-H2K-P9-netEff15/ &&  value != "NA" )
             sysType1.each do |sysType1Name|
               if ( sysType1Name == "P9" )
                 locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData/NetEfficiency"
@@ -5433,7 +5629,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
 
         # ===================== Get envelope characteristics from the XML file
-        getEnvelopeSpecs(h2kPostElements)
+        H2KFile.getEnvelopeSpecs(h2kPostElements)
 
         # Get house heated floor area
         $FloorArea = H2KFile.getHeatedFloorArea( h2kPostElements )
@@ -5775,188 +5971,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
         # End of getHouseInfo
 
-        # =========================================================================================
-        # Get the average characteristics of building facade by orientation
-        # Maybe this belongs in h2kutils? 
-        # =========================================================================================
-        def getEnvelopeSpecs(elements)
-          # ====================================================================================
-          # Parameter      Location
-          # ====================================================================================
-          # Orientation        HouseFile/House/Components/*/Components/Window/FacingDirection[code]
-          # SHGC               HouseFile/House/Components/*/Components/Window[SHGC]
-          # r-value            HouseFile/House/Components/*/Components/Window/Construction/Type/[rValue]
-          # Height             HouseFile/House/Components/*/Components/Window/Measurements/[height]
-          # Width              HouseFile/House/Components/*/Components/Window/Measurements/[width]
 
-          $SHGCWin_sum = Hash.new(0)
-          $uAValueWin_sum = Hash.new(0)
-          $AreaWin_sum = Hash.new(0)
-          $rValueWin = Hash.new(0)
-          $SHGCWin = Hash.new(0)
-          $UAValue = Hash.new(0)
-          $RSI = Hash.new(0)
-          $AreaComp = Hash.new(0)
-
-          locationText = "HouseFile/House/Components/*/Components/Window"
-
-          elements.each(locationText) do |window|
-            areaWin_temp = 0.0
-            # store the area of each windows
-            winOrient = window.elements["FacingDirection"].attributes["code"].to_i
-            # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
-            areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000
-            # [Height (mm) * Width (mm)] * No of Windows
-            $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp
-            # Adds the (SHGC * area) of each windows to summation for individual orientations
-            $uAValueWin_sum[winOrient] += areaWin_temp / (window.elements["Construction"].elements["Type"].attributes["rValue"].to_f)
-            # Adds the (area/RSI) of each windows to summation for individual orientations
-            $AreaWin_sum[winOrient] += areaWin_temp
-            # Adds area of each windows to summation for individual orientations
-          end
-
-          locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"
-          # Adds door-window
-
-          elements.each(locationText) do |window|
-            areaWin_temp = 0.0
-            # store the area of each windows
-            winOrient = window.elements["FacingDirection"].attributes["code"].to_i
-            # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
-            areaWin_temp = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000
-            # [Height (mm) * Width (mm)] * No of Windows
-            $SHGCWin_sum[winOrient] += window.attributes["shgc"].to_f * areaWin_temp
-            # Adds the (SHGC * area) of each windows to summation for individual orientations
-            $uAValueWin_sum[winOrient] += areaWin_temp / (window.elements["Construction"].elements["Type"].attributes["rValue"].to_f)
-            # Adds the (area/RSI) of each windows to summation for individual orientations
-            $AreaWin_sum[winOrient] += areaWin_temp
-            # Adds area of each windows to summation for individual orientations
-          end
-
-          (1..8).each do |winOrient|
-            # Calculate the average weighted values for each orientation
-            if $AreaWin_sum[winOrient] != 0
-              # No windows exist if the total area is zero for an orientation
-              $rValueWin[winOrient] = ($AreaWin_sum[winOrient] / $uAValueWin_sum[winOrient]).round(3)
-              # Overall R-value is [A_tot/(U_tot*A_tot)]
-              $SHGCWin[winOrient] = ($SHGCWin_sum[winOrient] / $AreaWin_sum[winOrient]).round(3)
-              # Divide the summation of (area* SHGC) by total area
-              $UAValue["win"] += $uAValueWin_sum[winOrient]
-              # overall UA value is the summation of individual UA values
-              $AreaComp["win"] += $AreaWin_sum[winOrient]
-              # overall window area of the buildings
-            end
-          end
-
-          locationText = "HouseFile/House/Components/*/Components/Door"
-
-          elements.each(locationText) do |door|
-            areaDoor_temp = 0.0
-            # store area of each Door
-            idDoor = door.attributes["id"].to_i
-            areaDoor_temp = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
-            # [Height (m) * Width (m)]
-
-            locationWindows = "HouseFile/House/Components/*/Components/Door/Components/Window"
-            areaWin_sum = 0.0
-            elements.each(locationWindows) do |openings|
-              if (openings.parent.parent.attributes["id"].to_i == idDoor)
-                areaWin_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)*openings.attributes["number"].to_i / 1000000
-                areaWin_sum += areaWin_temp
-              end
-            end
-
-            areaDoor_temp -= areaWin_sum
-
-            $UAValue["door"] += areaDoor_temp / (door.attributes["rValue"].to_f)
-            # Adds the (area/RSI) of each door to summation
-            $AreaComp["door"] += areaDoor_temp
-            # Adds area of each door to summation
-            $AreaComp["doorwin"] += areaWin_sum
-          end
-
-          $AreaWall_sum = 0.0
-          $uAValueWall_sum = 0.0
-          locationText = "HouseFile/House/Components/Wall"
-          elements.each(locationText) do |wall|
-            areaWall_temp = 0.0
-            idWall = wall.attributes["id"].to_i
-            areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
-
-            locationWindows = "HouseFile/House/Components/Wall/Components/Window"
-            areaWin_sum = 0.0
-            elements.each(locationWindows) do |openings|
-              if (openings.parent.parent.attributes["id"].to_i == idWall)
-                areaWin_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)*openings.attributes["number"].to_i / 1000000
-                areaWin_sum += areaWin_temp
-              end
-            end
-
-            locationDoors = "HouseFile/House/Components/Wall/Components/Door"
-            areaDoor_sum = 0.0
-            elements.each(locationDoors) do |openings|
-              if (openings.parent.parent.attributes["id"].to_i == idWall)
-                areaDoor_temp = (openings.elements["Measurements"].attributes["height"].to_f * openings.elements["Measurements"].attributes["width"].to_f)
-                areaDoor_sum += areaDoor_temp
-              end
-            end
-
-            locationDoors = "HouseFile/House/Components/Wall/Components/FloorHeader"
-            areaHeader_sum = 0.0
-            uAValueHeader = 0.0
-            elements.each(locationDoors) do |head|
-              if (head.parent.parent.attributes["id"].to_i == idWall)
-                areaHeader_temp = (head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f)
-                uAValueHeader_temp = areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
-                areaHeader_sum += areaHeader_temp
-                uAValueHeader += uAValueHeader_temp
-              end
-            end
-
-            areaWall_temp -= (areaWin_sum + areaDoor_sum)
-            uAValueWall = areaWall_temp / wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f
-            $UAValue["wall"] += uAValueWall
-            $AreaComp["wall"] += areaWall_temp
-          end
-
-          locationText = "HouseFile/House/Components/*/Components/FloorHeader"
-          elements.each(locationText) do |head|
-            areaHeader_temp = 0.0
-            areaHeader_temp = head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f
-            $UAValue["header"] += areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
-            $AreaComp["header"] += areaHeader_temp
-          end
-
-          locationText = "HouseFile/House/Components/Ceiling"
-          elements.each(locationText) do |ceiling|
-            areaCeiling_temp = 0.0
-            areaCeiling_temp = ceiling.elements["Measurements"].attributes["area"].to_f
-            $UAValue["ceiling"] += areaCeiling_temp / ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
-            $AreaComp["ceiling"] += areaCeiling_temp
-          end
-
-          locationText = "HouseFile/House/Components/Floor"
-          elements.each(locationText) do |floor|
-            areaFloor_temp = 0.0
-            areaFloor_temp = floor.elements["Measurements"].attributes["area"].to_f
-            $UAValue["floor"] += areaFloor_temp / floor.elements["Construction"].elements["Type"].attributes["rValue"].to_f
-            $AreaComp["floor"] += areaFloor_temp
-          end
-
-          $UAValue["house"] = 0.0
-          $AreaComp["house"] = 0.0
-          $UAValue.each_key do |component|
-            if ($UAValue[component]!= 0.0 && component !="house")
-              $RSI[component] = $AreaComp[component] / $UAValue[component]
-              $UAValue["house"] += $UAValue[component]
-              $AreaComp["house"] += $AreaComp[component]
-            end
-          end
-          $RSI["house"] = $AreaComp["house"] / $UAValue["house"]
-          $R_ValueHouse = ($RSI["house"] * R_PER_RSI).round(1)
-
-        end
-        # End of getEnvelopeSpecs
 
         # =========================================================================================
         # Calculate electricity cost using global results array and electricity cost rate structure
@@ -7287,4 +7302,3 @@ log_out ("substitute-h2k.rb run complete.")
 log_out ("Closing log files")
 $fSUMMARY.close()
 $fLOG.close()
-     

@@ -125,6 +125,7 @@ $HDDHash =  {
             "RESOLUTE" => 12360 ,
             "CORALHARBOUR" => 10720 ,
             "HALLBEACH" => 10720 ,
+				"KELOWNA" => 3715,
             "XXXXX" => 1
             }
 
@@ -205,7 +206,8 @@ CostingSupport = Set.new [ "Opt-Ceilings",
               "Opt-FoundationSlabBelowGrade",
               "Opt-FoundationSlabOnGrade",
               "Opt-FloorHeaderIntIns",
-					    "Opt-ExposedFloor"
+					    "Opt-ExposedFloor",
+						 "Opt-H2KFoundation"
           ]
 
 AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
