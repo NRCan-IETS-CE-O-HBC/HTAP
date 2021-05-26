@@ -202,6 +202,12 @@ def parse_def_file(filepath)
 
           end
 
+          if ( $RunParamsOpen && $token_values[0] =~ /assembly-list/i )
+            # Where is our assembly list located?
+            $gAssemblyList = $token_values[1]
+
+          end          
+
 
          if ( $RunParamsOpen && $token_values[0] =~ /rulesets-file/i )
             # Where is our options file located?
@@ -837,12 +843,15 @@ def run_these_cases(current_task_files)
 
           if ( $gComputeCosts ) then
             # Think about error handling.
+            # ( Are these steps even necessary? Could we not read them from their 
+            #   original location? )
             FileUtils.cp($gCostingFile,$RunDirectory)
+            FileUtils.cp($gAssemblyList,$RunDirectory)
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]
           $LocalOptionsFile = File.basename $gHTAPOptionsFile
-
+          
 
 
           # CD to run directory, spawn substitute-h2k thread and save PID
@@ -872,7 +881,7 @@ def run_these_cases(current_task_files)
           subCostFlag = ""
           subRulesetsFlag = ""
           if ($gComputeCosts ) then
-            subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile}"
+            subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile} --assembly-list #{$gAssemblyList} "
           end
 
 

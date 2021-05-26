@@ -152,6 +152,23 @@ end
 
 module HTAPData
 
+  def  HTAPData.parseJson(jsonfile, desc='')
+    debug_out("parsing #{jsonfile} as json...")
+    data_hash = Hash.new 
+    data_string = File.read(jsonfile)
+ 
+    begin 
+      data_hash = JSON.parse(data_string)
+    rescue 
+      fatalerror("Looks like #{desc} (#{jsonfile}) is incorrectly formatted; cannot be intrepreted as json.")
+    end 
+    data_string.clear 
+    debug_out(" (File parsed OK) \n")
+    return data_hash
+  
+  end 
+
+  
   # Returns a hash containing the HTAP options data structure. Pareses the file and creates 
   # the hash on first call. 
   def HTAPData.getOptionsData()

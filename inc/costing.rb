@@ -27,23 +27,56 @@ $RegionalCostFactors  = {  "Halifax"      =>  0.95 ,
 
 module Costing
 
-  # Function to read unit cost info - i.e. HTAPUnitCosts.json
-  def Costing.parseUnitCosts(unitCostFileName)
+  #===============================================================================
+  # Costing module / Supervisory routine
+  #===============================================================================
 
+  def Costing.estimateCosts(myOptions,myAssemblies,myUnitCosts,myChoices,myChoiceOrder,passedH2kData=nil)
+    
+    if ( passedH2kData.nil? )
+
+      h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
+    else 
+      h2kCostElements = passedH2kData
+    
+    end 
+    myCosts = Hash.new
+    myH2KHouseInfo = Hash.new
+    myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
+    myH2KHouseInfo["h2kFile"] = $gWorkingModelFile
+
+    debug_out ( "Data from #{$gWorkingModelFile}\n")
+    #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
+
+    specdCostSources = Hash.new
+    specdCostSources = {
+      "custom" => [],
+      "components" => ["MiscNRCanEstimates2019","VancouverAirSealData","LEEP-BC-Vancouver","*"]
+    }
+
+    # Compute costs
+    costsOK = false
+
+    myCosts, costsOK = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myAssemblies,myChoices,myH2KHouseInfo)
+
+    if ( ! costsOK )
+      stream_out " - Costs could not be calculated correctly. See warning messages\n"
+      myCosts["costing-dimensions"] = myH2KHouseInfo
+    else
+      debug_out "\n\n"
+      debug_out drawRuler(" cost calculations complete; reporting "," / ")
+      debug_out "\n\n"
+      info_out ( drawRuler("Cost Impacts"))
+      info_out( Costing.summarizeCosts(myChoices, myCosts))
+      File.write(CostingAuditReportName, Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo))
+      info_out("Comprehensive costing calculation report written to #{CostingAuditReportName}")
+
+      myCosts["costing-dimensions"] = myH2KHouseInfo
+
+    end
     debug_off
 
-    unitCostDataHash = Hash.new
-
-    unitCostFile = File.read(unitCostFileName)
-
-    begin 
-      unitCostDataHash = JSON.parse(unitCostFile)
-    rescue
-      fatalerror("Unit costs file (#{unitCostFileName}) is incorrectly formmatted, can not be interpreted as json")
-    end 
-    unitCostFile.clear
-
-    return unitCostDataHash
+    return myCosts
 
   end
 
@@ -53,21 +86,28 @@ module Costing
   # That may include 'proxy' references, in which a code spec
   # is costed using an actual system with equal or nearly-equal
   # thermal performance. Call this funciton recursively if necessary.
-  def Costing.getCostComponentList(myOptions,myChoices,attribute,choice)
+  def Costing.getCostComponentList(myOptions,myAssemblies,myChoices,attribute,choice)
 
-    #debug_off
-    #debug_on if ( attribute =~ /HVAC/ )
+    
+    #debug_on if ( attribute =~ /ACH/ )
+    #debug_on 
     componentList = Array.new
     finalChoice = ""
     debug_out " recovering cost component list for  #{attribute} = #{choice} \n"
-    #debug_out " contents of options at #{attribute}/#{choice}:#{myOptions[attribute]["options"][choice].pretty_inspect}\n"
+    debug_out " contents of assembly at #{attribute} / #{choice} :#{myAssemblies[attribute][choice].pretty_inspect}\n"
+
+    if ( myAssemblies[attribute][choice].nil?  ) then 
+      finalChoice = choice 
+      return componentList, finalChoice
+    end 
 
     # Get proxy
-    if ( ! myOptions[attribute]["options"][choice]["costProxy"].nil? ) then
+    if ( ! myAssemblies[attribute][choice]['proxy'].nil? ) then
 
-      proxyChoice = myOptions[attribute]["options"][choice]["costProxy"]
+      proxyChoice = myAssemblies[attribute][choice]['proxy']
 
       debug_out " following proxy reference #{choice}->#{proxyChoice}"
+
       # Should test to see if a component exists!
 
       if ( ! HTAPData.isChoiceValid(myOptions, attribute, proxyChoice) ) then
@@ -75,21 +115,20 @@ module Costing
       end
       # Recursively call funciton to follow proxy. Tested this on 2x nested
       # references; don't know what happens beyond that.
-      componentList, finalChoice = getCostComponentList(myOptions,myChoices,attribute,proxyChoice)
+      componentList, finalChoice = getCostComponentList(myOptions,myAssemblies,myChoices,attribute,proxyChoice)
 
-    elsif ( ! myOptions[attribute]["options"][choice]["costComponents"].nil? )
-
-      componentList = myOptions[attribute]["options"][choice]["costComponents"]
+    elsif ( ! myAssemblies[attribute][choice]["context"].nil? )
+      componentList = myAssemblies[attribute][choice]['context']['legacy']['data']
       finalChoice = choice
     end
-
+    debug_out("Compoents: #{componentList.pretty_inspect}\n")
     return componentList, finalChoice
 
   end
 
   # Functon that can deal with conditional costing statements -
   # such as hrv ducting costs that change if central forced air is available or not.
-  def Costing.solveComponentConditionals(myOptions,myChoices,attribute,component,myH2KHouseInfo)
+  def Costing.solveComponentConditionals(myOptions,myAssemblies,myChoices,attribute,component,myH2KHouseInfo)
     #debug_on
     if ( component.is_a?(String) ) then
       debug_out "retuning string  #{component}"
@@ -149,7 +188,7 @@ module Costing
 
       if ( testVariable.is_a?(Hash) ) then
         debug_out "COND: #{condVariable} :A hash was retuned - calling recursively. \n"
-        testVariable = Costing.solveComponentConditionals(myOptions,myChoices,attribute,testVariable,myH2KHouseInfo)
+        testVariable = Costing.solveComponentConditionals(myOptions,myAssemblies,myChoices,attribute,testVariable,myH2KHouseInfo)
       end
 
       if ( testVariable.is_a?(Array) ) then
@@ -157,7 +196,7 @@ module Costing
         testVariable.each do | variable |
           if ( variable.is_a?(Hash) ) then
             debug_out "COND: #{condVariable} :A hash was found in that array - calling recursively. \n"
-            variable = Costing.solveComponentConditionals(myOptions,myChoices,attribute,variable,myH2KHouseInfo)
+            variable = Costing.solveComponentConditionals(myOptions,myAssemblies,myChoices,attribute,variable,myH2KHouseInfo)
           end
         end
       end
@@ -214,9 +253,9 @@ module Costing
   # This function untangles these references and returns
   # a cleaner Option array specifiying the effective
   # component costs.
-  def Costing.resolveCostingLogic(myOptions,myChoices,myH2KHouseInfo)
+  def Costing.resolveCostingLogic(myOptions,myAssemblies,myChoices,myH2KHouseInfo)
 
-    #debug_off
+    #debug_on
 
     mySimplerCostTree = Hash.new
     rawCostLists = Hash.new
@@ -234,7 +273,7 @@ module Costing
 
 
       debug_out ("Checking for proxy costing for #{attribute}=#{choice}: source = ")
-      rawCostLists[attribute], finalChoice = Costing.getCostComponentList(myOptions,myChoices,attribute,choice)
+      rawCostLists[attribute], finalChoice = Costing.getCostComponentList(myOptions,myAssemblies,myChoices,attribute,choice)
 
       mySimplerCostTree[attribute] = Hash.new
       mySimplerCostTree[attribute]["options"] = Hash.new
@@ -253,7 +292,7 @@ module Costing
       # elements inside component Cost list can  be a hash, indicating embedded comditional logic
       list.each do | component |
         debug_out "Component? #{component}\n"
-        resolvedComponent = Costing.solveComponentConditionals(mySimplerCostTree,myChoices,attribute,component,myH2KHouseInfo)
+        resolvedComponent = Costing.solveComponentConditionals(mySimplerCostTree,myAssemblies,myChoices,attribute,component,myH2KHouseInfo)
         #debug_out " > #{resolvedComponent.pretty_inspect}\n"
         if ( resolvedComponent.is_a?(Array) ) then 
           finalCostList.concat resolvedComponent
@@ -273,10 +312,10 @@ module Costing
   end
 
   # Recovers costs associated with a given attribute, choices.
-  def Costing.getCosts(myUnitCosts,myOptions,attrib,choice,useTheseSources)
-
-    debug_flag = false 
-    debug_flag = true  if (  attrib =~ /Opt-HVAC/)
+  def Costing.getCosts(myUnitCosts,myOptions,myAssemblies,attrib,choice,useTheseSources)
+    #debug_on 
+    #debug_flag = false 
+    #debug_flag = true  if (  attrib =~ /Opt-HVAC/)
 
      #  #  # debug_on if debug_flag
 
@@ -348,7 +387,7 @@ module Costing
 
         debug_out "   Proxy cost specified. Will attempt to use cost data for #{proxy_choice} ...\n"
         myProxyCosts = Has
-        myProxyCosts = Costing.getCosts(myUnitCosts,myOptions,attrib,proxy_choice,useTheseSources)
+        myProxyCosts = Costing.getCosts(myUnitCosts,myOptions,myAssemblies,attrib,proxy_choice,useTheseSources)
         if ( myProxyCosts["found"] ) then 
           myCosts["data"] = myProxyCosts["data"]
           myCosts["inherited"] = myProxyCosts["inherited"]
@@ -491,9 +530,9 @@ module Costing
 
 
   # Master routine for computing costs
-  def Costing.computeCosts(mySpecdSrc,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
+  def Costing.computeCosts(mySpecdSrc,myUnitCosts,myOptions,myAssemblies,myChoices,myH2KHouseInfo)
 
-    debug_off
+    #debug_on 
 
     costSourcesDBs = Array.new
     costSourcesCustom = Array.new
@@ -518,7 +557,7 @@ module Costing
 
     debug_out "  Untangling costing logic via  Costing.resolveCostingLogic(myOptions,myChoices)\n"
 
-    simpleCostTree = Costing.resolveCostingLogic(myOptions,myChoices,myH2KHouseInfo)
+    simpleCostTree = Costing.resolveCostingLogic(myOptions,myAssemblies,myChoices,myH2KHouseInfo)
    
     #debug_on
     #debug_out (simpleCostTree.pretty_inspect)
@@ -557,9 +596,10 @@ module Costing
 
         choiceCosts = Hash.new
 
-        choiceCosts = Costing.getCosts(myUnitCosts,simpleCostTree,attrib,choice,costSourcesDBs)
+        choiceCosts = Costing.getCosts(myUnitCosts,simpleCostTree,myAssemblies,attrib,choice,costSourcesDBs)
 
-        
+        debug_out ("costs: #{choiceCosts.pretty_inspect}")
+
         costsOK = true
         
         choiceCosts.keys.each do | costingElement |
@@ -574,6 +614,14 @@ module Costing
           units = "ea" if ( units =~ /ea\.?ch/i  )
           materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
           labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
+          total = choiceCosts[costingElement]["data"]["UnitCostTotal"].to_f
+
+          
+          if ( total < 0.01 &&  total > -0.01 ) then 
+            total = materials + labour
+          end 
+
+
           source = choiceCosts[costingElement]["data"]["source"]
           count = choiceCosts[costingElement]["count"].to_f
           
@@ -587,6 +635,7 @@ module Costing
             measure   = 0.0
             materials = 0.0
             labour    = 0.0
+            total     = 0.0
             count     = 1
             measureDescription = "Spec as defined in H2K file; costs cannot be computed"
           elsif ( costingElement == "no_costs_defined") then
@@ -595,6 +644,7 @@ module Costing
             measure   = 0.0
             materials = 0.0
             labour    = 0.0
+            total     = 0.0
             count     = 1
             measureDescription = "No costs have been defined; assume zero cost impact."
           else
@@ -880,7 +930,7 @@ module Costing
           # ===============================================================
           # Compute costs :
           if ( costsOK )
-            myCostsComponent = measure * ( materials + labour ) * count
+            myCostsComponent = measure * ( total ) * count
 
             myCosts["total"] += myCostsComponent.round(2)
 

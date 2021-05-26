@@ -231,6 +231,7 @@ $gWarn = false
 
 
 $UnitCostFileSet = false 
+$gAssemblyListSet = false 
 $RulesetFileSet = false 
 
 $gNoDebug = false
@@ -3776,7 +3777,7 @@ def createProgramXMLSection( houseElements )
 end
 
 # =========================================================================================
-#  Function to set fuel cost rates
+#  Function to set fuel cost rates / Currently obsolete? 
 # =========================================================================================
 def SetFuelCostRates( fuelName, houseElements, fuelElements, theValue )
 
@@ -3840,132 +3841,129 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
   $useThisCodeID  = {  "S"  =>  191 ,    "SE" =>  192 ,    "E"  =>  193 ,    "NE" =>  194 ,    "N"  =>  195 ,    "NW" =>  196 ,    "W"  =>  197 ,    "SW" =>  198   }
 
-    thisCodeInHouse = false
-    foundFavLibCode = false
-    foundUsrDefLibCode = false
-    foundCodeLibElement = ""
-    locationCodeFavText = "Codes/Window/Favorite/Code"
-    h2kCodeLibElements.each(locationCodeFavText) do |codeElement|
+  thisCodeInHouse = false
+  foundFavLibCode = false
+  foundUsrDefLibCode = false
+  foundCodeLibElement = ""
+  locationCodeFavText = "Codes/Window/Favorite/Code"
+  h2kCodeLibElements.each(locationCodeFavText) do |codeElement|
+    if ( codeElement.get_text("Label") == newValue )
+      foundFavLibCode = true
+      foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+      break
+    end
+  end
+  # Code library names are also unique across Favorite and User Defined codes
+  if ( ! foundFavLibCode )
+    locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+    h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement|
       if ( codeElement.get_text("Label") == newValue )
-        foundFavLibCode = true
+        foundUsrDefLibCode = true
         foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
         break
       end
     end
-    # Code library names are also unique across Favorite and User Defined codes
-    if ( ! foundFavLibCode )
-      locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
-      h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement|
-        if ( codeElement.get_text("Label") == newValue )
-          foundUsrDefLibCode = true
-          foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
-          break
-        end
-      end
-    end
-    if ( foundFavLibCode || foundUsrDefLibCode )
-      # Check to see if this code is already used in H2K file and add, if not.
-      # Code references are in the <Codes> section. Avoid duplicates!
-      if ( foundFavLibCode )
-        locationText = "HouseFile/Codes/Window/Favorite"
-      else
-        locationText = "HouseFile/Codes/Window/UserDefined"
-      end
-      h2kFileElements.each(locationText + "/Code") do |element|
-        if ( element.get_text("Label") == newValue )
-          thisCodeInHouse = true
-          $useThisCodeID[winOrient] = element.attributes["id"]
-          break
-        end
-      end
-      if ( ! thisCodeInHouse )
-        if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
-          # No section of this type in house file Codes section -- add it!
-          h2kFileElements["HouseFile/Codes"].add_element("Window")
-        end
-        if ( h2kFileElements[locationText] == nil )
-          # No Favorite or UserDefined section in house file Codes section -- add it!
-          if ( foundFavLibCode )
-            h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
-          else
-            h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
-          end
-        end
-        foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
-        h2kFileElements[locationText].add(foundCodeLibElement)
-      end
-
-      # Windows in walls elements
-      locationText = "HouseFile/House/Components/Wall/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
-        end
-      end
-      # Windows in basement
-      locationText = "HouseFile/House/Components/Basement/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
-        end
-      end
-      # Windows in walkout
-      locationText = "HouseFile/House/Components/Walkout/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
-        end
-      end
-      # Windows in crawlspace (closed or vented)
-      locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
-        end
-      end
-
-    else
-      # Code name not found in the code library
-      # Since no User Specified option for windows this must be an error!
-      fatalerror("Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
-    end
-
   end
+  if ( foundFavLibCode || foundUsrDefLibCode )
+    # Check to see if this code is already used in H2K file and add, if not.
+    # Code references are in the <Codes> section. Avoid duplicates!
+    if ( foundFavLibCode )
+      locationText = "HouseFile/Codes/Window/Favorite"
+    else
+      locationText = "HouseFile/Codes/Window/UserDefined"
+    end
+    h2kFileElements.each(locationText + "/Code") do |element|
+      if ( element.get_text("Label") == newValue )
+        thisCodeInHouse = true
+        $useThisCodeID[winOrient] = element.attributes["id"]
+        break
+      end
+    end
+    if ( ! thisCodeInHouse )
+      if ( h2kFileElements["HouseFile/Codes/Window"] == nil )
+        # No section of this type in house file Codes section -- add it!
+        h2kFileElements["HouseFile/Codes"].add_element("Window")
+      end
+      if ( h2kFileElements[locationText] == nil )
+        # No Favorite or UserDefined section in house file Codes section -- add it!
+        if ( foundFavLibCode )
+          h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+        else
+          h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
+        end
+      end
+      foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
+      h2kFileElements[locationText].add(foundCodeLibElement)
+    end
+    # Windows in walls elements
+    locationText = "HouseFile/House/Components/Wall/Components/Window"
+    h2kFileElements.each(locationText) do |element|
+      if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        # Check if each house entry has an "idref" attribute and add if it doesn't.
+        # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+        if element[3][1].attributes["idref"] != nil
+          # ../Construction/Type
+          element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+        else
+          element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+        end
+        element[3][1].text = newValue
+      end
+    end
+    # Windows in basement
+    locationText = "HouseFile/House/Components/Basement/Components/Window"
+    h2kFileElements.each(locationText) do |element|
+      # 9=FacingDirection
+      if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        # Check if each house entry has an "idref" attribute and add if it doesn't.
+        # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+        if element[3][1].attributes["idref"] != nil
+          # ../Construction/Type
+          element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+        else
+          element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+        end
+        element[3][1].text = newValue
+      end
+    end
+    # Windows in walkout
+    locationText = "HouseFile/House/Components/Walkout/Components/Window"
+    h2kFileElements.each(locationText) do |element|
+      # 9=FacingDirection
+      if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        # Check if each house entry has an "idref" attribute and add if it doesn't.
+        # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+        if element[3][1].attributes["idref"] != nil
+          # ../Construction/Type
+          element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+        else
+          element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+        end
+        element[3][1].text = newValue
+      end
+    end
+    # Windows in crawlspace (closed or vented)
+    locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
+    h2kFileElements.each(locationText) do |element|
+      # 9=FacingDirection
+      if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        # Check if each house entry has an "idref" attribute and add if it doesn't.
+        # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+        if element[3][1].attributes["idref"] != nil
+          # ../Construction/Type
+          element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+        else
+          element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+        end
+        element[3][1].text = newValue
+      end
+    end
+  else
+    # Code name not found in the code library
+    # Since no User Specified option for windows this must be an error!
+    fatalerror("Missing code name: #{newValue} in code library for H2K #{choiceEntryValue} tag:#{tagValue}\n")
+  end
+end
 
   # =========================================================================================
   #  Function to change skylight window codes by orientation
@@ -3982,7 +3980,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
     $useThisCodeID  = { "S"  =>  201 , "SE" =>  202 , "E"  =>  203 , "NE" =>  204 , "N"  =>  205 , "NW" =>  206 , "W"  =>  207 , "SW" =>  208   }
 
-      thisCodeInHouse = false
+      thisCodeInHouse = false   
       foundFavLibCode = false
       foundUsrDefLibCode = false
       foundCodeLibElement = ""
@@ -6702,59 +6700,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           return cost
         end
 
-        #===============================================================================
-        # Costing module
-
-        #===============================================================================
-
-        def estimateCosts(myOptions,myUnitCosts,myChoices, myChoiceOrder )
-          debug_off
-
-          h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
-          myCosts = Hash.new
-          myH2KHouseInfo = Hash.new
-          myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
-          myH2KHouseInfo["h2kFile"] = $gWorkingModelFile
-          debug_out ( "Data from #{$gWorkingModelFile}\n")
-          #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
-
-          specdCostSources = Hash.new
-          specdCostSources = {
-            "custom" => [],
-            "components" => ["MiscNRCanEstimates2019","VancouverAirSealData","LEEP-BC-Vancouver","*"]
-          }
-
-          # Compute costs
-          costsOK = false
-
-          myCosts, costsOK = Costing.computeCosts(specdCostSources,myUnitCosts,myOptions,myChoices,myH2KHouseInfo)
-
-          if ( ! costsOK )
-            stream_out " - Costs could not be calculated correctly. See warning messages\n"
-            myCosts["costing-dimensions"] = myH2KHouseInfo
-          else
-            debug_out "\n\n"
-            debug_out drawRuler(" cost calculations complete; reporting "," / ")
-            debug_out "\n\n"
-            stream_out ( drawRuler("Cost Impacts"))
-            stream_out( Costing.summarizeCosts(myChoices, myCosts))
-            File.write(CostingAuditReportName, Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo))
-            info_out("Comprehensive costing calculation report written to #{CostingAuditReportName}")
-
-            myCosts["costing-dimensions"] = myH2KHouseInfo
-
-          end
-
-          #debug_on
-          #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
-          debug_off
-
-          return myCosts
-
-        end
-
-
-############## SUBSTITUTE-H2K.rb-Routine
+############# SUBSTITUTE-H2K.rb-Routine
         $allok = true
 
         $gChoiceOrder = Array.new
@@ -6835,6 +6781,17 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               end
               $gLookForArchetype = 0;
             end
+
+
+            opts.on("--assembly-list FILE", "Specified path to assembly lists (e.g. HTAP-assemblies.json)") do |c|
+              $cmdlineopts["unitCosts"] = c
+              $assemblyFileName = c
+              if ( !File.exist?($assemblyFileName) )
+                err_out ("Could not find #{$assemblyFileName}")
+                fatalerror("Valid path to assembly list must be specified with --assembly-list option!")
+              end
+              $gAssemblyListSet = true
+            end 
 
             opts.on("--unit-cost-db FILE", "Specified path to unit cost database (e.g. HTAPUnitCosts.json)") do |c|
               $cmdlineopts["unitCosts"] = c
@@ -7528,13 +7485,15 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           end
 
 
-
+          
           # if autocosts were estimatd, compute costs
           if ( $autoEstimateCosts ) then
-
-            myUnitCosts = Costing.parseUnitCosts($unitCostFileName)
-            costEstimates = estimateCosts($gOptions,myUnitCosts,$gChoices,$gChoiceOrder)
-
+            debug_out ("Call to parse unit costs: #{$autoEstimateCosts}")
+            myUnitCosts = HTAPData.parseJson($unitCostFileName,'Unit costs')
+            myAssemblies = HTAPData.parseJson($assemblyFileName,'Assembly list')
+            
+            costEstimates = Costing.estimateCosts($gOptions,myAssemblies,myUnitCosts,$gChoices,$gChoiceOrder)
+             
           end
 
 
