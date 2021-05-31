@@ -563,7 +563,7 @@ def processFile(h2kElements)
       #debug_out "contents of valHash:\n#{valHash.pretty_inspect}\n"
       for tagIndex in tagHash.keys()
         tag = tagHash[tagIndex]
-        #debug_on
+        
         debug_out "tagIndex: #{tagIndex}: #{tag}\n"
 
 
@@ -1964,6 +1964,7 @@ def processFile(h2kElements)
               optDHWTankSize = "1"
               # User Specified
             end
+
             h2kElements[locationText].attributes["code"] = value
 
           elsif ( tag =~ /Opt-H2K-TankSize/ &&  value != "NA" )
@@ -2070,13 +2071,13 @@ def processFile(h2kElements)
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-Heating-Cooling/ )
 
-       myHVACChoice = $gChoices["Opt-Heating-Cooling"]
-			 if myHVACChoice != "NA"
-            locationText = "HouseFile/House/HeatingCooling"
-            if (! h2kElements[locationText].elements["SupplementaryHeatingSystems"].nil?)
-              h2kElements[locationText].delete_element("SupplementaryHeatingSystems")
-            end
-       end
+          myHVACChoice = $gChoices["Opt-Heating-Cooling"]
+          if myHVACChoice != "NA"
+               locationText = "HouseFile/House/HeatingCooling"
+               if (! h2kElements[locationText].elements["SupplementaryHeatingSystems"].nil?)
+                 h2kElements[locationText].delete_element("SupplementaryHeatingSystems")
+               end
+          end
 
 			 if ( tag =~ /Opt-H2K-SysType1/ &&  value != "NA" )
             locationText = "HouseFile/House/HeatingCooling/Type1"
@@ -2621,7 +2622,7 @@ def processFile(h2kElements)
           # END of elsif under HVACSystem section
         
         elsif( choiceEntry =~ /Opt-VentSched/ )
-          # debug_on
+          debug_on
           
           debug_out " Start of Vent-schedule-code \n"
           locationText = "HouseFile/House/Ventilation"
@@ -2634,16 +2635,31 @@ def processFile(h2kElements)
 
           if ( tag =~ /WH_sched_code/ && value !~ /NA/  )
               debug_out "setting whole house vent schedule code to  #{value} \n"
-              h2kElements[locationText + "/WholeHouse/OperationSchedule"].attributes["code"] = value 
+              h2kElements[locationText + "/WholeHouse/OperationSchedule"].attributes["code"] =  value 
+              h2kElements[locationText].delete_element("SupplementalVentilatorList")
+              h2kElements[locationText].add_element("SupplementalVentilatorList")
           end 
 
 
           
-          if ( tag =~ /WH_sched_rate/ && value !~ /NA/ )
+          if ( tag =~ /WH_sched_mins/ && value !~ /NA/ )
             debug_out "setting whole house scheduled rate to #{value} l/s\n"
             h2kElements[locationText + "/WholeHouse/OperationSchedule"].attributes["value"] = value 
           end 
 
+          debug_on 
+          calcFlow = getF326FlowRates(h2kElements)
+
+          if(calcFlow < 1)
+            fatalerror("ERROR: For Opt-VentSched, could not calculate F326 flow rates!\n")
+          else
+            h2kElements[locationText + "/WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = calcFlow.to_s
+            # L/s supply
+            h2kElements[locationText + "/WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = calcFlow.to_s
+            # Exhaust = Supply
+          end
+
+          
 
 
           #h2kElements.each(locationTextWin) do |window|
@@ -3742,16 +3758,22 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Windows in walls elements
       locationText = "HouseFile/House/Components/Wall/Components/Window"
       h2kFileElements.each(locationText) do |element|
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        # debug_on
+        #debug_out ">elements name #{element.name}\n"
+        #debug_out element.elements["FacingDirection"].pretty_inspect
+ 
+
+
+        if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
+          if element.elements["Construction/Type"].attributes["idref"] != nil
             # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            element.elements["Construction/Type"].attributes["idref"]  = $useThisCodeID[winOrient]
           else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
           end
-          element[3][1].text = newValue
+          element.elements["Construction/Type"].text = newValue
         end
       end
       # Windows in basement
@@ -4185,10 +4207,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Determine the F326 flow rate for a house
       # =========================================================================================
       def getF326FlowRates( elements )
+        debug_on 
         locationText = "HouseFile/House/Ventilation/Rooms"
         roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
         ventRequired = 0
         roomLabels.each do |roommName|
+
           if(roommName == "living" || roommName == "bathrooms" || roommName == "utility" || roommName == "otherHabitable")
             numRooms = elements[locationText].attributes[roommName].to_i
             ventRequired += (numRooms*5)
@@ -4203,6 +4227,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             end
             #print "Room is ",roommName, " and number is ",numRooms, ". Total vent required is ", ventRequired, "\n"
           end
+          debug_out "> ROOM: #{roommName} / vent req: #{ventRequired}\n"
         end
 
         # If there is a basement, add another 10 L/s
@@ -4210,6 +4235,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           ventRequired += 10
           #print "Room is basement. Total vent required is ", ventRequired, "\n"
         end
+
+        debug_off
         #print "Final total vent required is ", ventRequired, "\n"
         return ventRequired
       end
@@ -6940,9 +6967,31 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             
             elsif ( ruleSet =~ /LEEP_Pathways/)
                 LEEP_pathways_ruleset()
+
+            elsif ( ruleSet =~ /^NBC_*9_*36p5_2020$/  )
+                stream_out ("  (b) NBC 936 *2020* pathway \n")
+                  NBC.apply_936p5("2020", $ruleSetSpecs, h2kElements, $HDDs, locale)
+
+                  #NBC_936_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs, locale, "2020")
+
+            elsif ( ruleSet =~ /^NBC_*9_*36p6_2020_reference$/  )
+                  stream_out ("  (b) NBC 936 *2020* pathway \n")
+                    NBC.apply_936p6("2020", "ref_house", $ruleSetSpecs, h2kElements, $HDDs, locale)
+  
+                    #NBC_936_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs, locale, "2020
+
+            elsif ( ruleSet =~ /^NBC_*9_*36p6_2020_proposed$/  )
+                    stream_out ("  (b) NBC 936 *2020* pathway \n")
+                      NBC.apply_936p6("2020", "prop_house", $ruleSetSpecs, h2kElements, $HDDs, locale)
+    
+                      #NBC_936_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs, locale, "2020
+  
+
             elsif ( ruleSet =~ /^NBC_*9_*36$/ || ruleSet =~ /^NBC_*9_*36_noHRV$/ ||  ruleSet =~ /^NBC_*9_*36_noHRV$/ )
-              stream_out ("  (b) NBC 936 pathway \n")
-                NBC_936_2010_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
+              stream_out ("  (b) NBC 936 *2015* pathway \n")
+                #NBC.apply_936p5("2020", $ruleSetSpecs, h2kElements, $HDDs, locale)
+
+                NBC_936_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale, "2015" )
 
             elsif ( ruleSet =~ /936_2015_AW_HRV/ ||  ruleSet =~ /936_2015_AW_noHRV / )
               stream_out ("  (c) Protorype NBC Ruleset by Adam Wills.\n")
@@ -6975,6 +7024,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                 next
                 # skip setting this empty choice!
               elsif ( $gChoices[attrib].empty? || $gChoices[attrib] =~ /NA/ )
+                # Add to choice order if not empty! 
+                if ($gChoices[attrib].empty? ) then 
+                   $gChoiceOrder.push(attrib)
+                end 
                 # Change choice to rule set value for all choices that are "NA"
                 isSetbyRuleset[attrib] = true
                 $gChoices[attrib] = choice
@@ -6985,7 +7038,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               end
             end
 
-
+            debug_on
+            debug_out($gChoices.pretty_inspect())
+            debug_off
           end
 
 

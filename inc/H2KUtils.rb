@@ -904,6 +904,13 @@ module H2KFile
   def H2KFile.getPrimaryDHWSys(elements)
 
     fuelName = elements["HouseFile/House/Components/HotWater/Primary/EnergySource/English"].text
+
+    if ( fuelName !~ /gas/i && fuelName !~ /elect/i && fuelName !~ /oil/i)
+      warn_out ("H2K file - could not decode DHW fuel type. Using SH fuel type.  ")
+      fuelName= H2KFile.getPrimaryHeatSys(elements) 
+   end 
+
+
     #tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
 
     return fuelName
@@ -944,7 +951,32 @@ module H2KFile
 
   end # function getWindowArea
 
+  # =====================================================================================
+  # Get Ventilation system
+  # =====================================================================================
+  def H2KFile.get_vent_sys_type(elements)
 
+    bHRV_found = false 
+    bERV_found = false 
+
+    location_txt = "HouseFile/House/Ventilation/WholeHouseVentilatorList/*"
+ 
+    elements.each(location_txt) do | this_vent_sys |
+
+      if ( this_vent_sys.name =~ /hrv/i )
+        bHRV_found = true 
+      elsif ( this_vent_sys.name =~ /hrv/i )
+        bERV_found = true 
+      end 
+    end 
+
+
+
+    return "ERV" if bERV_found 
+    return "HRV" if bHRV_found
+    return "fans"
+
+  end 
 
   # ======================================================================================
   # Get wall characteristics (above-grade, headers....)
@@ -2527,15 +2559,17 @@ module H2KOutput
           pvAvailable = 0
           pvUtilized  = 0
           #monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
-          monthArr.each do |mth|
+          
+          # Stubbed out - not currently working.... 
+          #monthArr.each do |mth|
             # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsistent with convention used
             #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
             # ASF: 05-Oct-2016: I suspect this loop is really expensive.
-            pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f
+            #pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f
             # GJ
-            pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f
+            #pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f
             # GJ
-          end
+          #end
           # 10-Nov-2016 JTB: Use annual PV values only! HOT2000 redistributes the monthly excesses, if available!
           myResults[houseCode]["avgEnergyPVAvailableGJ"] = pvAvailable
           # GJ

@@ -120,6 +120,9 @@
       "NBC9_36": "NBC9_36",
       "NBC9_36_noHRV": "NBC9_36_noHRV",
       "NBC9_36_HRV": "NBC9_36_HRV",
+      "NBC_936p5_2020": "NBC_936p5_2020",
+      "NBC_936p6_2020_reference": "NBC_936p6_2020_reference",
+      "NBC_936p6_2020_proposed": "NBC_936p6_2020_proposed",
       "ArchetypeRoadmapping_oil": "ArchetypeRoadmapping_oil",
       "ArchetypeRoadmapping_gas": "ArchetypeRoadmapping_gas",
       "ArchetypeRoadmapping_elec": "ArchetypeRoadmapping_elec", 
@@ -1280,6 +1283,36 @@
         "h2kMap": {
           "base": {
             "<Opt-ACH>": "2.5",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
+      "ACH_NBC_2p5": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "2.5",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
+      "ACH_NBC_3p0": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "3.0",
             "Opt-BuildingSite": "7",
             "Opt-WallShield": "4",
             "Opt-FlueShield": "2"
@@ -3234,7 +3267,7 @@
         }
       }
     },
-    "default": "SkylightDef",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-win-S-CON>",
@@ -5133,6 +5166,20 @@
           ]
         }
       },
+      "nbc_rsi_2.78": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NBC_Wall_zone4",
+            "OPT-H2K-EffRValue": "15.79",
+            "HeaderExtInsRValue": 0.0
+          }
+        },
+        "costs": {
+          "proxy": "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb",
+          "custom-costs": {
+          }
+        }
+      },
       "NBC_Wall_zone4": {
         "h2kMap": {
           "base": {
@@ -6336,7 +6383,7 @@
         }
       }
     },
-    "default": "Stud_2x6_R20",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-GenInsulLayerInboard-a>",
@@ -9411,8 +9458,6 @@
           "components": []
         }
       },
-      
-      
       "BaseExpFloor-R31": {
         "h2kMap": {
           "base": {
@@ -9474,7 +9519,7 @@
           ]
         }
       },
-      "VintageR30": {
+      "VintageR30b": {
         "h2kMap": {
           "base": {
             "OPT-H2K-CodeName": "NA",
@@ -10605,6 +10650,27 @@
           ]
         }
       },
+      "NBC-gas-furnace-2020": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "gas-furnace-ecm"
+        }
+      },
       "NBC-gas-furnace": {
         "h2kMap": {
           "base": {
@@ -11248,6 +11314,41 @@
       "OPT-H2K-Rating2"
     ]
   },
+  "Opt-VentSched":{
+    "structure": "tree",
+    "costed": false,
+    "options":{
+      "NA":{
+        "h2kMap":{
+        "base":{
+          "WH_sched_code": "NA",
+          "WH_sched_mins": "NA"
+        }
+      }},
+      "nbc_ventilation_rate": {
+        "h2kMap":{
+          "base":{
+            "WH_sched_code": "0",
+            "WH_sched_mins": "480"
+          }
+        }
+      },
+      "continuious": {
+        "h2kMap":{
+          "base":{
+            "WH_sched_code": "0",
+            "WH_sched_mins": "1440"
+          }
+        }
+      }
+    },
+    "default": "NA",
+    "stop-on-error": true,
+    "h2kSchema":[
+      "WH_sched_code",
+      "WH_sched_mins"
+    ]
+  },
   "Opt-VentSystem": {
     "structure": "tree",
     "costed": true,
@@ -11754,6 +11855,57 @@
           }
         }
       },
+      "NBC_2020_DHW_gas_EF0.69": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.69",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "proxy": "gas_storagetank_w/powervent_ef0.67",
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC_2020_DHW_HP_EF0.89": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "3",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.876",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "elec_storage_ef0.89"
+        }
+      },
+      "NBC_2020_DHW_HP_EF2.1": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.10",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "HPHotWater"
+        }
+      },
       "NBC-HotWater_elec": {
         "h2kMap": {
           "base": {
@@ -11763,6 +11915,23 @@
             "Opt-H2K-EF": "0.876",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "elec_storage_ef0.89"
+        }
+      },
+      "NBC-HotWater_HP": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.00",
+            "Opt-H2K-FlueDiameter": "NA"
           }
         },
         "costs": {
@@ -11920,7 +12089,7 @@
       }
 
     },
-    "default": "BaseDHW",
+    "default": "NA",
     "stop-on-error": true,
     "h2kSchema": [
       "Opt-H2K-Fuel",
@@ -12165,6 +12334,37 @@
           ]
         }
       },
+      "nbc_2020_baseloads": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "2",
+            "Opt-H2K-FracAdultsHome": "0",
+            "Opt-H2K-NumChilds": "2",
+            "Opt-H2K-FracChildsHome": "0",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "18.41",
+            "Opt-H2K-Lighting": "0",
+            "Opt-H2K-Other": "0",
+            "Opt-H2K-Exterior": "0",
+            "Opt-H2K-DHWLoad": "176",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "ERS-MURB-regular-11.8kWh&125_per_day": {
         "h2kMap": {
           "base": {
@@ -12319,6 +12519,35 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-DayHeatSet": "21",
+            "Opt-H2K-NightHeatSet": "21",
+            "Opt-H2K-SetbackDur": "8",
+            "Opt-H2K-CoolSet": "25",
+            "Opt-H2K-AllowRise": "3",
+            "Opt-H2K-BsmtIsHeat": "true",
+            "Opt-H2K-BsmtIsCool": "false",
+            "Opt-H2K-BsmtHeatSet": "19",
+            "Opt-H2K-BsmtSepTherm": "true",
+            "Opt-H2K-EqipHeat": "22",
+            "Opt-H2K-EqipCool": "24",
+            "Opt-H2K-CrawlIsHeat": "NA",
+            "Opt-H2K-CrawlHeatSet": "15",
+            "Opt-H2K-CoolSeasStart": "5",
+            "Opt-H2K-CoolSeasEnd": "10",
+            "Opt-H2K-CoolSeasDes": "7"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "nbc_2020_temps": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-DayHeatSet": "20",
             "Opt-H2K-NightHeatSet": "21",
             "Opt-H2K-SetbackDur": "8",
             "Opt-H2K-CoolSet": "25",

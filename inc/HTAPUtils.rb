@@ -393,7 +393,7 @@ module HTAPData
         # Currently only base supported.
         if ( structure.to_s =~ /tree/) then
           $values = jsonRawOptions[attribute]["options"][optionEntry]["h2kMap"]
-          debug_out" has h2kMap entries - \n#{$values["base"].pretty_inspect}\n\n"
+          #debug_out" has h2kMap entries - \n#{$values["base"].pretty_inspect}\n\n"
 
 
           valuesWithConditions = Hash.new
