@@ -259,7 +259,7 @@ module NBC
 
       # Recover parameters needed to apply the right rulesets
       params_for_code = get_hse_params_for_code(elements, ruleSpecs, locale_HDD, cityName)
-      +
+      
       apply_936_operating_conditions(year)
       if ( house == "ref_house")
 
@@ -302,7 +302,8 @@ module NBC
          "DHW_type"          => H2KFile.getPrimaryDHWSys( elements ),
          "house_type"        => H2KFile.getHouseType(elements), 
          "heated_crawlspace" => H2KFile.heatedCrawlspace(elements), 
-         "vent_sys_type"     => H2KFile.get_vent_sys_type(elements) }
+         "vent_sys_type"     => H2KFile.get_vent_sys_type(elements),
+         "cityName"          => cityName         }
       
       
       
@@ -403,6 +404,13 @@ module NBC
       debug_out "Applying 9.36 envelope requirements for #{year} NBC\n"
       
       $ruleSetChoices["Opt-WindowDistribution"] = "Reference-9.36"
+      cityName = params_for_code['cityName']
+      if ($PermafrostHash[cityName] == "continuous")
+        $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Perma"
+        applyPermafrostRules = true
+      else
+         $ruleSetChoices["Opt-Specifications"] = "NBC_Specs_Normal"
+      end
 
 
       # ACH: 
