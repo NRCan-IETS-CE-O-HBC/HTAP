@@ -538,11 +538,17 @@ module H2KFile
     return myHouseFrontOrientString
   end
 
+  
   def H2KFile.getHeatedFloorArea(elements)
+    areas = H2KFile.getHeatedFloorAreaByGrade(elements)
+    return areas['above_grade']+areas['below_grade']
+  end 
+
+  def H2KFile.getHeatedFloorAreaByGrade(elements)
 
     # Initialize vars
     areaRatio = 0
-    heatedFloorArea = 0
+    heatedFloorArea = { 'above_grade' => 0, 'below_grade' => 0 }
 
     # Get XML file version that "elements" came from. The version can be from the original file (pre-processed inputs)
     # or from the post-processed outputs (which will match the version of the H2K CLI used), depending on the "elements"
@@ -613,14 +619,20 @@ module H2KFile
     if numStoreysInput == 1 then
       # Single storey house -- avoid counting a basement heated area
       areaEstimateTotal = ceilingAreaOut
+      areaEstimateAG = ceilingAreaOut
+      areaEstimateBG = 0 
     else
       # Multi-storey houses add area of "heated" basement & crawlspace (check if heated!)
       loc = "HouseFile/House/Temperatures/Basement"
       loc2 = "HouseFile/House/Temperatures/Crawlspace"
       if elements[loc].attributes["heated"] == "true" || elements[loc].attributes["heatingSetPoint"] == "true" || elements[loc2].attributes["heated"] == "true"
         areaEstimateTotal = ceilingAreaOut * numStoreysInput + basementSlabAreaOut
+        areaEstimateAG = ceilingAreaOut * numStoreysInput +
+        areaEstimateBG = basementSlabAreaOut
       else
         areaEstimateTotal = ceilingAreaOut * numStoreysInput
+        areaEstimateAG = ceilingAreaOut
+        areaEstimateBG = 0
       end
     end
 
@@ -632,18 +644,19 @@ module H2KFile
 
     if buildingType.include? "Multi-unit" then
       # For multis using the "new" MURB method assume that heated area comes from a valid user input (not an estimate form ceiling/basement areas)
-      heatedFloorArea = areaUserInputTotal
+      heatedFloorArea = {'above_grade'=>areaAboveGradeInput,'below_grade'=>areaBelowGradeInput}
     elsif (areaRatio > 0.50 && areaRatio < 2.0) || areaEstimateTotal == 0 then
       # Accept user input area if it's between 50% and 200% of the estimated area!
-      heatedFloorArea = areaUserInputTotal
+      heatedFloorArea = {'above_grade'=>areaAboveGradeInput,'below_grade'=>areaBelowGradeInput}
     else
       # Use user input area for Triplexes (type 4), Apartments (type 5), or
       # row house (end:6 or middle:8) regardless of area ratio (but non-zero)
       houseType = elements["HouseFile/House/Specifications/HouseType"].attributes["code"].to_i
       if (houseType == 4 || houseType == 5 || houseType == 6 || houseType == 8) && areaUserInputTotal > 0
-        heatedFloorArea = areaUserInputTotal
+        heatedFloorArea = {'above_grade'=>areaAboveGradeInput,'below_grade'=>areaBelowGradeInput}
       else
-        heatedFloorArea = areaEstimateTotal
+
+        heatedFloorArea = {'above_grade'=>areaEstimateAG,'below_grade'=>areaEstimateBG}
       end
     end
 
@@ -1077,7 +1090,7 @@ module H2KFile
     end
     # elements.each(locationWallText) do |wall|
 
-    debug_out ("Output follows:\n#{wallDimsAG.pretty_inspect}\n")
+    #debug_out ("Output follows:\n#{wallDimsAG.pretty_inspect}\n")
 
     debug_out ("[<] H2KFile.getAGWallDimensions \n")
     return wallDimsAG
@@ -1300,6 +1313,11 @@ module H2KFile
      return sout
    end
 
+  def H2KFile.getHighestCeiling (elements)
+    height = elements["HouseFile/House/NaturalAirInfiltration/Specifications/BuildingSite"].attributes["highestCeiling"].to_f
+    return height
+
+  end 
   # ==========================================================================================
   # Parses results section and returns peak heating/cooling loads. Need to think about whether
   # we need to spec the result section ...

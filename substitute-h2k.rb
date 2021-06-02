@@ -167,6 +167,7 @@ $aliasShortInput   = "i"
 $aliasShortOutput  = "o"
 $aliasShortConfig  = "c"
 $aliasShortArch    = "a"
+$aliasShortDebug   = "d"
 
 $aliasLongInput   = "input"
 $aliasLongOutput  = "output"
@@ -174,6 +175,7 @@ $aliasLongConfig  = "configuration"
 $aliasLongArch    = "archetype"
 $aliasLongStatus  = "status"
 $aliasLongCosts   = "cost-estimates"
+$aliasLongDebug   = "debug"
 
 # Default to short
 $aliasInput   = $aliasLongInput
@@ -2622,7 +2624,6 @@ def processFile(h2kElements)
           # END of elsif under HVACSystem section
         
         elsif( choiceEntry =~ /Opt-VentSched/ )
-          debug_on
           
           debug_out " Start of Vent-schedule-code \n"
           locationText = "HouseFile/House/Ventilation"
@@ -2647,7 +2648,7 @@ def processFile(h2kElements)
             h2kElements[locationText + "/WholeHouse/OperationSchedule"].attributes["value"] = value 
           end 
 
-          debug_on 
+           
           calcFlow = getF326FlowRates(h2kElements)
 
           if(calcFlow < 1)
@@ -3213,6 +3214,7 @@ def processFile(h2kElements)
         #-----------------------------------------------------------------------------------
         elsif (choiceEntry =~ /Opt-WindowDistribution/)
 
+
           winAreaOrient = H2KFile.getWindowArea(h2kElements)
           wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
           winArea = wallAreaAG["area"]["windows"].to_f
@@ -3221,24 +3223,118 @@ def processFile(h2kElements)
 
           frontOrientation = H2KFile.getFrontOrientation(h2kElements)
 
-          # FDWR
+          house_type        = H2KFile.getHouseType(h2kElements)
+          numb_of_units     = H2KFile.getMURBUnits(h2kElements)
+          ceiling_area      = H2KFile.getCeilingArea( h2kElements, 'All', 'NA' )
+          house_volume      = H2KFile.GetHouseVolume(h2kElements)
+          heated_floor_area = H2KFile.getHeatedFloorAreaByGrade(h2kElements)
+          height            = H2KFile.getHighestCeiling (h2kElements)
+
+          ag_volume = house_volume * heated_floor_area['above_grade']  / ( 
+            heated_floor_area['above_grade'] + heated_floor_area['below_grade']
+          )
+
+          ag_footprint =  ag_volume /  height
+
+          width = ( ag_footprint )**(0.5)
+          length = width 
+          est_enclosing_wall_area = 2.0* ( length+width ) * height
+
+          
+
+          
+          debug_out ("house type:       #{house_type}     \n")
+          debug_out ("number of units:  #{numb_of_units}  \n")
+          debug_out ("volume:           #{house_volume}\n")
+          debug_out ("height:           #{height}\n")
+          debug_out ("est area enc wall:#{est_enclosing_wall_area}\n")
+          debug_out ("gross wall area:  #{grossWallArea}\n")
+          debug_out ("WIDTH             #{width}\n")
+
+       
+          
+
+
+
+          if ( numb_of_units.to_i > 2 || 
+            ( house_type !~ /SingleDetached/ && house_type !~ /Double\/Semi-detached/ )
+          )
+            eff_wall_area = est_enclosing_wall_area
+            
+          else
+
+            eff_wall_area = grossWallArea
+
+          end 
+
+          actual_FDWR = ( winArea + doorArea ) / grossWallArea
+          effective_FDWR = ( winArea + doorArea )  / eff_wall_area
+
+          
+          refhouse_FDWR_min = ( 0.17 * eff_wall_area ) / grossWallArea
+          refhouse_FDWR_max = ( 0.22 * eff_wall_area ) / grossWallArea
+
+          if (refhouse_FDWR_max > 0.40 ) 
+            refhouse_FDWR_max = 0.40
+          end 
+
+          if (refhouse_FDWR_min > refhouse_FDWR_max )
+            refhouse_FDWR_min = refhouse_FDWR_max
+          end 
+
+          if ( value == "NBC9.36_legacy" )
+
+            refhouse_FDWR_min = ( 0.17 )
+            refhouse_FDWR_max = ( 0.22 )
+
+          end 
+
+          debug_out "tag/val #{tag} / #{value}\n"
           if (tag =~ /OPT-H2K-FDWR/)
             if value == "NA"
+              debug_out "Leave FDWR alone"
               # original FDWR
-              fDWR = (winArea+doorArea) / grossWallArea
-            elsif value == "NBC9.36"
+              fDWR = actual_FDWR
+            elsif value == "NBC9.36" || value == "NBC9.36_legacy"
+              debug_out (" Comparing actual FDWR #{actual_FDWR} to ref house values (#{refhouse_FDWR_min}->#{refhouse_FDWR_max}\n")
               # NBC9.36 specify a range (i.e. 0.17 < FDWR < 0.22)
               # Keep original if in the range, otherwise set to max or min
-              fDWR = (winArea+doorArea) / grossWallArea
-              if (fDWR < 0.17)
-                fDWR = 0.17
-              elsif (fDWR > 0.22)
-                fDWR = 0.22
+
+              if (actual_FDWR < refhouse_FDWR_min)
+                debug_out ("Set FDWR to ref house min\n")
+                fDWR = refhouse_FDWR_min
+              elsif (actual_FDWR > refhouse_FDWR_max)
+                debug_out ("Set FDWR to ref house max\n")
+                fDWR = refhouse_FDWR_max
+              else 
+                debug_out('Leaving FDWR alone.')
+                fDWR = actual_FDWR
               end
             else
+              debug_out "Set FDWR to user-sepcified value"
               fDWR = value.to_f
             end
           end
+
+
+          debug_out("FDWR: #{fDWR}\n")
+
+          $report_fdwr_data = {
+            'FDWR spec'       => value,
+            'gross-wall-area' => grossWallArea,
+            'number_of_units' => numb_of_units.to_i,
+            'house_type'      => house_type,
+            'reported_height'    => height,
+            'est_width_m'  => width, 
+            'est_length_m' => length,
+            'est_enclosing_wall_area' => est_enclosing_wall_area,
+            'actual_FDWR_original'    => actual_FDWR,
+            'effective_FDWR_original' => effective_FDWR,
+            'refhouse_FDWR_max'       => refhouse_FDWR_max,
+            'refhouse_FDWR_min'       => refhouse_FDWR_min,
+            'actual_FDWR_final'       => fDWR
+          }         
+
 
           locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
           # Overhang width
@@ -3291,6 +3387,7 @@ def processFile(h2kElements)
             tempAreaWin = Hash.new(0)
             maxAreaWin = Hash.new(0)
             totalNewWinArea = (fDWR * grossWallArea - doorArea)
+
             if value == "EQUAL"
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
@@ -3353,6 +3450,7 @@ def processFile(h2kElements)
               end
             end
           end
+          #debug_pause 
 
         #------------------------------------------------------------------------------------
         else
@@ -4207,7 +4305,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Determine the F326 flow rate for a house
       # =========================================================================================
       def getF326FlowRates( elements )
-        debug_on 
+
         locationText = "HouseFile/House/Ventilation/Rooms"
         roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
         ventRequired = 0
@@ -7022,7 +7120,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               if choice.empty?
                 warn_out("WARNING:  Attribute #{attrib} is blank in the rule set.")
                 next
-                # skip setting this empty choice!
+                # skip setting this empty c2627hoice!
               elsif ( $gChoices[attrib].empty? || $gChoices[attrib] =~ /NA/ )
                 # Add to choice order if not empty! 
                 if ($gChoices[attrib].empty? ) then 
@@ -7038,9 +7136,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               end
             end
 
-            debug_on
-            debug_out($gChoices.pretty_inspect())
-            debug_off
+            #debug_on
+            #debug_out($gChoices.pretty_inspect())
+            #debug_off
           end
 
 

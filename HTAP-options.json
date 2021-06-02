@@ -12818,6 +12818,16 @@
           }
         }
       },  
+      "Legacy-9.36": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-FDWR": "NBC9.36_legacy",
+            "OPT-H2K-OVERHANG-WDTH": "0.0",
+            "OPT-H2K-OVERHANG-HGHT": "0.0",
+				"OPT-H2K-DISTRIBUTION": "EQUAL"
+          }
+        }
+      },
       "Reference-9.36": {
         "h2kMap": {
           "base": {
