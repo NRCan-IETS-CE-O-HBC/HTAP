@@ -3213,16 +3213,16 @@ def processFile(h2kElements)
         # Delete all windows and redistribute according to the choices
         #-----------------------------------------------------------------------------------
         elsif (choiceEntry =~ /Opt-WindowDistribution/)
-
+          debug_on
 
           winAreaOrient = H2KFile.getWindowArea(h2kElements)
           wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
           winArea = wallAreaAG["area"]["windows"].to_f
           doorArea = wallAreaAG["area"]["doors"].to_f
           grossWallArea = wallAreaAG["area"]["gross"].to_f
-
+          
           frontOrientation = H2KFile.getFrontOrientation(h2kElements)
-
+          
           house_type        = H2KFile.getHouseType(h2kElements)
           numb_of_units     = H2KFile.getMURBUnits(h2kElements)
           ceiling_area      = H2KFile.getCeilingArea( h2kElements, 'All', 'NA' )
@@ -3387,7 +3387,7 @@ def processFile(h2kElements)
             tempAreaWin = Hash.new(0)
             maxAreaWin = Hash.new(0)
             totalNewWinArea = (fDWR * grossWallArea - doorArea)
-
+            window_ratio = totalNewWinArea / grossWallArea
             if value == "EQUAL"
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
@@ -3440,17 +3440,20 @@ def processFile(h2kElements)
 
             # Add windows on four sides of a house
             frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}
+            debug_on
             (1..8).each do |winOrient|
+              debug_out "> orientation #{winOrient}"
+              H2KFile.addWinByFDWR(h2kElements, frontFacingH2KVal[winOrient], window_ratio/8.0, winOrient, overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
+
               if (newWinHeight[winOrient] > 0.0 && newWinWidth[winOrient] > 0.0)
                 if winCode[winOrient].nil?
                   # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
                   winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
                 end
-                H2KFile.addWin(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
               end
             end
           end
-          #debug_pause 
+
 
         #------------------------------------------------------------------------------------
         else
