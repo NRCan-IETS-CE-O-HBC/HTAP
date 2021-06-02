@@ -1491,6 +1491,85 @@ module H2KFile
 
   end
 
+  def H2KFile.addWinByFDWR( elements, facingDirection, ratio, orientation, overhangW, overhangH, winCode )
+
+    $code = 291 
+    windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
+    useThisCodeID  = {  "S"  =>  291 ,    "SE" =>  292 ,    "E"  =>  293 ,    "NE" =>  294 ,    "N"  =>  295 ,    "NW" =>  296 ,    "W"  =>  297 ,    "SW" =>  298   }
+   
+
+    debug_on 
+    debug_out "Orientation #{orientation} \ ratio #{ratio}\n"
+
+    locationText = "HouseFile/House/Components/Wall"
+      elements.each(locationText) do |wall|
+        #next if (wall.attributes["adjacentEnclosedSpace"] == "true")
+        areaWall = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
+        
+        areaWindow = areaWall * ratio 
+
+        height = areaWindow ** 0.5 
+        width  = height
+        
+        wall.elements["Components"].add_element("Window") 
+
+        locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
+        elements.each(locationTextWin) do |window|
+          # Add window information to the newly added element
+
+          if (window.attributes["id"].nil?)
+            window.attributes["number"] = "1"
+            window.attributes["er"] = "12.7173"
+            window.attributes["shgc"] = "0.432"
+            window.attributes["frameHeight"] = "10"
+            window.attributes["frameAreaFraction"] = "0.0189"
+            window.attributes["edgeOfGlassFraction"] = "0.1157"
+            window.attributes["centreOfGlassFraction"] = "0.8654"
+            window.attributes["adjacentEnclosedSpace"] = "false"
+            window.attributes["id"] = $code
+            $code = $code + 1 
+            # Window label
+            window.add_element("Label")
+            window.elements["Label"].add_text("refHse+#{facingDirection}")
+            # Window construction
+            window.add_element("Construction")
+            window.elements["Construction"].attributes["energyStar"] = "true"
+            window.elements["Construction"].add_element("Type")
+            window.elements["Construction"].elements["Type"].attributes["idref"] = winCode
+            window.elements["Construction"].elements["Type"].attributes["rValue"] = "0.9259"
+            window.elements["Construction"].elements["Type"].add_text("NC-3g-HG-u1.08")
+            # Window measurements
+            window.add_element("Measurements")
+            window.elements["Measurements"].attributes["height"] = height
+            window.elements["Measurements"].attributes["width"] = width
+            window.elements["Measurements"].attributes["headerHeight"] = overhangH
+            window.elements["Measurements"].attributes["overhangWidth"] = overhangW
+            window.elements["Measurements"].add_element("Tilt")
+            window.elements["Measurements"].elements["Tilt"].attributes["code"] = "1"
+            window.elements["Measurements"].elements["Tilt"].attributes["value"] = "90"
+            window.elements["Measurements"].elements["Tilt"].add_element("English")
+            window.elements["Measurements"].elements["Tilt"].elements["English"].add_text("Vertical")
+            window.elements["Measurements"].elements["Tilt"].add_element("French")
+            window.elements["Measurements"].elements["Tilt"].elements["French"].add_text("Verticale")
+            # Window shading
+            window.add_element("Shading")
+            window.elements["Shading"].attributes["curtain"] = "1"
+            window.elements["Shading"].attributes["shutterRValue"] = "0"
+            # Facing direction
+            window.add_element("FacingDirection")
+            window.elements["FacingDirection"].attributes["code"] = windowFacingH2KVal[facingDirection]
+            window.elements["FacingDirection"].add_element("English")
+            window.elements["FacingDirection"].elements["English"].add_text("#{facingDirection}")
+            window.elements["FacingDirection"].add_element("French")
+            window.elements["FacingDirection"].elements["French"].add_text("#{facingDirection}")
+          end
+        end 
+
+      end 
+
+  end 
+
+
   def H2KFile.addWin(elements, facingDirection, height, width, overhangW, overhangH, winCode)
     # Facing direction codes for HOT2000
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
