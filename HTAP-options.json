@@ -11855,6 +11855,25 @@
           }
         }
       },
+      "NBC-HotWater_gas_tankless": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.80",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+           "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+          ]
+        }
+      },      
       "NBC_2020_DHW_gas_EF0.69": {
         "h2kMap": {
           "base": {
@@ -11872,7 +11891,7 @@
           }
         }
       },
-      "NBC_2020_DHW_HP_EF0.89": {
+      "NBC_2020_DHW_elec_EF0.89": {
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "1",
