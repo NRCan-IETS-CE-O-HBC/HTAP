@@ -259,7 +259,7 @@ module NBC
 
       # Recover parameters needed to apply the right rulesets
       params_for_code = get_hse_params_for_code(elements, ruleSpecs, locale_HDD, cityName)
-      +
+      
       apply_936_operating_conditions(year)
       if ( house == "ref_house")
 

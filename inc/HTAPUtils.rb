@@ -1261,6 +1261,15 @@ module HTAPData
       results[$aliasLongCosts] = $costEstimates
     end
 
+
+    # Debugging info? 
+    results[$aliasLongDebug] = {}
+    $report_fdwr_data.each_key do |key| 
+      results[$aliasLongDebug]["FDWR_calc_"+key] = $report_fdwr_data[key]
+    end 
+
+
+
     return results
 
   end 
