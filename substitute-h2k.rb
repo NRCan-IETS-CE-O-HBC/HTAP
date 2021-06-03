@@ -3381,6 +3381,7 @@ def processFile(h2kElements)
 
           # Window size
           if (tag =~ /OPT-H2K-DISTRIBUTION/ && value != "NA")
+            debug_out " Distribtion - #{value}\n"
             newWinHeight = Hash.new(0)
             newWinWidth = Hash.new(0)
             winCode = Hash.new
@@ -3392,7 +3393,7 @@ def processFile(h2kElements)
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
 
-            
+                
                 if (frontOrientation == "S" || frontOrientation == "N" || frontOrientation == "W" || frontOrientation == "E")
                   newWinHeight[1] = equalWinSide
                   newWinHeight[3] = equalWinSide
@@ -3440,16 +3441,17 @@ def processFile(h2kElements)
 
             # Add windows on four sides of a house
             frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}
-            debug_on
             (1..8).each do |winOrient|
-              debug_out "> orientation #{winOrient}"
-              H2KFile.addWinByFDWR(h2kElements, frontFacingH2KVal[winOrient], window_ratio/8.0, winOrient, overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
+              debug_out " Adding window for orientation ... > orientation #{winOrient}\n"
+              #H2KFile.addWinByFDWR(h2kElements, frontFacingH2KVal[winOrient], window_ratio/8.0, winOrient, overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
 
               if (newWinHeight[winOrient] > 0.0 && newWinWidth[winOrient] > 0.0)
                 if winCode[winOrient].nil?
                   # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
                   winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
                 end
+                debug_out "    .... calling add_win_to_any_wall ."
+                H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
               end
             end
           end

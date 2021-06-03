@@ -1491,84 +1491,138 @@ module H2KFile
 
   end
 
-  def H2KFile.addWinByFDWR( elements, facingDirection, ratio, orientation, overhangW, overhangH, winCode )
-
-    $code = 291 
+  def H2KFile.add_win_to_any_wall(passed_elements, facingDirection, height, width, overhangW, overhangH, winCode)
+  
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
     useThisCodeID  = {  "S"  =>  291 ,    "SE" =>  292 ,    "E"  =>  293 ,    "NE" =>  294 ,    "N"  =>  295 ,    "NW" =>  296 ,    "W"  =>  297 ,    "SW" =>  298   }
-   
-
-    debug_on 
-    debug_out "Orientation #{orientation} \ ratio #{ratio}\n"
-
     locationText = "HouseFile/House/Components/Wall"
-      elements.each(locationText) do |wall|
-        #next if (wall.attributes["adjacentEnclosedSpace"] == "true")
-        areaWall = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
-        
-        areaWindow = areaWall * ratio 
+    #debug_on
+    debug_out ("Placing window (w = #{width} / h = #{height}; faces #{facingDirection}) \n")
+    
+    window_placed = false
 
-        height = areaWindow ** 0.5 
-        width  = height
-        
-        wall.elements["Components"].add_element("Window") 
+    window_area = ( height / 1000.0 ) * ( width / 1000.0 )
+    wall_num = 0 
+    locationText = "HouseFile/House/Components/Wall"
 
-        locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
-        elements.each(locationTextWin) do |window|
-          # Add window information to the newly added element
 
-          if (window.attributes["id"].nil?)
-            window.attributes["number"] = "1"
-            window.attributes["er"] = "12.7173"
-            window.attributes["shgc"] = "0.432"
-            window.attributes["frameHeight"] = "10"
-            window.attributes["frameAreaFraction"] = "0.0189"
-            window.attributes["edgeOfGlassFraction"] = "0.1157"
-            window.attributes["centreOfGlassFraction"] = "0.8654"
-            window.attributes["adjacentEnclosedSpace"] = "false"
-            window.attributes["id"] = $code
-            $code = $code + 1 
-            # Window label
-            window.add_element("Label")
-            window.elements["Label"].add_text("refHse+#{facingDirection}")
-            # Window construction
-            window.add_element("Construction")
-            window.elements["Construction"].attributes["energyStar"] = "true"
-            window.elements["Construction"].add_element("Type")
-            window.elements["Construction"].elements["Type"].attributes["idref"] = winCode
-            window.elements["Construction"].elements["Type"].attributes["rValue"] = "0.9259"
-            window.elements["Construction"].elements["Type"].add_text("NC-3g-HG-u1.08")
-            # Window measurements
-            window.add_element("Measurements")
-            window.elements["Measurements"].attributes["height"] = height
-            window.elements["Measurements"].attributes["width"] = width
-            window.elements["Measurements"].attributes["headerHeight"] = overhangH
-            window.elements["Measurements"].attributes["overhangWidth"] = overhangW
-            window.elements["Measurements"].add_element("Tilt")
-            window.elements["Measurements"].elements["Tilt"].attributes["code"] = "1"
-            window.elements["Measurements"].elements["Tilt"].attributes["value"] = "90"
-            window.elements["Measurements"].elements["Tilt"].add_element("English")
-            window.elements["Measurements"].elements["Tilt"].elements["English"].add_text("Vertical")
-            window.elements["Measurements"].elements["Tilt"].add_element("French")
-            window.elements["Measurements"].elements["Tilt"].elements["French"].add_text("Verticale")
-            # Window shading
-            window.add_element("Shading")
-            window.elements["Shading"].attributes["curtain"] = "1"
-            window.elements["Shading"].attributes["shutterRValue"] = "0"
-            # Facing direction
-            window.add_element("FacingDirection")
-            window.elements["FacingDirection"].attributes["code"] = windowFacingH2KVal[facingDirection]
-            window.elements["FacingDirection"].add_element("English")
-            window.elements["FacingDirection"].elements["English"].add_text("#{facingDirection}")
-            window.elements["FacingDirection"].add_element("French")
-            window.elements["FacingDirection"].elements["French"].add_text("#{facingDirection}")
-          end
+
+    passed_elements.each(locationText) do |wall|
+
+      next if window_placed
+      wall_num = wall_num + 1 
+      
+      wall_area = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
+      debug_out " >#{wall_num} -  Wall area: #{wall_area}\n"
+    
+
+      comp_area_total = 0.0
+
+      debug_out ( " >#{wall_num} - # components: #{wall.elements['components'].nil?}\n" )
+
+    
+      if ( ! wall.elements['Components'].nil? )
+        debug_out(" >#{wall_num} - wall name: #{wall.name}\n")
+        wall.elements["Components"].elements.each do |comp|
+          debug_out (" >#{wall_num} - Wall has comonent - #{comp.name}\n")
+          
+        #  #debug_out "comp> #{component.pretty_inspect}\n"
+          comp_width = comp.elements["Measurements"].attributes["width"].to_f 
+          comp_height = comp.elements["Measurements"].attributes["height"].to_f 
+          if ( comp.name == 'Window' )
+            comp_width = comp_width / 1000.0
+            comp_height = comp_height / 1000.0 
+          end 
+          comp_area = comp_width * comp_height 
+          debug_out (" >#{wall_num} - > Component: #{comp.name} w #{comp_width} x h #{comp_height} = a #{comp_area} \n")
+          comp_area_total = comp_area_total + comp_area
         end 
-
       end 
 
-  end 
+      free_area = wall_area - comp_area_total
+      debug_out (" >#{wall_num} - Net wall area #{free_area} > window area #{window_area}  ? \n")
 
+      if ( free_area < window_area )
+        debug_out (" >#{wall_num} -    No  (wall too small, going to next one )\n ")
+
+      else 
+        # Place window in this wall
+
+        debug_out (" >#{wall_num} -    YES (wall is big enough, placing window here. )\n")
+
+        wall.elements["Components"].add_element("Window")
+        #pp wall.elements["Components"]
+        #locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
+        #elements.each(locationTextWin) do |window|
+        debug_out (' >#{wall_num} - Looping through comonents to find a window with nil ID ?')
+        wall.elements["Components"].elements.each do | window |
+          debug_out(" >#{wall_num} -wall has a #{window.name}, needs and ID ? #{ window.attributes["id"].nil? }\n")
+          next if ( window.name != 'Window' )
+          next if ( ! window.attributes["id"].nil? )
+
+          #debug_out(" wall has a #{window.name}, needs and ID ? #{ window.attributes["id"].nil? }\n")
+         
+          window.attributes["number"] = "1"
+          window.attributes["er"] = "12.7173"
+          window.attributes["shgc"] = "0.432"
+          window.attributes["frameHeight"] = "10"
+          window.attributes["frameAreaFraction"] = "0.0189"
+          window.attributes["edgeOfGlassFraction"] = "0.1157"
+          window.attributes["centreOfGlassFraction"] = "0.8654"
+          window.attributes["adjacentEnclosedSpace"] = "false"
+          window.attributes["id"] = useThisCodeID[facingDirection]
+          # Window label
+          window.add_element("Label")
+          window.elements["Label"].add_text("refHse+#{facingDirection}")
+          # Window construction
+          window.add_element("Construction")
+          window.elements["Construction"].attributes["energyStar"] = "true"
+          window.elements["Construction"].add_element("Type")
+          window.elements["Construction"].elements["Type"].attributes["idref"] = winCode
+          window.elements["Construction"].elements["Type"].attributes["rValue"] = "0.9259"
+          window.elements["Construction"].elements["Type"].add_text("NC-3g-HG-u1.08")
+          # Window measurements
+          window.add_element("Measurements")
+          window.elements["Measurements"].attributes["height"] = height
+          window.elements["Measurements"].attributes["width"] = width
+          window.elements["Measurements"].attributes["headerHeight"] = overhangH
+          window.elements["Measurements"].attributes["overhangWidth"] = overhangW
+          window.elements["Measurements"].add_element("Tilt")
+          window.elements["Measurements"].elements["Tilt"].attributes["code"] = "1"
+          window.elements["Measurements"].elements["Tilt"].attributes["value"] = "90"
+          window.elements["Measurements"].elements["Tilt"].add_element("English")
+          window.elements["Measurements"].elements["Tilt"].elements["English"].add_text("Vertical")
+          window.elements["Measurements"].elements["Tilt"].add_element("French")
+          window.elements["Measurements"].elements["Tilt"].elements["French"].add_text("Verticale")
+          # Window shading
+          window.add_element("Shading")
+          window.elements["Shading"].attributes["curtain"] = "1"
+          window.elements["Shading"].attributes["shutterRValue"] = "0"
+          # Facing direction
+          window.add_element("FacingDirection")
+          window.elements["FacingDirection"].attributes["code"] = windowFacingH2KVal[facingDirection]
+          window.elements["FacingDirection"].add_element("English")
+          window.elements["FacingDirection"].elements["English"].add_text("#{facingDirection}")
+          window.elements["FacingDirection"].add_element("French")
+          window.elements["FacingDirection"].elements["French"].add_text("#{facingDirection}")
+          
+
+        end
+        
+        window_placed = true 
+      end 
+    end 
+
+
+    if ( ! window_placed )
+      warn_out ("Could not find a location for window facing #{facingDirection}\n")
+    end
+
+
+
+    debug_out " Did I find a home in this window ? #{window_placed}\n"
+
+  end 
 
   def H2KFile.addWin(elements, facingDirection, height, width, overhangW, overhangH, winCode)
     # Facing direction codes for HOT2000
