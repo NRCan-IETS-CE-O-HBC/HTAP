@@ -1492,11 +1492,13 @@ module H2KFile
   end
 
   def H2KFile.add_win_to_any_wall(passed_elements, facingDirection, height, width, overhangW, overhangH, winCode)
-  
+    #debug_on
+    
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
     useThisCodeID  = {  "S"  =>  291 ,    "SE" =>  292 ,    "E"  =>  293 ,    "NE" =>  294 ,    "N"  =>  295 ,    "NW" =>  296 ,    "W"  =>  297 ,    "SW" =>  298   }
     locationText = "HouseFile/House/Components/Wall"
-    #debug_on
+    
+    
     debug_out ("Placing window (w = #{width} / h = #{height}; faces #{facingDirection}) \n")
     
     window_placed = false
@@ -1549,7 +1551,9 @@ module H2KFile
         # Place window in this wall
 
         debug_out (" >#{wall_num} -    YES (wall is big enough, placing window here. )\n")
-
+        if ( wall.elements['Components'].nil? ) 
+          wall.add_element('Components')
+        end 
         wall.elements["Components"].add_element("Window")
         #pp wall.elements["Components"]
         #locationTextWin = "HouseFile/House/Components/Wall/Components/Window"
