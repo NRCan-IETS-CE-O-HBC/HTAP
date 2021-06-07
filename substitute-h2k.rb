@@ -7151,7 +7151,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
 
-
+          debug_on
           
 
           debug_out("Checking for upgrade packages?\n")
@@ -7186,7 +7186,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               debug_out ("Package #{package} found\n")
               stream_out(" Applying upgrades from package #{package}:\n")
               rulesetHash["upgrade-packages"][package].each do |thisAttrib,thisChoice|
+
                 attrib  = HTAPData.queryAttribAliases( thisAttrib )
+                next if $gChoices[attrib] !~ /NA/
                 stream_out ("   - #{attrib} -> #{thisChoice}\n")
                 $gChoices[attrib] = thisChoice
                 isSetbyRuleset[attrib] = false 
@@ -7222,30 +7224,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           $gCustomCostAdjustment = 0
           $gCostAdjustmentFactor = 0
 
-          # Possibly overwrite internal parameters with user-specified parameters
-          # This can probably be deleted !
-          #$gParameters.each do |parameter, value1|
-          #   if ( parameter =~ /CostAdjustmentFactor/  )
-          #      $gCostAdjustmentFactor = value1
-          #      $gCustomCostAdjustment = 1
-          #   end
-          #
-          #   if ( parameter =~ /PVTarrifDollarsPerkWh/ )
-          #      $PVTarrifDollarsPerkWh = value1.to_f
-          #   end
-          #
-          #   if ( parameter =~ /BaseUpgradeCost/ )
-          #      $gIncBaseCosts = value1.to_f
-          #   end
-          #
-          #   if ( parameter =~ /BaseUtilitiesCost/ )
-          #      $gUtilityBaseCost = value1.to_f
-          #   end
-          #end
 
-          #=begin rdoc
-          #Validate choices and options.
-          #=end
           stream_out(drawRuler("Validating choices and options"))
 
 
@@ -7264,6 +7243,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             stream_out (" - #{attribute.ljust(35)} = #{value} \n ")
           end
 
+          debug_pause
 
 
           if ( $OptionsERR ) then
