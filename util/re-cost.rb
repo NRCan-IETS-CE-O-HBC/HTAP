@@ -24,15 +24,22 @@ include REXML
 $program = "re-cost.rb"
 HTAPInit()
 
+$pass_system_size = TRUE 
+$system_size = 0.0 
+
+log_out ("Initalizing RECOST-Calculations ")
+
 $results_file = ''
 $costs_file = ''
 $assembly_file = ''
 $options_file  = ''
-
+$costed = {}
 $recosted_file = 'HTAP-prm-output-recosted.csv'
 
 stream_out( drawRuler("A script for re-estimating capital costs from HTAP output."))
 
+
+debug_on
 
 $help_msg =  " 
  re-cost.rb parses existing HTAP results (e.g. HTAP-prm-output.csv)
@@ -117,49 +124,102 @@ stream_out("   - Options file:    #{$options_file}\n")
 stream_out("   - Assembly file:   #{$ssembly_file}\n")
 stream_out("   - path to h2k files: #{$h2k_path}\n")
 
-stream_out (" Parsing input files...")
-
+stream_out (" Parsing input files [")
+stream_out (" options ")
 options_data   = HTAPData.parseJson( $options_file, desc = 'Options definitions')
+stream_out(" / unit costs ")
 unit_cost_data = HTAPData.parseJson( $costs_file , desc='Unit costs file')
+stream_out(" / assebmlies ")
 assembly_data  = HTAPData.parseJson( $assembly_file , desc='Assembly file')
+stream_out(" / results ")
 results_data = CSV.parse(File.read($results_file), headers: true)
-
-stream_out (" done.\n")
+stream_out ("] done.\n")
 list_of_attributes = []
 
 # Shortlist inputs,
+debug_out("List of attributes: ")
 for header in results_data.headers()
   if (header =~ /^input\|/i  )
+    debug_out (" - #{header}\n")
     list_of_attributes.push(header.gsub(/^input\|/,''))
   end 
 end 
 
 h2k_file_data = {}
 
-
 out_csv = CSV.open($recosted_file,'w') 
 
 modified_costs = []
 first = true 
-stream_out(" Parsing rows")
+irow = 0
+debug_off 
 for row in results_data.by_row.each()
 
-  h2k_file = row['archetype|h2k-File']
-  
-  if ! h2k_file_data.key?(h2k_file)
-    h2k_file_path = "#{$h2k_path}\\#{h2k_file}".gsub(/\\/,'/')
-    h2k_file_data[h2k_file] = H2KFile.get_elements_from_filename(h2k_file_path)
+
+  if ( row['input|Opt-Heating-Cooling'] != 'ASHP-mini-split' )
+    #stream_out "X >#{row['input|Opt-Heating-Cooling']}<\n"
+  #  next 
+  else   
+    #stream_out "o >#{row['input|Opt-Heating-Cooling']}<\n"
   end 
+  irow = irow + 1 
+  #break if irow > 100
+  #stream_out(" Parsing row # #{irow}\r")
+  debug_out (" ROW # #{irow}\n")
+  h2k_file = row['archetype|h2k-File']
 
   choices = {}
 
   for attribute in list_of_attributes
      choices[attribute] = row["input|#{attribute}"]
+  end   
+
+  
+
+  system_size_heating = row['output|PEAK-Heating-W']
+  system_size_cooling = row['output|PEAK-Cooling-W']
+
+
+
+
+  if ( row['input|Opt-Ruleset'] =~ /NBC9_36/ ) then 
+    costed = false 
+
+  else 
+    costed = true 
   end 
 
-  costEstimates = Costing.estimateCosts(options_data,assembly_data,unit_cost_data,choices,list_of_attributes, h2k_file_data[h2k_file] )
+  if ! h2k_file_data.key?(h2k_file)
+    
+    h2k_file_path = "#{$h2k_path}\\#{h2k_file}".gsub(/\\/,'/')
+    
+    h2k_file_data[h2k_file] = H2KFile.get_elements_from_filename(h2k_file_path)
+    
+    h2k_file_data[h2k_file]["HouseFile/AllResults"].elements.each do |element|
+      element.elements[".//Other"].attributes["designHeatLossRate"] = system_size_heating
+      element.elements[".//Other"].attributes["designCoolLossRate"] = system_size_cooling
+    end
 
-  row['recosted|total'] = costEstimates['total']
+
+  end 
+
+  h2kElements = h2k_file_data[h2k_file]
+  h2kElements["HouseFile/AllResults"].elements.each do |element|
+    element.elements[".//Other"].attributes["designHeatLossRate"] = system_size_heating
+    element.elements[".//Other"].attributes["designCoolLossRate"] = system_size_cooling
+  end  
+
+  final_size =  H2KFile.getDesignLoads(  h2kElements  )
+    
+  stream_out(" Parsing row # #{irow} / #{row['input|Opt-Ruleset']} / size: #{system_size_heating} (#{final_size['heating_W']}): \n")
+
+
+
+  costEstimates = Costing.estimateCosts(options_data,assembly_data,unit_cost_data,choices,list_of_attributes, h2kElements  )
+  row['recosted|OK?']   = "#{costed}"
+  row['recosted|total_avg'] = costEstimates['total_avg']
+  row['recosted|total_max'] = costEstimates['total_max']
+  row['recosted|total_min'] = costEstimates['total_min']
 
   for attribute in costEstimates['byAttribute'].keys()
     row['recosted|byAttribute|'+attribute] = costEstimates['byAttribute'][attribute]
@@ -177,8 +237,24 @@ for row in results_data.by_row.each()
     first = false
   end 
   out_csv << row 
-  stream_out '.'
 
+
+end 
+
+
+
+stream_out("Measures that were costed successfully:\n")
+for key in $costed.keys().sort
+  if $costed[key]
+    stream_out "[o] #{key}\n"
+  end 
+end 
+
+stream_out("Measures that could not be costed:\n")
+for key in $costed.keys().sort
+  if ! $costed[key]
+    stream_out "[X] #{key}\n"
+  end 
 end 
 
 stream_out (" done!\n")
