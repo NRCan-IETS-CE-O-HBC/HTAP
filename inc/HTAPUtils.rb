@@ -154,6 +154,7 @@ module HTAPData
 
   def  HTAPData.parseJson(jsonfile, desc='')
     debug_out("parsing #{jsonfile} as json...")
+    log_out("Parsing #{jsonfile} as json.")
     data_hash = Hash.new 
     data_string = File.read(jsonfile)
  
@@ -164,6 +165,7 @@ module HTAPData
     end 
     data_string.clear 
     debug_out(" (File parsed OK) \n")
+    log_out("   (File parsed OK)")
     return data_hash
   
   end 
