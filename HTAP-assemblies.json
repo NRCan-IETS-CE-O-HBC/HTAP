@@ -1,103 +1,171 @@
 {
-    "Opt-H2KFoundation": {},
-    "Opt-DHWSystem": {
-        "elec_heatpump_ef2.30": {
+    "Opt-Baseloads": {},
+    "Opt-ACH": {
+        "New-Const-air_seal_to_1.50_ach": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+                        "upgrade_to_plastic_air_tight_electrical_boxes",
+                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+                        "all_poly_lapped_joints_located_over_solid_backing:sealed",
+                        "preliminary_blower_door_test:single_home",
+                        "sprayfoam_rim_joists;by_header_area",
+                        "credit:elimination_of_vapor_barrier_at_floor_header"
                     ]
                 }
             }
         },
-        "gas_storagetank_w/powervent_ef0.67": {
+        "New-Const-air_seal_to_3.50_ach": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67"
+                        "upgrade_to_plastic_air_tight_electrical_boxes",
+                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall"
                     ]
                 }
             }
         },
-        "elec_storage_ef0.89": {
+        "New-Const-air_seal_to_4-6_ach": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dhw_tank:electric:246_l:ef_0.89"
+                        "base-cost"
                     ]
                 }
             }
         },
-        "HPHotWater": {
+        "ACH_2_0": {
+            "proxy": "New-Const-air_seal_to_2.50_ach"
+        },
+        "ACH_0_6": {
+            "proxy": "New-Const-air_seal_to_1.00_ach"
+        },
+        "New-Const-air_seal_to_2.50_ach": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+                        "upgrade_to_plastic_air_tight_electrical_boxes",
+                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+                        "all_poly_lapped_joints_located_over_solid_backing:sealed"
                     ]
                 }
             }
         },
-        "NBC-HotWater_gas": {
-            "proxy": "gas_storagetank_w/powervent_ef0.67"
+        "Retrofit-ACH_10Percent_Reduction": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Minor sealing - drywall intact"
+                    ]
+                }
+            }
         },
-        "NBC-HotWater_elec": {
-            "proxy": "elec_storage_ef0.89"
-        },
-        "GasInstantaneous": {
+        "Retrofit-ACH_20Percent_Reduction": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Major air sealing; drywall removed and VB replaced."
+                    ]
+                }
+            }
+        },        
+        "New-Const-air_seal_to_0.60_ach": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+                        "upgrade_to_plastic_air_tight_electrical_boxes",
+                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+                        "all_poly_lapped_joints_located_over_solid_backing:sealed",
+                        "preliminary_blower_door_test:single_home",
+                        "sprayfoam_rim_joists;by_header_area",
+                        "credit:elimination_of_vapor_barrier_at_floor_header",
+                        "trades_training",
+                        "trades_training",
+                        "trades_training"
                     ]
                 }
             }
         },
-        "elec_tankless_ef0.94": {
+        "New-Const-air_seal_to_1.00_ach": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dhw_electric_tankless"
+                        "upgrade_to_plastic_air_tight_electrical_boxes",
+                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
+                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
+                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
+                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
+                        "all_poly_lapped_joints_located_over_solid_backing:sealed",
+                        "preliminary_blower_door_test:single_home",
+                        "sprayfoam_rim_joists;by_header_area",
+                        "credit:elimination_of_vapor_barrier_at_floor_header",
+                        "trades_training"
                     ]
                 }
             }
         },
-        "vintageElecEF0.92": {
-            "proxy": "elec_storage_ef0.89"
+        "ACH_NBC": {
+            "proxy": "New-Const-air_seal_to_2.50_ach"
+        },
+        "ACH_2_5": {
+            "proxy": "New-Const-air_seal_to_2.50_ach"
         }
     },
-    "Opt-HRVspec": {},
     "Opt-AboveGradeWall": {
-        "NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb": {
+        "NC_2x6_r19nom_r16Eff": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:25mm",
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:r20_batt",
                         "framing:conventional:38x140mm_o.c.",
+                        "insulation:r20_batt",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
                     ]
                 }
             }
         },
-        "NBC_Wall_zone6_noHRV": {
-            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
-        },
-        "NC_R-19(eff)_2x4-16inOC_R14-batt+1.5inXPS_poly_vb": {
+        "NC_R-18(eff)_2x6-24inOC_R24-batt_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:38mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-22(eff)_2x4-16inOC_R14-batt+2inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
                         "air_barrier_membrane",
                         "osb:12mm",
                         "insulation:r14_batt",
@@ -108,14 +176,14 @@
                 }
             }
         },
-        "NC_R-19(eff)_2x6-16inOC_2lb.ClosedCellSprayFoam_poly_vb": {
+        "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+                        "insulation:r22_batt",
                         "framing:conventional:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
@@ -139,86 +207,7 @@
                 }
             }
         },
-        "retrofit-main-wall-to-R-20-Yukon": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "retrofit: main wall to R-20, Yukon"
-                    ]
-                }
-            }
-        },
-        "NC_R-23(eff)_2x6-24inOC_R22-batt+1inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NBC_Wall_zone7B_HRV": {
-            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
-        },
-        "NBC_Wall_zone4": {
-            "proxy": "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb"
-        },
-        "NC_R-26(eff)_2x6-24inOC_R22-batt+2inMineralWool_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:spray_foam_2pd_urethane:5.5in_thickness",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-23(eff)_2x6-24inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:polyisocyanurate:foil-faced:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-25(eff)_2x6-16inOC_R22-batt+1.5inXPS_poly_vb": {
+        "NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -226,62 +215,8 @@
                         "insulation:xps_type_4:rigid:38mm",
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-22(eff)_2x4-16inOC_R14-batt+2inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r14_batt",
-                        "framing:conventional:38x89mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-21(eff)_2x6-16inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:polyisocyanurate:foil-faced:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
                         "insulation:r20_batt",
                         "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NBC_Wall_zone7A_HRV": {
-            "proxy": "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb"
-        },
-        "NBC_Wall_zone7A_noHRV": {
-            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
-        },
-        "NC_R-27(eff)_2x6-24inOC_R19-batt+2inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:advanced:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
                     ]
@@ -303,88 +238,7 @@
                 }
             }
         },
-        "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-24(eff)_2x6-24inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:polyisocyanurate:foil-faced:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NBC_Wall_zone7B_noHRV": {
-            "proxy": "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb"
-        },
-        "NC_R-16(eff)_2x6-24inOC_R19-batt_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-25(eff)_2x6-24inOC_R22-batt+1.5inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:38mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-26(eff)_2x6-24inOC_R24-batt+1.5inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:38mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-17(eff)_2x4-16inOC_R14-batt+1inXPS_poly_vb": {
+        "NC_R-23(eff)_2x6-16inOC_R24-batt+1inXPS_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -392,101 +246,6 @@
                         "insulation:xps_type_4:rigid:25mm",
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:r14_batt",
-                        "framing:conventional:38x89mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-18(eff)_2x6-24inOC_R24-batt_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-24(eff)_2x6-24inOC_R19-batt+2inMineralWool_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-29(eff)_2x6-24inOC_R24-batt+2inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-23(eff)_2x6-16inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:polyisocyanurate:foil-faced:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r22_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-24(eff)_2x6-16inOC_R19-batt+2inMineralWool_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-25(eff)_2x6-16inOC_R24-batt+1.5inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:38mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
                         "insulation:r24_batt",
                         "framing:conventional:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
@@ -495,31 +254,24 @@
                 }
             }
         },
-        "NC_R-28(eff)_2x6-16inOC_R24-batt+2inXPS_poly_vb": {
+        "retrofit-main-wall-to-R-20-Yukon": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
+                        "retrofit: main wall to R-20, Yukon"
                     ]
                 }
             }
         },
-        "NC_R-27(eff)_2x6-16inOC_R22-batt+2inXPS_poly_vb": {
+        "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:r22_batt",
+                        "insulation:r24_batt",
                         "framing:conventional:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
@@ -543,18 +295,32 @@
                 }
             }
         },
-        "NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb": {
+        "NC_R-26(eff)_2x6-24inOC_R24-batt+2inMineralWool_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:64mm",
-                        "fasteners_for_4in_thick_exterior_insulation",
+                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
                         "air_barrier_membrane",
                         "osb:12mm",
                         "insulation:r24_batt",
-                        "framing:conventional:38x140mm_o.c.",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-22(eff)_2x6-24inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:advanced:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
                     ]
@@ -577,15 +343,30 @@
                 }
             }
         },
-        "NC_R-26(eff)_2x6-16inOC_R24-batt+2inMineralWool_poly_vb": {
+        "NC_R-16(eff)_2x6-24inOC_R19-batt_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:r24_batt",
+                        "insulation:r20_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-23(eff)_2x6-16inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r22_batt",
                         "framing:conventional:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
@@ -593,10 +374,7 @@
                 }
             }
         },
-        "NBC_Wall_zone6_HRV": {
-            "proxy": "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb"
-        },
-        "NC_R-24(eff)_2x6-16inOC_R19-batt+1.5inXPS_poly_vb": {
+        "NC_R-25(eff)_2x6-24inOC_R22-batt+1.5inXPS_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -604,13 +382,51 @@
                         "insulation:xps_type_4:rigid:38mm",
                         "air_barrier_membrane",
                         "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:conventional:38x140mm_o.c.",
+                        "insulation:r22_batt",
+                        "framing:advanced:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
                     ]
                 }
             }
+        },
+        "NBC_Wall_zone8_HRV": {
+            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
+        },
+        "NC_R-26(eff)_2x6-24inOC_R22-batt+2inMineralWool_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r22_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-24(eff)_2x6-24inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NBC_Wall_zone8_noHRV": {
+            "proxy": "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb"
         },
         "NC_R-24(eff)_2x6-24inOC_R24-batt+1inXPS_poly_vb": {
             "context": {
@@ -622,145 +438,6 @@
                         "osb:12mm",
                         "insulation:r24_batt",
                         "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-16(eff)_2x4-16inOC_R14-batt+1inUnfacedEPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:eps_type_1:rigid:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r14_batt",
-                        "framing:conventional:38x89mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NBC_Wall_zone8_HRV": {
-            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
-        },
-        "NC_2x6_r19nom_r16Eff": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "framing:conventional:38x140mm_o.c.",
-                        "insulation:r20_batt",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-21(eff)_2x6-16inOC_R24-batt+1inUnfacedEPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:eps_type_1:rigid:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NBC_Wall_zone8_noHRV": {
-            "proxy": "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb"
-        },
-        "NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:38mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:25mm",
-                        "insulation:xps_type_4:rigid:51mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-22(eff)_2x6-24inOC_R24-batt+1inUnfacedEPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:eps_type_1:rigid:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NBC_Wall_zone5_HRV": {
-            "proxy": "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb"
-        },
-        "NBC_Wall_zone5_noHRV": {
-            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
-        },
-        "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:conventional:38x140mm_o.c.",
                         "vapour_barrier:6_mil",
                         "1/2in_gypsum_board"
                     ]
@@ -783,75 +460,12 @@
                 }
             }
         },
-        "NC_R-23(eff)_2x6-16inOC_R24-batt+1inXPS_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb": {
+        "NC_R-28(eff)_2x6-16inOC_R24-batt+2inXPS_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         "insulation:xps_type_4:rigid:51mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r20_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-26(eff)_2x6-24inOC_R24-batt+2inMineralWool_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:advanced:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-23(eff)_2x6-16inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:polyisocyanurate:foil-faced:25mm",
-                        "air_barrier_membrane",
-                        "osb:12mm",
-                        "insulation:r24_batt",
-                        "framing:conventional:38x140mm_o.c.",
-                        "vapour_barrier:6_mil",
-                        "1/2in_gypsum_board"
-                    ]
-                }
-            }
-        },
-        "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
                         "air_barrier_membrane",
                         "osb:12mm",
                         "insulation:r24_batt",
@@ -878,12 +492,94 @@
                 }
             }
         },
-        "NC_R-22(eff)_2x6-24inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
+        "NBC_Wall_zone5_noHRV": {
+            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
+        },
+        "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-21(eff)_2x6-16inOC_R19-batt+1inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-27(eff)_2x6-16inOC_R22-batt+2inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r22_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-16(eff)_2x4-16inOC_R14-batt+1inUnfacedEPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:eps_type_1:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r14_batt",
+                        "framing:conventional:38x89mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-25(eff)_2x6-16inOC_R24-batt+1.5inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-27(eff)_2x6-24inOC_R19-batt+2inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
                         "air_barrier_membrane",
                         "osb:12mm",
                         "insulation:r20_batt",
@@ -893,56 +589,762 @@
                     ]
                 }
             }
-        }
-    },
-    "Opt-Skylights": {},
-    "Opt-H2KFoundationSlabCrawl": {},
-    "Opt-FoundationWallExtIns": {
-        "xps2.5inEffR12.5": {
+        },
+        "NBC_Wall_zone4": {
+            "proxy": "NC_R-16(eff)_2x6-16inOC_R19-batt_poly_vb"
+        },
+        "NBC_Wall_zone7A_HRV": {
+            "proxy": "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb"
+        },
+        "NC_R-24(eff)_2x6-24inOC_R19-batt+2inMineralWool_poly_vb": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:64mm",
-                        "fasteners_for_2in_thick_exterior_insulation"
+                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
                     ]
                 }
             }
         },
+        "NC_R-26(eff)_2x6-16inOC_R24-batt+2inMineralWool_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NBC_Wall_zone5_HRV": {
+            "proxy": "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb"
+        },
+        "NBC_Wall_zone7A_noHRV": {
+            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
+        },
+        "NC_R-19(eff)_2x6-16inOC_2lb.ClosedCellSprayFoam_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-20(eff)_2x6-24inOC_2lb.ClosedCellSprayFoam_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:spray_foam_2pd_urethane:5.5in_thickness",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-17(eff)_2x4-16inOC_R14-batt+1inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r14_batt",
+                        "framing:conventional:38x89mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-22(eff)_2x6-24inOC_R19-batt+1inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-19(eff)_2x4-16inOC_R14-batt+1.5inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r14_batt",
+                        "framing:conventional:38x89mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-29(eff)_2x6-24inOC_R24-batt+2inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-33(eff)_2x6-16inOC_R24-batt+3inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:25mm",
+                        "insulation:xps_type_4:rigid:51mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-21(eff)_2x6-16inOC_R24-batt+1inUnfacedEPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:eps_type_1:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NBC_Wall_zone7B_HRV": {
+            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
+        },
+        "NC_R-25(eff)_2x6-16inOC_R22-batt+1.5inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r22_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-26(eff)_2x6-24inOC_R24-batt+1.5inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NBC_Wall_zone6_HRV": {
+            "proxy": "NC_R-17(eff)_2x6-16inOC_R22-batt_poly_vb"
+        },
+        "NC_R-40(eff)_2x6-16inOC_R24-batt+4.5inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:64mm",
+                        "fasteners_for_4in_thick_exterior_insulation",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-21(eff)_2x6-16inOC_R19-batt+1inFoilFacedPolyiso_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-24(eff)_2x6-24inOC_R19-batt+1.5inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NBC_Wall_zone6_noHRV": {
+            "proxy": "NC_R-18(eff)_2x6-16inOC_R24-batt_poly_vb"
+        },
+        "NC_R-23(eff)_2x6-16inOC_R24-batt+1inFoilFacedPolyiso_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-24(eff)_2x6-16inOC_R19-batt+2inMineralWool_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation_mineral_wool_board_8_lb._51mm_vertical_pt_strapping_&_screws",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NBC_Wall_zone7B_noHRV": {
+            "proxy": "NC_R-22(eff)_2x6-16inOC_R22-batt+1inXPS_poly_vb"
+        },
+        "NC_R-22(eff)_2x6-24inOC_R24-batt+1inUnfacedEPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:eps_type_1:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r24_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-23(eff)_2x6-24inOC_R22-batt+1inFoilFacedPolyiso_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:polyisocyanurate:foil-faced:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r22_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-26(eff)_2x6-16inOC_R19-batt+2inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r20_batt",
+                        "framing:conventional:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "NC_R-23(eff)_2x6-24inOC_R22-batt+1inXPS_poly_vb": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:25mm",
+                        "air_barrier_membrane",
+                        "osb:12mm",
+                        "insulation:r22_batt",
+                        "framing:advanced:38x140mm_o.c.",
+                        "vapour_barrier:6_mil",
+                        "1/2in_gypsum_board"
+                    ]
+                }
+            }
+        },
+        "retrofit-main-wall-Additional-R5": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-5 to above grade wall (exterior insulation)"
+                    ]
+                }
+            }
+        },        
+        "retrofit-main-wall-Additional-R10": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-10 to above grade wall (reinsulate wall cavity)"
+                    ]
+                }
+            }
+        },
+        "retrofit-main-wall-Additional-R15": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-5 to above grade wall (exterior insulation)",
+                        "Add R-10 to above grade wall (reinsulate wall cavity)"
+                    ]
+                }
+            }
+        },
+        "retrofit-main-wall-Additional-R20": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-20 to above grade wall (exterior insulation)"
+                    ]
+                }
+            }
+        }
+    },
+    "Opt-Temperatures": {},
+    "Opt-FlatCeilings": {
+        "CeilR40": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r40_dense-pack_cellulose"
+                    ]
+                }
+            }
+        },
+        "retrofit-FlatCeiling-Additional-R20": {
+            "proxy": "CeilR60"
+        },
+        "CeilR100": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r100:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR70": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r70:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR80": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r80:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_FlatCeiling_RSI4.67": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r27_batt"
+                    ]
+                }
+            }
+        },
+        "retrofit-FlatCeiling-Additional-R10": {
+            "proxy": "CeilR60"
+        },
+        "CeilR60": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r60:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "retrofit-FlatCeiling-Additional-R30": {
+            "proxy": "CeilR60"
+        },
+        "NBC_FlatCeiling_RSI5.02": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r29_batt"
+                    ]
+                }
+            }
+        }
+    },
+    "Opt-H2K-PV": {
+        "Yukon_PV": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "solar_photovoltaic_system:installed_on_roof:5_kw"
+                    ]
+                }
+            }
+        }
+    },
+    "Opt-ExposedFloor": {
+        "BaseExpFloor-R31": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r31_batt"
+                    ]
+                }
+            }
+        },
+        "ExpFloorFoamed-R52": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:spray_foam:2pound_urethane:7.5in_thickness",
+                        "insulation:spray_foam:38mm:r6/inch"
+                    ]
+                }
+            }
+        },
+        "NBC_936_4.67RSI": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r27_batt"
+                    ]
+                }
+            }
+        },
+        "ExpFloorFlash&Batt-R36": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:spray_foam_2pd_urethane:5.5in_thickness"
+                    ]
+                }
+            }
+        },
+        "NBC_936_5.02RSI": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r29_batt"
+                    ]
+                }
+            }
+        }
+    },
+    "Opt-Ceilings": {
+        "CeilR66": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r60:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_Ceiling_zone7A_noHRV": {
+            "proxy": "CeilR60"
+        },
+        "CeilR40": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r40:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_Ceiling_zone5_noHRV": {
+            "proxy": "CeilR50"
+        },
+        "NBC_Ceiling_zone6_HRV": {
+            "proxy": "CeilR50"
+        },
+        "CeilR100": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r100:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR80": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r80:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "retrofit-ceiling-Additional-R10": {
+            "proxy": "CeilR60"
+        },
+        "NBC_Ceiling_zone8": {
+            "proxy": "CeilR60"
+        },
+        "CeilR90": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r90:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_Ceiling_zone7A_HRV": {
+            "proxy": "CeilR50"
+        },
+        "CeilR89": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r90:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_Ceiling_zone6_noHRV": {
+            "proxy": "CeilR50"
+        },
+        "NBC_Ceiling_zone5_HRV": {
+            "proxy": "CeilR40"
+        },
+        "NBC_Ceiling_zone4": {
+            "proxy": "CeilR40"
+        },
+        "NBC_Ceiling_zone7B": {
+            "proxy": "CeilR60"
+        },
+        "CeilR70": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r70:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR60": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r60:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR50": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r50:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        }
+    },
+    "Opt-CathCeilings": {
+        "NBC_CathCeiling_RSI5.02": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r29_batt"
+                    ]
+                }
+            }
+        },
+        "retrofit-CathCeiling-Additional-R10": {
+            "proxy": "CeilR60"
+        },
+        "CeilR40": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r40_dense-pack_cellulose"
+                    ]
+                }
+            }
+        },
+        "CeilR100": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r100:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR70": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r70:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR80": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r80:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "CeilR60": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r60:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_CathCeiling_RSI4.67": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:r27_batt"
+                    ]
+                }
+            }
+        }
+    },
+    "Opt-FoundationSlabBelowGrade": {
         "xps4inEffR20": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:51mm",
-                        "fasteners_for_4in_thick_exterior_insulation"
-                    ]
-                }
-            }
-        },
-        "xps1.5inEffR7.5": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:38mm",
-                        "fasteners_for_1in_thick_exterior_insulation"
-                    ]
-                }
-            }
-        },
-        "NBC_936_uninsulated_EffR0": {
-            "proxy": "uninsulated"
-        },
-        "xps3inEffR15": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:25mm",
-                        "fasteners_for_4in_thick_exterior_insulation"
+                        "insulation:xps_type_4:rigid:51mm"
                     ]
                 }
             }
@@ -952,103 +1354,69 @@
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:25mm",
-                        "fasteners_for_1in_thick_exterior_insulation"
+                        "insulation:xps_type_4:rigid:25mm"
                     ]
                 }
             }
+        },
+        "NBC_936_1.96RSI": {
+            "proxy": "xps2.5inEffR12.5"
+        },
+        "xps2.5inEffR12.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:64mm"
+                    ]
+                }
+            }
+        },
+        "xps3inEffR15": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:25mm"
+                    ]
+                }
+            }
+        },
+        "NBC_936_uninsulated_EffR0": {
+            "proxy": "uninsulated"
         },
         "xps2inEffR10": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
+                        "insulation:xps_type_4:rigid:51mm"
+                    ]
+                }
+            }
+        },
+        "NBC_936_4.44RSI": {
+            "proxy": "xps4.5inEffR22.5"
+        },
+        "xps4.5inEffR22.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
                         "insulation:xps_type_4:rigid:51mm",
-                        "fasteners_for_2in_thick_exterior_insulation"
-                    ]
-                }
-            }
-        }
-    },
-    "Opt-FoundationWallIntIns": {
-        "NBC_936_2.98RSI": {
-            "proxy": "WoodFrameEffR17"
-        },
-        "WoodFrameEffR15": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "framing:interior_basement:38x89mm_o.c.",
-                        "insulation:r20_batt"
+                        "insulation:xps_type_4:rigid:25mm",
+                        "insulation:xps_type_4:rigid:64mm"
                     ]
                 }
             }
         },
-        "WoodFrameEffR11": {
+        "xps1.5inEffR7.5": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "framing:interior_basement:38x89mm_o.c.",
-                        "insulation:r14_batt"
-                    ]
-                }
-            }
-        },
-        "WoodFrameEffR10": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "framing:interior_basement:38x89mm_o.c.",
-                        "insulation:r12_batt"
-                    ]
-                }
-            }
-        },
-        "NBC_936_1.99RSI": {
-            "proxy": "WoodFrameEffR11"
-        },
-        "NBC_936_3.97RSI": {
-            "proxy": "WoodFrame+intEpsEffR23"
-        },
-        "WoodFrameEffR17": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "framing:interior_basement:38x89mm_o.c.",
-                        "insulation:r22_batt"
-                    ]
-                }
-            }
-        },
-        "NBC_936_3.46RSI": {
-            "proxy": "WoodFrame+intEpsEffR20"
-        },
-        "WoodFrame+intEpsEffR20": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "framing:interior_basement:38x89mm_o.c.",
-                        "insulation:r20_batt",
-                        "insulation:eps_type_2:rigid:25mm",
-                        "fasteners_for_1in_thick_exterior_insulation"
-                    ]
-                }
-            }
-        },
-        "WoodFrame+intEpsEffR23": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "framing:interior_basement:38x89mm_o.c.",
-                        "insulation:r22_batt",
-                        "insulation:eps_type_2:rigid:38mm",
-                        "fasteners_for_1in_thick_exterior_insulation"
+                        "insulation:xps_type_4:rigid:38mm"
                     ]
                 }
             }
@@ -1068,15 +1436,17 @@
                             }
                         }
                     ]
-                }
-            }
-        },
-        "HRV_sre_70": {
-            "context": {
-                "legacy": {
+                },
+                "retrofit": {
                     "type": "list",
                     "data": [
-                        "hrv:conventional_sre_70%_@_0:61%_@_-25"
+                        "Install HRV (60% efficient)",
+                        {
+                            "HTAPOptions.Opt-Heating-Cooling/options/[choice]/costComponents": {
+                                "inc?ducting:central_forced_air": "ducting:connect_ventilator_to_central_forced_air",
+                                "else": "Install HRV ductwork"
+                            }
+                        }
                     ]
                 }
             }
@@ -1093,10 +1463,10 @@
                 }
             }
         },
-        "NBC_HRV": {
-            "proxy": "HRV_sre_60"
+        "NBC_noHRV": {
+            "proxy": "VentFans_sre_0"
         },
-        "HRV_sre_78": {
+        "HRV_sre_70": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -1105,6 +1475,9 @@
                     ]
                 }
             }
+        },
+        "NBC_HRV": {
+            "proxy": "HRV_sre_60"
         },
         "Yukon_HRV": {
             "context": {
@@ -1116,169 +1489,209 @@
                 }
             }
         },
-        "NBC_noHRV": {
-            "proxy": "VentFans_sre_0"
+        "HRV_sre_78": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "hrv:conventional_sre_70%_@_0:61%_@_-25"
+                    ]
+                }
+            }
         }
     },
+    "Opt-Skylights": {},
+    "Opt-Doors": {},
+    "Opt-H2KFoundationSlabCrawl": {},
+    "Opt-H2KFoundation": {
+        "Additional_2in_Ext_Rigid_XPS_PLUS_int-R20-Retrofit":{
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-10 below grade (exterior excavation)",
+                        "Add R-20 below grade (interior)"
+                    ]
+                }
+            }
+        },
+        "Additional_int_R10-Retrofit": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-10 below grade (interior)"
+                    ]
+                }
+            }
+        },
+        "Additional_int_R20-Retrofit": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-20 below grade (interior)"
+                    ]
+                }
+            }
+        },
+        "Additional_int_R15-Retrofit": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-15 below grade (interior)"
+                    ]
+                }
+            }
+        }                  
+    },
     "Opt-DoorWindows": {},
-    "Opt-FoundationSlabOnGrade": {
-        "xps2.5inEffR12.5": {
+    "Opt-HRVspec": {},
+    "Opt-DHWSystem": {
+        "elec_heatpump_ef2.30": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:64mm"
+                        "dhw_heat_pump_water_heater:50_gal:ef_2.35"
                     ]
                 }
             }
         },
-        "xps5.5inEffR27.5": {
+        "HPHotWater": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:38mm"
+                        "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "replace tank with EF3.5+ HPWH"
                     ]
                 }
             }
         },
-        "NBC_936_1.96RSI": {
-            "proxy": "xps2.5inEffR12.5"
+        "NBC-HotWater_gas": {
+            "proxy": "gas_storagetank_w/powervent_ef0.67"
         },
-        "xps3inEffR17.5": {
+        "gas_storagetank_w/powervent_ef0.67": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:38mm"
+                        "dhw_tank:gas_fuelled:190_l:power_vented:ef_0.67"
                     ]
                 }
             }
         },
-        "xps4inEffR20": {
+        "vintageElecEF0.92": {
+            "proxy": "elec_storage_ef0.89"
+        },
+        "elec_tankless_ef0.94": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:51mm"
+                        "dhw_electric_tankless"
                     ]
                 }
             }
         },
-        "xps1.5inEffR7.5": {
+        "elec_storage_ef0.89": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:38mm"
+                        "dhw_tank:electric:246_l:ef_0.89"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "replace tank with EF0.92+ electric storage tank"
                     ]
                 }
             }
         },
-        "NBC_936_3.72RSI": {
-            "proxy": "xps4.5inEffR22.5"
-        },
-        "NBC_936_4.59RSI": {
-            "proxy": "xps5.5inEffR27.5"
-        },
-        "xps3inEffR15": {
+        "GasInstantaneous": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:25mm"
+                        "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Replace gas water heater with EF0.95+ gas tankless"
                     ]
                 }
             }
         },
-        "NBC_936_2.84RSI": {
-            "proxy": "xps3inEffR17.5"
-        },
-        "xps1inEffR5": {
+        "NBC-HotWater_elec": {
+            "proxy": "elec_storage_ef0.89"
+        }
+    },
+    "Opt-DWHR": {
+        "DWHR-eff-30": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:25mm"
+                        "dwhr_unit:91cm_supply",
+                        "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
                     ]
                 }
             }
         },
-        "xps4.5inEffR22.5": {
+        "DWHR-eff-55": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:64mm"
-                    ]
-                }
-            }
-        },
-        "xps2inEffR10": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:51mm"
+                        "dwhr_unit:152cm_supply",
+                        "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
                     ]
                 }
             }
         }
     },
     "Opt-Windows": {
-        "NC-3g-LG-u1.14": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "window:shgc_0.17:u-value_1.14"
-                    ]
-                }
-            }
-        },
-        "NBC-zone7B-window": {
-            "proxy": "NC-3g-HG-u1.36"
-        },
-        "YHC-W12": {
-            "proxy": "NC-3g-HG-u1.36"
-        },
         "YHC-W11": {
             "proxy": "NC-3g-HG-u1.36"
         },
-        "NC-2g-HG-u1.65": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "window:shgc_0.51:u-value_1.65"
-                    ]
-                }
-            }
+        "NBC-zone4-window": {
+            "proxy": "NC-2g-HG-u1.82"
         },
-        "NC-3g-MG-u1.36": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "window:shgc_0.46:u-value_1.36"
-                    ]
-                }
-            }
+        "NBC-zone7A-window": {
+            "proxy": "NC-2g-HG-u1.65"
         },
         "YHC-W13": {
             "proxy": "NC-3g-HG-u1.36"
         },
-        "NBC-zone8-window": {
+        "YHC-W10": {
             "proxy": "NC-3g-HG-u1.36"
         },
-        "NBC-zone5-window": {
-            "proxy": "NC-2g-HG-u1.82"
+        "NC-2g-LG-u1.65": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "window:shgc_0.19:u-value_1.65"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Replace windows with double pane (U = 1.65)"
+                    ]
+                }
+            }
         },
         "NC-3g-HG-u1.36": {
             "context": {
@@ -1290,29 +1703,6 @@
                 }
             }
         },
-        "NC-2g-MG-u1.82": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "window:double_glaze:vinyl:glass:double_lof_lowe:insulating_spacers:air_fill:shgc_0.5:u-value_1.82"
-                    ]
-                }
-            }
-        },
-        "NC-3g-LG-u1.36": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "window:shgc_0.46:u-value_1.36"
-                    ]
-                }
-            }
-        },
-        "NBC-zone7A-window": {
-            "proxy": "NC-2g-HG-u1.65"
-        },
         "NC-3g-LG-u0.85": {
             "context": {
                 "legacy": {
@@ -1323,12 +1713,15 @@
                 }
             }
         },
-        "NC-2g-LG-u1.65": {
+        "NBC-zone8-window": {
+            "proxy": "NC-3g-HG-u1.36"
+        },
+        "NC-3g-MG-u1.36": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "window:shgc_0.19:u-value_1.65"
+                        "window:shgc_0.46:u-value_1.36"
                     ]
                 }
             }
@@ -1343,18 +1736,30 @@
                 }
             }
         },
-        "NBC-zone4-window": {
+        "NBC-zone5-window": {
             "proxy": "NC-2g-HG-u1.82"
         },
-        "NC-2g-MG-u1.65": {
+        "NBC-zone7B-window": {
+            "proxy": "NC-3g-HG-u1.36"
+        },
+        "NC-3g-LG-u1.14": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "window:shgc_0.19:u-value_1.65"
+                        "window:shgc_0.17:u-value_1.14"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Replace windows with triple pane (U = 1.2)"
                     ]
                 }
             }
+        },
+        "YHC-W12": {
+            "proxy": "NC-3g-HG-u1.36"
         },
         "NC-3g-LG-u1.08": {
             "context": {
@@ -1364,6 +1769,22 @@
                         "window:shgc_0.44:u-value_1.08"
                     ]
                 }
+            }
+        },
+        "NC-2g-MG-u1.65": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "window:shgc_0.19:u-value_1.65"
+                    ]
+                }
+            },
+            "retrofit": {
+                "type": "list",
+                "data": [
+                    "Replace windows with double pane (U = 1.65)"
+                ]
             }
         },
         "NC-2g-HG-u1.82": {
@@ -1376,11 +1797,31 @@
                 }
             }
         },
-        "YHC-W10": {
-            "proxy": "NC-3g-HG-u1.36"
+        "NC-2g-HG-u1.65": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "window:shgc_0.51:u-value_1.65"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Replace windows with double pane (U = 1.65)"
+                    ]
+                }
+            }
         },
-        "NBC-zone6-window": {
-            "proxy": "NC-2g-HG-u1.65"
+        "NC-2g-MG-u1.82": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "window:double_glaze:vinyl:glass:double_lof_lowe:insulating_spacers:air_fill:shgc_0.5:u-value_1.82"
+                    ]
+                }
+            }
         },
         "NC-3g-HG-u1.08": {
             "context": {
@@ -1391,273 +1832,23 @@
                     ]
                 }
             }
-        }
-    },
-    "Opt-Ceilings": {
-        "NBC_Ceiling_zone7A_HRV": {
-            "proxy": "CeilR50"
         },
-        "CeilR40": {
+        "NBC-zone6-window": {
+            "proxy": "NC-2g-HG-u1.65"
+        },
+        "NC-3g-LG-u1.36": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "r40:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_Ceiling_zone6_noHRV": {
-            "proxy": "CeilR50"
-        },
-        "NBC_Ceiling_zone6_HRV": {
-            "proxy": "CeilR50"
-        },
-        "NBC_Ceiling_zone7A_noHRV": {
-            "proxy": "CeilR60"
-        },
-        "retrofit-ceiling-Additional-R10": {
-            "proxy": "CeilR60"
-        },
-        "CeilR70": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r70:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR90": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r90:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_Ceiling_zone5_HRV": {
-            "proxy": "CeilR40"
-        },
-        "NBC_Ceiling_zone8": {
-            "proxy": "CeilR60"
-        },
-        "CeilR60": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r60:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR66": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r60:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR80": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r80:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR50": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r50:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR100": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r100:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_Ceiling_zone5_noHRV": {
-            "proxy": "CeilR50"
-        },
-        "CeilR89": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r90:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_Ceiling_zone7B": {
-            "proxy": "CeilR60"
-        },
-        "NBC_Ceiling_zone4": {
-            "proxy": "CeilR40"
-        }
-    },
-    "Opt-CathCeilings": {
-        "retrofit-CathCeiling-Additional-R10": {
-            "proxy": "CeilR60"
-        },
-        "CeilR100": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r100:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_CathCeiling_RSI5.02": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r29_batt"
-                    ]
-                }
-            }
-        },
-        "CeilR40": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r40_dense-pack_cellulose"
-                    ]
-                }
-            }
-        },
-        "NBC_CathCeiling_RSI4.67": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r27_batt"
-                    ]
-                }
-            }
-        },
-        "CeilR70": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r70:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR60": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r60:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR80": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r80:cost_including_materials:labour:mark-up_and_taxes"
+                        "window:shgc_0.46:u-value_1.36"
                     ]
                 }
             }
         }
     },
-    "Opt-ExposedFloor": {
-        "ExpFloorFlash&Batt-R36": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:spray_foam_2pd_urethane:5.5in_thickness"
-                    ]
-                }
-            }
-        },
-        "ExpFloorFoamed-R52": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:spray_foam:2pound_urethane:7.5in_thickness",
-                        "insulation:spray_foam:38mm:r6/inch"
-                    ]
-                }
-            }
-        },
-        "BaseExpFloor-R31": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r31_batt"
-                    ]
-                }
-            }
-        },
-        "NBC_936_4.67RSI": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r27_batt"
-                    ]
-                }
-            }
-        },
-        "NBC_936_5.02RSI": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r29_batt"
-                    ]
-                }
-            }
-        }
-    },
-    "Opt-Doors": {},
+    "Opt-Specifications": {},
     "Opt-FloorHeaderIntIns": {
-        "NC_R-22eff_5.5inBatt": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r24_batt"
-                    ]
-                }
-            }
-        },
-        "NBC_RSI3.08_int": {
-            "proxy": "NC_R-18eff_5.5inBatt"
-        },
         "NC_R-16eff_5inBatt": {
             "context": {
                 "legacy": {
@@ -1671,9 +1862,6 @@
         "NBC_RSI2.78_int": {
             "proxy": "NC_R-15eff_4.5inBatt"
         },
-        "NBC_RSI2.97_int": {
-            "proxy": "NC_R-16eff_5inBatt"
-        },
         "NC_R-29eff_5.5inBatt": {
             "context": {
                 "legacy": {
@@ -1684,12 +1872,12 @@
                 }
             }
         },
-        "NC_R-15eff_4.5inBatt": {
+        "NC_R-22eff_5.5inBatt": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:r15_batt"
+                        "insulation:r24_batt"
                     ]
                 }
             }
@@ -1704,15 +1892,8 @@
                 }
             }
         },
-        "NC_R-18eff_5.5inBatt": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r19_batt"
-                    ]
-                }
-            }
+        "NBC_RSI2.97_int": {
+            "proxy": "NC_R-16eff_5inBatt"
         },
         "NC_R-26eff_8inBatt": {
             "context": {
@@ -1723,212 +1904,95 @@
                     ]
                 }
             }
-        }
-    },
-    "Opt-FlatCeilings": {
-        "NBC_FlatCeiling_RSI4.67": {
+        },
+        "NC_R-18eff_5.5inBatt": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "insulation:r27_batt"
+                        "insulation:r19_batt"
                     ]
                 }
             }
         },
-        "CeilR100": {
+        "NC_R-15eff_4.5inBatt": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "r100:cost_including_materials:labour:mark-up_and_taxes"
+                        "insulation:r15_batt"
                     ]
                 }
             }
         },
-        "CeilR40": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r40_dense-pack_cellulose"
-                    ]
-                }
-            }
-        },
-        "retrofit-FlatCeiling-Additional-R10": {
-            "proxy": "CeilR60"
-        },
-        "retrofit-FlatCeiling-Additional-R20": {
-            "proxy": "CeilR60"
-        },
-        "retrofit-FlatCeiling-Additional-R30": {
-            "proxy": "CeilR60"
-        },
-        "CeilR70": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r70:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_FlatCeiling_RSI5.02": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:r29_batt"
-                    ]
-                }
-            }
-        },
-        "CeilR60": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r60:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR80": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r80:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        }
-    },
-    "Opt-ACH": {
-        "New-Const-air_seal_to_3.50_ach": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "upgrade_to_plastic_air_tight_electrical_boxes",
-                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
-                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall"
-                    ]
-                }
-            }
-        },
-        "ACH_2_0": {
-            "proxy": "New-Const-air_seal_to_2.50_ach"
-        },
-        "New-Const-air_seal_to_1.50_ach": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "upgrade_to_plastic_air_tight_electrical_boxes",
-                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
-                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
-                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
-                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
-                        "all_poly_lapped_joints_located_over_solid_backing:sealed",
-                        "preliminary_blower_door_test:single_home",
-                        "sprayfoam_rim_joists;by_header_area",
-                        "credit:elimination_of_vapor_barrier_at_floor_header"
-                    ]
-                }
-            }
-        },
-        "ACH_NBC": {
-            "proxy": "New-Const-air_seal_to_2.50_ach"
-        },
-        "New-Const-air_seal_to_0.60_ach": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "upgrade_to_plastic_air_tight_electrical_boxes",
-                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
-                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
-                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
-                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
-                        "all_poly_lapped_joints_located_over_solid_backing:sealed",
-                        "preliminary_blower_door_test:single_home",
-                        "sprayfoam_rim_joists;by_header_area",
-                        "credit:elimination_of_vapor_barrier_at_floor_header",
-                        "trades_training",
-                        "trades_training",
-                        "trades_training"
-                    ]
-                }
-            }
-        },
-        "New-Const-air_seal_to_4-6_ach": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "base-cost"
-                    ]
-                }
-            }
-        },
-        "New-Const-air_seal_to_1.00_ach": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "upgrade_to_plastic_air_tight_electrical_boxes",
-                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
-                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
-                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
-                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
-                        "all_poly_lapped_joints_located_over_solid_backing:sealed",
-                        "preliminary_blower_door_test:single_home",
-                        "sprayfoam_rim_joists;by_header_area",
-                        "credit:elimination_of_vapor_barrier_at_floor_header",
-                        "trades_training"
-                    ]
-                }
-            }
-        },
-        "New-Const-air_seal_to_2.50_ach": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "upgrade_to_plastic_air_tight_electrical_boxes",
-                        "greater_attention_to_taping_electrical_boxes;_create_better_seal_around_stairs_and_mechanical_penetrations;_caulk_between_joists",
-                        "caulking_sill_plate_of_walls_to_the_subfloor:and_applying_a_bead_of_acoustic_sealant_at_top_and_bottom_of_drywall",
-                        "use_air-tight_junction_boxes_for_lighting_on_ceiling",
-                        "on_exterior_walls:place_acoustic_sealant_half_way_up_sill_plate:and_caulk_sill_plate_to_subfloor",
-                        "all_poly_lapped_joints_located_over_solid_backing:sealed"
-                    ]
-                }
-            }
-        },
-        "ACH_2_5": {
-            "proxy": "New-Const-air_seal_to_2.50_ach"
-        },
-        "ACH_0_6": {
-            "proxy": "New-Const-air_seal_to_1.00_ach"
-        }
-    },
-    "Opt-H2K-PV": {
-        "Yukon_PV": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "solar_photovoltaic_system:installed_on_roof:5_kw"
-                    ]
-                }
-            }
+        "NBC_RSI3.08_int": {
+            "proxy": "NC_R-18eff_5.5inBatt"
         }
     },
     "Opt-Heating-Cooling": {
-        "oil-hybrid": {
+        "ASHP-mini-split": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        {
+                            "H2KHouseInfo.HVAC/designLoads/heating_W": {
+                                "per?3200.0": "Add Minisplit - single head, 1.0 ton"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "elec-baseboard": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "traditional_electric_resistance_baseboard_heaters",
+                        "install_200a_service_instead_of_100a_service"
+                    ]
+                }
+            }
+        },
+        "NBC-elec-heat": {
+            "proxy": "elec-baseboard"
+        },
+        "elec-baseboard+AC": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "traditional_electric_resistance_baseboard_heaters",
+                        "ducting:direct-duct_hrv",
+                        "portable_room_ac"
+                    ]
+                }
+            }
+        },
+        "CCASHP": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        {
+                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
+                            }
+                        },
+                        "ducting:central_forced_air",
+                        "install_200a_service_instead_of_100a_service"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Install CCASHP (including air-handler and back-up heater)"
+                    ]
+                }
+            }
+        },
+        "gas-furnace-ecm+AC": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -1938,35 +2002,15 @@
                                 "per?14": "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock"
                             }
                         },
-                        {
-                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
-                                "per?14": "ashp:conventional"
-                            }
-                        },
-                        "ducting:central_forced_air"
-                    ]
-                }
-            }
-        },
-        "gas_combo_p9_rated_OTPF0.95": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
                         "ducting:central_forced_air",
-                        "air_handler:1-zone:ecm_motor:circ._pump:and_electrical",
-                        "DHW heater, gas fuelled, on-demand, EF 0.95 (P9 Rated System, TPF 95)"
+                        "ac_2.5_ton:14_seer"
                     ]
-                }
-            }
-        },
-        "condensing-gas-furnace": {
-            "context": {
-                "legacy": {
+                },
+                "retrofit": {
                     "type": "list",
                     "data": [
-                        "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
-                        "ducting:central_forced_air"
+                        "Replace furnace with high-efficiency gas unit",
+                        "Add Central AC"
                     ]
                 }
             }
@@ -1988,95 +2032,42 @@
                         },
                         "ducting:central_forced_air"
                     ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Install gas hybrid system (inc. new furnace)"
+                    ]
                 }
             }
         },
-        "ASHP": {
+        "condensing-boiler-base": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "boiler:condensing:90%_afue"
+                    ]
+                }
+            }
+        },
+        "NBC-gas-furnace-AC": {
+            "proxy": "gas-furnace-psc+AC"
+        },
+        "GSHP": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         {
-                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
-                                "per?14": "ashp:conventional"
+                            "H2KHouseInfo.HVAC/GSHP/capacity_kW": {
+                                "<?8.5": "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+                                "<?11.0": "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
+                                "else": "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
                             }
                         },
                         "ducting:central_forced_air",
                         "install_200a_service_instead_of_100a_service"
-                    ]
-                }
-            }
-        },
-        "ASHP-central-single": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        {
-                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
-                                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
-                            }
-                        },
-                        "ducting:central_forced_air",
-                        "install_200a_service_instead_of_100a_service"
-                    ]
-                }
-            }
-        },
-        "gas-furnace-ecm+AC": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        {
-                            "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
-                                "per?14": "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock"
-                            }
-                        },
-                        "ducting:central_forced_air",
-                        "ac_2.5_ton:14_seer"
-                    ]
-                }
-            }
-        },
-        "NBC-elec-heat": {
-            "proxy": "elec-baseboard"
-        },
-        "condensing-propane-furnace": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
-                        "ducting:central_forced_air"
-                    ]
-                }
-            }
-        },
-        "ASHP-central-split": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        {
-                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
-                                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
-                            }
-                        },
-                        "ducting:central_forced_air",
-                        "install_200a_service_instead_of_100a_service"
-                    ]
-                }
-            }
-        },
-        "elec-baseboard+AC": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "traditional_electric_resistance_baseboard_heaters",
-                        "ducting:direct-duct_hrv",
-                        "portable_room_ac"
                     ]
                 }
             }
@@ -2086,33 +2077,21 @@
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "Example Key-phrase: Layer1",
-                        "Example Key-phrase: Layer2",
-                        "Example Key-phrase: Layer3"
+                        "Install condensing gas boiler"
                     ]
-                }
-            }
-        },
-        "NBC-gas-furnace-AC": {
-            "proxy": "gas-furnace-psc+AC"
-        },
-        "gas-furnace-psc+AC": {
-            "context": {
-                "legacy": {
+                },
+                "retrofit": {
                     "type": "list",
                     "data": [
-                        {
-                            "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
-                                "per?14": "furnace_94%_afue:14kw_output:psc_motor"
-                            }
-                        },
-                        "ducting:central_forced_air",
-                        "ac_2.5_ton:14_seer"
+                        "Install condensing gas boiler"
                     ]
                 }
             }
         },
-        "CCASHP": {
+        "NBC-gas-furnace": {
+            "proxy": "gas-furnace-psc"
+        },
+        "ASHP-central-single": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -2140,59 +2119,95 @@
                 }
             }
         },
-        "ASHP-mini-split": {
+        "gas-furnace-ecm": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        {
+                            "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
+                                "per?14": "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock"
+                            }
+                        },
+                        "ducting:central_forced_air"
+                    ]
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Replace furnace with high-efficiency gas unit"
+                    ]
+                }
+            }
+        },
+        "mid-efficiency-oil-furnace": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+                        "ducting:central_forced_air"
+                    ]
+                }
+            }
+        },
+        "ASHP": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         {
                             "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
-                                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
+                                "per?14": "ashp:conventional"
                             }
                         },
                         "ducting:central_forced_air",
                         "install_200a_service_instead_of_100a_service"
                     ]
-                }
+                },
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add ASHP to existing electric furnace"
+                    ]
+                }    
             }
         },
-        "elec-baseboard": {
+        "gas_combo_p9_rated_OTPF0.95": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "traditional_electric_resistance_baseboard_heaters",
-                        "install_200a_service_instead_of_100a_service"
+                        "ducting:central_forced_air",
+                        "air_handler:1-zone:ecm_motor:circ._pump:and_electrical",
+                        "DHW heater, gas fuelled, on-demand, EF 0.95 (P9 Rated System, TPF 95)"
                     ]
                 }
             }
         },
-        "boiler-electric": {
+        "condensing-propane-furnace": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "Example Key-phrase: Layer1",
-                        "Example Key-phrase: Layer2",
-                        "Example Key-phrase: Layer3"
+                        "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock",
+                        "ducting:central_forced_air"
                     ]
                 }
             }
         },
-        "GSHP": {
+        "gas-furnace-psc+AC": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         {
-                            "H2KHouseInfo.HVAC/GSHP/capacity_kW": {
-                                "<?8.5": "gshp:3_ton:8.5_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
-                                "<?11.0": "gshp:4_ton:11_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters",
-                                "else": "gshp:5_ton:14_kw:incl._pump_ass.:trenching_&_piping:ethanol_&_aux._heaters"
+                            "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
+                                "per?14": "furnace_94%_afue:14kw_output:psc_motor"
                             }
                         },
                         "ducting:central_forced_air",
-                        "install_200a_service_instead_of_100a_service"
+                        "ac_2.5_ton:14_seer"
                     ]
                 }
             }
@@ -2212,22 +2227,33 @@
                 }
             }
         },
-        "gas-furnace-ecm": {
+        "ASHP-central-split": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         {
-                            "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
-                                "per?14": "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock"
+                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                                "per?13": "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat"
                             }
                         },
-                        "ducting:central_forced_air"
+                        "ducting:central_forced_air",
+                        "install_200a_service_instead_of_100a_service"
                     ]
                 }
             }
         },
-        "mid-efficiency-oil-furnace": {
+        "boiler-electric": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "dhw_electric_tankless"
+                    ]
+                }
+            }
+        },
+        "condensing-gas-furnace": {
             "context": {
                 "legacy": {
                     "type": "list",
@@ -2238,36 +2264,28 @@
                 }
             }
         },
-        "NBC-gas-furnace": {
-            "proxy": "gas-furnace-psc"
-        },
-        "condensing-boiler-base": {
+        "oil-hybrid": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "Example Key-phrase: Layer1",
-                        "Example Key-phrase: Layer2",
-                        "Example Key-phrase: Layer3"
+                        {
+                            "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
+                                "per?14": "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock"
+                            }
+                        },
+                        {
+                            "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                                "per?14": "ashp:conventional"
+                            }
+                        },
+                        "ducting:central_forced_air"
                     ]
                 }
             }
         }
     },
-    "Opt-FoundationSlabBelowGrade": {
-        "xps2.5inEffR12.5": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:64mm"
-                    ]
-                }
-            }
-        },
-        "NBC_936_1.96RSI": {
-            "proxy": "xps2.5inEffR12.5"
-        },
+    "Opt-FoundationSlabOnGrade": {
         "xps4inEffR20": {
             "context": {
                 "legacy": {
@@ -2275,16 +2293,6 @@
                     "data": [
                         "insulation:xps_type_4:rigid:51mm",
                         "insulation:xps_type_4:rigid:51mm"
-                    ]
-                }
-            }
-        },
-        "xps1.5inEffR7.5": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "insulation:xps_type_4:rigid:38mm"
                     ]
                 }
             }
@@ -2299,11 +2307,21 @@
                 }
             }
         },
-        "NBC_936_4.44RSI": {
-            "proxy": "xps4.5inEffR22.5"
+        "NBC_936_1.96RSI": {
+            "proxy": "xps2.5inEffR12.5"
         },
-        "NBC_936_uninsulated_EffR0": {
-            "proxy": "uninsulated"
+        "NBC_936_4.59RSI": {
+            "proxy": "xps5.5inEffR27.5"
+        },
+        "xps2.5inEffR12.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:64mm"
+                    ]
+                }
+            }
         },
         "xps3inEffR15": {
             "context": {
@@ -2316,14 +2334,14 @@
                 }
             }
         },
-        "xps4.5inEffR22.5": {
+        "xps5.5inEffR27.5": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
                         "insulation:xps_type_4:rigid:51mm",
-                        "insulation:xps_type_4:rigid:25mm",
-                        "insulation:xps_type_4:rigid:64mm"
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:38mm"
                     ]
                 }
             }
@@ -2337,14 +2355,125 @@
                     ]
                 }
             }
+        },
+        "xps3inEffR17.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:38mm"
+                    ]
+                }
+            }
+        },
+        "NBC_936_3.72RSI": {
+            "proxy": "xps4.5inEffR22.5"
+        },
+        "xps4.5inEffR22.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:64mm"
+                    ]
+                }
+            }
+        },
+        "xps1.5inEffR7.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm"
+                    ]
+                }
+            }
+        },
+        "NBC_936_2.84RSI": {
+            "proxy": "xps3inEffR17.5"
+        }
+    },
+    "Opt-FoundationWallExtIns": {
+        "xps4inEffR20": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:51mm",
+                        "fasteners_for_4in_thick_exterior_insulation"
+                    ]
+                }
+            }
+        },
+        "xps1inEffR5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:25mm",
+                        "fasteners_for_1in_thick_exterior_insulation"
+                    ]
+                }
+            }
+        },
+        "xps2.5inEffR12.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:64mm",
+                        "fasteners_for_2in_thick_exterior_insulation"
+                    ]
+                }
+            }
+        },
+        "xps3inEffR15": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "insulation:xps_type_4:rigid:25mm",
+                        "fasteners_for_4in_thick_exterior_insulation"
+                    ]
+                }
+            }
+        },
+        "NBC_936_uninsulated_EffR0": {
+            "proxy": "uninsulated"
+        },
+        "xps2inEffR10": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:51mm",
+                        "fasteners_for_2in_thick_exterior_insulation"
+                    ]
+                }
+            }
+        },
+        "xps1.5inEffR7.5": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "insulation:xps_type_4:rigid:38mm",
+                        "fasteners_for_1in_thick_exterior_insulation"
+                    ]
+                }
+            }
         }
     },
     "Opt-AtticCeilings": {
-        "NBC_Ceiling_zone7A_HRV": {
-            "proxy": "CeilR50"
+        "NBC_Ceiling_zone7A_noHRV": {
+            "proxy": "CeilR60"
         },
-        "NBC_Ceiling_zone6": {
-            "proxy": "CeilR50"
+        "retrofit-AtticCeiling-Additional-R20": {
+            "proxy": "CeilR60"
         },
         "CeilR40": {
             "context": {
@@ -2356,41 +2485,15 @@
                 }
             }
         },
-        "NBC_Ceiling_zone7A_noHRV": {
-            "proxy": "CeilR60"
+        "NBC_Ceiling_zone5_noHRV": {
+            "proxy": "CeilR50"
         },
-        "CeilR70": {
+        "CeilR100": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "r70:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "CeilR90": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r90:cost_including_materials:labour:mark-up_and_taxes"
-                    ]
-                }
-            }
-        },
-        "NBC_Ceiling_zone5_HRV": {
-            "proxy": "CeilR40"
-        },
-        "NBC_Ceiling_zone8": {
-            "proxy": "CeilR60"
-        },
-        "CeilR60": {
-            "context": {
-                "legacy": {
-                    "type": "list",
-                    "data": [
-                        "r60:cost_including_materials:labour:mark-up_and_taxes"
+                        "r100:cost_including_materials:labour:mark-up_and_taxes"
                     ]
                 }
             }
@@ -2405,6 +2508,57 @@
                 }
             }
         },
+        "NBC_Ceiling_zone8": {
+            "proxy": "CeilR60"
+        },
+        "CeilR90": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r90:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_Ceiling_zone7A_HRV": {
+            "proxy": "CeilR50"
+        },
+        "NBC_Ceiling_zone5_HRV": {
+            "proxy": "CeilR40"
+        },
+        "NBC_Ceiling_zone7B": {
+            "proxy": "CeilR60"
+        },
+        "CeilR70": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r70:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "NBC_Ceiling_zone6": {
+            "proxy": "CeilR50"
+        },
+        "NBC_Ceiling_zone4": {
+            "proxy": "CeilR40"
+        },
+        "CeilR60": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "r60:cost_including_materials:labour:mark-up_and_taxes"
+                    ]
+                }
+            }
+        },
+        "retrofit-AtticCeiling-Additional-R10": {
+            "proxy": "CeilR60"
+        },
         "CeilR50": {
             "context": {
                 "legacy": {
@@ -2415,57 +2569,119 @@
                 }
             }
         },
-        "retrofit-AtticCeiling-Additional-R20": {
-            "proxy": "CeilR60"
-        },
-        "CeilR100": {
+        "retrofit-AtticCeiling-Additional-R40": {
             "context": {
-                "legacy": {
+                "retrofit": {
                     "type": "list",
                     "data": [
-                        "r100:cost_including_materials:labour:mark-up_and_taxes"
+                        "Add R-40 to attic"
                     ]
                 }
             }
         },
-        "NBC_Ceiling_zone5_noHRV": {
-            "proxy": "CeilR50"
-        },
-        "NBC_Ceiling_zone7B": {
-            "proxy": "CeilR60"
-        },
-        "NBC_Ceiling_zone4": {
-            "proxy": "CeilR40"
-        },
-        "retrofit-AtticCeiling-Additional-R10": {
-            "proxy": "CeilR60"
+        "retrofit-AtticCeiling-Additional-R50": {
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-50 to attic"
+                    ]
+                }
+            }
         },
         "retrofit-AtticCeiling-Additional-R30": {
-            "proxy": "CeilR60"
+            "context": {
+                "retrofit": {
+                    "type": "list",
+                    "data": [
+                        "Add R-35 to attic"
+                    ]
+                }
+            }
         }
     },
-    "Opt-DWHR": {
-        "DWHR-eff-55": {
+    "Opt-FoundationWallIntIns": {
+        "WoodFrameEffR17": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dwhr_unit:152cm_supply",
-                        "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+                        "framing:interior_basement:38x89mm_o.c.",
+                        "insulation:r22_batt"
                     ]
                 }
             }
         },
-        "DWHR-eff-30": {
+        "NBC_936_1.99RSI": {
+            "proxy": "WoodFrameEffR11"
+        },
+        "WoodFrame+intEpsEffR23": {
             "context": {
                 "legacy": {
                     "type": "list",
                     "data": [
-                        "dwhr_unit:91cm_supply",
-                        "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+                        "framing:interior_basement:38x89mm_o.c.",
+                        "insulation:r22_batt",
+                        "insulation:eps_type_2:rigid:38mm",
+                        "fasteners_for_1in_thick_exterior_insulation"
                     ]
                 }
             }
+        },
+        "NBC_936_2.98RSI": {
+            "proxy": "WoodFrameEffR17"
+        },
+        "NBC_936_3.46RSI": {
+            "proxy": "WoodFrame+intEpsEffR20"
+        },
+        "WoodFrameEffR10": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "framing:interior_basement:38x89mm_o.c.",
+                        "insulation:r12_batt"
+                    ]
+                }
+            }
+        },
+        "WoodFrameEffR15": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "framing:interior_basement:38x89mm_o.c.",
+                        "insulation:r20_batt"
+                    ]
+                }
+            }
+        },
+        "WoodFrame+intEpsEffR20": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "framing:interior_basement:38x89mm_o.c.",
+                        "insulation:r20_batt",
+                        "insulation:eps_type_2:rigid:25mm",
+                        "fasteners_for_1in_thick_exterior_insulation"
+                    ]
+                }
+            }
+        },
+        "WoodFrameEffR11": {
+            "context": {
+                "legacy": {
+                    "type": "list",
+                    "data": [
+                        "framing:interior_basement:38x89mm_o.c.",
+                        "insulation:r14_batt"
+                    ]
+                }
+            }
+        },
+        "NBC_936_3.97RSI": {
+            "proxy": "WoodFrame+intEpsEffR23"
         }
     }
 }

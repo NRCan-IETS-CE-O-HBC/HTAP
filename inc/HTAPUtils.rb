@@ -54,7 +54,7 @@ def flattenHash(thisHash,breadCrumbs="")
       flatData.merge!( { "#{currHeader.gsub(/^:/,"")}" => thisHash[key] } ) 
     end 
   end 
-  debug_out ("<<returning\n#{flatData.pretty_inspect}\n<<end\n")
+  #debug_out ("<<returning\n#{flatData.pretty_inspect}\n<<end\n")
   return flatData
 
 end 
@@ -283,10 +283,11 @@ module HTAPData
 
 
   def HTAPData.parse_json_options_file(filename)
+    #debug_on 
     # New parsing method for json format
     log_out("Reading available options (#{filename})")
 
-    debug_off
+
     debug_out("Parsing JSON Options file #{filename}\n")
 
 
@@ -329,7 +330,7 @@ module HTAPData
       end
 
 
-      #puts "> #{attribute} (#{structure}) \n"
+      debug_out "> #{attribute} (#{structure}) \n"
       parsedOptions[attribute] = Hash.new
       parsedOptions[attribute] = { "type" => "internal" ,
                                    "default" => Hash.new ,
@@ -364,7 +365,7 @@ module HTAPData
       end
 
       for optionEntry in jsonRawOptions[attribute]["options"].keys
-        debug_off
+
         #debug_on if (attribute =~ /DHW/ && optionEntry =~ /NBC-HotWater_gas/ )
         debug_out " \n"
         debug_out " ........... OPTION: #{optionEntry} ............ \n"
@@ -413,7 +414,7 @@ module HTAPData
         # Currently only base supported.
         if ( structure.to_s =~ /tree/) then
           $values = jsonRawOptions[attribute]["options"][optionEntry]["h2kMap"]
-          debug_out" has h2kMap entries - \n#{$values["base"].pretty_inspect}\n\n"
+          #debug_out" has h2kMap entries - \n#{$values["base"].pretty_inspect}\n\n"
 
 
           valuesWithConditions = Hash.new
@@ -605,7 +606,7 @@ module HTAPData
     fCHOICES.close
 
     # ------------------------------------------------------
-    debug_out ("Parsed choices:\n#{choices.pretty_inspect}\n")
+    # debug_out ("Parsed choices:\n#{choices.pretty_inspect}\n")
 
     return choices,order
 
@@ -881,7 +882,7 @@ module HTAPData
 
     end
 
-    debug_out ("Intrepreted #{fdnConfigs.pretty_inspect}\n Result: #{config}\n")
+    #debug_out ("Intrepreted #{fdnConfigs.pretty_inspect}\n Result: #{config}\n")
 
     return config
 
@@ -1133,7 +1134,7 @@ module HTAPConfig
       found = self.checkKeys(object[keys[0]], keys[1..-1], action )
     end
 
-    debug_out("object @ 3:\n#{object.pretty_inspect}\n")
+    # debug_out("object @ 3:\n#{object.pretty_inspect}\n")
     return found
   end
 

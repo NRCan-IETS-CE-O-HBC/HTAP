@@ -32,11 +32,13 @@ module Costing
   #===============================================================================
 
   def Costing.estimateCosts(myOptions,myAssemblies,myUnitCosts,myChoices,myChoiceOrder,passedH2kData=nil)
-    
+    # debug_on 
     if ( passedH2kData.nil? )
-
+      debug_out "H2K Data empty\n"
+      debug_out ( "Using data from #{$gWorkingModelFile}\n")
       h2kCostElements = H2KFile.get_elements_from_filename( $gWorkingModelFile )
     else 
+      debug_out "Using passed h2k elements\m"
       h2kCostElements = passedH2kData
     
     end 
@@ -45,7 +47,7 @@ module Costing
     myH2KHouseInfo = H2KFile.getAllInfo(h2kCostElements)
     myH2KHouseInfo["h2kFile"] = $gWorkingModelFile
 
-    debug_out ( "Data from #{$gWorkingModelFile}\n")
+
     #debug_out ( "Dimensions for costing:\n#{myH2KHouseInfo.pretty_inspect}\n")
 
     specdCostSources = Hash.new
@@ -63,13 +65,13 @@ module Costing
       stream_out " - Costs could not be calculated correctly. See warning messages\n"
       myCosts["costing-dimensions"] = myH2KHouseInfo
     else
-      debug_out "\n\n"
-      debug_out drawRuler(" cost calculations complete; reporting "," / ")
-      debug_out "\n\n"
-      info_out ( drawRuler("Cost Impacts"))
-      info_out( Costing.summarizeCosts(myChoices, myCosts))
-      File.write(CostingAuditReportName, Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo))
-      info_out("Comprehensive costing calculation report written to #{CostingAuditReportName}")
+      #debug_out "\n\n"
+      #debug_out drawRuler(" cost calculations complete; reporting "," / ")
+      #debug_out "\n\n"
+      #info_out ( drawRuler("Cost Impacts"))
+      #info_out( Costing.summarizeCosts(myChoices, myCosts))
+      #File.write(CostingAuditReportName, Costing.auditCosts(myChoices,myCosts,myH2KHouseInfo))
+      #info_out("Comprehensive costing calculation report written to #{CostingAuditReportName}")
 
       myCosts["costing-dimensions"] = myH2KHouseInfo
 
@@ -94,7 +96,7 @@ module Costing
     componentList = Array.new
     finalChoice = ""
     debug_out " recovering cost component list for  #{attribute} = #{choice} \n"
-    debug_out " contents of assembly at #{attribute} / #{choice} :#{myAssemblies[attribute][choice].pretty_inspect}\n"
+    #debug_out " contents of assembly at #{attribute} / #{choice} :#{myAssemblies[attribute][choice].pretty_inspect}\n"
 
     if ( myAssemblies[attribute][choice].nil?  ) then 
       finalChoice = choice 
@@ -118,10 +120,14 @@ module Costing
       componentList, finalChoice = getCostComponentList(myOptions,myAssemblies,myChoices,attribute,proxyChoice)
 
     elsif ( ! myAssemblies[attribute][choice]["context"].nil? )
-      componentList = myAssemblies[attribute][choice]['context']['legacy']['data']
+      if ( ! myAssemblies[attribute][choice]['context']['retrofit'].nil? )
+        componentList = myAssemblies[attribute][choice]['context']['retrofit']['data']
+      elsif ( ! myAssemblies[attribute][choice]['context']['legacy'].nil? )
+        #componentList = myAssemblies[attribute][choice]['context']['legacy']['data']
+      end       
       finalChoice = choice
     end
-    debug_out("Compoents: #{componentList.pretty_inspect}\n")
+    #debug_out("Compoents: #{componentList.pretty_inspect}\n")
     return componentList, finalChoice
 
   end
@@ -129,14 +135,15 @@ module Costing
   # Functon that can deal with conditional costing statements -
   # such as hrv ducting costs that change if central forced air is available or not.
   def Costing.solveComponentConditionals(myOptions,myAssemblies,myChoices,attribute,component,myH2KHouseInfo)
-    #debug_on
+    # debug_on
     if ( component.is_a?(String) ) then
       debug_out "retuning string  #{component}"
       return component
     elsif ( component.is_a?(Hash) ) then
       finalResult = nil
+      
       #debug_off
-      #debug_on if (attribute =~ /HVAC/ )
+      #debug_on if (attribute =~ /Heating/ )
       #debug_out " Solving component conditionals for HASH:\n#{component.pretty_inspect}"
 
       # Conditionals are defined as hashes
@@ -212,15 +219,14 @@ module Costing
         queryType, queryValue = query.split(/\?/)
 
         if ( queryType =~ /per/ ) then 
-          warn_out ("Experimental costing feature \"per\" in use. Not yet supported.")
+          info_out ("Experimental costing feature \"per\" in use. Not yet supported.")
           debug_out " costing per #{queryValue} / Counting required #{result} \n"
           #debug_out "\n#{myMap.pretty_inspect}\n"
           count = (testVariable.to_f / queryValue.to_f).to_i + 1
-
           debug_out "computed: #{count}\n"
 
           # Experimental code to add multiple items according to sizing. Disabled for time being
-          count = 1
+
 
           retARR = Array.new
           retARR.fill(result,0..count-1)
@@ -313,11 +319,11 @@ module Costing
 
   # Recovers costs associated with a given attribute, choices.
   def Costing.getCosts(myUnitCosts,myOptions,myAssemblies,attrib,choice,useTheseSources)
-    #debug_on 
-    #debug_flag = false 
-    #debug_flag = true  if (  attrib =~ /Opt-HVAC/)
+ 
+    debug_flag = false 
+    #debug_flag = true  if (  attrib =~ /Opt-Heating-Cooling/)
 
-     #  #  # debug_on if debug_flag
+    debug_on if debug_flag
 
     debug_out(" [>] Costing.getCosts: searching cost data for #{attrib} = #{choice}\n")
 
@@ -400,8 +406,8 @@ module Costing
       myOptions[attrib]["options"][choice]["costComponents"].each do | component |
         debug_out " . . . . . . . . . . . . . . . . . . . . . . . .  . . . . . . . . . . . .  \n"
         debug_out " [#] working with #{component}\n"
-        #debug_out myCosts.pretty_inspect
-
+        #if debug_flag then debug_out myCosts.pretty_inspect end 
+        #debug_out "\n"
 
         # Cost data sets can inherit data from prior dbs.
         # Set default inheratence flag to zero.
@@ -410,7 +416,7 @@ module Costing
         # Define myCosts as a hash with cost component as key; initialize 'found'
         # attribut to false.
         if ( emptyOrNil(myCosts[component])) then 
-          debug_out "Zeroing out my hash for this component!"
+          debug_out "Zeroing out my hash for this component!\n"
           myCosts[component] = Hash.new
           myCosts[component]["found"] = false
           myCosts[component]["count"] = 0
@@ -428,6 +434,8 @@ module Costing
             ( ! specdSource.eql? "*" ) then
             #debug_out " no. (moving on) \n"
             nomatch = true
+          #else
+          #  debug_out " Yes! \n"
           end
 
           next if nomatch
@@ -444,7 +452,7 @@ module Costing
 
           else
 
-            #debug_out " yes! \n"
+            debug_out " yes! \n"
 
             source = specdSource
             #debug_out "  .  checking for inheratence:\n"
@@ -471,8 +479,9 @@ module Costing
 
           # find the component in myUnitCosts, and determine if it has cost
           # data that matches our source (specd || ancestor if inherited = true || arbitrary source for wildcard. )
+          
           debug_out ("  .  proceeding to process component cost using data from #{source}  \n")
-          #debug_out ("    >#{component}<\n")
+          debug_out ("    >#{component}<\n")
 
           myUnitCosts["data"][component].keys.each do | costset |
             debug_out "  .   .  found unit cost data from `#{costset}`"
@@ -492,7 +501,14 @@ module Costing
                 myCosts[component]["specified_source"] = specdSource
                 myCosts[component]["inherited_from"] = source
               end
-              #debug_out(myCosts.pretty_inspect)
+              #debug_out(" Available cost data \n")
+              #if debug_flag then debug_out("#{myUnitCosts["data"][component].pretty_inspect}\n") end 
+              
+              myCosts[component]["all_sources"] = myUnitCosts["data"][component]
+              
+              ####debug_out(" RETURNING COSTS:\n")
+              #if debug_flag then debug_out(myCosts.pretty_inspect) end 
+              #debug_out(" \n")
             end
             #
           end # myUnitCosts["data"][component].keys.each do | costset |
@@ -541,7 +557,9 @@ module Costing
     costSourcesDBs       = mySpecdSrc["components"]
 
     myCosts = Hash.new
-    myCosts["total"] = 0
+    myCosts["total_avg"] = 0
+    myCosts["total_max"] = 0
+    myCosts["total_min"] = 0
     myCosts["byAttribute"] = Hash.new
 
     CostingSupport.each do | attribute |
@@ -592,20 +610,73 @@ module Costing
 
         #debug_out ( simpleCostTree.pretty_inspect)
         
-        #debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
+        debug_out (" Calling Costing.GetCosts to recover unit costs for #{attrib} = #{choice}\n")
 
         choiceCosts = Hash.new
 
         choiceCosts = Costing.getCosts(myUnitCosts,simpleCostTree,myAssemblies,attrib,choice,costSourcesDBs)
 
-        debug_out ("costs: #{choiceCosts.pretty_inspect}")
+        debug_out ("contents of hash choiceCosts{}:\n #{choiceCosts.pretty_inspect}")
 
         costsOK = true
         
         choiceCosts.keys.each do | costingElement |
-          
-          debug_out " Computing costs for #{attrib}=#{choice}, \n+-> component [#{costingElement}]\n"
+          debug_out ". ELEMENT? #{costingElement}\n"
 
+
+
+          if ( costingElement =~ /no_costs_defined/ || costingElement =~ /as_per_h2k_file/ )
+            $costed["#{attrib}:#{choice}"] = false
+            log_out " #{attrib}=#{choice} | Costs could not be computed!"
+          else 
+            $costed["#{attrib}:#{choice}"] = true
+          end 
+          debug_out " Computing costs for #{attrib}=#{choice}, \n +---> component [#{costingElement}]\n"
+
+
+          
+          # Loop through all sources and get max/min/average parameters
+          summarize_data = { 
+            'average' => 0.0,
+            'max'     => 0.0,
+            'min'     => 0.0
+
+          }
+          if ( costingElement !~ /no_costs_defined/ && costingElement !~ /as_per_h2k_file/ )
+            
+            all_cost_data = []
+            
+            units = nil
+            choiceCosts[costingElement]['all_sources'].keys.each do | source | 
+              debug_out "    Collating data from SRC #{source}\n"
+              
+              # warn if units are inconsistent
+              if (units.nil? ) then 
+                units = choiceCosts[costingElement]['all_sources'][source]['units']
+              else
+                if ( units != choiceCosts[costingElement]['all_sources'][source]['units'] ) then
+                  warn_out("costing source #{source} / #{ costingElement } has incosistent units #{ choiceCosts[costingElement]['all_sources'][source]['units']} /= #{units}\n")
+                else
+                  debug_out "              ....units OK\n"
+                end 
+              end 
+
+              all_cost_data.push(choiceCosts[costingElement]['all_sources'][source]['UnitCostTotal'].to_f)
+
+            end 
+
+          
+            summarize_data = { 
+              'average' => all_cost_data.sum(0.0) / all_cost_data.size( ),
+              'max'     => all_cost_data.max(),
+              'min'     => all_cost_data.min()
+
+            }
+          
+          
+          end 
+
+          
           catagory = choiceCosts[costingElement]["data"]["category"]
           debug_out "       from catagory: #{catagory} \n"
 
@@ -614,7 +685,7 @@ module Costing
           units = "ea" if ( units =~ /ea\.?ch/i  )
           materials = choiceCosts[costingElement]["data"]["UnitCostMaterials"].to_f
           labour  = choiceCosts[costingElement]["data"]["UnitCostLabour"].to_f
-          total = choiceCosts[costingElement]["data"]["UnitCostTotal"].to_f
+          total = summarize_data['average']
 
           
           if ( total < 0.01 &&  total > -0.01 ) then 
@@ -673,6 +744,11 @@ module Costing
                 measureDescription = "ea.   - Total component cost, including materials + labour"
                 measure = 1.0
 
+              elsif ( units == "sf heated floor area")
+                measure =  ( myH2KHouseInfo["dimensions"]["heatedFloorArea"] ) * SF_PER_SM
+                measureDescription = "sq.ft - Heated floor area from HOT2000 file"
+
+
               else
 
                 costsOK = false
@@ -690,7 +766,7 @@ module Costing
               # ........................................................................
             when "Opt-AtticCeilings"
 
-              if ( units == "sf attic" || units =="undefined" )
+              if ( units == "sf applied" || units == "sf attic" || units =="undefined" )
                 measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["attic"] * SF_PER_SM
                 measureDescription = "sq.ft - Ceiling area, attics"
               else
@@ -698,7 +774,7 @@ module Costing
               end
 
               # ........................................................................
-			when "Opt-FlatCeilings"
+		        when "Opt-FlatCeilings"
 
               if ( units == "sf attic" || units == "sf applied" || units =="undefined" )
                 measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["flat"] * SF_PER_SM
@@ -708,7 +784,7 @@ module Costing
               end
 
               # ........................................................................
-			when "Opt-CathCeilings"
+            when "Opt-CathCeilings"
 
               if ( units == "sf attic" || units == "sf applied" || units =="undefined" )
                 measure = myH2KHouseInfo["dimensions"]["ceilings"]["area"]["cathedral"] * SF_PER_SM
@@ -745,7 +821,7 @@ module Costing
             when "Opt-Windows"
 
 
-              if ( (units == "sf applied" &&  catagory == "WINDOWS") || units =="undefined")
+              if ( (units == "sf applied" ) || units =="undefined")
 
                 measure = myH2KHouseInfo["dimensions"]["windows"]["area"]["total"] * SF_PER_SM
                 measureDescription = "sq.ft - Window area, glass + frame"
@@ -768,6 +844,18 @@ module Costing
                 costsOK = false
 
               end
+
+            when "Opt-H2KFoundation"
+
+
+              if ( units == "sf applied" || units == "sf wall" || units =="undefined")
+                measure = myH2KHouseInfo["dimensions"]["below-grade"]["walls"]["total-area"]["internal"] * SF_PER_SM
+                measureDescription = "sq.ft - Foundation walls - total internal area inc. above & below grade"
+              else
+                costsOK = false
+              end              
+
+
               # ..................................................................
             when "Opt-FoundationWallIntIns"
 
@@ -805,12 +893,12 @@ module Costing
 
               end
               # ..................................................................
-				when "Opt-ExposedFloor"
+            when "Opt-ExposedFloor"
 
               if ( units == "sf applied" || units =="undefined")
 
                 measure = (myH2KHouseInfo["dimensions"]["exposed-floors"]["area"]["total"] ) * SF_PER_SM
-					 measureDescription = "sq.ft - Exposed floor area"
+                measureDescription = "sq.ft - Exposed floor area"
               else
 
                 costsOK = false
@@ -847,6 +935,7 @@ module Costing
 
               # ..................................................................
 
+
             when "Opt-Heating-Cooling"
 
 
@@ -869,7 +958,11 @@ module Costing
                   if ( myH2KHouseInfo["HVAC"]["Baseboards"]["count"].to_i == 0  ) then
                     warn_out "H2K file doesn't contain any baseboards. Can't cost #{costingElement}\n"
                   end
-                  measure = myH2KHouseInfo["HVAC"]["Baseboards"]["capacity_kW"].to_f * 1.1
+                  if ( $pass_system_size ) 
+                    measure = $system_size 
+                  else 
+                    measure = myH2KHouseInfo["HVAC"]["Baseboards"]["capacity_kW"].to_f * 1.1
+                  end 
                   measureDescription = "kW    - Total installed baseboard heating capacity"
 
                 elsif ( catagory == "AIR CONDITIONING" ) then
@@ -930,16 +1023,22 @@ module Costing
           # ===============================================================
           # Compute costs :
           if ( costsOK )
-            myCostsComponent = measure * ( total ) * count
 
-            myCosts["total"] += myCostsComponent.round(2)
 
-            myCosts["byAttribute"][attrib] += myCostsComponent.round(2)
+            myCostsComponent_max = measure * ( summarize_data['max'] ) * count
+            myCostsComponent_min = measure * ( summarize_data['min'] ) * count
+            myCostsComponent_avg = measure * ( summarize_data['average'] ) * count
+            myCosts["total_avg"] += myCostsComponent_avg.round(2)
+            myCosts["total_min"] += myCostsComponent_min.round(2)
+            myCosts["total_max"] += myCostsComponent_max.round(2)
+
+
+            myCosts["byAttribute"][attrib] += myCostsComponent_avg.round(2)
 
             if ( myCosts["bySource"][source].nil?  ) then
               myCosts["bySource"][source] = 0.0
             end
-            myCosts["bySource"][source] +=  myCostsComponent.round(2)
+            myCosts["bySource"][source] +=  myCostsComponent_avg.round(2)
 
             myCosts["audit"][attrib]["elements"][costingElement] = {
               "source" => source,
@@ -947,14 +1046,14 @@ module Costing
               "units"  => units,
               "count"  => count, 
               "measureDescription"  => measureDescription,
-              "unit-cost-materials" => materials.round(2),
-              "unit-cost-labour"    => labour.round(2),
-              "unit-cost-total"     => labour.round(2)+ materials.round(2),
-              "component-costs"     => myCostsComponent.round(2),
+              #"unit-cost-materials" => materials.round(2),
+              #"unit-cost-labour"    => labour.round(2),
+              #"unit-cost-total"     => labour.round(2)+ materials.round(2),
+              "component-costs"     => myCostsComponent_avg.round(2),
             }
 
-            debug_out ("   Cost      : $ #{myCostsComponent.round(2)}\n")
-            componentCostsSummary[costingElement] = myCostsComponent.round(2)
+            debug_out ("   Cost      : $ #{myCostsComponent_avg.round(2)}\n")
+            componentCostsSummary[costingElement] = myCostsComponent_avg.round(2)
 
           else
             warn_out ("Can't cost #{attrib}/#{choice}/#{costingElement}")
@@ -981,7 +1080,7 @@ module Costing
         debug_out "      _____________\n"
         total = '%.2f' % myCosts["byAttribute"][attrib].round(2)
         debug_out "      $ #{total.rjust(10)} : TOTAL \n"
-        debug_off
+        #debug_off
 
         if ( choice != simpleCostTree[attrib]["options"][choice]["dataCameFrom"] )
           proxyCosts = true
@@ -1037,20 +1136,6 @@ module Costing
     #debug_out "Compute-Costs: Returning \n#{myCosts.pretty_inspect}\n"
 
     return myCosts,allCostsOK
-
-  end
-
-  # Create a report auditing all the costing data used in calculaitons,
-  # and return as a string.
-
-  def Costing.getAttributeComponents(myChoices,myCosts,myH2KHouseInfo)
-
-    myComponentsDetails = Hash.new
-    myChoices.each do |attribute, choice |
-
-
-    end
-
 
   end
 
@@ -1357,7 +1442,7 @@ module Costing
 
 
   def Costing.summarizeCosts(myChoices,myCosts,format="txt")
-    #debug_on
+
 
     # TO DO - simplify the markdown inplementaiton of this table
 
@@ -1372,11 +1457,14 @@ module Costing
     maxAttLen = 0
     maxChoiceLen = 0
     myCosts["byAttribute"].each do | attribute, cost |
+      #next if myChoices[attribute].length
       debug_out ("> #{attribute}: #{cost}\n")
       maxAttLen = [attribute.length, maxAttLen].max
-      maxChoiceLen = [myChoices[attribute].length,maxChoiceLen].max
+      if ( ! myChoices[attribute].nil? )
+        maxChoiceLen = [myChoices[attribute].length,maxChoiceLen].max
+      end 
     end
-    summaryTxt = ""
+    summaryTxt = 
     summaryTxt +=  " ....................................................................................................\n" if (! markdown)
     summaryTxt +=  "#{m}#{"Option".ljust(maxAttLen)} #{m}  #{"Choice".ljust(maxChoiceLen)} #{m}    Cost#{m}\n"
     summaryTxt +=  "#{m}---#{m}---#{m}---:#{m}\n" if markdown
@@ -1397,7 +1485,7 @@ module Costing
         summaryTxt += " #{m}#{attribute.ljust(maxAttLen)} #{m} #{myChoices[attribute].ljust(maxChoiceLen)} #{m} $\\ #{costtxt.rjust(9)}#{m}\n"
       end
     end
-    myTotal = '%.2f' % myCosts["total"].to_f
+    myTotal = '%.2f' % myCosts["total_avg"].to_f
     summaryTxt +=  " ....................................................................................................\n" if (! markdown)
     summaryTxt +=  "#{m}#{"Total ".ljust(maxAttLen)} #{m} #{" ".ljust(maxChoiceLen)} #{m}  $\\ #{myTotal.rjust(9)}#{m}\n"
 

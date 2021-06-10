@@ -7487,6 +7487,9 @@ end
 
           
           # if autocosts were estimatd, compute costs
+
+          warn_out('Costing estimation via substiture-h2k.rb disabled for the time being. Use re-cost.rb.')
+          $autoEstimateCosts = false 
           if ( $autoEstimateCosts ) then
             debug_out ("Call to parse unit costs: #{$autoEstimateCosts}")
             myUnitCosts = HTAPData.parseJson($unitCostFileName,'Unit costs')
