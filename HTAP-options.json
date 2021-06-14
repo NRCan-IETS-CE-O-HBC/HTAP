@@ -1440,7 +1440,22 @@
           ]
         }
       },
-      "ACH_3": {
+      "ACH_3_2": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "3.2",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_3.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
+	  "ACH_3": {
         "h2kMap": {
           "base": {
             "<Opt-ACH>": "3.0",
@@ -10561,7 +10576,7 @@
             "Opt-IsActive": "true",
             "OPT-H2K-AirDistType": "1",
             "OPT-H2K-OpSched": "480",
-            "OPT-FlowCalc": "1",
+            "OPT-FlowCalc": "3",
             "OPT-H2K-HRVSupply": "NA",
             "OPT-H2K-Rating1": "78",
             "OPT-H2K-Rating2": "72",
