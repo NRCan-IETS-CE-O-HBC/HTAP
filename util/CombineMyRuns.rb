@@ -2,6 +2,7 @@ require 'fileutils'
 require 'pp'
 require 'csv'
 
+filter = false 
 
 files = ARGV
 
@@ -10,7 +11,6 @@ AliasesForAttributes = {
   "Opt-FloorAboveCrawl" => "Opt-ExposedFloor",
   "Opt-HRVonly" => "Opt-VentSystem",
   "Opt-CasementWindows" => "Opt-Windows", 
-  "Opt-HVACSystem" => "Opt-Heating-Cooling",
   "Opt-DWHRSystem" => "Opt-DWHR"
 }
 
@@ -33,6 +33,7 @@ KeepTheseColumns =
  "archetype|Area-Wall-m2",
  "archetype|Area-Windows-m2",
  "archetype|Base-Locale",
+ "archetype|Base-City",
 # "archetype|Base-Region",
 # "archetype|Ceiling-Type",
  "archetype|Floor-Area-m2",
@@ -106,8 +107,7 @@ KeepTheseColumns =
  "input|House-ListOfUpgrades",
  "input|House-Upgraded",
  "input|Opt-ACH",
-# "input|Opt-AtticCeilings",
-# "input|Opt-Baseloads",
+ "input|Opt-AtticCeilings",
  "input|Opt-CasementWindows",
 # "input|Opt-CathCeilings",
  "input|Opt-Ceilings",
@@ -128,7 +128,7 @@ KeepTheseColumns =
 # "input|Opt-H2K-PV",
  "input|Opt-HRVonly",
  "input|Opt-HRVspec",
- "input|Opt-HVACSystem",
+ "input|Opt-Heating-Cooling",
  "input|Opt-Location",
 # "input|Opt-MainWall",
 # "input|Opt-ResultHouseCode",
@@ -141,9 +141,12 @@ KeepTheseColumns =
  "input|Ruleset-Ventilation",
  "input|Run-Locale",
  "input|Run-Region",
+ "input|Opt-VentSystem",
+ "input|Opt-Windows",
  "input|upgrade-package-list",
  "output|AuxEnergyReq-HeatingGJ",
-# "output|AvgAirConditioning-COP",
+ "output|AnnDHWLoad-GJ",
+ "output|AvgAirConditioning-COP",
 # "output|ERS-Value",
  "output|Energy-CoolingGJ",
  "output|Energy-DHWGJ",
@@ -158,6 +161,7 @@ KeepTheseColumns =
  "output|EnergyProp_L",
  "output|EnergyWood_cord",
  "output|Gross-HeatLoss-GJ",
+ "output|Infil-VentHeatLoss-GJ",
  "output|HDDs",
 # "output|House-R-Value(SI)",
 # "output|LapsedTime",
@@ -188,8 +192,20 @@ KeepTheseColumns =
  #"status|infoMsgs",
  #"status|processingtime",
  #"status|substitute-h2k-err-msgs",
- "status|success"
+ "status|success",
+ "output|SpcHeatHP-GJ",
+ "output|SpcHeatElec-GJ",
+ "output|SpcHeatGas-GJ",
+ "output|SpcHeatOil-GJ",
+ "output|SpcHeatWood-GJ",
+ "output|SpcHeatProp-GJ",
+ "output|HotWaterElec-GJ",
+ "output|HotWaterGas-GJ",
+ "output|HotWaterOil-GJ",
+ "output|HotWaterWood-GJ",
+ "output|HotWaterProp-GJ"
  #"status|warnings"
+
 ]
 
 def filterGoodCols(line)
@@ -205,6 +221,8 @@ def filterGoodCols(line)
 end 
 
 data = {} 
+
+print "Combining!\n"
 
 print "\n\n"
 
@@ -243,12 +261,14 @@ def rebuildCSV(masterfile,files)
 
         colHeaders = line.split(",")
         
+        
         KeepTheseColumns.each do | keepColumn | 
           foundIndex = -1 
           index  = 0 
           colHeaders.each do | foundColumn | 
-            if ( keepColumn == foundColumn) then 
+            if ( keepColumn == foundColumn ) then 
               foundIndex = index
+              # print " KEEPING: #{foundColumn}\n"
             end 
             index = index+ 1 
           end 

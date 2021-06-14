@@ -399,8 +399,11 @@ module HTAPData
           valuesWithConditions = Hash.new
 
           for tagname,value in $values["base"]
-
-            tagindex = jsonRawOptions[attribute]["h2kSchema"].index(tagname) + 1
+            begin 
+              tagindex = jsonRawOptions[attribute]["h2kSchema"].index(tagname) + 1
+            rescue 
+              fatalerror("Could not locate tag \"#{tagname}\" in h2k schema for option \"#{attribute}\". Check definition of #{attribute} = #{optionEntry} ")
+            end 
             if ( ! tagindex.nil? )
               valuesWithConditions[tagindex.to_s] = Hash.new
               valuesWithConditions[tagindex.to_s] = { "conditions" => Hash.new }
@@ -442,7 +445,7 @@ module HTAPData
     rescue 
       fatalerror("Could not read ruleset  #{filename}.")
     end 
-#
+
     begin 
       rulesetHash =  JSON.parse(rulesetContents) 
     rescue 
@@ -680,7 +683,7 @@ module HTAPData
       end
 
       if ( $DoNotValidateOptions.include? option )
-        degug_out ("No need to validate #{option}\n")
+        debug_out ("No need to validate #{option}\n")
         next
       end 
 
@@ -731,7 +734,6 @@ module HTAPData
       end
 
       next if ( $LegacyOptionsToIgnore.include? attrib or $DoNotValidateOptions.include? attrib ) 
-
 
       debug_out ( "\n =CHOOSING=> #{attrib}-> #{choice} \n")
 
@@ -1040,6 +1042,231 @@ module HTAPData
 
   	return branch_name.strip, revision_number.strip
   end
+
+
+  def HTAPData.prepareResult4Json()
+    results = Hash.new
+    results[$aliasLongConfig] = {
+      "OptionsFile"         =>  "#{$gOptionFile}",
+      "Recovered-results"   =>  "#{$outputHCode}",
+      "version" => $gResults["version"]
+    }
+
+
+    case $HDDs.to_i
+    when 0..2999
+      climateZone = "Zone 4"
+    when 3000..3999
+      climateZone = "Zone 5"
+    when 4000..4999
+      climateZone = "Zone 6"
+    when 5000..5999
+      climateZone = "Zone 7a"
+    when 6000..6999
+      climateZone = "Zone 7b"
+    when 7000..9999999
+      climateZone = "Zone 8"
+    else
+      climateZone = "nil"
+      warn_out ("Could not compute climate zone for #{locale} - HDDs:#{$HDDs}")
+
+    end    
+
+
+    results[$aliasLongArch] = {   
+      "h2k-File"            =>  "#{$h2kFileName}",
+      "House-Builder"       =>  "#{$BuilderName}",
+      "EvaluationDate"      =>  "#{$EvalDate}",
+      "Year-Built"          =>  "#{$YearBuilt}",
+      "House-Type"          =>  "#{$HouseType}",
+      "House-Storeys"       =>  "#{$HouseStoreys}",
+			"Front-Orientation"   =>  "#{$HouseFrontOrientation}",
+      "Weather-Locale"      =>  "#{$Locale_model}",
+      "Base-Region"         =>  "#{$gBaseRegion}",
+      "Base-Locale"         =>  "#{$gBaseLocale}",
+			"Base-City"           =>  "#{$gBaseCity}",
+      "climate-zone"        =>  "#{climateZone}",
+      "fuel-heating-presub"  =>  "#{$ArchetypeData["pre-substitution"]["fuelHeating"]}",
+      "fuel-DHW-presub"     =>  "#{$ArchetypeData["pre-substitution"]["fuelDHW"]}",
+      "Ceiling-Type"        =>  "#{$Ceilingtype}",
+      "Area-Slab-m2"        =>  "#{$FoundationArea["Slab"].round(2)}",
+      "Area-Basement-m2"    => "#{$FoundationArea["Basement"].round(2)}",
+      "Area-Walkout-m2"     =>  "#{$FoundationArea["Walkout"].round(2)}",
+      "Area-Crawl-m2"       =>  "#{$FoundationArea["Crawl"].round(2)}",
+      "Floor-Area-m2"     => "#{$FloorArea.round(1)}",
+      "House-Volume-m3"   => "#{$HouseVolume.round(1)}",
+      "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
+      # "Win-R-value-S"     => "#{$rValueWin[1].round(3)}",
+      "Win-Area-m2-S"     => "#{$AreaWin_sum[1].round(1)}",
+      "Win-SHGC-SE"       => "#{$SHGCWin[2].round(3)}",
+      #  "Win-R-value-SE"    => "#{$rValueWin[2].round(3)}",
+      "Win-Area-m2-SE"    => "#{$AreaWin_sum[2].round(1)}",
+      "Win-SHGC-E"        => "#{$SHGCWin[3].round(3)}",
+      # "Win-R-value-E"     => "#{$rValueWin[3].round(3)}",
+      "Win-Area-m2-E"     => "#{$AreaWin_sum[3].round(1)}",
+      "Win-SHGC-NE"       => "#{$SHGCWin[4].round(3)}",
+      # "Win-R-value-NE"    => "#{$rValueWin[4].round(3)}",
+      "Win-Area-m2-NE"    => "#{$AreaWin_sum[4].round(1)}",
+      "Win-SHGC-N"        => "#{$SHGCWin[5].round(3)}",
+      # "Win-R-value-N"     => "#{$rValueWin[5].round(3)}",
+      "Win-Area-m2-N"     => "#{$AreaWin_sum[5].round(1)}",
+      "Win-SHGC-NW"       => "#{$SHGCWin[6].round(3)}",
+      # "Win-R-value-NW"    => "#{$rValueWin[6].round(3)}",
+      "Win-Area-m2-NW"    => "#{$AreaWin_sum[6].round(1)}",
+      "Win-SHGC-W"        => "#{$SHGCWin[7].round(3)}",
+      # "Win-R-value-W"     => "#{$rValueWin[7].round(3)}",
+      "Win-Area-m2-W"     => "#{$AreaWin_sum[7].round(1)}",
+      "Win-SHGC-SW"       => "#{$SHGCWin[8].round(3)}",
+      #  "Win-R-value-SW"    => "#{$rValueWin[8].round(3)}",
+      "Win-Area-m2-SW"    => "#{$AreaWin_sum[8].round(1)}",
+
+
+      "Wall-UAValue"      => "#{$UAValue["wall"].round(2)}" ,
+      "Window-UAValue"    => "#{$UAValue['win'].round(2)}", 
+      "ExposedFloor-UAValue"      => "#{$UAValue['floor'].round(2)}" ,
+      "Ceiling-UAValue"      => "#{$UAValue['ceiling'].round(2)}" ,
+		  "Wall-RSI"          => "#{$RSI['wall'].round(2)}" ,
+      "Ceiling-RSI"       => "#{$RSI['ceiling'].round(2)}" ,
+      "ExposedFloor-RSI"          => "#{$RSI["floor"].round(2)}" ,
+      "Archetype-ACH"   => "#{$ACHRate.round(1)}",
+
+
+      "Area-Door-m2"      => "#{$AreaComp['door'].round(3)}",
+      "Area-DoorWin-m2"   => "#{$AreaComp['doorwin'].round(3)}",
+      "Area-Windows-m2"   => "#{$AreaComp['win'].round(3)}",
+      "Area-Wall-m2"      => "#{$AreaComp['wall'].round(3)}",
+      "Area-Header-m2"    => "#{$AreaComp['header'].round(3)}",
+      "Area-Ceiling-m2"   => "#{$AreaComp['ceiling'].round(3)}",
+      "Area-ExposedFloor-m2"     => "#{$AreaComp['floor'].round(3)}",
+      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}"
+    }
+
+    if $gReportChoices then
+      results[$aliasLongInput] = Hash.new
+      results[$aliasLongInput] = { "Run-Region" =>  "#{$gRunRegion}",
+      "Run-Locale" =>  "#{$gRunLocale}",
+      "House-Upgraded"   =>  "#{$houseUpgraded}",
+      "House-ListOfUpgrades" => "#{$houseUpgradeList}",
+      "Ruleset-Fuel-Source" => "#{$gRulesetSpecs["fuel"]}",
+      "Ruleset-Ventilation" => "#{$gRulesetSpecs["vent"]}"
+    }
+    $gChoices.sort.to_h
+    for attribute in $gChoices.keys()
+      choice = $gChoices[attribute]
+      results[$aliasLongInput][attribute] = "#{choice}"
+    end
+    end
+
+    # duplicate? "Area-ExposedFloor-m2"=>  "#{$FoundationArea["Floor"].round(2)}",
+
+    results["analysis_BCStepCode"] = {
+      "TEDI_compliance" =>  BCStepCode.getStepByTEDI(climateZone,$TEDI_kWh_m2)
+    }
+
+    results[$aliasLongOutput] = {
+      "HDDs"              => $HDDs,
+      "Energy-Total-GJ"   => $gResults[$outputHCode]['avgEnergyTotalGJ'].round(1),
+      "ERSRefHouse_Energy-Total-GJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyTotalGJ"].round(1),
+      #"Ref-En-Total-GJ"   => $RefEnergy.round(1),
+      "Util-Bill-gross"   => $gResults[$outputHCode]['avgFuelCostsTotal$'].round(2),
+      "Util-PV-revenue"   => $gResults[$outputHCode]['avgPVRevenue'].round(2),
+      "Util-Bill-Net"     => $gResults[$outputHCode]['avgFuelCostsTotal$'].round(2) - $gResults[$outputHCode]['avgPVRevenue'].round(2),
+      "Util-Bill-Elec"    => $gResults[$outputHCode]['avgFuelCostsElec$'].round(2),
+      "Util-Bill-Gas"     => $gResults[$outputHCode]['avgFuelCostsNatGas$'].round(2),
+      "Util-Bill-Prop"    => $gResults[$outputHCode]['avgFuelCostsPropane$'].round(2),
+      "Util-Bill-Oil"     => $gResults[$outputHCode]['avgFuelCostsOil$'].round(2),
+      "Util-Bill-Wood"    => $gResults[$outputHCode]['avgFuelCostsWood$'].round(2),
+      "Energy-PV-kWh"     => $gResults[$outputHCode]['avgElecPVGenkWh'].round(0),
+      "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
+      "Infil-VentHeatLoss-GJ" => $gResults[$outputHCode]["avgVentAndInfilGJ"].round(1),
+      "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
+      "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
+      "ERSRefHouse_Energy-HeatingGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyHeatingGJ"].round(1),
+      "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),
+      "TotalAirConditioning-LoadGJ" => $TotalAirConditioningLoad.round(1) ,
+      "AvgAirConditioning-COP" => $AvgACCOP.round(1) ,
+      "Energy-CoolingGJ"  => $gResults[$outputHCode]['avgEnergyCoolingGJ'].round(1) ,
+      "ERSRefHouse_Energy-CoolingGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyCoolingGJ"].round(1),
+      "Energy-VentGJ"     => $gResults[$outputHCode]['avgEnergyVentilationGJ'].round(1) ,
+      "ERSRefHouse_Energy-VentGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyVentilationGJ"].round(1),
+      "Energy-DHWGJ"      => $gResults[$outputHCode]['avgEnergyWaterHeatingGJ'].round(1) ,
+      "ERSRefHouse_Energy-DHWGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyWaterHeatingGJ"].round(1),
+      "Energy-PlugGJ"     => $gResults[$outputHCode]['avgEnergyEquipmentGJ'].round(1) ,
+      "ESRefHouse_Energy-PlugGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyEquipmentGJ"].round(1),
+      "EnergyEleckWh"     => $gResults[$outputHCode]['avgFueluseEleckWh'].round(1) ,
+      "EnergyGasM3"       => $gResults[$outputHCode]['avgFueluseNatGasM3'].round(1) ,
+      "EnergyOil_l"       => $gResults[$outputHCode]['avgFueluseOilL'].round(1) ,
+      "EnergyProp_L"      => $gResults[$outputHCode]['avgFuelusePropaneL'].round(1) ,
+      "EnergyWood_cord"   => $gResults[$outputHCode]['avgFueluseWoodcord'].round(1) ,
+      # includes pellets
+      "TEDI_kWh_m2"       => $TEDI_kWh_m2.round(1) ,
+      "MEUI_kWh_m2"       => $MEUI_kWh_m2.round(1) ,
+      "ERS-Value"         => $gERSNum.round(1) ,
+      "NumTries"          => $NumTries.round(1) ,
+      "LapsedTime"        => $runH2KTime.round(2) ,
+      "PEAK-Heating-W"    => $gResults[$outputHCode]['avgOthPeakHeatingLoadW'].round(1) ,
+      "PEAK-Cooling-W"    => $gResults[$outputHCode]['avgOthPeakCoolingLoadW'].round(1) ,
+      "DesignTemp-Heating-oC" => $gResults[$outputHCode]["annual"]["design_Temp"]["heating_C"].round(1)
+#      "House-R-Value(SI)" => $RSI['house'].round(3)
+    }
+
+    if $ExtraOutput1 then
+      results[$aliasLongOutput]["EnvTotalHL-GJ"]     =  $gResults[$outputHCode]['EnvHLTotalGJ'].round(1)
+      results[$aliasLongOutput]["EnvCeilHL-GJ"]      =  $gResults[$outputHCode]['EnvHLCeilingGJ'].round(1)
+      results[$aliasLongOutput]["EnvWallHL-GJ"]      =  $gResults[$outputHCode]['EnvHLMainWallsGJ'].round(1)
+      results[$aliasLongOutput]["EnvWinHL-GJ"]       =  $gResults[$outputHCode]['EnvHLWindowsGJ'].round(1)
+      results[$aliasLongOutput]["EnvDoorHL-GJ"]      =  $gResults[$outputHCode]['EnvHLDoorsGJ'].round(1)
+      results[$aliasLongOutput]["EnvFloorHL-GJ"]     =  $gResults[$outputHCode]['EnvHLExpFloorsGJ'].round(1)
+      results[$aliasLongOutput]["EnvCrawlHL-GJ"]     =  $gResults[$outputHCode]['EnvHLCrawlspaceGJ'].round(1)
+      results[$aliasLongOutput]["EnvSlabHL-GJ"]      =  $gResults[$outputHCode]['EnvHLSlabGJ'].round(1)
+      results[$aliasLongOutput]["EnvBGBsemntHL-GJ"]  =  $gResults[$outputHCode]['EnvHLBasementBGWallGJ'].round(1)
+      results[$aliasLongOutput]["EnvAGBsemntHL-GJ"]  =  $gResults[$outputHCode]['EnvHLBasementAGWallGJ'].round(1)
+      results[$aliasLongOutput]["EnvBsemntFHHL-GJ"]  =  $gResults[$outputHCode]['EnvHLBasementFlrHdrsGJ'].round(1)
+      results[$aliasLongOutput]["EnvPonyWallHL-GJ"]  =  $gResults[$outputHCode]['EnvHLPonyWallGJ'].round(1)
+      results[$aliasLongOutput]["EnvFABsemntHL-GJ"]  =  $gResults[$outputHCode]['EnvHLFlrsAbvBasementGJ'].round(1)
+      results[$aliasLongOutput]["EnvAirLkVntHL-GJ"]  =  $gResults[$outputHCode]['EnvHLAirLkVentGJ'].round(1)
+      results[$aliasLongOutput]["AnnDHWLoad-GJ"]     =  $gResults[$outputHCode]['AnnHotWaterLoadGJ'].round(1)
+
+      results[$aliasLongOutput]["SpcHeatElec-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatElecGJ'].round(1)
+      results[$aliasLongOutput]["SpcHeatHP-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatHPGJ'].round(1)
+      results[$aliasLongOutput]["SpcHeatGas-GJ"]     = $gResults[$outputHCode]['AnnSpcHeatGasGJ'].round(1)
+      results[$aliasLongOutput]["SpcHeatOil-GJ"]     = $gResults[$outputHCode]['AnnSpcHeatOilGJ'].round(1)
+      results[$aliasLongOutput]["SpcHeatProp-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatPropGJ'].round(1)
+      results[$aliasLongOutput]["SpcHeatWood-GJ"]    = $gResults[$outputHCode]['AnnSpcHeatWoodGJ'].round(1)
+      results[$aliasLongOutput]["HotWaterElec-GJ"]   = $gResults[$outputHCode]['AnnHotWaterElecGJ'].round(1)
+      results[$aliasLongOutput]["HotWaterGas-GJ"]    = $gResults[$outputHCode]['AnnHotWaterGasGJ'].round(1)
+      results[$aliasLongOutput]["HotWaterOil-GJ"]    = $gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)
+      results[$aliasLongOutput]["HotWaterProp-GJ"]   = $gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)
+      results[$aliasLongOutput]["HotWaterWood-GJ"]   = $gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)
+    end
+
+
+    results[$aliasLongStatus] = Hash.new
+    $gStatus.keys.each do | status_type |
+      results[$aliasLongStatus][status_type] = "#{$gStatus[status_type]}"
+    end
+
+    results[$aliasLongStatus]["errors"] = Array.new
+    results[$aliasLongStatus]["errors"] = $gErrors
+    results[$aliasLongStatus]["warnings"] = Array.new
+    results[$aliasLongStatus]["warnings"] = $gWarnings
+    results[$aliasLongStatus]["infoMsgs"] = Array.new
+    results[$aliasLongStatus]["infoMsgs"] = $gInfoMsgs
+    results[$aliasLongStatus]["success"] = $allok
+
+    myEndProcessTime = Time.now
+    totalDiff = myEndProcessTime - $startProcessTime
+    results[$aliasLongStatus]["processingtime"]  = $totalDiff
+    if ( $autoEstimateCosts ) then
+      results[$aliasLongCosts] = $costEstimates
+    end
+
+    return results
+
+  end 
+
+
+
 
   def self.formatSqFtSqM(area)
     return "--".rjust($numPad) if numOrDash(area) == "--"

@@ -119,7 +119,11 @@
       "LEEP_Pathways": "LEEP_Pathways",
       "NBC9_36": "NBC9_36",
       "NBC9_36_noHRV": "NBC9_36_noHRV",
-      "NBC9_36_HRV": "NBC9_36_HRV"
+      "NBC9_36_HRV": "NBC9_36_HRV",
+      "ArchetypeRoadmapping_oil": "ArchetypeRoadmapping_oil",
+      "ArchetypeRoadmapping_gas": "ArchetypeRoadmapping_gas",
+      "ArchetypeRoadmapping_elec": "ArchetypeRoadmapping_elec", 
+      "ArchetypeRoadmapping_auto": "ArchetypeRoadmapping_auto"
     },
     "default": "NA",
     "stop-on-error": true
@@ -1287,6 +1291,34 @@
           }
         }
       },
+      "ACH_10": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "10.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "ACH_8": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "8.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
       "ACH_7": {
         "h2kMap": {
           "base": {
@@ -1773,6 +1805,190 @@
           ]
         }
       },
+      "dbl-clear-u3.85": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 3.85,
+          "SHGC": 0.65,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "dbl-clear-u3.85",
+            "<Opt-win-E-CON>":  "dbl-clear-u3.85",
+            "<Opt-win-N-CON>":  "dbl-clear-u3.85",
+            "<Opt-win-W-CON>":  "dbl-clear-u3.85",
+            "<Opt-win-SE-CON>": "dbl-clear-u3.85",
+            "<Opt-win-SW-CON>": "dbl-clear-u3.85",
+            "<Opt-win-NE-CON>": "dbl-clear-u3.85",
+            "<Opt-win-NW-CON>": "dbl-clear-u3.85"
+          }
+        },
+        "costs": {
+          "components": [
+          ],
+          "custom-costs": {}
+        }
+      },      
+      "dbl-clear-u3.33": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 3.33,
+          "SHGC": 0.65,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "dbl-clear-u3.33",
+            "<Opt-win-E-CON>":  "dbl-clear-u3.33",
+            "<Opt-win-N-CON>":  "dbl-clear-u3.33",
+            "<Opt-win-W-CON>":  "dbl-clear-u3.33",
+            "<Opt-win-SE-CON>": "dbl-clear-u3.33",
+            "<Opt-win-SW-CON>": "dbl-clear-u3.33",
+            "<Opt-win-NE-CON>": "dbl-clear-u3.33",
+            "<Opt-win-NW-CON>": "dbl-clear-u3.33"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "dbl-clear-u3.13": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 3.13,
+          "SHGC": 0.63,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "dbl-clear-u3.13",
+            "<Opt-win-E-CON>": "dbl-clear-u3.13",
+            "<Opt-win-N-CON>": "dbl-clear-u3.13",
+            "<Opt-win-W-CON>": "dbl-clear-u3.13",
+            "<Opt-win-SE-CON>": "dbl-clear-u3.13",
+            "<Opt-win-SW-CON>": "dbl-clear-u3.13",
+            "<Opt-win-NE-CON>": "dbl-clear-u3.13",
+            "<Opt-win-NW-CON>": "dbl-clear-u3.13"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },      
+      "dbl-clear-u2.94": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 2.94,
+          "SHGC": 0.61,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "dbl-clear-u2.94",
+            "<Opt-win-E-CON>":  "dbl-clear-u2.94",
+            "<Opt-win-N-CON>":  "dbl-clear-u2.94",
+            "<Opt-win-W-CON>":  "dbl-clear-u2.94",
+            "<Opt-win-SE-CON>": "dbl-clear-u2.94",
+            "<Opt-win-SW-CON>": "dbl-clear-u2.94",
+            "<Opt-win-NE-CON>": "dbl-clear-u2.94",
+            "<Opt-win-NW-CON>": "dbl-clear-u2.94"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "dbl-clear-u2.13": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 2.13,
+          "SHGC": 0.53,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "dbl-clear-u2.13",
+            "<Opt-win-E-CON>":  "dbl-clear-u2.13",
+            "<Opt-win-N-CON>":  "dbl-clear-u2.13",
+            "<Opt-win-W-CON>":  "dbl-clear-u2.13",
+            "<Opt-win-SE-CON>": "dbl-clear-u2.13",
+            "<Opt-win-SW-CON>": "dbl-clear-u2.13",
+            "<Opt-win-NE-CON>": "dbl-clear-u2.13",
+            "<Opt-win-NW-CON>": "dbl-clear-u2.13"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },  
+      "dbl-clear-u1.8": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 1.8,
+          "SHGC": 0.35,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "dbl-clear-u1.8",
+            "<Opt-win-E-CON>":  "dbl-clear-u1.8",
+            "<Opt-win-N-CON>":  "dbl-clear-u1.8",
+            "<Opt-win-W-CON>":  "dbl-clear-u1.8",
+            "<Opt-win-SE-CON>": "dbl-clear-u1.8",
+            "<Opt-win-SW-CON>": "dbl-clear-u1.8",
+            "<Opt-win-NE-CON>": "dbl-clear-u1.8",
+            "<Opt-win-NW-CON>": "dbl-clear-u1.8"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "dbl-one-coat-u1.6": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "argon",
+          "coat": "LowE-LowGain",
+          "u-value": 1.6,
+          "SHGC": 0.3,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>":  "dbl-one-coat-u1.6",
+            "<Opt-win-E-CON>":  "dbl-one-coat-u1.6",
+            "<Opt-win-N-CON>":  "dbl-one-coat-u1.6",
+            "<Opt-win-W-CON>":  "dbl-one-coat-u1.6",
+            "<Opt-win-SE-CON>": "dbl-one-coat-u1.6",
+            "<Opt-win-SW-CON>": "dbl-one-coat-u1.6",
+            "<Opt-win-NE-CON>": "dbl-one-coat-u1.6",
+            "<Opt-win-NW-CON>": "dbl-one-coat-u1.6"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },      
+      
       "NC-2g-HG-u1.82": {
         "characteristics": {
           "panes": 2,
@@ -3473,6 +3689,46 @@
           ]
         }
       },
+      "CeilR20": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "20"
+          }
+        },
+        "costs": {
+          "components": [
+            
+          ],
+          "custom-costs": {}
+        }
+      },   
+    "CeilR25": {
+      "h2kMap": {
+        "base": {
+          "<Opt-Ceiling>": "NA",
+          "OPT-H2K-EffRValue": "25"
+        }
+      },
+      "costs": {
+        "components": [],
+        "custom-costs": {}
+      }
+    },
+    
+    
+      "CeilR30": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "30"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
       "CeilR40": {
         "h2kMap": {
           "base": {
@@ -4408,6 +4664,55 @@
           ]
         }
       },
+      "Generic_Wall_R-07-eff": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "7.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },      
+      "Generic_Wall_R-10-eff": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "Generic_Wall_R-15-eff": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "15.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "Generic_Wall_R-17-eff": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "17.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      
       "Stud_2x6_R16": {
         "h2kMap": {
           "base": {
@@ -6378,6 +6683,41 @@
           ]
         }
       },
+      "VintageR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+
+          ]
+        }
+      }, 
+      "VintageR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      }, 
+      "VintageR17": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "17.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },                
       "WoodFrameEffR10": {
         "h2kMap": {
           "base": {
@@ -6559,6 +6899,30 @@
           ]
         }
       },
+      "VintageR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+            
+          ]
+        }
+      },
+      "VintageR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },      
       "xps1inEffR5": {
         "h2kMap": {
           "base": {
@@ -9001,6 +9365,144 @@
           ]
         }
       },
+      "VintageR3": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "3"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+          ]
+        }
+      },    
+      "VintageR10": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "10"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "VintageR20": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "20"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "VintageR25": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "25"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "VintageR30": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "32"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      
+      
+      "BaseExpFloor-R31": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "31"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:r31_batt"
+          ]
+        }
+      },
+      "ExpFloorFlash&Batt-R36": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "36"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:spray_foam_2pd_urethane:5.5in_thickness"
+          ]
+        }
+      },
+      "ExpFloorFoamed-R52": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "Foamed-R52",
+            "OPT-H2K-EffRValue": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+				"insulation:spray_foam:2pound_urethane:7.5in_thickness",
+				"insulation:spray_foam:38mm:r6/inch"
+          ]
+        }
+      },
+      "NWTCrawlFlr": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "30"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "VintageR30": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "32"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      
+      
       "BaseExpFloor-R31": {
         "h2kMap": {
           "base": {
@@ -9331,7 +9833,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "None",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1EqpType": "5",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
@@ -9359,7 +9861,7 @@
             "Opt-H2K-SysType1": "Furnace",
             "Opt-H2K-SysType2": "AirConditioning",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1EqpType": "5",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
@@ -9371,6 +9873,7 @@
             "Opt-H2K-Type2Type": "1",
             "Opt-H2K-Type2CapOpt": "2",
             "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-CoolSpecType": "COP", 
             "Opt-H2K-Type2CoolCOP": "4.27",
             "Opt-H2K-CoolOperWindow": "4"
           }
@@ -9395,7 +9898,7 @@
             "Opt-H2K-SysType1": "Furnace",             
             "Opt-H2K-SysType2": "AirHeatPump",
             "Opt-H2K-Type1Fuel": "2",
-            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1EqpType": "5",
             "Opt-H2K-Type1CapOpt": "2",
             "Opt-H2K-Type1CapVal": "NA",
             "Opt-H2K-Type1EffType": "true",
@@ -9403,16 +9906,16 @@
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "true",
             "Opt-H2K-Type2CCaseH": "60",
-            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
-            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapOpt": "3",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2HeatCOP": "3.66",
             "Opt-H2K-Type2RatingTemp": "8.3",            
-            "Opt-H2K-Type2CoolCOP": "NA",
+            "Opt-H2K-Type2CoolCOP": "4.27",
             "Opt-H2K-Type2CutoffType": "1",
             "Opt-H2K-Type2CutoffTemp": "NA",
-            "Opt-H2K-CoolOperWindow": "25"
+            "Opt-H2K-CoolOperWindow": "4"
           }
         },
         "costs": {
@@ -9433,6 +9936,50 @@
           ]
         }
       },
+      "oil-hybrid": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirHeatPump",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "85",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "3",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2HeatCOP": "3.66",
+            "Opt-H2K-Type2RatingTemp": "8.3",
+            "Opt-H2K-CoolSpecType": "SEER",
+            "Opt-H2K-Type2CoolCOP": "17",
+            "Opt-H2K-Type2CutoffType": "1",
+            "Opt-H2K-Type2CutoffTemp": "NA",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+            {
+              "H2KHouseInfo.HVAC/Furnace/capacity_kW": {
+                "per?14": "furnace:94%_afue_vs_2_stage:70_mbtuh_input:19.5_kw_max_output:incl._vent_kit_&_hrv_interlock"
+              }
+            },
+            {
+              "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                "per?14": "ashp:conventional"
+              }
+            },
+            "ducting:central_forced_air"
+          ]
+        }
+      },      
       "ASHP": {
         "h2kMap": {
           "base": {
@@ -9447,16 +9994,16 @@
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "true",
             "Opt-H2K-Type2CCaseH": "60",
-            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
             "Opt-H2K-Type2CapOpt": "2",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2HeatCOP": "3.66",
             "Opt-H2K-Type2RatingTemp": "8.3",
-            "Opt-H2K-Type2CoolCOP": "NA",
+            "Opt-H2K-Type2CoolCOP": "4.0",
             "Opt-H2K-Type2CutoffType": "1",
             "Opt-H2K-Type2CutoffTemp": "NA",
-            "Opt-H2K-CoolOperWindow": "25"
+            "Opt-H2K-CoolOperWindow": "4"
           }
         },
         "costs": {
@@ -9517,9 +10064,10 @@
             "Opt-H2K-Type2CCaseH": "60",
             "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
-            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapOpt": "3",
+            "Opt-H2K-CoolSpecType": "SEER",
             "Opt-H2K-Type2CapVal": "NA",
-            "Opt-H2K-Type2CoolCOP": "4.27",
+            "Opt-H2K-Type2CoolCOP": "17",
             "Opt-H2K-CoolOperWindow": "4"
           }
         },
@@ -9745,15 +10293,17 @@
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "true",
             "Opt-H2K-Type2CCaseH": "60",
-            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
-            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapOpt": "3",
             "Opt-H2K-Type2CapVal": "NA",
-            "Opt-H2K-Type2HeatCOP": "4.6",
-            "Opt-H2K-Type2CoolCOP": "NA",
+            "Opt-H2K-Type2HeatCOP": "2.97",
+            "Opt-H2K-Type2RatingTemp": "-6.3",            
+            "Opt-H2K-CoolSpecType": "SEER",
+            "Opt-H2K-Type2CoolCOP": "18",
             "Opt-H2K-Type2CutoffType": "2",
             "Opt-H2K-Type2CutoffTemp": "-25",
-            "Opt-H2K-CoolOperWindow": "25"
+            "Opt-H2K-CoolOperWindow": "4"
           }
         },
         "costs": {
@@ -10214,6 +10764,53 @@
           ]
         }
       },
+      "oil-high-efficiency-noAC": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "94",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },      
+      "oil-high-efficiency": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "94",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "4.27",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
       "R2000-elec-baseboard": {
         "h2kMap": {
           "base": {
@@ -10271,7 +10868,227 @@
             "install_200a_service_instead_of_100a_service"
           ]
         }
-      }
+      },
+      "vintageGas74%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "74",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas78%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "78",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas80%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "80",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas87%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "87",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas90%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "90",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas92%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "92",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOil64%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "1",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "64",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOil68%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "1",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "68",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOil74%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "4",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "74",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOil83%": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "4",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "83",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOil87%": {
+         "h2kMap": {
+           "base": {
+              "Opt-H2K-SysType1": "Furnace",
+              "Opt-H2K-SysType2": "None",
+              "Opt-H2K-Type1Fuel": "3",
+              "Opt-H2K-Type1EqpType": "4",
+              "Opt-H2K-Type1CapOpt": "2",
+              "Opt-H2K-Type1CapVal": "NA",
+              "Opt-H2K-Type1EffType": "false",
+              "Opt-H2K-Type1EffVal": "87",
+              "Opt-H2K-Type1FanCtl": "1",
+              "Opt-H2K-Type1EEMotor": "false"
+            }
+          },
+          "costs": {
+            "custom-costs": {},
+            "components": []
+          }
+      }      
     },
     "default": "NA",
     "stop-on-error": true,
@@ -10297,6 +11114,7 @@
       "Opt-H2K-Type2CutoffType",
       "Opt-H2K-Type2CutoffTemp",
       "Opt-H2K-CoolOperWindow",
+      "Opt-H2K-CoolSpecType",      
       "Opt-H2K-P9-manufacturer",
       "Opt-H2K-P9-model",
       "Opt-H2K-P9-TPF",
@@ -10797,6 +11615,24 @@
           ]
         }
       },
+      "elec_tankless_ef0.96": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "4",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.96",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+
+          ]
+        }
+      },      
       "elec_heatpump_ef2.30": {
         "h2kMap": {
           "base": {
@@ -10835,6 +11671,25 @@
           ]
         }
       },
+
+      "ElecIDEAL": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "4",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "1.0",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+
+
       "ElecInstantaneous": {
         "h2kMap": {
           "base": {
@@ -11094,7 +11949,117 @@
 
           ]
         }
+      },
+      "vintageGasEF0.55": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.55",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "custom-costs": {}
+        }
+      },
+      "vintageGasEF0.57": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.575",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "custom-costs": {}
+        }
+      },
+      "vintageGasEF0.67": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.67",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "custom-costs": {}
+        }
+      },
+      "vintageOilEF0.52": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "3",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.52",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOilEF0.55": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "3",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.55",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageOilEF0.57": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "3",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.57",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageElecEF0.92": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "3",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.92",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "proxy": "elec_storage_ef0.89"
+        }
       }
+
     },
     "default": "BaseDHW",
     "stop-on-error": true,
