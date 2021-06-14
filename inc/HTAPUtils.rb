@@ -857,7 +857,7 @@ module HTAPData
       warn_out ("HTAP cannot use whole foundation and surf-by-surf definitions. Either use Opt-H2KFoundation... or Opt-Foundaiton... defintions")
       warn_out ("Ignoring Options Opt-FoundationSlabBelowGrade,Opt-FoundationSlabOnGrade,Opt-FoundationWallIntIns and  Opt-FoundationWallExtIns")
       $gChoicesChangedbyProgram = true
-      help_out(catagory,topic)
+      # help_out(catagory,topic)
 
     end
 

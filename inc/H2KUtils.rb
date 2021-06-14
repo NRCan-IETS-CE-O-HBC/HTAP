@@ -854,7 +854,7 @@ module H2KFile
   end  # function get Ceiling area.
 
   # =========================================================================================
-  # Get primary heating system type and fuel
+  # Get primary heating system fuel
   # =========================================================================================
   def H2KFile.getPrimaryHeatSys(elements)
 
@@ -876,6 +876,26 @@ module H2KFile
     end
 
     return fuelName
+  end
+  
+  # =========================================================================================
+  # Get primary heating system type
+  # =========================================================================================
+  def H2KFile.getPrimaryHeatSysType(elements)
+    sysType1 = ""
+    if elements["HouseFile/House/HeatingCooling/Type1/Baseboards"] != nil
+      sysType1 = "Baseboards"
+    elsif elements["HouseFile/House/HeatingCooling/Type1/Furnace"] != nil
+      sysType1 = "Furnace"
+    elsif elements["HouseFile/House/HeatingCooling/Type1/Boiler"] != nil
+      sysType1 = "Boiler"
+    elsif elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"] != nil
+      sysType1 = "Combo"
+    elsif elements["HouseFile/House/HeatingCooling/Type1/P9"] != nil
+      sysType1 = "P9"
+    end
+
+    return sysType1
   end
 
   # =========================================================================================
@@ -907,6 +927,17 @@ module H2KFile
     #tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
 
     return fuelName
+  end
+  
+  # =========================================================================================
+  # Get primary DHW system type and fuel
+  # =========================================================================================
+  def H2KFile.getPrimaryDHWSysTankType(elements)
+
+    sTankType = elements["HouseFile/House/Components/HotWater/Primary/TankType/English"].text
+    sTankType=sTankType.to_s
+
+    return sTankType.strip
   end
 
   # ======================================================================================

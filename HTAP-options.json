@@ -1472,7 +1472,22 @@
           ]
         }
       },
-      "ACH_3": {
+      "ACH_3_2": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "3.2",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_3.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
+	  "ACH_3": {
         "h2kMap": {
           "base": {
             "<Opt-ACH>": "3.0",
@@ -10626,6 +10641,27 @@
           "proxy": "gas-furnace-psc"
         }
       },
+      "NBC-propane-furnace": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "4",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "92",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "gas-furnace-psc"
+        }
+      },
       "NBC-gas-furnace-AC": {
         "h2kMap": {
           "base": {
@@ -11358,7 +11394,7 @@
             "Opt-IsActive": "true",
             "OPT-H2K-AirDistType": "1",
             "OPT-H2K-OpSched": "480",
-            "OPT-FlowCalc": "1",
+            "OPT-FlowCalc": "3",
             "OPT-H2K-HRVSupply": "NA",
             "OPT-H2K-Rating1": "78",
             "OPT-H2K-Rating2": "72",
@@ -11408,7 +11444,7 @@
             "Opt-IsActive": "true",
             "OPT-H2K-AirDistType": "1",
             "OPT-H2K-OpSched": "480",
-            "OPT-FlowCalc": "1",
+            "OPT-FlowCalc": "3",
             "OPT-H2K-HRVSupply": "NA",
             "OPT-H2K-Rating1": "60",
             "OPT-H2K-Rating2": "55",
@@ -11430,7 +11466,7 @@
             "Opt-IsActive": "true",
             "OPT-H2K-AirDistType": "1",
             "OPT-H2K-OpSched": "480",
-            "OPT-FlowCalc": "1",
+            "OPT-FlowCalc": "3",
             "OPT-H2K-HRVSupply": "NA",
             "OPT-H2K-Rating1": "0",
             "OPT-H2K-Rating2": "0",
@@ -11438,6 +11474,18 @@
             "OPT-H2K-FanPowerCalc": "NBC",
             "OPT-H2K-FanPower1": "NA",
             "OPT-H2K-FanPower2": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "VentFans_sre_0"
+        }
+      },
+      "NBC_noVNT": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "delete"
           }
         },
         "costs": {
@@ -11754,6 +11802,61 @@
           }
         }
       },
+      "NBC-HotWater_inst_gas": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.80",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+           "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+          ]
+        }
+      },
+      "NBC-HotWater_prop": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "4",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.575",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "proxy": "gas_storagetank_w/powervent_ef0.67",
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC-HotWater_inst_prop": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "4",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.80",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+           "dhw_heater:gas_fuelled:on-demand:ef_0.94"
+          ]
+        }
+      },
       "NBC-HotWater_elec": {
         "h2kMap": {
           "base": {
@@ -11769,6 +11872,25 @@
           "custom-costs": {
           },
           "proxy": "elec_storage_ef0.89"
+        }
+      },
+      "NBC-HotWater_inst_elec": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "4",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.936",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
         }
       },
       "NBC-HotWater_oil": {
@@ -11787,6 +11909,25 @@
           },
           "components": [
 
+          ]
+        }
+      },
+	  "NBC-HotWater_hp": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.22",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+             "dhw_heat_pump_water_heater:50_gal:ef_2.35"
           ]
         }
       },
@@ -11961,7 +12102,7 @@
       "none": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-HasDWHR": "NA",
+            "Opt-H2K-HasDWHR": "false",
             "Opt-H2K-DWHR-preheatShowerTank": "NA",
             "Opt-H2K-DWHR-Manufacturer": "NA",
             "Opt-H2K-DWHR-Model": "NA",
