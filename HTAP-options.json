@@ -12476,6 +12476,68 @@
 
           ]
         }
+      },
+      "nbc_2020_quad": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "8",
+            "Opt-H2K-FracAdultsHome": "0",
+            "Opt-H2K-NumChilds": "8",
+            "Opt-H2K-FracChildsHome": "0",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "73.64",
+            "Opt-H2K-Lighting": "0",
+            "Opt-H2K-Other": "0",
+            "Opt-H2K-Exterior": "0",
+            "Opt-H2K-DHWLoad": "704",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "nbc_2020_10plex": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "20",
+            "Opt-H2K-FracAdultsHome": "0",
+            "Opt-H2K-NumChilds": "20",
+            "Opt-H2K-FracChildsHome": "0",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-Appliances": "184.1",
+            "Opt-H2K-Lighting": "0",
+            "Opt-H2K-Other": "0",
+            "Opt-H2K-Exterior": "0",
+            "Opt-H2K-DHWLoad": "1760",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-FuelStove": "NA",
+            "Opt-H2K-StoveUse": "NA",
+            "Opt-H2K-FuelDryer": "NA",
+            "Opt-H2K-DryerUse": "NA",
+            "Opt-H2K-DryerLoc": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
       }
     },
     "default": "NA",
