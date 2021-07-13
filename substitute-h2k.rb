@@ -2664,12 +2664,15 @@ def processFile(h2kElements)
             # Option is active
             # Delete all existing systems
             locationText = "HouseFile/House/Ventilation/"
-            h2kElements[locationText].delete_element("WholeHouseVentilatorList")
-            h2kElements[locationText].delete_element("SupplementalVentilatorList")
+            h2kElements[locationText].delete_element("WholeHouseVentilatorList")          
 
             # Make fresh elements
             h2kElements[locationText].add_element("WholeHouseVentilatorList")
-            h2kElements[locationText].add_element("SupplementalVentilatorList")
+
+            if ( $outputHCode =~ /General/ )
+              h2kElements[locationText].add_element("SupplementalVentilatorList")
+              h2kElements[locationText].delete_element("SupplementalVentilatorList")
+            end 
 
             # Construct the HRV input framework
             createHRV(h2kElements)
@@ -3333,7 +3336,9 @@ def processFile(h2kElements)
                   # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
                   winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
                 end
-                H2KFile.addWin(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
+                #H2KFile.addWin(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
+                H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])              
+              
               end
             end
           end
@@ -3742,64 +3747,64 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       # Windows in walls elements
       locationText = "HouseFile/House/Components/Wall/Components/Window"
       h2kFileElements.each(locationText) do |element|
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
+          if element.elements["Construction/Type"].attributes["idref"] != nil
             # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            element.elements["Construction/Type"].attributes["idref"] = $useThisCodeID[winOrient]
           else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
           end
-          element[3][1].text = newValue
+          element.elements["Construction/Type"].text = newValue
         end
       end
       # Windows in basement
       locationText = "HouseFile/House/Components/Basement/Components/Window"
       h2kFileElements.each(locationText) do |element|
         # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
+          if element.elements["Construction/Type"].attributes["idref"] != nil
             # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            element.elements["Construction/Type"].attributes["idref"] = $useThisCodeID[winOrient]
           else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
           end
-          element[3][1].text = newValue
+          element.elements["Construction/Type"].text = newValue
         end
       end
       # Windows in walkout
       locationText = "HouseFile/House/Components/Walkout/Components/Window"
       h2kFileElements.each(locationText) do |element|
         # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
+          if element.elements["Construction/Type"].attributes["idref"] != nil
             # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            element.elements["Construction/Type"].attributes["idref"] = $useThisCodeID[winOrient]
           else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
           end
-          element[3][1].text = newValue
+          element.elements["Construction/Type"].text = newValue
         end
       end
       # Windows in crawlspace (closed or vented)
       locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
       h2kFileElements.each(locationText) do |element|
         # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+        if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
+          if element.elements["Construction/Type"].attributes["idref"] != nil
             # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            element.elements["Construction/Type"].attributes["idref"] = $useThisCodeID[winOrient]
           else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
           end
-          element[3][1].text = newValue
+          element.elements["Construction/Type"].text = newValue
         end
       end
 
@@ -3885,16 +3890,16 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         locationText = "HouseFile/House/Components/Ceiling/Components/Window"
         h2kFileElements.each(locationText) do |element|
           # 9=FacingDirection
-          if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+          if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
             # Check if each entry has an "idref" attribute and add if it doesn't.
             # Change each entry to reference a new <Codes> section $useThisCodeID[winOrient]
-            if element[3][1].attributes["idref"] != nil
+            if element.elements["Construction/Type"].attributes["idref"] != nil
               # ../Construction/Type
-              element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+              element.elements["Construction/Type"].attributes["idref"] = $useThisCodeID[winOrient]
             else
-              element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+              element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
             end
-            element[3][1].text = newValue
+            element.elements["Construction/Type"].text = newValue
           end
         end
       else
@@ -3979,16 +3984,16 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"
           h2kFileElements.each(locationText) do |element|
             # 9=FacingDirection
-            if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
               # Check if each house entry has an "idref" attribute and add if it doesn't.
               # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-              if element[3][1].attributes["idref"] != nil
+              if element.elements["Construction/Type"].attributes["idref"] != nil
                 # ../Construction/Type
-                element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+                element.elements["Construction/Type"].attributes["idref"] = $useThisCodeID[winOrient]
               else
-                element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+                element.elements["Construction/Type"].add_attribute("idref", $useThisCodeID[winOrient])
               end
-              element[3][1].text = newValue
+              element.elements["Construction/Type"].text = newValue
             end
           end
         else
