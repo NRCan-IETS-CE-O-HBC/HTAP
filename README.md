@@ -49,7 +49,7 @@ features under development for future versions of HTAP.
 
 ## Documentation ##
 
- - [Introduction to HTAP](./doc/Introduction%20to%20HTAP.docx): a summary of 
+ - [Introduction to HTAP](./doc/Introduction-to-HTAP.docx): a summary of 
    HTAP features and use
  - [HTAP-input-and-output.md](./doc/HTAP-input-and-output.md): Documentation 
    for HTAP input & output
