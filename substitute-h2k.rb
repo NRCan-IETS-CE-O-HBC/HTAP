@@ -4881,6 +4881,14 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               Process.waitpid(pid, 0)
             }
             status = $?.exitstatus
+
+          rescue SystemCallError => errmsg 
+
+            stream_out ("HOT2000 CLI could not be invoked. Trying again.\n")
+            log_out("HOT2000 CLI runtime error: #{errmsg}")
+            status = -1
+            sleep(2)
+
           rescue Timeout::Error
 
             begin
@@ -4888,8 +4896,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             rescue
               # do nothing - process may have died on its own?
             end
-
-
             status = -1
 
             sleep(2)
@@ -6597,7 +6603,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
             opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
               $cmdlineopts["extra_output1"] = true
-              $gReadROutStrTxt = true
+              $gReadROutStrTxt = false
               $ExtraOutput1 = true
             end
 
