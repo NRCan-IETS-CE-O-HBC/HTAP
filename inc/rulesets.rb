@@ -14,7 +14,7 @@ def ArchetypeRoadmapping_RuleSet( rule, elements )
    if ( rule =~ /auto/ ) then 
 
       primHeatFuelName = H2KFile.getPrimaryHeatSys( elements )
-      
+     
       secSysType = H2KFile.getSecondaryHeatSys( elements )
       yearbuilt = H2KFile.getYearBuilt(elements)
 
@@ -248,7 +248,7 @@ end
 # =========================================================================================
 def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
-   #debug_on
+   debug_on
    #debug_out "Applying ruleset #{ruleType}[#{ruleSpecs}] for HDD #{locale_HDD}\n"
    primHeatFuelName = ""
    secSysType = ""
@@ -261,6 +261,15 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
      primHeatFuelName = ruleSpecs["fuel"]
      secSysType = "Baseboard"
      primDHWFuelName = ruleSpecs["fuel"]
+
+     if ( primHeatFuelName !~ /Elec/i &&
+          primHeatFuelName !~ /oil/i
+          primHeatFuelName !~ /gas/i  ) then 
+
+          err_out("NBC 936 heating fuel (#{primHeatFuelName}) not specified correctly.")
+          err_out("NBC_936 fuel spec must be one of 'gas', 'oil' or 'electricity'")
+          fatalerror("Could not intrepret NBC 936 heating fuel.")
+     end 
    else
      debug_out ( " Fuel not specified, obtain from h2k file contnets \n")
      # Use system data
@@ -309,7 +318,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-oil-heat"
-   elsif (primHeatFuelName =~ /Elect/i) != nil   # value is "Electricity
+   elsif (primHeatFuelName =~ /Elec/i) != nil   # value is "Electricity
       if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
          $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-CCASHP"
       else
@@ -321,7 +330,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    # DHW Equipment performance requirements (Table 9.36.4.2)
    if (primDHWFuelName =~ /gas/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
-   elsif (primDHWFuelName =~ /Elect/i) != nil
+   elsif (primDHWFuelName =~ /Elec/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_elec"
    elsif (primDHWFuelName =~ /Oil/i) != nil
       $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_oil"

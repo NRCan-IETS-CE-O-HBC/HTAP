@@ -2499,14 +2499,20 @@ module H2KOutput
   end 
 
   def H2KOutput.parse_results(myResultCode,myElements)
-
+    debug_on
     myResults = Hash.new(&$blk)
     myResults[myResultCode] = Hash.new 
     myResults[myResultCode]["found"] = false  
-
+    debug_out("Results: #{myResultCode}\n")
     log_out("Querying HOT2000 file for result set #{myResultCode}.\n")
 
     # Make sure that the code we want is available
+
+    if ( myElements["HouseFile/AllResults"].nil? ) then 
+      err_out ("<AllResults> section is missing from h2k file.")
+      fatalerror("HOT2000 did not produce any results.")
+    end 
+
     myElements["HouseFile/AllResults"].elements.each do |element|
 
       houseCode =  element.attributes["houseCode"]
