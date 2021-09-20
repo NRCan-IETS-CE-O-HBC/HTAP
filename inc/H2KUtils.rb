@@ -2499,7 +2499,7 @@ module H2KOutput
   end 
 
   def H2KOutput.parse_results(myResultCode,myElements)
-    debug_on
+    
     myResults = Hash.new(&$blk)
     myResults[myResultCode] = Hash.new 
     myResults[myResultCode]["found"] = false  
