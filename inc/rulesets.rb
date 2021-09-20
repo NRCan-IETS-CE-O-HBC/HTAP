@@ -248,7 +248,6 @@ end
 # =========================================================================================
 def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
 
-   debug_on
    #debug_out "Applying ruleset #{ruleType}[#{ruleSpecs}] for HDD #{locale_HDD}\n"
    primHeatFuelName = ""
    secSysType = ""
@@ -263,7 +262,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
      primDHWFuelName = ruleSpecs["fuel"]
 
      if ( primHeatFuelName !~ /Elec/i &&
-          primHeatFuelName !~ /oil/i
+          primHeatFuelName !~ /oil/i && 
           primHeatFuelName !~ /gas/i  ) then 
 
           err_out("NBC 936 heating fuel (#{primHeatFuelName}) not specified correctly.")
