@@ -85,13 +85,19 @@ def shortenToLen(msg, len, truncStr=" [...] ")
 
 end
 
-def shortenToTerm(msg,extrashort = 0, truncStr="[...]")
+def shortenToTerm(msg,extrashort = 0, truncStr="[...]", newline = TRUE )
 
   setTermSize if ( $termWidth.nil? )
 
+  if ( newline ) then 
+    newline_char = "\n"
+  else 
+    newline_char = ""
+  end 
+
   if msg.length > $termWidth-extrashort-3 then
     msg.gsub!(/\n/,"")
-    shortmsg = "#{msg[0..$termWidth-extrashort-9]} #{truncStr}\n"
+    shortmsg = "#{msg[0..$termWidth-extrashort-9]} #{truncStr}#{newline_char}"
   else
     shortmsg = "#{msg}"
   end
@@ -108,6 +114,99 @@ def reportSRC(branch, revision)
   stream_out ("    - Revision: #{revision} \n")
   return
 end
+
+
+def update_run_status (
+  batch: nil , 
+  action: nil,
+  threads_delta: nil ,
+  threads_total: nil ,
+  frac_done: nil , 
+  run_count: nil ,
+  err_count: nil ,
+  time_left: nil 
+)
+
+  if (! batch.nil?  ) then 
+    $bufferStatus[:batch] = batch
+  end 
+
+  if (!  action.nil?  ) then 
+    $bufferStatus[:action] = action 
+  end 
+
+  if ( ! threads_delta.nil? ) then 
+    $bufferStatus[:current_threads] = $bufferStatus[:current_threads] + threads_delta
+
+  end 
+
+  if ( ! threads_total.nil?) then 
+    $bufferStatus[:threads_total] = threads_total
+  end 
+
+  if ( ! err_count.nil? ) then 
+    $bufferStatus[:err_count] = err_count
+  end
+
+  if ( ! run_count.nil? ) then 
+    $bufferStatus[:run_count] = run_count.to_i
+  end 
+
+  if ( ! time_left.nil? ) then 
+    $bufferStatus[:time_left] = time_left
+  end
+
+  if (! frac_done.nil? ) then 
+    $bufferStatus[:frac_done] = frac_done
+  end 
+
+  if ( $bufferStatus[:err_count] == 0 ) then 
+    err_txt = colourize("Errors: #{$bufferStatus[:err_count]}", :green)
+  else 
+    err_txt = colourize("Errors: #{$bufferStatus[:err_count]}", :red)
+  end 
+
+  update_txt = shortenToTerm(
+    msg = "  --> Batch ##{$bufferStatus[:batch]} [Runs Active: #{$bufferStatus[:current_threads]}/#{$bufferStatus[:threads_total]}, Runs done: #{$bufferStatus[:run_count]} (#{$bufferStatus[:frac_done]}%), #{err_txt}, ETA: #{$bufferStatus[:time_left]}] - #{$bufferStatus[:action]}",
+    extrashort = 0,
+    truncStr = '[...]',
+    newline=FALSE
+  )
+
+  update_buffer(update_txt)
+
+end 
+
+def update_buffer(new_msg) 
+   empty_line = " ".ljust($termWidth-1," ")
+   print "\r#{empty_line}"
+   buffer = "\r#{new_msg}" 
+   print buffer 
+end 
+
+
+def colourize(value, colour)
+	case colour
+		when :black then "\e[30m" + value.to_s + "\e[0m"
+		when :red then "\e[31m" + value.to_s + "\e[0m"
+		when :green then "\e[32m" + value.to_s + "\e[0m"
+		when :yellow then "\e[33m" + value.to_s + "\e[0m"
+		when :blue then "\e[34m" + value.to_s + "\e[0m"
+		when :magenta then "\e[35m" + value.to_s + "\e[0m"
+		when :cyan then "\e[36m" + value.to_s + "\e[0m"
+		when :white then "\e[37m" + value.to_s + "\e[0m"
+		when :bright_black then "\e[1m\e[30m" + value.to_s + "\e[0m"
+		when :bright_red then "\e[1m\e[31m" + value.to_s + "\e[0m"
+		when :bright_green then "\e[1m\e[32m" + value.to_s + "\e[0m"
+		when :bright_yellow then "\e[1m\e[33m" + value.to_s + "\e[0m"
+		when :bright_blue then "\e[1m\e[34m" + value.to_s + "\e[0m"
+		when :bright_magenta then "\e[1m\e[35m" + value.to_s + "\e[0m"
+		when :bright_cyan then "\e[1m\e[36m" + value.to_s + "\e[0m"
+		when :bright_white then "\e[1m\e[37m" + value.to_s + "\e[0m"
+		else value.to_s
+	end
+end
+
 # =========================================================================================
 # Optionally write text to buffer -----------------------------------
 # =========================================================================================
@@ -341,7 +440,7 @@ def debug_out_now(debmsg, callerID)
   else
     fullmsg = shortenToTerm(debmsg)
   end
-  print fullmsg
+  print colourize(fullmsg,:bright_black)
 
   if ($gTest_params["logfile"] )
     $fLOG.write(fullmsg)
@@ -394,7 +493,7 @@ def warn_out(msg)
 
   $gWarnings << msg
   stream_out "\n"
-  stream_out prettyList( " (?) WARNING:",msg)
+  stream_out prettyList(" (?) WARNING:",msg,:yellow)
   stream_out "\n"
 end
 
@@ -475,9 +574,21 @@ end
 # =========================================================================================
 # Write error message to screen, log for reporting, and set global error flag.
 # =========================================================================================
-def err_out(msg)
+def err_out(msg, reportnow=true)
 
-  stream_out "\n\n ERROR: #{msg}\n\n"
+  callerID = Hash.new
+  callerID = caller_info()
+  line     = callerID["line"]
+  file     = callerID["file"]
+  routine  = callerID["routine"]
+  msg.gsub(/^\n+/, "")
+  msg.gsub(/\n+$/, "")
+  msg += " (error reported by #{routine} - #{file}:#{line})"
+
+  
+  stream_out ("\n")
+  stream_out prettyList(" (!) ERROR:",msg,:red)
+  stream_out ("\n")
 
   if ($fLOG != nil )
     $fLOG.write("\n\n ERROR: #{msg}\n\n")
@@ -536,9 +647,15 @@ end
 
 # print a pretty line
 
-def prettyList(prefix,msg)
+def prettyList(prefix,msg,colour=nil)
 
   tgtWrapLen = $termWidth - prefix.length - 10
+
+  if ( colour.nil? ) then 
+    prefix_colourized = prefix 
+  else 
+    prefix_colourized = colourize(prefix,colour)
+  end 
 
   wrappedMsg = msg.gsub(/\n/, ' ').gsub(/(.{1,#{tgtWrapLen}})(\s+|$)/, "\\1\n").strip
   prettyMsg = ""
@@ -547,7 +664,7 @@ def prettyList(prefix,msg)
   first = true
   wrappedMsg.each_line do |line|
     if first then
-      prettyMsg += "#{prefix} #{line}"
+      prettyMsg += "#{prefix_colourized} #{line}"
       first = false
     else
       prettyMsg += "#{blankPrefix} #{line}"
@@ -574,7 +691,7 @@ def ReportMsgs()
 
     $fSUMMARY.write "status.info   = \"#{msg}\" \n"
 
-    $InfoBuffer += prettyList("   (-) Info -",msg)
+    $InfoBuffer += prettyList("   (-) Info -",msg,:blue)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
@@ -587,7 +704,7 @@ def ReportMsgs()
 
     $fSUMMARY.write "status.warning   = \"#{msg}\" \n"
 
-    $WarningBuffer += prettyList("   (?) WARNING -",msg)
+    $WarningBuffer += prettyList("   (?) WARNING -",msg, :yellow)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
@@ -599,21 +716,21 @@ def ReportMsgs()
   $gErrors.each  do |msg|
 
     $fSUMMARY.write "status.error    = \"#{msg}\" \n"
-    $ErrorBuffer += prettyList("   (!) ERROR -",msg)
+    $ErrorBuffer += prettyList("   (!) ERROR -",msg,:red)
 
 
 
   end
   if ($ErrorBuffer.to_s.gsub(/\s*/, "" ).empty?)
-    $ErrorBuffer = "   (nil)\n"
+    $ErrorBuffer = colourize("   (nil)",:green)+"\n"
   end
 
 
   if $allok then
-    status = "Task completed successfully"
+    status = colourize("Task completed successfully",:green)
     $fSUMMARY.write "status.success    = true\n"
   else
-    status = "Task failed"
+    status = colourize("Task failed",:red)
     $fSUMMARY.write "status.success    = false\n"
   end
 
@@ -628,9 +745,10 @@ def ReportMsgs()
   stream_out( " Total processing time: #{$totalDiff.to_f.round(2)} seconds\n" )
   if $program =~ /substitute-h2k\.rb/ then
     stream_out( " Total H2K execution time : #{$runH2KTime.to_f.round(2)} seconds\n" )
-    stream_out( " H2K evaluation attempts: #{$gStatus["H2KExecutionAttempts"]} \n\n" )
+    stream_out( " H2K evaluation attempts: #{$gStatus["H2KExecutionAttempts"]} \n" )
   end
 
+  stream_out "\n"
   stream_out " -> Informational messages:\n\n"
   stream_out "#{$InfoBuffer}\n"
 

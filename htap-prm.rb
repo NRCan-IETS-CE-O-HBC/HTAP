@@ -47,6 +47,17 @@ $gLocationHash  = Hash.new
 $gExtendedOutputFlag = ""
 $gHourlySimulationFlag = ""
 
+$bufferStatus = {:current_threads => 0,
+                 :total_threads => 0,
+                 :batch =>"",
+                 :action => "",
+                 :err_count => 0,
+                 :processed_count => 0,
+                 :frac_done => 0,
+                 :time_left => "TBD"
+}
+
+
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
 $gGenChoiceFileNum = 0
@@ -722,6 +733,7 @@ def run_these_cases(current_task_files)
 
       batchStartTime = Time.now
       fracCompleted = $choicefileIndex.to_f/numberOfFiles.to_f
+      
       debug_out ("> BATCH #{$batchCount}, Index: #{$choicefileIndex}, Complete: #{fracCompleted*100}% \n")
       timeMsg = ""
       if ( fracCompleted > 0.0 ) then
@@ -731,15 +743,25 @@ def run_these_cases(current_task_files)
         timeMsg = ", ~#{formatTimeInterval(timeRemaining)} remaining"
 
         debug_out "Time Differential = #{(timeNow -startRunsTime)}\n"
-
+        update_run_status(time_left: "#{formatTimeInterval(timeRemaining)}")
       end
 
-      stream_out ("   + Batch #{$batchCount} ( #{(fracCompleted*100).round(4)}% done, #{$choicefileIndex}/#{numberOfFiles} files processed so far#{timeMsg} ...) \n" )
+      batchLapsedTime = '0'
+
+
+      update_run_status(batch: $batchCount )     
+      update_run_status(action: "Initalizing")      
+      update_run_status(threads_total: $gNumberOfThreads )
+      update_run_status(run_count: $choicefileIndex.to_i)
+
+      update_run_status(frac_done: "#{(fracCompleted*100).round(2)}")
+
+      #stream_out ("   + Batch #{$batchCount} ( #{(fracCompleted*100).round(4)}% done, #{$choicefileIndex}/#{numberOfFiles} files processed so far#{timeMsg} ...) \n" )
       if ( $batchCount == 1 && $snailStart ) then
 
-        stream_out ("   |\n")
-        stream_out ("   +-> NOTE: \"SnailStart\" is active. Waiting for #{$snailStartWait} seconds between threads (on first batch ONLY!) \n\n")
-
+        #stream_out ("   |\n")
+        #stream_out ("   +-> NOTE: \"SnailStart\" is active. Waiting for #{$snailStartWait} seconds between threads (on first batch ONLY!) \n\n")
+        update_run_status(action: "Pausing between threads (Snail Start)")
       end
 
       # Empty arrays for current batch.
@@ -758,6 +780,7 @@ def run_these_cases(current_task_files)
       # Multi-threaded runs - Step 1: Spawn threads.
       for thread in 0..$ThreadsNeeded-1
 
+        update_run_status(action: "Spawning threads")
         # For this thread: Get the next choice file in the batch.
         $choicefiles[thread] = current_task_files[$choicefileIndex]
 
@@ -768,7 +791,7 @@ def run_these_cases(current_task_files)
 
         count = thread + 1
         #stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
-        stream_out ("     - Starting thread #{count}/#{$ThreadsNeeded} for sim ##{$choicefileIndex+1} ")
+        #stream_out ("     - Starting thread #{count}/#{$ThreadsNeeded} for sim ##{$choicefileIndex+1} ")
 
 
         # For this thread: Get the next choice file in the batch.
@@ -918,12 +941,12 @@ def run_these_cases(current_task_files)
           )
           
           
-
+          update_run_status(threads_delta: 1)
 
 
           $PIDS[thread] = pid
 
-          stream_out("(PID #{$PIDS[thread]})...")
+          #stream_out("(PID #{$PIDS[thread]})...")
 
 
 
@@ -949,21 +972,21 @@ def run_these_cases(current_task_files)
 
           if ( $batchCount == 1 && $snailStart ) then
 
-            stream_out ("  *SS-Wait")
+            #stream_out ("  *SS-Wait")
             for wait in 1..5
 
-              stream_out (".")
+              #stream_out (".")
 
               sleep($snailStartWait/5)
 
             end
 
-            stream_out( "*")
+            #stream_out( "*")
 
           end
 
 
-        stream_out (" done. \n")
+        #stream_out (" done. \n")
         $choicefileIndex = $choicefileIndex + 1
 
         # Create hash to hold results
@@ -984,12 +1007,12 @@ def run_these_cases(current_task_files)
       # Multi-threaded runs - Step 2: Monitor thread progress
       #=====================================================================================
       # Wait for threads to complete
-
+      update_run_status( action: "Monitoring thread progress" )
       for thread2 in 0..$ThreadsNeeded-1
-
+         update_run_status( action: "Monitoring progress on thread #{thread2+1}" )
          count = thread2 + 1
 
-         stream_out ("     - Waiting on PID: #{$PIDS[thread2]} (#{count}/#{$ThreadsNeeded})...")
+         #stream_out ("     - Waiting on PID: #{$PIDS[thread2]} (#{count}/#{$ThreadsNeeded})...")
 
           Process.wait($PIDS[thread2], 0)
 
@@ -997,28 +1020,32 @@ def run_these_cases(current_task_files)
 
           if ( status == 0 )
 
-            stream_out (" done.\n")
+            #stream_out (" done.\n")
 
           else
 
-            stream_out (" FAILED! (Exit status: #{status})\n")
+            #stream_out (" FAILED! (Exit status: #{status})\n")
 
             $RunResults["run-#{thread2}"]["status"]["success"] = false
             $RunResults["run-#{thread2}"]["status"]["errors"].push  " Run failed - substitute-h2k.rb returned status #{status}"
 
           end
+          update_run_status( action: "Shutting down thread ##{thread2+1}")
+          update_run_status( threads_delta: -1 )
 
       end
 
       #=====================================================================================
       # Multi-threaded runs - Step 3: Post-process and clean up.
-
+      update_run_status(action: "Parsing batch results")
       LEEPPathways.EmptyBuffers() if ($gLEEPPathwayExport )
 
       for thread3 in 0..$ThreadsNeeded-1
 
+
+
         count = thread3 + 1
-        stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
+        #stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
         Dir.chdir($gMasterPath)
         Dir.chdir($RunDirs[thread3])
 
@@ -1087,7 +1114,7 @@ def run_these_cases(current_task_files)
           # Extract data for use in pathway tool 
           LEEPPathways.ExtractPathwayData(thisRunResults) if ( $gLEEPPathwayExport )
 
-          stream_out (" done.\n")
+          #stream_out (" done.\n")
         end
 
         # if JSON output not found, attempt to parse summary-out file  
@@ -1147,16 +1174,16 @@ def run_these_cases(current_task_files)
           if tokenResults["status.success"] =~ /false/ then
             $runFailed = true
             $RunResults["run-#{thread3}"]["status"]["success"] = false
-            stream_out (" done (with errors).\n")
+            #stream_out (" done (with errors).\n")
           else
-            stream_out (" done.\n")
+            #stream_out (" done.\n")
           end
 
           debug_off
           
         else
             debug_out ("no output anywhere!\n")
-            stream_out (" Output couldn't be found! \n")
+            #stream_out (" Output couldn't be found! \n")
             $runFailed = true
         end
 
@@ -1165,7 +1192,7 @@ def run_these_cases(current_task_files)
             #stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
             $failures.write "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb\n"
             $FailedRuns.push "#{$choicefiles[thread3]} (dir: #{$SaveDirs[thread3]}) - no output from substitute-h2k.rb"
-            $FailedRunCount = $FailedRunCount + 1
+            #$FailedRunCount = $FailedRunCount + 1
 
             $RunResults["run-#{thread3}"]["status"]["success"] = false
             #if ( $RunResults["run-#{thread3}"]["status"]["errors"].nil? ) then
@@ -1207,7 +1234,8 @@ def run_these_cases(current_task_files)
       end
 
       errs = ""
-      stream_out ("     - Post-processing results:\n")
+      currentAction = "Postprocessing results"
+      #stream_out ("     - Post-processing results:\n")
 
       $outputlines = ""
 
@@ -1276,7 +1304,7 @@ def run_these_cases(current_task_files)
           $failures.write "#{$msg}\n"
           $FailedRuns.push $msg
           $FailedRunCount = $FailedRunCount + 1
-
+          update_run_status(err_count: $FailedRunCount )
         else
           
           thread = run.gsub(/run-/,"").to_i
@@ -1302,7 +1330,8 @@ def run_these_cases(current_task_files)
       headerLine = ""
       batchSuccessCount = 0
 
-      stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
+      update_run_status(action: "Writing CSV output" )
+      #stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
 
             #-Loop though all instances, and compute 
       $RunResults.each do |run,data|
@@ -1371,10 +1400,11 @@ def run_these_cases(current_task_files)
       debug_off 
       $fCSVout.write(outputlines)
       $fCSVout.flush
-      stream_out ("done.\n")
+      #stream_out ("done.\n")
 
 
       if ($gJSONize )
+        update_run_status(action: "Writing JSON output" )
         stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
         
@@ -1424,40 +1454,45 @@ def run_these_cases(current_task_files)
         firstJSONLine = false
         fJSONout.write txtOut
         fJSONout.flush
-        stream_out("done.\n")
+        #stream_out("done.\n")
       end
 
       if ($gLEEPPathwayExport )
-        stream_out("        -> Exporting LEEP Pathway Data ... ")
+        update_run_status(action: "Exporting Pathway file")
+        #stream_out("        -> Exporting LEEP Pathway Data ... ")
         LEEPPathways.ExportPathwayData()
-        stream_out("done.\n")
+        #stream_out("done.\n")
       end 
 
-
-      stream_out("        -> updating HTAP-prm.resume ... ")
+      update_run_status(action: "Updating HTAP.resume file")
+      #stream_out("        -> updating HTAP-prm.resume ... ")
       list = ""
       batchStatusUpdate.each do | run |
         list += "#{run}\n"
       end 
       $fResume.write list 
       batchStatusUpdate.clear 
-      stream_out("done.\n")
+      #stream_out("done.\n")
       $fResume.flush 
 
      $failures.flush
 
      $RunResults.clear
 
-     batchLapsedTime = "#{(Time.now - batchStartTime).round(0)} seconds"
+     batchLapsedTime = "#{(Time.now - batchStartTime).round(0)}"
 
-     stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs}\n\n")
+     #stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs}\n\n")
 
      HTAPConfig.countSuccessfulEvals(batchSuccessCount)
      HTAPConfig.writeConfigData()
 
+     update_run_status(action: "Batch complete")
+
      if ( ! $FinishedTheseFiles.has_value?(false) )
 
        $RunsDone = true
+
+       update_run_status(action: "Job complete")
 
      end
 
@@ -1466,10 +1501,13 @@ def run_these_cases(current_task_files)
 
   fJSONout.close
   Dir.chdir($gMasterPath)
+
+
+
   if ( $GiveUp ) then
-    stream_out(" - HTAP-prm: runs terminated due to error ----------\n\n")
+    stream_out("\n\n - HTAP-prm: runs terminated due to error ----------\n\n")
   else
-    stream_out(" - HTAP-prm: runs finished -------------------------\n\n")
+    stream_out("\n\n - HTAP-prm: runs finished -------------------------\n\n")
   end
 
   LEEPPathways.CloseOutputFiles() if ($gLEEPPathwayExport)
@@ -1804,7 +1842,7 @@ else
   # Smarter mode - embark on run according to definitions in the .run file (mesh supported for now)
   #  - First parse the *.run file
 
-  stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... ")
+  stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... \n")
 
   parse_def_file($gRunDefinitionsFile)
 
@@ -1852,9 +1890,9 @@ else
 
 
 
-  debug_out " ARCH: \n#{$archetypeFiles[0].pretty_inspect}\n"
+  #debug_out " ARCH: \n#{$archetypeFiles[0].pretty_inspect}\n"
 
-  stream_out (" done.\n")
+  #stream_out (" done.\n")
 
 
   case $gRunDefMode
