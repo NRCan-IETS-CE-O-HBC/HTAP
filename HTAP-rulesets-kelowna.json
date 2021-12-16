@@ -7,7 +7,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-1900-45",
       "Opt-Ceilings": "kelowna-elec-1900-45",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SolidWood"
   	},
@@ -18,7 +18,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-1945-60",
        "Opt-Ceilings": "kelowna-elec-1945-60",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SolidWood"
   	},
@@ -29,7 +29,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-1960-77",
        "Opt-Ceilings": "kelowna-elec-1960-77",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
@@ -40,7 +40,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-1977-83",
        "Opt-Ceilings": "kelowna-elec-1977-83",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
@@ -51,7 +51,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-1983-95",
        "Opt-Ceilings": "kelowna-elec-1983-95",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
@@ -62,7 +62,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-1995-05",
        "Opt-Ceilings": "kelowna-elec-1995-05",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
@@ -73,7 +73,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-2005-12",
        "Opt-Ceilings": "kelowna-elec-1995-05",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
@@ -84,7 +84,7 @@
       "Opt-FoundationWallIntIns": "kelowna-elec-2012-21",
       "Opt-Ceilings": "kelowna-elec-2012-21",
       "Opt-Heating-Cooling": "elec-baseboard",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "ElectricStorage",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	}, 
@@ -162,7 +162,7 @@
       "Opt-FoundationWallIntIns": "kelowna-gas-2005-12",
        "Opt-Ceilings": "kelowna-gas-1995-05",
       "Opt-Heating-Cooling": "vintageGas92%",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-DHWSystem": "BaseDHW",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
@@ -172,8 +172,8 @@
       "Opt-AboveGradeWall": "kelowna-gas-2012-21",
       "Opt-FoundationWallIntIns": "kelowna-gas-2012-21",
       "Opt-Ceilings": "kelowna-gas-2012-21",
-      "Opt-Heating-Cooling": "vintageGas90%",
-      "Opt-DHWSystem": "vintageGasEF0.55",
+      "Opt-Heating-Cooling": "vintageGas92%",
+      "Opt-DHWSystem": "BaseDHW",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	}
