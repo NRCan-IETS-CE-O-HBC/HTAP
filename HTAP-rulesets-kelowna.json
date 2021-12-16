@@ -162,7 +162,7 @@
       "Opt-FoundationWallIntIns": "kelowna-gas-2005-12",
        "Opt-Ceilings": "kelowna-gas-1995-05",
       "Opt-Heating-Cooling": "vintageGas92%",
-      "Opt-DHWSystem": "BaseDHW",
+      "Opt-DHWSystem": "vintageGasEF0.55",
       "Opt-VentSystem": "VentFans_sre_0",
       "Opt-Doors": "SteelPS"
   	},
