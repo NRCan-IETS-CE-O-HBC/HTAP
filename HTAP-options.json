@@ -1758,7 +1758,7 @@
       "ACH_Kelowna_stock_elec-1900-44": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "11.41",
+            "<Opt-ACH>": "10.59",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1775,7 +1775,7 @@
       "ACH_Kelowna_stock_elec-1945-60": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "9.26",
+            "<Opt-ACH>": "8.97",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1792,7 +1792,7 @@
       "ACH_Kelowna_stock_elec-1960-77": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "6.28",
+            "<Opt-ACH>": "6.51",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1809,7 +1809,7 @@
       "ACH_Kelowna_stock_elec-1977-83": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "6.00",
+            "<Opt-ACH>": "5.65",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1826,7 +1826,7 @@
       "ACH_Kelowna_stock_elec-1983-95": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "5.08",
+            "<Opt-ACH>": "4.31",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1843,7 +1843,7 @@
       "ACH_Kelowna_stock_elec-1995-05": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "4.14",
+            "<Opt-ACH>": "4.30",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1860,7 +1860,7 @@
       "ACH_Kelowna_stock_elec-2005-12": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "2.70",
+            "<Opt-ACH>": "3.40",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1877,7 +1877,7 @@
       "ACH_Kelowna_stock_elec-2012-21": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "2.70",
+            "<Opt-ACH>": "3.10",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1894,7 +1894,7 @@
       "ACH_Kelowna_stock_gas-1900-44": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "10.49",
+            "<Opt-ACH>": "10.74",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1928,7 +1928,7 @@
       "ACH_Kelowna_stock_gas-1960-77": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "6.28",
+            "<Opt-ACH>": "6.27",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1945,7 +1945,7 @@
       "ACH_Kelowna_stock_gas-1977-83": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "6.11",
+            "<Opt-ACH>": "6.20",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1962,7 +1962,7 @@
       "ACH_Kelowna_stock_gas-1983-95": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "4.87",
+            "<Opt-ACH>": "5.08",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1979,7 +1979,7 @@
       "ACH_Kelowna_stock_gas-1995-05": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "3.91",
+            "<Opt-ACH>": "4.30",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -1996,7 +1996,7 @@
       "ACH_Kelowna_stock_gas-2005-12": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "3.19",
+            "<Opt-ACH>": "3.35",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -2013,7 +2013,7 @@
       "ACH_Kelowna_stock_gas-2012-21": {
         "h2kMap": {
           "base": {
-            "<Opt-ACH>": "3.19",
+            "<Opt-ACH>": "3.10",
             "Opt-BuildingSite": "NA",
             "Opt-WallShield": "NA",
             "Opt-FlueShield": "NA"
@@ -3445,25 +3445,25 @@
           }
         }
       },
-      "kelowna-single-pane": {
+      "kelowna-200002": {
         "characteristics": {
-          "panes": 1,
+          "panes": 2,
           "fill": "air",
           "coat": "clear",
-          "u-value": 6.67,
-          "SHGC": 0.81,
-          "frame": "wood"
+          "u-value": 2.94,
+          "SHGC": 0.62,
+          "frame": "aluminum"
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-S-CON>":  "kelowna-single-pane",
-            "<Opt-win-E-CON>":  "kelowna-single-pane",
-            "<Opt-win-N-CON>":  "kelowna-single-pane",
-            "<Opt-win-W-CON>":  "kelowna-single-pane",
-            "<Opt-win-SE-CON>": "kelowna-single-pane",
-            "<Opt-win-SW-CON>": "kelowna-single-pane",
-            "<Opt-win-NE-CON>": "kelowna-single-pane",
-            "<Opt-win-NW-CON>": "kelowna-single-pane"
+            "<Opt-win-S-CON>":  "kelowna-200002",
+            "<Opt-win-E-CON>":  "kelowna-200002",
+            "<Opt-win-N-CON>":  "kelowna-200002",
+            "<Opt-win-W-CON>":  "kelowna-200002",
+            "<Opt-win-SE-CON>": "kelowna-200002",
+            "<Opt-win-SW-CON>": "kelowna-200002",
+            "<Opt-win-NE-CON>": "kelowna-200002",
+            "<Opt-win-NW-CON>": "kelowna-200002"
           }
         },
         "costs": {
@@ -3474,25 +3474,25 @@
           }
         }
       },
-      "kelowna-dbl-lowE": {
+      "kelowna-234004": {
         "characteristics": {
           "panes": 2,
           "fill": "argon",
           "coat": "low-e",
-          "u-value": 2.083,
-          "SHGC": 0.65,
-          "frame": "wood"
+          "u-value": 2.12,
+          "SHGC": 0.53,
+          "frame": "vinyl"
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-S-CON>":  "kelowna-dbl-lowE",
-            "<Opt-win-E-CON>":  "kelowna-dbl-lowE",
-            "<Opt-win-N-CON>":  "kelowna-dbl-lowE",
-            "<Opt-win-W-CON>":  "kelowna-dbl-lowE",
-            "<Opt-win-SE-CON>": "kelowna-dbl-lowE",
-            "<Opt-win-SW-CON>": "kelowna-dbl-lowE",
-            "<Opt-win-NE-CON>": "kelowna-dbl-lowE",
-            "<Opt-win-NW-CON>": "kelowna-dbl-lowE"
+            "<Opt-win-S-CON>":  "kelowna-234004",
+            "<Opt-win-E-CON>":  "kelowna-234004",
+            "<Opt-win-N-CON>":  "kelowna-234004",
+            "<Opt-win-W-CON>":  "kelowna-234004",
+            "<Opt-win-SE-CON>": "kelowna-234004",
+            "<Opt-win-SW-CON>": "kelowna-234004",
+            "<Opt-win-NE-CON>": "kelowna-234004",
+            "<Opt-win-NW-CON>": "kelowna-234004"
           }
         },
         "costs": {
@@ -3503,25 +3503,25 @@
           }
         }
       },
-      "kelowna-dbl-clear": {
+      "kelowna-224204": {
         "characteristics": {
           "panes": 2,
           "fill": "air",
-          "coat": "clear",
-          "u-value": 2.87,
-          "SHGC": 0.69,
+          "coat": "low-e",
+          "u-value": 1.82,
+          "SHGC": 0.47,
           "frame": "vinyl"
         },
         "h2kMap": {
           "base": {
-            "<Opt-win-S-CON>":  "kelowna-dbl-clear",
-            "<Opt-win-E-CON>":  "kelowna-dbl-clear",
-            "<Opt-win-N-CON>":  "kelowna-dbl-clear",
-            "<Opt-win-W-CON>":  "kelowna-dbl-clear",
-            "<Opt-win-SE-CON>": "kelowna-dbl-clear",
-            "<Opt-win-SW-CON>": "kelowna-dbl-clear",
-            "<Opt-win-NE-CON>": "kelowna-dbl-clear",
-            "<Opt-win-NW-CON>": "kelowna-dbl-clear"
+            "<Opt-win-S-CON>":  "kelowna-224204",
+            "<Opt-win-E-CON>":  "kelowna-224204",
+            "<Opt-win-N-CON>":  "kelowna-224204",
+            "<Opt-win-W-CON>":  "kelowna-224204",
+            "<Opt-win-SE-CON>": "kelowna-224204",
+            "<Opt-win-SW-CON>": "kelowna-224204",
+            "<Opt-win-NE-CON>": "kelowna-224204",
+            "<Opt-win-NW-CON>": "kelowna-224204"
           }
         },
         "costs": {
@@ -4359,7 +4359,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "19.07"
+            "OPT-H2K-EffRValue": "17.38"
           }
         },
         "costs": {
@@ -4374,7 +4374,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "20.67"
+            "OPT-H2K-EffRValue": "17.38"
           }
         },
         "costs": {
@@ -4389,7 +4389,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "26.10"
+            "OPT-H2K-EffRValue": "22.10"
           }
         },
         "costs": {
@@ -4404,7 +4404,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "29.70"
+            "OPT-H2K-EffRValue": "23.91"
           }
         },
         "costs": {
@@ -4419,7 +4419,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "34.88"
+            "OPT-H2K-EffRValue": "29.59"
           }
         },
         "costs": {
@@ -4434,7 +4434,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "38.47"
+            "OPT-H2K-EffRValue": "33.80"
           }
         },
         "costs": {
@@ -4449,7 +4449,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "41.25"
+            "OPT-H2K-EffRValue": "39.36"
           }
         },
         "costs": {
@@ -4464,7 +4464,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "41.25"
+            "OPT-H2K-EffRValue": "42.03"
           }
         },
         "costs": {
@@ -4479,7 +4479,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "22.17"
+            "OPT-H2K-EffRValue": "18.12"
           }
         },
         "costs": {
@@ -4494,7 +4494,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "24.73"
+            "OPT-H2K-EffRValue": "19.48"
           }
         },
         "costs": {
@@ -4509,7 +4509,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "27.38"
+            "OPT-H2K-EffRValue": "23.34"
           }
         },
         "costs": {
@@ -4524,7 +4524,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "30.21"
+            "OPT-H2K-EffRValue": "24.03"
           }
         },
         "costs": {
@@ -4539,7 +4539,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "34.90"
+            "OPT-H2K-EffRValue": "30.16"
           }
         },
         "costs": {
@@ -4554,7 +4554,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "38.59"
+            "OPT-H2K-EffRValue": "32.89"
           }
         },
         "costs": {
@@ -4569,7 +4569,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "41.71"
+            "OPT-H2K-EffRValue": "34.88"
           }
         },
         "costs": {
@@ -4584,7 +4584,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "NA",
-            "OPT-H2K-EffRValue": "41.71"
+            "OPT-H2K-EffRValue": "42.03"
           }
         },
         "costs": {
@@ -6951,8 +6951,8 @@
       "kelowna-elec-1945-60": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 8.94,
-            "HeaderExtInsRValue": 8.94
+            "OPT-H2K-EffRValue": 9.54,
+            "HeaderExtInsRValue": 9.54
           }
         },
         "costs": {
@@ -6966,8 +6966,8 @@
       "kelowna-elec-1960-77": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 10.95,
-            "HeaderExtInsRValue": 10.95
+            "OPT-H2K-EffRValue": 10.96,
+            "HeaderExtInsRValue": 10.96
           }
         },
         "costs": {
@@ -7011,8 +7011,8 @@
       "kelowna-elec-1995-05": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 15.53,
-            "HeaderExtInsRValue":15.53
+            "OPT-H2K-EffRValue": 15.54,
+            "HeaderExtInsRValue":15.54
           }
         },
         "costs": {
@@ -7041,8 +7041,8 @@
       "kelowna-elec-2012-21": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 16.43,
-            "HeaderExtInsRValue": 16.43
+            "OPT-H2K-EffRValue": 18.01,
+            "HeaderExtInsRValue": 18.01
           }
         },
         "costs": {
@@ -7086,8 +7086,8 @@
       "kelowna-gas-1960-77": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 10.72,
-            "HeaderExtInsRValue": 10.72
+            "OPT-H2K-EffRValue": 10.73,
+            "HeaderExtInsRValue": 10.73
           }
         },
         "costs": {
@@ -7116,8 +7116,8 @@
       "kelowna-gas-1983-95": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 14.60,
-            "HeaderExtInsRValue": 14.60
+            "OPT-H2K-EffRValue": 14.61,
+            "HeaderExtInsRValue": 14.61
           }
         },
         "costs": {
@@ -7131,8 +7131,8 @@
       "kelowna-gas-1995-05": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 15.03,
-            "HeaderExtInsRValue":15.03
+            "OPT-H2K-EffRValue": 15.45,
+            "HeaderExtInsRValue":15.45
           }
         },
         "costs": {
@@ -7146,8 +7146,8 @@
       "kelowna-gas-2005-12": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 16.10,
-            "HeaderExtInsRValue": 16.10
+            "OPT-H2K-EffRValue": 16.59,
+            "HeaderExtInsRValue": 16.59
           }
         },
         "costs": {
@@ -7161,8 +7161,8 @@
       "kelowna-gas-2012-21": {
         "h2kMap": {
           "base": {
-            "OPT-H2K-EffRValue": 16.10,
-            "HeaderExtInsRValue": 16.10
+            "OPT-H2K-EffRValue": 18.01,
+            "HeaderExtInsRValue": 18.01
           }
         },
         "costs": {
@@ -7686,7 +7686,7 @@
       "kelowna-elec-1900-45": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "4.24"
+            "H2K-Fdn-IntWallReff": "4.43"
           }
         },
         "costs": {
@@ -7697,7 +7697,7 @@
       "kelowna-elec-1945-60": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "4.07"
+            "H2K-Fdn-IntWallReff": "4.43"
           }
         },
         "costs": {
@@ -7708,7 +7708,7 @@
       "kelowna-elec-1960-77": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "7.74"
+            "H2K-Fdn-IntWallReff": "7.75"
           }
         },
         "costs": {
@@ -7752,7 +7752,7 @@
       "kelowna-elec-2005-12": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "13.56"
+            "H2K-Fdn-IntWallReff": "17.51"
           }
         },
         "costs": {
@@ -7763,7 +7763,7 @@
       "kelowna-elec-2012-21": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "13.56"
+            "H2K-Fdn-IntWallReff": "17.21"
           }
         },
         "costs": {
@@ -7774,7 +7774,7 @@
       "kelowna-gas-1900-45": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "3.86"
+            "H2K-Fdn-IntWallReff": "4.49"
           }
         },
         "costs": {
@@ -7851,7 +7851,7 @@
       "kelowna-gas-2012-21": {
         "h2kMap": {
           "base": {
-            "H2K-Fdn-IntWallReff": "14.02"
+            "H2K-Fdn-IntWallReff": "17.21"
           }
         },
         "costs": {
@@ -11232,6 +11232,166 @@
           ]
         }
       },
+      "elec-baseboard+AC-SEER8.5": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "1",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "NA",
+            "Opt-H2K-Type1EEMotor": "NA",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.45",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv",
+            "portable_room_ac"
+          ]
+        }
+      }, 
+      "elec-baseboard+AC-SEER9.5": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "1",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "NA",
+            "Opt-H2K-Type1EEMotor": "NA",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.52",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv",
+            "portable_room_ac"
+          ]
+        }
+      }, 
+      "elec-baseboard+AC-SEER10": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "1",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "NA",
+            "Opt-H2K-Type1EEMotor": "NA",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.57",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv",
+            "portable_room_ac"
+          ]
+        }
+      }, 
+      "elec-baseboard+AC-SEER12": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "1",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "NA",
+            "Opt-H2K-Type1EEMotor": "NA",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.808",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv",
+            "portable_room_ac"
+          ]
+        }
+      },
+      "elec-baseboard+AC-SEER14": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "1",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "1",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "NA",
+            "Opt-H2K-Type1EEMotor": "NA",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "3.03",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "traditional_electric_resistance_baseboard_heaters",
+            "ducting:direct-duct_hrv",
+            "portable_room_ac"
+          ]
+        }
+      },                   
       "pellet-stove": {
         "h2kMap": {
           "base": {
@@ -11907,6 +12067,87 @@
           "components": []
         }
       },
+      "vintageGas80%+AC-SEER-8.5": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "80",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.45",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas80%+AC-SEER-9.5": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "80",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.52",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },      
+      "vintageGas83%+AC-SEER-10": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "2",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "83",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.57",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
       "vintageGas87%": {
         "h2kMap": {
           "base": {
@@ -11947,6 +12188,33 @@
           "components": []
         }
       },
+      "vintageGas90%+AC-SEER-12": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "90",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "2.82",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
       "vintageGas92%": {
         "h2kMap": {
           "base": {
@@ -11960,6 +12228,33 @@
             "Opt-H2K-Type1EffVal": "92",
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "true"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "vintageGas92%+AC-SEER-14": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "92",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "3.03",
+            "Opt-H2K-CoolOperWindow": "4"
           }
         },
         "costs": {
@@ -12845,6 +13140,21 @@
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
             "Opt-H2K-EF": "0.575",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "76.2"
+          }
+        },
+        "costs": {
+          "custom-costs": {}
+        }
+      },
+      "vintageGasEF0.60": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "2",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.60",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "76.2"
           }
