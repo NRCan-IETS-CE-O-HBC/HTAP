@@ -3633,266 +3633,6 @@
           </WindowLegacy>
         </Layers>
       </Code>
-      <Code id='Code 316' nominalRValue='0'>
-        <Label>dbl-clear-u3.85</Label>
-        <Description>2 pane; clear; air fill; U=3.85</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.65' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.2597' edgeOfGlass='0.2597' frame='0.2597'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 317' nominalRValue='0'>
-        <Label>dbl-clear-u3.33</Label>
-        <Description>2 pane; clear; air fill; U=3.33</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.65' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.3003' edgeOfGlass='0.3003' frame='0.3003'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 318' nominalRValue='0'>
-        <Label>dbl-clear-u3.13</Label>
-        <Description>2 pane; clear; air fill; U=3.13</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.63' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.3195' edgeOfGlass='0.3195' frame='0.3195'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 319' nominalRValue='0'>
-        <Label>dbl-clear-u2.94</Label>
-        <Description>2 pane; clear; air fill; U=2.94</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.61' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.3401' edgeOfGlass='0.3401' frame='0.3401'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 320' nominalRValue='0'>
-        <Label>dbl-clear-u2.13</Label>
-        <Description>2 pane; clear; air fill; U=2.13</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.53' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.4695' edgeOfGlass='0.4695' frame='0.4695'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 321' nominalRValue='0'>
-        <Label>dbl-clear-u1.8</Label>
-        <Description>2 pane; clear; air fill; U=1.8</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.35' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.5556' edgeOfGlass='0.5556' frame='0.5556'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 322' nominalRValue='0'>
-        <Label>dbl-one-coat-u1.6</Label>
-        <Description>2 pane; LowE-LowGain; argon fill; U=1.6</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.3' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.625' edgeOfGlass='0.625' frame='0.625'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 323' nominalRValue='0'>
-        <Label>NC-2g-HG-u1.82</Label>
-        <Description>2 pane; clear; argon fill; U=1.82</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.5' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.5495' edgeOfGlass='0.5495' frame='0.5495'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 324' nominalRValue='0'>
-        <Label>NC-2g-MG-u1.82</Label>
-        <Description>2 pane; clear; argon fill; U=1.82</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.5495' edgeOfGlass='0.5495' frame='0.5495'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 325' nominalRValue='0'>
-        <Label>NC-2g-HG-u1.65</Label>
-        <Description>2 pane; LowE-HighGain; argon fill; U=1.65</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.51' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 326' nominalRValue='0'>
-        <Label>NC-2g-MG-u1.65</Label>
-        <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 327' nominalRValue='0'>
-        <Label>NC-2g-LG-u1.65</Label>
-        <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.19' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 328' nominalRValue='0'>
-        <Label>NC-3g-HG-u1.36</Label>
-        <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.46' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 329' nominalRValue='0'>
-        <Label>NC-3g-MG-u1.36</Label>
-        <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 330' nominalRValue='0'>
-        <Label>NC-3g-LG-u1.36</Label>
-        <Description>3 pane; LowE-LowGain; argon fill; U=1.36</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.165' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 331' nominalRValue='0'>
-        <Label>NC-3g-LG-u1.14</Label>
-        <Description>3 pane; LowE-LowGain; argon fill; U=1.14</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.17' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.8772' edgeOfGlass='0.8772' frame='0.8772'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 332' nominalRValue='0'>
-        <Label>NC-3g-HG-u1.08</Label>
-        <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.44' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 333' nominalRValue='0'>
-        <Label>NC-3g-LG-u0.85</Label>
-        <Description>3 pane; LowE-HighGain; argon fill; U=0.85</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.19' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='1.1765' edgeOfGlass='1.1765' frame='1.1765'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 334' nominalRValue='0'>
-        <Label>NC-3g-MG-u1.08</Label>
-        <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
-      <Code id='Code 335' nominalRValue='0'>
-        <Label>NC-3g-LG-u1.08</Label>
-        <Description>3 pane; LowE-LowGain; argon fill; U=1.08</Description>
-        <Layers>
-          <WindowLegacy frameHeight='10' shgc='0.165' rank='1'>
-            <Type code='1'>
-              <English/>
-              <French/>
-            </Type>
-            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
-          </WindowLegacy>
-        </Layers>
-      </Code>
       <Code id='Code 336' nominalRValue='0'>
         <Label>kelowna-single-pane</Label>
         <Description>1 pane; clear; air fill; U=6.67</Description>
@@ -3929,6 +3669,305 @@
               <French/>
             </Type>
             <RsiValues centreOfGlass='0.3484' edgeOfGlass='0.3484' frame='0.3484'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 339' nominalRValue='0'>
+        <Label>dbl-clear-u3.85</Label>
+        <Description>2 pane; clear; air fill; U=3.85</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.65' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.2597' edgeOfGlass='0.2597' frame='0.2597'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 340' nominalRValue='0'>
+        <Label>dbl-clear-u3.33</Label>
+        <Description>2 pane; clear; air fill; U=3.33</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.65' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.3003' edgeOfGlass='0.3003' frame='0.3003'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 341' nominalRValue='0'>
+        <Label>dbl-clear-u3.13</Label>
+        <Description>2 pane; clear; air fill; U=3.13</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.63' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.3195' edgeOfGlass='0.3195' frame='0.3195'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 342' nominalRValue='0'>
+        <Label>dbl-clear-u2.94</Label>
+        <Description>2 pane; clear; air fill; U=2.94</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.61' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.3401' edgeOfGlass='0.3401' frame='0.3401'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 343' nominalRValue='0'>
+        <Label>dbl-clear-u2.13</Label>
+        <Description>2 pane; clear; air fill; U=2.13</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.53' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.4695' edgeOfGlass='0.4695' frame='0.4695'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 344' nominalRValue='0'>
+        <Label>dbl-clear-u1.8</Label>
+        <Description>2 pane; clear; air fill; U=1.8</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.35' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.5556' edgeOfGlass='0.5556' frame='0.5556'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 345' nominalRValue='0'>
+        <Label>dbl-one-coat-u1.6</Label>
+        <Description>2 pane; LowE-LowGain; argon fill; U=1.6</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.3' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.625' edgeOfGlass='0.625' frame='0.625'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 346' nominalRValue='0'>
+        <Label>NC-2g-HG-u1.82</Label>
+        <Description>2 pane; clear; argon fill; U=1.82</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.5' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.5495' edgeOfGlass='0.5495' frame='0.5495'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 347' nominalRValue='0'>
+        <Label>NC-2g-MG-u1.82</Label>
+        <Description>2 pane; clear; argon fill; U=1.82</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.5495' edgeOfGlass='0.5495' frame='0.5495'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 348' nominalRValue='0'>
+        <Label>NC-2g-HG-u1.65</Label>
+        <Description>2 pane; LowE-HighGain; argon fill; U=1.65</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.51' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 349' nominalRValue='0'>
+        <Label>NC-2g-MG-u1.65</Label>
+        <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 350' nominalRValue='0'>
+        <Label>NC-2g-LG-u1.65</Label>
+        <Description>2 pane; LowE-LowGain; argon fill; U=1.65</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.19' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.6061' edgeOfGlass='0.6061' frame='0.6061'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 351' nominalRValue='0'>
+        <Label>NC-3g-HG-u1.36</Label>
+        <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.46' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 352' nominalRValue='0'>
+        <Label>NC-3g-MG-u1.36</Label>
+        <Description>3 pane; LowE-HighGain; argon fill; U=1.36</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 353' nominalRValue='0'>
+        <Label>NC-3g-LG-u1.36</Label>
+        <Description>3 pane; LowE-LowGain; argon fill; U=1.36</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.165' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.7353' edgeOfGlass='0.7353' frame='0.7353'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 354' nominalRValue='0'>
+        <Label>NC-3g-LG-u1.14</Label>
+        <Description>3 pane; LowE-LowGain; argon fill; U=1.14</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.17' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.8772' edgeOfGlass='0.8772' frame='0.8772'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 355' nominalRValue='0'>
+        <Label>NC-3g-HG-u1.08</Label>
+        <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.44' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 356' nominalRValue='0'>
+        <Label>NC-3g-LG-u0.85</Label>
+        <Description>3 pane; LowE-HighGain; argon fill; U=0.85</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.19' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='1.1765' edgeOfGlass='1.1765' frame='1.1765'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 357' nominalRValue='0'>
+        <Label>NC-3g-MG-u1.08</Label>
+        <Description>3 pane; LowE-HighGain; argon fill; U=1.08</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.26' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 358' nominalRValue='0'>
+        <Label>NC-3g-LG-u1.08</Label>
+        <Description>3 pane; LowE-LowGain; argon fill; U=1.08</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.165' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.9259' edgeOfGlass='0.9259' frame='0.9259'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 359' nominalRValue='0'>
+        <Label>kelowna-200002</Label>
+        <Description>2 pane; clear; air fill; U=2.94</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.62' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.3401' edgeOfGlass='0.3401' frame='0.3401'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 360' nominalRValue='0'>
+        <Label>kelowna-234004</Label>
+        <Description>2 pane; low-e; argon fill; U=2.12</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.53' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.4717' edgeOfGlass='0.4717' frame='0.4717'/>
+          </WindowLegacy>
+        </Layers>
+      </Code>
+      <Code id='Code 361' nominalRValue='0'>
+        <Label>kelowna-224204</Label>
+        <Description>2 pane; low-e; air fill; U=1.82</Description>
+        <Layers>
+          <WindowLegacy frameHeight='10' shgc='0.47' rank='1'>
+            <Type code='1'>
+              <English/>
+              <French/>
+            </Type>
+            <RsiValues centreOfGlass='0.5495' edgeOfGlass='0.5495' frame='0.5495'/>
           </WindowLegacy>
         </Layers>
       </Code>
