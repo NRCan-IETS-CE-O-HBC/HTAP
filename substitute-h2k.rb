@@ -2664,8 +2664,10 @@ def processFile(h2kElements)
             # Option is active
             # Delete all existing systems
             locationText = "HouseFile/House/Ventilation/"
+            begin 
             h2kElements[locationText].delete_element("WholeHouseVentilatorList")          
-
+            rescue 
+            end
             # Make fresh elements
             h2kElements[locationText].add_element("WholeHouseVentilatorList")
 

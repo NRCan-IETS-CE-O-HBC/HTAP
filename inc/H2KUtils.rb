@@ -663,9 +663,14 @@ module H2KFile
   # Get the name of the base file weather city
   # =========================================================================================
   def H2KFile.getWeatherCity(elements)
+    
+    begin 
+
     myWth_cityName = elements["HouseFile/ProgramInformation/Weather/Location/English"].text
     myWth_cityName.gsub!(/\s*/, '')    # Removes mid-line white space
-
+    rescue 
+      myWth_cityName = ""
+    end 
     return myWth_cityName
   end
 
