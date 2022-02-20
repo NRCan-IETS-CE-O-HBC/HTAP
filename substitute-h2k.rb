@@ -5464,6 +5464,25 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                                           ".#{h2kPostElements["HouseFile/Application/Version"].attributes["minor"]}"+
                                           "b#{h2kPostElements["HouseFile/Application/Version"].attributes["build"]}"
         
+		# Get data for embodied carbon calculation START	
+		$FootingLength = H2KFile.getFootingLength(h2kPostElements)
+		#$FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements) #TODO Qs (see H2KUtils.rb)
+		$FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
+        $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
+		$CeilingArea = H2KFile.getCeilingArea_for_EC(h2kPostElements)
+		$RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
+		$RoofInsulationArea = H2KFile.getRoofInsulationArea(h2kPostElements)
+		#debug_on
+		debug_out "FootingLength is #{$FootingLength}\n"
+		debug_out "FoundationWallArea is #{$FoundationWallArea}\n"
+		debug_out "FoundationSlabArea is #{$FoundationSlabArea}\n"
+		debug_out "FramedFloorArea is #{$FramedFloorArea}\n"
+		debug_out "CeilingArea is #{$CeilingArea}\n"
+		debug_out "RoofingArea is #{$RoofingArea}\n"
+		debug_out "RoofInsulationArea is #{$RoofInsulationArea}\n"
+		debug_off
+		# Get data for embodied carbon calculation END
+		
         $gResults[$outputHCode] = H2KOutput.parse_results($outputHCode,h2kPostElements)
 
         debug_off

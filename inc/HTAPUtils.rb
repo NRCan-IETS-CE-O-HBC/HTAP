@@ -1138,7 +1138,18 @@ module HTAPData
       "Area-Header-m2"    => "#{$AreaComp['header'].round(3)}",
       "Area-Ceiling-m2"   => "#{$AreaComp['ceiling'].round(3)}",
       "Area-ExposedFloor-m2"     => "#{$AreaComp['floor'].round(3)}",
-      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}"
+      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}",
+	  
+	  # Data for embodied carbon calculation START	
+	  "Footing-Length-m"        => $FootingLength,
+	  "Foundation-Wall-Area-m2" => $FoundationWallArea,
+	  "Foundation-Slab-Area-m2" => $FoundationSlabArea,
+	  "Framed-Floor-Area-m2"    => $FramedFloorArea,
+	  "Ceiling-Area-m2"         => $CeilingArea,
+	  "Roofing-Area-m2"         => $RoofingArea,
+	  "Roof-Insulation-Area-m2" => $RoofInsulationArea
+	  # Data for embodied carbon calculation END	
+
     }
 
     if $gReportChoices then
