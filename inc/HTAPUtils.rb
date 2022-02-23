@@ -1249,6 +1249,22 @@ module HTAPData
       results[$aliasLongOutput]["HotWaterOil-GJ"]    = $gResults[$outputHCode]['AnnHotWaterOilGJ'].round(1)
       results[$aliasLongOutput]["HotWaterProp-GJ"]   = $gResults[$outputHCode]['AnnHotWaterPropGJ'].round(1)
       results[$aliasLongOutput]["HotWaterWood-GJ"]   = $gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)
+
+      # Extra data for embodied carbon calculation START
+      results[$aliasLongOutput]["House-HasBasement"]           = $House_HasBasement
+      results[$aliasLongOutput]["House-HasBasement-Door"]      = $House_HasBasementDoor
+      results[$aliasLongOutput]["House-HasBasement-Window"]    = $House_HasBasementWindow
+      results[$aliasLongOutput]["House-HasCrawlspace"]         = $House_HasCrawlspace
+      results[$aliasLongOutput]["House-HasCrawlspace-Door"]    = $House_HasCrawlspaceDoor
+      results[$aliasLongOutput]["House-HasCrawlspace-Window"]  = $House_HasCrawlspaceWindow
+      results[$aliasLongOutput]["House-HasWalkout"]            = $House_HasWalkout
+      results[$aliasLongOutput]["House-HasWalkout-Door"]       = $House_HasWalkoutDoor
+      results[$aliasLongOutput]["House-HasWalkout-Window"]     = $House_HasWalkoutWindow
+      results[$aliasLongOutput]["House-HasSlab"]               = $House_HasSlab
+      results[$aliasLongOutput]["House-HasSlab-Door"]          = $House_HasSlabDoor
+      results[$aliasLongOutput]["House-HasSlab-Window"]        = $House_HasSlabWindow
+      # Extra data for embodied carbon calculation END
+
     end
 
 

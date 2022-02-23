@@ -5466,20 +5466,28 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         
 		# Get data for embodied carbon calculation START	
 		$FootingLength = H2KFile.getFootingLength(h2kPostElements)
-		#$FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements) #TODO Qs (see H2KUtils.rb)
+		$FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements) #TODO Qs (see H2KUtils.rb)
 		$FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
         $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
 		$CeilingArea = H2KFile.getCeilingArea_for_EC(h2kPostElements)
 		$RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
 		$RoofInsulationArea = H2KFile.getRoofInsulationArea(h2kPostElements)
-		#debug_on
-		debug_out "FootingLength is #{$FootingLength}\n"
-		debug_out "FoundationWallArea is #{$FoundationWallArea}\n"
-		debug_out "FoundationSlabArea is #{$FoundationSlabArea}\n"
-		debug_out "FramedFloorArea is #{$FramedFloorArea}\n"
-		debug_out "CeilingArea is #{$CeilingArea}\n"
-		debug_out "RoofingArea is #{$RoofingArea}\n"
-		debug_out "RoofInsulationArea is #{$RoofInsulationArea}\n"
+		$House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
+		$House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
+		$House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
+		$House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
+# 		debug_on
+		debug_out "FootingLength? >#{$FootingLength}<\n"
+		debug_out "FoundationWallArea? >#{$FoundationWallArea}<\n"
+		debug_out "FoundationSlabArea? >#{$FoundationSlabArea}<\n"
+		debug_out "FramedFloorArea? >#{$FramedFloorArea}<\n"
+		debug_out "CeilingArea? >#{$CeilingArea}<\n"
+		debug_out "RoofingArea? >#{$RoofingArea}<\n"
+		debug_out "RoofInsulationArea? >#{$RoofInsulationArea}<\n"
+		debug_out "House_HasBasement? >#{$House_HasBasement}<\n"
+		debug_out "House_HasCrawlspace? >#{$House_HasCrawlspace}<\n"
+		debug_out "House_HasWalkout? >#{$House_HasWalkout}<\n"
+		debug_out "House_HasSlab? >#{$House_HasSlab}<\n"
 		debug_off
 		# Get data for embodied carbon calculation END
 		
