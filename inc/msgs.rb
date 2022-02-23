@@ -99,7 +99,8 @@ def shortenToTerm(msg,extrashort = 0, truncStr="[...]", newline = TRUE )
     msg.gsub!(/\n/,"")
     shortmsg = "#{msg[0..$termWidth-extrashort-9]} #{truncStr}#{newline_char}"
   else
-    shortmsg = "#{msg}"
+    msg.gsub!(/\n/,"")
+    shortmsg = "#{msg}#{newline_char}"
   end
 
   return shortmsg
@@ -371,11 +372,58 @@ def debug_off()
 end
 
 
+# Routine to test debugging msg formatting
+
+def debug_test_functions()
+  debug_on 
+  callerID = caller_info()
+  # This case causes text to wrap around the console, because sebsequent calls 
+  debug_out("{'debug_out' - Test#1: short msg, no return}")
+  debug_out("{'debug_out' - Test#2: short msg, with return after '}'}\n")
+  debug_out("{'debug_out' - Test#3: a trailing msg}")
+
+  debug_out("{'debug_out' - Test#4: a long message |123456789|123456789|123456789|123456789|123456789}")
+  debug_out("{'debug_out' - Test#5: a long message w return |123456789\n                                               |123456789\n                                               |123456789\n                                               |123456789\n                                               |123456789}")
+
+  debug_out("{'debug_out' - Test#6: a message with some interesting content \n#{callerID.pretty_inspect})\n")
+  debug_out("{'debug_out' - Test#7: #6, d#{callerID.pretty_inspect})\n")
+  
+  debug_out_long("{'debug_out_long' - Test#1: short msg, no return}")
+  debug_out_long("{'debug_out_long' - Test#2: short msg, with return after '}'}\n")
+  debug_out_long("{'debug_out_long' - Test#3: a trailing msg}")
+
+  debug_out_long("{'debug_out_long' - Test#4: a long message |123456789|123456789|123456789|123456789|123456789}")
+  debug_out_long("{'debug_out_long' - Test#5: a long message w return |123456789\n                                               |123456789\n                                               |123456789\n                                               |123456789\n                                               |123456789}")
+
+  debug_out_long("{'debug_out_long' - Test#6: a message with some interesting content #{callerID.pretty_inspect})\n")
+  debug_out_long("{'debug_out_long' - Test#7: #6, d#{callerID.pretty_inspect})\n")
+
+  debug_off 
+  debug_pause 
+
+end 
+
+
 # Check of debugging is active, and if so, call debug_out_now
 # to write out debugging messages.
+
 def debug_out(debmsg)
   return if ( $gNoDebug )
   callerID = caller_info()
+  debug_msg_handler(debmsg, callerID, longmsg=false)
+
+end
+
+def debug_out_long(debmsg)
+  return if ( $gNoDebug )
+  callerID = caller_info()
+  debug_msg_handler(debmsg, callerID, longmsg=true)
+
+end
+
+def debug_msg_handler(debmsg, callerID, longmsg=false)
+  return if ( $gNoDebug )
+
   if( $localDebug[callerID["routine"]].nil? ) then
     lDebug = false
   else
@@ -383,8 +431,8 @@ def debug_out(debmsg)
   end
 
   if (lDebug || $gDebug ) then
-     debugCaller = Array.new
-     debug_out_now( debmsg, callerID)
+     #debugCaller = Array.new
+     debug_out_now( debmsg, callerID, longmsg)
      log_out(debmsg)
   end
 end
@@ -393,7 +441,7 @@ end
 # Write out formatted debugging messages to the screen. (in almost all cases,
 # code should call debug_out and not debug_out_now.
 # =========================================================================================
-def debug_out_now(debmsg, callerID)
+def debug_out_now(debmsg, callerID, longmsg=false)
   return if ( $gNoDebug )
   callindent = ""
 
@@ -412,34 +460,39 @@ def debug_out_now(debmsg, callerID)
   blankstring = " "
 
   fullmsg = ""
+ 
 
-  if ($lastDbgMsg =~ /\n/ ) then
-    prefixLen = 0
-    first = true
-    debmsg.each_line do |line|
+  prefixLen = 0
+  first = true
+  debmsg.each_line do |line|
+    #print ">#{line}"
+    if first then
+      first = false
+      prefix = "[#{calldots}d#{level}:#{callindent}#{routine}:#{linestring} ".ljust(30)
+      prefix = "#{prefix}]"
+      prefixLen = prefix.length-1
 
-      if first then
-        first = false
-        prefix = "[#{calldots}d#{level}:#{callindent}#{routine}:#{linestring} ".ljust(30)
-        prefix = "#{prefix}]"
-        prefixLen = prefix.length-1
-
-      else
-        prefix = "[ ".ljust(prefixLen)+"]"
-      end
-
-      if (  debmsg =~ /^[^\s]/ ) then
-        prefix = "#{prefix} "
-      end
-      fullmsg = "#{fullmsg}"+shortenToTerm("#{prefix}#{line}")
-
+    else
+      prefix = "[ ".ljust(prefixLen)+"]"
     end
 
-    #debmsg.gsub!(/\n/,"\n#{blank}")
-    #debmsg.gsub!(/\n#{blank}\s*\Z/, '')
-  else
-    fullmsg = shortenToTerm(debmsg)
+    if (  debmsg =~ /^[^\s]/ ) then
+      prefix = "#{prefix} "
+    end
+    if longmsg then 
+      fullmsg = "#{fullmsg}"+"#{prefix}#{line}"
+    else 
+      fullmsg = "#{fullmsg}"+shortenToTerm("#{prefix}#{line}")
+    end 
+
   end
+
+  if longmsg then 
+    fullmsg = "#{fullmsg}\n"
+  end 
+  #debmsg.gsub!(/\n/,"\n#{blank}")
+  #debmsg.gsub!(/\n#{blank}\s*\Z/, '')
+
   print colourize(fullmsg,:bright_black)
 
   if ($gTest_params["logfile"] )
