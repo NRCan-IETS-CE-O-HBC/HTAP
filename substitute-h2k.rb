@@ -5464,18 +5464,18 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                                           ".#{h2kPostElements["HouseFile/Application/Version"].attributes["minor"]}"+
                                           "b#{h2kPostElements["HouseFile/Application/Version"].attributes["build"]}"
         
-		# Get data for embodied carbon calculation START	
-		$FootingLength = H2KFile.getFootingLength(h2kPostElements)
-		$FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements) #TODO Qs (see H2KUtils.rb)
-		$FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
+        # Get data for embodied carbon calculation START
+        $FootingLength = H2KFile.getFootingLength(h2kPostElements)
+        $FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements)
+        $FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
         $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
-		$CeilingArea = H2KFile.getCeilingArea_for_EC(h2kPostElements)
-		$RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
-		$RoofInsulationArea = H2KFile.getRoofInsulationArea(h2kPostElements)
-		$House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
-		$House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
-		$House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
-		$House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
+        $CeilingArea = H2KFile.getCeilingArea_for_EC(h2kPostElements)
+        $RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
+        $RoofInsulationArea = H2KFile.getRoofInsulationArea(h2kPostElements)
+        $House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
+        $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
+        $House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
+        $House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
 # 		debug_on
 		debug_out "FootingLength? >#{$FootingLength}<\n"
 		debug_out "FoundationWallArea? >#{$FoundationWallArea}<\n"

@@ -1660,13 +1660,23 @@ module H2KFile
         locationText = "HouseFile/House/Components/Basement"
         elements.each(locationText) do |basement|
             if basement.nil? == false
-                footingLength += basement.attributes["exposedSurfacePerimeter"].to_f
+                if basement.elements["Floor/Measurements"].attributes["isRectangular"] == true
+                    footingLength += 2 * basement.elements["Floor/Measurements"].attributes["length"].to_f +
+                    2 * basement.elements["Floor/Measurements"].attributes["width"].to_f
+                else
+                    footingLength += basement.elements["Floor/Measurements"].attributes["perimeter"].to_f
+                end
             end
         end
         locationText = "HouseFile/House/Components/Crawlspace"
         elements.each(locationText) do |crawlspace|
             if crawlspace.nil? == false
-                footingLength += crawlspace.attributes["exposedSurfacePerimeter"].to_f
+                if crawlspace.elements["Floor/Measurements"].attributes["isRectangular"] == true
+                    footingLength += 2 * crawlspace.elements["Floor/Measurements"].attributes["length"].to_f +
+                    2 * crawlspace.elements["Floor/Measurements"].attributes["width"].to_f
+                else
+                    footingLength += crawlspace.elements["Floor/Measurements"].attributes["perimeter"].to_f
+                end
             end
         end
         locationText = "HouseFile/House/Components/Walkout"
@@ -1679,10 +1689,11 @@ module H2KFile
         locationText = "HouseFile/House/Components/Slab"
         elements.each(locationText) do |slab|
             if slab.nil? == false
-                footingLength += slab.elements["Floor/Measurements"].attributes["perimeter"].to_f
-                if slab.elements["Floor/Measurements"].attributes["perimeter"].to_f == 0.0
+                if slab.elements["Floor/Measurements"].attributes["isRectangular"] == true
                     footingLength += 2 * slab.elements["Floor/Measurements"].attributes["length"].to_f +
                     2 * slab.elements["Floor/Measurements"].attributes["width"].to_f
+                else
+                    footingLength += slab.elements["Floor/Measurements"].attributes["perimeter"].to_f
                 end
             end
         end
@@ -1879,7 +1890,7 @@ module H2KFile
         locationText = "HouseFile/House/Components/Walkout"
         elements.each(locationText) do |walkout|
 #             debug_on
-#             debug_out_long "#{walkout.pretty_inspect}"
+#             debug_out_long "walkout: >#{walkout.pretty_inspect}<\n"
 #             debug_off
             if walkout.nil? == false
 
@@ -2016,7 +2027,7 @@ module H2KFile
         roofingArea = 0.0
         if elements["HouseFile/House/Specifications"].attributes["defaultRoofCavity"] == 'false'
             roofingArea += elements["HouseFile/House/Specifications/RoofCavity/SlopedRoof"].attributes["area"].to_f
-            if roofingArea == 0.0 # for some archetypes, SlopedRoof=0.0 although defaultRoofCavity=false
+            if roofingArea == 0.0 # for some archetypes, SlopedRoof=0.0 although defaultRoofCavity=false; so, this if-clause has been added.
                 locationText = "HouseFile/House/Components/Ceiling"
                 elements.each(locationText) do |ceiling|
                     if ceiling.nil? == false
