@@ -1251,18 +1251,18 @@ module HTAPData
       results[$aliasLongOutput]["HotWaterWood-GJ"]   = $gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)
 
       # Extra data for embodied carbon (EC) calculation START
-      results[$aliasLongOutput]["EC-House-HasBasement"]           = $House_HasBasement
-      results[$aliasLongOutput]["EC-House-HasBasement-Door"]      = $House_HasBasementDoor
-      results[$aliasLongOutput]["EC-House-HasBasement-Window"]    = $House_HasBasementWindow
-      results[$aliasLongOutput]["EC-House-HasCrawlspace"]         = $House_HasCrawlspace
-      results[$aliasLongOutput]["EC-House-HasCrawlspace-Door"]    = $House_HasCrawlspaceDoor
-      results[$aliasLongOutput]["EC-House-HasCrawlspace-Window"]  = $House_HasCrawlspaceWindow
-      results[$aliasLongOutput]["EC-House-HasWalkout"]            = $House_HasWalkout
-      results[$aliasLongOutput]["EC-House-HasWalkout-Door"]       = $House_HasWalkoutDoor
-      results[$aliasLongOutput]["EC-House-HasWalkout-Window"]     = $House_HasWalkoutWindow
-      results[$aliasLongOutput]["EC-House-HasSlab"]               = $House_HasSlab
-      results[$aliasLongOutput]["EC-House-HasSlab-Door"]          = $House_HasSlabDoor
-      results[$aliasLongOutput]["EC-House-HasSlab-Window"]        = $House_HasSlabWindow
+      results[$aliasLongArch]["EC-House-HasBasement"]           = $House_HasBasement
+      results[$aliasLongArch]["EC-House-HasBasement-Door"]      = $House_HasBasementDoor
+      results[$aliasLongArch]["EC-House-HasBasement-Window"]    = $House_HasBasementWindow
+      results[$aliasLongArch]["EC-House-HasCrawlspace"]         = $House_HasCrawlspace
+      results[$aliasLongArch]["EC-House-HasCrawlspace-Door"]    = $House_HasCrawlspaceDoor
+      results[$aliasLongArch]["EC-House-HasCrawlspace-Window"]  = $House_HasCrawlspaceWindow
+      results[$aliasLongArch]["EC-House-HasWalkout"]            = $House_HasWalkout
+      results[$aliasLongArch]["EC-House-HasWalkout-Door"]       = $House_HasWalkoutDoor
+      results[$aliasLongArch]["EC-House-HasWalkout-Window"]     = $House_HasWalkoutWindow
+      results[$aliasLongArch]["EC-House-HasSlab"]               = $House_HasSlab
+      results[$aliasLongArch]["EC-House-HasSlab-Door"]          = $House_HasSlabDoor
+      results[$aliasLongArch]["EC-House-HasSlab-Window"]        = $House_HasSlabWindow
       # Extra data for embodied carbon (EC) calculation END
 
     end

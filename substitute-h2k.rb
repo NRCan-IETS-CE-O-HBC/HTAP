@@ -5465,12 +5465,13 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                                           "b#{h2kPostElements["HouseFile/Application/Version"].attributes["build"]}"
         
         # Get data for embodied carbon calculation START
+        # Note: HTAP's 'Area-Ceiling-m2' is used as MCE2's 'Roofing Area'  #TODO Q: ok?
+        # Note: HTAP's 'Floor-Area-m2' is used as MCE2's 'Ceiling Area'  #TODO Q: ok?
         $FootingLength = H2KFile.getFootingLength(h2kPostElements)
         $FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements)
         $FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
         $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
         $CeilingArea = H2KFile.getCeilingArea_for_EC(h2kPostElements)
-        $RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
         $RoofInsulationArea = H2KFile.getRoofInsulationArea(h2kPostElements)
         $House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
         $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
@@ -5482,7 +5483,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 		debug_out "FoundationSlabArea? >#{$FoundationSlabArea}<\n"
 		debug_out "FramedFloorArea? >#{$FramedFloorArea}<\n"
 		debug_out "CeilingArea? >#{$CeilingArea}<\n"
-		debug_out "RoofingArea? >#{$RoofingArea}<\n"
 		debug_out "RoofInsulationArea? >#{$RoofInsulationArea}<\n"
 		debug_out "House_HasBasement? >#{$House_HasBasement}<\n"
 		debug_out "House_HasCrawlspace? >#{$House_HasCrawlspace}<\n"

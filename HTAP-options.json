@@ -11961,7 +11961,7 @@
       "none": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-HasDWHR": "NA",
+            "Opt-H2K-HasDWHR": "false",
             "Opt-H2K-DWHR-preheatShowerTank": "NA",
             "Opt-H2K-DWHR-Manufacturer": "NA",
             "Opt-H2K-DWHR-Model": "NA",
