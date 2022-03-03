@@ -5471,7 +5471,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements)
         $FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
         $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
-        $CeilingArea = H2KFile.getCeilingArea_for_EC(h2kPostElements)
         $RoofInsulationArea = H2KFile.getRoofInsulationArea(h2kPostElements)
         $House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
         $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
