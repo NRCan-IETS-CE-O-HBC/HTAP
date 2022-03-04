@@ -1146,7 +1146,6 @@ module HTAPData
 	  "Foundation-Slab-Area-m2" => $FoundationSlabArea,
 	  "Framed-Floor-Area-m2"    => $FramedFloorArea,
 	  "Roofing-Area-m2"         => $RoofingArea,
-	  "Roof-Insulation-Area-m2" => $RoofInsulationArea
 	  # Data for embodied carbon calculation END
 
     }

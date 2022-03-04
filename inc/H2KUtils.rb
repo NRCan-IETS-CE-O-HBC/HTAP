@@ -896,22 +896,6 @@ module H2KFile
     debug_off
     return roofingArea
   end # END getRoofingArea
-
-  # ====================================================================================
-  # The below method is for the calculation of roof insulation area required for the embodied carbon estimation using MCE2
-  def H2KFile.getRoofInsulationArea(elements)
-    roofInsulationArea = 0.0
-    locationText = "HouseFile/House/Components/Ceiling"
-    elements.each(locationText) do |ceiling|
-        if ceiling.nil? == false
-            roofInsulationArea += ceiling.elements["Measurements"].attributes["area"].to_f
-        end
-    end
-#         debug_on
-    debug_out "roofInsulationArea: >#{roofInsulationArea}<\n"
-    debug_off
-    return roofInsulationArea
-  end
   # =========================================================================================
   # Get primary heating system type and fuel
   # =========================================================================================
