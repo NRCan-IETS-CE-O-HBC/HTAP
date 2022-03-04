@@ -651,6 +651,27 @@ module H2KFile
 
   end # End GetHeatedFloorArea
 
+  # ====================================================================================
+  # The below method is for the calculation of framed floor area required for the embodied carbon estimation using MCE2
+  def H2KFile.getFramedFloorArea(elements)
+    # Get XML file version that "elements" came from. The version can be from the original file (pre-processed inputs)
+    # or from the post-processed outputs (which will match the version of the H2K CLI used), depending on the "elements"
+    # passed to this function.
+    versionMajor = elements["HouseFile/Application/Version"].attributes["major"].to_i
+    versionMinor = elements["HouseFile/Application/Version"].attributes["minor"].to_i
+    versionBuild = elements["HouseFile/Application/Version"].attributes["build"].to_i
+    if (versionMajor == 11 && versionMinor >= 5 && versionBuild >= 8) || versionMajor > 11 then
+        framedFloorArea = elements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["aboveGrade"].to_f
+    else
+        framedFloorArea = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
+    end
+#         debug_on
+    debug_out "framedFloorArea: >#{framedFloorArea}<\n"
+    debug_off
+    return framedFloorArea
+  end # End getFramedFloorArea
+
+  # ====================================================================================
   def H2KFile.GetHouseVolume(elements)
 
     myHouseVolume= elements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
@@ -852,7 +873,45 @@ module H2KFile
     end
     return area
   end  # function get Ceiling area.
+  # =========================================================================================
+  # The below method is for the calculation of roof area required for the embodied carbon estimation using MCE2
+  def H2KFile.getRoofingArea(elements)
+    roofingArea = 0.0
+    locationText = "HouseFile/House/Components/Ceiling"
+    elements.each(locationText) do |ceiling|
+        if ceiling.nil? == false
+            if ceiling.elements["Construction/Type/English"].include?("Flat") ||
+            ceiling.elements["Construction/Type/English"].include?("Cathedral") ||
+            ceiling.elements["Construction/Type/English"].include?("Scissor")
+                roofingArea += ceiling.elements["Measurements"].attributes["area"].to_f
+            elsif ceiling.elements["Construction/Type/English"].include?("Attic/gable") ||
+            ceiling.elements["Construction/Type/English"].include?("Attic/hip")
+                slope = ceiling.elements["Measurements/Slope"].attributes["value"].to_f
+                roofingArea += ceiling.elements["Measurements"].attributes["area"].to_f * Math.sqrt(1 + slope**2)
+            end
+        end
+    end
+#         debug_on
+    debug_out "roofingArea: >#{roofingArea}<\n"
+    debug_off
+    return roofingArea
+  end # END getRoofingArea
 
+  # ====================================================================================
+  # The below method is for the calculation of roof insulation area required for the embodied carbon estimation using MCE2
+  def H2KFile.getRoofInsulationArea(elements)
+    roofInsulationArea = 0.0
+    locationText = "HouseFile/House/Components/Ceiling"
+    elements.each(locationText) do |ceiling|
+        if ceiling.nil? == false
+            roofInsulationArea += ceiling.elements["Measurements"].attributes["area"].to_f
+        end
+    end
+#         debug_on
+    debug_out "roofInsulationArea: >#{roofInsulationArea}<\n"
+    debug_off
+    return roofInsulationArea
+  end
   # =========================================================================================
   # Get primary heating system type and fuel
   # =========================================================================================
@@ -1652,389 +1711,351 @@ module H2KFile
   end   
   #debug_off()
 
-    # ====================================================================================
-    # footing length required for embodied carbon calculation
-    def H2KFile.getFootingLength(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
-        footingLength = 0.0
-        locationText = "HouseFile/House/Components/Basement"
-        elements.each(locationText) do |basement|
-            if basement.nil? == false
-                if basement.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                    footingLength += 2 * basement.elements["Floor/Measurements"].attributes["length"].to_f +
-                    2 * basement.elements["Floor/Measurements"].attributes["width"].to_f
-                else
-                    footingLength += basement.elements["Floor/Measurements"].attributes["perimeter"].to_f
-                end
+  # ====================================================================================
+  # The below method is for the calculation of footing length required for the embodied carbon estimation using MCE2
+  def H2KFile.getFootingLength(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
+    footingLength = 0.0
+    locationText = "HouseFile/House/Components/Basement"
+    elements.each(locationText) do |basement|
+        if basement.nil? == false
+            if basement.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
+                footingLength += 2 * basement.elements["Floor/Measurements"].attributes["length"].to_f +
+                2 * basement.elements["Floor/Measurements"].attributes["width"].to_f
+            else
+                footingLength += basement.elements["Floor/Measurements"].attributes["perimeter"].to_f
             end
         end
-        locationText = "HouseFile/House/Components/Crawlspace"
-        elements.each(locationText) do |crawlspace|
-            if crawlspace.nil? == false
-                if crawlspace.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                    footingLength += 2 * crawlspace.elements["Floor/Measurements"].attributes["length"].to_f +
-                    2 * crawlspace.elements["Floor/Measurements"].attributes["width"].to_f
-                else
-                    footingLength += crawlspace.elements["Floor/Measurements"].attributes["perimeter"].to_f
-                end
+    end
+    locationText = "HouseFile/House/Components/Crawlspace"
+    elements.each(locationText) do |crawlspace|
+        if crawlspace.nil? == false
+            if crawlspace.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
+                footingLength += 2 * crawlspace.elements["Floor/Measurements"].attributes["length"].to_f +
+                2 * crawlspace.elements["Floor/Measurements"].attributes["width"].to_f
+            else
+                footingLength += crawlspace.elements["Floor/Measurements"].attributes["perimeter"].to_f
             end
         end
-        locationText = "HouseFile/House/Components/Walkout"
-        elements.each(locationText) do |walkout|
-            if walkout.nil? == false
-                footingLength += 2 * walkout.elements["Measurements"].attributes["l1"].to_f +
-                2 * walkout.elements["Measurements"].attributes["l2"].to_f
+    end
+    locationText = "HouseFile/House/Components/Walkout"
+    elements.each(locationText) do |walkout|
+        if walkout.nil? == false
+            footingLength += 2 * walkout.elements["Measurements"].attributes["l1"].to_f +
+            2 * walkout.elements["Measurements"].attributes["l2"].to_f
+        end
+    end
+    locationText = "HouseFile/House/Components/Slab"
+    elements.each(locationText) do |slab|
+        if slab.nil? == false
+            if slab.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
+                footingLength += 2 * slab.elements["Floor/Measurements"].attributes["length"].to_f +
+                2 * slab.elements["Floor/Measurements"].attributes["width"].to_f
+            else
+                footingLength += slab.elements["Floor/Measurements"].attributes["perimeter"].to_f
             end
         end
-        locationText = "HouseFile/House/Components/Slab"
-        elements.each(locationText) do |slab|
-            if slab.nil? == false
-                if slab.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                    footingLength += 2 * slab.elements["Floor/Measurements"].attributes["length"].to_f +
-                    2 * slab.elements["Floor/Measurements"].attributes["width"].to_f
-                else
-                    footingLength += slab.elements["Floor/Measurements"].attributes["perimeter"].to_f
-                end
-            end
-        end
+    end
 #         debug_on
-        debug_out "footingLength: >#{footingLength}<\n"
-        debug_off
-        return footingLength
-    end  # END getFootingLength
+    debug_out "footingLength: >#{footingLength}<\n"
+    debug_off
+    return footingLength
+  end  # END getFootingLength
     # ====================================================================================
     # Gather info on whether a house has basement/crawlspace/walkout/slab and if they have any door/window
-    def H2KFile.getHouseBelowGradeInfo(elements)
-        house_has_basement = false
-        house_has_basement_door = false
-        house_has_basement_window = false
-        house_has_crawlspace = false
-        house_has_crawlspace_door = false
-        house_has_crawlspace_window = false
-        house_has_walkout = false
-        house_has_walkout_door = false
-        house_has_walkout_window = false
-        house_has_slab = false
-        house_has_slab_door = false
-        house_has_slab_window = false
+  def H2KFile.getHouseBelowGradeInfo(elements)
+    house_has_basement = false
+    house_has_basement_door = false
+    house_has_basement_window = false
+    house_has_crawlspace = false
+    house_has_crawlspace_door = false
+    house_has_crawlspace_window = false
+    house_has_walkout = false
+    house_has_walkout_door = false
+    house_has_walkout_window = false
+    house_has_slab = false
+    house_has_slab_door = false
+    house_has_slab_window = false
 
-        ##### gather info of basements and their doors and windows
-        locationText = "HouseFile/House/Components/Basement"
-        elements.each(locationText) do |basement|
-            if basement.nil? == false
-                house_has_basement = true
+    ##### gather info of basements and their doors and windows
+    locationText = "HouseFile/House/Components/Basement"
+    elements.each(locationText) do |basement|
+        if basement.nil? == false
+            house_has_basement = true
+            ##### calculate door and window areas of the basement
+            if basement.elements["Components"].nil? == false
+                basement.elements["Components"].elements.each do |comp|
+                    if comp.nil? == false
+                        comp_name = comp.name
+                        if comp_name.include?("Door")
+                            house_has_basement_door = true
+                        elsif comp_name.include?("Window")
+                            house_has_basement_window = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    ##### gather info of crawlspaces and their doors and windows
+    locationText = "HouseFile/House/Components/Crawlspace"
+    elements.each(locationText) do |crawlspace|
+        if crawlspace.nil? == false
+            house_has_crawlspace = true
+            ##### calculate door and window areas of the crawlspace
+            if crawlspace.elements["Components"].nil? == false
+                crawlspace.elements["Components"].elements.each do |comp|
+                    if comp.nil? == false
+                        comp_name = comp.name
+                        if comp_name.include?("Door")
+                            house_has_crawlspace_door = true
+                        elsif comp_name.include?("Window")
+                            house_has_crawlspace_window = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    ##### gather info of walkouts and their doors and windows
+    locationText = "HouseFile/House/Components/Walkout"
+    elements.each(locationText) do |walkout|
+        if walkout.nil? == false
+            house_has_walkout = true
+            ##### calculate door and window areas of the walkout
+            if walkout.elements["Components"].nil? == false
+                walkout.elements["Components"].elements.each do |comp|
+                    if comp.nil? == false
+                        comp_name = comp.name
+                        if comp_name.include?("Door")
+                            house_has_walkout_door = true
+                        elsif comp_name.include?("Window")
+                            house_has_walkout_window = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    ##### gather info of slabs and their doors and windows
+    locationText = "HouseFile/House/Components/Slab"
+    elements.each(locationText) do |slab|
+        if slab.nil? == false
+            house_has_slab = true
+            ##### calculate door and window areas of the slab
+            if slab.elements["Components"].nil? == false
+                slab.elements["Components"].elements.each do |comp|
+                    if comp.nil? == false
+                        comp_name = comp.name
+                        if comp_name.include?("Door")
+                            house_has_slab_door = true
+                        elsif comp_name.include?("Window")
+                            house_has_slab_window = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return house_has_basement, house_has_basement_door, house_has_basement_window,
+    house_has_crawlspace, house_has_crawlspace_door, house_has_crawlspace_window,
+    house_has_walkout, house_has_walkout_door, house_has_walkout_window,
+    house_has_slab, house_has_slab_door, house_has_slab_window
+
+  end
+  # ====================================================================================
+  # The below method is for the calculation of foundation wall area required for the embodied carbon estimation using MCE2
+  def H2KFile.getFoundationWallArea(elements)  # (1) basement, (2) crawlspace, (3) walkout, (4) slab
+    foundationWallArea = 0.0
+    opening_area = 0.0
+
+    #=================== (1) basement: calculate foundation wall area of basement(s) ===================
+    locationText = "HouseFile/House/Components/Basement"
+    elements.each(locationText) do |basement|
+        if basement.nil? == false
+
+            ##### calculate foundation wall area of the basement
+            basement_footingLength = basement.attributes["exposedSurfacePerimeter"].to_f
+            basement_foundationWallHeight = basement.elements["Wall/Measurements"].attributes["height"].to_f
+            foundationWallArea += basement_footingLength * basement_foundationWallHeight
+
+            if basement.elements["Components"].nil? == false
+
                 ##### calculate door and window areas of the basement
-                if basement.elements["Components"].nil? == false
-                    basement.elements["Components"].elements.each do |comp|
-                        if comp.nil? == false
-                            comp_name = comp.name
-                            if comp_name.include?("Door")
-                                house_has_basement_door = true
-                            elsif comp_name.include?("Window")
-                                house_has_basement_window = true
-                            end
-                        end
+                basement.elements["Components"].elements.each do |comp|
+                    comp_name = comp.name
+                    if comp_name.include?("Door")
+                        door_height = comp.elements["Measurements"].attributes["height"].to_f
+                        door_width = comp.elements["Measurements"].attributes["width"].to_f
+                        opening_area += door_height * door_width
+    #                             debug_on
+                        debug_out "door_height: >#{door_height}<\n"
+                        debug_out "door_width: >#{door_width}<\n"
+                        debug_out "opening_area: >#{opening_area}<\n"
+                        debug_off
+                    elsif comp_name.include?("Window")
+                        window_number = comp.attributes["number"].to_f
+                        window_height = comp.elements["Measurements"].attributes["height"].to_f
+                        window_width = comp.elements["Measurements"].attributes["width"].to_f
+                        opening_area += window_height * window_width * window_number / 1000000
+    #                             debug_on
+                        debug_out "window_number: >#{window_number}<\n"
+                        debug_out "window_height: >#{window_height}<\n"
+                        debug_out "window_width: >#{window_width}<\n"
+                        debug_out "opening_area: >#{opening_area}<\n"
+                        debug_off
                     end
-                end
-            end
-        end
+                end # END basement.elements["Components"].elements.each do |comp|
+            end # END basement.elements["Components"].nil? == false
+        end # END if basement.nil? == false
+    end # END elements.each(locationText) do |basement|
+    #=================== (2) crawlspace: calculate foundation wall area of crawlspace(s) ====================
+    locationText = "HouseFile/House/Components/Crawlspace"
+    elements.each(locationText) do |crawlspace|
+        if crawlspace.nil? == false
 
-        ##### gather info of crawlspaces and their doors and windows
-        locationText = "HouseFile/House/Components/Crawlspace"
-        elements.each(locationText) do |crawlspace|
-            if crawlspace.nil? == false
-                house_has_crawlspace = true
+            ##### calculate foundation wall area of the crawlspace
+            crawlspace_footingLength = crawlspace.attributes["exposedSurfacePerimeter"].to_f
+            crawlspace_foundationWallHeight = crawlspace.elements["Wall/Measurements"].attributes["height"].to_f
+            foundationWallArea += crawlspace_footingLength * crawlspace_foundationWallHeight
+
+            if crawlspace.elements["Components"].nil? == false
                 ##### calculate door and window areas of the crawlspace
-                if crawlspace.elements["Components"].nil? == false
-                    crawlspace.elements["Components"].elements.each do |comp|
-                        if comp.nil? == false
-                            comp_name = comp.name
-                            if comp_name.include?("Door")
-                                house_has_crawlspace_door = true
-                            elsif comp_name.include?("Window")
-                                house_has_crawlspace_window = true
-                            end
-                        end
+                crawlspace.elements["Components"].elements.each do |comp|
+                    comp_name = comp.name
+                    if comp_name.include?("Door")
+                        door_height = comp.elements["Measurements"].attributes["height"].to_f
+                        door_width = comp.elements["Measurements"].attributes["width"].to_f
+                        opening_area += door_height * door_width
+    #                             debug_on
+                        debug_out "door_height: >#{door_height}<\n"
+                        debug_out "door_width: >#{door_width}<\n"
+                        debug_out "opening_area: >#{opening_area}<\n"
+                        debug_off
+                    elsif comp_name.include?("Window")
+                        window_number = comp.attributes["number"].to_f
+                        window_height = comp.elements["Measurements"].attributes["height"].to_f
+                        window_width = comp.elements["Measurements"].attributes["width"].to_f
+                        opening_area += window_height * window_width * window_number / 1000000
+    #                             debug_on
+                        debug_out "window_height: >#{window_height}<\n"
+                        debug_out "window_width: >#{window_width}<\n"
+                        debug_out "opening_area: >#{opening_area}<\n"
+                        debug_off
                     end
-                end
-            end
-        end
+                end # END crawlspace.elements["Components"].elements.each do |comp|
+            end # END crawlspace.elements["Components"].nil? == false
+        end # END if crawlspace.nil? == false
+    end # END elements.each(locationText) do |crawlspace|
+    #=================== (3) walkout: calculate foundation wall area of walkout(s) ====================
+    # calculate exterior surfaces area excluding door and window area
+    locationText = "HouseFile/House/Components/Walkout"
+    elements.each(locationText) do |walkout|
+    #             debug_on
+    #             debug_out_long "walkout: >#{walkout.pretty_inspect}<\n"
+    #             debug_off
+        if walkout.nil? == false
 
-        ##### gather info of walkouts and their doors and windows
-        locationText = "HouseFile/House/Components/Walkout"
-        elements.each(locationText) do |walkout|
-            if walkout.nil? == false
-                house_has_walkout = true
+            ##### calculate foundation wall area of the walkout
+            if walkout.elements["ExteriorSurfaces"].nil? == false
+                foundationWallArea += walkout.elements["ExteriorSurfaces"].attributes["aboveGradeArea"].to_f +
+                walkout.elements["ExteriorSurfaces"].attributes["belowGradeArea"].to_f
+            else  # Added this as the ERS-4386 and ERS-4540 archetypes did not have walkout.elements["ExteriorSurfaces"]
+                foundationWallArea += elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["aboveGrade"].to_f +
+                elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["belowGrade"].to_f +
+                elements["HouseFile/AllResults/Results/Other/GrossArea/Crawlspace"].attributes["wall"].to_f
+            end
+
+            if walkout.elements["Components"].nil? == false
                 ##### calculate door and window areas of the walkout
-                if walkout.elements["Components"].nil? == false
-                    walkout.elements["Components"].elements.each do |comp|
-                        if comp.nil? == false
-                            comp_name = comp.name
-                            if comp_name.include?("Door")
-                                house_has_walkout_door = true
-                            elsif comp_name.include?("Window")
-                                house_has_walkout_window = true
-                            end
-                        end
+                walkout.elements["Components"].elements.each do |comp|
+                    comp_name = comp.name
+                    if comp_name.include?("Door")
+                        door_height = comp.elements["Measurements"].attributes["height"].to_f
+                        door_width = comp.elements["Measurements"].attributes["width"].to_f
+                        opening_area += door_height * door_width
+    #                             debug_on
+                        debug_out "door_height: >#{door_height}<\n"
+                        debug_out "door_width: >#{door_width}<\n"
+                        debug_out "opening_area: >#{opening_area}<\n"
+                        debug_off
+                    elsif comp_name.include?("Window")
+                        window_number = comp.attributes["number"].to_f
+                        window_height = comp.elements["Measurements"].attributes["height"].to_f
+                        window_width = comp.elements["Measurements"].attributes["width"].to_f
+                        opening_area += window_height * window_width * window_number / 1000000
+    #                             debug_on
+                        debug_out "window_height: >#{window_height}<\n"
+                        debug_out "window_width: >#{window_width}<\n"
+                        debug_out "opening_area: >#{opening_area}<\n"
+                        debug_off
                     end
                 end
+            end #if walkout.elements["Components"].nil? == false
+        end # if walkout.nil? == false
+    end # elements.each(locationText) do |walkout|
+    #=================== (4) slab: calculate foundation wall area of slab(s) ====================
+    # no foundation wall and no window/door for slabs
+    # ============================================================================================
+    foundationWallArea = foundationWallArea - opening_area
+    #         debug_on
+    debug_out "foundationWallArea: >#{foundationWallArea}<\n"
+    debug_off
+    return foundationWallArea
+  end # END getFoundationWallArea
+  # ====================================================================================
+  # The below method is for the calculation of foundation slab area required for the embodied carbon estimation using MCE2
+  def H2KFile.getFoundationSlabArea(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
+    foundationSlabArea = 0.0
+    locationText = "HouseFile/House/Components/Basement"
+    elements.each(locationText) do |basement|
+        if basement.nil? == false
+            if basement.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
+                foundationSlabArea += basement.elements["Floor/Measurements"].attributes["length"].to_f *
+                basement.elements["Floor/Measurements"].attributes["width"].to_f
+            else
+                foundationSlabArea += basement.elements["Floor/Measurements"].attributes["area"].to_f
             end
         end
-
-        ##### gather info of slabs and their doors and windows
-        locationText = "HouseFile/House/Components/Slab"
-        elements.each(locationText) do |slab|
-            if slab.nil? == false
-                house_has_slab = true
-                ##### calculate door and window areas of the slab
-                if slab.elements["Components"].nil? == false
-                    slab.elements["Components"].elements.each do |comp|
-                        if comp.nil? == false
-                            comp_name = comp.name
-                            if comp_name.include?("Door")
-                                house_has_slab_door = true
-                            elsif comp_name.include?("Window")
-                                house_has_slab_window = true
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        return house_has_basement, house_has_basement_door, house_has_basement_window,
-        house_has_crawlspace, house_has_crawlspace_door, house_has_crawlspace_window,
-        house_has_walkout, house_has_walkout_door, house_has_walkout_window,
-        house_has_slab, house_has_slab_door, house_has_slab_window
-
     end
-    # ====================================================================================
-    # foundation wall area required for embodied carbon calculation
-    def H2KFile.getFoundationWallArea(elements)  # (1) basement, (2) crawlspace, (3) walkout, (4) slab
-        foundationWallArea = 0.0
-        opening_area = 0.0
-
-        #=================== (1) basement: calculate foundation wall area of basement(s) ===================
-        locationText = "HouseFile/House/Components/Basement"
-        elements.each(locationText) do |basement|
-            if basement.nil? == false
-
-                ##### calculate foundation wall area of the basement
-                basement_footingLength = basement.attributes["exposedSurfacePerimeter"].to_f
-                basement_foundationWallHeight = basement.elements["Wall/Measurements"].attributes["height"].to_f
-                foundationWallArea += basement_footingLength * basement_foundationWallHeight
-
-                if basement.elements["Components"].nil? == false
-
-                    ##### calculate door and window areas of the basement
-                    basement.elements["Components"].elements.each do |comp|
-                        comp_name = comp.name
-                        if comp_name.include?("Door")
-                            door_height = comp.elements["Measurements"].attributes["height"].to_f
-                            door_width = comp.elements["Measurements"].attributes["width"].to_f
-                            opening_area += door_height * door_width
-#                             debug_on
-                            debug_out "door_height: >#{door_height}<\n"
-                            debug_out "door_width: >#{door_width}<\n"
-                            debug_out "opening_area: >#{opening_area}<\n"
-                            debug_off
-                        elsif comp_name.include?("Window")
-                            window_number = comp.attributes["number"].to_f
-                            window_height = comp.elements["Measurements"].attributes["height"].to_f
-                            window_width = comp.elements["Measurements"].attributes["width"].to_f
-                            opening_area += window_height * window_width * window_number / 1000000
-#                             debug_on
-                            debug_out "window_number: >#{window_number}<\n"
-                            debug_out "window_height: >#{window_height}<\n"
-                            debug_out "window_width: >#{window_width}<\n"
-                            debug_out "opening_area: >#{opening_area}<\n"
-                            debug_off
-                        end
-                    end # END basement.elements["Components"].elements.each do |comp|
-                end # END basement.elements["Components"].nil? == false
-            end # END if basement.nil? == false
-        end # END elements.each(locationText) do |basement|
-        #=================== (2) crawlspace: calculate foundation wall area of crawlspace(s) ====================
-        locationText = "HouseFile/House/Components/Crawlspace"
-        elements.each(locationText) do |crawlspace|
-            if crawlspace.nil? == false
-
-                ##### calculate foundation wall area of the crawlspace
-                crawlspace_footingLength = crawlspace.attributes["exposedSurfacePerimeter"].to_f
-                crawlspace_foundationWallHeight = crawlspace.elements["Wall/Measurements"].attributes["height"].to_f
-                foundationWallArea += crawlspace_footingLength * crawlspace_foundationWallHeight
-
-                if crawlspace.elements["Components"].nil? == false
-                    ##### calculate door and window areas of the crawlspace
-                    crawlspace.elements["Components"].elements.each do |comp|
-                        comp_name = comp.name
-                        if comp_name.include?("Door")
-                            door_height = comp.elements["Measurements"].attributes["height"].to_f
-                            door_width = comp.elements["Measurements"].attributes["width"].to_f
-                            opening_area += door_height * door_width
-#                             debug_on
-                            debug_out "door_height: >#{door_height}<\n"
-                            debug_out "door_width: >#{door_width}<\n"
-                            debug_out "opening_area: >#{opening_area}<\n"
-                            debug_off
-                        elsif comp_name.include?("Window")
-                            window_number = comp.attributes["number"].to_f
-                            window_height = comp.elements["Measurements"].attributes["height"].to_f
-                            window_width = comp.elements["Measurements"].attributes["width"].to_f
-                            opening_area += window_height * window_width * window_number / 1000000
-#                             debug_on
-                            debug_out "window_height: >#{window_height}<\n"
-                            debug_out "window_width: >#{window_width}<\n"
-                            debug_out "opening_area: >#{opening_area}<\n"
-                            debug_off
-                        end
-                    end # END crawlspace.elements["Components"].elements.each do |comp|
-                end # END crawlspace.elements["Components"].nil? == false
-            end # END if crawlspace.nil? == false
-        end # END elements.each(locationText) do |crawlspace|
-        #=================== (3) walkout: calculate foundation wall area of walkout(s) ====================
-        # calculate exterior surfaces area excluding door and window area
-        locationText = "HouseFile/House/Components/Walkout"
-        elements.each(locationText) do |walkout|
-#             debug_on
-#             debug_out_long "walkout: >#{walkout.pretty_inspect}<\n"
-#             debug_off
-            if walkout.nil? == false
-
-                ##### calculate foundation wall area of the walkout
-                if walkout.elements["ExteriorSurfaces"].nil? == false
-                    foundationWallArea += walkout.elements["ExteriorSurfaces"].attributes["aboveGradeArea"].to_f +
-                    walkout.elements["ExteriorSurfaces"].attributes["belowGradeArea"].to_f
-                else  # Added this as the ERS-4386 and ERS-4540 archetypes did not have walkout.elements["ExteriorSurfaces"]  #TODO Q: ok?
-                    foundationWallArea += elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["aboveGrade"].to_f +
-                    elements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["belowGrade"].to_f +
-                    elements["HouseFile/AllResults/Results/Other/GrossArea/Crawlspace"].attributes["wall"].to_f
-                end
-
-                if walkout.elements["Components"].nil? == false
-                    ##### calculate door and window areas of the walkout
-                    walkout.elements["Components"].elements.each do |comp|
-                        comp_name = comp.name
-                        if comp_name.include?("Door")
-                            door_height = comp.elements["Measurements"].attributes["height"].to_f
-                            door_width = comp.elements["Measurements"].attributes["width"].to_f
-                            opening_area += door_height * door_width
-#                             debug_on
-                            debug_out "door_height: >#{door_height}<\n"
-                            debug_out "door_width: >#{door_width}<\n"
-                            debug_out "opening_area: >#{opening_area}<\n"
-                            debug_off
-                        elsif comp_name.include?("Window")
-                            window_number = comp.attributes["number"].to_f
-                            window_height = comp.elements["Measurements"].attributes["height"].to_f
-                            window_width = comp.elements["Measurements"].attributes["width"].to_f
-                            opening_area += window_height * window_width * window_number / 1000000
-#                             debug_on
-                            debug_out "window_height: >#{window_height}<\n"
-                            debug_out "window_width: >#{window_width}<\n"
-                            debug_out "opening_area: >#{opening_area}<\n"
-                            debug_off
-                        end
-                    end
-                end #if walkout.elements["Components"].nil? == false
-            end # if walkout.nil? == false
-        end # elements.each(locationText) do |walkout|
-        #=================== (4) slab: calculate foundation wall area of slab(s) ====================
-        # no foundation wall and no window/door for slabs
-        # ============================================================================================
-        foundationWallArea = foundationWallArea - opening_area
-#         debug_on
-        debug_out "foundationWallArea: >#{foundationWallArea}<\n"
-        debug_off
-        return foundationWallArea
-    end # END getFoundationWallArea
-    # ====================================================================================
-    # foundation slab area required for embodied carbon calculation
-    def H2KFile.getFoundationSlabArea(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
-        foundationSlabArea = 0.0
-        locationText = "HouseFile/House/Components/Basement"
-        elements.each(locationText) do |basement|
-            if basement.nil? == false
-                if basement.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                    foundationSlabArea += basement.elements["Floor/Measurements"].attributes["length"].to_f *
-                    basement.elements["Floor/Measurements"].attributes["width"].to_f
-                else
-                    foundationSlabArea += basement.elements["Floor/Measurements"].attributes["area"].to_f
-                end
+    locationText = "HouseFile/House/Components/Crawlspace"
+    elements.each(locationText) do |crawlspace|
+        if crawlspace.nil? == false
+            if crawlspace.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
+                foundationSlabArea += crawlspace.elements["Floor/Measurements"].attributes["length"].to_f *
+                crawlspace.elements["Floor/Measurements"].attributes["width"].to_f
+            else
+                foundationSlabArea += crawlspace.elements["Floor/Measurements"].attributes["area"].to_f
             end
         end
-        locationText = "HouseFile/House/Components/Crawlspace"
-        elements.each(locationText) do |crawlspace|
-            if crawlspace.nil? == false
-                if crawlspace.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                    foundationSlabArea += crawlspace.elements["Floor/Measurements"].attributes["length"].to_f *
-                    crawlspace.elements["Floor/Measurements"].attributes["width"].to_f
-                else
-                    foundationSlabArea += crawlspace.elements["Floor/Measurements"].attributes["area"].to_f
-                end
-            end
-        end
-        locationText = "HouseFile/House/Components/Walkout"
-        elements.each(locationText) do |walkout|
-            if walkout.nil? == false
-                foundationSlabArea += walkout.elements["Measurements"].attributes["l1"].to_f * walkout.elements["Measurements"].attributes["l2"].to_f
-            end
-        end
-        locationText = "HouseFile/House/Components/Slab"
-        elements.each(locationText) do |slab|
-            if slab.nil? == false
-                if slab.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                    foundationSlabArea += slab.elements["Floor/Measurements"].attributes["length"].to_f *
-                    slab.elements["Floor/Measurements"].attributes["width"].to_f
-                else
-                    foundationSlabArea += slab.elements["Floor/Measurements"].attributes["area"].to_f
-                end
-            end
-        end
-#         debug_on
-        debug_out "foundationSlabArea: >#{foundationSlabArea}<\n"
-        debug_off
-        return foundationSlabArea
     end
-    # ====================================================================================
-    # framed floor area required for embodied carbon calculation
-    def H2KFile.getFramedFloorArea(elements)
-        # Get XML file version that "elements" came from. The version can be from the original file (pre-processed inputs)
-        # or from the post-processed outputs (which will match the version of the H2K CLI used), depending on the "elements"
-        # passed to this function.
-        versionMajor = elements["HouseFile/Application/Version"].attributes["major"].to_i
-        versionMinor = elements["HouseFile/Application/Version"].attributes["minor"].to_i
-        versionBuild = elements["HouseFile/Application/Version"].attributes["build"].to_i
-        if (versionMajor == 11 && versionMinor >= 5 && versionBuild >= 8) || versionMajor > 11 then
-            framedFloorArea = elements["HouseFile/House/Specifications/HeatedFloorArea"].attributes["aboveGrade"].to_f
-        else
-            framedFloorArea = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
+    locationText = "HouseFile/House/Components/Walkout"
+    elements.each(locationText) do |walkout|
+        if walkout.nil? == false
+            foundationSlabArea += walkout.elements["Measurements"].attributes["l1"].to_f * walkout.elements["Measurements"].attributes["l2"].to_f
         end
-#         debug_on
-        debug_out "framedFloorArea: >#{framedFloorArea}<\n"
-        debug_off
-        return framedFloorArea
-    end # End getFramedFloorArea
-    # ====================================================================================
-    # roof insulation area required for embodied carbon calculation
-    def H2KFile.getRoofInsulationArea(elements)
-        roofInsulationArea = 0.0
-        locationText = "HouseFile/House/Components/Ceiling"  #TODO: Q: ceiling of the top floor (see MCE2's definition)
-        elements.each(locationText) do |ceiling|
-            if ceiling.nil? == false
-                if ceiling.elements["Construction/Type/English"].include?("Flat")
-                    roofInsulationArea += ceiling.elements["Measurements"].attributes["area"].to_f
-                else
-                    slope = ceiling.elements["Measurements/Slope"].attributes["value"].to_f
-                    roofInsulationArea += ceiling.elements["Measurements"].attributes["area"].to_f / Math.sqrt(1 + slope**2)  #TODO Q: HOT2000's slope is ratio not tan(angle), correct?
-                end
+    end
+    locationText = "HouseFile/House/Components/Slab"
+    elements.each(locationText) do |slab|
+        if slab.nil? == false
+            if slab.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
+                foundationSlabArea += slab.elements["Floor/Measurements"].attributes["length"].to_f *
+                slab.elements["Floor/Measurements"].attributes["width"].to_f
+            else
+                foundationSlabArea += slab.elements["Floor/Measurements"].attributes["area"].to_f
             end
         end
-#         debug_on
-        debug_out "roofInsulationArea: >#{roofInsulationArea}<\n"
-        debug_off
-        return roofInsulationArea
     end
-    # ====================================================================================
+#         debug_on
+    debug_out "foundationSlabArea: >#{foundationSlabArea}<\n"
+    debug_off
+    return foundationSlabArea
+  end
+
+  # ====================================================================================
 
 end # END module H2KFile
 
