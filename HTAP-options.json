@@ -4087,7 +4087,7 @@
         "h2kMap": {
           "base": {
             "<Opt-Ceiling>": "CeilR70",
-            "OPT-H2K-EffRValue": "NA"
+            "OPT-H2K-EffRValue": "70"
           }
         },
         "costs": {
