@@ -1261,6 +1261,7 @@ module HTAPData
       results[$aliasLongArch]["House-HasSlab"]               = $House_HasSlab
       results[$aliasLongArch]["House-HasSlab-Door"]          = $House_HasSlabDoor
       results[$aliasLongArch]["House-HasSlab-Window"]        = $House_HasSlabWindow
+      results[$aliasLongArch]["Foundation-Slab-Type"]        = $FoundationSlabType
       # Extra data for embodied carbon calculation END
 
     end

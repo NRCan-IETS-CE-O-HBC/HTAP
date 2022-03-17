@@ -2038,7 +2038,56 @@ module H2KFile
     debug_off
     return foundationSlabArea
   end
+  # ====================================================================================
+  # The below method is for finding what type of foundation slab a house has (needed for embodied carbon calculation)
+  def H2KFile.getFoundationSlabType(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
+    foundationSlabType = 'unknown'
+    locationText = "HouseFile/House/Components/Basement"
+    elements.each(locationText) do |basement|
+        if basement.nil? == false
+            if basement.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
+                foundationSlabType = 'BelowGrade'
+            else
+                foundationSlabType = 'OnGrade'
+            end
+        end
+    end
+    locationText = "HouseFile/House/Components/Crawlspace"
+    elements.each(locationText) do |crawlspace|
+        if crawlspace.nil? == false
+            if crawlspace.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
+                foundationSlabType = 'BelowGrade'
+            else
+                foundationSlabType = 'OnGrade'
+            end
+        end
+    end
+    locationText = "HouseFile/House/Components/Walkout"
+    elements.each(locationText) do |walkout|
+        if walkout.nil? == false
+            if walkout.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
+                foundationSlabType = 'BelowGrade'
+            else
+                foundationSlabType = 'OnGrade'
+            end
+        end
+    end
+    locationText = "HouseFile/House/Components/Slab"
+    elements.each(locationText) do |slab|
+        if slab.nil? == false
+            if slab.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
+                foundationSlabType = 'BelowGrade'
+            else
+                foundationSlabType = 'OnGrade'
+            end
+        end
+    end
+#     debug_on
+    debug_out "foundationSlabType: >#{foundationSlabType}<\n"
+    debug_off
+    return foundationSlabType
 
+  end
   # ====================================================================================
 
 end # END module H2KFile

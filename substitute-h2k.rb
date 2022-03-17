@@ -5477,6 +5477,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
         $House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
         $House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
+        $FoundationSlabType = H2KFile.getFoundationSlabType(h2kPostElements)
 # 		debug_on
 		debug_out "FootingLength? >#{$FootingLength}<\n"
 		debug_out "FoundationWallArea? >#{$FoundationWallArea}<\n"
@@ -5487,6 +5488,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 		debug_out "House_HasCrawlspace? >#{$House_HasCrawlspace}<\n"
 		debug_out "House_HasWalkout? >#{$House_HasWalkout}<\n"
 		debug_out "House_HasSlab? >#{$House_HasSlab}<\n"
+		debug_out "FoundationSlabType? >#{$FoundationSlabType}<\n"
 		debug_off
 		# Get data for embodied carbon calculation END
 		
