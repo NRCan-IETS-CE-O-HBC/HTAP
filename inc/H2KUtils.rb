@@ -1993,15 +1993,16 @@ module H2KFile
   # ====================================================================================
   # The below method is for the calculation of foundation slab area required for the embodied carbon estimation using MCE2
   def H2KFile.getFoundationSlabArea(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
-    foundationSlabArea = 0.0
+    foundationSlabArea_BelowGrade = 0.0
+    foundationSlabArea_OnGrade = 0.0
     locationText = "HouseFile/House/Components/Basement"
     elements.each(locationText) do |basement|
         if basement.nil? == false
             if basement.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                foundationSlabArea += basement.elements["Floor/Measurements"].attributes["length"].to_f *
+                foundationSlabArea_BelowGrade += basement.elements["Floor/Measurements"].attributes["length"].to_f *
                 basement.elements["Floor/Measurements"].attributes["width"].to_f
             else
-                foundationSlabArea += basement.elements["Floor/Measurements"].attributes["area"].to_f
+                foundationSlabArea_BelowGrade += basement.elements["Floor/Measurements"].attributes["area"].to_f
             end
         end
     end
@@ -2009,83 +2010,66 @@ module H2KFile
     elements.each(locationText) do |crawlspace|
         if crawlspace.nil? == false
             if crawlspace.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                foundationSlabArea += crawlspace.elements["Floor/Measurements"].attributes["length"].to_f *
+                foundationSlabArea_BelowGrade += crawlspace.elements["Floor/Measurements"].attributes["length"].to_f *
                 crawlspace.elements["Floor/Measurements"].attributes["width"].to_f
             else
-                foundationSlabArea += crawlspace.elements["Floor/Measurements"].attributes["area"].to_f
+                foundationSlabArea_BelowGrade += crawlspace.elements["Floor/Measurements"].attributes["area"].to_f
             end
         end
     end
     locationText = "HouseFile/House/Components/Walkout"
     elements.each(locationText) do |walkout|
         if walkout.nil? == false
-            foundationSlabArea += walkout.elements["Measurements"].attributes["l1"].to_f * walkout.elements["Measurements"].attributes["l2"].to_f
+            foundationSlabArea_BelowGrade += walkout.elements["Measurements"].attributes["l1"].to_f * walkout.elements["Measurements"].attributes["l2"].to_f
         end
     end
     locationText = "HouseFile/House/Components/Slab"
     elements.each(locationText) do |slab|
         if slab.nil? == false
             if slab.elements["Floor/Measurements"].attributes["isRectangular"] == 'true'
-                foundationSlabArea += slab.elements["Floor/Measurements"].attributes["length"].to_f *
+                foundationSlabArea_OnGrade += slab.elements["Floor/Measurements"].attributes["length"].to_f *
                 slab.elements["Floor/Measurements"].attributes["width"].to_f
             else
-                foundationSlabArea += slab.elements["Floor/Measurements"].attributes["area"].to_f
+                foundationSlabArea_OnGrade += slab.elements["Floor/Measurements"].attributes["area"].to_f
             end
         end
     end
-#         debug_on
-    debug_out "foundationSlabArea: >#{foundationSlabArea}<\n"
-    debug_off
-    return foundationSlabArea
+    return foundationSlabArea_BelowGrade, foundationSlabArea_OnGrade
   end
   # ====================================================================================
   # The below method is for finding what type of foundation slab a house has (needed for embodied carbon calculation)
   def H2KFile.getFoundationSlabType(elements) # (1) basement, (2) crawlspace, (3) walkout, (4) slab
-    foundationSlabType = 'unknown'
+    foundationSlabType_BelowGrade = false
+    foundationSlabType_OnGrade = false
     locationText = "HouseFile/House/Components/Basement"
     elements.each(locationText) do |basement|
         if basement.nil? == false
-            if basement.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
-                foundationSlabType = 'BelowGrade'
-            else
-                foundationSlabType = 'OnGrade'
-            end
+            foundationSlabType_BelowGrade = true
         end
     end
     locationText = "HouseFile/House/Components/Crawlspace"
     elements.each(locationText) do |crawlspace|
         if crawlspace.nil? == false
-            if crawlspace.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
-                foundationSlabType = 'BelowGrade'
-            else
-                foundationSlabType = 'OnGrade'
-            end
+            foundationSlabType_BelowGrade = true
         end
     end
     locationText = "HouseFile/House/Components/Walkout"
     elements.each(locationText) do |walkout|
         if walkout.nil? == false
-            if walkout.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
-                foundationSlabType = 'BelowGrade'
-            else
-                foundationSlabType = 'OnGrade'
-            end
+            foundationSlabType_BelowGrade = true
         end
     end
     locationText = "HouseFile/House/Components/Slab"
     elements.each(locationText) do |slab|
         if slab.nil? == false
-            if slab.elements["Floor/Construction"].attributes["isBelowFrostline"] == 'true'
-                foundationSlabType = 'BelowGrade'
-            else
-                foundationSlabType = 'OnGrade'
-            end
+            foundationSlabType_OnGrade = true
         end
     end
 #     debug_on
-    debug_out "foundationSlabType: >#{foundationSlabType}<\n"
+    debug_out "foundationSlabType_BelowGrade: >#{foundationSlabType_BelowGrade}<\n"
+    debug_out "foundationSlabType_OnGrade: >#{foundationSlabType_OnGrade}<\n"
     debug_off
-    return foundationSlabType
+    return foundationSlabType_BelowGrade, foundationSlabType_OnGrade
 
   end
   # ====================================================================================

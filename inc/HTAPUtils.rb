@@ -1143,7 +1143,8 @@ module HTAPData
 	  # Data for embodied carbon calculation START
 	  "Footing-Length-m"        => $FootingLength,
 	  "Foundation-Wall-Area-m2" => $FoundationWallArea,
-	  "Foundation-Slab-Area-m2" => $FoundationSlabArea,
+	  "Foundation-Slab-BelowGrade-Area-m2" => $FoundationSlabArea_BelowGrade,
+	  "Foundation-Slab-OnGrade-Area-m2" => $FoundationSlabArea_OnGrade,
 	  "Framed-Floor-Area-m2"    => $FramedFloorArea,
 	  "Roofing-Area-m2"         => $RoofingArea,
 	  # Data for embodied carbon calculation END
@@ -1249,19 +1250,20 @@ module HTAPData
       results[$aliasLongOutput]["HotWaterWood-GJ"]   = $gResults[$outputHCode]['AnnHotWaterWoodGJ'].round(1)
 
       # Extra data for embodied carbon calculation START
-      results[$aliasLongArch]["House-HasBasement"]           = $House_HasBasement
-      results[$aliasLongArch]["House-HasBasement-Door"]      = $House_HasBasementDoor
-      results[$aliasLongArch]["House-HasBasement-Window"]    = $House_HasBasementWindow
-      results[$aliasLongArch]["House-HasCrawlspace"]         = $House_HasCrawlspace
-      results[$aliasLongArch]["House-HasCrawlspace-Door"]    = $House_HasCrawlspaceDoor
-      results[$aliasLongArch]["House-HasCrawlspace-Window"]  = $House_HasCrawlspaceWindow
-      results[$aliasLongArch]["House-HasWalkout"]            = $House_HasWalkout
-      results[$aliasLongArch]["House-HasWalkout-Door"]       = $House_HasWalkoutDoor
-      results[$aliasLongArch]["House-HasWalkout-Window"]     = $House_HasWalkoutWindow
-      results[$aliasLongArch]["House-HasSlab"]               = $House_HasSlab
-      results[$aliasLongArch]["House-HasSlab-Door"]          = $House_HasSlabDoor
-      results[$aliasLongArch]["House-HasSlab-Window"]        = $House_HasSlabWindow
-      results[$aliasLongArch]["Foundation-Slab-Type"]        = $FoundationSlabType
+      results[$aliasLongArch]["House-HasBasement"]                   = $House_HasBasement
+      results[$aliasLongArch]["House-HasBasement-Door"]              = $House_HasBasementDoor
+      results[$aliasLongArch]["House-HasBasement-Window"]            = $House_HasBasementWindow
+      results[$aliasLongArch]["House-HasCrawlspace"]                 = $House_HasCrawlspace
+      results[$aliasLongArch]["House-HasCrawlspace-Door"]            = $House_HasCrawlspaceDoor
+      results[$aliasLongArch]["House-HasCrawlspace-Window"]          = $House_HasCrawlspaceWindow
+      results[$aliasLongArch]["House-HasWalkout"]                    = $House_HasWalkout
+      results[$aliasLongArch]["House-HasWalkout-Door"]               = $House_HasWalkoutDoor
+      results[$aliasLongArch]["House-HasWalkout-Window"]             = $House_HasWalkoutWindow
+      results[$aliasLongArch]["House-HasSlab"]                       = $House_HasSlab
+      results[$aliasLongArch]["House-HasSlab-Door"]                  = $House_HasSlabDoor
+      results[$aliasLongArch]["House-HasSlab-Window"]                = $House_HasSlabWindow
+      results[$aliasLongArch]["Foundation-Slab-Type-BelowGrade"]     = $FoundationSlabType_BelowGrade
+      results[$aliasLongArch]["Foundation-Slab-Type-OnGrade"]        = $FoundationSlabType_OnGrade
       # Extra data for embodied carbon calculation END
 
     end

@@ -5470,25 +5470,27 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Note: HTAP's 'Area-Ceiling-m2' will be used as MCE2's 'Roof Insulation Area'
         $FootingLength = H2KFile.getFootingLength(h2kPostElements)
         $FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements)
-        $FoundationSlabArea = H2KFile.getFoundationSlabArea(h2kPostElements)
+        $FoundationSlabArea_BelowGrade, $FoundationSlabArea_OnGrade = H2KFile.getFoundationSlabArea(h2kPostElements)
         $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
         $RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
         $House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
         $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
         $House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
         $House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
-        $FoundationSlabType = H2KFile.getFoundationSlabType(h2kPostElements)
+        $FoundationSlabType_BelowGrade, $foundationSlabType_OnGrade = H2KFile.getFoundationSlabType(h2kPostElements)
 # 		debug_on
 		debug_out "FootingLength? >#{$FootingLength}<\n"
 		debug_out "FoundationWallArea? >#{$FoundationWallArea}<\n"
-		debug_out "FoundationSlabArea? >#{$FoundationSlabArea}<\n"
+		debug_out "FoundationSlabArea_BelowGrade? >#{$FoundationSlabArea_BelowGrade}<\n"
+		debug_out "FoundationSlabArea_OnGrade? >#{$FoundationSlabArea_OnGrade}<\n"
 		debug_out "FramedFloorArea? >#{$FramedFloorArea}<\n"
 		debug_out "RoofingArea? >#{$RoofingArea}<\n"
 		debug_out "House_HasBasement? >#{$House_HasBasement}<\n"
 		debug_out "House_HasCrawlspace? >#{$House_HasCrawlspace}<\n"
 		debug_out "House_HasWalkout? >#{$House_HasWalkout}<\n"
 		debug_out "House_HasSlab? >#{$House_HasSlab}<\n"
-		debug_out "FoundationSlabType? >#{$FoundationSlabType}<\n"
+		debug_out "FoundationSlabType_BelowGrade? >#{$FoundationSlabType_BelowGrade}<\n"
+		debug_out "FoundationSlabType_OnGrade? >#{$FoundationSlabType_OnGrade}<\n"
 		debug_off
 		# Get data for embodied carbon calculation END
 		
