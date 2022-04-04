@@ -5477,7 +5477,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
         $House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
         $House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
-        $FoundationSlabType_BelowGrade, $foundationSlabType_OnGrade = H2KFile.getFoundationSlabType(h2kPostElements)
+        $FoundationSlabType_BelowGrade, $FoundationSlabType_OnGrade = H2KFile.getFoundationSlabType(h2kPostElements)
 # 		debug_on
 		debug_out "FootingLength? >#{$FootingLength}<\n"
 		debug_out "FoundationWallArea? >#{$FoundationWallArea}<\n"
