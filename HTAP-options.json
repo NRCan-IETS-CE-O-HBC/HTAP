@@ -4071,8 +4071,8 @@
       "CeilR60": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR60",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
           }
         },
         "costs": {
