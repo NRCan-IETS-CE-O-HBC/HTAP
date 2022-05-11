@@ -171,7 +171,7 @@ def update_run_status (
     msg = "  --> Batch ##{$bufferStatus[:batch]} [Runs Active: #{$bufferStatus[:current_threads]}/#{$bufferStatus[:threads_total]}, Runs done: #{$bufferStatus[:run_count]} (#{$bufferStatus[:frac_done]}%), #{err_txt}, ETA: #{$bufferStatus[:time_left]}] - #{$bufferStatus[:action]}",
     extrashort = 0,
     truncStr = '[...]',
-    newline=FALSE
+    newline=false
   )
 
   update_buffer(update_txt)
