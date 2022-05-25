@@ -1947,6 +1947,7 @@ module H2KOutput
     #debug_on
 
     myBrowseData = {"monthly"=>Hash.new, "daily" => Hash.new, "annual" => Hash.new }
+    myBrowseData["annual"]["volume"] = Hash.new
     fBrowseRpt = File.new(myBrowseRptFile, "r")
     # fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'UTF-8', :invalid=>:replace, :replace=>"?" )
     # fBrowseRpt = File.new(myBrowseRptFile, "r", :encoding => 'UTF-16BE', :invalid=>:replace, :replace=>"?" )
@@ -1961,6 +1962,7 @@ module H2KOutput
 
     $hourlyFoundACData = false 
     lineNo = 0
+    #debug_on()
     while !fBrowseRpt.eof? do
 
       lineNo = lineNo+ 1
@@ -1970,7 +1972,8 @@ module H2KOutput
       line.strip!
       # Remove leading and trailing whitespace
 
-
+      
+      debug_out(line)
       # ==============================================================
       # Heating section 
 
@@ -2275,7 +2278,7 @@ module H2KOutput
       # ==============================================================
       # Building Parameters Section
       if ( line =~ /\*\*\* BUILDING PARAMETERS SUMMARY \*\*\*/ )
-        myBrowseData["annual"]["volume"]={"house_volume_m^3"=> 0.0}
+        myBrowseData["annual"]["volume"]["house_volume_m^3"] = 0.0
         myBrowseData["annual"]["area"]={"walls_net_m^2"=> nil,
                                         "ceiling_m^2" => nil
         }
@@ -2292,10 +2295,13 @@ module H2KOutput
         else
 
           words = line.split(/\s+/)
+         
+          debug_out(line)
 
           if ( line =~ /m3/i ) then
+            
             debug_out ("Volume: #{words[0]}\n")
-            myBrowseData["annual"]["volume"]["house_volume_m^3"] = words[0].to_f
+            myBrowseData["annual"]["volume"]["house_volume_m^3"] += words[0].to_f
           end
           if ( line =~ /Main Walls/i ) then
             myBrowseData["annual"]["area"]["walls_net_m^2"] = words[3].to_f
@@ -2309,7 +2315,7 @@ module H2KOutput
       # ==============================================================
       # Foundation Section
       if ( line =~ /\*\*\* FOUNDATIONS \*\*\*/ )
-        myBrowseData["annual"]["volume"]={"basement_volume_m^3" => 0.0}
+        myBrowseData["annual"]["volume"]["basement_volume_m^3"] = 0.0
 
 
 
@@ -2318,17 +2324,25 @@ module H2KOutput
 
       if (flagFOUNDPARPref)
 
+
         if ( line =~ /\*\*\* Foundation Floor Header Code Schedule \*\*\*/ )
           flagFOUNDPARPref = false
         else
 
-          words = line.split(/\s+/)
 
-          if ( line =~ /Foundation type/i ) then
-            myBrowseData["annual"]["volume"]["basement_volume_m^3"] = words[6].to_f
+
+
+          if ( line =~ /Foundation type/i && line =~ /Volume/ ) then
+
+            words = line.split(/\s+/)
+
+            myBrowseData["annual"]["volume"]["basement_volume_m^3"] += words[6].to_f
+
+
           end
 
         end
+
       end
       # ==============================================================
       # General House Characteristics
@@ -2493,6 +2507,8 @@ module H2KOutput
 
 
     end 
+
+
 
     return myBrowseData
 
