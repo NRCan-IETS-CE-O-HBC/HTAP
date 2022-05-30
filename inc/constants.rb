@@ -220,7 +220,7 @@ AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
 
 
 
-$epwRemoteServer = "https://energyplus.net/weather-download/north_and_central_america_wmo_region_4/CAN/"
+$epwRemoteServer = "https://energyplus-weather.s3.amazonaws.com/north_and_central_america_wmo_region_4/CAN/"
 
 $epwLocaleHash =  {
     "WHITEHORSE" => "YT/CAN_YT_Whitehorse.719640_CWEC/CAN_YT_Whitehorse.719640_CWEC.epw" ,
