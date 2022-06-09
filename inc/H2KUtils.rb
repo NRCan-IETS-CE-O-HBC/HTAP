@@ -2683,17 +2683,19 @@ module H2KOutput
         end
 
         # ASF 03-Oct-2016 - picking up PV generation from each individual result set.
+
         if ( $PVIntModel )
           pvAvailable = 0
           pvUtilized  = 0
           #monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
           monthArr.each do |mth|
+
             # ASF: 03-Oct-2016: Note inner caps on PhotoVoltaic likely an error (and inconsistent with convention used
             #                   elsewhere in the h2k file. Watch out for future .h2k file format changes here!)
             # ASF: 05-Oct-2016: I suspect this loop is really expensive.
-            pvAvailable += h2kPostElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f
+            pvAvailable += myElements[".//Monthly/Load/PhotoVoltaicAvailable"].attributes[mth].to_f
             # GJ
-            pvUtilized  += h2kPostElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f
+            pvUtilized  += myElements[".//Monthly/Load/PhotoVoltaicUtilized"].attributes[mth].to_f
             # GJ
           end
           # 10-Nov-2016 JTB: Use annual PV values only! HOT2000 redistributes the monthly excesses, if available!
@@ -2705,7 +2707,7 @@ module H2KOutput
           # kWh
           myResults[houseCode]["avgElecPVUsedkWh"] = myResults[houseCode]["avgEnergyPVUtilizedGJ"] * 277.777778
           # kWh
-
+          
           # ***** Calculation of NET PV Revenue using HOT2000 model *****
           # 10-Nov-2016 JTB: Assumes that all annual PV energy available is used to reduce house electricity
           # to zero first, the balance is sold to utility at the rate PVTarrifDollarsPerkWh,
