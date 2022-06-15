@@ -154,20 +154,20 @@ module HTAPData
 
   # Returns a hash containing the HTAP options data structure. Pareses the file and creates 
   # the hash on first call. 
-  def HTAPData.getOptionsData()
-
+  def HTAPData.getOptionsData( file = "nil" )
+    debug_out ("Recovering option data, passed file = #{file}...\n")
     if ( ! $gHTAPOptionsParsed ) then 
 
 
-      log_out ("Parsing options file - #{$gHTAPOptionsFile}")
-      if ( ! File.exist? ($gHTAPOptionsFile) )
-        err_out "Options file '#{$gHTAPOptionsFile}' does not exist.  "
+      log_out ("Parsing options file - #{file}")
+      if ( ! File.exist? (file) )
+        err_out "Options file '#{file}' does not exist.  "
         err_out "Options file must be specified with the -o option, or via the .run file."
         fatalerror("Could not find options file")
 
       end 
 
-      $gHTAPOptions = HTAPData.parse_json_options_file($gHTAPOptionsFile)
+      $gHTAPOptions = HTAPData.parse_json_options_file(file)
 
       #fHTAPOptions = File.new($gHTAPOptionsFile, "r")
       #if (fHTAPOptions == nil ) then 
@@ -180,7 +180,7 @@ module HTAPData
       #$gHTAPOptions = JSON.parse(rawOptions )
       #rawOptions  = nil
 
-      info_out ("Parsed options file #{$gHTAPOptionsFile}")
+      info_out ("Parsed options file #{file}")
       $gHTAPOptionsParsed = true
 
     end 

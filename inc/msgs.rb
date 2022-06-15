@@ -168,7 +168,7 @@ def update_run_status (
   end 
 
   update_txt = shortenToTerm(
-    msg = "  --> Batch ##{$bufferStatus[:batch]} [Runs Active: #{$bufferStatus[:current_threads]}/#{$bufferStatus[:threads_total]}, Runs done: #{$bufferStatus[:run_count]} (#{$bufferStatus[:frac_done]}%), #{err_txt}, ETA: #{$bufferStatus[:time_left]}] - #{$bufferStatus[:action]}",
+    msg = " -> Batch ##{$bufferStatus[:batch]} [Threads Active: #{$bufferStatus[:current_threads]}/#{$bufferStatus[:threads_total]}, Runs done: #{$bufferStatus[:run_count]} (#{$bufferStatus[:frac_done]}%), #{err_txt}, ETA: #{$bufferStatus[:time_left]}] - #{$bufferStatus[:action]}",
     extrashort = 0,
     truncStr = '[...]',
     newline=false
@@ -361,6 +361,12 @@ def debug_on()
   debug_out_now(debmsg,callerID)
   return 1
 end
+
+
+
+
+
+
 # =========================================================================================
 # Hook disabling debugging from within a routine
 # =========================================================================================
@@ -403,6 +409,19 @@ def debug_test_functions()
 
 end 
 
+
+# check if debug is active 
+
+def debug_status()
+  return false if ( $gNoDebug )
+  callerID = caller_info() 
+  if( $localDebug[callerID["routine"]].nil? ) then
+    lDebug = false
+  else
+    lDebug = $localDebug[callerID["routine"]]
+  end
+  return lDebug 
+end 
 
 # Check of debugging is active, and if so, call debug_out_now
 # to write out debugging messages.

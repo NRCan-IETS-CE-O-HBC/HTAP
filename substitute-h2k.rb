@@ -7283,7 +7283,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
     $gResults.clear
 
 
-
+    $keepH2KFolder = true
 if ( ! $PRMcall )
   if !$keepH2KFolder
     FileUtils.rm_r ( "#{$gMasterPath}\\H2K" )

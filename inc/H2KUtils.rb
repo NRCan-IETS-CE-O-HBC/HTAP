@@ -396,19 +396,17 @@ module H2KFile
   # Returns XML elements of HOT2000 file.
   # =========================================================================================
   def H2KFile.get_elements_from_filename(fileSpec)
-
     # Split fileSpec into path and filename
     var = Array.new()
     (var[1], var[2]) = File.split( fileSpec )
     # Determine file extension
     tempExt = File.extname(var[2])
-
-    debug_out "Testing file read location, #{fileSpec}... "
-
-
+    debug_out "Extention is #{tempExt}.\n"
+    
     # Open file...
     begin
       fFileHANDLE = File.new(fileSpec, "r")
+      debug_out ("a")
       if fFileHANDLE == nil then
         fatalerror("Could not read #{fileSpec}.\n")
       end
@@ -425,7 +423,7 @@ module H2KFile
         $XMLOtherdoc = Document.new(fFileHANDLE)
       end
     rescue
-      warn_out ("Errors encounterd when reading #{fileSpec}")
+      #warn_out ("Errors encounterd when reading #{fileSpec}")
     ensure
 
       fFileHANDLE.close() # Close the since content read
@@ -1879,6 +1877,46 @@ end
 # =========================================================================================
 module H2KUtils
 
+  def H2KUtils.create_run_environment(src_path,run_path)
+    env_ok = true  
+    dest_path = "#{run_path}"
+    if ( ! Dir.exist?( dest_path ) )
+      if ( ! FileUtils.mkdir(dest_path) )
+        warn_out (" Could not create H2K folder at #{run_path}. Return error code #{$?}.")
+      end 
+      stream_out (" Copying H2K program folder to #{dest_path} ...")
+      FileUtils.cp_r("#{src_path}/.", "#{dest_path}")
+      stream_out (" (done)\n")
+    end
+
+    stream_out (" -> Checking integrity of H2K installation\n")
+    
+    masterMD5  = checksum("#{src_path}").to_s
+    workingMD5 = checksum("#{dest_path}").to_s
+
+    stream_out ("    - master:        #{masterMD5}\n")
+    stream_out ("    - working copy:  #{workingMD5}")
+
+
+    if (masterMD5.eql? workingMD5) then
+      stream_out(" (checksum match)\n")
+
+      $gStatus["MD5master"] = $masterMD5.to_s
+      $gStatus["MD5workingcopy"] = $workingMD5.to_s
+      $gStatus["H2KDirCopyAttempts"] = $CopyTries.to_s
+      $gStatus["H2KDirCheckSumMatch"] = $DirVerified
+
+    else
+      FileUtils.rm_r ( dest_path )
+      stream_out(" (CHECKSUM MISMATCH!!!)\n")
+      warn_out("Working H2K installation dir (#{dest_path}) differs from source #{$src_path}.")
+      env_ok = false 
+    end
+
+    return env_ok 
+
+  end 
+
   # =========================================================================================
   # Add magic h2k files for diagnostics, if they don't already exist.
   # =========================================================================================
@@ -2781,7 +2819,7 @@ end
 
 # Compute a checksum for directory, ignoring files that HOT2000 commonly alters during ar run
 # Can this be put inside the module?
-def self.checksum(dir)
+def checksum(dir)
   begin
     md5 = Digest::MD5.new
     searchLoc = dir.gsub(/\\/, "/")
