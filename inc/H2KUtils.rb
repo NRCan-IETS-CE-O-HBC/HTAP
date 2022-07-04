@@ -665,10 +665,27 @@ module H2KFile
     else
         framedFloorArea = elements["HouseFile/House/Specifications"].attributes["aboveGradeHeatedFloorArea"].to_f
     end
-#         debug_on
+
+    number_of_stories_string = H2KFile.getStoreys(elements)
+    myH2KHouseInfo = H2KFile.getAllInfo(elements)
+    exposedFloorArea_m2 = myH2KHouseInfo['dimensions']['exposed-floors']['area']['total']
+    foundationSlabArea_BelowGrade, foundationSlabArea_OnGrade = H2KFile.getFoundationSlabArea(elements)
+
+    # Calculate framed floor area of the floors where there is no living floor below
+    framedFloorArea_withoutLivingFloorBelow = foundationSlabArea_OnGrade + exposedFloorArea_m2
+
+    # Calculate framed floor area of the floors where there are living floors below
+    framedFloorArea_withLivingFloorBelow = framedFloorArea - framedFloorArea_withoutLivingFloorBelow
+
+    debug_on
     debug_out "framedFloorArea: >#{framedFloorArea}<\n"
+    debug_out "number_of_stories_string: >#{number_of_stories_string}<\n"
+    debug_out "exposedFloorArea_m2: >#{exposedFloorArea_m2}<\n"
+    debug_out "foundationSlabArea_OnGrade: >#{foundationSlabArea_OnGrade}<\n"
+    debug_out "framedFloorArea_withoutLivingFloorBelow: >#{framedFloorArea_withoutLivingFloorBelow}<\n"
+    debug_out "framedFloorArea_withLivingFloorBelow: >#{framedFloorArea_withLivingFloorBelow}<\n"
     debug_off
-    return framedFloorArea
+    return framedFloorArea, framedFloorArea_withoutLivingFloorBelow, framedFloorArea_withLivingFloorBelow
   end # End getFramedFloorArea
 
   # ====================================================================================

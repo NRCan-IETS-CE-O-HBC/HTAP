@@ -1146,6 +1146,8 @@ module HTAPData
 	  "Foundation-Slab-BelowGrade-Area-m2" => $FoundationSlabArea_BelowGrade,
 	  "Foundation-Slab-OnGrade-Area-m2" => $FoundationSlabArea_OnGrade,
 	  "Framed-Floor-Area-m2"    => $FramedFloorArea,
+	  "Framed-Floor-Area-withLivingFloorBelow-m2"    => $FramedFloorArea_withLivingFloorBelow,
+	  "Framed-Floor-Area-withoutLivingFloorBelow-m2"    => $FramedFloorArea_withoutLivingFloorBelow,
 	  "Roofing-Area-m2"         => $RoofingArea,
 	  # Data for embodied carbon calculation END
 

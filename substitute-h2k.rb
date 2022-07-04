@@ -5471,19 +5471,21 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $FootingLength = H2KFile.getFootingLength(h2kPostElements)
         $FoundationWallArea = H2KFile.getFoundationWallArea(h2kPostElements)
         $FoundationSlabArea_BelowGrade, $FoundationSlabArea_OnGrade = H2KFile.getFoundationSlabArea(h2kPostElements)
-        $FramedFloorArea = H2KFile.getFramedFloorArea(h2kPostElements)
+        $FramedFloorArea, $FramedFloorArea_withoutLivingFloorBelow, $FramedFloorArea_withLivingFloorBelow = H2KFile.getFramedFloorArea(h2kPostElements)
         $RoofingArea = H2KFile.getRoofingArea(h2kPostElements)
         $House_HasBasement, $House_HasBasementDoor, $House_HasBasementWindow,
         $House_HasCrawlspace, $House_HasCrawlspaceDoor, $House_HasCrawlspaceWindow,
         $House_HasWalkout, $House_HasWalkoutDoor, $House_HasWalkoutWindow,
         $House_HasSlab, $House_HasSlabDoor, $House_HasSlabWindow = H2KFile.getHouseBelowGradeInfo(h2kPostElements)
         $FoundationSlabType_BelowGrade, $FoundationSlabType_OnGrade = H2KFile.getFoundationSlabType(h2kPostElements)
-# 		debug_on
+		debug_on
 		debug_out "FootingLength? >#{$FootingLength}<\n"
 		debug_out "FoundationWallArea? >#{$FoundationWallArea}<\n"
 		debug_out "FoundationSlabArea_BelowGrade? >#{$FoundationSlabArea_BelowGrade}<\n"
 		debug_out "FoundationSlabArea_OnGrade? >#{$FoundationSlabArea_OnGrade}<\n"
 		debug_out "FramedFloorArea? >#{$FramedFloorArea}<\n"
+		debug_out "FramedFloorArea_withLivingFloorBelow? >#{$FramedFloorArea_withLivingFloorBelow}<\n"
+		debug_out "FramedFloorArea_withoutLivingFloorBelow? >#{$FramedFloorArea_withoutLivingFloorBelow}<\n"
 		debug_out "RoofingArea? >#{$RoofingArea}<\n"
 		debug_out "House_HasBasement? >#{$House_HasBasement}<\n"
 		debug_out "House_HasCrawlspace? >#{$House_HasCrawlspace}<\n"
