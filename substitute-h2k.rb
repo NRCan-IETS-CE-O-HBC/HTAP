@@ -2010,6 +2010,10 @@ def processFile(h2kElements)
                 # Need to remove DWHR section!
                 h2kElements[locationText].delete_element("DrainWaterHeatRecovery")
               end
+              if ( h2kElements["HouseFile/House/Components/HotWater/Secondary"] != nil )
+			    h2kElements["HouseFile/House/Components/HotWater/Secondary"].delete_element("DrainWaterHeatRecovery")
+				h2kElements["HouseFile/House/Components/HotWater/Secondary"].attributes["hasDrainWaterHeatRecovery"] = "false"
+			  end
             end
             h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value
             # Flag for DWHR
