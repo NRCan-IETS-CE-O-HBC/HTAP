@@ -11469,7 +11469,19 @@
             "hrv:conventional_sre_70%_@_0:61%_@_-25"
           ]
         }
-      }
+      },
+      "NBC_noVNT": {
+        "h2kMap": {
+          "base": {
+            "Opt-IsActive": "delete"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "VentFans_sre_0"
+        }
+       }
     },
     "default": "NA",
     "stop-on-error": true,
