@@ -2238,7 +2238,7 @@ def processFile(h2kElements)
             sysType2.each do |sysType2Name|
               if ( sysType2Name == "AirHeatPump" )
                 locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
-                if ( h2kElements[locationText] != nil )
+                if ( h2kElements[locationText] != nil && h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"] != nil )
                   locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Equipment"
                   h2kElements[locationText].attributes["crankcaseHeater"] = value
                 end
