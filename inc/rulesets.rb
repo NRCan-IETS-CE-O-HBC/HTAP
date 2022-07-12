@@ -359,6 +359,9 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    else # If it's solar or wood, use gas per Table 9.36.5.16
 	  $ruleSetChoices["Opt-DHWSystem"] = "NBC-HotWater_gas"
    end
+   
+   # DWHR system is removed for the reference house
+   $ruleSetChoices["Opt-DWHR"] = "none"
 
    # Thermal zones and HDD by rule type
    #-------------------------------------------------------------------------
