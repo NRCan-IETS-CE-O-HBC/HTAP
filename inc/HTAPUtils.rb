@@ -1180,6 +1180,7 @@ module HTAPData
       "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
       "Infil-VentHeatLoss-GJ" => $gResults[$outputHCode]["avgVentAndInfilGJ"].round(1),
       "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
+      "Useful-Internal-Gain-GJ" => $gResults[$outputHCode]['avgInternalGainsUtilized'].round(1),
       "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
       "ERSRefHouse_Energy-HeatingGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyHeatingGJ"].round(1),
       "AuxEnergyReq-HeatingGJ" => $gAuxEnergyHeatingGJ.round(1),

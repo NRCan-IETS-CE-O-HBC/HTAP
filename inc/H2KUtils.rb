@@ -2607,7 +2607,12 @@ module H2KOutput
         myResults[houseCode]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f  
         myResults[houseCode]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f  
         myResults[houseCode]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f  
-
+        # Process useful gains
+        monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+        myResults[houseCode]["avgInternalGainsUtilized"] = 0.0
+        monthArr.each do |mth|
+            myResults[houseCode]["avgInternalGainsUtilized"] += element.elements[".//Monthly/Gains/UtilizedInternal"].attributes[mth].to_f / 1000.0
+        end
         myResults[houseCode]["avgFuelCostsElec$"]    = element.elements[".//Annual/ActualFuelCosts"].attributes["electrical"].to_f  
         myResults[houseCode]["avgFuelCostsNatGas$"]  = element.elements[".//Annual/ActualFuelCosts"].attributes["naturalGas"].to_f  
         myResults[houseCode]["avgFuelCostsOil$"]     = element.elements[".//Annual/ActualFuelCosts"].attributes["oil"].to_f  
@@ -2673,7 +2678,7 @@ module H2KOutput
 
       
 
-        monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
+        # monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
         debug_out (" Picking up  AUX energy requirement from each result set. \n")
 
         $gAuxEnergyHeatingGJ = 0
