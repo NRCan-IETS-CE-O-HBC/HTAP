@@ -10728,6 +10728,27 @@
           ]
         }
       },
+      "NBC-propane-furnace": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "4",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "92",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "gas-furnace-psc"
+        }
+      },
       "oil-high-efficiency-noAC": {
         "h2kMap": {
           "base": {

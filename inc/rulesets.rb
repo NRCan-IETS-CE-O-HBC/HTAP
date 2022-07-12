@@ -317,6 +317,8 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-gas-furnace"
    elsif (primHeatFuelName =~ /Oil/i) != nil   # value is Oil
       $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-oil-heat"
+   elsif (primHeatFuelName =~ /Propane/i) != nil   # value is Propane
+      $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-propane-furnace"
    elsif (primHeatFuelName =~ /Elec/i) != nil   # value is "Electricity
       if secSysType =~ /AirHeatPump/   # TODO: Should we also include WSHP & GSHP in this check?
          $ruleSetChoices["Opt-Heating-Cooling"] = "NBC-CCASHP"
