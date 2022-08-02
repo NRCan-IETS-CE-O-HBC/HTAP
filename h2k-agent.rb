@@ -12,8 +12,8 @@ require 'pp'
 include REXML
 
 require_relative 'inc/msgs'
-require_relative 'inc/H2KUtils'
-require_relative 'inc/HTAPUtils'
+require_relative 'inc/H2KUtilities'
+require_relative 'inc/HTAPUtilities'
 require_relative 'inc/constants'
 require_relative 'inc/rulesets'
 
@@ -25,13 +25,28 @@ choice_file = ""
 option_file = ""
 base_h2k_file = ""
 
+$locale = {
+  "location" => "",
+  "hdds"     => 0, 
+  "climate_zone" => ""
+}
+
+
+# Initialize weather directory data
+
+$cmdlineopts = Hash.new 
+
 
 bLookForArchetype = FALSE 
 
 
 h2k_src_path = "C:\\H2K-CLI-Min"
-run_path = $gMasterPath + "\\H2K"
 
+
+# Get the hot2000 weather library. (fi)
+h2k_locations = H2KWth.read_weather_dir(h2k_src_path+"\\Dat\\Wth2020.dir")
+
+ 
 # ======================================================================================
 # h2k-user agent: main flow.
 
@@ -51,13 +66,14 @@ Command line options:
 "
 
 
+
 if ARGV.empty? then
   stream_out drawRuler("A wrapper for HOT2000")
   puts help_msg
   exit()
 end
 
-cmdlineopts = {  
+$cmdlineopts = {  
   "verbose" => false,
   "debug"   => false 
 }
@@ -72,7 +88,7 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on("-c", "--choices FILE", "Specified choice file (mandatory)") do |c|
-    cmdlineopts["choices"] = c
+    $cmdlineopts["choices"] = c
     choice_file = c
     if ( !File.exist?(choice_file) )
       fatalerror("Valid path to choice file must be specified with --choices (or -c) option!")
@@ -80,7 +96,7 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on("-o", "--options FILE", "Specified options file (mandatory)") do |o|
-    cmdlineopts["options"] = o
+    $cmdlineopts["options"] = o
     option_file = o
     if ( !File.exist?(option_file) )
       fatalerror("Valid path to option file must be specified with --options (or -o) option!")
@@ -88,7 +104,7 @@ optparse = OptionParser.new do |opts|
   end            
 
   opts.on("-b", "--base_model FILE", "Specified base file (mandatory)") do |b|
-    cmdlineopts["base_model"] = b
+    $cmdlineopts["base_model"] = b
     base_h2k_file = b
     if !base_h2k_file
       fatalerror("Base folder file name missing after --base_folder (or -b) option!")
@@ -121,7 +137,7 @@ optparse = OptionParser.new do |opts|
 
 
   opts.on("-v", "--verbose", "Run verbosely") do
-    cmdlineopts["verbose"] = true
+    $cmdlineopts["verbose"] = true
     #gTest_params["verbosity"] = "verbose"
   end
 
@@ -147,22 +163,18 @@ optparse = OptionParser.new do |opts|
   #end
 
 
-  #opts.on("-e", "--extra_output1", "Produce and save extended output (v1)") do
-  #  $cmdlineopts["extra_output1"] = true
-  #  $gReadROutStrTxt = false
-  #  $ExtraOutput1 = true
-  #end
+  opts.on("--list_locations", "Produce a list of valid weather locations") do 
+    $cmdlineopts["list_locations"] = true 
+  end 
+
+
+  opts.on("-e", "--extra_output", "Produce and save extended output (v1)") do
+    $cmdlineopts["extra_output"] = true
+  end
 
   #opts.on("-k", "--keep_H2K_folder", "Keep the H2K sub-folder generated during last run.") do
   #  $cmdlineopts["keep_H2K_folder"] = true
   #  keepH2KFolder = true
-  #end
-
-  #opts.on("-l", "--long-prefix", "Use long-prefixes in output .") do
-  #  $aliasInput   = $aliasLongInput              
-  #  $aliasOutput  = $aliasLongOutput  
-  #  $aliasConfig  = $aliasLongConfig  
-  #  $aliasArch    = $aliasLongArch      
   #end
 
   #opts.on("-a", "--auto-cost-options", "Automatically cost the option(s) set for this run.") do
@@ -196,6 +208,8 @@ end
 optparse.parse!
 
 
+debug_on()
+
 stream_out drawRuler("A wrapper for HOT2000")
 
 # Get hot2000 model names
@@ -208,10 +222,9 @@ if debug_status() then
   debug_out " Environment: "
   debug_out "    script location: #{$scriptLocation}\n"
   debug_out "    master path: #{$gMasterPath}\n"
-
   debug_out " Command line options:"
-  cmdlineopts.keys.each do | option |
-    value = cmdlineopts[option]
+  $cmdlineopts.keys.each do | option |
+    value = $cmdlineopts[option]
     debug_out "    #{option} -> #{value}"
   end 
     
@@ -220,16 +233,26 @@ if debug_status() then
   debug_out("    h2k file name: #{h2k_file_name}\n")
 end 
 
-
-
-
 stream_out ("\n Input files:  \n")
 stream_out ("         path: #{$gMasterPath} \n")
 stream_out ("         choice_file: #{choice_file} \n")
 stream_out ("         option_file: #{option_file} \n")
 stream_out ("         Base model: #{base_h2k_file} \n")
 stream_out ("         HOT2000 source folder: #{h2k_src_path} \n")
-stream_out ("         HOT2000 run folder: #{run_path} \n")
+
+if ($cmdlineopts["list_locations"]) then 
+  stream_out drawRuler("Printing a list of valid location keywords")
+  stream_out ("\n Locations:\n")
+  h2k_locations["options"].keys.each do | location |
+    stream_out "  - Key: #{location}  (Region: #{h2k_locations["options"][location]["h2kMap"]["base"]["region_name"]})\n"
+  end 
+
+  stream_out ("\n  -> To use these locations, specify `Opt-Location = KEYWORD `\n\n" )
+  #pp h2k_locations
+  exit
+end 
+
+
 
 # =====================================================================
 # Read inputs
@@ -237,20 +260,38 @@ stream_out drawRuler("Parsing input data")
 stream_out "\n"
 # 1) Options file
 stream_out(" -> Parsing options data from #{option_file} ...")
-htap_options = HTAPData.getOptionsData(option_file)
+options = HTAPData.getOptionsData(option_file)
+options["Opt-Location"] = h2k_locations
+
 stream_out(" (done) \n") if ($allok)
 
 #2) Choices file
 stream_out(" -> Reading user-defined choices from #{choice_file} ...")
-htap_choices, htap_choice_order = HTAPData.parse_choice_file(choice_file)
+user_choices, user_choice_order = HTAPData.parse_choice_file(choice_file)
 stream_out(" (done) \n") if ($allok)
 stream_out("\n")
 
 stream_out ( " Specified choices: \n")
-htap_choices.each do | attribute, value |
+user_choices.each do | attribute, value |
   stream_out ("       - #{attribute.ljust(35)} = #{value} \n")
 end
 
+#=======================================================================
+# Confirm options, choices make sense 
+stream_out(drawRuler("Validating choices and options"))
+
+parseOK,  valid_choices = HTAPData.valdate(options,user_choices)
+
+if (not parseOK) then 
+  fatalerror("Options, Choices could not be validated")
+end 
+
+stream_out(drawRuler("Verifying Upgrade packages"))
+
+
+stream_out(drawRuler("Verifying rulesets"))
+
+processed_choices = valid_choices
 #===============================================================================
 # Configure h2k run folders
 stream_out(drawRuler("Setting up HOT2000 environment"))
@@ -261,7 +302,7 @@ stream_out("\n")
 # Variables for doing a md5 test on the integrety of the run.
 dir_verified = false
 copy_tries   = 0
-
+run_path = $gMasterPath + "\\H2K"
 while ( ! dir_verified && copy_tries < 3  )
   copy_tries = copy_tries + 1 
   stream_out (" -> Creating local H2K install to run files (attempt ##{copy_tries}) \n")
@@ -276,9 +317,9 @@ end
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
 # (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file)
-working_h2k_file = $gMasterPath + "\\agent_"+ h2k_file_name
+stream_out("\n -> Creating a copy of HOT2000 model (#{base_h2k_file} for optimization work... \n")
 
-stream_out("\n Creating a copy of HOT2000 model (#{base_h2k_file} for optimization work... \n")
+working_h2k_file = $gMasterPath + "\\agent_"+ h2k_file_name
 
 # Remove any existing file first!
 
@@ -289,27 +330,37 @@ if ( File.exist?(working_h2k_file) )
 end
 debug_out "copy arguements: #{base_h2k_file} -> #{working_h2k_file}\n "
 FileUtils.cp(base_h2k_file,working_h2k_file)
-stream_out("\n  (File #{working_h2k_file} created.)\n\n")
+stream_out("\n    (File #{working_h2k_file} created.)\n\n")
 
 #===============================================================================
 # Parse HOT2000 file and manipulate as necessary 
 stream_out(drawRuler("Reading HOT2000 file"))
 stream_out("\n -> Parsing a copy of HOT2000 model (#{working_h2k_file}) for optimization work...")
-h2k_file_contents = H2KFile.get_elements_from_filename(working_h2k_file)
+h2k_file_contents = H2KFile.open_xml_as_elements(working_h2k_file)
 stream_out("done.")
 
 err_options = false 
-stream_out(drawRuler("Applying Upgrade packages"))
 
-stream_out(drawRuler("Applying rulesets"))
+#==========================================================
+stream_out(drawRuler("Manipulating HOT2000 file "))
+H2KFile.write_elements_as_xml("presub.h2k")
 
-stream_out(drawRuler("Validating choices and options"))
+mods_ok = H2KEdit.modify_contents(h2k_file_contents,options, valid_choices)
 
-# LegacyProcessConditions()
+#debug_pause
 
-stream_out(" Choices that will be used in the simulation:\n")
-htap_choices.each do | attribute, value |
-  stream_out (" - #{attribute.ljust(35)} = #{value} \n ")
+#===============================================================================
+# Write out new xml file 
+stream_out(drawRuler("Writing HOT2000 file"))
+stream_out("\n -> Writing modified file (#{working_h2k_file}) for optimization work...")
+H2KFile.write_elements_as_xml(working_h2k_file)
+
+
+
+
+stream_out(" -> Choices that will be used in the simulation:\n")
+valid_choices.each do | attribute, value |
+  stream_out ("     - #{attribute.ljust(35)} = #{value} \n")
 end
 
 
@@ -321,13 +372,34 @@ if (! $allok )
   fatalerror ("Could not parse options & choices")
 end
 
-
-stream_out(drawRuler("Manipulating HOT2000 file "))
-
-stream_out drawRuler(' Manipulating HOT2000 file ')
 stream_out (" Performing substitutions on H2K file...")
 
 # Process file flow to go here. 
+
+
+#==========================================================
+stream_out(drawRuler("Invoking HOT2000  "))
+run_ok = TRUE 
+run_ok = H2Kexec.run_a_hot2000_simulation(working_h2k_file)
+
+if (! run_ok ) then 
+  fatal_error("Could not execute HOT2000 calculations")
+end 
+
+#==========================================================
+stream_out(drawRuler("Reading simulation results"))
+code = "SOC"
+results = H2Kpost.handle_sim_results(working_h2k_file,code,processed_choices)
+
+debug_out(results.pretty_inspect)
+
+
+
+#==========================================================
+stream_out(drawRuler("Writing simulation results"))
+HTAPout.write_h2k_eval_results(results)
+
+
 
 
 #===============================================================================
