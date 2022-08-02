@@ -1,0 +1,25 @@
+! Choice file for run $gGenChoiceFileNum
+Opt-Location : VICTORIA-INTL
+Opt-Ruleset : as-found 
+Opt-ResultHouseCode : SOC
+Opt-ACH : New-Const-air_seal_to_1.50_ach 
+Opt-Windows : dbl-clear-u3.85
+Opt-Skylights : NA 
+Opt-DoorWindows : NA 
+Opt-Doors : NA 
+Opt-AboveGradeWall : NA 
+Opt-FoundationWallExtIns : NA 
+Opt-FoundationWallIntIns : NA 
+Opt-FoundationSlabBelowGrade : NA 
+Opt-FoundationSlabOnGrade : NA 
+Opt-ExposedFloor : NA 
+Opt-Ceilings : NA 
+Opt-AtticCeilings : NA 
+Opt-CathCeilings : NA 
+Opt-FlatCeilings : NA 
+Opt-VentSystem : HRV_sre_70
+Opt-DHWSystem : NA 
+Opt-Heating-Cooling : NA
+Opt-DWHR : NA 
+Opt-H2K-PV : NA 
+Opt-Baseloads : NBC-Baseloads 
