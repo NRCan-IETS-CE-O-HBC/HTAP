@@ -10853,10 +10853,8 @@
             "Opt-H2K-Type2CapOpt": "2",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2HeatCOP": "7.1",
-            "Opt-H2K-Type2CoolCOP": "4.3",
             "Opt-H2K-Type2CutoffType": "2",
-            "Opt-H2K-Type2CutoffTemp": "-20",
-            "Opt-H2K-CoolOperWindow": "25"
+            "Opt-H2K-Type2CutoffTemp": "-20"
           }
         },
         "costs": {
