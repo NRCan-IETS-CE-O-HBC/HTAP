@@ -13,7 +13,6 @@ module HTAP2H2K
 
     debug_out "Setting up foundations for this config:\n#{myFdnData.pretty_inspect}\n"
 
-    slabConfigInsulated = "SCB_25"
     # Insulation configuration on slabs -
     #  Pretty sure requirements are that 9.25.2.3 (5) requires SBC 25 and 29.
     #
@@ -36,6 +35,7 @@ module HTAP2H2K
     #       ********                     ********
     #
     slabConfigInsulated = "SCB_25"
+    slabConfigUninsulated = "SCN_1"
 
     h2kFdnData = Hash.new
 
@@ -57,6 +57,7 @@ module HTAP2H2K
       bExtWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallExtIns",myFdnData["FoundationWallExtIns"])["H2K-Fdn-ExtWallReff"].to_f > 0.01 )
       bIntWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallIntIns",myFdnData["FoundationWallIntIns"])["H2K-Fdn-IntWallReff"].to_f > 0.01 )
       bBGSlabInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabBelowGrade",myFdnData["FoundationSlabBelowGrade"])["H2K-Fdn-SlabBelowGradeReff"].to_f > 0.01 )
+      bOGSlabInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabOnGrade",myFdnData["FoundationSlabOnGrade"])["H2K-Fdn-SlabOnGradeReff"].to_f > 0.01 )
 
 
 
@@ -68,12 +69,11 @@ module HTAP2H2K
 
       debug_out(drawRuler("Basements, CrawlSpaces",". "))
 
-      # Where is the insulation ?
+      # Where is the insulation ? Sort basements first
       #
       # [  ] exterior     [   ] Interior      [  ] Slab  (None! )
       if  ( ! bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
         basementConfig = "BCNN_2"
-        crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
         h2kFdnData["?IntWallIns"] = false
         h2kFdnData["?ExtWallIns"] = false
@@ -82,7 +82,6 @@ module HTAP2H2K
         # [ X ] exterior     [   ] Interior      [  ] Slab  ( full height exterior)
       elsif  ( bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
         basementConfig = "BCEN_2"
-        crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
         h2kFdnData["?IntWallIns"] = false
         h2kFdnData["?ExtWallIns"] = true
@@ -91,7 +90,6 @@ module HTAP2H2K
       elsif  ( ! bExtWallInsul &&  bIntWallInsul && ! bBGSlabInsul ) then
 
         basementConfig = "BCIN_1"
-        crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
         h2kFdnData["?IntWallIns"] = true
         h2kFdnData["?ExtWallIns"] = false
@@ -100,7 +98,6 @@ module HTAP2H2K
       elsif  ( bExtWallInsul && bIntWallInsul && ! bBGSlabInsul ) then
 
         basementConfig = "BCCN_5"
-        crawlSpaceConfig = "SCN_1"
         h2kFdnData["?bgSlabIns"]  = false
         h2kFdnData["?IntWallIns"] = true
         h2kFdnData["?ExtWallIns"] = true
@@ -109,7 +106,6 @@ module HTAP2H2K
       elsif  (  bExtWallInsul && ! bIntWallInsul &&  bBGSlabInsul ) then
 
         basementConfig = "BCEB_4"
-        crawlSpaceConfig = slabConfigInsulated
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
 
         h2kFdnData["?bgSlabIns"]  = true
@@ -121,7 +117,6 @@ module HTAP2H2K
       elsif  ( ! bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
 
         basementConfig = "BCIB_1"
-        crawlSpaceConfig = slabConfigInsulated
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
 
         h2kFdnData["?bgSlabIns"]  = true
@@ -133,7 +128,6 @@ module HTAP2H2K
       elsif  (  bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
 
         basementConfig = "BCCB_9"
-        crawlSpaceConfig = slabConfigInsulated
         # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
 
         h2kFdnData["?bgSlabIns"]  = true
@@ -144,6 +138,15 @@ module HTAP2H2K
         # Need to make this case more general?
         fatalerror ("Unsupported foundation configuration!!!")
       end
+      
+      # Sort the slab-on-grade configurations
+      if (bOGSlabInsul) then
+        crawlSpaceConfig = slabConfigInsulated
+        h2kFdnData["?ogSlabIns"]  = true
+      else
+        crawlSpaceConfig = slabConfigUninsulated
+        h2kFdnData["?ogSlabIns"]  = false
+      end
 
       debug_out " Basement/crawlspace configuration : #{basementConfig}\n"
       h2kFdnData["BasementConfig"] = basementConfig
@@ -151,6 +154,7 @@ module HTAP2H2K
       h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
       h2kFdnData["rEffExtWall"] =  myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["values"]["1"]["conditions"]["all"].to_f
       h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["values"]["1"]["conditions"]["all"].to_f
+      h2kFdnData["rEff_SlabOG"] =  myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["values"]["1"]["conditions"]["all"].to_f
 
       debug_out "Processing basements/crawlspaces with following specs:\n#{h2kFdnData.pretty_inspect}"
 
@@ -280,7 +284,6 @@ module H2KFile
         debug_out(" ... crawlspace code \n")
         config_type = fdnData["CrawlConfig"].split(/_/)[0]
         config_subtype= fdnData["CrawlConfig"].split(/_/)[1]
-
       end
 
       debug_out(" setting configuration to #{config_type}, subtype #{config_subtype}\n")
@@ -290,8 +293,14 @@ module H2KFile
       node.elements[loc].attributes["subtype"] = config_subtype
 
       node.elements[loc].attributes["overlap"] = "0" if ( node.name == "Basement" )
-
-      node.elements[loc].text = fdnData["configuration"]
+      
+      if (  node.name == "Basement" ) then
+        node.elements[loc].text = fdnData["BasementConfig"]
+      elsif ( node.name == "Crawlspace" ) then
+        node.elements[loc].text = fdnData["CrawlConfig"]
+      else
+        puts "TODO: Error handling here line 302"
+      end
 
       loc = ".//Floor/Construction"
       node.elements[loc].attributes["isBelowFrostline"] = "true"
@@ -372,20 +381,23 @@ module H2KFile
       loc = ".//Floor/Construction"
       node.elements["#{loc}"].attributes["heatedFloor"] = 'false'
       node.elements[loc].elements.delete("AddedToSlab")
-      if ( !  fdnData["?bgSlabIns"] ) then
-
-      else
-        debug_out "Adding definitions for under-slab insulation\n"
-        #node.elements["#{loc}/Composite"].elements.each do | section |
-
-        node.elements[loc].elements.add("AddedToSlab")
-        node.elements["#{loc}/AddedToSlab"].text = "User Specified"
-        node.elements["#{loc}/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabBG"].to_f + 1.0)/R_PER_RSI).round(4)}"
-        #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
-        node.elements["#{loc}/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabBG"].to_f)/R_PER_RSI).round(4)}"
+      if ( node.name == "Basement" && fdnData["?bgSlabIns"] ) then
+          debug_out "Adding definitions for under-slab insulation for basement\n"
+    
+          node.elements[loc].elements.add("AddedToSlab")
+          node.elements["#{loc}/AddedToSlab"].text = "User Specified"
+          node.elements["#{loc}/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabBG"].to_f + 1.0)/R_PER_RSI).round(4)}"
+          #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
+          node.elements["#{loc}/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabBG"].to_f)/R_PER_RSI).round(4)}"
+      elsif ( node.name == "Crawlspace" && fdnData["?ogSlabIns"]) then
+          debug_out "Adding definitions for under-slab insulation for crawlspace\n"
+    
+          node.elements[loc].elements.add("AddedToSlab")
+          node.elements["#{loc}/AddedToSlab"].text = "User Specified"
+          node.elements["#{loc}/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabOG"].to_f + 1.0)/R_PER_RSI).round(4)}"
+          #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
+          node.elements["#{loc}/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabOG"].to_f)/R_PER_RSI).round(4)}"
       end
-
-
 
     end
 
