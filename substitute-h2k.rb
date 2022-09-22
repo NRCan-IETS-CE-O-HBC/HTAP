@@ -7023,6 +7023,10 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               stream_out ("  (f) Vintage archetypes based on EGH database analysis ")
               ArchetypeRoadmapping_RuleSet( ruleSet, h2kElements )
 
+            elsif ( ruleSet =~ /^2020NBC_*9_*36$/ || ruleSet =~ /^2020NBC_*9_*36_noHRV$/ ||  ruleSet =~ /^2020NBC_*9_*36_noHRV$/ )
+              stream_out ("  (g) NBC 936 pathway \n")
+                NBC_936_2020_RuleSet( ruleSet, $ruleSetSpecs, h2kElements, $HDDs,locale )
+
             else
               fatalerror "Unknown ruleset #{ruleSet}"
 
