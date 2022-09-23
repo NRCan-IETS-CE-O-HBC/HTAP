@@ -285,8 +285,18 @@ end
 
 setTermSize
 
-filename = "C:\\HTAP\\HTAP-options.json"
+default_options_file = "C:\\HTAP\\HTAP-options.json"
 h2kCodeFile = "C:\\HTAP\\lib\\codeLib.cod"
+
+# Dump help text, if no argument given
+if ARGV.empty? then
+  filename = default_options_file
+else
+  filename = ARGV[0] 
+end
+
+
+
 
 $program = "manage_options.rb"
 $info    = "
@@ -296,18 +306,33 @@ $info    = "
     - Reads through the options file to find Windows
       with the performance data defined via
       the characteristic data field, and creates similar
-      reclsords in the code library (at location
+      records in the code library (at location
        #{h2kCodeFile}  )
 
-  With these modifications, it creates a new version of
-  the options file (HTAP-options-draft.json), and
-  saves it to the working directory.
+  Usage: manage_options.rb [path/to/htap-options-file.json]
 
+  (if no arguement is provided, script will use default 
+   C:\\HTAP\htap-options.json )
+
+  Source options file: #{filename}
+  Target code library: #{h2kCodeFile}
 
 "
-
+HTAPInit()
 writeHeader()
 
+waitstart =Time.now
+stream_out("\n    ? Continue ? [yes] \r")
+exitQuery = input "    ? Continue  ? [yes] "
+stream_out("\n")
+waitend = Time.now
+if ( exitQuery =~ /y[es]*/i ||  exitQuery == "" || exitQuery.nil? )
+else
+  log_out ("User terminated run with response #{exitQuery}\n")
+  fatalerror("Run terminated by user")
+end
+$waitTime = waitend - waitstart
+log_out ("Waited for #{formatTimeInterval($waitTime)}\n")
 
 
 
