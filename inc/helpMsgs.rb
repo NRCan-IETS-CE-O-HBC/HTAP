@@ -63,7 +63,7 @@ def initialize
   You can only use one or the other. Either the options on the left or the right
   must be set to 'NA'
   ...............................................................................................
-  Approach         Opt-FoundaitonXYZ vals                   Opt-H2KFoundation vals
+  Approach         Opt-FoundationXYZ vals                   Opt-H2KFoundation vals
   ...............................................................................................
   Whole            Opt-FoundationWallExtIns     = 'value'   Opt-H2KFoundation          = 'NA'
   Foundation       Opt-FoundationWallIntIns     = 'value'   Opt-H2KFoundationSlabCrawl = 'NA'

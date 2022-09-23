@@ -180,7 +180,7 @@ module HTAPData
       #$gHTAPOptions = JSON.parse(rawOptions )
       #rawOptions  = nil
 
-      info_out ("Parsed options file #{$gHTAPOptionsFile}")
+      #info_out ("Parsed options file #{$gHTAPOptionsFile}")
       $gHTAPOptionsParsed = true
 
     end 
@@ -764,13 +764,13 @@ module HTAPData
 
     end
 
-    validatedChoices, order = HTAPData.zeroInvalidFoundaiton(options,validatedChoices,order)
+    validatedChoices, order = HTAPData.zeroInvalidFoundation(options,validatedChoices,order)
 
     return err ,validatedChoices, order
 
   end
 
-  def HTAPData.zeroInvalidFoundaiton(options,choices,order)
+  def HTAPData.zeroInvalidFoundation(options,choices,order)
     #debug_on
 
     if ( $foundationConfiguration == "surfBySurf" ) then
@@ -854,7 +854,7 @@ module HTAPData
 
       # Can't have both!
 
-      warn_out ("HTAP cannot use whole foundation and surf-by-surf definitions. Either use Opt-H2KFoundation... or Opt-Foundaiton... defintions")
+      warn_out ("HTAP cannot use whole foundation and surf-by-surf definitions. Either use Opt-H2KFoundation... or Opt-Foundation... defintions")
       warn_out ("Ignoring Options Opt-FoundationSlabBelowGrade,Opt-FoundationSlabOnGrade,Opt-FoundationWallIntIns and  Opt-FoundationWallExtIns")
       $gChoicesChangedbyProgram = true
       help_out(catagory,topic)

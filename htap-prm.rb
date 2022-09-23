@@ -12,8 +12,7 @@ require 'fileutils'
 require 'pp'
 require 'json'
 require 'set'
-require 'rexml/document'
-
+require 'rexml/document' 
 
 require_relative 'inc/msgs'
 require_relative 'inc/constants'
@@ -55,8 +54,7 @@ $bufferStatus = {:current_threads => 0,
                  :processed_count => 0,
                  :frac_done => 0,
                  :time_left => "TBD"
-}
-
+} 
 
 $gGenChoiceFileBaseName = "sim-X.choices"
 $gGenChoiceFileDir = "./gen-choice-files/"
@@ -86,16 +84,14 @@ $snailStartWait = 1
 
 $choicesInMemory = true
 $ChoiceFileContents = Hash.new
-$gDebug = false
-
+$gDebug = false 
 
 =begin rdoc
 =========================================================================================
  METHODS: Routines called in this file must be defined before use in Ruby
           (can't put at bottom of listing).
 =========================================================================================
-=end
-
+=end 
 
 =begin rdoc
 # ----------------------------------------------------------------------------
@@ -103,7 +99,7 @@ $gDebug = false
 # This function parses a prm run definition file (such as HTAP-prm-trialmesh.run)
 # and loads the attirbute: options info into a hash.
 # ----------------------------------------------------------------------------
-=end
+=end 
 
 
 def parse_def_file(filepath)
@@ -156,21 +152,15 @@ def parse_def_file(filepath)
           $token_values = Array.new
           $token_values = $defline.split("=")
 
-          debug_out "Token:#{$token_values[0]} = #{$token_values[1]} \n"
-
+          debug_out "Token:#{$token_values[0]} = #{$token_values[1]} \n" 
 
           if ( $RunParamsOpen && $token_values[0] =~ /archetype-dir/i )
             # Where are our .h2k files located?
 
-            $gArchetypeDir = $token_values[1]
+            $gArchetypeDir = $token_values[1] 
+          end  
 
-
-          end
-
-
-
-          if ( $RunParamsOpen && $token_values[0] =~ /options-file/i )
-
+          if ( $RunParamsOpen && $token_values[0] =~ /options-file/i ) 
 
             # Where is our options file located?
 
@@ -179,40 +169,30 @@ def parse_def_file(filepath)
             debug_out "$gHTAPOptionsFile? : #{$gHTAPOptionsFile}\n"
 
             jsonRawOptions = HTAPData.getOptionsData()
-
-          end
-
+          end 
 
           if ( $RunParamsOpen && $token_values[0] =~ /substitute-file/i )
             # Where is our options file located?
 
             $gSubstitutePath = $token_values[1]
 
-            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n"
-
-
-          end
-
+            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n" 
+          end 
 
           if ( $RunParamsOpen && $token_values[0] =~ /substitute-file/i )
             # Where is our options file located?
 
             $gSubstitutePath = $token_values[1]
 
-            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n"
-
-
-          end
-
+            debug_out "$gSubstituteFile? : #{$gSubstitutePath}\n" 
+          end 
 
          if ( $RunParamsOpen && $token_values[0] =~ /unit-costs-db/i )
             # Where is our options file located?
 
             $gCostingFile = $token_values[1]
             $gComputeCosts = true 
-
-          end
-
+          end 
 
          if ( $RunParamsOpen && $token_values[0] =~ /rulesets-file/i )
             # Where is our options file located?
@@ -223,11 +203,9 @@ def parse_def_file(filepath)
             rulesetsHASH = HTAPData.parse_upgrade_file($gRulesetsFile)
             debug_out "Rulesets file #{$gRulesetsFile} parsed ok.\n"
      
-          end
+          end 
 
-
-
-
+ 
 
           if ( $RunParamsOpen && $token_values[0] =~ /run-mode/i )
 
@@ -263,9 +241,7 @@ def parse_def_file(filepath)
 
                  $gRunDefMode.gsub!(/\{.*$/,"")
 
-              end
-
-
+              end 
           end
 
           if ( $RunScopeOpen && $token_values[0] =~ /rulesets/i )
@@ -276,9 +252,7 @@ def parse_def_file(filepath)
           if ( $RunScopeOpen && $token_values[0] =~ /archetypes/i )
 
             # archetypes -
-            $gArchetypes = $token_values[1].to_s.split(",")
-
-
+            $gArchetypes = $token_values[1].to_s.split(",") 
           end
 
           if ( $RunScopeOpen && $token_values[0] =~ /locations/i )
@@ -287,7 +261,6 @@ def parse_def_file(filepath)
             $gLocations = $token_values[1].to_s.split(",")
 
             $WildCardsInUse = true if ($gLocations.grep(/\*/).length > 0 )
-
           end
 
           if ( $UpgradesOpen )
@@ -318,21 +291,14 @@ def parse_def_file(filepath)
               $gRunUpgrades[option] = choices
   
               $gOptionList.push option
-            end 
-
-
-          end
-
-
+            end  
+          end 
       end  #Case
-
     end # if ( $defline !~ /^\s*$/ )
  
-  end # rundefs.each do | line |
+  end # rundefs.each do | line | 
 
-
-  # Check to see if run options contians wildcards
-
+  # Check to see if run options contians wildcards 
 
   if ( $WildCardsInUse ) then
 
@@ -354,8 +320,7 @@ def parse_def_file(filepath)
  
       debug_out( " Wildcard search for #{key} => \n" )
 
-      # `upgrade-package-list` does not get tested against the options file. 
-
+      # `upgrade-package-list` does not get tested against the options file.  
 
       if ( key !~ /upgrade-package-list/ and not HTAPData.isAttribValid(jsonRawOptions,key)  ) then 
         err_out("Attribute #{key} does not match any attribute entry in the options file.")
@@ -384,10 +349,8 @@ def parse_def_file(filepath)
   
         end
       end 
-
     end
     jsonRawOptions = nil
-
   end
 
   if bError 
@@ -400,8 +363,7 @@ def parse_def_file(filepath)
   #debug_out ("Final Upgrades: #{$gRunUpgrades.pretty_inspect}")
 
   
-end # def parse_def_file(filepath)
-
+end # def parse_def_file(filepath) 
 
 =begin rdoc
 # ----------------------------------------------------------------------------
@@ -411,6 +373,7 @@ end # def parse_def_file(filepath)
 # * It calls itself recusrively *
 # ----------------------------------------------------------------------------
 =end
+
 
 def create_mesh_cartisian_combos(optIndex)
 
@@ -433,23 +396,19 @@ def create_mesh_cartisian_combos(optIndex)
 
     if ( $combosSinceLastUpdate == $comboInterval )
       stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
-      $combosSinceLastUpdate = 0
-
-
+      $combosSinceLastUpdate = 0 
     end
 
   else
 
     case optIndex
-    when -3
-
+    when -3 
 
       $gLocations.each do |location|
 
         $gChoiceFileSet["Opt-Location"] = location
 
         create_mesh_cartisian_combos(optIndex+1)
-
       end
 
     when -2
@@ -463,9 +422,7 @@ def create_mesh_cartisian_combos(optIndex)
           $gChoiceFileSet["!Opt-Archetype"] = $h2kfile
 
           create_mesh_cartisian_combos(optIndex+1)
-
-      end
-
+      end 
 
     when -1
 
@@ -473,11 +430,8 @@ def create_mesh_cartisian_combos(optIndex)
 
         $gChoiceFileSet["Opt-Ruleset"] = ruleset
 
-        create_mesh_cartisian_combos(optIndex+1)
-
-
-      end #$gOptionList $gRulesets.each do |ruleset|
-
+        create_mesh_cartisian_combos(optIndex+1) 
+      end #$gOptionList $gRulesets.each do |ruleset| 
 
     else
 
@@ -490,12 +444,9 @@ def create_mesh_cartisian_combos(optIndex)
            # Recursive call for next step in order.
            create_mesh_cartisian_combos(optIndex+1)
        end
-
     end
-
   end
-
-end 
+end  
 
 
 def create_parametric_combos()
@@ -506,19 +457,14 @@ def create_parametric_combos()
 
   parameterSpace = Hash.new
 
-  parameterSpace = $gRunUpgrades.clone
-
-
-
+  parameterSpace = $gRunUpgrades.clone   
 
   parameterSpace.keys.each do |attribute|
 
     startSet[attribute] =  parameterSpace[attribute][0]
-
   end
 
-  #debug_out " > START SET:\n#{startSet.pretty_inspect}\n"
-
+  #debug_out " > START SET:\n#{startSet.pretty_inspect}\n" 
 
   $gArchetypes.each do | archetype |
     debug_out ("> archatype - #{$gArchetypes}\n")
@@ -536,8 +482,7 @@ def create_parametric_combos()
           startSet["Opt-Ruleset"] = ruleset
 
           thisSet=Hash.new
-          thisSet = startSet.clone
-
+          thisSet = startSet.clone 
 
           generated_file = gen_choice_file(thisSet)
           $gGenChoiceFileList.push generated_file
@@ -582,36 +527,23 @@ def create_parametric_combos()
                 stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
                 $combosSinceLastUpdate = 0
               end
-
-            end
-
-
+            end 
           end
 
           if ( $combosSinceLastUpdate >= $comboInterval )
             stream_out ("    - Creating mesh run for #{$combosRequired} combinations --- #{$combosGenerated} combos created so far...\r")
             $combosSinceLastUpdate = 0
-          end
-
-
+          end 
         end
-
       end
     end
-  end
-
-
+  end  
 
   debug_out (" ----- PARAMETRIC RUN: PARAMETER SPACE ----\n#{parameterSpace.pretty_inspect}\n")
   debug_out( " - gArchetype\n#{$gArchetypeHash.pretty_inspect}\n")
   debug_out( " - gLocationH\n#{$gLocationHash.pretty_inspect} \n")
-  debug_out( " - gRulesetHa\n#{$gRulesetHash.pretty_inspect}  \n")
-
-
-end
-
-
-
+  debug_out( " - gRulesetHa\n#{$gRulesetHash.pretty_inspect}  \n") 
+end   
 
 =begin rdoc
 # ----------------------------------------------------------------------------
@@ -620,6 +552,7 @@ end
 # ----------------------------------------------------------------------------
 =end
 
+
 def gen_choice_file(choices)
 
   # create empty directory to hold choice files
@@ -627,14 +560,11 @@ def gen_choice_file(choices)
     if ( ! Dir.mkdir($gGenChoiceFileDir) )
       fatalerror( " Fatal Error! Could not create #{$gGenChoiceFileDir} below #{$gMasterPath}!\n MKDir Return code: #{$?}\n" )
     end
-
   end
 
   $gGenChoiceFileNum = $gGenChoiceFileNum + 1
 
-  choicefilename = $gGenChoiceFileBaseName.gsub(/X/,"#{$gGenChoiceFileNum}")
-
-
+  choicefilename = $gGenChoiceFileBaseName.gsub(/X/,"#{$gGenChoiceFileNum}")  
 
   if ( $choicesInMemory ) then
 
@@ -645,12 +575,9 @@ def gen_choice_file(choices)
     choices.each do | attribute, choice |
 
       $ChoiceFileContents[choicefilepath].concat("#{attribute} : #{choice} \n")
+    end 
 
-    end
-
-
-  else
-
+  else 
 
     choicefilepath = "#{$gGenChoiceFileDir}#{choicefilename}"
     choicefile = File.open(choicefilepath, 'w')
@@ -658,18 +585,13 @@ def gen_choice_file(choices)
     choices.each do | attribute, choice |
 
       choicefile.write(" #{attribute} : #{choice} \n")
-
     end
 
     choicefile.close
-
   end
 
   return choicefilepath
-
-end
-
-
+end  
 
 =begin rdoc
 #======================================================================================================
@@ -677,8 +599,8 @@ end
 #======================================================================================================
 =end
 
-def run_these_cases(current_task_files)
 
+def run_these_cases(current_task_files) 
 
   $RunResults         = Hash.new
   $choicefiles        = Array.new
@@ -697,16 +619,14 @@ def run_these_cases(current_task_files)
     headerOut = true 
   else 
     headerOut= false
-  end 
-
+  end  
 
   current_task_files.each do |choicefile|
     $FinishedTheseFiles[choicefile] = false
   end
 
   $choicefileIndex = 0
-  numberOfFiles = $FinishedTheseFiles.count {|k| k.include?(false)}
-
+  numberOfFiles = $FinishedTheseFiles.count {|k| k.include?(false)} 
 
   stream_out drawRuler("Begin Runs")
   stream_out "\n"
@@ -734,7 +654,7 @@ def run_these_cases(current_task_files)
       batchStartTime = Time.now
       fracCompleted = $choicefileIndex.to_f/numberOfFiles.to_f
       
-      debug_out ("> BATCH #{$batchCount}, Index: #{$choicefileIndex}, Complete: #{fracCompleted*100}% \n")
+      debug_out ("> BATCH #{$batchCount}, Index: #{$choicefileIndex}, Complete: #{(fracCompleted*100).round(0)}% \n")
       timeMsg = ""
       if ( fracCompleted > 0.0 ) then
         timeNow = Time.now
@@ -746,30 +666,27 @@ def run_these_cases(current_task_files)
         update_run_status(time_left: "#{formatTimeInterval(timeRemaining)}")
       end
 
-      batchLapsedTime = '0'
-
+      batchLapsedTime = '0' 
 
       update_run_status(batch: $batchCount )     
       update_run_status(action: "Initalizing")      
       update_run_status(threads_total: $gNumberOfThreads )
       update_run_status(run_count: $choicefileIndex.to_i)
 
-      update_run_status(frac_done: "#{(fracCompleted*100).round(2)}")
+      update_run_status(frac_done: "#{(fracCompleted*100).round(0)}")
 
       #stream_out ("   + Batch #{$batchCount} ( #{(fracCompleted*100).round(4)}% done, #{$choicefileIndex}/#{numberOfFiles} files processed so far#{timeMsg} ...) \n" )
       if ( $batchCount == 1 && $snailStart ) then
 
         #stream_out ("   |\n")
-        #stream_out ("   +-> NOTE: \"SnailStart\" is active. Waiting for #{$snailStartWait} seconds between threads (on first batch ONLY!) \n\n")
-        update_run_status(action: "Pausing between threads (Snail Start)")
+        #stream_out ("   +-> NOTE: \"SnailStart\" is active. Waiting for #{$snailStartWait} seconds between threads (on first batch ONLY!)  \n")
+        update_run_status(action: "Pausing for Snail Start")
       end
 
       # Empty arrays for current batch.
       $choicefiles.clear
       $PIDS.clear
-      $SaveDirs.clear
-
-
+      $SaveDirs.clear  
 
       # Compute the number of threads we will start: lesser of a) files remaining, or b) threads allowed.
 
@@ -791,20 +708,17 @@ def run_these_cases(current_task_files)
 
         count = thread + 1
         #stream_out ("     - Starting thread : #{count}/#{$ThreadsNeeded} for file #{$choicefiles[thread]} ")
-        #stream_out ("     - Starting thread #{count}/#{$ThreadsNeeded} for sim ##{$choicefileIndex+1} ")
-
+        #stream_out ("     - Starting thread #{count}/#{$ThreadsNeeded} for sim ##{$choicefileIndex+1} ") 
 
         # For this thread: Get the next choice file in the batch.
-        #$choicefiles[thread] = $RunTheseFiles[$choicefileIndex]
-
+        #$choicefiles[thread] = $RunTheseFiles[$choicefileIndex] 
 
         # Make sure that's a real choice file ( this just duplicates a test above )
         if ( $choicefiles[thread] =~ /.*choices$/ )
 
           # Increment run number and create name for unique simulation directory
           $RunNumber = $RunNumber + 1
-          $RunDirectory  = $RunDirs[thread]
-
+          $RunDirectory  = $RunDirs[thread] 
 
           $SaveDirectory = "#{$SaveDirectoryRoot}-#{$RunNumber}"
 
@@ -840,10 +754,7 @@ def run_these_cases(current_task_files)
                
               end
             end 
-          end
-
-
-
+          end   
 
           # Copy choice and options file into intended run directory...
           if $choicesInMemory
@@ -869,18 +780,14 @@ def run_these_cases(current_task_files)
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
           $LocalChoiceFile  = File.basename $choicefiles[thread]
-          $LocalOptionsFile = File.basename $gHTAPOptionsFile
-
-
+          $LocalOptionsFile = File.basename $gHTAPOptionsFile  
 
           # CD to run directory, spawn substitute-h2k thread and save PID
           Dir.chdir($RunDirectory)
 
           if ( $gDebug )
             FileUtils.cp("#{$H2kFile}","#{$H2kFile}-p0")
-          end
-
-
+          end  
 
           # Possibly call another script to modify the .h2k and .choice files
           # Perhaps these are depeciated? 
@@ -901,8 +808,7 @@ def run_these_cases(current_task_files)
           subRulesetsFlag = ""
           if ($gComputeCosts ) then
             subCostFlag = "--auto_cost_options --unit-cost-db #{$gCostingFile}"
-          end
-
+          end 
 
           if ( ! $gRulesetsFile.empty? ) then 
             subRulesetsFlag = "--rulesets #{$gRulesetsFile}"
@@ -941,19 +847,14 @@ def run_these_cases(current_task_files)
           )
           
           
-          update_run_status(threads_delta: 1)
-
+          update_run_status(threads_delta: 1) 
 
           $PIDS[thread] = pid
 
-          #stream_out("(PID #{$PIDS[thread]})...")
-
-
-
+          #stream_out("(PID #{$PIDS[thread]})...")   
 
           # Cd to root, move to next choice file.
           Dir.chdir($gMasterPath)
-
         end
 
           # Snail-Start:
@@ -978,13 +879,10 @@ def run_these_cases(current_task_files)
               #stream_out (".")
 
               sleep($snailStartWait/5)
-
             end
 
             #stream_out( "*")
-
-          end
-
+          end 
 
         #stream_out (" done. \n")
         $choicefileIndex = $choicefileIndex + 1
@@ -1000,16 +898,14 @@ def run_these_cases(current_task_files)
         $RunResults["run-#{thread}"]["archetype"] = Hash.new
         $RunResults["run-#{thread}"]["output"] = Hash.new
         $RunResults["run-#{thread}"]["cost-estimates"] = Hash.new
-
-      end
-
+      end 
 
       # Multi-threaded runs - Step 2: Monitor thread progress
       #=====================================================================================
       # Wait for threads to complete
       update_run_status( action: "Monitoring thread progress" )
       for thread2 in 0..$ThreadsNeeded-1
-         update_run_status( action: "Monitoring progress on thread #{thread2+1}" )
+         update_run_status( action: "Monitoring progress on T#{thread2+1}" )
          count = thread2 + 1
 
          #stream_out ("     - Waiting on PID: #{$PIDS[thread2]} (#{count}/#{$ThreadsNeeded})...")
@@ -1028,11 +924,9 @@ def run_these_cases(current_task_files)
 
             $RunResults["run-#{thread2}"]["status"]["success"] = false
             $RunResults["run-#{thread2}"]["status"]["errors"].push  " Run failed - substitute-h2k.rb returned status #{status}"
-
           end
-          update_run_status( action: "Shutting down thread ##{thread2+1}")
+          update_run_status( action: "Shutting down T##{thread2+1}")
           update_run_status( threads_delta: -1 )
-
       end
 
       #=====================================================================================
@@ -1040,9 +934,7 @@ def run_these_cases(current_task_files)
       update_run_status(action: "Parsing batch results")
       LEEPPathways.EmptyBuffers() if ($gLEEPPathwayExport )
 
-      for thread3 in 0..$ThreadsNeeded-1
-
-
+      for thread3 in 0..$ThreadsNeeded-1  
 
         count = thread3 + 1
         #stream_out ("     - Reading results files from PID: #{$PIDS[thread3]} (#{count}/#{$ThreadsNeeded})...")
@@ -1067,9 +959,7 @@ def run_these_cases(current_task_files)
             if ( ! $errmsgs_chk.gsub(/\n*/,"").gsub( / */, "").empty? )
               $RunResults["run-#{thread3}"]["status"]["substitute-h2k-err-msgs"] = $errmsgs
             end
-
-        end
-
+        end 
 
         # if JSON output was generated, default to parsing that. 
         jsonParsed = false
@@ -1149,8 +1039,7 @@ def run_these_cases(current_task_files)
               token = $contents[0].gsub(/\s*/,'')
               value = $contents[1].gsub(/^\s*/,'')
               value = $contents[1].gsub(/^ /,'')
-              value = $contents[1].gsub(/ +$/,'')
-
+              value = $contents[1].gsub(/ +$/,'') 
 
               # add prefix to
               case token
@@ -1164,7 +1053,6 @@ def run_these_cases(current_task_files)
               tokenResults[token] = value 
               #$RunResults["run-#{thread3}"][token] = value
             end
-
           end
           contents.close
           rescue 
@@ -1185,8 +1073,7 @@ def run_these_cases(current_task_files)
             debug_out ("no output anywhere!\n")
             #stream_out (" Output couldn't be found! \n")
             $runFailed = true
-        end
-
+        end 
 
         if ($runFailed)
             #stream_out (" RUN FAILED! (see dir: #{$SaveDirs[thread3]}) \n")
@@ -1203,9 +1090,7 @@ def run_these_cases(current_task_files)
             $LocalChoiceFile = File.basename $gHTAPOptionsFile
             if ( ! FileUtils.rm_rf("#{$RunDirs[thread3]}/#{$LocalChoiceFile}") )
               warn_out("Could not delete #{$RunDirs[thread3]}  rm_fr Return code: #{$?}\n" )
-            end
-
-
+            end 
         end
 
         # Save files from runs that failed, or possibly all runs.
@@ -1218,19 +1103,14 @@ def run_these_cases(current_task_files)
           else
 
             FileUtils.rm_rf Dir.glob("#{$SaveDirs[thread3]}/*.*")
-
           end
 
           FileUtils.cp( Dir.glob("#{$RunDirs[thread3]}/*.*")  , "#{$SaveDirs[thread3]}" )
           FileUtils.rm_rf ("#{$RunDirs[thread3]}/sim-output")
-        end
-
-
+        end  
 
         #Update status of this thread.
-        $FinishedTheseFiles[$choicefiles[thread3]] = true
-
-
+        $FinishedTheseFiles[$choicefiles[thread3]] = true 
       end
 
       errs = ""
@@ -1239,11 +1119,9 @@ def run_these_cases(current_task_files)
 
       $outputlines = ""
 
-      row = 0
+      row = 0 
 
-
-      # Alternative output in JSON format. Can be memory-intensive
-
+      # Alternative output in JSON format. Can be memory-intensive 
 
       $gJSONAllData = Hash.new
       $gJSONAllData = {
@@ -1255,9 +1133,7 @@ def run_these_cases(current_task_files)
         "git-branch" => $branch_name,
         "git-revision" => $revision_number,
         "runs-by-h2kVersion" => Hash.new
-      }
-
-
+      }  
 
       Array.new
       $RunResults.keys.each do | run |
@@ -1291,15 +1167,14 @@ def run_these_cases(current_task_files)
             thisRunHash["analysis:BCStepCode"] = $RunResults[run]["analysis_BCStepCode"]
           end
         rescue 
-        end 
-
+        end  
 
         $gJSONAllData["htap-results"].push thisRunHash
 
         if ($RunResults[run]["status"]["success"] == false ) then
 
           $runFailed = true
-          errs="\n\n       (!) simulation errors found (!)"
+          errs=" \n       (!) simulation errors found (!)"
           $msg = "#{$RunResults[run]["configuration"]["ChoiceFile"]} (dir: #{$RunResults[run]["configuration"]["SaveDirectory"]}) - substitute-h2k.rb reports errors"
           $failures.write "#{$msg}\n"
           $FailedRuns.push $msg
@@ -1310,9 +1185,7 @@ def run_these_cases(current_task_files)
           thread = run.gsub(/run-/,"").to_i
           batchStatusUpdate.push $choicefiles[thread]
           $CompletedRunCount = $CompletedRunCount + 1
-
-        end
-
+        end 
 
         # Increment hash increment too.
         $gHashLoc = $gHashLoc + 1
@@ -1322,8 +1195,7 @@ def run_these_cases(current_task_files)
           $GiveUp = true
         end
         Dir.chdir($gMasterPath)
-      end # ends $RunResults.each do
-
+      end # ends $RunResults.each do 
 
       # CSV OUTPUT.
       outputlines = ""
@@ -1341,7 +1213,7 @@ def run_these_cases(current_task_files)
         next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ || data["status"]["success"] == false )
         batchSuccessCount += 1
         debug_out "processing:\n"
-        debug_out "  #{data.pretty_inspect}\n\n"
+        debug_out "  #{data.pretty_inspect} \n"
         debug_off
         data.keys.sort.each do | section |
           data[section].keys.sort.each do |subsection|
@@ -1390,22 +1262,19 @@ def run_these_cases(current_task_files)
           $fCSVout.write(headerLine)
           headerOut = true
         end
-        outputlines.concat("\n")
-
+        outputlines.concat("\n") 
 
       # End of $RunResults.each do
-
       end
 
       debug_off 
       $fCSVout.write(outputlines)
       $fCSVout.flush
-      #stream_out ("done.\n")
-
+      #stream_out ("done.\n") 
 
       if ($gJSONize )
         update_run_status(action: "Writing JSON output" )
-        stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
+        # stream_out("        -> Writing JSON output to HTAP-prm-output.json... ")
         nextBatch = JSON.pretty_generate($gJSONAllData)
         
         configStarted = false 
@@ -1426,8 +1295,7 @@ def run_these_cases(current_task_files)
         # Compute the length and save for 
         thisCount = configtxt.length
         
-        debug_out ("first line? #{firstJSONLine}\n")
-
+        debug_out ("first line? #{firstJSONLine}\n") 
 
         if ( ! firstJSONLine )
 
@@ -1444,9 +1312,7 @@ def run_these_cases(current_task_files)
         else 
           
           txtOut = nextBatch
-
-        end
-
+        end 
 
         lastCount = thisCount 
         debug_out ("setting rewind flag to #{lastCount}\n")
@@ -1481,7 +1347,7 @@ def run_these_cases(current_task_files)
 
      batchLapsedTime = "#{(Time.now - batchStartTime).round(0)}"
 
-     #stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs}\n\n")
+     #stream_out ("     - Batch processing time: #{batchLapsedTime}.#{errs} \n")
 
      HTAPConfig.countSuccessfulEvals(batchSuccessCount)
      HTAPConfig.writeConfigData()
@@ -1494,59 +1360,49 @@ def run_these_cases(current_task_files)
 
        update_run_status(action: "Job complete")
 
-     end
-
-
+     end 
   end
 
   fJSONout.close
-  Dir.chdir($gMasterPath)
-
-
+  Dir.chdir($gMasterPath)  
 
   if ( $GiveUp ) then
-    stream_out("\n\n - HTAP-prm: runs terminated due to error ----------\n\n")
-  else
-    stream_out("\n\n - HTAP-prm: runs finished -------------------------\n\n")
+    stream_out(" \n - HTAP-prm: runs terminated due to error ---------- \n")
+  # else
+  #   stream_out(" \n - HTAP-prm: runs finished ------------------------- \n")
   end
 
   LEEPPathways.CloseOutputFiles() if ($gLEEPPathwayExport)
 
   if ( ! $gDebug ) then
-     stream_out (" - Deleting working directories... ")
+     # stream_out (" - Deleting working directories... ")
      FileUtils.rm_rf Dir.glob("HTAP-work-*")
-     stream_out("done.\n\n")
+     # stream_out("done. \n")
   end
-
-end
-
+end 
 
 =begin rdoc
 =========================================================================================
   END OF ALL METHODS
 =========================================================================================
-=end
-
+=end 
 
 #-------------------------------------------------------------------
 # Help text. Dumped if help requested, or if no arguments supplied.
 #-------------------------------------------------------------------
 
-# Dump help text, if no argument given
-
+# Dump help text, if no argument given 
 
 $cmdlineopts = Hash.new
 $gTest_params = Hash.new        # test parameters
-$gTest_params["verbosity"] = "verbose"
-
-
+$gTest_params["verbosity"] = "verbose"  
 
 $gHTAPOptionsFile = ""
 $gRulesetsFile = ""
 
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
-$gOutputFile = "HTAP-prm-output.csv"
+$gOutputFile = ""
 $gResumeFile = "HTAP-prm.resume"
 $gOutputJSON = "HTAP-prm-output.json"
 $gFailFile = "HTAP-prm-failures.txt"
@@ -1644,8 +1500,7 @@ optparse = OptionParser.new do |opts|
                                          ) do
    
       $gJSONize = true
-   end
-
+   end 
 
  opts.separator " "
    opts.on("-l", "--LEEP-Pathways", "Export tables for use in LEEP pathways tool.") do
@@ -1679,8 +1534,7 @@ opts.separator " "
 
       $StopOnError = true
 
-   end
-
+   end 
 
    opts.on("--log-debug-msgs", "Log debugging messages from programs. Use with --keep-all-files to see",
                                "substiture-h2k.rb debugging output too.") do
@@ -1713,14 +1567,10 @@ opts.separator " "
    opts.on("-h", "--help", "Show help message") do
       puts opts
       exit()
-   end
-
+   end 
 
    opts.separator ""
-
-end
-
-
+end  
 
 if ARGV.empty? then
    ARGV.push "-h"
@@ -1728,7 +1578,7 @@ end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
 stream_out(drawRuler("A simple parallel run manager for HTAP"))
-reportSRC($branch_name, $revision_number)
+# reportSRC($branch_name, $revision_number)
 
 $RunNumber = 0
 $processed_file_count = 0
@@ -1738,19 +1588,26 @@ $FailedRuns  = Array.new
 $RunDirectoryRoot  = "HTAP-work"
 $SaveDirectoryRoot = "HTAP-sim"
 $RunResultFilenameV2 = "h2k_run_results.json"
-$RunResultFilename = "substitute-h2k_summary.out"
-
+$RunResultFilename = "substitute-h2k_summary.out" 
 
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
 
 $RunsNeeded = Array.new
 $RunTheseFiles = Array.new
-$FinishedTheseFiles = Hash.new
-
+$FinishedTheseFiles = Hash.new 
 
 # Generate working directories
-#stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1}) \n\n")
+#stream_out(" - Creating working directories (HTAP_work-0 ... HTAP_work-#{$gNumberOfThreads-1})  \n")
 stream_out("\n Initialization: \n")
+
+#2021djf - output file is based on input run file name
+baserun = $gRunDefinitionsFile.gsub(".run", "")
+$gOutputFile = baserun + ".csv"
+if File.file?($gOutputFile) then
+  baserun = baserun + Time.now.strftime("%Y-%m-%d %H%M")
+end
+
+#stream_out "base = #{baserun}  and output=#{$gOutputFile}"
 
 if ( $bResume ) then 
   warn_out("Option `--resume` is experimental. Talk to Alex Ferguson before putting to use.")
@@ -1805,16 +1662,13 @@ else
   LEEPPathways.OpenOutputFiles("overwrite") if ($gLEEPPathwayExport)
 
   $bReadyToResume = false
-end
-
+end 
 
 for prethread in 0..$gNumberOfThreads-1
 
     $RunDirName = "#{$RunDirectoryRoot}-#{prethread}"
     $RunDirs[prethread] = $RunDirName
-
-end
-
+end 
 
 $failures = File.open($gFailFile, 'w')
 
@@ -1842,7 +1696,7 @@ else
   # Smarter mode - embark on run according to definitions in the .run file (mesh supported for now)
   #  - First parse the *.run file
 
-  stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... \n")
+  #stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... \n")
 
   parse_def_file($gRunDefinitionsFile)
 
@@ -1869,14 +1723,10 @@ else
         err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")
         bErr = true 
      end
-  end 
-
-
-
+  end    
 
   fatalerror("Attributes and choices do not match those in options file") if bErr
-  options.clear
-
+  options.clear 
 
   debug_out("> Options file #{$gHTAPOptionsFile}")
 
@@ -1885,15 +1735,11 @@ else
   debug_out "> #{$Folder}\n"
   $gArchetypes.each do |arch_entry|
     Dir["#{$Folder}/#{arch_entry}"].each {|file| $archetypeFiles.push file}
-  end
-
-
-
+  end   
 
   #debug_out " ARCH: \n#{$archetypeFiles[0].pretty_inspect}\n"
 
-  #stream_out (" done.\n")
-
+  #stream_out (" done.\n") 
 
   case $gRunDefMode
   when  "mesh", "sample"
@@ -1901,7 +1747,7 @@ else
     # estimate the number of combonations
     #debug_out
     runningProduct = 1
-    stream_out "    - Evaluating combinations for #{$gRunDefMode} run\n\n"
+    stream_out "    - Evaluating combinations for #{$gRunDefMode} run \n"
     stream_out "          * "+$gLocations.length.to_s.ljust(10)+" (options for Location)\n" #if ($gLocations.length>1 )
     stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+" (options for Archetypes)\n" #if ($archetypeFiles.length>1 )
     stream_out "          * "+$gRulesets.length.to_s.ljust(10)+" (options for Rulesets)\n" #if ($gRulesets.length>1 )
@@ -1915,13 +1761,11 @@ else
     runningProduct *= $archetypeFiles.length
     runningProduct *= $gRulesets.length
     stream_out "          ----------------------------------------------------------\n"
-    stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
-
+    stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations \n" 
 
     if ( runningProduct < 1) then
       fatalerror ( " No combinations to run.")
-    end
-
+    end 
 
     if ($gRunDefMode == "mesh" ) then
       $RunsNeeded = $gGenChoiceFileList
@@ -1938,10 +1782,9 @@ else
       if ( $pop_size.to_i < $sample_size.to_i ) then
 
         warn_out("Sample run method - requested sample size (#{$sample_size}) exceeds size of parameter space (#{$pop_size}).\n")
-        warn_out("Run will only return #{$pop_size} results.\n\n")
+        warn_out("Run will only return #{$pop_size} results. \n")
 
         $sample_size = $pop_size
-
       end
 
       if ( $sample_seeded ) then
@@ -1955,7 +1798,6 @@ else
       debug_out ($RunsNeeded.pretty_inspect)
 
       stream_out ("    - Sampled #{$sample_size.to_i} combinations for run\n")
-
     end
 
   when "parametric"
@@ -1964,7 +1806,7 @@ else
     #debug_out
     runningSum = 1
     runningProduct = 1
-    stream_out "    - Evaluating combinations for parametric run\n\n"
+    stream_out "    - Evaluating combinations for parametric run \n"
     stream_out "          * "+$gLocations.length.to_s.ljust(10)+"  { # of options for Location }\n" #if ($gLocations.length>1 )
     stream_out "          * "+$archetypeFiles.length.to_s.ljust(10)+"  { # of options for Archetypes }\n" #if ($archetypeFiles.length>1 )
     stream_out "          * "+$gRulesets.length.to_s.ljust(10)+"  { # of options for Rulesets }\n" #if ($gRulesets.length>1 )
@@ -1981,22 +1823,16 @@ else
     runningProduct *= $gRulesets.length
     runningProduct *= runningSum
     stream_out "          ----------------------------------------------------------\n"
-    stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations\n\n"
-
-  end
-
-
+    stream_out "           #{runningProduct.to_s.ljust(15)} Total combinations \n"
+  end  
 
   #if ($choicesInMemory )
   #  stream_out (" done. ( created #{$gGenChoiceFileNum} combinations )\n")
   #else
   #  stream_out (" done. (created #{$gGenChoiceFileNum} '.choice' files)\n")
-  #end
-
-
+  #end  
 
   fileorgin = "generated"
-
 end
 
 $batchCount = 0
@@ -2004,7 +1840,7 @@ goodEst, evalSpeed = HTAPConfig.getPrmSpeed()
 evalSpeed = 30.0 if ( ! goodEst )
 estDuration = runningProduct * evalSpeed / [$gNumberOfThreads, runningProduct].min
 
-stream_out("    - Guesstimated time requirements ~ #{formatTimeInterval(estDuration)} (including pre- & post-processing)\n")
+stream_out("    - Guesstimated time requirements ~ #{formatTimeInterval(estDuration)} (including pre- & post-processing) using #{$gNumberOfThreads} threads\n")
 $waitTime = 0
 if ( $promptBeforeProceeding )
   waitstart =Time.now
@@ -2029,8 +1865,7 @@ when  "mesh", "sample"
   $combosSinceLastUpdate = 0
   $comboInterval = 1000
 
-  create_mesh_cartisian_combos(-3)
-
+  create_mesh_cartisian_combos(-3) 
 
   stream_out ("    - Creating #{$gRunDefMode} run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
 
@@ -2044,12 +1879,11 @@ when "parametric"
       fatalerror ( " No combinations to run.")
     end
 
-    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
+#    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\r")
 
     create_parametric_combos()
-    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
+#    stream_out ("    - Creating parametric run for #{$combosRequired} combinations --- #{$combosGenerated} combos created.\n")
     $RunsNeeded = $gGenChoiceFileList
-
 end 
 
 if ( $bResume )  
@@ -2063,30 +1897,24 @@ if ( $bResume )
 else 
   $RunTheseFiles = $RunsNeeded
   numOfRunsRequired = $RunTheseFiles.length
-end 
-
+end  
 
 if ( numOfRunsRequired <= 0  ) then 
   fatalerror "No runs to be completed!"
-end 
+end    
 
-
-
-
-stream_out("    - Deleting prior HTAP-work directories... ")
+# stream_out("    - Deleting prior HTAP-work...")
 FileUtils.rm_rf Dir.glob("HTAP-work-*")
-stream_out (" done.\n")
-stream_out("    - Deleting prior HTAP-sim directories... ")
+# stream_out (" done.\n")
+# stream_out(" and HTAP-sim directories... ")
 FileUtils.rm_rf Dir.glob("HTAP-sim-*")
-stream_out (" done.\n")
+# stream_out (" done.\n") 
 
-
-if ( $choicesInMemory )
-  stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} combinations using #{$gNumberOfThreads} threads \n\n")
-else
-  stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads \n\n")
-end
-
+# if ( $choicesInMemory )
+#   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} combinations using #{$gNumberOfThreads} threads  \n")
+# else
+#   stream_out("    - Preparing to process #{$RunTheseFiles.count} #{fileorgin} '.choice' files using #{$gNumberOfThreads} threads  \n")
+# end 
 
 #==================================================================
 # Process cases 
@@ -2095,36 +1923,36 @@ run_these_cases($RunTheseFiles)
 
 #==================================================================
 #
-#==================================================================
-
+#================================================================== 
 
 #==================================================================
 # Report on progress
 #==================================================================
 if ( ! $GiveUp ) then
-  stream_out (" - HTAP-prm: Run complete -----------------------\n\n")
+  stream_out (" - HTAP-prm: Run complete ----------------------- \n")
 else
-  stream_out (" - HTAP-prm: Error encountered, run terminated --\n\n")
+  stream_out (" - HTAP-prm: Error encountered, run terminated -- \n")
 end
-stream_out ("    + #{$CompletedRunCount} files were evaluated successfully.\n\n")
-stream_out ("    + #{$FailedRunCount} files failed to run \n")
 
-if ( $FailedRunCount > 0 )
+if $FailedRunCount >0
+  stream_out ("    + #{$FailedRunCount} files failed to run \n")
+else
+  stream_out ("    + All files were evaluated successfully. \n")
 
-  stream_out ("\n ** The following files failed to run: ** \n")
-
-  $FailedRuns.each do |errorfile|
-    stream_out ("     + #{errorfile} \n")
-  end
-  err_out ("#{$FailedRunCount} files failed to run.")
 end
+# if ( $FailedRunCount > 0 )
+#   stream_out ("\n ** The following files failed to run: ** \n")
+#   $FailedRuns.each do |errorfile|
+#     stream_out ("     + #{errorfile} \n")
+#   end
+#   err_out ("#{$FailedRunCount} files failed to run.")
+# end
 
 if ( $CompletedRunCount> 0  &&  $ThreadsNeeded > 0  )
   lapsedTime = Time.now - $startProcessTime - $waitTime
   timePerEvaluation = lapsedTime /  $CompletedRunCount * $ThreadsNeeded
   HTAPConfig.setPrmSpeed(timePerEvaluation)
-end
-
+end 
 
 if ( HTAPConfig.checkOddities() ) then
   info_out(" Fun fact: HTAP has performed #{HTAPConfig.reportSuccessfulEvals()} successful hot2000 simulations for you since #{HTAPConfig.getCreationDate()}.")
@@ -2138,6 +1966,6 @@ HTAPConfig.writeConfigData()
 
 ReportMsgs()
 
-stream_out ("\n\n")
+stream_out ("\n")
 
 exit
