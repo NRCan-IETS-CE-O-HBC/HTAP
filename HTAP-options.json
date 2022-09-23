@@ -1276,6 +1276,174 @@
           ]
         }
       },
+      "AIR_3.0": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "3.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_2.75": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "2.75",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_2.5": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "2.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_2.25": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "2.25",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_2.0": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "2.0",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_1.75": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.75",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_1.5": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.5",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_1.25": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.25",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_1.0": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "1.00",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_0.8": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "0.8",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_0.6": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "0.6",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AIR_0.3": {
+        "h2kMap": {
+          "base": {
+            "<Opt-ACH>": "0.3",
+            "Opt-BuildingSite": "NA",
+            "Opt-WallShield": "NA",
+            "Opt-FlueShield": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
       "ACH_NBC": {
         "h2kMap": {
           "base": {
@@ -2941,6 +3109,162 @@
           ]
         }
       },
+      "WINDOWU_1.61": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 1.61,
+          "SHGC": 0.4,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "WINDOWU_1.61",
+            "<Opt-win-E-CON>": "WINDOWU_1.61",
+            "<Opt-win-N-CON>": "WINDOWU_1.61",
+            "<Opt-win-W-CON>": "WINDOWU_1.61",
+            "<Opt-win-SE-CON>": "WINDOWU_1.61",
+            "<Opt-win-SW-CON>": "WINDOWU_1.61",
+            "<Opt-win-NE-CON>": "WINDOWU_1.61",
+            "<Opt-win-NW-CON>": "WINDOWU_1.61"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "WINDOWU_1.44": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 1.44,
+          "SHGC": 0.4,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "WINDOWU_1.44",
+            "<Opt-win-E-CON>": "WINDOWU_1.44",
+            "<Opt-win-N-CON>": "WINDOWU_1.44",
+            "<Opt-win-W-CON>": "WINDOWU_1.44",
+            "<Opt-win-SE-CON>": "WINDOWU_1.44",
+            "<Opt-win-SW-CON>": "WINDOWU_1.44",
+            "<Opt-win-NE-CON>": "WINDOWU_1.44",
+            "<Opt-win-NW-CON>": "WINDOWU_1.44"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "WINDOWU_1.22": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 1.22,
+          "SHGC": 0.4,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "WINDOWU_1.22",
+            "<Opt-win-E-CON>": "WINDOWU_1.22",
+            "<Opt-win-N-CON>": "WINDOWU_1.22",
+            "<Opt-win-W-CON>": "WINDOWU_1.22",
+            "<Opt-win-SE-CON>": "WINDOWU_1.22",
+            "<Opt-win-SW-CON>": "WINDOWU_1.22",
+            "<Opt-win-NE-CON>": "WINDOWU_1.22",
+            "<Opt-win-NW-CON>": "WINDOWU_1.22"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "WINDOWU_1.05": {
+        "characteristics": {
+          "panes": 3,
+          "fill": "argon",
+          "coat": "clear",
+          "u-value": 1.05,
+          "SHGC": 0.4,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "WINDOWU_1.05",
+            "<Opt-win-E-CON>": "WINDOWU_1.05",
+            "<Opt-win-N-CON>": "WINDOWU_1.05",
+            "<Opt-win-W-CON>": "WINDOWU_1.05",
+            "<Opt-win-SE-CON>": "WINDOWU_1.05",
+            "<Opt-win-SW-CON>": "WINDOWU_1.05",
+            "<Opt-win-NE-CON>": "WINDOWU_1.05",
+            "<Opt-win-NW-CON>": "WINDOWU_1.05"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "WINDOWU_0.90": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 0.9,
+          "SHGC": 0.4,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "WINDOWU_0.90",
+            "<Opt-win-E-CON>": "WINDOWU_0.90",
+            "<Opt-win-N-CON>": "WINDOWU_0.90",
+            "<Opt-win-W-CON>": "WINDOWU_0.90",
+            "<Opt-win-SE-CON>": "WINDOWU_0.90",
+            "<Opt-win-SW-CON>": "WINDOWU_0.90",
+            "<Opt-win-NE-CON>": "WINDOWU_0.90",
+            "<Opt-win-NW-CON>": "WINDOWU_0.90"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "WINDOWU_0.80": {
+        "characteristics": {
+          "panes": 2,
+          "fill": "air",
+          "coat": "clear",
+          "u-value": 0.8,
+          "SHGC": 0.4,
+          "frame": "vinyl"
+        },
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "WINDOWU_0.80",
+            "<Opt-win-E-CON>": "WINDOWU_0.80",
+            "<Opt-win-N-CON>": "WINDOWU_0.80",
+            "<Opt-win-W-CON>": "WINDOWU_0.80",
+            "<Opt-win-SE-CON>": "WINDOWU_0.80",
+            "<Opt-win-SW-CON>": "WINDOWU_0.80",
+            "<Opt-win-NE-CON>": "WINDOWU_0.80",
+            "<Opt-win-NW-CON>": "WINDOWU_0.80"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
       "LG-HP-Triple": {
         "h2kMap": {
           "base": {
@@ -3994,6 +4318,101 @@
           "proxy": "CeilR60",
           "custom-costs": {
           }
+        }
+      },      "CEILR_40": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "40"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_45": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "45"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_50": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "50"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_60": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_70": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "70"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_80": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "80"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_90": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "90"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
+        }
+      },
+      "CEILR_100": {
+        "h2kMap": {
+          "base": {
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "100"
+          }
+        },
+        "costs": {
+          "components": [],
+          "custom-costs": {}
         }
       }
     },
@@ -6212,6 +6631,101 @@
         },
         "custom-costs": {
         }
+      },      "AGWALLR_22": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "22."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_26": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "26."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_30": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "30."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_35": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "35."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_40": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "40."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_45": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "45."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_50": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "50."
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "AGWALLR_55": {
+        "h2kMap": {
+          "base": {
+            "<Opt-GenInsulLayerInboard-a>": "NA",
+            "OPT-H2K-EffRValue": "55"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
       },
       "NC_R-28(eff)_2x6-24inOC_R22-batt+2inXPS_poly_vb": {
         "h2kMap": {
@@ -6843,6 +7357,61 @@
           "custom-costs": {
           },
           "proxy": "WoodFrame+intEpsEffR23"
+        }
+      },
+      "BGWALLR_20": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "20.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "BGWALLR_25": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "25.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "BGWALLR_34": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "34.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "BGWALLR_42": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "42.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "BGWALLR_51": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-IntWallReff": "51.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
         }
       }
     },
@@ -9411,83 +9980,6 @@
           "components": []
         }
       },
-      
-      
-      "BaseExpFloor-R31": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "31"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-				"insulation:r31_batt"
-          ]
-        }
-      },
-      "ExpFloorFlash&Batt-R36": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "36"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-				"insulation:spray_foam_2pd_urethane:5.5in_thickness"
-          ]
-        }
-      },
-      "ExpFloorFoamed-R52": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "Foamed-R52",
-            "OPT-H2K-EffRValue": "NA"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-				"insulation:spray_foam:2pound_urethane:7.5in_thickness",
-				"insulation:spray_foam:38mm:r6/inch"
-          ]
-        }
-      },
-      "NWTCrawlFlr": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "30"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "VintageR30": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "32"
-          }
-        },
-        "costs": {
-          "custom-costs": {},
-          "components": []
-        }
-      },
-      
-      
       "BaseExpFloor-R31": {
         "h2kMap": {
           "base": {
@@ -9590,6 +10082,42 @@
           "components": [
 
           ]
+        }
+      },
+      "EXPOSEDR_30": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "32"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "EXPOSEDR_40": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "40"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },
+      "EXPOSEDR_50": {
+        "h2kMap": {
+          "base": {
+            "OPT-H2K-CodeName": "NA",
+            "OPT-H2K-EffRValue": "50"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
         }
       }
     },
@@ -11945,7 +12473,102 @@
           "custom-costs": {},
           "components": []
         }
-      },
+      },"DHWEF_ElecConserver_0.9": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "4",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.936",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+},
+      "DHWEF_IntHeatPump_2.1": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.1",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+},
+      "DHWEF_IntHeatPump_3": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "3.0",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+},
+      "DHWEF_IntHeatPump_4": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "4.0",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+},
+      "DHWEF_GasCondensing_0.86": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.86",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+},
+      "DHWEF_GasCondensing_0.94": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "2",
+            "Opt-H2K-TankType": "5",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "0.94",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+},
       "vintageElecEF0.92": {
         "h2kMap": {
           "base": {
