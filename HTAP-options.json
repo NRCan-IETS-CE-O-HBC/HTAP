@@ -10492,7 +10492,49 @@
             "ducting:central_forced_air"
           ]
         }
-      },      
+      },     
+      "ASHP-HSPF": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirHeatPump",
+            "Opt-H2K-Type1Fuel": "NA",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2HeatCOP": "9.5",
+            "Opt-H2K-HeatSpecType": "HSPF",
+            "Opt-H2K-Type2RatingTemp": "8.3",
+            "Opt-H2K-Type2CoolCOP": "4.0",
+            "Opt-H2K-Type2CutoffType": "1",
+            "Opt-H2K-Type2CutoffTemp": "NA",
+            "Opt-H2K-CoolOperWindow": "4"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            {
+              "H2KHouseInfo.HVAC/ASHP/capacity_kW": {
+                "per?14": "ashp:conventional"
+              }
+            },            
+            "ducting:central_forced_air", 
+            "install_200a_service_instead_of_100a_service"
+          ]
+        }
+      },          
+
       "ASHP": {
         "h2kMap": {
           "base": {
@@ -10512,6 +10554,7 @@
             "Opt-H2K-Type2CapOpt": "2",
             "Opt-H2K-Type2CapVal": "NA",
             "Opt-H2K-Type2HeatCOP": "3.66",
+            "Opt-H2K-HeatSpecType": "COP",
             "Opt-H2K-Type2RatingTemp": "8.3",
             "Opt-H2K-Type2CoolCOP": "4.0",
             "Opt-H2K-Type2CutoffType": "1",
@@ -11606,7 +11649,7 @@
       "Opt-H2K-Type2CutoffType",
       "Opt-H2K-Type2CutoffTemp",
       "Opt-H2K-CoolOperWindow",
-      "Opt-H2K-HeatSpecType",      
+      "Opt-H2K-HeatSpecType",
       "Opt-H2K-CoolSpecType",      
       "Opt-H2K-P9-manufacturer",
       "Opt-H2K-P9-model",

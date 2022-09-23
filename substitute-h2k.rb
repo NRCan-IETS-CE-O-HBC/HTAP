@@ -2294,6 +2294,8 @@ def processFile(h2kElements)
 
             end
 
+
+
           elsif ( tag =~ /Opt-H2K-Type2CapVal/ && value != "NA"  && "#{value}" != "" )
             sysType2.each do |sysType2Name|
               if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump")
@@ -2322,11 +2324,38 @@ def processFile(h2kElements)
                 locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                 if ( h2kElements[locationText] != nil )
                   locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/HeatingEfficiency"
-                  h2kElements[locationText].attributes["isCop"] = "true"
+                  #h2kElements[locationText].attributes["isCop"] = "true"
                   h2kElements[locationText].attributes["value"] = value
                 end
               end
             end
+
+
+            # COP, or HSPF rating method ? 
+          elsif ( tag =~ /Opt-H2K-HeatSpecType/ && value != "NA"  && "#{value}" != "" ) 
+
+
+            if ( value =~ /COP/ ) 
+              
+              isCOP = "true"
+            else 
+              isCOP = "false"
+            end 
+            
+            debug_out (" HEATSPECTYPE #{choiceVal} ISCOP: #{isCOP}")
+
+            sysType2.each do |sysType2Name|
+              if ( sysType2Name == "AirHeatPump" || sysType2Name == "WaterHeatPump" || sysType2Name == "GroundHeatPump" )
+                locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
+                if ( h2kElements[locationText] != nil )
+                  locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/HeatingEfficiency"
+                  h2kElements[locationText].attributes["isCop"] = isCOP
+
+                end
+              end
+
+            end
+
 
             # Possibly set the rating temperature
           elsif ( tag =~ /Opt-H2K-Type2RatingTemp/ && value != "NA"  && "#{value}" != "" )
