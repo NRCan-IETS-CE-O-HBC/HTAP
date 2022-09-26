@@ -12050,6 +12050,25 @@
           ]
         }
       },
+      "NBC-HotWater_hp": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "6",
+            "Opt-H2K-TankSize": "0",
+            "Opt-H2K-EF": "2.1",
+            "Opt-H2K-IntHeatPumpCOP": "NA",
+            "Opt-H2K-FlueDiameter": "0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "R2000-HotWater-elec": {
         "h2kMap": {
           "base": {
