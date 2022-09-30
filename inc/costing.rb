@@ -321,7 +321,7 @@ module Costing
   def Costing.getCosts(myUnitCosts,myOptions,myAssemblies,attrib,choice,useTheseSources)
  
     debug_flag = false 
-    #debug_flag = true  if (  attrib =~ /Opt-Heating-Cooling/)
+    #debug_flag = true  if (  attrib =~ /Opt-ACH/)
 
     debug_on if debug_flag
 
@@ -698,7 +698,7 @@ module Costing
           
           measureDescription = ""
           measure = 0.0
-
+          #debug_on if ( choice !~ /NA/ )
           debug_out "  Recovering measure for #{attrib}/#{choice}/#{costingElement}\n"
           if ( costingElement == "as_per_h2k_file" ) then
             source    = "NA"
@@ -909,10 +909,15 @@ module Costing
             when "Opt-DWHR"
 
 
-              if ( units == "ea"  || units =="undefined")
+              if ( units == "ea" || units =="undefined"  )
 
-                measure = 1.0
-                measureDescription = "ea.   - Total component installation cost (ea)"
+                if ( myH2KHouseInfo["house-description"]["buildingType"] =~ /Multi-unit/)
+                  measure = myH2KHouseInfo["house-description"]["MURBUnits"]
+                  measureDescription = "ea.   - Total component installation cost"
+                else
+                  measure = 1.0
+                  measureDescription = "ea.   - Total component installation cost"
+                end
               else
 
                 costsOK = false
@@ -922,10 +927,15 @@ module Costing
               # ..................................................................
             when "Opt-DHWSystem"
 
-              if ( units == "ea"  || units =="undefined")
+              if ( units == "ea" || units =="undefined"  )
 
-                measure = 1.0
-                measureDescription = "ea.   - Total component installation cost (ea)"
+                if ( myH2KHouseInfo["house-description"]["buildingType"] =~ /Multi-unit: whole building/)
+                  measure = myH2KHouseInfo["house-description"]["MURBUnits"]
+                  measureDescription = "ea.   - Total component installation cost"
+                else
+                  measure = 1.0
+                  measureDescription = "ea.   - Total component installation cost"
+                end
               else
 
                 costsOK = false
@@ -941,7 +951,7 @@ module Costing
 
               if ( units == "ea" || units =="undefined"  )
 
-                if ( myH2KHouseInfo["house-description"]["buildingType"] =~ /Multi-unit/)
+                if ( myH2KHouseInfo["house-description"]["buildingType"] =~ /Multi-unit: whole building/)
                   measure = myH2KHouseInfo["house-description"]["MURBUnits"]
                   measureDescription = "ea.   - Total component installation cost"
                 else
@@ -985,11 +995,15 @@ module Costing
 
             when "Opt-VentSystem"
 
+              if ( units == "ea" || units =="undefined"  )
 
-              if ( units == "ea" || units =="undefined" )
-
-                measure = 1.0
-                measureDescription = "ea.   - Total component installation cost"
+                if ( myH2KHouseInfo["house-description"]["buildingType"] =~ /Multi-unit: whole building/)
+                  measure = myH2KHouseInfo["house-description"]["MURBUnits"]
+                  measureDescription = "ea.   - Total component installation cost"
+                else
+                  measure = 1.0
+                  measureDescription = "ea.   - Total component installation cost"
+                end
 
               elsif ( units == "l/s capacity")
                 if ( catagory == "HRV" ) then
@@ -1019,7 +1033,7 @@ module Costing
           debug_out ("   Measure   :   #{measure} (#{units})\n")
           debug_out ("   Materials : $ #{materials.round(2)} / #{units}\n")
           debug_out ("   Labour    : $ #{labour.round(2)} / #{units}\n")
-          
+          debug_off
           # ===============================================================
           # Compute costs :
           if ( costsOK )

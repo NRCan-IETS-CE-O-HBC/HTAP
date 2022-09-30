@@ -39,7 +39,7 @@ $recosted_file = 'HTAP-prm-output-recosted.csv'
 stream_out( drawRuler("A script for re-estimating capital costs from HTAP output."))
 
 
-debug_on
+#debug_on
 
 $help_msg =  " 
  re-cost.rb parses existing HTAP results (e.g. HTAP-prm-output.csv)
@@ -124,6 +124,7 @@ stream_out("   - Options file:    #{$options_file}\n")
 stream_out("   - Assembly file:   #{$ssembly_file}\n")
 stream_out("   - path to h2k files: #{$h2k_path}\n")
 
+
 stream_out (" Parsing input files [")
 stream_out (" options ")
 options_data   = HTAPData.parseJson( $options_file, desc = 'Options definitions')
@@ -145,6 +146,8 @@ for header in results_data.headers()
   end 
 end 
 
+
+
 h2k_file_data = {}
 
 out_csv = CSV.open($recosted_file,'w') 
@@ -153,13 +156,15 @@ modified_costs = []
 first = true 
 irow = 0
 ifailures = 0
-debug_off 
+
+##debug_on 
+
 for row in results_data.by_row.each()
   
   irow = irow + 1 
 
   
-  begin 
+  #begin 
 
     if ( row['input|Opt-Heating-Cooling'] != 'ASHP-mini-split' )
       #stream_out "X >#{row['input|Opt-Heating-Cooling']}<\n"
@@ -167,6 +172,7 @@ for row in results_data.by_row.each()
     else   
       #stream_out "o >#{row['input|Opt-Heating-Cooling']}<\n"
     end 
+
 
 
     #next if irow < 20720
@@ -179,13 +185,31 @@ for row in results_data.by_row.each()
 
 
     h2k_file = row['archetype|h2k-File']
-    debug_out (" ROW # #{irow}: h2k file: #{h2k_file}\n")
-    choices = {}
+    #debug_on 
+    #debug_out "> #{h2k_file}\n"
+    #debug_off
+    skip = false
+    if (h2k_file == 'CFHA-Portfolio-6047.H2K' ||  h2k_file == 'CFHA-Portfolio-1007.H2K' )
+      skip = false 
+    end 
+    
+    next if skip 
 
+    pkg_list = row['input|upgrade-package-list']
+    #debug_on 
+    #debug_out (" ROW # #{irow}: h2k file: #{h2k_file}, pkg: #{pkg_list} \n")
+    #debug_off
+    #debug_on if (pkg_list == "scenario-1-recap-T3-z4&5")
+    
+
+
+    choices = {}
+    debug_out " - CHOICES: start -----------------\n"
     for attribute in list_of_attributes
       choices[attribute] = row["input|#{attribute}"]
+      debug_out "   CHOICE: #{attribute}->#{choices[attribute]}\n"
     end   
-
+    debug_out " - CHOICES: end -----------------\n"
     
 
     system_size_heating = row['output|PEAK-Heating-W']
@@ -193,25 +217,30 @@ for row in results_data.by_row.each()
 
 
 
-
+    # Not sure what the logic here is. 
     if ( row['input|Opt-Ruleset'] =~ /NBC9_36/ ) then 
       costed = false 
-
     else 
       costed = true 
     end 
+
+
+
+    debug_out "COSTED FLAG: [#{costed}]\n"
+
 
     if ! h2k_file_data.key?(h2k_file)
       
       h2k_file_path = "#{$h2k_path}\\#{h2k_file}".gsub(/\\/,'/')
       
       h2k_file_data[h2k_file] = H2KFile.get_elements_from_filename(h2k_file_path)
-      
+      # Need to adapt h2k system size to value computed at run (otherwise the base archetype
+      # system size will be used, and won't reflect climate or envelope parameters for the rhn)
       h2k_file_data[h2k_file]["HouseFile/AllResults"].elements.each do |element|
         element.elements[".//Other"].attributes["designHeatLossRate"] = system_size_heating
         element.elements[".//Other"].attributes["designCoolLossRate"] = system_size_cooling
       end
-
+      debug_out (" System size - Heating: #{system_size_heating} W\n")
 
     end 
 
@@ -223,7 +252,7 @@ for row in results_data.by_row.each()
 
     final_size =  H2KFile.getDesignLoads(  h2kElements  )
       
-    #stream_out(" Parsing row # #{irow} / #{row['input|Opt-Ruleset']} / size: #{system_size_heating} (#{final_size['heating_W']}): \n")
+    debug_out ( " size for costing calculations: #{system_size_heating} W (#{final_size['heating_W']}): \n")
 
 
 
@@ -232,6 +261,13 @@ for row in results_data.by_row.each()
     row['recosted|total_avg'] = costEstimates['total_avg']
     row['recosted|total_max'] = costEstimates['total_max']
     row['recosted|total_min'] = costEstimates['total_min']
+
+
+    #debug_pause if (pkg_list == "Retrofit-env-pkg_101")
+
+    debug_out (" - Costing result: start -----------\n")
+    debug_out (costEstimates.pretty_inspect)
+    debug_out (" - Costing result: end -----------\n")
 
     for attribute in costEstimates['byAttribute'].keys()
       row['recosted|byAttribute|'+attribute] = costEstimates['byAttribute'][attribute]
@@ -250,15 +286,18 @@ for row in results_data.by_row.each()
     end 
     out_csv << row 
     stream_out (" O ")
-  rescue 
-    ifailures = ifailures + 1 
-    stream_out ( " X " )
+  #rescue 
+    #ifailures = ifailures + 1 
+    #stream_out ( " X " )
     #warn_out (" Could not cost row.\n")
 
-  end 
+  #end 
 
   stream_out "]\n"
+  
 
+  debug_off 
+  #debug_pause if (pkg_list == "scenario-1-recap-T3-z4&5")
 end 
 
 

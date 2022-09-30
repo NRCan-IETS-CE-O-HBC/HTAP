@@ -1318,6 +1318,9 @@ module H2KFile
         systemInfo["Furnace"]["count"] += 1
         systemInfo["Furnace"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
         systemInfo[""]
+      when "Boiler"
+        systemInfo["Boiler"]["count"] += 1 
+        systemInfo["Boiler"]["capacity_kW"] = t1_system.elements[".//Specifications/OutputCapacity"].attributes["value"].to_f
       else
         warn_out "Unknown system type #{t1_system.name}\n"
       end

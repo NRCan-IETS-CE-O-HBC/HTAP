@@ -275,6 +275,27 @@ end
 # Check of debugging is active, and if so, call debug_out_now
 # to write out debugging messages.
 def debug_out(debmsg)
+  return false if ( $gNoDebug )
+  callerID = caller_info()
+  if( $localDebug[callerID["routine"]].nil? ) then
+    lDebug = false
+  else
+    lDebug = $localDebug[callerID["routine"]]
+  end
+
+  if (lDebug || $gDebug ) then
+     debugCaller = Array.new
+     debug_out_now( debmsg, callerID)
+     log_out(debmsg)
+     return true 
+  else 
+     return false 
+  end
+end
+
+# Check of debugging is active, and if so, call debug_out_now
+# to write out debugging messages.
+def debug_out_long(debmsg)
   return if ( $gNoDebug )
   callerID = caller_info()
   if( $localDebug[callerID["routine"]].nil? ) then
@@ -290,11 +311,12 @@ def debug_out(debmsg)
   end
 end
 
+
 # =========================================================================================
 # Write out formatted debugging messages to the screen. (in almost all cases,
 # code should call debug_out and not debug_out_now.
 # =========================================================================================
-def debug_out_now(debmsg, callerID)
+def debug_out_now(debmsg, callerID, long=false)
   return if ( $gNoDebug )
   callindent = ""
 
@@ -332,7 +354,11 @@ def debug_out_now(debmsg, callerID)
       if (  debmsg =~ /^[^\s]/ ) then
         prefix = "#{prefix} "
       end
-      fullmsg = "#{fullmsg}"+shortenToTerm("#{prefix}#{line}")
+      if ( long )
+        fullmsg = "#{fullmsg}#{prefix}#{line}"
+      else 
+        fullmsg = "#{fullmsg}"+shortenToTerm("#{prefix}#{line}")
+      end 
 
     end
 

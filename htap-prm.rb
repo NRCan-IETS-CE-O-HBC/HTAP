@@ -846,6 +846,8 @@ def run_these_cases(current_task_files)
             # ( Are these steps even necessary? Could we not read them from their 
             #   original location? )
             FileUtils.cp($gCostingFile,$RunDirectory)
+            #debug_on
+            debug_out("ASSEMBLIES: #{$gAssemblyList}")
             FileUtils.cp($gAssemblyList,$RunDirectory)
           end
           # ... And get base file names for insertion into the substitute-h2k.rb command.
@@ -1857,6 +1859,11 @@ else
 
 
   debug_out " ARCH: \n#{$archetypeFiles[0].pretty_inspect}\n"
+
+  if ( $archetypeFiles.length < 1 ) then 
+    err_out ("No archetypes to run")
+    fatalerror("Simulations could not be performed.")
+  end 
 
   stream_out (" done.\n")
 
