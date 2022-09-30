@@ -957,7 +957,10 @@ def run_these_cases(current_task_files)
             $errmsgs= File.read("substitute-h2k-errors.txt")
             $errmsgs_chk = $errmsgs
             if ( ! $errmsgs_chk.gsub(/\n*/,"").gsub( / */, "").empty? )
-              $RunResults["run-#{thread3}"]["status"]["substitute-h2k-err-msgs"] = $errmsgs
+              $RunResults["run-#{thread3}"]["status"]["substitute-h2k-err-msgs"] =  $errmsgs #"Substitute.h2k encountered errors" 
+              log_out ("ERROR MESSAGES FROM SUBSTITUTE - START:")
+              log_out ($errmsgs)
+              log_out ("ERROR MESSAGES FRON SUBSTITUTE - END: ")
             end
         end 
 
