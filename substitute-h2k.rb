@@ -3009,6 +3009,180 @@ def processFile(h2kElements)
           # Move to the next choiceEntry with a break
           break
 
+        elsif ( choiceEntry =~ /Opt-AdvancedBaseloads/ )
+          # Baseload option has been defined in choice file, update
+          if(choiceVal == "NA")
+            # Don't change the baseload entries
+            break
+          end
+
+          # Instead of looping through tags, update all values in this pass
+          locationText = "HouseFile/House/BaseLoads/"
+          
+          h2kElements["HouseFile/House/BaseLoads"].delete_element("AdvancedUserSpecified")
+          h2kElements["HouseFile/House/BaseLoads"].delete_element("AdvancedUserSpecified") # Needs to be deleted twice for some reason
+
+          # Set to not specified
+          h2kElements[locationText + "Summary"].delete_attribute("isSpecified")
+
+          # Update occupancy
+          h2kElements[locationText + "Occupancy"].attributes["isOccupied"] = "true"
+          h2kElements[locationText + "Occupancy/Adults"].attributes["occupants"] = valHash["1"]
+          h2kElements[locationText + "Occupancy/Adults"].attributes["atHome"] = valHash["2"]
+          h2kElements[locationText + "Occupancy/Children"].attributes["occupants"] = valHash["3"]
+          h2kElements[locationText + "Occupancy/Children"].attributes["atHome"] = valHash["4"]
+          h2kElements[locationText + "Occupancy/Infants"].attributes["occupants"] = valHash["5"]
+          h2kElements[locationText + "Occupancy/Infants"].attributes["atHome"] = valHash["6"]
+          h2kElements[locationText].attributes["basementFractionOfInternalGains"] = valHash["7"]
+
+          # Populate the water usage
+          h2kElements[locationText].delete_element("WaterUsage")
+          h2kElements[locationText].add_element("WaterUsage")
+          h2kElements[locationText + "WaterUsage"].add_attribute("temperature", valHash["8"]) # Temperature
+          h2kElements[locationText + "WaterUsage"].add_attribute("otherHotWaterUse", "0.0")
+          h2kElements[locationText + "WaterUsage"].add_attribute("lowFlushToilets", "0")
+          
+          h2kElements[locationText + "WaterUsage"].add_element("BathroomFaucets")
+          h2kElements[locationText + "WaterUsage/BathroomFaucets"].add_attribute("code", "2")
+          h2kElements[locationText + "WaterUsage/BathroomFaucets"].add_attribute("value", "8.3")
+          fTotalOccs = valHash["1"].to_f+valHash["3"].to_f+valHash["5"].to_f
+          fTotalOtherWater = valHash["9"].to_f
+          numberPerOccupantPerDay = fTotalOtherWater/(fTotalOccs*8.3)
+          numberPerOccupantPerDay = sprintf("%0.3f", numberPerOccupantPerDay)
+          
+          h2kElements[locationText + "WaterUsage/BathroomFaucets"].add_attribute("numberPerOccupantPerDay", numberPerOccupantPerDay)
+          h2kElements[locationText + "WaterUsage/BathroomFaucets"].add_element("English")
+          h2kElements[locationText + "WaterUsage/BathroomFaucets/English"].add_text("Standard 8.3 L/min (2.2 US gpm)")
+          h2kElements[locationText + "WaterUsage/BathroomFaucets"].add_element("French")
+          h2kElements[locationText + "WaterUsage/BathroomFaucets/French"].add_text("Débit standard 8.3 L/min (2,2 gal/min)")
+          
+          fTotalDurPerDay = fTotalOccs*valHash["10"].to_f*(valHash["11"].to_f/7.0)
+          fTotalDurPerDay = sprintf("%0.4f", fTotalDurPerDay)
+          h2kElements[locationText + "WaterUsage"].add_element("Shower")
+          h2kElements[locationText + "WaterUsage/Shower"].add_attribute("averageDuration", valHash["10"])
+          h2kElements[locationText + "WaterUsage/Shower"].add_attribute("numberPerOccupantPerWeek", valHash["11"])
+          h2kElements[locationText + "WaterUsage/Shower"].add_attribute("totalDurationPerDay", fTotalDurPerDay)
+          
+          #     temperature code for shower
+          sShowerTemp=""
+          sShowerEnglish=""
+          sShowerFrench=""
+          if (valHash["12"] == "1")
+            sShowerTemp="41"
+            sShowerEnglish="Warm 41°C (106°F)"
+            sShowerFrench="Tempérée 41°C (106°F)"
+          elsif (valHash["12"] == "0")
+            sShowerTemp="37"
+            sShowerEnglish="Cool 37°C (99°F)"
+            sShowerFrench="Fraîche 37°C (99°F)"
+          elsif (valHash["12"] == "2")
+            sShowerTemp="45"
+            sShowerEnglish="Hot 45°C (113°F)"
+            sShowerFrench="Chaude 45°C (113°F)"
+          else
+            fatalerror("In Opt-AdvancedBaseloads: Invalid shower temperature code #{valHash["12"]}! Must be 0, 1, or 2 \n")
+          end
+          h2kElements[locationText + "WaterUsage/Shower"].add_element("Temperature")
+          h2kElements[locationText + "WaterUsage/Shower/Temperature"].add_attribute("code", valHash["12"])
+          h2kElements[locationText + "WaterUsage/Shower/Temperature"].add_attribute("value", sShowerTemp)
+          h2kElements[locationText + "WaterUsage/Shower/Temperature"].add_element("English")
+          h2kElements[locationText + "WaterUsage/Shower/Temperature/English"].add_text(sShowerEnglish)
+          h2kElements[locationText + "WaterUsage/Shower/Temperature"].add_element("French")
+          h2kElements[locationText + "WaterUsage/Shower/Temperature/French"].add_text(sShowerFrench)
+
+          #     flow code for shower
+          sShowerFlow=""
+          sShowerEnglish=""
+          sShowerFrench=""
+          if (valHash["13"] == "2")
+            sShowerFlow="9.5"
+            sShowerEnglish="Standard 9.5 L/min (2.5 US gpm)"
+            sShowerFrench="Standard 9.5 L/min (2.5 ÉU gpm)"
+          elsif (valHash["13"] == "0")
+            sShowerFlow="5.7"
+            sShowerEnglish="Ultra Low flow 5.7 L/min (1.5 US gpm)"
+            sShowerFrench="Très faible débit 5.7 L/min (1.5 ÉU gpm)"
+          elsif (valHash["13"] == "1")
+            sShowerFlow="7.6"
+            sShowerEnglish="Low flow 7.6 L/min (2.0 US gpm)"
+            sShowerFrench="Faible débit 7.6 L/min (2.0 ÉU gpm)"
+          elsif (valHash["13"] == "3")
+            sShowerFlow="15"
+            sShowerEnglish="Older 15 L/min (4.0 US gpm)"
+            sShowerFrench="Plus ancien 15 L/min (4.0 ÉU gpm)"
+          elsif (valHash["13"] == "4")
+            sShowerFlow="19"
+            sShowerEnglish="High Flow 19 L/min (5.0 US gpm)"
+            sShowerFrench="Haut débit 19 L/min (5.0 ÉU gpm)"
+          else
+            fatalerror("In Opt-AdvancedBaseloads: Invalid shower flow code #{valHash["13"]}! Must be 0 to 4 \n")
+          end
+          h2kElements[locationText + "WaterUsage/Shower"].add_element("FlowRate")
+          h2kElements[locationText + "WaterUsage/Shower/FlowRate"].add_attribute("code", valHash["13"])
+          h2kElements[locationText + "WaterUsage/Shower/FlowRate"].add_attribute("value", sShowerFlow)
+          h2kElements[locationText + "WaterUsage/Shower/FlowRate"].add_element("English")
+          h2kElements[locationText + "WaterUsage/Shower/FlowRate/English"].add_text(sShowerEnglish)
+          h2kElements[locationText + "WaterUsage/Shower/FlowRate"].add_element("French")
+          h2kElements[locationText + "WaterUsage/Shower/FlowRate/French"].add_text(sShowerFrench)
+          
+          # Populate the electrical usage
+          h2kElements[locationText].delete_element("ElectricalUsage")
+          h2kElements[locationText].add_element("ElectricalUsage")
+          h2kElements[locationText + "ElectricalUsage"].add_attribute("otherLoad", valHash["14"])
+          h2kElements[locationText + "ElectricalUsage"].add_attribute("averageExteriorUse", "0")
+          h2kElements[locationText + "ElectricalUsage"].add_element("ClothesDryer")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer"].add_attribute("percentageOfWasherLoads", "71.4")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer"].add_element("EnergySource")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/EnergySource"].add_attribute("code", "1")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/EnergySource"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/EnergySource/English"].add_text("Electric")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/EnergySource"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/EnergySource/French"].add_text("Électricité")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer"].add_element("RatedValue")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/RatedValue"].add_attribute("code", "0")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/RatedValue"].add_attribute("value", "0")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/RatedValue"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/RatedValue/English"].add_text("User Specified")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/RatedValue"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/RatedValue/French"].add_text("Spécifié par l'utilisateur")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer"].add_element("Location")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/Location"].add_attribute("code", "1")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/Location"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/Location/English"].add_text("Main Floor")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/Location"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/ClothesDryer/Location/French"].add_text("Plancher Principal")
+          h2kElements[locationText + "ElectricalUsage"].add_element("Stove")
+          h2kElements[locationText + "ElectricalUsage/Stove"].add_element("EnergySource")
+          h2kElements[locationText + "ElectricalUsage/Stove/EnergySource"].add_attribute("code", "1")
+          h2kElements[locationText + "ElectricalUsage/Stove/EnergySource"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/Stove/EnergySource/English"].add_text("Electric")
+          h2kElements[locationText + "ElectricalUsage/Stove/EnergySource"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/Stove/EnergySource/French"].add_text("Électricité")
+          h2kElements[locationText + "ElectricalUsage/Stove"].add_element("RatedValue")
+          h2kElements[locationText + "ElectricalUsage/Stove/RatedValue"].add_attribute("code", "0")
+          h2kElements[locationText + "ElectricalUsage/Stove/RatedValue"].add_attribute("value", "0")
+          h2kElements[locationText + "ElectricalUsage/Stove/RatedValue"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/Stove/RatedValue/English"].add_text("User Specified")
+          h2kElements[locationText + "ElectricalUsage/Stove/RatedValue"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/Stove/RatedValue/French"].add_text("Spécifié par l'utilisateur")
+          h2kElements[locationText + "ElectricalUsage"].add_element("Refrigerator")
+          h2kElements[locationText + "ElectricalUsage/Refrigerator"].add_attribute("code", "0")
+          h2kElements[locationText + "ElectricalUsage/Refrigerator"].add_attribute("value", "0")
+          h2kElements[locationText + "ElectricalUsage/Refrigerator"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/Refrigerator/English"].add_text("User Specified")
+          h2kElements[locationText + "ElectricalUsage/Refrigerator"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/Refrigerator/French"].add_text("Spécifié par l'utilisateur")
+          h2kElements[locationText + "ElectricalUsage"].add_element("InteriorLighting")
+          h2kElements[locationText + "ElectricalUsage/InteriorLighting"].add_attribute("code", "0")
+          h2kElements[locationText + "ElectricalUsage/InteriorLighting"].add_attribute("value", "0")
+          h2kElements[locationText + "ElectricalUsage/InteriorLighting"].add_element("English")
+          h2kElements[locationText + "ElectricalUsage/InteriorLighting/English"].add_text("User Specified")
+          h2kElements[locationText + "ElectricalUsage/InteriorLighting"].add_element("French")
+          h2kElements[locationText + "ElectricalUsage/InteriorLighting/French"].add_text("Spécifié par l'utilisateur")
+          
+          # Move to the next choiceEntry with a break
+          break
+          
           # Temperature inputs
           # ADW 23-May-2018: Original development of option
           # Notes:
