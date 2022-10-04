@@ -10816,6 +10816,27 @@
           "proxy": "gas-furnace-psc"
         }
       },
+      "NBC2020-propane-furnace": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "4",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "95",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "gas-furnace-psc"
+        }
+      },
       "oil-high-efficiency-noAC": {
         "h2kMap": {
           "base": {
@@ -12258,6 +12279,126 @@
           "components": [
 
           ]
+        }
+      },
+      "NBC-eff-30": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-HasDWHR": "true",
+            "Opt-H2K-DWHR-preheatShowerTank": "false",
+            "Opt-H2K-DWHR-Manufacturer": "Power-Pipe",
+            "Opt-H2K-DWHR-Model": "C4-42",
+            "Opt-H2K-DWHR-Efficiency_code": "2",
+            "Opt-H2K-DWHR-Effectiveness9p5": "30.4",
+            "Opt-H2K-DWHR-ShowerTemperature_code": "2",
+            "Opt-H2K-DWHR-ShowerHead_code": "1",
+            "Opt-H2K-DWHR-showerLength": "15.0",
+            "Opt-H2K-DWHR-dailyShowers": "1"
+          }
+        },
+        "costs": {
+          "components": [
+            "dwhr_unit:91cm_supply",
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC-eff-42": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-HasDWHR": "true",
+            "Opt-H2K-DWHR-preheatShowerTank": "false",
+            "Opt-H2K-DWHR-Manufacturer": "Power-Pipe",
+            "Opt-H2K-DWHR-Model": "R2-54",
+            "Opt-H2K-DWHR-Efficiency_code": "2",
+            "Opt-H2K-DWHR-Effectiveness9p5": "42.8",
+            "Opt-H2K-DWHR-ShowerTemperature_code": "2",
+            "Opt-H2K-DWHR-ShowerHead_code": "1",
+            "Opt-H2K-DWHR-showerLength": "15.0",
+            "Opt-H2K-DWHR-dailyShowers": "1"
+          }
+        },
+        "costs": {
+          "components": [
+            "dwhr_unit:91cm_supply",
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC-eff-54": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-HasDWHR": "true",
+            "Opt-H2K-DWHR-preheatShowerTank": "false",
+            "Opt-H2K-DWHR-Manufacturer": "Power-Pipe",
+            "Opt-H2K-DWHR-Model": "C3-81",
+            "Opt-H2K-DWHR-Efficiency_code": "2",
+            "Opt-H2K-DWHR-Effectiveness9p5": "54.4",
+            "Opt-H2K-DWHR-ShowerTemperature_code": "2",
+            "Opt-H2K-DWHR-ShowerHead_code": "1",
+            "Opt-H2K-DWHR-showerLength": "15.0",
+            "Opt-H2K-DWHR-dailyShowers": "1"
+          }
+        },
+        "costs": {
+          "components": [
+            "dwhr_unit:91cm_supply",
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC-eff-62": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-HasDWHR": "true",
+            "Opt-H2K-DWHR-preheatShowerTank": "false",
+            "Opt-H2K-DWHR-Manufacturer": "Power-Pipe",
+            "Opt-H2K-DWHR-Model": "C4-99",
+            "Opt-H2K-DWHR-Efficiency_code": "2",
+            "Opt-H2K-DWHR-Effectiveness9p5": "62.5",
+            "Opt-H2K-DWHR-ShowerTemperature_code": "2",
+            "Opt-H2K-DWHR-ShowerHead_code": "1",
+            "Opt-H2K-DWHR-showerLength": "15.0",
+            "Opt-H2K-DWHR-dailyShowers": "1"
+          }
+        },
+        "costs": {
+          "components": [
+            "dwhr_unit:91cm_supply",
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+          ],
+          "custom-costs": {
+          }
+        }
+      },
+      "NBC-eff-70": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-HasDWHR": "true",
+            "Opt-H2K-DWHR-preheatShowerTank": "false",
+            "Opt-H2K-DWHR-Manufacturer": "Power-Pipe",
+            "Opt-H2K-DWHR-Model": "R3-114",
+            "Opt-H2K-DWHR-Efficiency_code": "2",
+            "Opt-H2K-DWHR-Effectiveness9p5": "70.4",
+            "Opt-H2K-DWHR-ShowerTemperature_code": "2",
+            "Opt-H2K-DWHR-ShowerHead_code": "1",
+            "Opt-H2K-DWHR-showerLength": "15.0",
+            "Opt-H2K-DWHR-dailyShowers": "1"
+          }
+        },
+        "costs": {
+          "components": [
+            "dwhr_unit:91cm_supply",
+            "pex_pipe_to_and_from_dwhr_and_dhw_systems:15_ft_run"
+          ],
+          "custom-costs": {
+          }
         }
       },
       "DWHR-eff-30": {
