@@ -125,8 +125,8 @@
       "ArchetypeRoadmapping_elec": "ArchetypeRoadmapping_elec", 
       "ArchetypeRoadmapping_auto": "ArchetypeRoadmapping_auto",
       "2020NBC9_36": "NBC9_36",
-      "2020NBC9_36_noHRV": "NBC9_36_noHRV",
-      "2020NBC9_36_HRV": "NBC9_36_HRV"
+      "2020NBC9_36_noHRV": "2020NBC9_36_noHRV",
+      "2020NBC9_36_HRV": "2020NBC9_36_HRV"
     },
     "default": "NA",
     "stop-on-error": true
@@ -12590,6 +12590,84 @@
       "Opt-H2K-FuelDryer",
       "Opt-H2K-DryerUse",
       "Opt-H2K-DryerLoc"
+    ]
+  },
+  "Opt-AdvancedBaseloads": {
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "NA",
+            "Opt-H2K-FracAdultsHome": "NA",
+            "Opt-H2K-NumChilds": "NA",
+            "Opt-H2K-FracChildsHome": "NA",
+            "Opt-H2K-NumInfants": "NA",
+            "Opt-H2K-FracInfantsHome": "NA",
+            "Opt-H2K-FracToBasement": "NA",
+            "Opt-H2K-DHWTemp": "NA",
+            "Opt-H2K-DHWLoad": "NA",
+            "Opt-H2K-ShowerAverageDuration": "NA",
+            "Opt-H2K-ShowerPerOccPerWeek": "NA",
+            "Opt-H2K-ShowerTempCode": "NA",
+            "Opt-H2K-ShowerFlowCode": "NA",
+            "Opt-H2K-InternalElectrical": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "NBC2020-AdvancedBaseloads" : {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-NumAdults": "2",
+            "Opt-H2K-FracAdultsHome": "50",
+            "Opt-H2K-NumChilds": "2",
+            "Opt-H2K-FracChildsHome": "50",
+            "Opt-H2K-NumInfants": "0",
+            "Opt-H2K-FracInfantsHome": "0",
+            "Opt-H2K-FracToBasement": "0.15",
+            "Opt-H2K-DHWTemp": "55",
+            "Opt-H2K-DHWLoad": "97",
+            "Opt-H2K-ShowerAverageDuration": "3.75",
+            "Opt-H2K-ShowerPerOccPerWeek": "7",
+            "Opt-H2K-ShowerTempCode": "1",
+            "Opt-H2K-ShowerFlowCode": "1",
+            "Opt-H2K-InternalElectrical": "16.3"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      }
+    },
+    "default": "NA",
+    "stop-on-error": true,
+    "h2kSchema": [
+      "Opt-H2K-NumAdults",
+      "Opt-H2K-FracAdultsHome",
+      "Opt-H2K-NumChilds",
+      "Opt-H2K-FracChildsHome",
+      "Opt-H2K-NumInfants",
+      "Opt-H2K-FracInfantsHome",
+      "Opt-H2K-FracToBasement",
+      "Opt-H2K-DHWTemp",
+      "Opt-H2K-DHWLoad",
+      "Opt-H2K-ShowerAverageDuration",
+      "Opt-H2K-ShowerPerOccPerWeek",
+      "Opt-H2K-ShowerTempCode",
+      "Opt-H2K-ShowerFlowCode",
+      "Opt-H2K-InternalElectrical"
     ]
   },
   "Opt-Temperatures": {

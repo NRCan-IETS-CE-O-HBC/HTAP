@@ -941,7 +941,8 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
    applyPermafrostRules = false
 
    $ruleSetChoices["Opt-ACH"] = "ACH_NBC"
-   $ruleSetChoices["Opt-Baseloads"] = "NBC2020-Baseloads"
+   $ruleSetChoices["Opt-Baseloads"] = "NA"
+   $ruleSetChoices["Opt-AdvancedBaseloads"] = "NBC2020-AdvancedBaseloads"
    $ruleSetChoices["Opt-ResultHouseCode"] = "General"
    $ruleSetChoices["Opt-Temperatures"] = "NBC2020_Temps"
    $ruleSetChoices["Opt-WindowDistribution"] = "Reference-9.36"
