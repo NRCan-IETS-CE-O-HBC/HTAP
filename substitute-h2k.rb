@@ -3505,21 +3505,8 @@ def processFile(h2kElements)
               fCasementWidth = 600
               equalAreaEachSide = totalNewWinArea/4.0 # Area in meters
               
-              iCasementsPerSide = equalAreaEachSide/(0.6*1.5)
-              if (fDWR<0.17)
-                 # Round up
-                 iCasementsPerSide=iCasementsPerSide.ceil
-              elsif (fDWR<0.22)
-                 # Round down
-                 iCasementsPerSide=iCasementsPerSide.floor
-              else
-                 # Round to nearest integer
-                 iCasementsPerSide=iCasementsPerSide.round
-              end
-              
-              # four square window
-              equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
-
+              iCasementsPerSide = equalAreaEachSide/((fCasementHeight/1000.0)*(fCasementWidth/1000.0))
+              iCasementsPerSide = iCasementsPerSide.round
             
                 if (frontOrientation == "S" || frontOrientation == "N" || frontOrientation == "W" || frontOrientation == "E")
                   newWinHeight[1] = fCasementHeight
@@ -3540,8 +3527,11 @@ def processFile(h2kElements)
                   newWinWidth[6] = fCasementWidth
                   newWinWidth[8] = fCasementWidth
                 end
-
-             
+                
+                sfDWR = fDWR.round(2)
+                sFDWRAct = (iCasementsPerSide*((fCasementHeight/10000.0)*(fCasementWidth/1000.0)))/grossWallArea
+                sFDWRAct=sFDWRAct.round(2)
+                info_out("Opt-WindowDistribution: An FDWR of #{sfDWR} was requested and an FDWR of #{sFDWRAct} was achieved.")
 
             elsif value == "PROPORTIONAL"
               #TBA
@@ -3565,6 +3555,9 @@ def processFile(h2kElements)
 
             # Delete all existing windows
             H2KFile.deleteAllWin(h2kElements)
+
+            # Delete all the windows in doors
+            H2KFile.deleteAllDoorWindows(h2kElements)
 
             # Add windows on four sides of a house
             frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}

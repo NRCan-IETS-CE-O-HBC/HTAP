@@ -1497,6 +1497,24 @@ module H2KFile
 
   end
 
+  def H2KFile.deleteAllDoorWindows(elements)
+    # Delete all existing door-windows
+    locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"
+    elements.each(locationText) do |window|
+      window.parent.delete_element("Window")
+    end
+  
+  end
+  
+  def H2KFile.deleteAllDoors(elements)
+    # Delete all existing doors
+    locationText = "HouseFile/House/Components/*/Components/Door"
+    elements.each(locationText) do |door|
+      door.parent.delete_element("Door")
+    end
+
+  end
+
   def H2KFile.addWin(elements, facingDirection, height, width, overhangW, overhangH, winCode)
     # Facing direction codes for HOT2000
     windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
