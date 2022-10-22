@@ -3399,12 +3399,32 @@ def processFile(h2kElements)
         # Delete all windows and redistribute according to the choices
         #-----------------------------------------------------------------------------------
         elsif (choiceEntry =~ /Opt-WindowDistribution/)
-
+          myH2KHouseInfo=H2KFile.getAllInfo(h2kElements)
           winAreaOrient = H2KFile.getWindowArea(h2kElements)
+          winArea = winAreaOrient["total"]
+
+          # Get the gross above
           wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
-          winArea = wallAreaAG["area"]["windows"].to_f
-          doorArea = wallAreaAG["area"]["doors"].to_f
+          doorArea = H2KFile.getDoorArea(h2kElements)
           grossWallArea = wallAreaAG["area"]["gross"].to_f
+
+          # Add AG foundation walls
+          locationText = "HouseFile/House/Components/Basement"
+          h2kElements.each(locationText) do |bsmt|
+            fExpPerim = bsmt.attributes["exposedSurfacePerimeter"].to_f
+            fBsmtAGWallHeight = bsmt.elements["Wall/Measurements"].attributes["height"].to_f-bsmt.elements["Wall/Measurements"].attributes["depth"].to_f
+            grossWallArea+=(fExpPerim*fBsmtAGWallHeight)
+            
+            # Add pony wall area
+            fPonyHeight = bsmt.elements["Wall/Measurements"].attributes["ponyWallHeight"].to_f
+            grossWallArea+=(fExpPerim*fPonyHeight)
+            
+            # Add Header Area
+            bsmt.elements.each("Components/FloorHeader") do |header|
+               grossWallArea+=(fExpPerim*header.elements["Measurements"].attributes["height"].to_f)
+            end
+
+          end
 
           frontOrientation = H2KFile.getFrontOrientation(h2kElements)
 
@@ -3478,29 +3498,47 @@ def processFile(h2kElements)
             tempAreaWin = Hash.new(0)
             maxAreaWin = Hash.new(0)
             totalNewWinArea = (fDWR * grossWallArea - doorArea)
+            iCasementsPerSide = 1
             if value == "EQUAL"
+              # Divide into CSA A440.2:19 Casement Windows (Table 1) which are 600 mm wide by 1500 mm high
+              fCasementHeight = 1500
+              fCasementWidth = 600
+              equalAreaEachSide = totalNewWinArea/4.0 # Area in meters
+              
+              iCasementsPerSide = equalAreaEachSide/(0.6*1.5)
+              if (fDWR<0.17)
+                 # Round up
+                 iCasementsPerSide=iCasementsPerSide.ceil
+              elsif (fDWR<0.22)
+                 # Round down
+                 iCasementsPerSide=iCasementsPerSide.floor
+              else
+                 # Round to nearest integer
+                 iCasementsPerSide=iCasementsPerSide.round
+              end
+              
               # four square window
               equalWinSide = Math.sqrt(totalNewWinArea/4) * 1000.0
 
             
                 if (frontOrientation == "S" || frontOrientation == "N" || frontOrientation == "W" || frontOrientation == "E")
-                  newWinHeight[1] = equalWinSide
-                  newWinHeight[3] = equalWinSide
-                  newWinHeight[5] = equalWinSide
-                  newWinHeight[7] = equalWinSide
-                  newWinWidth[1] = equalWinSide
-                  newWinWidth[3] = equalWinSide
-                  newWinWidth[5] = equalWinSide
-                  newWinWidth[7] = equalWinSide
+                  newWinHeight[1] = fCasementHeight
+                  newWinHeight[3] = fCasementHeight
+                  newWinHeight[5] = fCasementHeight
+                  newWinHeight[7] = fCasementHeight
+                  newWinWidth[1] = fCasementWidth
+                  newWinWidth[3] = fCasementWidth
+                  newWinWidth[5] = fCasementWidth
+                  newWinWidth[7] = fCasementWidth
                 else
-                  newWinHeight[2] = equalWinSide
-                  newWinHeight[4] = equalWinSide
-                  newWinHeight[6] = equalWinSide
-                  newWinHeight[8] = equalWinSide
-                  newWinWidth[2] = equalWinSide
-                  newWinWidth[4] = equalWinSide
-                  newWinWidth[6] = equalWinSide
-                  newWinWidth[8] = equalWinSide
+                  newWinHeight[2] = fCasementHeight
+                  newWinHeight[4] = fCasementHeight
+                  newWinHeight[6] = fCasementHeight
+                  newWinHeight[8] = fCasementHeight
+                  newWinWidth[2] = fCasementWidth
+                  newWinWidth[4] = fCasementWidth
+                  newWinWidth[6] = fCasementWidth
+                  newWinWidth[8] = fCasementWidth
                 end
 
              
@@ -3536,9 +3574,9 @@ def processFile(h2kElements)
                   # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
                   winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
                 end
-                #H2KFile.addWin(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])
-                H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])              
-              
+                (1..iCasementsPerSide).each do |iWindows|
+                    H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])    
+                end
               end
             end
           end
