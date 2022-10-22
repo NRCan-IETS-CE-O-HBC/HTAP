@@ -987,7 +987,20 @@ module H2KFile
 
   end # function getWindowArea
 
+  # ======================================================================================
+  # Get door area
+  # ======================================================================================
+  def H2KFile.getDoorArea(elements)
 
+    doorArea = 0.0
+
+    locationText = "HouseFile/House/Components/*/Components/Door"
+    elements.each(locationText) do |door|
+      doorArea+= door.elements["Measurements"].attributes["height"].to_f*door.elements["Measurements"].attributes["width"].to_f
+    end
+    return doorArea
+
+  end # function getWindowArea
 
   # ======================================================================================
   # Get wall characteristics (above-grade, headers....)
