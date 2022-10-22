@@ -3506,7 +3506,13 @@ def processFile(h2kElements)
               equalAreaEachSide = totalNewWinArea/4.0 # Area in meters
               
               iCasementsPerSide = equalAreaEachSide/((fCasementHeight/1000.0)*(fCasementWidth/1000.0))
-              iCasementsPerSide = iCasementsPerSide.round
+              if(fDWR<=0.17)
+                iCasementsPerSide = iCasementsPerSide.ceil
+              elsif(fDWR>=0.22)
+                iCasementsPerSide = iCasementsPerSide.floor
+              else
+                iCasementsPerSide = iCasementsPerSide.round
+              end
             
                 if (frontOrientation == "S" || frontOrientation == "N" || frontOrientation == "W" || frontOrientation == "E")
                   newWinHeight[1] = fCasementHeight
@@ -3529,7 +3535,7 @@ def processFile(h2kElements)
                 end
                 
                 sfDWR = fDWR.round(2)
-                sFDWRAct = (iCasementsPerSide*((fCasementHeight/10000.0)*(fCasementWidth/1000.0)))/grossWallArea
+                sFDWRAct = ((4.0*iCasementsPerSide.to_f*((fCasementHeight/1000.0)*(fCasementWidth/1000.0)))+doorArea)/grossWallArea
                 sFDWRAct=sFDWRAct.round(2)
                 info_out("Opt-WindowDistribution: An FDWR of #{sfDWR} was requested and an FDWR of #{sFDWRAct} was achieved.")
 
