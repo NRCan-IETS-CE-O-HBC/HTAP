@@ -13161,7 +13161,7 @@
             "OPT-H2K-FDWR": "NA",
             "OPT-H2K-OVERHANG-WDTH": "NA",
             "OPT-H2K-OVERHANG-HGHT": "NA",
-				"OPT-H2K-DISTRIBUTION": "NA"
+				"OPT-H2K-DISTRIBUTION": "SAME"
           }
         }
       },  

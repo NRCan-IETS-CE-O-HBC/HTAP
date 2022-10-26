@@ -3402,6 +3402,8 @@ def processFile(h2kElements)
           myH2KHouseInfo=H2KFile.getAllInfo(h2kElements)
           winAreaOrient = H2KFile.getWindowArea(h2kElements)
           winArea = winAreaOrient["total"]
+          fCasementHeight = 1500
+          fCasementWidth = 600
 
           # Get the gross above
           wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
@@ -3500,9 +3502,8 @@ def processFile(h2kElements)
             totalNewWinArea = (fDWR * grossWallArea - doorArea)
             iCasementsPerSide = 1
             if value == "EQUAL"
+              bIsSameDist = 0
               # Divide into CSA A440.2:19 Casement Windows (Table 1) which are 600 mm wide by 1500 mm high
-              fCasementHeight = 1500
-              fCasementWidth = 600
               equalAreaEachSide = totalNewWinArea/4.0 # Area in meters
               
               iCasementsPerSide = equalAreaEachSide/((fCasementHeight/1000.0)*(fCasementWidth/1000.0))
@@ -3538,16 +3539,19 @@ def processFile(h2kElements)
                 sFDWRAct = ((4.0*iCasementsPerSide.to_f*((fCasementHeight/1000.0)*(fCasementWidth/1000.0)))+doorArea)/grossWallArea
                 sFDWRAct=sFDWRAct.round(2)
                 info_out("Opt-WindowDistribution: An FDWR of #{sfDWR} was requested and an FDWR of #{sFDWRAct} was achieved.")
-
             elsif value == "PROPORTIONAL"
               #TBA
+              bIsSameDist = 0
               (1..8).each do |winOrient|
                 ratioWinArea = (winAreaOrient["byOrientation"][winOrient]/winAreaOrient["total"]).to_f
                 propWinSide = Math.sqrt(totalNewWinArea*ratioWinArea) * 1000.0
                 newWinHeight[winOrient] = propWinSide
                 newWinWidth[winOrient] = propWinSide
               end
-
+            
+            elsif value == "SAME"
+              # Distribution of the windows is the same, but replaced with standard casement sizes
+              bIsSameDist = 1
             end
             # Obtain window codes
             h2kElements.each(locationTextWin) do |window|
@@ -3568,14 +3572,30 @@ def processFile(h2kElements)
             # Add windows on four sides of a house
             frontFacingH2KVal = { 1 => "S" , 2 => "SE", 3 => "E", 4 => "NE", 5 => "N", 6 => "NW", 7 => "W", 8 => "SW"}
             (1..8).each do |winOrient|
-              if (newWinHeight[winOrient] > 0.0 && newWinWidth[winOrient] > 0.0)
-                if winCode[winOrient].nil?
-                  # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
-                  winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
-                end
-                (1..iCasementsPerSide).each do |iWindows|
-                    H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])    
-                end
+              if bIsSameDist == 0
+                 if (newWinHeight[winOrient] > 0.0 && newWinWidth[winOrient] > 0.0)
+                   if winCode[winOrient].nil?
+                     # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
+                     winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
+                   end
+                   (1..iCasementsPerSide).each do |iWindows|
+                       H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], newWinHeight[winOrient], newWinWidth[winOrient], overhangW[winOrient], overhangH[winOrient], winCode[winOrient])    
+                   end
+                 end
+              else
+              # Keeping the same distribution
+                 next if winAreaOrient["byOrientation"][winOrient] <= 0
+                 if winCode[winOrient].nil?
+                    # No window currently exist in one orientation? => use the characteristics of largest window currently exist in the house
+                    winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
+                 end
+                 iCasementsThisSide = (winAreaOrient["byOrientation"][winOrient]/((fCasementHeight/1000.0)*(fCasementWidth/1000.0))).round
+                 puts winOrient
+                 puts winAreaOrient["byOrientation"][winOrient]
+                 puts iCasementsThisSide
+                 (1..iCasementsThisSide).each do |iWindows|
+                     H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], fCasementHeight, fCasementWidth, overhangW[winOrient], overhangH[winOrient], winCode[winOrient])    
+                 end
               end
             end
           end
