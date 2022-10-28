@@ -3590,9 +3590,6 @@ def processFile(h2kElements)
                     winCode[winOrient] = winCode[winAreaOrient["byOrientation"].key(winAreaOrient["byOrientation"].values.max)]
                  end
                  iCasementsThisSide = (winAreaOrient["byOrientation"][winOrient]/((fCasementHeight/1000.0)*(fCasementWidth/1000.0))).round
-                 puts winOrient
-                 puts winAreaOrient["byOrientation"][winOrient]
-                 puts iCasementsThisSide
                  (1..iCasementsThisSide).each do |iWindows|
                      H2KFile.add_win_to_any_wall(h2kElements, frontFacingH2KVal[winOrient], fCasementHeight, fCasementWidth, overhangW[winOrient], overhangH[winOrient], winCode[winOrient])    
                  end
