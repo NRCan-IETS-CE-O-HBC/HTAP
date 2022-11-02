@@ -988,6 +988,22 @@ module H2KFile
   end # function getWindowArea
 
   # ======================================================================================
+  # Get skylight dimensions
+  # ======================================================================================
+  def H2KFile.getSkylightArea(elements)
+
+    windowArea =0
+    locationText = "HouseFile/House/Components/Ceiling/Components/Window"
+    elements.each(locationText) do |window|
+      thisWindowArea   = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
+
+      windowArea += thisWindowArea
+    end
+    return windowArea
+
+  end # function getWindowArea
+
+  # ======================================================================================
   # Get door area
   # ======================================================================================
   def H2KFile.getDoorArea(elements)
@@ -1491,6 +1507,23 @@ module H2KFile
   def H2KFile.deleteAllWin(elements)
     # Delete all existing windows - exclude door-windows
     locationText = "HouseFile/House/Components/*/Components/Window"
+    elements.each(locationText) do |window|
+      window.parent.delete_element("Window")
+    end
+
+  end
+  
+  def H2KFile.deleteAllWinExceptSky(elements)
+    # Delete all existing windows - exclude door-windows and skylights
+    locationText = "HouseFile/House/Components/Wall/Components/Window"
+    elements.each(locationText) do |window|
+      window.parent.delete_element("Window")
+    end
+    locationText = "HouseFile/House/Components/Basement/Components/Window"
+    elements.each(locationText) do |window|
+      window.parent.delete_element("Window")
+    end
+    locationText = "HouseFile/House/Components/Walkout/Components/Window"
     elements.each(locationText) do |window|
       window.parent.delete_element("Window")
     end

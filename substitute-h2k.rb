@@ -3409,6 +3409,7 @@ def processFile(h2kElements)
           wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
           doorArea = H2KFile.getDoorArea(h2kElements)
           grossWallArea = wallAreaAG["area"]["gross"].to_f
+          skylightArea = H2KFile.getSkylightArea(h2kElements)
 
           # Add AG foundation walls
           locationText = "HouseFile/House/Components/Basement"
@@ -3499,7 +3500,7 @@ def processFile(h2kElements)
             winCode = Hash.new
             tempAreaWin = Hash.new(0)
             maxAreaWin = Hash.new(0)
-            totalNewWinArea = (fDWR * grossWallArea - doorArea)
+            totalNewWinArea = (fDWR * grossWallArea - doorArea - skylightArea)
             iCasementsPerSide = 1
             if value == "EQUAL"
               bIsSameDist = 0
@@ -3564,7 +3565,8 @@ def processFile(h2kElements)
             end
 
             # Delete all existing windows
-            H2KFile.deleteAllWin(h2kElements)
+            # H2KFile.deleteAllWin(h2kElements)
+            H2KFile.deleteAllWinExceptSky(h2kElements)
 
             # Delete all the windows in doors
             H2KFile.deleteAllDoorWindows(h2kElements)
