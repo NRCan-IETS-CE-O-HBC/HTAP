@@ -3893,6 +3893,118 @@
           </WindowLegacy>
         </Layers>
       </Code>
+      <Code id='Code 273' nominalRValue='0'>
+        <Label>NBC-zone4-5-Skylight</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='0' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='2.92'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='3'>
+              <English>Picture</English>
+              <French>fixe</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 274' nominalRValue='0'>
+        <Label>NBC-zone6-7A-Skylight</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='0' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='2.75'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='3'>
+              <English>Picture</English>
+              <French>fixe</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 275' nominalRValue='0'>
+        <Label>NBC-zone7B-8-Skylight</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='0' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='2.75'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='3'>
+              <English>Picture</English>
+              <French>fixe</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
+      <Code id='Code 276' nominalRValue='0'>
+        <Label>NBC-zone7B-8-Skylight</Label>
+        <Description/>
+        <Layers>
+          <Window frameHeight='0' shgc='0.26' rank='1'>
+            <GlazingType code='2'>
+              <English>Double/double with 1 coat</English>
+              <French>Double/double avec un enduit</French>
+            </GlazingType>
+            <OverallThermalResistance code='2' value='2.41'>
+              <English>U-Value</English>
+              <French>Valeur-U</French>
+            </OverallThermalResistance>
+            <WindowStyle code='3'>
+              <English>Picture</English>
+              <French>fixe</French>
+            </WindowStyle>
+            <FillGas code='2'>
+              <English>Argon</English>
+              <French>Argon</French>
+            </FillGas>
+            <LowECoating code='2'>
+              <English>Soft Coat</English>
+              <French>Traitement doux</French>
+            </LowECoating>
+          </Window>
+        </Layers>
+      </Code>
     </UserDefined>
   </Window>
   <FloorsAbove>

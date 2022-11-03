@@ -385,6 +385,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Skylights"] = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
@@ -406,6 +407,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
@@ -422,6 +424,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"] = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Skylights"] = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
@@ -439,6 +442,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
@@ -455,6 +459,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
@@ -472,6 +477,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
@@ -487,6 +493,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
@@ -504,6 +511,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+        $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
 
@@ -530,6 +538,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
@@ -547,11 +556,14 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+         
 
 
 
@@ -577,6 +589,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Skylights"]                =  "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
@@ -594,10 +607,13 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_4.59RSI"
+         
 
       end
 
@@ -623,6 +639,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Skylights"] = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
@@ -640,6 +657,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
 
@@ -657,6 +675,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
@@ -674,6 +693,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
@@ -690,6 +710,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
@@ -708,6 +729,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
@@ -723,6 +745,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
@@ -740,6 +763,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_2.84RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 7B ( 6000 < HDD < 6999) with an HRV
@@ -755,6 +779,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                =  "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Skylights"]                =  "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
@@ -772,10 +797,13 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_2.84RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 8 (HDD <= 7000) with an HRV
@@ -792,6 +820,7 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Skylights"]                =  "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
@@ -809,10 +838,13 @@ def NBC_936_2010_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       end
@@ -1012,6 +1044,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Skylights"] = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
@@ -1033,6 +1066,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 5 ( 3000 < HDD < 3999) without an HRV
@@ -1049,6 +1083,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"] = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Skylights"] = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
@@ -1066,6 +1101,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 6 ( 4000 < HDD < 4999) without an HRV
@@ -1082,6 +1118,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
@@ -1099,6 +1136,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
       # Zone 7A ( 5000 < HDD < 5999) without an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
@@ -1114,6 +1152,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
@@ -1131,6 +1170,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
         $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
         $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
         $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
+        $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
 
@@ -1157,6 +1197,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
@@ -1174,8 +1215,10 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
@@ -1204,6 +1247,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Skylights"]                =  "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
@@ -1221,8 +1265,10 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_4.59RSI"
 
@@ -1250,6 +1296,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
       # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"] = "NBC-zone4-window"
+         $ruleSetChoices["Opt-Skylights"] = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone4-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone4-Doorwindow"
@@ -1267,6 +1314,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
 
@@ -1284,6 +1332,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone5-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone4-5-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone5-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone5-Doorwindow"
@@ -1301,6 +1350,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 6 ( 4000 < HDD < 4999) with an HRV
@@ -1317,6 +1367,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone6-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone6-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone6-Doorwindow"
@@ -1335,6 +1386,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_1.96RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
       # Zone 7A ( 5000 < HDD < 5999) with an HRV
       elsif locale_HDD >= 5000 && locale_HDD < 5999
@@ -1350,6 +1402,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                = "NBC-zone7A-window"
+         $ruleSetChoices["Opt-Skylights"]                = "NBC-zone6-7A-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7A-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7A-Doorwindow"
@@ -1367,6 +1420,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_2.84RSI"
+         $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
 
 
       # Zone 7B ( 6000 < HDD < 6999) with an HRV
@@ -1382,6 +1436,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                =  "NBC-zone7B-window"
+         $ruleSetChoices["Opt-Skylights"]                =  "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone7B-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone7B-Doorwindow"
@@ -1399,8 +1454,10 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_2.84RSI"
 
@@ -1419,6 +1476,7 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          # Effective thermal resistance of fenestration (Table 9.36.2.7.(1))
 
          $ruleSetChoices["Opt-Windows"]                =  "NBC-zone8-window"
+         $ruleSetChoices["Opt-Skylights"]                =  "NBC-zone7B-8-Skylight"
 
          $ruleSetChoices["Opt-Doors"] = "NBC-zone8-door"
          $ruleSetChoices["Opt-DoorWindows"] = "NBC-zone8-Doorwindow"
@@ -1436,8 +1494,10 @@ def NBC_936_2020_RuleSet( ruleType, ruleSpecs, elements, locale_HDD, cityName )
          $ruleSetChoices["Opt-FoundationWallExtIns"] = "NBC_936_uninsulated_EffR0"
          if ( applyPermafrostRules ) then
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_4.44RSI"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_4.44RSI"
          else
            $ruleSetChoices["Opt-FoundationSlabBelowGrade"] = "NBC_936_uninsulated_EffR0"
+           $ruleSetChoices["Opt-FoundationSlabBelowGradeAboveFrost"] = "NBC_936_1.96RSI"
          end
          $ruleSetChoices["Opt-FoundationSlabOnGrade"] = "NBC_936_3.72RSI"
 

@@ -7,7 +7,7 @@
 
 module HTAP2H2K
 
-  def HTAP2H2K.conf_foundations(myFdnData,myOptions,h2kElements)
+  def HTAP2H2K.conf_foundations(myFdnData,myOptions,h2kElements,fFrostDepth)
 
     #debug_on
 
@@ -44,10 +44,11 @@ module HTAP2H2K
     rEff_IntWall = myFdnData["FoundationWallIntIns"]
     rEff_SlabOG  = myFdnData["FoundationSlabOnGrade"]
     rEff_SlabBG  = myFdnData["FoundationSlabBelowGrade"]
+    rEff_SlabBGAF  = myFdnData["FoundationSlabBelowGradeAboveFrost"]
 
 
     # Basements, crawl-spaces
-    if ( rEff_ExtWall == "NA" && rEff_IntWall == "NA" && rEff_SlabBG == "NA" )
+    if ( rEff_ExtWall == "NA" && rEff_IntWall == "NA" && rEff_SlabBG == "NA" && rEff_SlabBGAF == "NA")
       # Do nothing!
       debug_out ("'NA' spec'd for Int/Ext walls and below-grade slabs. No changes needed\n")
     else
@@ -58,14 +59,14 @@ module HTAP2H2K
       bIntWallInsul = true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationWallIntIns",myFdnData["FoundationWallIntIns"])["H2K-Fdn-IntWallReff"].to_f > 0.01 )
       bBGSlabInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabBelowGrade",myFdnData["FoundationSlabBelowGrade"])["H2K-Fdn-SlabBelowGradeReff"].to_f > 0.01 )
       bOGSlabInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabOnGrade",myFdnData["FoundationSlabOnGrade"])["H2K-Fdn-SlabOnGradeReff"].to_f > 0.01 )
-
-
+      bBGSlabAFInsul =  true if ( HTAPData.getResultsForChoice(myOptions,"Opt-FoundationSlabBelowGradeAboveFrost",myFdnData["FoundationSlabBelowGradeAboveFrost"])["H2K-Fdn-SlabBelowGradeReff"].to_f > 0.01 )
 
       rEff_ExtWall = "uninsulated" if ( rEff_ExtWall == "NA")
       rEff_IntWall = "uninsulated" if ( rEff_IntWall == "NA")
       rEff_SlabBG  = "uninsulated" if ( rEff_SlabBG  == "NA")
+      rEff_SlabBGAF  = "uninsulated" if ( rEff_SlabBGAF  == "NA")
 
-      debug_out ( "vars:#{rEff_ExtWall}/#{rEff_IntWall}/#{rEff_SlabBG}/#{rEff_SlabOG}\n")
+      debug_out ( "vars:#{rEff_ExtWall}/#{rEff_IntWall}/#{rEff_SlabBG}/#{rEff_SlabOG}/#{rEff_SlabBGAF}\n")
 
       debug_out(drawRuler("Basements, CrawlSpaces",". "))
 
@@ -139,6 +140,76 @@ module HTAP2H2K
         fatalerror ("Unsupported foundation configuration!!!")
       end
       
+      # Next sort the walkouts
+      #
+      # [  ] exterior     [   ] Interior      [  ] Slab  (None! )
+      if  ( ! bExtWallInsul && ! bIntWallInsul && ! bBGSlabAFInsul ) then
+        walkoutConfig = "BCNN_2"
+        h2kFdnData["?bgSlabInsWalk"]  = false
+        h2kFdnData["?IntWallIns"] = false
+        h2kFdnData["?ExtWallIns"] = false
+
+
+        # [ X ] exterior     [   ] Interior      [  ] Slab  ( full height exterior)
+      elsif  ( bExtWallInsul && ! bIntWallInsul && ! bBGSlabAFInsul ) then
+        walkoutConfig = "BCEN_2"
+        h2kFdnData["?bgSlabInsWalk"]  = false
+        h2kFdnData["?IntWallIns"] = false
+        h2kFdnData["?ExtWallIns"] = true
+
+        # [   ] exterior     [  X ] Interior      [  ] Slab   ( full height interior )
+      elsif  ( ! bExtWallInsul &&  bIntWallInsul && ! bBGSlabAFInsul ) then
+
+        walkoutConfig = "BCIN_1"
+        h2kFdnData["?bgSlabInsWalk"]  = false
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = false
+
+        # [ X ] exterior     [ X ] Interior      [  ] Slab     ( full height exterior, within 8" of slab on interior )
+      elsif  ( bExtWallInsul && bIntWallInsul && ! bBGSlabAFInsul ) then
+
+        walkoutConfig = "BCCN_5"
+        h2kFdnData["?bgSlabInsWalk"]  = false
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = true
+
+        #      [ X ] exterior                  [   ] Interior                   [ X ] Slab     ( full height exterior, underneath slab )
+      elsif  (  bExtWallInsul && ! bIntWallInsul &&  bBGSlabAFInsul ) then
+
+        walkoutConfig = "BCEB_4"
+        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+
+        h2kFdnData["?bgSlabInsWalk"]  = true
+        h2kFdnData["?IntWallIns"] = false
+        h2kFdnData["?ExtWallIns"] = true
+
+
+        # [   ] exterior     [ x  ] Interior      [ X ] Slab     ( full height exterior, underneath slab )
+      elsif  ( ! bExtWallInsul &&  bIntWallInsul &&  bBGSlabAFInsul ) then
+
+        walkoutConfig = "BCIB_1"
+        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+
+        h2kFdnData["?bgSlabInsWalk"]  = true
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = false
+
+
+        #      [ X ] exterior                  [  X ] Interior                   [ X ] Slab     ( full height exterior, underneath slab )
+      elsif  (  bExtWallInsul &&  bIntWallInsul &&  bBGSlabAFInsul ) then
+
+        walkoutConfig = "BCCB_9"
+        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+
+        h2kFdnData["?bgSlabInsWalk"]  = true
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = true
+
+      else
+        # Need to make this case more general?
+        fatalerror ("Unsupported foundation configuration!!!")
+      end
+      
       # Sort the slab-on-grade configurations
       if (bOGSlabInsul) then
         crawlSpaceConfig = slabConfigInsulated
@@ -151,14 +222,16 @@ module HTAP2H2K
       debug_out " Basement/crawlspace configuration : #{basementConfig}\n"
       h2kFdnData["BasementConfig"] = basementConfig
       h2kFdnData["CrawlConfig"] = crawlSpaceConfig
+      h2kFdnData["WalkoutConfig"] = walkoutConfig
       h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
       h2kFdnData["rEffExtWall"] =  myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["values"]["1"]["conditions"]["all"].to_f
       h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["values"]["1"]["conditions"]["all"].to_f
       h2kFdnData["rEff_SlabOG"] =  myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["values"]["1"]["conditions"]["all"].to_f
+      h2kFdnData["rEff_SlabBGAF"] =  myOptions["Opt-FoundationSlabBelowGradeAboveFrost"]["options"][rEff_SlabBGAF]["values"]["1"]["conditions"]["all"].to_f
 
       debug_out "Processing basements/crawlspaces with following specs:\n#{h2kFdnData.pretty_inspect}"
 
-      H2KFile.updBsmCrawlDef(h2kFdnData,h2kElements)
+      H2KFile.updBsmCrawlDef(h2kFdnData,h2kElements,fFrostDepth)
 
 
     end
@@ -259,7 +332,7 @@ module H2KFile
   end
 
   # Update a basement definition to reflect new data.
-  def H2KFile.updBsmCrawlDef(fdnData,h2kElements)
+  def H2KFile.updBsmCrawlDef(fdnData,h2kElements,fFrostDepth)
 
     #debug_on
 
@@ -268,7 +341,7 @@ module H2KFile
     h2kElements[looplocation].elements.each do | node |
 
       # Only work if basements, heated crawlspaces
-      next if ( node.name != "Basement"   && node.name != "Crawlspace"               )
+      next if ( node.name != "Basement"   && node.name != "Crawlspace"  && node.name != "Walkout" )
       next if ( node.name == "Crawlspace" && ! H2KFile.heatedCrawlspace(h2kElements) )
 
       label = node.elements[".//Label"].text
@@ -277,9 +350,25 @@ module H2KFile
 
       if ( node.name == "Basement" ) then
         debug_out(" ... basement code \n")
-        config_type = fdnData["BasementConfig"].split(/_/)[0]
-        config_subtype= fdnData["BasementConfig"].split(/_/)[1]
-
+        # Check basement depth against frost depth
+        fFdnDepth = node.elements[".//Wall/Measurements"].attributes["depth"].to_f
+        if (fFdnDepth <= fFrostDepth) then
+        # Basement is above the frostline. Use the walkout configuration
+           config_type = fdnData["WalkoutConfig"].split(/_/)[0]
+           config_subtype= fdnData["WalkoutConfig"].split(/_/)[1]
+           bFdnBelowFrost = 0
+        else
+        # Basement is below the frostline. Use the basement configuration
+           config_type = fdnData["BasementConfig"].split(/_/)[0]
+           config_subtype= fdnData["BasementConfig"].split(/_/)[1]
+           bFdnBelowFrost = 1
+        end
+        
+      elsif ( node.name == "Walkout" ) then
+        debug_out(" ... walkout code \n")
+        config_type = fdnData["WalkoutConfig"].split(/_/)[0]
+        config_subtype= fdnData["WalkoutConfig"].split(/_/)[1]
+ 
       elsif ( node.name == "Crawlspace" ) then
         debug_out(" ... crawlspace code \n")
         config_type = fdnData["CrawlConfig"].split(/_/)[0]
@@ -295,7 +384,13 @@ module H2KFile
       node.elements[loc].attributes["overlap"] = "0" if ( node.name == "Basement" )
       
       if (  node.name == "Basement" ) then
-        node.elements[loc].text = fdnData["BasementConfig"]
+        if(bFdnBelowFrost == 1) then
+           node.elements[loc].text = fdnData["BasementConfig"]
+        else
+           node.elements[loc].text = fdnData["WalkoutConfig"]
+        end
+      elsif ( node.name == "Walkout" ) then
+        node.elements[loc].text = fdnData["WalkoutConfig"]
       elsif ( node.name == "Crawlspace" ) then
         node.elements[loc].text = fdnData["CrawlConfig"]
       else
@@ -303,7 +398,15 @@ module H2KFile
       end
 
       loc = ".//Floor/Construction"
-      node.elements[loc].attributes["isBelowFrostline"] = "true"
+      if (  node.name == "Basement" ) then
+        if(bFdnBelowFrost == 1) then
+           node.elements[loc].attributes["isBelowFrostline"] = "true"
+        else
+           node.elements[loc].attributes["isBelowFrostline"] = "false"
+        end
+      else
+        node.elements[loc].attributes["isBelowFrostline"] = "false"
+      end
       node.elements[loc].attributes["hasIntegralFooting"] = "false"
       node.elements[loc].attributes["heatedFloor"] = "false"
 
@@ -311,7 +414,7 @@ module H2KFile
       node.elements[loc].elements.delete("InteriorAddedInsulation")
       if (!  fdnData["?IntWallIns"] ) then
 
-      elsif ( node.name == "Basement") then
+      elsif ( node.name == "Basement" || node.name == "Walkout") then
 
         debug_out "Adding definitions for interior wall insulation\n"
         node.elements[loc].elements.add("InteriorAddedInsulation")
@@ -340,7 +443,7 @@ module H2KFile
       node.elements[loc].elements.delete("ExteriorAddedInsulation")
       if ( ! fdnData["?ExtWallIns"] ) then
 
-      elsif ( node.name == "Basement")
+      elsif ( node.name == "Basement" || node.name == "Walkout" )
         debug_out "Adding definitions for exterior wall insulation\n"
         node.elements[loc].elements.add("ExteriorAddedInsulation")
 
@@ -381,7 +484,7 @@ module H2KFile
       loc = ".//Floor/Construction"
       node.elements["#{loc}"].attributes["heatedFloor"] = 'false'
       node.elements[loc].elements.delete("AddedToSlab")
-      if ( node.name == "Basement" && fdnData["?bgSlabIns"] ) then
+      if ( node.name == "Basement" && fdnData["?bgSlabIns"] && bFdnBelowFrost == 1 ) then
           debug_out "Adding definitions for under-slab insulation for basement\n"
     
           node.elements[loc].elements.add("AddedToSlab")
@@ -389,6 +492,14 @@ module H2KFile
           node.elements["#{loc}/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabBG"].to_f + 1.0)/R_PER_RSI).round(4)}"
           #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
           node.elements["#{loc}/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabBG"].to_f)/R_PER_RSI).round(4)}"
+      elsif ( (node.name == "Walkout" || (node.name == "Basement" && bFdnBelowFrost == 0)) && fdnData["?bgSlabInsWalk"] ) then
+          debug_out "Adding definitions for under-slab insulation for walkout\n"
+    
+          node.elements[loc].elements.add("AddedToSlab")
+          node.elements["#{loc}/AddedToSlab"].text = "User Specified"
+          node.elements["#{loc}/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabBGAF"].to_f + 1.0)/R_PER_RSI).round(4)}"
+          #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
+          node.elements["#{loc}/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabBGAF"].to_f)/R_PER_RSI).round(4)}"
       elsif ( node.name == "Crawlspace" && fdnData["?ogSlabIns"]) then
           debug_out "Adding definitions for under-slab insulation for crawlspace\n"
     

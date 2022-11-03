@@ -1093,6 +1093,18 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
+            
+            # Update basement and walkout pony walls
+            locationText = "HouseFile/House/Components/*/Wall/Construction/PonyWallType"
+            h2kElements.each(locationText) do |element|
+              element.delete_attribute("idref")
+              element.elements[".//Description"].text = 'User specified'
+              element.attributes["nominalInsulation"]= "#{((value.to_f)/R_PER_RSI).round(4)}"
+              element.elements[".//Composite/Section"].attributes["nominalRsi"] = "#{((value.to_f)/R_PER_RSI).round(4)}"
+              element.elements[".//Composite/Section"].attributes["percentage"] = "100"
+              element.elements[".//Composite/Section"].attributes["rank"] = "1"
+              element.elements[".//Composite/Section"].attributes["rsi"] = "#{(value.to_f/R_PER_RSI).round(4)}"
+            end           
           end
 
           # Floor header User-Specified R-values
@@ -3633,7 +3645,9 @@ def processFile(h2kElements)
     myFdnData["FoundationWallIntIns"     ] =  $gChoices["Opt-FoundationWallIntIns"     ]
     myFdnData["FoundationSlabBelowGrade" ] =  $gChoices["Opt-FoundationSlabBelowGrade" ]
     myFdnData["FoundationSlabOnGrade"    ] =  $gChoices["Opt-FoundationSlabOnGrade"    ]
-    HTAP2H2K.conf_foundations(myFdnData,$gOptions.clone,h2kElements)
+    myFdnData["FoundationSlabBelowGradeAboveFrost"    ] =  $gChoices["Opt-FoundationSlabBelowGradeAboveFrost"    ]
+    fFrostDepth = $Frostline[$gRunLocale]
+    HTAP2H2K.conf_foundations(myFdnData,$gOptions.clone,h2kElements,fFrostDepth)
   end
 
 

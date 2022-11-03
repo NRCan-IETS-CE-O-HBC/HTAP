@@ -3230,6 +3230,69 @@
           ]
         }
       },
+      "NBC-zone4-5-Skylight": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-E-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-N-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-W-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-SE-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-SW-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-NE-CON>": "NBC-zone4-5-Skylight",
+            "<Opt-win-NW-CON>": "NBC-zone4-5-Skylight"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "NBC-zone6-7A-Skylight": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-E-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-N-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-W-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-SE-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-SW-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-NE-CON>": "NBC-zone6-7A-Skylight",
+            "<Opt-win-NW-CON>": "NBC-zone6-7A-Skylight"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "NBC-zone7B-8-Skylight": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-E-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-N-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-W-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-SE-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-SW-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-NE-CON>": "NBC-zone7B-8-Skylight",
+            "<Opt-win-NW-CON>": "NBC-zone7B-8-Skylight"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
       "SkylightDef": {
         "h2kMap": {
           "base": {
@@ -6871,6 +6934,207 @@
     ]
   },
   "Opt-FoundationSlabBelowGrade": {
+    "structure": "tree",
+    "costed": true,
+    "options": {
+      "NA": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "uninsulated": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+      "VintageR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": [
+            
+          ]
+        }
+      },
+      "VintageR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {},
+          "components": []
+        }
+      },      
+      "xps1inEffR5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "5.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:25mm"
+          ]
+        }
+      },
+      "xps1.5inEffR7.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "7.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:38mm"
+          ]
+        }
+      },
+      "xps2inEffR10": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "10.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm"
+          ]
+        }
+      },
+      "xps2.5inEffR12.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "12.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:64mm"
+          ]
+        }
+      },
+      "xps3inEffR15": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "15.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:25mm"
+          ]
+        }
+      },
+      "xps4inEffR20": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "20.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:51mm"
+          ]
+        }
+      },
+      "xps4.5inEffR22.5": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "22.5"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "insulation:xps_type_4:rigid:51mm",
+            "insulation:xps_type_4:rigid:25mm",
+            "insulation:xps_type_4:rigid:64mm"
+          ]
+        }
+      },
+      "NBC_936_uninsulated_EffR0": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "0.0"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "uninsulated"
+        }
+      },
+      "NBC_936_1.96RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
+      "NBC_936_4.44RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "25.22"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps4.5inEffR22.5"
+        }
+      }
+    },
+    "default": "NA",
+    "stop_on-error": true,
+    "h2kSchema": [
+      "H2K-Fdn-SlabBelowGradeReff"
+    ]
+  },
+  "Opt-FoundationSlabBelowGradeAboveFrost": {
     "structure": "tree",
     "costed": true,
     "options": {
