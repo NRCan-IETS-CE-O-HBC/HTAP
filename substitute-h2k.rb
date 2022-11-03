@@ -103,6 +103,8 @@ $ArchetypeData["post-substitution"] = Hash.new
 # Use lambda function to avoid the extra lines of creating each hash nesting
 $blk = lambda { |h,k| h[k] = Hash.new(&$blk) }
 $gOptions = Hash.new(&$blk)
+$gAssemblies = Hash.new(&$blk)
+
 $gOptions2 = Hash.new
 $gOptionsOld = Hash.new
 $gChoices = Hash.new(&$blk)
@@ -1209,7 +1211,7 @@ def processFile(h2kElements)
 
             # query costing components
             achCostComponents = Hash.new
-            achCostComponents = Costing.getCostComponentList($gOptions,$gChoices,"Opt-ACH",achChoice)
+            achCostComponents = Costing.getCostComponentList($gOptions,$gAssemblies, $gChoices,"Opt-ACH",achChoice)
 
             #debug_out ("Cost components for OPT-ACH = #{achChoice}:\n #{achCostComponents.pretty_inspect}")
 
@@ -2360,10 +2362,11 @@ def processFile(h2kElements)
           elsif ( tag =~ /Opt-H2K-Type1CapVal/ && "#{value}" != "" )
             # Allowing "NA" value here for P9 autosize option!
             sysType1.each do |sysType1Name|
+              
               if ( sysType1Name != "P9" && value != "NA" )
                 locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/Specifications/OutputCapacity"
                 h2kElements[locationText].attributes["value"] = value if ( h2kElements[locationText] != nil )
-              else
+              elsif ( h2kElements["HouseFile/House/HeatingCooling/Type1/P9"] != nil)
                 # JTB 06-Feb-2017 - P9 capacity: Allowing option 2 (Calculated) even though not available in H2K GUI!
                 # When this case is specified in the options file, use base system heating capacity. Also set burner
                 # input parameter further down in this code.
@@ -2371,9 +2374,9 @@ def processFile(h2kElements)
                 if ( value == "NA" )
                   # Happens when options file user specifies "Calculated" for sizing option!
                   h2kElements[locationText].attributes["spaceHeatingCapacity"] = baseHeatSysCap.to_s if ( h2kElements[locationText] != nil )
-                else
+                elsif ( )
                   h2kElements[locationText].attributes["spaceHeatingCapacity"] = value if ( h2kElements[locationText] != nil )
-						h2kElements[locationText].attributes["numberOfSystems"] = ((baseHeatSysCap / value.to_f).to_i).to_s
+                  h2kElements[locationText].attributes["numberOfSystems"] = ((baseHeatSysCap / value.to_f).to_i).to_s
                 end
               end
 
@@ -2854,7 +2857,14 @@ def processFile(h2kElements)
             elsif(valHash["4"] == "1")
               # The flow rate is calculated using F326
               calcFlow = getF326FlowRates(h2kElements)
-              if(calcFlow < 1)
+
+              if(calcFlow < 1.0)
+                warn_out("Could not calculate F326 Flow rates. Setting to 60 l/s.")
+                calcFlow = 60.0
+              end 
+
+              if(calcFlow < 1.0)
+                err_out("F326 vent rates: #{calcFlow}")
                 fatalerror("ERROR: For Opt-VentSystem, could not calculate F326 flow rates!\n")
               else
                 h2kElements[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = calcFlow.to_s
@@ -7494,7 +7504,7 @@ end
             debug_out ("Call to parse unit costs: #{$autoEstimateCosts}")
             myUnitCosts = HTAPData.parseJson($unitCostFileName,'Unit costs')
             myAssemblies = HTAPData.parseJson($assemblyFileName,'Assembly list')
-            
+            $gAssemblies = myAssemblies 
             costEstimates = Costing.estimateCosts($gOptions,myAssemblies,myUnitCosts,$gChoices,$gChoiceOrder)
              
           end
