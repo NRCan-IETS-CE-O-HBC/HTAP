@@ -33,6 +33,8 @@ $gOptionList          = Array.new
 $gOptionListLimit     = Hash.new
 $gOptionListIterators = Hash.new
 
+$gMetaValues = Hash.new
+
 $gRulesets   = Array.new
 $gArchetypes = Array.new
 $gLocations  = Array.new
@@ -103,12 +105,11 @@ $gDebug = false
 
 
 def parse_def_file(filepath)
-  #debug_on
   bError = false 
   $runParamsOpen = false;
   $runScopeOpen  = false;
   $UpgradesOpen  = false;
-
+  $MetaOpen = false;
   $WildCardsInUse = false;
 
   rundefs = File.open(filepath, 'r')
@@ -144,7 +145,13 @@ def parse_def_file(filepath)
           $UpgradesOpen = true;
 
         when $defline.match(/Upgrades_END/i)
-          $UpgradesOpen = false;
+          $UpgradesOpen = false; 
+
+        when $defline.match(/Meta_START/i)
+          $MetaOpen = true; 
+          
+        when $defline.match(/Meta_END/i)
+          $MetaOpen = false; 
 
         else
 
@@ -243,6 +250,18 @@ def parse_def_file(filepath)
 
               end 
           end
+
+
+          if ( $MetaOpen )
+            token = $token_values[0]
+            value = $token_values[1]
+            $gMetaValues[token] = value
+          end
+          
+
+
+
+
 
           if ( $RunScopeOpen && $token_values[0] =~ /rulesets/i )
             # Rulesets that can be applied.
@@ -898,6 +917,7 @@ def run_these_cases(current_task_files)
         $RunResults["run-#{thread}"]["archetype"] = Hash.new
         $RunResults["run-#{thread}"]["output"] = Hash.new
         $RunResults["run-#{thread}"]["cost-estimates"] = Hash.new
+        $RunResults["run-#{thread}"]["meta"] = Hash.new
       end 
 
       # Multi-threaded runs - Step 2: Monitor thread progress
@@ -947,6 +967,10 @@ def run_these_cases(current_task_files)
         $RunResults["run-#{thread3}"]["configuration"]["SaveDirectory"]  = "#{$SaveDirs[thread3].to_s}"
         $RunResults["run-#{thread3}"]["configuration"]["ChoiceFile"]     = "#{$choicefiles[thread3].to_s}"
 
+
+        for token in $gMetaValues.keys() 
+          $RunResults["run-#{thread3}"]['meta'][token] = $gMetaValues[token]
+        end 
         $runFailed = false
 
         # Parse contents of substitute-h2k-errors.txt, which may contain ruby errors if substitute-h2k.rb did
@@ -1018,7 +1042,7 @@ def run_these_cases(current_task_files)
           debug_out "results from run-#{thread3}:\n"
           #debug_out ("#{$RunResults["run-#{thread3}"].pretty_inspect}\n")
         elsif (  File.exist?($RunResultFilename)  ) then
-
+          
           debug_out "processing old token/value file \n"
 
           contents = File.open($RunResultFilename, 'r')
@@ -1147,7 +1171,8 @@ def run_these_cases(current_task_files)
           "input"                  => $RunResults[run]["input"             ],
           "output"                 => $RunResults[run]["output"            ],
           "configuration"          => $RunResults[run]["configuration"     ],
-          "cost-estimates"         => $RunResults[run]["cost-estimates"]
+          "cost-estimates"         => $RunResults[run]["cost-estimates"    ],
+          "meta"                   => $gMetaValues
         }
         
         debug_out (" Result number = #{run} \n")
@@ -1206,6 +1231,7 @@ def run_these_cases(current_task_files)
       batchSuccessCount = 0
 
       update_run_status(action: "Writing CSV output" )
+
       #stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
 
             #-Loop though all instances, and compute 
@@ -1217,7 +1243,7 @@ def run_these_cases(current_task_files)
         batchSuccessCount += 1
         debug_out "processing:\n"
         debug_out "  #{data.pretty_inspect} \n"
-        debug_off
+
         data.keys.sort.each do | section |
           data[section].keys.sort.each do |subsection|
             debug_out " . location #{section} : #{subsection} \n"
