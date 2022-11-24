@@ -97,16 +97,15 @@
     "default": "H2KCodeLibFile",
     "stop-on-error": true
   },
-  "Opt-ResultHouseCode": {
+  "Opt-Program": {
     "structure": "flat",
     "costed": false,
     "options": {
-      "NA": "NA",
+      "NA":"NA",
       "General": "General",
-      "SOC": "SOC",
-      "ROC": "ROC",
-      "HCV": "HCV",
-      "NBC": "NBC"
+      "ERS": "ERS",
+      "NBC": "NBC",
+      "ON": "ON"
     },
     "default": "General",
     "stop-on-error": true

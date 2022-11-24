@@ -45,7 +45,29 @@ end
 # ===========================================================================
 module HTAPData 
 
- # Returns a hash containing the HTAP options data structure. Pareses the file and creates 
+  # Recovers version info from git, returns 'unknown' if errors are encountered
+  def HTAPData.getGitInfo()
+
+    begin
+      # Change to directory where scripts are located.
+      Dir.chdir($scriptLocation)
+      revision_number=`git log --pretty=format:'%h' -n 1`
+	    revision_number.gsub!(/^'/, '')
+	    revision_number.gsub!(/'$/, '')
+      branch_name=`git rev-parse --abbrev-ref HEAD`
+    rescue
+      revision_number = "unknown"
+      branch_name = "unknown"
+    ensure
+      Dir.chdir($gMasterPath)
+    end
+
+  	return branch_name.strip, revision_number.strip
+  end
+
+
+
+  # Returns a hash containing the HTAP options data structure. Pareses the file and creates 
   # the hash on first call. 
   def HTAPData.getOptionsData( file = "nil" )
     debug_out ("Recovering option data, passed file = #{file}...\n")
@@ -262,13 +284,14 @@ module HTAPData
   end 
 
   def HTAPData.isChoiceValid(options, attrib, choice)
-
+    #debug_on 
     #debug_on # if (attrib =~ /DHW/ )
-    #debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
+    debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
     if $DoNotValidateOptions.include?(attrib) then 
       return true
     end 
-    #debug_out "options[#{attrib}] contains #{choice}?"
+
+    debug_out "options[#{attrib}] contains #{choice}?"
     if ( options[attrib]["options"][choice].nil? ||
          options[attrib]["options"][choice].empty?  ) then
       return false
@@ -284,7 +307,7 @@ module HTAPData
 
 
   def HTAPData.valdate(options,passed_choices)
-    debug_on 
+    #debug_on 
     # A) go through the list of choices, and resolve aliases if any. 
     resolved_choices = Hash.new 
     parseOK = TRUE 
@@ -323,7 +346,7 @@ module HTAPData
 
     # B) lets make sure that the choice attributes correspond
     #    to valid options
-
+    #debug_on 
     debug_out "CHOICES: \n"
     resolved_choices.each do | user_attribute, value | 
       bError = FALSE       
@@ -357,10 +380,6 @@ module HTAPData
     return  parseOK , valid_choices
 
   end
-
-  
-
-
 
 end
 

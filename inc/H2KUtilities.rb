@@ -12,7 +12,7 @@ module H2KWth
 
   def H2KWth.read_weather_dir(wfile)
 
-    debug_on 
+    debug_off
     debug_out "Parsing weather data from #{wfile}"
 
     prov_names = Array.new 
@@ -157,6 +157,8 @@ module H2KFile
   # Returns XML elements of HOT2000 file.
   # =========================================================================================
   def H2KFile.open_xml_as_elements(fileSpec)
+    debug_on 
+    debug_out ("FILE: #{fileSpec}")
     # Split fileSpec into path and filename
     var = Array.new()
     (var[1], var[2]) = File.split( fileSpec )
@@ -184,7 +186,7 @@ module H2KFile
         $XMLOtherdoc = Document.new(fFileHANDLE)
       end
     rescue
-      warn_out ("Errors encounterd when reading #{fileSpec}")
+      warn_out ("Errors encountered when reading #{fileSpec}")
     ensure
 
       fFileHANDLE.close() # Close the since content read
@@ -201,8 +203,7 @@ module H2KFile
     end
   end
   
-
-  def H2KFile.write_elements_as_xml(filespec)
+    def H2KFile.write_elements_as_xml(filespec)
   
     debug_on 
     #$XMLdoc.elements["HouseFile"].delete_element("AllResults")
@@ -251,6 +252,8 @@ module H2KFile
     return myYearBuilt
   end
 
+
+  
   # =========================================================================================
   # Returns Year home was built
   # =========================================================================================
@@ -1337,7 +1340,31 @@ module H2KFile
     return myWth_cityName
   end
 
+  # =========================================================================================
+  # Get program name
+  # =========================================================================================
 
+  def H2KFile.getProgramName(elements)
+    if( elements["HouseFile/Program"] == nil ) then 
+      return "General"
+    else 
+      loc = "HouseFile/Program"
+      name = elements[loc].attributes["class"].to_s 
+
+      case (name)
+      when "ca.nrcan.gc.OEE.ERS2020NBC.ErsProgram"
+        return "NBC"
+      when "ca.nrcan.gc.OEE.ERS.ErsProgram"
+        return "ERS"
+      when "ca.nrcan.gc.OEE.ONrh.OnProgram"
+        return "ON"
+      else 
+        warn_out("unknown program #{name}")
+        return name 
+      end 
+    end 
+  
+  end 
 
 end 
 
@@ -1348,13 +1375,7 @@ end
 module H2KEdit
   #.....................................................
   def H2KEdit.modify_contents(h2k_contents,options,choices)
-
-  
-
-  
-    debug_on 
-
-
+    #debug_on 
     # Parse code library
     code_lib_name = "codelib.cod"
     code_lib_file =  "#{$gMasterPath}\\H2K\\StdLibs\\#{code_lib_name}"
@@ -1374,7 +1395,6 @@ module H2KEdit
       
       next if (attribute =~ /Opt-Ruleset/ ) 
 
-
       # Legacy options
       next if (attribute =~ /GOconfig_rotate/)
       next if (attribute =~ /Opt-Archetype/)
@@ -1382,19 +1402,23 @@ module H2KEdit
       next if (attribute =~ /Opt-Archetype/ )
       
 
-
-      begin
-        map = options[attribute]["options"][choice]["h2kMap"]["base"]
-      rescue 
-        err_out("Attribute #{attribute} = #{choice} not found in options / H2Kmap / base")
+      if (options[attribute]["structure"] == "flat" )
+        map = nil
+      else 
+        begin
+          map = options[attribute]["options"][choice]["h2kMap"]["base"]
+        rescue 
+          err_out("Attribute #{attribute} = #{choice} not found in options / H2Kmap / base")
+        end 
       end 
       # Extra error handling needed? 
 
       case attribute
 
-      when "Opt-ResultHouseCode"
-
-        H2KEdit.set_resultcode(h2k_contents,map,choice)
+      when "Opt-Program"
+        debug_on 
+        debug_out("Setting  program... / #{map.pretty_inspect} / #{choice}")
+        H2KEdit.set_program(h2k_contents,map,choice)
 
       when "Opt-Location"
       
@@ -1429,11 +1453,14 @@ module H2KEdit
 
 
   end 
+
+
+
   #.....................................................
   def H2KEdit.set_location(h2k_contents,map,choice)
-    debug_on 
+    debug_off 
     debug_out("Setting Location to : #{choice} ")
-    debug_out("Spec: #{map.pretty_inspect}")
+    #debug_out("Spec: #{map.pretty_inspect}")
     if ( choice == "NA" ) then 
       debug_out ("NA choice specified; leaving location alone")
       return 
@@ -1490,7 +1517,7 @@ module H2KEdit
   #.....................................................
   def H2KEdit.set_ach(h2k_contents,map,choice)
 
-    debug_on 
+    #debug_on 
     debug_out("Setting ACH to : #{choice} ")
     debug_out("Spec: #{map.pretty_inspect}")
 
@@ -1559,7 +1586,7 @@ module H2KEdit
   #.....................................................
   def H2KEdit.set_ventsystem(h2k_contents,map,choice)
 
-    debug_on 
+    #debug_on 
     debug_out ("Setting ventilation system to #{choice}")
     debug_out ("Spec: #{map.pretty_inspect}")
 
@@ -1658,7 +1685,7 @@ module H2KEdit
   #.....................................................
   def H2KEdit.set_windows(h2k_contents,h2k_codes,map,choice)
 
-    debug_on 
+    #debug_on 
     debug_out ("Setting windows to #{choice}")
     debug_out ("Spec: #{map.pretty_inspect}")
 
@@ -1679,13 +1706,157 @@ module H2KEdit
   end  
 
   def H2KEdit.set_resultcode(h2k_contents,map,choice)
-    debug_on
-    debug_out("Setting rule-set to: #{choice}")
+    warn_out("This function doesn't do anything!!!")
+  end 
+  
+  #.................................................. 
+  def H2KEdit.set_program(h2k_contents,map,choice)
+    #debug_on 
 
-    debug_pause 
+    debug_out(" setting program to #{choice}")
+
+    return if (choice == "NA")
+
+    if (h2k_contents["HouseFile/Program"] != nil) 
+      debug_out ("Deleting existing program section")
+      h2k_contents["HouseFile"].delete_element("Program")
+    end 
+    
+    
+    if ( choice == "General" )
+      debug_out(" Nothing more needed for general, returning ")
+      return 
+    end 
+      
+    debug_out(" adding program section")
+    loc = "HouseFile"
+    h2k_contents[loc].add_element("AllResults")
+    h2k_contents[loc].add_element("Program")
+
+    loc = "HouseFile/Program" 
+    h2k_contents[loc].add_element("Labels")
+    
+    loc = "HouseFile/Program/Labels"
+    h2k_contents[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+    h2k_contents[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+    h2k_contents[loc].add_element("English")
+    loc = "HouseFile/Program/Labels/English"
+    h2k_contents[loc].add_text("EnerGuide Rating System")
+    loc = "HouseFile/Program/Labels"
+    h2k_contents[loc].add_element("French")
+    loc = "HouseFile/Program/Labels/French"
+    h2k_contents[loc].add_text("Système de cote ÉnerGuide")
+
+    loc = "HouseFile/Program"
+    h2k_contents[loc].add_element("Version")
+    loc = "HouseFile/Program/Version"
+    h2k_contents[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+    h2k_contents[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+    h2k_contents[loc].attributes["major"] = "15"
+    h2k_contents[loc].attributes["minor"] = "6"
+    h2k_contents[loc].attributes["build"] = "18345"
+    h2k_contents[loc].add_element("Labels")
+    loc = "HouseFile/Program/Version/Labels"
+    h2k_contents[loc].add_element("English")
+    loc = "HouseFile/Program/Version/Labels/English"
+    h2k_contents[loc].add_text("v15.6b18345")
+    loc = "HouseFile/Program/Version/Labels"
+    h2k_contents[loc].add_element("French")
+    loc = "HouseFile/Program/Version/Labels/French"
+    h2k_contents[loc].add_text("v15.6b18345")
+
+    loc = "HouseFile/Program"
+    h2k_contents[loc].add_element("SdkVersion")
+    loc = "HouseFile/Program/SdkVersion"
+    h2k_contents[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+    h2k_contents[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+    h2k_contents[loc].attributes["major"] = "1"
+    h2k_contents[loc].attributes["minor"] = "16"
+    h2k_contents[loc].attributes["build"] = "18345"
+    h2k_contents[loc].add_element("Labels")
+    loc = "HouseFile/Program/SdkVersion/Labels"
+    h2k_contents[loc].add_element("English")
+    loc = "HouseFile/Program/SdkVersion/Labels/English"
+    h2k_contents[loc].add_text("v1.16b18345")
+    loc = "HouseFile/Program/SdkVersion/Labels"
+    h2k_contents[loc].add_element("French")
+    loc = "HouseFile/Program/SdkVersion/Labels/French"
+    h2k_contents[loc].add_text("v1.16b18345")
+
+    loc = "HouseFile/Program"
+    h2k_contents[loc].add_element("Options")
+    loc = "HouseFile/Program/Options"
+    h2k_contents[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+    h2k_contents[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+    h2k_contents[loc].add_element("Main")
+    loc = "HouseFile/Program/Options/Main"
+    h2k_contents[loc].attributes["applyHouseholdOperatingConditions"] = "false"
+    h2k_contents[loc].attributes["applyReducedOperatingConditions"] = "false"
+    h2k_contents[loc].attributes["atypicalElectricalLoads"] = "false"
+    h2k_contents[loc].attributes["waterConservation"] = "false"
+    h2k_contents[loc].attributes["referenceHouse"] = "false"
+    h2k_contents[loc].add_element("Vermiculite")
+    loc = "HouseFile/Program/Options/Main/Vermiculite"
+    h2k_contents[loc].attributes["code"] = "1"
+    h2k_contents[loc].add_element("English")
+    loc = "HouseFile/Program/Options/Main/Vermiculite/English"
+    h2k_contents[loc].add_text("Unknown")
+    loc = "HouseFile/Program/Options/Main/Vermiculite"
+    h2k_contents[loc].add_element("French")
+    loc = "HouseFile/Program/Options/Main/Vermiculite/French"
+    h2k_contents[loc].add_text("Inconnu")
+    loc = "HouseFile/Program/Options"
+    h2k_contents[loc].add_element("RURComments")
+    loc = "HouseFile/Program/Options/RURComments"
+    h2k_contents[loc].attributes["xml:space"] = "preserve"
+
+    loc = "HouseFile/Program"
+    h2k_contents[loc].add_element("Results")
+    loc = "HouseFile/Program/Results"
+    h2k_contents[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+    h2k_contents[loc].attributes["xmlns:xsd"] = "http://www.w3.org/2001/XMLSchema"
+    h2k_contents[loc].add_element("Tsv")
+    h2k_contents[loc].add_element("Ers")
+    h2k_contents[loc].add_element("RefHse")
+
+
+    debug_out(" Setting program specific attributes")
+    case (choice)
+    
+    when "ERS"
+      loc = "HouseFile/Program" 
+      h2k_contents[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
+      loc = "HouseFile/Program/Labels/English"
+      h2k_contents[loc].add_text("EnerGuide Rating System")
+      loc = "HouseFile/Program/Labels/French"
+      h2k_contents[loc].add_text("Système de cote ÉnerGuide")
+    when "NBC"
+      loc = "HouseFile/Program" 
+      h2k_contents[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS2020NBC.ErsProgram"
+      loc = "HouseFile/Program/Labels/English"
+      h2k_contents[loc].add_text("EnerGuide Rating System")
+      loc = "HouseFile/Program/Labels/French"
+      h2k_contents[loc].add_text("Système de cote ÉnerGuide")    
+    when "ON"
+      loc = "HouseFile/Program" 
+      h2k_contents[loc].attributes["class"] = "ca.nrcan.gc.OEE.ONrh.OnProgram"
+      loc = "HouseFile/Program/Labels/English"
+      h2k_contents[loc].add_text("Ontario Reference House")
+      loc = "HouseFile/Program/Labels/French"
+      h2k_contents[loc].add_text("Maison de référence de l'Ontario")
+    else 
+      # Shouldn't happen - choice verified above
+
+    end 
+
   end 
   #..................................................
-  
+  def H2KEdit.delete_results(h2k_contents)
+    h2k_contents["HouseFile"].delete_element("AllResults")
+    return
+  end 
+
+  #..................................................
   # =========================================================================================
   #  Function to change window codes by orientation
   # =========================================================================================
@@ -2093,30 +2264,33 @@ end
 
 module H2Kpost
 
-  def H2Kpost.handle_sim_results(h2k_file_name,code,choices)
+  # This function does nothing! 
+  def H2Kpost.handle_sim_results(h2k_file_name,choices)
     stream_out("  -> Loading XML elements from #{h2k_file_name}\n")
-    
-    results = H2Kpost.prep_results(h2k_file_name,code,choices)
-
+    results = H2Kpost.prep_results(h2k_file_name,choices)
     return results
 
   end 
 
-  def H2Kpost.prep_results(h2k_file_name,code,choices)
+  
+  def H2Kpost.prep_results(h2k_file_name,choices)
+    debug_on
+    
+    code = "SOC"
+    res_e = H2KFile.open_xml_as_elements(h2k_file_name)
 
     
+    program = H2KFile.getProgramName(res_e)
 
-    res_e = H2KFile.open_xml_as_elements(h2k_file_name)
+
+
+    debug_out ("PROGRAM: #{program}")
 
     dim_info = H2KFile.getAllInfo(res_e)
     env_info = H2KFile.getEnvelopeSpecs(res_e)
-    res_data = H2Kpost.get_results_from_elements(res_e,code)
+    res_data = H2Kpost.get_results_from_elements(res_e,program)
 
     results =  Hash.new 
-
-
-
-    debug_on 
 
     results["configuration"] = {
       "OptionsFile"         =>  "#{$gOptionFile}",
@@ -2128,6 +2302,8 @@ module H2Kpost
                       "b#{res_e["HouseFile/Application/Version"].attributes["build"]}"
       },
     }
+
+    # return results 
     results["archetype"] = {
       "h2k-File"  => h2k_file_name, 
       "House-Builder"       =>  H2KFile.getBuilderName(res_e), 
@@ -2382,23 +2558,41 @@ module H2Kpost
 
   end 
 
-  def H2Kpost.get_results_from_elements(res_e,code)
+  def H2Kpost.get_results_from_elements(res_e,program)
     xmlpath = "HouseFile/AllResults"
-    debug_on
 
     myResults = {
       "std_output" => Hash.new,
-      "extra_output" => Hash.new 
+      "extra_output" => Hash.new,
+      "ref_house" => Hash.new 
     } 
 
     found_the_set = FALSE
 
+    if ( program == "ERS" or  program == "NBC" or program == "ON" )
+      code = "SOC"
+    else 
+      code = "General"
+    end 
+
+    debug_on
+    debug_out ("Paring results for code: #{program} / #{code}")
+    
     res_e["HouseFile/AllResults"].elements.each do |element|
 
+
+
+
       this_set_code = element.attributes["houseCode"]
+      if (this_set_code == nil && element.attributes["sha256"] != nil)
+        this_set_code = "General"
+      end
 
       debug_out "Result-set: #{this_set_code}"
       
+
+
+
       if ( this_set_code != code ) then 
         next 
       end 

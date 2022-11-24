@@ -1,5 +1,3 @@
-
-
 require 'rexml/document'
 require 'optparse'
 require 'timeout'
@@ -46,8 +44,10 @@ h2k_src_path = "C:\\H2K-CLI-Min"
 # Get the hot2000 weather library. (fi)
 h2k_locations = H2KWth.read_weather_dir(h2k_src_path+"\\Dat\\Wth2020.dir")
 
- 
-# ======================================================================================
+$gTest_params["verbosity"] = "quiet"
+
+
+#=======================================================================================
 # h2k-user agent: main flow.
 
 help_msg = "
@@ -138,7 +138,7 @@ optparse = OptionParser.new do |opts|
 
   opts.on("-v", "--verbose", "Run verbosely") do
     $cmdlineopts["verbose"] = true
-    #gTest_params["verbosity"] = "verbose"
+    $gTest_params["verbosity"] = "verbose"
   end
 
   opts.on("--hints", "Provide helpful hints for intrepreting output") do
@@ -146,16 +146,16 @@ optparse = OptionParser.new do |opts|
   end
 
 
-  #opts.on("-d", "--no-debug", "Disable all debugging") do
+  opts.on("-d", "--no-debug", "Disable all debugging") do
   #  #$cmdlineopts["verbose"] = true
   #  #{$gTest_params["verbosity"] = "debug"}
-  #  $gNoDebug = true
-  #end
+    $gNoDebug = true
+  end
 
-  #opts.on("-p", "--prm", "Run as a slave to htap-prm") do
-  #  $cmdlineopts["prm"] = true
-  #  $PRMcall = true
-  #end
+  opts.on("-p", "--prm", "Run as a slave to htap-prm") do
+    $cmdlineopts["prm"] = true
+    $PRMcall = true
+  end
 
   #opts.on("-w", "--warnings", "Report warning messages") do
   #  $cmdlineopts["warnings"] = true
@@ -317,21 +317,24 @@ end
 
 # Create a copy of the HOT2000 file into the master folder for manipulation.
 # (when called by PRM, the run manager will already do this - if we don't test for it, it will delete the file)
-stream_out("\n -> Creating a copy of HOT2000 model (#{base_h2k_file} for optimization work... \n")
+working_h2k_file = $gMasterPath + "\\"+ h2k_file_name
+if ( ! $PRMcall )
+ # warn_out ("Need to restore PRM call feature")
+  stream_out("\n -> Creating a copy of HOT2000 model (#{base_h2k_file} for optimization work... \n")
 
-working_h2k_file = $gMasterPath + "\\agent_"+ h2k_file_name
+  
 
-# Remove any existing file first!
+  # Remove any existing file first!
 
-if ( File.exist?(working_h2k_file) )
-  if ( ! FileUtils.rm(working_h2k_file) )
-    fatalerror ("Fatal Error! Could not delete #{working_h2k_file}!\n Del return error code #{$?}\n")
+  if ( File.exist?(working_h2k_file) )
+    if ( ! FileUtils.rm(working_h2k_file) )
+      fatalerror ("Fatal Error! Could not delete #{working_h2k_file}!\n Del return error code #{$?}\n")
+    end
   end
-end
-debug_out "copy arguements: #{base_h2k_file} -> #{working_h2k_file}\n "
-FileUtils.cp(base_h2k_file,working_h2k_file)
-stream_out("\n    (File #{working_h2k_file} created.)\n\n")
-
+  debug_out "copy arguements: #{base_h2k_file} -> #{working_h2k_file}\n "
+  FileUtils.cp(base_h2k_file,working_h2k_file)
+  stream_out("\n    (File #{working_h2k_file} created.)\n\n")
+end 
 #===============================================================================
 # Parse HOT2000 file and manipulate as necessary 
 stream_out(drawRuler("Reading HOT2000 file"))
@@ -346,8 +349,8 @@ stream_out(drawRuler("Manipulating HOT2000 file "))
 H2KFile.write_elements_as_xml("presub.h2k")
 
 mods_ok = H2KEdit.modify_contents(h2k_file_contents,options, valid_choices)
+H2KEdit.delete_results(h2k_file_contents)
 
-#debug_pause
 
 #===============================================================================
 # Write out new xml file 
@@ -362,7 +365,6 @@ stream_out(" -> Choices that will be used in the simulation:\n")
 valid_choices.each do | attribute, value |
   stream_out ("     - #{attribute.ljust(35)} = #{value} \n")
 end
-
 
 if ( err_options ) then
   $allok = false
@@ -388,9 +390,11 @@ end
 
 #==========================================================
 stream_out(drawRuler("Reading simulation results"))
-code = "SOC"
-results = H2Kpost.handle_sim_results(working_h2k_file,code,processed_choices)
 
+
+results = H2Kpost.handle_sim_results(working_h2k_file,processed_choices)
+
+# Should probably comment this line out in production. 
 debug_out(results.pretty_inspect)
 
 
@@ -404,6 +408,14 @@ HTAPout.write_h2k_eval_results(results)
 
 #===============================================================================
 # Closeout 
+
+if ( ! $PRMcall )
+  if !$keepH2KFolder
+    FileUtils.rm_r ( "#{$gMasterPath}\\H2K" )
+  end
+end
+
+
 ReportMsgs()
 
 log_out ("h2k-agent.rb run complete.")

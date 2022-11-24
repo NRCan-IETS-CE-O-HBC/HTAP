@@ -17,7 +17,7 @@ require 'rexml/document'
 
 require_relative 'inc/msgs'
 require_relative 'inc/constants'
-require_relative 'inc/HTAPUtils.rb'
+require_relative 'inc/HTAPUtilities.rb'
 require_relative 'inc/application_modules.rb'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
@@ -171,14 +171,13 @@ def parse_def_file(filepath)
 
           if ( $RunParamsOpen && $token_values[0] =~ /options-file/i )
 
-
             # Where is our options file located?
 
             $gHTAPOptionsFile = $token_values[1]
 
             debug_out "$gHTAPOptionsFile? : #{$gHTAPOptionsFile}\n"
 
-            jsonRawOptions = HTAPData.getOptionsData()
+            jsonRawOptions = HTAPData.getOptionsData($gHTAPOptionsFile)
 
           end
 
@@ -209,7 +208,7 @@ def parse_def_file(filepath)
             # Where is our options file located?
 
             $gCostingFile = $token_values[1]
-            $gComputeCosts = true 
+            $gComputeCosts = false
 
           end
 
@@ -1544,7 +1543,7 @@ $gTest_params["verbosity"] = "verbose"
 $gHTAPOptionsFile = ""
 $gRulesetsFile = ""
 
-$gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
+$gSubstitutePath = "C:\/HTAP\/h2k-agent.rb"
 $gWarn = "1"
 $gOutputFile = "HTAP-prm-output.csv"
 $gResumeFile = "HTAP-prm.resume"
@@ -1607,7 +1606,8 @@ optparse = OptionParser.new do |opts|
 
    opts.separator " "
    opts.on("--compute-costs", "Estimate costs for assemblies using","costing database.") do |o|
-      $gComputeCosts = true
+      warn_out ("Costing disabled")
+      $gComputeCosts = false 
    end
 
    opts.separator " "
@@ -1848,6 +1848,8 @@ else
 
   options = HTAPData.getOptionsData()
   bErr = false 
+
+
   $gRunUpgrades.keys.each do | attribute |
     next if HTAPData.isAttribIgnored( attribute )
     if ( not HTAPData.isAttribValid(options, attribute) ) then 
@@ -1864,12 +1866,13 @@ else
     end 
   end 
 
-  $gLocations.each do | location | 
-     if ( not HTAPData.isChoiceValid(options, "Opt-Location", location) ) 
-        err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")
-        bErr = true 
-     end
-  end 
+  warn_out ("Need to fix weather")
+  #$gLocations.each do | location | 
+  #   if ( not HTAPData.isChoiceValid(options, "Opt-Location", location) ) 
+  #      err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")
+  #      bErr = true 
+  #   end
+  #end 
 
 
 
