@@ -1373,7 +1373,7 @@ module H2KEdit
       
       
       next if (attribute =~ /Opt-Ruleset/ ) 
-      next if (attribute =~ /Opt-ResultHouseCode/)
+
 
       # Legacy options
       next if (attribute =~ /GOconfig_rotate/)
@@ -1391,6 +1391,11 @@ module H2KEdit
       # Extra error handling needed? 
 
       case attribute
+
+      when "Opt-ResultHouseCode"
+
+        H2KEdit.set_resultcode(h2k_contents,map,choice)
+
       when "Opt-Location"
       
         
@@ -1412,9 +1417,11 @@ module H2KEdit
         H2KEdit.set_windows(h2k_contents,h2k_codes,map,choice)
 
       else
-
-        warn_out "Unsupported attribute #{attribute} "
-        
+        if (choice == "NA" )
+          info_out "Unsupported attribute #{attribute}, Choice = #{choice} "
+        else 
+          warn_out "Unsupported attribute #{attribute}, Choice = #{choice} "
+        end 
       end 
 
     end 
@@ -1667,9 +1674,16 @@ module H2KEdit
         
         
     end 
-    debug_pause
+    warn_out("Development stopped here")
+    #debug_pause
   end  
 
+  def H2KEdit.set_resultcode(h2k_contents,map,choice)
+    debug_on
+    debug_out("Setting rule-set to: #{choice}")
+
+    debug_pause 
+  end 
   #..................................................
   
   # =========================================================================================

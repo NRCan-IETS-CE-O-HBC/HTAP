@@ -105,7 +105,8 @@
       "General": "General",
       "SOC": "SOC",
       "ROC": "ROC",
-      "HCV": "HCV"
+      "HCV": "HCV",
+      "NBC": "NBC"
     },
     "default": "General",
     "stop-on-error": true

@@ -1,7 +1,7 @@
 ! Choice file for run $gGenChoiceFileNum
 Opt-Location : VICTORIA-INTL
 Opt-Ruleset : as-found 
-Opt-ResultHouseCode : SOC
+Opt-ResultHouseCode : NBC
 Opt-ACH : New-Const-air_seal_to_1.50_ach 
 Opt-Windows : dbl-clear-u3.85
 Opt-Skylights : NA 
