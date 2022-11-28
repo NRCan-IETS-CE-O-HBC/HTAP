@@ -157,7 +157,6 @@ module H2KFile
   # Returns XML elements of HOT2000 file.
   # =========================================================================================
   def H2KFile.open_xml_as_elements(fileSpec)
-    debug_on 
     debug_out ("FILE: #{fileSpec}")
     # Split fileSpec into path and filename
     var = Array.new()
@@ -169,7 +168,6 @@ module H2KFile
     # Open file...
     begin
       fFileHANDLE = File.new(fileSpec, "r")
-      debug_out ("a")
       if fFileHANDLE == nil then
         fatalerror("Could not read #{fileSpec}.\n")
       end
@@ -205,7 +203,6 @@ module H2KFile
   
     def H2KFile.write_elements_as_xml(filespec)
   
-    debug_on 
     #$XMLdoc.elements["HouseFile"].delete_element("AllResults")
 
     # Save changes to the XML doc in existing working H2K file (overwrite original)
@@ -1416,7 +1413,7 @@ module H2KEdit
       case attribute
 
       when "Opt-Program"
-        debug_on 
+        
         debug_out("Setting  program... / #{map.pretty_inspect} / #{choice}")
         H2KEdit.set_program(h2k_contents,map,choice)
 
@@ -1440,6 +1437,10 @@ module H2KEdit
 
         H2KEdit.set_windows(h2k_contents,h2k_codes,map,choice)
 
+      when "Opt-AboveGradeWall"
+
+        H2KEdit.set_above_grade_wall(h2k_contents,map,choice)
+
       else
         if (choice == "NA" )
           devmsg_out "Unsupported attribute #{attribute}, Choice = #{choice} "
@@ -1450,11 +1451,39 @@ module H2KEdit
 
     end 
 
+    # Test foundation configruations 
+    debug_on 
+    fdn_config = HTAPData.get_foundation_config(choices)
+    if (debug_status())
+      debug_out("Foundation config: #{fdn_config.pretty_inspect}")
+    end 
+
+    
+    devmsg_out("Need to add support for legacy foundations")
+    case fdn_config
+
+    when "wholeFdn"
+    
+      warn_out("use of H2kFoundations not yet supported")
+    
+    when "surfBySurf"
 
 
+      # Now we have processed all sequential choices - we need to preform
+      # operations tha depend on multiple choices. Start with Foundations...
+      myFdnData = Hash.new
+
+
+      debug_out ( ">>> $foundation config? #{$foundationConfiguration}\n")
+
+      myFdnData["FoundationWallExtIns"     ] = choices["Opt-FoundationWallExtIns"     ]
+      myFdnData["FoundationWallIntIns"     ] = choices["Opt-FoundationWallIntIns"     ]
+      myFdnData["FoundationSlabBelowGrade" ] = choices["Opt-FoundationSlabBelowGrade" ]
+      myFdnData["FoundationSlabOnGrade"    ] = choices["Opt-FoundationSlabOnGrade"    ]
+      H2KEdit.conf_foundations(myFdnData,options.clone,h2k_contents)
+
+    end
   end 
-
-
 
   #.....................................................
   def H2KEdit.set_location(h2k_contents,map,choice)
@@ -1679,31 +1708,428 @@ module H2KEdit
       err_out("ERROR: For Opt-VentSystem, unknown fan power calculation input  #{map["OPT-H2K-FanPowerCalc"]}!")
     end 
 
-
-
   end 
   #.....................................................
   def H2KEdit.set_windows(h2k_contents,h2k_codes,map,choice)
 
     #debug_on 
-    debug_out ("Setting windows to #{choice}")
-    debug_out ("Spec: #{map.pretty_inspect}")
-
+    if ( debug_status())
+      debug_out ("Setting windows to #{choice}")
+      debug_out ("Spec: #{map.pretty_inspect}")
+    end 
     return if ( choice == "NA" )
 
 
     map.keys.each do | key, value |
-
       orientation = key.gsub(/\<Opt-win-/,"").gsub(/-CON\>/,"")
       debug_out ("Orientation: #{orientation}")
 
       H2KEdit.set_windows_by_orientation(h2k_contents,h2k_codes,orientation,choice)
-        
-        
     end 
-    warn_out("Development stopped here")
-    #debug_pause
+    
   end  
+
+  def H2KEdit.set_above_grade_wall(h2k_contents,map,choice)
+    debug_on
+
+    if ( debug_status())
+      debug_out ("Setting walls to #{choice}")
+      debug_out ("Spec: #{map.pretty_inspect}")
+    end
+    
+    return if ( choice == "NA" )
+
+    locationText = "HouseFile/House/Components/Wall/Construction/Type"
+
+    h2k_contents.each(locationText) do |wall_type|
+
+      wall_type.text = "User specified"
+      
+      wall_type.attributes["rValue"] = map["OPT-H2K-EffRValue"] 
+      
+      if wall_type.attributes["idref"] != nil then
+        # Must delete attribute for User Specified!
+        wall_type.delete_attribute("idref")
+      end 
+    
+    end 
+    
+  end
+
+  def H2KEdit.conf_foundations(myFdnData,myOptions,h2k_contents)
+
+    debug_on
+
+    if (debug_status())
+      debug_out "Setting up foundations for this config:\n#{myFdnData.pretty_inspect}\n"
+    end 
+    slabConfigInsulated = "SCB_25"
+    # Insulation configuration on slabs -
+    #  Pretty sure requirements are that 9.25.2.3 (5) requires SBC 25 and 29.
+    #
+    #         |   |_______________________|   |
+    #         |    _______________________    |   SCB 25
+    #         |   /***********************\   |
+    #         |__/*************************\__|
+    #
+    #
+    #         |   |_______________________|   |
+    #       **|    _______________________    |**  SCB 29
+    #       **|   /***********************\   |**
+    #       **|__/*************************\__|**
+    #
+    #
+    #         |   |_______________________|   |
+    #       **|    _______________________    |**  SCB 31
+    #       **|   /***********************\   |**
+    #       **|__/*************************\__|**
+    #       ********                     ********
+    #
+    slabConfigInsulated = "SCB_25"
+
+    h2kFdnData = Hash.new
+
+
+    rEff_ExtWall = myFdnData["FoundationWallExtIns"]
+    rEff_IntWall = myFdnData["FoundationWallIntIns"]
+    rEff_SlabOG  = myFdnData["FoundationSlabOnGrade"]
+    rEff_SlabBG  = myFdnData["FoundationSlabBelowGrade"]
+
+
+    # Basements, crawl-spaces
+    if ( rEff_ExtWall == "NA" && rEff_IntWall == "NA" && rEff_SlabBG == "NA" )
+      # Do nothing!
+      debug_out ("'NA' spec'd for Int/Ext walls and below-grade slabs. No changes needed\n")
+    else
+
+      debug_out (">>> FDN CHOICE: #{myFdnData["FoundationSlabBelowGrade"]}\n")
+
+      bExtWallInsul = true if ( myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["h2kMap"]["base"]["H2K-Fdn-ExtWallReff"].to_f > 0.01 )
+      bIntWallInsul = true if ( myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["h2kMap"]["base"]["H2K-Fdn-IntWallReff"].to_f > 0.01)  
+      bBGSlabInsul =  true if ( myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["h2kMap"]["base"]["H2K-Fdn-SlabBelowGradeReff"].to_f > 0.01)
+        
+      if ( bBGSlabInsul & !bIntWallInsul & ! bExtWallInsul )
+        # HOT2000 Can't actually run this scenario. Set slab to uninsulated and warn user
+        bBGSlabInsul = false 
+        rEff_SlabBG  = "uninsulated"
+        warn_out ("Slab below-grade set to 'uninsulated'")
+      end 
+
+
+      rEff_ExtWall = "uninsulated" if ( rEff_ExtWall == "NA")
+      rEff_IntWall = "uninsulated" if ( rEff_IntWall == "NA")
+      rEff_SlabBG  = "uninsulated" if ( rEff_SlabBG  == "NA")
+
+      debug_out ( "vars:#{rEff_ExtWall}/#{rEff_IntWall}/#{rEff_SlabBG}/#{rEff_SlabOG}\n")
+
+      debug_out(drawRuler("Basements, CrawlSpaces",". "))
+
+      # Where is the insulation ?
+      #
+      # [  ] exterior     [   ] Interior      [  ] Slab  (None! )
+      if  ( ! bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
+        basementConfig = "BCNN_2"
+        crawlSpaceConfig = "SCN_1"
+        h2kFdnData["?bgSlabIns"]  = false
+        h2kFdnData["?IntWallIns"] = false
+        h2kFdnData["?ExtWallIns"] = false
+
+
+        # [ X ] exterior     [   ] Interior      [  ] Slab  ( full height exterior)
+      elsif  ( bExtWallInsul && ! bIntWallInsul && ! bBGSlabInsul ) then
+        basementConfig = "BCEN_2"
+        crawlSpaceConfig = "SCN_1"
+        h2kFdnData["?bgSlabIns"]  = false
+        h2kFdnData["?IntWallIns"] = false
+        h2kFdnData["?ExtWallIns"] = true
+
+        # [   ] exterior     [  X ] Interior      [  ] Slab   ( full height interior )
+      elsif  ( ! bExtWallInsul &&  bIntWallInsul && ! bBGSlabInsul ) then
+
+        basementConfig = "BCIN_1"
+        crawlSpaceConfig = "SCN_1"
+        h2kFdnData["?bgSlabIns"]  = false
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = false
+
+        # [ X ] exterior     [ X ] Interior      [  ] Slab     ( full height exterior, within 8" of slab on interior )
+      elsif  ( bExtWallInsul && bIntWallInsul && ! bBGSlabInsul ) then
+
+        basementConfig = "BCCN_5"
+        crawlSpaceConfig = "SCN_1"
+        h2kFdnData["?bgSlabIns"]  = false
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = true
+
+        #      [ X ] exterior                  [   ] Interior                   [ X ] Slab     ( full height exterior, underneath slab )
+      elsif  (  bExtWallInsul && ! bIntWallInsul &&  bBGSlabInsul ) then
+
+        basementConfig = "BCEB_4"
+        crawlSpaceConfig = slabConfigInsulated
+        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+
+        h2kFdnData["?bgSlabIns"]  = true
+        h2kFdnData["?IntWallIns"] = false
+        h2kFdnData["?ExtWallIns"] = true
+
+
+        # [   ] exterior     [ x  ] Interior      [ X ] Slab     ( full height exterior, underneath slab )
+      elsif  ( ! bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
+
+        basementConfig = "BCIB_1"
+        crawlSpaceConfig = slabConfigInsulated
+        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+
+        h2kFdnData["?bgSlabIns"]  = true
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = false
+
+
+        #      [ X ] exterior                  [  X ] Interior                   [ X ] Slab     ( full height exterior, underneath slab )
+      elsif  (  bExtWallInsul &&  bIntWallInsul &&  bBGSlabInsul ) then
+
+        basementConfig = "BCCB_9"
+        crawlSpaceConfig = slabConfigInsulated
+        # (SCB_29, SCB_31 would give better thermal separation - not sure which to use... )
+
+        h2kFdnData["?bgSlabIns"]  = true
+        h2kFdnData["?IntWallIns"] = true
+        h2kFdnData["?ExtWallIns"] = true
+
+      else
+        # Need to make this case more general?
+        fatalerror ("Unsupported foundation configuration!!!")
+      end
+
+      debug_out " Basement/crawlspace configuration : #{basementConfig}\n"
+      h2kFdnData["BasementConfig"] = basementConfig
+      h2kFdnData["CrawlConfig"] = crawlSpaceConfig
+      h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["h2kMap"]["base"]["H2K-Fdn-IntWallReff"].to_f
+      h2kFdnData["rEffExtWall"] =  myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["h2kMap"]["base"]["H2K-Fdn-ExtWallReff"].to_f
+      h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["h2kMap"]["base"]["H2K-Fdn-SlabBelowGradeReff"].to_f
+
+      debug_out "Processing basements/crawlspaces with following specs:\n#{h2kFdnData.pretty_inspect}"
+
+      H2KFile.updBsmCrawlDef(h2kFdnData,h2k_contents)
+
+
+    end
+
+    debug_out(drawRuler("Slab",". "))
+    if ( rEff_SlabOG == "NA" )
+      # do nothing!
+      debug_out ("'NA' spec'd for on-grade slab. No changes needed\n")
+
+    else
+      bOGSlabInsul =  true if ( myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["h2kMap"]["base"]["H2K-Fdn-SlabOnGradeReff"].to_f > 0.01 )
+        
+        h2kSlabData = Hash.new
+      if ( ! bOGSlabInsul  ) then
+        slabConfig = "SCN_1"
+        h2kSlabData["?ogSlabIns"] = false
+      else
+        slabConfig = slabConfigInsulated
+        h2kSlabData["?ogSlabIns"] = true
+      end
+
+      h2kSlabData["rEff_SlabOG"] = myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["values"]["1"]["conditions"]["all"].to_f
+      h2kSlabData["SlabConfig"] = slabConfig
+
+      H2KFile.updSlabDef(h2kSlabData,h2k_contents)
+
+
+    end
+
+  end
+
+  def H2KFile.updSlabDef (fdnData,h2kElements)
+    debug_off
+
+
+    debug_out ("FDN data:\n#{fdnData.pretty_inspect}\n")
+    looplocation = "HouseFile/House/Components"
+
+    h2kElements[looplocation].elements.each do | node |
+      next if ( node.name != "Slab" )
+      debug_out ("Processing node: #{node.name} ? \n")
+
+      config_type = fdnData["SlabConfig"].split(/_/)[0]
+      config_subtype= fdnData["SlabConfig"].split(/_/)[1]
+
+
+      loc = ".//Configuration"
+      node.elements[loc].attributes["type"] = config_type
+      node.elements[loc].attributes["subtype"] = config_subtype
+      node.elements[loc].text = fdnData["SlabConfig"]
+
+      loc = ".//Floor"
+      debug_out ( "Setting paramaters at #{loc}\n")
+      node.elements["#{loc}/Construction"].attributes["heatedFloor"] = 'false'
+
+      node.elements["#{loc}/Construction"].elements.delete("AddedToSlab")
+      if ( ! fdnData["?ogSlabIns"] ) then
+
+      else
+        node.elements["#{loc}/Construction"].elements.add("AddedToSlab")
+
+        node.elements[loc].elements.add("AddedToSlab")
+        node.elements["#{loc}/Construction/AddedToSlab"].text = "User Specified"
+        node.elements["#{loc}/Construction/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabOG"].to_f)/R_PER_RSI).round(4)}"
+        #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
+        node.elements["#{loc}/Construction/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabOG"].to_f)/R_PER_RSI).round(4)}"
+
+        debug_out "slab insulation R-value: #{node.elements["#{loc}/Construction/AddedToSlab"].attributes["rValue"] } \n"
+
+      end
+
+      node.elements.delete("Wall")
+      node.elements.add("Wall")
+      node.elements[".//Wall"].elements.add("RValues")
+      node.elements[".//Wall/RValues"].attributes["skirt"] = '0'
+      node.elements[".//Wall/RValues"].attributes["thermalBreak"] = '0'
+    end
+
+    return
+  end
+
+  # Update a basement definition to reflect new data.
+  def H2KFile.updBsmCrawlDef(fdnData,h2kElements)
+
+    #debug_on
+
+    looplocation = "HouseFile/House/Components"
+
+    h2kElements[looplocation].elements.each do | node |
+
+      # Only work if basements, heated crawlspaces
+      next if ( node.name != "Basement"   && node.name != "Crawlspace"               )
+      next if ( node.name == "Crawlspace" && ! H2KFile.heatedCrawlspace(h2kElements) )
+
+      label = node.elements[".//Label"].text
+
+      debug_out "> updating definitions for #{node.name} '#{label}'\n"
+
+      if ( node.name == "Basement" ) then
+        debug_out(" ... basement code \n")
+        config_type = fdnData["BasementConfig"].split(/_/)[0]
+        config_subtype= fdnData["BasementConfig"].split(/_/)[1]
+
+      elsif ( node.name == "Crawlspace" ) then
+        debug_out(" ... crawlspace code \n")
+        config_type = fdnData["CrawlConfig"].split(/_/)[0]
+        config_subtype= fdnData["CrawlConfig"].split(/_/)[1]
+
+      end
+
+      debug_out(" setting configuration to #{config_type}, subtype #{config_subtype}\n")
+      loc = ".//Configuration"
+
+      node.elements[loc].attributes["type"] = config_type
+      node.elements[loc].attributes["subtype"] = config_subtype
+
+      node.elements[loc].attributes["overlap"] = "0" if ( node.name == "Basement" )
+
+      node.elements[loc].text = fdnData["configuration"]
+
+      loc = ".//Floor/Construction"
+      node.elements[loc].attributes["isBelowFrostline"] = "true"
+      node.elements[loc].attributes["hasIntegralFooting"] = "false"
+      node.elements[loc].attributes["heatedFloor"] = "false"
+
+      loc = ".//Wall/Construction/"
+      node.elements[loc].elements.delete("InteriorAddedInsulation")
+      if (!  fdnData["?IntWallIns"] ) then
+
+      elsif ( node.name == "Basement") then
+
+        debug_out "Adding definitions for interior wall insulation\n"
+        node.elements[loc].elements.add("InteriorAddedInsulation")
+        loc = ".//Wall/Construction/InteriorAddedInsulation"
+
+        node.elements[loc].attributes["nominalInsulation"]= "#{((fdnData["rEffIntWall"].to_f)/R_PER_RSI).round(4)}"
+        #   <Section nominalRsi='2.11' percentage='100' rank='1' rsi='1.7687'/>
+
+        node.elements[loc].elements.add("Composite")
+
+
+        node.elements["#{loc}/Composite"].elements.each do | section |
+          debug_out " Deleting   node.elements[#{loc}/Composite].elements.delete(Section)\n"
+          node.elements["#{loc}/Composite"].elements.delete("Section")
+        end
+
+        node.elements["#{loc}/Composite"].elements.add("Section")
+        node.elements["#{loc}/Composite/Section"].attributes["nominalRsi"] = "#{((fdnData["rEffIntWall"].to_f)/R_PER_RSI).round(4)}"
+        node.elements["#{loc}/Composite/Section"].attributes["percentage"] = "100"
+        node.elements["#{loc}/Composite/Section"].attributes["rank"] = "1"
+        node.elements["#{loc}/Composite/Section"].attributes["rsi"] = "#{(fdnData["rEffIntWall"].to_f/R_PER_RSI).round(4)}"
+
+      end
+
+      loc = ".//Wall/Construction/"
+      node.elements[loc].elements.delete("ExteriorAddedInsulation")
+      if ( ! fdnData["?ExtWallIns"] ) then
+
+      elsif ( node.name == "Basement")
+        debug_out "Adding definitions for exterior wall insulation\n"
+        node.elements[loc].elements.add("ExteriorAddedInsulation")
+
+
+        loc = ".//Wall/Construction/ExteriorAddedInsulation"
+
+        node.elements[loc].attributes["nominalInsulation"]= "#{((fdnData["rEffExtWall"].to_f + 1.0)/R_PER_RSI).round(4)}"
+        #   <Section nominalRsi='2.11' percentage='100' rank='1' rsi='1.7687'/>
+
+        #node.elements["#{loc}/Composite"].elements.each do | section |
+        #  debug_out "     deleting section tag (node.elements[#{loc}/Composite].elements.delete(Section))\n"
+        #  node.elements["#{loc}/Composite"].elements.delete("Section")
+        #end
+        node.elements["#{loc}"].elements.add("Composite")
+        node.elements["#{loc}/Composite"].elements.add("Section")
+        node.elements["#{loc}/Composite/Section"].attributes["nominalRsi"] = "#{((fdnData["rEffExtWall"].to_f + 1.0)/R_PER_RSI).round(4)}"
+        node.elements["#{loc}/Composite/Section"].attributes["percentage"] = "100"
+        node.elements["#{loc}/Composite/Section"].attributes["rank"] = "1"
+        node.elements["#{loc}/Composite/Section"].attributes["rsi"] = "#{(fdnData["rEffExtWall"].to_f/R_PER_RSI).round(4)}"
+        debug_out "Ext wall RSI: #{(fdnData["rEffExtWall"].to_f/R_PER_RSI).round(4)}\n"
+      end
+
+      if (node.name == "Crawlspace" )
+        loc = ".//Wall/Construction/Type"
+        node.elements[loc].attributes.delete 'idref'
+        node.elements["#{loc}/Description"].text = "User Defined"
+        node.elements["#{loc}/Composite"].elements.each do | section |
+          debug_out " Deleting   node.elements[#{loc}/Composite].elements.delete(Section)\n"
+          node.elements["#{loc}/Composite"].elements.delete("Section")
+        end
+        node.elements["#{loc}/Composite"].elements.add("Section")
+        node.elements["#{loc}/Composite/Section"].attributes["nominalRsi"] = "#{((fdnData["rEffIntWall"].to_f+fdnData["rEffExtWall"].to_f)/R_PER_RSI).round(4)}"
+        node.elements["#{loc}/Composite/Section"].attributes["percentage"] = "100"
+        node.elements["#{loc}/Composite/Section"].attributes["rank"] = "1"
+        node.elements["#{loc}/Composite/Section"].attributes["rsi"] = "#{((fdnData["rEffIntWall"].to_f+fdnData["rEffExtWall"].to_f)/R_PER_RSI).round(4)}"
+      end
+
+      loc = ".//Floor/Construction"
+      node.elements["#{loc}"].attributes["heatedFloor"] = 'false'
+      node.elements[loc].elements.delete("AddedToSlab")
+      if ( !  fdnData["?bgSlabIns"] ) then
+
+      else
+        debug_out "Adding definitions for under-slab insulation\n"
+        #node.elements["#{loc}/Composite"].elements.each do | section |
+
+        node.elements[loc].elements.add("AddedToSlab")
+        node.elements["#{loc}/AddedToSlab"].text = "User Specified"
+        node.elements["#{loc}/AddedToSlab"].attributes["nominalInsulation"] = "#{((fdnData["rEff_SlabBG"].to_f + 1.0)/R_PER_RSI).round(4)}"
+        #HOT2000 v11.58 expects rValue - but values set to RSI ?!?! - possible h2k bug.
+        node.elements["#{loc}/AddedToSlab"].attributes["rValue"] = "#{((fdnData["rEff_SlabBG"].to_f)/R_PER_RSI).round(4)}"
+      end
+
+
+
+    end
+
+  end
+
+
 
   def H2KEdit.set_resultcode(h2k_contents,map,choice)
     warn_out("This function doesn't do anything!!!")
@@ -1885,7 +2311,7 @@ module H2KEdit
     }
 
 
-    debug_on 
+    #debug_on 
     debug_out "Setting windows to #{newValue} for orientation: #{winOrient}"
 
     thisCodeInHouse = false
@@ -2156,8 +2582,6 @@ end
 # =========================================================================================
 module H2Kexec
   def H2Kexec.run_a_hot2000_simulation(h2k_file_name)
-
-    debug_on
     keep_trying = true
     tries = 0
     max_tries = 3 
@@ -2166,7 +2590,7 @@ module H2Kexec
     run_ok = FALSE 
     
 
-    run_path = $gMasterPath + "\\H2K"
+    run_path = $gMasterPath + "/H2K"
   
 
     while keep_trying do 
@@ -2251,7 +2675,7 @@ module H2Kexec
 
     end 
   
-    return run_ok 
+    return run_ok, lapsed_time
 
   end 
 end
@@ -2264,17 +2688,10 @@ end
 
 module H2Kpost
 
-  # This function does nothing! 
-  def H2Kpost.handle_sim_results(h2k_file_name,choices)
-    stream_out("  -> Loading XML elements from #{h2k_file_name}\n")
-    results = H2Kpost.prep_results(h2k_file_name,choices)
-    return results
-
-  end 
-
   # This function collects data fom various parts of the HTA data model and coolates 
   # it into a digestable/outputable hash.
-  def H2Kpost.prep_results(h2k_file_name,choices)
+  def H2Kpost.handle_sim_results(h2k_file_name,choices,agent_data)
+    stream_out("  -> Loading XML elements from #{h2k_file_name}\n")
     debug_on
     
     code = "SOC"
@@ -2283,6 +2700,7 @@ module H2Kpost
 
     debug_out ("PROGRAM: #{program}")
 
+  
     dim_info = H2KFile.getAllInfo(res_e)
     env_info = H2KFile.getEnvelopeSpecs(res_e)
     res_data = H2Kpost.get_results_from_elements(res_e,program)
@@ -2389,6 +2807,16 @@ module H2Kpost
     #  "Ruleset-Ventilation" => "#{$gRulesetSpecs["vent"]}"
     }
     
+    # Designate house as upgraded or not, and prepare list of upgrades as a string
+    
+    house_upgraded, list_of_upgrades = HTAPData.upgrade_status(choices)
+    debug_on 
+    debug_out "> upgraded >  #{house_upgraded} "
+    debug_out "> list >  #{list_of_upgrades} "
+    results["input"]["upgraded"] = house_upgraded
+    results["input"]["upgrades_applied"] = list_of_upgrades
+
+
     choices.sort.to_h
     for attribute in choices.keys()
       choice = choices[attribute]
@@ -2429,7 +2857,12 @@ module H2Kpost
     results["status"]["infoMsgs"] = Array.new
     results["status"]["infoMsgs"] = $gInfoMsgs
     results["status"]["success"] = $allok
-    
+
+    agent_data.keys.each do | agent_var |
+      results["status"][agent_var] = agent_data[agent_var]
+    end 
+
+
     #    myEndProcessTime = Time.now
     #    totalDiff = myEndProcessTime - $startProcessTime
     #    results["status"]["processingtime"]  = $totalDiff
@@ -2561,6 +2994,7 @@ module H2Kpost
 
   end 
 
+  # Recover simulation results from the h2k file 
   def H2Kpost.get_results_from_elements(res_e,program)
 
     xmlpath = "HouseFile/AllResults"
@@ -2740,14 +3174,9 @@ module H2Kpost
     debug_pause
   end 
 
+  # Stub to read diagnostic output (maybe used in the future! )
   def H2Kpost.read_routstr
-
   end 
-
-  def H2Kpost.write_results(results)
-
-  end 
-
 
 end 
 
@@ -2765,8 +3194,11 @@ module H2KUtils
         warn_out (" Could not create H2K folder at #{run_path}. Return error code #{$?}.")
       end 
       stream_out ("    Copying H2K program folder to #{dest_path} ...")
+      log_out ("Created a new h2k directory")
       FileUtils.cp_r("#{src_path}/.", "#{dest_path}")
       stream_out (" (done)\n")
+    else 
+      log_out "h2k directory exists - no need to copy a new one"
     end
 
     stream_out ("    Checking integrity of H2K installation:\n")
@@ -2779,6 +3211,7 @@ module H2KUtils
 
 
     if (masterMD5.eql? workingMD5) then
+      log_out("H2K file checksum matches master. All OK")
       stream_out(" (checksum match)\n")
 
       $gStatus["MD5master"] = $masterMD5.to_s
@@ -2787,6 +3220,7 @@ module H2KUtils
       $gStatus["H2KDirCheckSumMatch"] = $DirVerified
 
     else
+      log_out("H2K file checksum does not match master. Deleting copy")
       FileUtils.rm_r ( dest_path )
       stream_out(" (CHECKSUM MISMATCH!!!)\n")
       warn_out("Working H2K installation dir (#{dest_path}) differs from source #{$src_path}.")

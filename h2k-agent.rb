@@ -165,6 +165,8 @@ optparse = OptionParser.new do |opts|
 
   opts.on("--list_locations", "Produce a list of valid weather locations") do 
     $cmdlineopts["list_locations"] = true 
+    $cmdlineopts["verbose"] = true
+    $gTest_params["verbosity"] = "verbose"
   end 
 
 
@@ -217,7 +219,7 @@ stream_out drawRuler("A wrapper for HOT2000")
 h2k_file_path.sub!(/\\User/i, '')
 
 # Debug out: print out options
-debug_on 
+
 if debug_status() then 
   debug_out " Environment: "
   debug_out "    script location: #{$scriptLocation}\n"
@@ -232,13 +234,16 @@ if debug_status() then
   debug_out("    h2k file path: #{h2k_file_path}\n")
   debug_out("    h2k file name: #{h2k_file_name}\n")
 end 
-
+debug_on 
+debug_out "Dieing here?"
 stream_out ("\n Input files:  \n")
 stream_out ("         path: #{$gMasterPath} \n")
 stream_out ("         choice_file: #{choice_file} \n")
 stream_out ("         option_file: #{option_file} \n")
 stream_out ("         Base model: #{base_h2k_file} \n")
 stream_out ("         HOT2000 source folder: #{h2k_src_path} \n")
+
+
 
 if ($cmdlineopts["list_locations"]) then 
   stream_out drawRuler("Printing a list of valid location keywords")
@@ -304,6 +309,7 @@ dir_verified = false
 copy_tries   = 0
 run_path = $gMasterPath + "\\H2K"
 while ( ! dir_verified && copy_tries < 3  )
+  log_out("Attempt ##{copy_tries} to verify h2k directory")
   copy_tries = copy_tries + 1 
   stream_out (" -> Creating local H2K install to run files (attempt ##{copy_tries}) \n")
   dir_verified = H2KUtils.create_run_environment(h2k_src_path,run_path)
@@ -382,7 +388,17 @@ stream_out (" Performing substitutions on H2K file...")
 #==========================================================
 stream_out(drawRuler("Invoking HOT2000  "))
 run_ok = TRUE 
-run_ok = H2Kexec.run_a_hot2000_simulation(working_h2k_file)
+run_ok, lapsed_time = H2Kexec.run_a_hot2000_simulation(working_h2k_file)
+
+debug_out ("Lapsed time: #{lapsed_time} s")
+
+agent_data = {
+  "h2k_run_time" => lapsed_time ,
+  "agent_processing_time" => Time.now - $startProcessTime -lapsed_time,
+  "approx_lapsed_time"=> Time.now - $startProcessTime,
+  "copy_tries"  => copy_tries
+}
+
 
 if (! run_ok ) then 
   fatal_error("Could not execute HOT2000 calculations")
@@ -392,10 +408,13 @@ end
 stream_out(drawRuler("Reading simulation results"))
 
 
-results = H2Kpost.handle_sim_results(working_h2k_file,processed_choices)
+results = H2Kpost.handle_sim_results(working_h2k_file,processed_choices,agent_data)
 
 # Should probably comment this line out in production. 
-debug_out(results.pretty_inspect)
+if (debug_status()) 
+  debug_out(results.pretty_inspect)
+end 
+
 
 
 

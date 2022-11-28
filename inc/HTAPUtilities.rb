@@ -6,9 +6,12 @@
 
 def HTAPInit()
   
-  #debug_on
+  
   $startProcessTime = Time.now
   $gMasterPath = Dir.getwd()
+
+  $dev_msgs_on = true 
+
 
   $gHelp = false
   $gHelpAvailableFlagged = false 
@@ -302,10 +305,6 @@ module HTAPData
 
   end
 
-
-
-
-
   def HTAPData.valdate(options,passed_choices)
     #debug_on 
     # A) go through the list of choices, and resolve aliases if any. 
@@ -381,7 +380,166 @@ module HTAPData
 
   end
 
+  # Simple function that returns the tags/values as a token-value
+  # list. Should be able to directly access this through options,
+  # but legacy data map obscures it.
+  def HTAPData.getResultsForChoice(options,attribute,choice)
+
+    debug_on
+    if (debug_status())
+      debug_out("options[#{attribute}] = #{options[attribute].pretty_inspect}")
+    end 
+
+    result = Hash.new
+    #debug_out ("Att: #{attribute}\n")
+    #debug_out ("Choice: #{choice}\n")
+    #debug_out( "contents of options[#{attribute}][`options`][#{choice}][`values`] ") #{}"=\n#{options[attribute]["options"][choice]["values"].pretty_inspect}")
+
+    options[attribute]["tags"].each do |tagIndex, tagName|
+
+
+
+     debug_out "Querying tag #{tagIndex}\n"
+     if ( ! options[attribute]["options"][choice]["values"][tagIndex.to_s].nil? ) then
+       tagValue = options[attribute]["options"][choice]["values"][tagIndex.to_s]["conditions"]["all"]
+       result[tagName] = tagValue
+     else
+       result[tagName] = nil
+     end
+    end
+    #debug_out ("returning: \n#{result.pretty_inspect}\n")
+    return result
+
+  end
+
+
+  # Determines if a house will be upgraded, and returns a list 
+  # of parameters describing the upgrades
+  def HTAPData.upgrade_status(passed_choices)
+    devmsg_out("Need to add support for upgrade status on rulesets")
+    isSetbyRuleset = {}
+    house_upgraded = false 
+    list_of_upgrades = ""
+
+    passed_choices.each do |thisAttrib, thisChoice|
+      isSetbyRuleset[thisAttrib] = false
+      next if ( AttribThatAreNotUpgrades.include?(thisAttrib) )
+      
+      if ( isSetbyRuleset[thisAttrib] )
+      
+        # skip, if upgrade was imposed by ruleset.
+      
+      elsif ( thisChoice != "NA" )
+      
+        house_upgraded = true
+        list_of_upgrades += "#{thisAttrib}=>#{thisChoice};"
+      
+      end
+    end
+
+    return house_upgraded, list_of_upgrades
+
+  end 
+
+
+  #
+  def HTAPData.get_foundation_config(passed_choices)
+    debug_on
+
+    # Use a copy, bc these tests cause new keys to be created?
+    choice_clone = passed_choices.clone 
+
+    config = ""
+    fdnConfigs = Hash.new
+
+    if (debug_status()) 
+      debug_out("FDN choices #{passed_choices.pretty_inspect}")
+      debug_out("FDN CONFIG: #{fdnConfigs.pretty_inspect}")
+    end 
+
+
+    fdnConfigs["wholeFdn"] = HTAPData.valOrNaOrNil([choice_clone["Opt-H2KFoundation"],
+                                                    choice_clone["Opt-H2KFoundationSlabCrawl"]
+                                                   ])
+
+    
+
+    fdnConfigs["surfBySurf"] = HTAPData.valOrNaOrNil([choice_clone["Opt-FoundationSlabBelowGrade"] ,
+                                                      choice_clone["Opt-FoundationSlabOnGrade"]    ,
+                                                      choice_clone["Opt-FoundationWallIntIns"]     ,
+                                                      choice_clone["Opt-FoundationWallExtIns"]
+                                                    ])
+
+
+    if (debug_status()) 
+      debug_out("FDN choices #{passed_choices.pretty_inspect}")
+      debug_out("FDN CONFIG: #{fdnConfigs.pretty_inspect}")
+    end 
+
+    if ( fdnConfigs["wholeFdn"]   == "nonNA" ||
+         fdnConfigs["surfBySurf"] == "nil" ||
+         ( fdnConfigs["wholeFdn"]   == "NA" &&  fdnConfigs["surfBySurf"] == "NA" ) ) then
+         config = "wholeFdn"
+    else
+         config = "surfBySurf"
+    end
+
+    if ( fdnConfigs["wholeFdn"]   == "nonNA" &&  fdnConfigs["surfBySurf"] != "nonNA" ) then
+
+      # Can't have both!
+
+      warn_out ("HTAP cannot use whole foundation and surf-by-surf definitions. Either use Opt-H2KFoundation... or Opt-Foundaiton... defintions")
+      warn_out ("Ignoring Options Opt-FoundationSlabBelowGrade,Opt-FoundationSlabOnGrade,Opt-FoundationWallIntIns and  Opt-FoundationWallExtIns")
+      $gChoicesChangedbyProgram = true
+      help_out(catagory,topic)
+
+    end
+
+    debug_out ("Intrepreted #{fdnConfigs.pretty_inspect}\n Result: #{config}\n")
+
+    return config
+
+  end
+
+  # Test a list of value to see if it is NA, or Nil, or Non NA>
+  def HTAPData.valOrNaOrNil(values)
+
+    debug_off
+    result = nil
+
+    valNonNa        = false
+    valDefined      = false
+
+    values.each do | value |
+      debug_out "value: ?#{value}?"
+      if ( ! value.nil? && ! value.empty?  ) then
+          valDefined=true
+          if ( value != "NA" ) then
+              valNonNa = true
+              #break
+          end
+      end
+
+    end
+
+    if ( valNonNa ) then
+      result = "nonNA"
+    elsif ( valDefined )
+      result = "NA"
+    else
+      result = "nil"
+    end
+    debug_out ("result? #{result}\n")
+    return result
+  end
+
+
 end
+
+
+
+
+
 
 module HTAPout
 

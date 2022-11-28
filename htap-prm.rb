@@ -1304,6 +1304,7 @@ def run_these_cases(current_task_files)
           $FailedRuns.push $msg
           $FailedRunCount = $FailedRunCount + 1
           update_run_status(err_count: $FailedRunCount )
+          
         else
           
           thread = run.gsub(/run-/,"").to_i
@@ -1866,7 +1867,7 @@ else
     end 
   end 
 
-  warn_out ("Need to fix weather")
+  devmsg_out ("Need validate weather")
   #$gLocations.each do | location | 
   #   if ( not HTAPData.isChoiceValid(options, "Opt-Location", location) ) 
   #      err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")

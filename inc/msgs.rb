@@ -570,6 +570,9 @@ def warn_out(msg)
 end
 
 def devmsg_out(msg)
+
+
+
   callerID = Hash.new
   callerID = caller_info()
   line     = callerID["line"]
@@ -583,9 +586,10 @@ def devmsg_out(msg)
     $fLOG.write(msg)
   end
 
+  return if ( not $dev_msgs_on )
   $gInfoMsgs << msg 
   stream_out "\n"
-  stream_out prettyList(" [-> DEV ]:",msg,:magenta)
+  stream_out prettyList(" [->DEV]:",msg,:magenta)
   stream_out "\n"
 end  
 

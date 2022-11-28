@@ -208,9 +208,12 @@ CostingSupport = Set.new [ "Opt-Ceilings",
 					    "Opt-ExposedFloor"
           ]
 
-AttribThatAreNotUpgrades = Set.new [ "Opt-Baseloads",
+AttribThatAreNotUpgrades = Set.new [ "GOconfig_rotate",
+                                     "Opt-DBFiles",
+                                     "Opt-Archetype",
+                                     "Opt-Program",
+                                     "Opt-Baseloads",
                                      "Opt-FuelCost",
-                                     "Opt-ResultHouseCode",
                                      "Opt-Specifications",
                                      "Opt-Location",
                                      "Opt-Ruleset",
