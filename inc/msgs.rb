@@ -569,6 +569,26 @@ def warn_out(msg)
   stream_out "\n"
 end
 
+def devmsg_out(msg)
+  callerID = Hash.new
+  callerID = caller_info()
+  line     = callerID["line"]
+  file     = callerID["file"]
+  routine  = callerID["routine"]
+  msg.gsub(/^\n+/, "")
+  msg.gsub(/\n+$/, "")
+  msg += " (developer msg reported by #{routine} - #{file}:#{line})"
+
+  if ($gTest_params["logfile"])
+    $fLOG.write(msg)
+  end
+
+  $gInfoMsgs << msg 
+  stream_out "\n"
+  stream_out prettyList(" [-> DEV ]:",msg,:magenta)
+  stream_out "\n"
+end  
+
 def help_out(catagory,topic)
   #require_relative 'helpMsgs'
   return if (emptyOrNil(catagory))
@@ -763,7 +783,7 @@ def ReportMsgs()
 
     $fSUMMARY.write "status.info   = \"#{msg}\" \n"
 
-    $InfoBuffer += prettyList("   (-) Info -",msg,:blue)
+    $InfoBuffer += prettyList("   (-) Info -",msg,:cyan)
     #$WarningBuffer += "   + WARNING: #{msg} \n\n"
 
   end
