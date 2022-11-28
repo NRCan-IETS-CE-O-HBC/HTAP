@@ -1387,7 +1387,7 @@ module H2KEdit
     end
   
 
-    warn_out ("Need to add ruleset support, SOC/General codes")
+    devmsg_out ("Need to add ruleset support")
     choices.each do | attribute, choice |
       
       debug_out(" processing: #{attribute} = #{choice}")
@@ -1442,9 +1442,9 @@ module H2KEdit
 
       else
         if (choice == "NA" )
-          info_out "Unsupported attribute #{attribute}, Choice = #{choice} "
+          devmsg_out "Unsupported attribute #{attribute}, Choice = #{choice} "
         else 
-          warn_out "Unsupported attribute #{attribute}, Choice = #{choice} "
+          devmsg_out "Unsupported attribute #{attribute}, Choice = #{choice} "
         end 
       end 
 
@@ -2272,17 +2272,14 @@ module H2Kpost
 
   end 
 
-  
+  # This function collects data fom various parts of the HTA data model and coolates 
+  # it into a digestable/outputable hash.
   def H2Kpost.prep_results(h2k_file_name,choices)
     debug_on
     
     code = "SOC"
     res_e = H2KFile.open_xml_as_elements(h2k_file_name)
-
-    
     program = H2KFile.getProgramName(res_e)
-
-
 
     debug_out ("PROGRAM: #{program}")
 
@@ -2303,9 +2300,9 @@ module H2Kpost
       },
     }
 
-    # return results 
+    # return results / Archetype description
     results["archetype"] = {
-      "h2k-File"  => h2k_file_name, 
+      "h2k-File"  => File.split(h2k_file_name)[1], 
       "House-Builder"       =>  H2KFile.getBuilderName(res_e), 
       "EvaluationDate"      =>  H2KFile.getEvalDate(res_e),
       "Year-Built"          =>  H2KFile.getYearBuilt(res_e),
@@ -2336,7 +2333,7 @@ module H2Kpost
 
     }
 
-
+    # Window data 
     if ($cmdlineopts["extra_output"]) then 
       results["archetype"]["Win-SHGC-S"     ]  = env_info["windows"]["by_orientation"]["SHGC"][1]
       results["archetype"]["Win-SHGC-SE"    ]  = env_info["windows"]["by_orientation"]["SHGC"][2]
@@ -2346,14 +2343,14 @@ module H2Kpost
       results["archetype"]["Win-SHGC-NW"    ]  = env_info["windows"]["by_orientation"]["SHGC"][6]
       results["archetype"]["Win-SHGC-W"     ]  = env_info["windows"]["by_orientation"]["SHGC"][7]
       results["archetype"]["Win-SHGC-SW"    ]  = env_info["windows"]["by_orientation"]["SHGC"][8]
-      results["archetype"]["Win-UValue-S"   ]  =   env_info["windows"]["by_orientation"]["Uvalue"][1]
-      results["archetype"]["Win-UValue-SE"  ]  =   env_info["windows"]["by_orientation"]["Uvalue"][2]
-      results["archetype"]["Win-UValue-E"   ]  =   env_info["windows"]["by_orientation"]["Uvalue"][3]
-      results["archetype"]["Win-UValue-NE"  ]  =   env_info["windows"]["by_orientation"]["Uvalue"][4]
-      results["archetype"]["Win-UValue-N"   ]  =   env_info["windows"]["by_orientation"]["Uvalue"][5]
-      results["archetype"]["Win-UValue-NW"  ]  =   env_info["windows"]["by_orientation"]["Uvalue"][6]
-      results["archetype"]["Win-UValue-W"   ]  =   env_info["windows"]["by_orientation"]["Uvalue"][7]
-      results["archetype"]["Win-UValue-SW"  ]  =   env_info["windows"]["by_orientation"]["Uvalue"][8]
+      results["archetype"]["Win-UValue-S"   ]  = env_info["windows"]["by_orientation"]["Uvalue"][1]
+      results["archetype"]["Win-UValue-SE"  ]  = env_info["windows"]["by_orientation"]["Uvalue"][2]
+      results["archetype"]["Win-UValue-E"   ]  = env_info["windows"]["by_orientation"]["Uvalue"][3]
+      results["archetype"]["Win-UValue-NE"  ]  = env_info["windows"]["by_orientation"]["Uvalue"][4]
+      results["archetype"]["Win-UValue-N"   ]  = env_info["windows"]["by_orientation"]["Uvalue"][5]
+      results["archetype"]["Win-UValue-NW"  ]  = env_info["windows"]["by_orientation"]["Uvalue"][6]
+      results["archetype"]["Win-UValue-W"   ]  = env_info["windows"]["by_orientation"]["Uvalue"][7]
+      results["archetype"]["Win-UValue-SW"  ]  = env_info["windows"]["by_orientation"]["Uvalue"][8]
       results["archetype"]["Win-Area-S"     ]  = env_info["windows"]["by_orientation"]["area"][1]
       results["archetype"]["Win-Area-SE"    ]  = env_info["windows"]["by_orientation"]["area"][2]
       results["archetype"]["Win-Area-E"     ]  = env_info["windows"]["by_orientation"]["area"][3]
@@ -2382,7 +2379,7 @@ module H2Kpost
     
 
  
-    
+    # INPUT ! 
     results["input"] = { 
     #  "Run-Region" =>  "#{$gRunRegion}",
     #  "Run-Locale" =>  "#{$gRunLocale}",
@@ -2413,6 +2410,12 @@ module H2Kpost
         results["output"][column] = value 
       end
     end 
+
+    results["ref_house"] = {}
+    res_data["ref_house"].each do | column, value  |
+      results["ref_house"][column] = value 
+    end
+
 
     results["status"] = {}
     $gStatus.keys.each do | status_type |
@@ -2559,6 +2562,7 @@ module H2Kpost
   end 
 
   def H2Kpost.get_results_from_elements(res_e,program)
+
     xmlpath = "HouseFile/AllResults"
 
     myResults = {
@@ -2580,9 +2584,6 @@ module H2Kpost
     
     res_e["HouseFile/AllResults"].elements.each do |element|
 
-
-
-
       this_set_code = element.attributes["houseCode"]
       if (this_set_code == nil && element.attributes["sha256"] != nil)
         this_set_code = "General"
@@ -2590,12 +2591,11 @@ module H2Kpost
 
       debug_out "Result-set: #{this_set_code}"
       
-
-
-
       if ( this_set_code != code ) then 
         next 
       end 
+
+      
 
       found_the_set = TRUE 
       debug_out ("Parsing code #{this_set_code}")
@@ -2668,6 +2668,47 @@ module H2Kpost
       end
 
     end
+
+    # For NBC, parse reference house data too
+    if ( program == "NBC" )
+      res_e["HouseFile/AllResults"].elements.each do |element|
+        this_set_code = element.attributes["houseCode"]
+        next if (this_set_code != "Reference")
+            
+        debug_out "Getting reference house data from result set '#{this_set_code}'"
+        myResults["ref_house"]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  
+        myResults["ref_house"]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f  
+        myResults["ref_house"]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+        myResults["ref_house"]["avgVentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
+        myResults["ref_house"]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f  
+        myResults["ref_house"]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f  
+        myResults["ref_house"]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f  
+        myResults["ref_house"]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f  
+
+        myResults["ref_house"]["Design_Heating_Load_W"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f  
+        myResults["ref_house"]["Design_Cooling_Load_W"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f  
+          
+
+        
+      end 
+
+    else 
+      
+      debug_out "Setting reference house data to nil "
+      myResults["ref_house"]["avgEnergyTotalGJ"]        = " " 
+      myResults["ref_house"]["avgEnergyHeatingGJ"]      = " "
+      myResults["ref_house"]["avgGrossHeatLossGJ"]      = " "
+      myResults["ref_house"]["avgVentAndInfilGJ"]       = " " 
+      myResults["ref_house"]["avgEnergyCoolingGJ"]      = " "
+      myResults["ref_house"]["avgEnergyVentilationGJ"]  = " "
+      myResults["ref_house"]["avgEnergyEquipmentGJ"]    = " "
+      myResults["ref_house"]["avgEnergyWaterHeatingGJ"] = " "
+      myResults["ref_house"]["Design_Heating_Load_W"]   = " "
+      myResults["ref_house"]["Design_Cooling_Load_W"]   = " "
+        
+
+    
+    end 
 
     # do these belong here? ???
     # Open output file here so we can log errors too!
