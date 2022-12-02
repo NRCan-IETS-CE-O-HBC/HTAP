@@ -11204,6 +11204,40 @@
           ]
         }
       },
+      "NBC-ASHP": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Baseboards",
+            "Opt-H2K-SysType2": "AirHeatPump",
+            "Opt-H2K-Type1Fuel": "NA",
+            "Opt-H2K-Type1EqpType": "NA",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "6",
+            "Opt-H2K-Type1EffType": "true",
+            "Opt-H2K-Type1EffVal": "100",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false",
+            "Opt-H2K-Type2CCaseH": "60",
+            "Opt-H2K-Type2Func": "1",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2HeatCOP": "3.45",
+            "Opt-H2K-Type2RatingTemp": "8.3",
+            "Opt-H2K-Type2CutoffType": "1",
+            "Opt-H2K-Type2CutoffTemp": "8.3"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "ccashp:3_ton:13.5_kw_@_-25oc:incl._ecm_air_handler_w/coil:staging_controls:tank:aux._heater_&_tstat",
+            "ducting:central_forced_air",
+            "install_200a_service_instead_of_100a_service"
+          ]
+        }
+      },
       "vintageGas74%": {
         "h2kMap": {
           "base": {
@@ -12140,7 +12174,7 @@
             "Opt-H2K-Fuel": "2",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.53",
+            "Opt-H2K-EF": "0.601",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "76.2"
           }
@@ -12157,7 +12191,7 @@
             "Opt-H2K-Fuel": "1",
             "Opt-H2K-TankType": "3",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.876",
+            "Opt-H2K-EF": "0.855",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -12193,7 +12227,7 @@
             "Opt-H2K-Fuel": "3",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.495",
+            "Opt-H2K-EF": "0.585",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "0"
           }
@@ -12267,7 +12301,7 @@
             "Opt-H2K-Fuel": "4",
             "Opt-H2K-TankType": "2",
             "Opt-H2K-TankSize": "189.3",
-            "Opt-H2K-EF": "0.53",
+            "Opt-H2K-EF": "0.601",
             "Opt-H2K-IntHeatPumpCOP": "NA",
             "Opt-H2K-FlueDiameter": "76.2"
           }
@@ -12339,18 +12373,18 @@
         "h2kMap": {
           "base": {
             "Opt-H2K-Fuel": "1",
-            "Opt-H2K-TankType": "6",
-            "Opt-H2K-TankSize": "0",
-            "Opt-H2K-EF": "2.1",
-            "Opt-H2K-IntHeatPumpCOP": "NA",
-            "Opt-H2K-FlueDiameter": "0"
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.33",
+            "Opt-H2K-FlueDiameter": "NA"
           }
         },
         "costs": {
           "custom-costs": {
           },
           "components": [
-
+            "dhw_heat_pump_water_heater:50_gal:ef_2.35"
           ]
         }
       },
