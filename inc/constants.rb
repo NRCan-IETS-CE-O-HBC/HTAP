@@ -175,6 +175,10 @@ $LegacyOptionsToIgnore = Set.new [
 ]
 
 
+$sys_type_1_list = [ "Baseboards", "Furnace", "Boiler", "ComboHeatDhw", "P9" ]
+$sys_type_2_list = [ "AirHeatPump", "WaterHeatPump", "GroundHeatPump", "AirConditioning" ]
+
+
 AliasesForAttributes = {
   "Opt-GenericWall_1Layer_definitions" => "Opt-AboveGradeWall",
   "Opt-FloorAboveCrawl" => "Opt-ExposedFloor",

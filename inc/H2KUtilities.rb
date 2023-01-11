@@ -466,10 +466,10 @@ module H2KFile
 
 
 
-    locationText = "HouseFile/House/Components/*/Components/Window"
+    x_path = "HouseFile/House/Components/*/Components/Window"
 
 
-    elements.each(locationText) do |window|
+    elements.each(x_path) do |window|
       areaWin_temp = 0.0
       # store the area of each windows
       winOrient = window.elements["FacingDirection"].attributes["code"].to_i
@@ -485,10 +485,10 @@ module H2KFile
       # Adds area of each windows to summation for individual orientations
     end
 
-    locationText = "HouseFile/House/Components/*/Components/Door/Components/Window"
+    x_path = "HouseFile/House/Components/*/Components/Door/Components/Window"
     # Adds door-window
 
-    elements.each(locationText) do |window|
+    elements.each(x_path) do |window|
       areaWin_temp = 0.0
       # store the area of each windows
       winOrient = window.elements["FacingDirection"].attributes["code"].to_i
@@ -535,9 +535,9 @@ module H2KFile
 
 
     ### Support for door sto be added.
-    ##locationText = "HouseFile/House/Components/*/Components/Door"
+    ##x_path = "HouseFile/House/Components/*/Components/Door"
 
-    ##elements.each(locationText) do |door|
+    ##elements.each(x_path) do |door|
     ##  areaDoor_temp = 0.0
     ##  # store area of each Door
     ##  idDoor = door.attributes["id"].to_i
@@ -564,8 +564,8 @@ module H2KFile
 
     #areaWall_sum = 0.0
     #
-    #locationText = "HouseFile/House/Components/Wall"
-    #elements.each(locationText) do |wall|
+    #x_path = "HouseFile/House/Components/Wall"
+    #elements.each(x_path) do |wall|
     #  areaWall_temp = 0.0
     #  idWall = wall.attributes["id"].to_i
     #  areaWall_temp = wall.elements["Measurements"].attributes["height"].to_f * wall.elements["Measurements"].attributes["perimeter"].to_f
@@ -606,24 +606,24 @@ module H2KFile
     #  $AreaComp["wall"] += areaWall_temp
     #end
 
-    #locationText = "HouseFile/House/Components/*/Components/FloorHeader"
-    #elements.each(locationText) do |head|
+    #x_path = "HouseFile/House/Components/*/Components/FloorHeader"
+    #elements.each(x_path) do |head|
     #  areaHeader_temp = 0.0
     #  areaHeader_temp = head.elements["Measurements"].attributes["height"].to_f * head.elements["Measurements"].attributes["perimeter"].to_f
     #  $UAValue["header"] += areaHeader_temp / head.elements["Construction"].elements["Type"].attributes["rValue"].to_f
     #  $AreaComp["header"] += areaHeader_temp
     #end
 
-    #locationText = "HouseFile/House/Components/Ceiling"
-    #elements.each(locationText) do |ceiling|
+    #x_path = "HouseFile/House/Components/Ceiling"
+    #elements.each(x_path) do |ceiling|
     #  areaCeiling_temp = 0.0
     #  areaCeiling_temp = ceiling.elements["Measurements"].attributes["area"].to_f
     #  $UAValue["ceiling"] += areaCeiling_temp / ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
     #  $AreaComp["ceiling"] += areaCeiling_temp
     #end
 
-    #locationText = "HouseFile/House/Components/Floor"
-    #elements.each(locationText) do |floor|
+    #x_path = "HouseFile/House/Components/Floor"
+    #elements.each(x_path) do |floor|
     #  areaFloor_temp = 0.0
     #  areaFloor_temp = floor.elements["Measurements"].attributes["area"].to_f
     #  $UAValue["floor"] += areaFloor_temp / floor.elements["Construction"].elements["Type"].attributes["rValue"].to_f
@@ -639,8 +639,8 @@ module H2KFile
   # Return blower door test value 
   # =========================================================================================
   def H2KFile.getACHRate(elements)
-    locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-    ach_result = elements[locationText].attributes["airChangeRate"].to_f
+    x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+    ach_result = elements[x_path].attributes["airChangeRate"].to_f
     return ach_result
   end 
 
@@ -884,9 +884,9 @@ module H2KFile
 
   def H2KFile.getExpFloorDimensions(elements)
     #debug_on
-    locationText = "HouseFile/House/Components/Floor"
+    x_path = "HouseFile/House/Components/Floor"
     areaFloors = 0
-    elements.each(locationText) do |floor|
+    elements.each(x_path) do |floor|
 
       thisFloorArea  = ( floor.elements["Measurements"].attributes["area"].to_f   )
       areaFloors += thisFloorArea
@@ -906,11 +906,11 @@ module H2KFile
 
   def H2KFile.getFlrHeaderDimensions(elements)
     #debug_on
-    locationText = "HouseFile/House/Components/*/Components/FloorHeader"
+    x_path = "HouseFile/House/Components/*/Components/FloorHeader"
     areaHeaders = 0
     areaHeadersAG = 0
     areaHeadersBG = 0
-    elements.each(locationText) do |header|
+    elements.each(x_path) do |header|
 
       thisHeaderArea  = ( header.elements["Measurements"].attributes["height"].to_f *  header.elements["Measurements"].attributes["perimeter"].to_f  )
       areaHeaders += thisHeaderArea
@@ -1099,8 +1099,8 @@ module H2KFile
     }
 
 
-    locationText = "HouseFile/House/Components/*/Components/Window"
-    elements.each(locationText) do |window|
+    x_path = "HouseFile/House/Components/*/Components/Window"
+    elements.each(x_path) do |window|
 
       # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
       thisWindowOrient = window.elements["FacingDirection"].attributes["code"].to_i
@@ -1130,8 +1130,8 @@ module H2KFile
   # =========================================================================================
   def H2KFile.getCeilingArea( elements, ceilingType, ceilingCodeName )
     area = 0.0
-    locationText = "HouseFile/House/Components/Ceiling"
-    elements.each(locationText) do |element|
+    x_path = "HouseFile/House/Components/Ceiling"
+    elements.each(x_path) do |element|
       if ceilingType =~ /attic/i
         # Check if construction type (element 3) is Attic/gable (2), Attic/hip (3) or Scissor (6)
         if element[3][1].attributes["code"] == "2" || element[3][1].attributes["code"] == "3" || element[3][1].attributes["code"] == "6"
@@ -1441,6 +1441,27 @@ module H2KEdit
 
         H2KEdit.set_above_grade_wall(h2k_contents,map,choice)
 
+      when "Opt-Ceilings"
+
+        H2KEdit.set_ceilings(h2k_contents,map,choice,"all")
+
+      when "Opt-AtticCeilings"
+        H2KEdit.set_ceilings(h2k_contents,map,choice,"attic")
+
+      when "Opt-CathCeilings"
+        H2KEdit.set_ceilings(h2k_contents,map,choice,"cathedral")
+
+      when "Opt-FlatCeilings"
+        H2KEdit.set_ceilings(h2k_contents,map,choice,"flat")
+
+      when "Opt-Heating-Cooling"
+
+        H2KEdit.set_heating_cooling(h2k_contents,map,choice)
+
+      when "Opt-FoundationWallIntIns" , "Opt-FoundationWallExtIns", "Opt-FoundationSlabOnGrade" ,"Opt-FoundationSlabBelowGrade"
+
+        # Do nothing - handled below
+
       else
         if (choice == "NA" )
           devmsg_out "Unsupported attribute #{attribute}, Choice = #{choice} "
@@ -1452,7 +1473,7 @@ module H2KEdit
     end 
 
     # Test foundation configruations 
-    debug_on 
+    # debug_on 
     fdn_config = HTAPData.get_foundation_config(choices)
     if (debug_status())
       debug_out("Foundation config: #{fdn_config.pretty_inspect}")
@@ -1475,7 +1496,6 @@ module H2KEdit
 
 
       debug_out ( ">>> $foundation config? #{$foundationConfiguration}\n")
-
       myFdnData["FoundationWallExtIns"     ] = choices["Opt-FoundationWallExtIns"     ]
       myFdnData["FoundationWallIntIns"     ] = choices["Opt-FoundationWallIntIns"     ]
       myFdnData["FoundationSlabBelowGrade" ] = choices["Opt-FoundationSlabBelowGrade" ]
@@ -1483,6 +1503,7 @@ module H2KEdit
       H2KEdit.conf_foundations(myFdnData,options.clone,h2k_contents)
 
     end
+
   end 
 
   #.....................................................
@@ -1507,29 +1528,29 @@ module H2KEdit
 
     debug_out(" READ: #{weather_file} #{region} #{location} #{region_name}")
 
-    locationText = "HouseFile/ProgramInformation/Weather"
-    h2k_contents[locationText].attributes["library"] = weather_file
+    x_path = "HouseFile/ProgramInformation/Weather"
+    h2k_contents[x_path].attributes["library"] = weather_file
 
-    locationText = "HouseFile/ProgramInformation/Weather/Region"
-    h2k_contents[locationText].attributes["code"] = region
+    x_path = "HouseFile/ProgramInformation/Weather/Region"
+    h2k_contents[x_path].attributes["code"] = region
 
-    locationText = "HouseFile/ProgramInformation/Weather/Region/English"
-    h2k_contents[locationText].text = region_name
+    x_path = "HouseFile/ProgramInformation/Weather/Region/English"
+    h2k_contents[x_path].text = region_name
 
-    locationText = "HouseFile/ProgramInformation/Weather/Region/French"
-    h2k_contents[locationText].text = region_name
+    x_path = "HouseFile/ProgramInformation/Weather/Region/French"
+    h2k_contents[x_path].text = region_name
 
-    locationText = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
-    h2k_contents[locationText].text = region_name
+    x_path = "HouseFile/ProgramInformation/Client/StreetAddress/Province"
+    h2k_contents[x_path].text = region_name
     
-    locationText = "HouseFile/ProgramInformation/Weather/Location"
-    h2k_contents[locationText].attributes["code"] = location    
+    x_path = "HouseFile/ProgramInformation/Weather/Location"
+    h2k_contents[x_path].attributes["code"] = location    
 
-    locationText = "HouseFile/ProgramInformation/Weather/Location/English"
-    h2k_contents[locationText].text = choice
+    x_path = "HouseFile/ProgramInformation/Weather/Location/English"
+    h2k_contents[x_path].text = choice
 
-    locationText = "HouseFile/ProgramInformation/Weather/Location/French"
-    h2k_contents[locationText].text = choice
+    x_path = "HouseFile/ProgramInformation/Weather/Location/French"
+    h2k_contents[x_path].text = choice
 
 
 
@@ -1559,29 +1580,29 @@ module H2KEdit
 
     if ( ach != "NA" ) then 
 
-      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
-      h2k_contents[locationText].attributes["code"] = "x"
+      x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
+      h2k_contents[x_path].attributes["code"] = "x"
     
       # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
-      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
-      h2k_contents[locationText].attributes["code"] = "x"
+      x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
+      h2k_contents[x_path].attributes["code"] = "x"
 
       # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
-      locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
-      if (  h2k_contents[locationText] != nil )
+      x_path = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
+      if (  h2k_contents[x_path] != nil )
         # Need to remove this section!
-        locationText = "HouseFile/House/NaturalAirInfiltration"
-        h2k_contents[locationText].delete_element("AirLeakageTestData")
+        x_path = "HouseFile/House/NaturalAirInfiltration"
+        h2k_contents[x_path].delete_element("AirLeakageTestData")
         # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
-        locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-        h2k_contents[locationText].attributes["isCgsbTest"] = "true"
+        x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+        h2k_contents[x_path].attributes["isCgsbTest"] = "true"
       end
       # Set the blower door test value in airChangeRate field
-      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
-      h2k_contents[locationText].attributes["airChangeRate"] = ach
+      x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+      h2k_contents[x_path].attributes["airChangeRate"] = ach
   
-      h2k_contents[locationText].attributes["isCgsbTest"] = "true"
-      h2k_contents[locationText].attributes["isCalculated"] = "true"      
+      h2k_contents[x_path].attributes["isCgsbTest"] = "true"
+      h2k_contents[x_path].attributes["isCalculated"] = "true"      
 
 
     end 
@@ -1591,24 +1612,24 @@ module H2KEdit
       if(site.to_f < 1 || site.to_f > 8)
         fatalerror("In Opt-ACH = #{choice}, invalid building site input #{site}")
       end
-      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BuildingSite/Terrain"
-      h2k_contents[locationText].attributes["code"] = site
+      x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/BuildingSite/Terrain"
+      h2k_contents[x_path].attributes["code"] = site
     end 
 
     if ( wall_shield != "NA" ) then 
       if(wall_shield.to_f < 1 || wall_shield.to_f > 5)
         fatalerror("In Opt-ACH = #{choice}, invalid wall shield input #{wall_shield}")
       end
-      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/LocalShielding/Walls"
-      h2k_contents[locationText].attributes["code"] = wall_shield
+      x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/LocalShielding/Walls"
+      h2k_contents[x_path].attributes["code"] = wall_shield
     end 
 
     if ( flue_shield != "NA" ) then 
       if(flue_shield.to_f < 1 || flue_shield.to_f > 5)
         fatalerror("In Opt-ACH = #{choice}, invalid flue shield input #{wall_shield}")
       end
-      locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/LocalShielding/Flue"
-      h2k_contents[locationText].attributes["code"] = flue_shield
+      x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/LocalShielding/Flue"
+      h2k_contents[x_path].attributes["code"] = flue_shield
     end 
 
   end 
@@ -1622,34 +1643,34 @@ module H2KEdit
     return if ( choice == "NA" )
 
     # Delete existing ventilation list.
-    locationText = "HouseFile/House/Ventilation/"
-    h2k_contents[locationText].delete_element("WholeHouseVentilatorList")        
+    x_path = "HouseFile/House/Ventilation/"
+    h2k_contents[x_path].delete_element("WholeHouseVentilatorList")        
 
 
     # What does this do?
     #if ( $outputHCode =~ /General/ )
-    #  h2k_contents[locationText].add_element("SupplementalVentilatorList")
-    #  h2k_contents[locationText].delete_element("SupplementalVentilatorList")
+    #  h2k_contents[x_path].add_element("SupplementalVentilatorList")
+    #  h2k_contents[x_path].delete_element("SupplementalVentilatorList")
     #end 
 
 
     # Make fresh element
-    h2k_contents[locationText].add_element("WholeHouseVentilatorList")    
+    h2k_contents[x_path].add_element("WholeHouseVentilatorList")    
 
 
     # Create HRV from template. 
     H2KTemplates.hrv(h2k_contents)
 
     # Set the ventilation code requirement to 4 (Not applicable)
-    h2k_contents[locationText + "Requirements/Use"].attributes["code"] = "4"
+    h2k_contents[x_path + "Requirements/Use"].attributes["code"] = "4"
 
     # Set the air distribution type
-    h2k_contents[locationText + "WholeHouse/AirDistributionType"].attributes["code"] = map["OPT-H2K-AirDistType"]
+    h2k_contents[x_path + "WholeHouse/AirDistributionType"].attributes["code"] = map["OPT-H2K-AirDistType"]
 
     # Set the operation schedule
-    h2k_contents[locationText + "WholeHouse/OperationSchedule"].attributes["code"] = 0
+    h2k_contents[x_path + "WholeHouse/OperationSchedule"].attributes["code"] = 0
     # User Specified
-    h2k_contents[locationText + "WholeHouse/OperationSchedule"].attributes["value"] = map["OPT-H2K-OpSched"]
+    h2k_contents[x_path + "WholeHouse/OperationSchedule"].attributes["value"] = map["OPT-H2K-OpSched"]
 
 
     flow_rate = 0 
@@ -1667,19 +1688,19 @@ module H2KEdit
     end 
 
     # L/s supply, exhaust
-    h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = flow_rate.to_s
+    h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["supplyFlowrate"] = flow_rate.to_s
 
-    h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = flow_rate.to_s
+    h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["exhaustFlowrate"] = flow_rate.to_s
 
 
 
 
     # Update the HRV efficiency
-    h2k_contents[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency1"] = map["OPT-H2K-Rating1"]
+    h2k_contents[x_path  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency1"] = map["OPT-H2K-Rating1"]
     # Rating 1 Efficiency
-    h2k_contents[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency2"] = map["OPT-H2K-Rating2"]
+    h2k_contents[x_path  + "WholeHouseVentilatorList/Hrv"].attributes["efficiency2"] = map["OPT-H2K-Rating2"]
     # Rating 2 Efficiency
-    h2k_contents[locationText  + "WholeHouseVentilatorList/Hrv"].attributes["coolingEfficiency"] = map["OPT-H2K-Rating3"]
+    h2k_contents[x_path  + "WholeHouseVentilatorList/Hrv"].attributes["coolingEfficiency"] = map["OPT-H2K-Rating3"]
     # Rating 3 Efficiency
 
 
@@ -1690,20 +1711,20 @@ module H2KEdit
       # Determine fan power from flow rate as stated in 9.36.5.11(14a)
       fan_power = flow_rate * 2.32
       fan_power = sprintf("%0.2f", flow_rate )
-      h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  fan_power
+      h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  fan_power
       # Supply the fan power at operating point 1 [W]
-      h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  fan_power
+      h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  fan_power
       # Supply the fan power at operating point 2 [W]
     when "specified"
-      h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "false"
+      h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "false"
       # Specify the fan power
-      h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  map["OPT-H2K-FanPower1"]
+      h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["fanPower1"] =  map["OPT-H2K-FanPower1"]
       # Supply the fan power at operating point 1 [W]
-      h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  map["OPT-H2K-FanPower2"]
+      h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["fanPower2"] =  map["OPT-H2K-FanPower2"]
       # Supply the fan power at operating point 2 [W]
 
     when "default"
-      h2k_contents[locationText + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "true"
+      h2k_contents[x_path + "WholeHouseVentilatorList/Hrv"].attributes["isDefaultFanpower"] = "true"
     else 
       err_out("ERROR: For Opt-VentSystem, unknown fan power calculation input  #{map["OPT-H2K-FanPowerCalc"]}!")
     end 
@@ -1730,7 +1751,7 @@ module H2KEdit
   end  
 
   def H2KEdit.set_above_grade_wall(h2k_contents,map,choice)
-    debug_on
+    #debug_on
 
     if ( debug_status())
       debug_out ("Setting walls to #{choice}")
@@ -1739,9 +1760,9 @@ module H2KEdit
     
     return if ( choice == "NA" )
 
-    locationText = "HouseFile/House/Components/Wall/Construction/Type"
+    x_path = "HouseFile/House/Components/Wall/Construction/Type"
 
-    h2k_contents.each(locationText) do |wall_type|
+    h2k_contents.each(x_path) do |wall_type|
 
       wall_type.text = "User specified"
       
@@ -1756,9 +1777,693 @@ module H2KEdit
     
   end
 
+  def H2KEdit.set_ceilings(h2k_contents,map,choice,type)
+
+    debug_out("Seeting ceiling type #{type} to #{choice}")
+    
+    return if choice == "NA"
+    
+    if ( map["OPT-H2K-EffRValue"] == "NA" ) 
+      err_out "Ceiling type #{type}, choice #{choice}: OPT-H2K-EffRValue must be numerical value (not NA)"
+    end 
+
+    r_value = map["OPT-H2K-EffRValue"].to_f
+                  
+    debug_out ("TYPE: #{type} Choice: #{choice} / RVALUE: #{r_value}")
+    x_path = "HouseFile/House/Components/Ceiling"
+    
+    h2k_contents.each(x_path) do |ceiling|
+
+      next if ( type == "attic" &&
+                ceiling.elements["Construction/Type"].attributes["code"] != "2" && 
+                ceiling.elements["Construction/Type"].attributes["code"] != "3" && 
+                ceiling.elements["Construction/Type"].attributes["code"] != "6" )
+
+      next if ( type == "flat" &&
+                ceiling.elements["Construction/Type"].attributes["code"] != "5" ) 
+
+      next if ( type == "cathedral" &&
+                  ceiling.elements["Construction/Type"].attributes["code"] != "4" ) 
+
+      rsi = r_value / R_PER_RSI 
+      debug_out("RSI: #{rsi.round(3).to_s}")
+      ceiling.elements["Construction/CeilingType"].text = "User specified"
+      ceiling.elements["Construction/CeilingType"].attributes["rValue"] = rsi.round(3).to_s
+      if ceiling.elements["Construction/CeilingType"].attributes["idref"] != nil then
+        # Must delete attribute for User Specified!
+        ceiling.elements["Construction/CeilingType"].delete_attribute("idref")
+      end
+    end
+    devmsg_out("Support for code definitions in ceilings currently broken.")
+    devmsg_out("Heel-height not currently supported; consider adding function in the future.")
+
+  end 
+
+
+  def H2KEdit.set_heating_cooling(h2k_contents,map,choice)
+    debug_on 
+
+    if ( debug_status())
+      debug_out ("Setting heating/cooling to #{choice}")
+      debug_out ("Spec: #{map.pretty_inspect}")
+    end
+    
+    return if ( choice == "NA" )
+
+    sys_1_keyword = map["Opt-H2K-SysType1"]
+    sys_2_keyword = map["Opt-H2K-SysType2"]
+    
+    if ( sys_1_keyword  != "NA" )
+    
+      x_path = "HouseFile/House/HeatingCooling/Type1"
+      # Make sure template exists (?)
+      if ( h2k_contents[x_path + "/#{sys_1_keyword}"] == nil )
+        # Create a new system type 1 element with default values for all of its sub-elements
+        debug_out ("calling Create System type to add xml entry for #{sys_1_keyword}")
+        H2KEdit.createH2KSysType1(h2k_contents,sys_1_keyword)
+
+        # Delete any other systems, if there are any
+        $sys_type_1_list.each do |sys_type|
+          if ( h2k_contents[x_path + "/#{sys_type}"] != nil && sys_type != sys_1_keyword )
+            debug_out ("Deleting redundant system #{sys_type}")
+            h2k_contents[x_path].delete_element(sys_type)
+          end
+        end
+        
+      end 
+
+      # Now set type fuel type
+      $sys_type_1_list.each do |sys_type|
+
+        base_path = "HouseFile/House/HeatingCooling/Type1/#{sys_type}"
+        
+        x_path = base_path + "/Equipment/EnergySource"
+        next if (sys_type == "Baseboards")
+        next if (h2k_contents[x_path] == nil )
+
+        # FUEL TYPE
+        fuel_code = map["Opt-H2K-Type1Fuel"]
+        debug_out "Setting fuel for #{sys_type} to #{fuel_code}"
+        h2k_contents[x_path].attributes["code"] = map["Opt-H2K-Type1Fuel"]
+      
+        if (fuel_code != "1" )
+          
+          x_path = base_path + "/Specifications"
+          if h2k_contents[x_path].attributes["flueDiameter"].to_i == 0
+            debug_out ("Setting flue diameter to 127 mm by default")
+            h2k_contents[x_path].attributes["flueDiameter"] = "127"  #mm
+          end
+        end 
+
+        # EQUIPMENT TYPE
+        equip_code = map["Opt-H2K-Type1EqpType"]
+        x_path = base_path + "/Equipment/EquipmentType"
+        if ( h2k_contents[x_path] != nil )
+          debug_out ("Setting equipment type to #{equip_code}")
+          h2k_contents[x_path].attributes["code"] = equip_code
+          # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is
+          # NOT a conventional fireplace, add the "EPA/CSA" attribute field in the
+          # EquipmentInformation section to avoid a crash!
+          if (h2k_contents[base_path+"/Equipment/EnergySource"].attributes["code"].to_i > 4 && equip_code != "8" )
+            h2k_contents[base_path+"/EquipmentInformation"].attributes["epaCsa"] = "false"
+          end 
+        
+        end 
+
+      end 
+
+
+    end 
+
+    warn_out("This routine is is not yet finished")
+    
+    debug_pause 
+  end 
+
+
+  # =========================================================================================
+  # Add a System Type 1 section (check for existence done external to this method)
+  # =========================================================================================
+  def H2KEdit.createH2KSysType1( elements, sysType1Name )
+    debug_on 
+    debug_out("Creating type 1 definition - #{sysType1Name}")
+    x_path = "HouseFile/House/HeatingCooling/Type1"
+
+    elements[x_path].add_element(sysType1Name)
+    if ( sysType1Name == "Baseboards" )
+      x_path = "HouseFile/House/HeatingCooling/Type1/Baseboards"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Baseboards/EquipmentInformation"
+      elements[x_path].attributes["numberOfElectronicThermostats"] = "0"
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/Baseboards"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Baseboards/Specifications"
+      elements[x_path].attributes["sizingFactor"] = "1.1"
+      elements[x_path].attributes["efficiency"] = "100"
+      elements[x_path].add_element("OutputCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Baseboards/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      # Calculated
+      elements[x_path].attributes["value"] = "0"
+      # Calculated value - will be replaced!
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+    elsif ( sysType1Name == "Furnace" )
+
+
+      debug_out ("ADDING FURNACE ....\n")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/EquipmentInformation"
+      elements[x_path].attributes["energystar"] = "false"
+      elements[x_path].add_element("Manufacturer")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace"
+      elements[x_path].add_element("Equipment")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment"
+      elements[x_path].attributes["isBiEnergy"] = "false"
+      elements[x_path].attributes["switchoverTemperature"] = "0"
+      elements[x_path].add_element("EnergySource")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EnergySource"
+      elements[x_path].attributes["code"] = "2"
+      # Gas
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment"
+      elements[x_path].add_element("EquipmentType")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EquipmentType"
+      elements[x_path].attributes["code"] = "1"
+      # Furnace with cont. pilot
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/Specifications"
+      elements[x_path].attributes["sizingFactor"] = "1.1"
+      elements[x_path].attributes["efficiency"] = "78"
+      elements[x_path].attributes["isSteadyState"] = "true"
+      elements[x_path].attributes["pilotLight"] = "0"
+      elements[x_path].attributes["flueDiameter"] = "127"
+      elements[x_path].add_element("OutputCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Furnace/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      # Calculated
+      elements[x_path].attributes["value"] = "0"
+      # Calculated value - will be replaced!
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+    elsif ( sysType1Name == "Boiler" )
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/EquipmentInformation"
+      elements[x_path].attributes["energystar"] = "false"
+      elements[x_path].add_element("Manufacturer")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler"
+      elements[x_path].add_element("Equipment")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment"
+      elements[x_path].attributes["isBiEnergy"] = "false"
+      elements[x_path].attributes["switchoverTemperature"] = "0"
+      elements[x_path].add_element("EnergySource")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EnergySource"
+      elements[x_path].attributes["code"] = "2"
+      # Gas
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment"
+      elements[x_path].add_element("EquipmentType")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EquipmentType"
+      elements[x_path].attributes["code"] = "1"
+      # Boiler with cont. pilot
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/Specifications"
+      elements[x_path].attributes["sizingFactor"] = "1.1"
+      elements[x_path].attributes["efficiency"] = "78"
+      elements[x_path].attributes["isSteadyState"] = "true"
+      elements[x_path].attributes["pilotLight"] = "0"
+      elements[x_path].attributes["flueDiameter"] = "127"
+      elements[x_path].add_element("OutputCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type1/Boiler/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      # Calculated
+      elements[x_path].attributes["value"] = "0"
+      # Calculated value - will be replaced!
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+    elsif ( sysType1Name == "ComboHeatDhw" )
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/EquipmentInformation"
+      elements[x_path].attributes["energystar"] = "false"
+      elements[x_path].add_element("Manufacturer")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[x_path].add_element("Equipment")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment"
+      elements[x_path].add_element("EnergySource")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EnergySource"
+      elements[x_path].attributes["code"] = "2"
+      # Gas
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment"
+      elements[x_path].add_element("EquipmentType")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EquipmentType"
+      elements[x_path].attributes["code"] = "1"
+      # ComboHeatDhw with cont. pilot
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Specifications"
+      elements[x_path].attributes["sizingFactor"] = "1.1"
+      elements[x_path].attributes["efficiency"] = "78"
+      elements[x_path].attributes["isSteadyState"] = "true"
+      elements[x_path].attributes["pilotLight"] = "25.3"
+      elements[x_path].attributes["flueDiameter"] = "152.4"
+      elements[x_path].add_element("OutputCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      # Calculated
+      elements[x_path].attributes["value"] = "0"
+      # Calculated value - will be replaced!
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"
+      elements[x_path].add_element("ComboTankAndPump")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[x_path].add_element("TankCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump/TankCapacity"
+      elements[x_path].attributes["code"] = "3"
+      elements[x_path].attributes["value"] = "151.4"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[x_path].add_element("EnergyFactor")
+      elements[x_path].attributes["useDefaults"] = "true"
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[x_path].add_element("TankLocation")
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/ComboTankAndPump"
+      elements[x_path].add_element("CirculationPump")
+      elements[x_path].attributes["isCalculated"] = "true"
+      elements[x_path].attributes["value"] = "0"
+      elements[x_path].attributes["hasEnergyEfficientMotor"] = "false"
+
+    elsif ( sysType1Name == "P9" )
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9"
+      elements[x_path].attributes["id"] = "0"
+      elements[x_path].attributes["numberOfSystems"] = "1"
+      elements[x_path].attributes["thermalPerformanceFactor"] = "0.9"
+      elements[x_path].attributes["annualElectricity"] = "1800"
+      elements[x_path].attributes["spaceHeatingCapacity"] = "23900"
+      elements[x_path].attributes["spaceHeatingEfficiency"] = "90"
+      elements[x_path].attributes["waterHeatingPerformanceFactor"] = "0.9"
+      elements[x_path].attributes["burnerInput"] = "0"
+      elements[x_path].attributes["recoveryEfficiency"] = "0"
+      elements[x_path].attributes["isUserSpecified"] = "true"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation"
+      elements[x_path].add_element("Manufacturer")
+      elements[x_path].add_element("Model")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Manufacturer"
+      elements[x_path].text = "Generic"
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation/Model"
+      elements[x_path].text = "Generic"
+
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9"
+      elements[x_path].add_element("TestData")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[x_path].attributes["controlsPower"] = "10"
+      elements[x_path].attributes["circulationPower"] = "130"
+      elements[x_path].attributes["dailyUse"] = "0.2"
+      elements[x_path].attributes["standbyLossWithFan"] = "0"
+      elements[x_path].attributes["standbyLossWithoutFan"] = "0"
+      elements[x_path].attributes["oneHourRatingHotWater"] = "1000"
+      elements[x_path].attributes["oneHourRatingConcurrent"] = "1000"
+      elements[x_path].add_element("EnergySource")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData/EnergySource"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[x_path].add_element("NetEfficiency")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData/NetEfficiency"
+      elements[x_path].attributes["loadPerformance15"] = "80"
+      elements[x_path].attributes["loadPerformance40"] = "80"
+      elements[x_path].attributes["loadPerformance100"] = "80"
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[x_path].add_element("ElectricalUse")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData/ElectricalUse"
+      elements[x_path].attributes["loadPerformance15"] = "100"
+      elements[x_path].attributes["loadPerformance40"] = "200"
+      elements[x_path].attributes["loadPerformance100"] = "300"
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
+      elements[x_path].add_element("BlowerPower")
+      x_path = "HouseFile/House/HeatingCooling/Type1/P9/TestData/BlowerPower"
+      elements[x_path].attributes["loadPerformance15"] = "300"
+      elements[x_path].attributes["loadPerformance40"] = "500"
+      elements[x_path].attributes["loadPerformance100"] = "800"
+    end
+  end
+  # createH2KSysType1
+
+  # =========================================================================================
+  # Procedure to create a new H2K system Type 2 in the XML house file. Check done external.
+  # =========================================================================================
+  def H2KEdit.createH2KSysType2( elements, sysType2Name )
+    debug_on 
+    debug_out("Creating type 2 definition - #{sysType1Name}")
+    x_path = "HouseFile/House/HeatingCooling/Type2"
+    elements[x_path].add_element(sysType2Name)
+    elements[x_path].attributes["shadingInF280Cooling"] = "AccountedFor"
+
+    if ( sysType2Name == "AirHeatPump" )
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[x_path].add_element("EquipmentInformation")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/EquipmentInformation"
+      elements[x_path].attributes["energystar"] = "false"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[x_path].add_element("Equipment")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment"
+      elements[x_path].attributes["crankcaseHeater"] = "60"
+      elements[x_path].add_element("Type")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment/Type"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment"
+      elements[x_path].add_element("Function")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Equipment/Function"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[x_path].add_element("Specifications")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications"
+      elements[x_path].add_element("OutputCapacity")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      # I think these can be commented out if we default to 'calculated'
+      #elements[x_path].attributes["value"] = ""
+      #elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications"
+      elements[x_path].add_element("HeatingEfficiency")
+      elements[x_path].add_element("CoolingEfficiency")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/HeatingEfficiency"
+      elements[x_path].attributes["isCop"] = "true"
+      elements[x_path].attributes["value"] = "2"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Specifications/CoolingEfficiency"
+      elements[x_path].attributes["isCop"] = "true"
+      elements[x_path].attributes["value"] = "2"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[x_path].add_element("Temperature")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
+      elements[x_path].add_element("CutoffType")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/CutoffType"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].attributes["value"] = "0"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature"
+      elements[x_path].add_element("RatingType")
+
+      # CHECK this - should be 8.3 ?
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/Temperature/RatingType"
+      elements[x_path].attributes["code"] = "3"
+      elements[x_path].attributes["value"] = "-5.0"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump"
+      elements[x_path].add_element("CoolingParameters")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters"
+      elements[x_path].attributes["sensibleHeatRatio"] = "0.76"
+      elements[x_path].attributes["openableWindowArea"] = "20"
+
+      elements[x_path].add_element("FansAndPump")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters/FansAndPump"
+      # Do we need to set this? what should we set it to?
+      elements[x_path].attributes["flowRate"] = "700"
+
+      elements[x_path].add_element("Mode")
+      elements[x_path].add_element("Power")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters/FansAndPump/Mode"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirHeatPump/CoolingParameters/FansAndPump/Power"
+      elements[x_path].attributes["isCalculated"] = "true"
+
+    elsif ( sysType2Name == "WaterHeatPump" )
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/EquipmentInformation"
+      elements[x_path].attributes["canCsaC448"] = "false"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[x_path].add_element("Equipment")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Equipment"
+      elements[x_path].attributes["crankcaseHeater"] = "0"
+      elements[x_path].add_element("Function")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Equipment/Function"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications"
+      elements[x_path].add_element("OutputCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].attributes["value"] = "21.5"
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications"
+      elements[x_path].add_element("HeatingEfficiency")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Specifications/HeatingEfficiency"
+      elements[x_path].attributes["isCop"] = "true"
+      elements[x_path].attributes["value"] = "3"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[x_path].add_element("Temperature")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature"
+      elements[x_path].add_element("CutOffType")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature/CutOffType"
+      elements[x_path].attributes["code"] = "3"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature"
+      elements[x_path].add_element("RatingType")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/Temperature/RatingType"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].attributes["value"] = "8.3"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump"
+      elements[x_path].add_element("SourceTemperature")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/SourceTemperature"
+      elements[x_path].attributes["depth"] = "1.5"
+      elements[x_path].add_element("Use")
+      x_path = "HouseFile/House/HeatingCooling/Type2/WaterHeatPump/SourceTemperature/Use"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+    elsif ( sysType2Name == "GroundHeatPump" )
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/EquipmentInformation"
+      elements[x_path].attributes["canCsaC448"] = "false"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[x_path].add_element("Equipment")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Equipment"
+      elements[x_path].attributes["crankcaseHeater"] = "0"
+      elements[x_path].add_element("Function")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Equipment/Function"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications"
+      elements[x_path].add_element("OutputCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/OutputCapacity"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].attributes["value"] = "21.5"
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications"
+      elements[x_path].add_element("HeatingEfficiency")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/HeatingEfficiency"
+      elements[x_path].attributes["isCop"] = "true"
+      elements[x_path].attributes["value"] = "3"
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications"
+      elements[x_path].add_element("CoolingEfficiency")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Specifications/CoolingEfficiency"
+      elements[x_path].attributes["isCop"] = "true"
+      elements[x_path].attributes["value"] = "3"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[x_path].add_element("Temperature")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature"
+      elements[x_path].add_element("CutoffType")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature/CutoffType"
+      elements[x_path].attributes["code"] = "3"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature"
+      elements[x_path].add_element("RatingType")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/Temperature/RatingType"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].attributes["value"] = "8.3"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[x_path].add_element("SourceTemperature")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/SourceTemperature"
+      elements[x_path].attributes["depth"] = "1.5"
+      elements[x_path].add_element("Use")
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/SourceTemperature/Use"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump"
+      elements[x_path].add_element("CoolingParameters")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters"
+      elements[x_path].attributes["sensibleHeatRatio"] = "0.76"
+      elements[x_path].attributes["openableWindowArea"] = "20"
+
+      elements[x_path].add_element("FansAndPump")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters/FansAndPump"
+      # Do we need to set this? what should we set it to?
+      elements[x_path].attributes["flowRate"] = "360"
+
+      elements[x_path].add_element("Mode")
+      elements[x_path].add_element("Power")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters/FansAndPump/Mode"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/GroundHeatPump/CoolingParameters/FansAndPump/Power"
+      elements[x_path].attributes["isCalculated"] = "true"
+
+    elsif ( sysType2Name == "AirConditioning" )
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[x_path].add_element("EquipmentInformation")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/EquipmentInformation"
+      elements[x_path].attributes["energystar"] = "false"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[x_path].add_element("Equipment")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Equipment"
+      elements[x_path].attributes["crankcaseHeater"] = "60"
+      elements[x_path].add_element("CentralType")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Equipment/CentralType"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[x_path].add_element("Specifications")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications"
+      elements[x_path].attributes["sizingFactor"] = "1"
+      elements[x_path].add_element("RatedCapacity")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications/RatedCapacity"
+      elements[x_path].attributes["code"] = "2"
+      elements[x_path].attributes["value"] = "0"
+      elements[x_path].attributes["uiUnits"] = "kW"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications"
+      elements[x_path].add_element("Efficiency")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/Specifications/Efficiency"
+      elements[x_path].attributes["isCop"] = "true"
+      elements[x_path].attributes["value"] = "3"
+
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning"
+      elements[x_path].add_element("CoolingParameters")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters"
+      elements[x_path].attributes["sensibleHeatRatio"] = "0.76"
+      elements[x_path].attributes["openableWindowArea"] = "20"
+      elements[x_path].add_element("FansAndPump")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump"
+      elements[x_path].attributes["flowRate"] = "0"
+      elements[x_path].add_element("Mode")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump/Mode"
+      elements[x_path].attributes["code"] = "1"
+      elements[x_path].add_element("English")
+      elements[x_path].add_element("French")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump"
+      elements[x_path].add_element("Power")
+      x_path = "HouseFile/House/HeatingCooling/Type2/AirConditioning/CoolingParameters/FansAndPump/Power"
+      elements[x_path].attributes["isCalculated"] = "true"
+    end
+  end
+  # createH2KSysType2
+
+
+
+
+
+
   def H2KEdit.conf_foundations(myFdnData,myOptions,h2k_contents)
 
-    debug_on
+    
 
     if (debug_status())
       debug_out "Setting up foundations for this config:\n#{myFdnData.pretty_inspect}\n"
@@ -1931,8 +2636,8 @@ module H2KEdit
         slabConfig = slabConfigInsulated
         h2kSlabData["?ogSlabIns"] = true
       end
-
-      h2kSlabData["rEff_SlabOG"] = myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["values"]["1"]["conditions"]["all"].to_f
+                                   
+      h2kSlabData["rEff_SlabOG"] = myOptions["Opt-FoundationSlabOnGrade"]["options"][rEff_SlabOG]["h2kMap"]["base"]["H2K-Fdn-SlabOnGradeReff"].to_f
       h2kSlabData["SlabConfig"] = slabConfig
 
       H2KFile.updSlabDef(h2kSlabData,h2k_contents)
@@ -2343,11 +3048,11 @@ module H2KEdit
       # Check to see if this code is already used in H2K file and add, if not.
       # Code references are in the <Codes> section. Avoid duplicates!
       if ( foundFavLibCode )
-        locationText = "HouseFile/Codes/Window/Favorite"
+        x_path = "HouseFile/Codes/Window/Favorite"
       else
-        locationText = "HouseFile/Codes/Window/UserDefined"
+        x_path = "HouseFile/Codes/Window/UserDefined"
       end
-      h2kFileElements.each(locationText + "/Code") do |element|
+      h2kFileElements.each(x_path + "/Code") do |element|
         if ( element.get_text("Label") == newValue )
           thisCodeInHouse = true
           $useThisCodeID[winOrient] = element.attributes["id"]
@@ -2359,7 +3064,7 @@ module H2KEdit
           # No section of this type in house file Codes section -- add it!
           h2kFileElements["HouseFile/Codes"].add_element("Window")
         end
-        if ( h2kFileElements[locationText] == nil )
+        if ( h2kFileElements[x_path] == nil )
           # No Favorite or UserDefined section in house file Codes section -- add it!
           if ( foundFavLibCode )
             h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
@@ -2368,12 +3073,12 @@ module H2KEdit
           end
         end
         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
-        h2kFileElements[locationText].add(foundCodeLibElement)
+        h2kFileElements[x_path].add(foundCodeLibElement)
       end
 
       # Windows in walls elements
-      locationText = "HouseFile/House/Components/Wall/Components/Window"
-      h2kFileElements.each(locationText) do |element|
+      x_path = "HouseFile/House/Components/Wall/Components/Window"
+      h2kFileElements.each(x_path) do |element|
         if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
           # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
@@ -2387,8 +3092,8 @@ module H2KEdit
         end
       end
       # Windows in basement
-      locationText = "HouseFile/House/Components/Basement/Components/Window"
-      h2kFileElements.each(locationText) do |element|
+      x_path = "HouseFile/House/Components/Basement/Components/Window"
+      h2kFileElements.each(x_path) do |element|
         # 9=FacingDirection
         if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
@@ -2403,8 +3108,8 @@ module H2KEdit
         end
       end
       # Windows in walkout
-      locationText = "HouseFile/House/Components/Walkout/Components/Window"
-      h2kFileElements.each(locationText) do |element|
+      x_path = "HouseFile/House/Components/Walkout/Components/Window"
+      h2kFileElements.each(x_path) do |element|
         # 9=FacingDirection
         if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
@@ -2419,8 +3124,8 @@ module H2KEdit
         end
       end
       # Windows in crawlspace (closed or vented)
-      locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
-      h2kFileElements.each(locationText) do |element|
+      x_path = "HouseFile/House/Components/Crawlspace/Components/Window"
+      h2kFileElements.each(x_path) do |element|
         # 9=FacingDirection
         if ( element.elements["FacingDirection"].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
           # Check if each house entry has an "idref" attribute and add if it doesn't.
@@ -2453,88 +3158,88 @@ module H2KTemplates
   # =========================================================================================
 
   def H2KTemplates.hrv(elements)
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
-    elements[locationText].add_element("Hrv")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
-    elements[locationText].attributes["supplyFlowrate"] = "60"
-    elements[locationText].attributes["exhaustFlowrate"] = "60"
-    elements[locationText].attributes["fanPower1"] = "123.7"
-    elements[locationText].attributes["isDefaultFanpower"] = "true"
-    elements[locationText].attributes["isEnergyStar"] = "false"
-    elements[locationText].attributes["isHomeVentilatingInstituteCertified"] = "false"
-    elements[locationText].attributes["isSupplemental"] = "false"
-    elements[locationText].attributes["temperatureCondition1"] = "0"
-    elements[locationText].attributes["temperatureCondition2"] = "-25"
-    elements[locationText].attributes["fanPower2"] = "145.6"
-    elements[locationText].attributes["efficiency1"] = "64"
-    elements[locationText].attributes["efficiency2"] = "64"
-    elements[locationText].attributes["preheaterCapacity"] = "0"
-    elements[locationText].attributes["lowTempVentReduction"] = "0"
-    elements[locationText].attributes["coolingEfficiency"] = "25"
-    elements[locationText].add_element("EquipmentInformation")
-    elements[locationText].add_element("VentilatorType")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+    elements[x_path].add_element("Hrv")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+    elements[x_path].attributes["supplyFlowrate"] = "60"
+    elements[x_path].attributes["exhaustFlowrate"] = "60"
+    elements[x_path].attributes["fanPower1"] = "123.7"
+    elements[x_path].attributes["isDefaultFanpower"] = "true"
+    elements[x_path].attributes["isEnergyStar"] = "false"
+    elements[x_path].attributes["isHomeVentilatingInstituteCertified"] = "false"
+    elements[x_path].attributes["isSupplemental"] = "false"
+    elements[x_path].attributes["temperatureCondition1"] = "0"
+    elements[x_path].attributes["temperatureCondition2"] = "-25"
+    elements[x_path].attributes["fanPower2"] = "145.6"
+    elements[x_path].attributes["efficiency1"] = "64"
+    elements[x_path].attributes["efficiency2"] = "64"
+    elements[x_path].attributes["preheaterCapacity"] = "0"
+    elements[x_path].attributes["lowTempVentReduction"] = "0"
+    elements[x_path].attributes["coolingEfficiency"] = "25"
+    elements[x_path].add_element("EquipmentInformation")
+    elements[x_path].add_element("VentilatorType")
 
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/VentilatorType"
-    elements[locationText].attributes["code"] = "1"
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/VentilatorType"
+    elements[x_path].attributes["code"] = "1"
     # HRV
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
 
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
-    elements[locationText].add_element("ColdAirDucts")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts"
-    elements[locationText].add_element("Supply")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
-    elements[locationText].attributes["length"] = "1.5"
-    elements[locationText].attributes["diameter"] = "152.4"
-    elements[locationText].attributes["insulation"] = "0.7"
-    elements[locationText].add_element("Location")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Location"
-    elements[locationText].attributes["code"] = "4"
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
+    elements[x_path].add_element("ColdAirDucts")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts"
+    elements[x_path].add_element("Supply")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
+    elements[x_path].attributes["length"] = "1.5"
+    elements[x_path].attributes["diameter"] = "152.4"
+    elements[x_path].attributes["insulation"] = "0.7"
+    elements[x_path].add_element("Location")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Location"
+    elements[x_path].attributes["code"] = "4"
     # Main Floor
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
-    elements[locationText].add_element("Type")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Type"
-    elements[locationText].attributes["code"] = "1"
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
+    elements[x_path].add_element("Type")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Type"
+    elements[x_path].attributes["code"] = "1"
     # Flexible
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
-    elements[locationText].add_element("Sealing")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Sealing"
-    elements[locationText].attributes["code"] = "2"
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply"
+    elements[x_path].add_element("Sealing")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Supply/Sealing"
+    elements[x_path].attributes["code"] = "2"
     # Sealed
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
 
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts"
-    elements[locationText].add_element("Exhaust")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
-    elements[locationText].attributes["length"] = "1.5"
-    elements[locationText].attributes["diameter"] = "152.4"
-    elements[locationText].attributes["insulation"] = "0.7"
-    elements[locationText].add_element("Location")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Location"
-    elements[locationText].attributes["code"] = "4"
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts"
+    elements[x_path].add_element("Exhaust")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
+    elements[x_path].attributes["length"] = "1.5"
+    elements[x_path].attributes["diameter"] = "152.4"
+    elements[x_path].attributes["insulation"] = "0.7"
+    elements[x_path].add_element("Location")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Location"
+    elements[x_path].attributes["code"] = "4"
     # Main Floor
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
-    elements[locationText].add_element("Type")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Type"
-    elements[locationText].attributes["code"] = "1"
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
+    elements[x_path].add_element("Type")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Type"
+    elements[x_path].attributes["code"] = "1"
     # Flexible
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
-    elements[locationText].add_element("Sealing")
-    locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Sealing"
-    elements[locationText].attributes["code"] = "2"
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust"
+    elements[x_path].add_element("Sealing")
+    x_path = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv/ColdAirDucts/Exhaust/Sealing"
+    elements[x_path].attributes["code"] = "2"
     # Sealed
-    elements[locationText].add_element("English")
-    elements[locationText].add_element("French")
+    elements[x_path].add_element("English")
+    elements[x_path].add_element("French")
   end 
 
 end 
@@ -2544,16 +3249,16 @@ end
 # Functions related to h2k data model, but that might one day be abstracted elsewhere
 module H2KMisc
   def H2KMisc.getF326FlowRates( elements )
-    locationText = "HouseFile/House/Ventilation/Rooms"
+    x_path = "HouseFile/House/Ventilation/Rooms"
     roomLabels = [ "living", "bedrooms", "bathrooms", "utility", "otherHabitable" ]
     ventRequired = 0
     roomLabels.each do |roommName|
       if(roommName == "living" || roommName == "bathrooms" || roommName == "utility" || roommName == "otherHabitable")
-        numRooms = elements[locationText].attributes[roommName].to_i
+        numRooms = elements[x_path].attributes[roommName].to_i
         ventRequired += (numRooms*5)
         #print "Room is ",roommName, " and number is ",numRooms, ". Total vent required is ", ventRequired, "\n"
       elsif(roommName == "bedrooms")
-        numRooms = elements[locationText].attributes[roommName].to_i
+        numRooms = elements[x_path].attributes[roommName].to_i
         if(numRooms >= 1)
           ventRequired += 10
           if(numRooms > 1)
@@ -2692,7 +3397,7 @@ module H2Kpost
   # it into a digestable/outputable hash.
   def H2Kpost.handle_sim_results(h2k_file_name,choices,agent_data)
     stream_out("  -> Loading XML elements from #{h2k_file_name}\n")
-    debug_on
+    #debug_on
     
     code = "SOC"
     res_e = H2KFile.open_xml_as_elements(h2k_file_name)
@@ -2810,7 +3515,7 @@ module H2Kpost
     # Designate house as upgraded or not, and prepare list of upgrades as a string
     
     house_upgraded, list_of_upgrades = HTAPData.upgrade_status(choices)
-    debug_on 
+    #debug_on 
     debug_out "> upgraded >  #{house_upgraded} "
     debug_out "> list >  #{list_of_upgrades} "
     results["input"]["upgraded"] = house_upgraded
@@ -3013,7 +3718,7 @@ module H2Kpost
       code = "General"
     end 
 
-    debug_on
+    #debug_on
     debug_out ("Paring results for code: #{program} / #{code}")
     
     res_e["HouseFile/AllResults"].elements.each do |element|
