@@ -385,7 +385,7 @@ module HTAPData
   # but legacy data map obscures it.
   def HTAPData.getResultsForChoice(options,attribute,choice)
 
-    debug_on
+    #debug_on
     if (debug_status())
       debug_out("options[#{attribute}] = #{options[attribute].pretty_inspect}")
     end 
@@ -444,7 +444,7 @@ module HTAPData
 
   #
   def HTAPData.get_foundation_config(passed_choices)
-    debug_on
+    #debug_on
 
     # Use a copy, bc these tests cause new keys to be created?
     choice_clone = passed_choices.clone 
