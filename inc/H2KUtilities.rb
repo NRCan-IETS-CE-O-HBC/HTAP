@@ -1578,7 +1578,7 @@ module H2KEdit
     wall_shield = map["Opt-WallShield"]
     flue_shield = map["Opt-FlueShield"]
 
-    if ( ach != "NA" ) then 
+    if ( isNonNa(ach) ) then 
 
       x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
       h2k_contents[x_path].attributes["code"] = "x"
@@ -1608,7 +1608,7 @@ module H2KEdit
     end 
 
 
-    if ( site != "NA" ) then 
+    if ( isNonNa(site) ) then 
       if(site.to_f < 1 || site.to_f > 8)
         fatalerror("In Opt-ACH = #{choice}, invalid building site input #{site}")
       end
@@ -1616,7 +1616,7 @@ module H2KEdit
       h2k_contents[x_path].attributes["code"] = site
     end 
 
-    if ( wall_shield != "NA" ) then 
+    if ( isNonNa(wall_shield) ) then 
       if(wall_shield.to_f < 1 || wall_shield.to_f > 5)
         fatalerror("In Opt-ACH = #{choice}, invalid wall shield input #{wall_shield}")
       end
@@ -1624,7 +1624,7 @@ module H2KEdit
       h2k_contents[x_path].attributes["code"] = wall_shield
     end 
 
-    if ( flue_shield != "NA" ) then 
+    if ( isNonNa(flue_shield) ) then 
       if(flue_shield.to_f < 1 || flue_shield.to_f > 5)
         fatalerror("In Opt-ACH = #{choice}, invalid flue shield input #{wall_shield}")
       end
@@ -1834,8 +1834,10 @@ module H2KEdit
     sys_2_keyword = map["Opt-H2K-SysType2"]
     
     if ( sys_1_keyword  != "NA" )
-    
+      debug_out "SYSTEM 1 - #{sys_1_keyword}"
+      
       x_path = "HouseFile/House/HeatingCooling/Type1"
+      
       # Make sure template exists (?)
       if ( h2k_contents[x_path + "/#{sys_1_keyword}"] == nil )
         # Create a new system type 1 element with default values for all of its sub-elements
@@ -1852,33 +1854,39 @@ module H2KEdit
         
       end 
 
-      # Now set type fuel type
+      # Now set Type 1 parameters 
       $sys_type_1_list.each do |sys_type|
+      end 
+      
+      sys_type = sys_1_keyword
+      base_path = "HouseFile/House/HeatingCooling/Type1/#{sys_type}"
+      x_path = base_path + "/Equipment/EnergySource"
+      if ( sys_type != "Baseboards" && h2k_contents[x_path] == nil )
 
-        base_path = "HouseFile/House/HeatingCooling/Type1/#{sys_type}"
-        
-        x_path = base_path + "/Equipment/EnergySource"
-        next if (sys_type == "Baseboards")
-        next if (h2k_contents[x_path] == nil )
+
+        #next if (sys_type == "Baseboards")
+        #next if (h2k_contents[x_path] == nil )
 
         # FUEL TYPE
         fuel_code = map["Opt-H2K-Type1Fuel"]
-        debug_out "Setting fuel for #{sys_type} to #{fuel_code}"
-        h2k_contents[x_path].attributes["code"] = map["Opt-H2K-Type1Fuel"]
+        if ( isNonNa(fuel_code))
+          debug_out "Setting fuel for #{sys_type} to #{fuel_code}"
+          h2k_contents[x_path].attributes["code"] = fuel_code
       
-        if (fuel_code != "1" )
-          
-          x_path = base_path + "/Specifications"
-          if h2k_contents[x_path].attributes["flueDiameter"].to_i == 0
-            debug_out ("Setting flue diameter to 127 mm by default")
-            h2k_contents[x_path].attributes["flueDiameter"] = "127"  #mm
-          end
+          if (fuel_code != "1" )
+            # Ensure that combustio appliances have a flue
+            x_path = base_path + "/Specifications"
+            if h2k_contents[x_path].attributes["flueDiameter"].to_i == 0
+              debug_out ("Setting flue diameter to 127 mm by default")
+              h2k_contents[x_path].attributes["flueDiameter"] = "127"  #mm
+            end
+          end 
         end 
 
         # EQUIPMENT TYPE
         equip_code = map["Opt-H2K-Type1EqpType"]
         x_path = base_path + "/Equipment/EquipmentType"
-        if ( h2k_contents[x_path] != nil )
+        if ( h2k_contents[x_path] != nil && isNonNa(equip_code) )
           debug_out ("Setting equipment type to #{equip_code}")
           h2k_contents[x_path].attributes["code"] = equip_code
           # 28-Dec-2016 JTB: If the energy source is one of the 4 woods and the equipment type is
@@ -1890,16 +1898,241 @@ module H2KEdit
         
         end 
 
+        # How is capacity sized ?
+        cap_opt = map["Opt-H2K-Type1CapOpt"]
+        x_path = base_path + "/Specifications/OutputCapacity"
+        if (isNonNa(cap_opt) && h2k_contents[x_path] != nil)
+          debug_out("Setting capacity option to #{cap_opt}")
+          h2k_contents[x_path].attributes["code"] = cap_opt
+
+        end 
+
+        # how big is the system?
+        capacity = map["Opt-H2k-Type1CapVal"]
+        if ( isNonNa(capacity) && capacity.to_s != "" && h2k_contents[x_path] != nil )
+          debug_out ("TYPE 1 Capacity = |#{capacity}|")
+          h2k_contents[x_path].attributes["value"] = capacity
+        end 
+
+        # Is efficiency steady-state? 
+        eff_type = map["Opt-H2K-Type1EffType"]
+        x_path = base_path + "/Specifications"
+        if (isNonNa(eff_type) && sys_type != "Baseboards" )
+          debug_out ("Type 1 eff type / is steady state ? = #{eff_type}")
+          h2k_contents[x_path].attributes["isSteadyState"] = eff_type
+        end 
+
+        # Efficiency value
+        eff_value= map["Opt-H2K-Type1EffVal"]
+        if (isNonNa(eff_type) && sys_type != "Baseboards" )
+          debug_out ("Type 1 efficiency value = #{eff_value}")
+          h2k_contents[x_path].attributes["efficiency"] = eff_value
+        end
+
+        # Fan Control
+        fan_ctl = map["Opt-H2K-Type1FanCtl"]
+        x_path = "HouseFile/House/HeatingCooling/Type1/FansAndPump/Mode"
+        if (isNonNa(fan_ctl) )
+          debug_out ("Type 1 fa ctl = #{fan_ctl}")
+          h2k_contents[x_path].attributes["code"] = fan_ctl
+        end 
+
+        # Fan Control
+        ee_motor = map["Opt-H2K-Type1EEMotor"]
+        x_path = "HouseFile/House/HeatingCooling/Type1/FansAndPump"
+        if (isNonNa(ee_motor) )
+          debug_out("Type 1 ee motor: #{ee_motor}")
+          h2k_contents[x_path].attributes["hasEnergyEfficientMotor"] = ee_motor
+        end  
+
       end 
 
 
-    end 
+    end # if ( sys_1_keyword  != "NA" )
+
+    #------ type 2 
+    if( sys_2_keyword == "None" )
+      debug_out("System 2 = none, deleting type 2 systems")
+      x_path = "HouseFile/House/HeatingCooling/Type2"
+      $sys_type_2_list.each do |sys_type|
+        if ( h2k_contents[x_path + "/#{sys_type}"] != nil )
+          debug_out ("Deleting redundant system #{sys_type}")
+          h2k_contents[x_path].delete_element(sys_type)
+        end
+      end 
+    
+    elsif ( sys_2_keyword  != "NA" )
+
+      debug_out "SYSTEM 2 - #{sys_2_keyword}"
+      x_path = "HouseFile/House/HeatingCooling/Type2"
+      if ( h2k_contents[x_path + "/#{sys_2_keyword}"] == nil && sys_2_keyword != "None" )
+        debug_out ("calling Create System type to add xml entry for #{sys_2_keyword}")
+        H2KEdit.createH2KSysType2(h2k_contents,sys_2_keyword)
+      end 
+      $sys_type_2_list.each do |sys_type|
+        if ( h2k_contents[x_path + "/#{sys_type}"] != nil && sys_type != sys_2_keyword )
+          debug_out ("Deleting redundant system #{sys_type}")
+          h2k_contents[x_path].delete_element(sys_type)
+        end
+      end
+      
+      debug_out ("Setting cooling seasing start / end ")
+      h2k_contents["HouseFile/House/HeatingCooling/CoolingSeason/Start"].attributes["code"] = 5
+      h2k_contents["HouseFile/House/HeatingCooling/CoolingSeason/End"].attributes["code"] = 10
+      
+      
+      sys_type = sys_2_keyword
+
+      base_path = base_path = "HouseFile/House/HeatingCooling/Type2/#{sys_type}"
+
+      # Type2 function 
+      type_2_function = map["Opt-H2K-Type2Func"]
+      if ( isNonNa(type_2_function) && sys_type != "AirConditioning"  )
+        debug_out("Type 2 function #{type_2_function}")
+        x_path = base_path + "/Equipment/Function"
+        h2k_contents[x_path].attributes["code"] = type_2_function
+      end 
+      #return 
+      # Type2 type
+      type_2_type = map["Opt-H2K-Type2Type"]
+      if ( isNonNa(type_2_type) && sys_type != "AirConditioning"  )
+        debug_out("Type 2 type #{type_2_type}")
+        x_path = base_path + "/Equipment/Type"
+        h2k_contents[x_path].attributes["code"] = type_2_type
+      end 
+
+
+      # Crank Case Heater power draw
+      crank_case_heater = map["Opt-H2K-Type2CCaseH"]
+      x_path = base_path + "/Equipment"
+      if (sys_type == "AirHeatPump" && isNonNa(crank_case_heater) )
+        debug_out("Setting Crank Case heater to #{crank_case_heater}")
+        h2k_contents[x_path].attributes["crankcaseHeater"] = crank_case_heater
+      end 
+
+      # How is capacity sized ?
+      cap_opt = map["Opt-H2K-Type2CapOpt"]
+      if ( sys_type != "AirConditioning" )
+        # For ASHP, GSHP, WHP
+        x_path = base_path + "/Specifications/OutputCapacity"
+      else 
+        # FOR AC
+        x_path = base_path + "/Specifications/RatedCapacity"
+      end 
+
+      if (isNonNa(cap_opt) && h2k_contents[x_path] != nil)
+        debug_out("Setting type 2 capacity option to #{cap_opt}")
+        h2k_contents[x_path].attributes["code"] = cap_opt
+        h2k_contents[x_path].attributes["value"] = "15.6"
+        h2k_contents[x_path].attributes["uiUnits"] = "kW"
+      end 
+
+      # how big is the system?
+      capacity = map["Opt-H2k-Type2CapVal"]
+      if ( isNonNa(capacity) && capacity.to_s != "" && h2k_contents[x_path] != nil )
+        debug_out ("TYPE 2 Capacity = |#{capacity}|")
+        h2k_contents[x_path].attributes["value"] = capacity
+        h2k_contents[x_path].attributes["uiUnits"] = "kW"
+      end 
+
+      # Heating COP?
+      heat_cop = map["Opt-H2K-Type2HeatCOP"]
+      x_path = base_path + "/Specifications/HeatingEfficiency"
+      if ( isNonNa(heat_cop) && sys_type != "AirConditioning")
+        debug_out ("TYPE 2 COP heating= |#{heat_cop}|")
+        h2k_contents[x_path].attributes["isCOP"] = "true"
+        h2k_contents[x_path].attributes["uiUnits"] = heat_cop
+      end 
+
+      rating_temp = map["Opt-H2K-Type2RatingTemp"]
+      x_path = base_path + "/Temperature/RatingType"
+      if ( isNonNa(rating_temp) && sys_type != "AirConditioning" )
+        debug_out ("TYPE 2 rating temp: #{rating_temp}")
+        h2k_contents[x_path].attributes["code"] = "3"
+        h2k_contents[x_path].attributes["value"] = rating_temp
+      end 
+
+
+      # Type 2 cutoff (balanced/restricted/unrestricted)
+      cutoff_control = map["Opt-H2K-Type2CutoffType"]
+      x_path = base_path + "/Temperature/CutoffType"
+      if ( isNonNa(cutoff_control) && sys_type != "AirConditioning")
+        debug_out ("TYPE 2 cutoff control |#{cutoff_control}|")
+        h2k_contents[x_path].attributes["code"] = cutoff_control
+      end 
+
+      # Type 2 cutoff (balanced/restricted/unrestricted)
+      cutoff_temp = map["Opt-H2K-Type2CutoffTemp"]
+      x_path = base_path + "/Temperature/CutoffType"
+      if ( isNonNa(cutoff_temp) && sys_type != "AirConditioning")
+        debug_out ("TYPE 2 cutoff control |#{cutoff_temp}|")
+        h2k_contents[x_path].attributes["value"] = cutoff_temp
+      end       
+
+      # Cooling COP ?
+      cool_cop = map["Opt-H2K-Type2CoolCOP"]
+      if ( sys_type != "AirConditioning" )
+        # For ASHP, GSHP, WHP
+        x_path = base_path + "/Specifications/CoolingEfficiency"
+      else 
+        # FOR AC
+        x_path = base_path + "/Specifications/Efficiency"
+      end 
+
+      if ( isNonNa(cool_cop)  && h2k_contents[x_path] != nil)
+        debug_out("Setting type 2 cooling COP to #{cool_cop}")
+        h2k_contents[x_path].attributes["isCOP"] = "true"
+        h2k_contents[x_path].attributes["value"] = cool_cop
+      end 
+
+      cool_spec_type = map["Opt-H2K-CoolSpecType"]
+      x_path = base_path + "/Specifications/CoolingEfficiency"
+      if ( isNonNa(cool_spec_type) && sys_type != "AirConditioning" )
+        if (cool_spec_type != "COP" ) then 
+          result = "false"
+        else 
+          result = "true"
+        end 
+        h2k_contents[x_path].attributes["isCop"] = result
+      end 
+
+
+
+
+
+
+      # Type 2 cutoff (balanced/restricted/unrestricted)
+      operable_window_frac = map["Opt-H2K-CoolOperWindow"]
+      x_path = base_path + "/CoolingParameters"
+      if ( isNonNa(operable_window_frac))
+        debug_out ("TYPE 2 window operable parameter |#{operable_window_frac}|")
+        h2k_contents[x_path].attributes["openableWindowArea"] = operable_window_frac
+      end 
+
+
+    end # if ( sys_2_keyword  != "NA" ) 
 
     warn_out("This routine is is not yet finished")
-    
-    debug_pause 
+    #debug_pause()
+
   end 
 
+  def self.isNonNa(value)
+    debug_off
+  
+    valNonNa   = false
+
+    if ( ! value.nil? && ! value.empty? )
+      if (value != "NA" )
+        valNonNa = true 
+      else 
+        valNonNa = false
+      end 
+    end 
+
+    return valNonNa
+
+  end 
 
   # =========================================================================================
   # Add a System Type 1 section (check for existence done external to this method)
@@ -2151,7 +2384,7 @@ module H2KEdit
   # =========================================================================================
   def H2KEdit.createH2KSysType2( elements, sysType2Name )
     debug_on 
-    debug_out("Creating type 2 definition - #{sysType1Name}")
+    debug_out("Creating type 2 definition - #{sysType2Name}")
     x_path = "HouseFile/House/HeatingCooling/Type2"
     elements[x_path].add_element(sysType2Name)
     elements[x_path].attributes["shadingInF280Cooling"] = "AccountedFor"
