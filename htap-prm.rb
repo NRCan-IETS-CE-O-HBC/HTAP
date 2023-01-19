@@ -4,7 +4,7 @@
 # ************************************************************************************
 # This is a rudamentary run-manager developed as a ...
 # ************************************************************************************
-
+Encoding::ISO_8859_1
 require 'optparse'
 require 'ostruct'
 require 'timeout'
@@ -17,8 +17,9 @@ require 'rexml/document'
 
 require_relative 'inc/msgs'
 require_relative 'inc/constants'
-require_relative 'inc/HTAPUtilities.rb'
-require_relative 'inc/application_modules.rb'
+require_relative 'inc/HTAPUtilities'
+require_relative 'inc/H2KUtilities'
+require_relative 'inc/application_modules'
 
 include REXML   # This allows for no "REXML::" prefix to REXML methods
 
@@ -88,6 +89,7 @@ $choicesInMemory = true
 $ChoiceFileContents = Hash.new
 $gDebug = false
 
+h2k_src_path = Default_h2k_install_dir
 
 =begin rdoc
 =========================================================================================
@@ -114,8 +116,7 @@ def parse_def_file(filepath)
   $UpgradesOpen  = false;
 
   $WildCardsInUse = false;
-
-  rundefs = File.open(filepath, 'r')
+  rundefs = File.open(filepath, "rb:ISO-8859-1")
   rulesetsHASH = Hash.new
   jsonRawOptions = Hash.new
   rundefs.each do | line |
@@ -178,7 +179,7 @@ def parse_def_file(filepath)
             debug_out "$gHTAPOptionsFile? : #{$gHTAPOptionsFile}\n"
 
             jsonRawOptions = HTAPData.getOptionsData($gHTAPOptionsFile)
-
+            jsonRawOptions["Opt-Location"] = $h2k_locations
           end
 
 
@@ -652,7 +653,7 @@ def gen_choice_file(choices)
 
 
     choicefilepath = "#{$gGenChoiceFileDir}#{choicefilename}"
-    choicefile = File.open(choicefilepath, 'w')
+    choicefile = File.open(choicefilepath, "rb:ISO-8859-1")
 
     choices.each do | attribute, choice |
 
@@ -907,7 +908,7 @@ def run_these_cases(current_task_files)
             subRulesetsFlag = "--rulesets #{$gRulesetsFile}"
           end 
 
-          cmdscript =  "ruby #{$gSubstitutePath} "+
+          cmdscript =  "ruby -E ISO-8859-1 #{$gSubstitutePath} "+
                            "-o #{$LocalOptionsFile} "+
                            "-c #{$LocalChoiceFile} "+
                            "-b #{$H2kFile} "+
@@ -1567,9 +1568,13 @@ $promptBeforeProceeding = false
 $StopOnError = false
 
 $gLEEPPathwayExport = false 
-
+list_weather_locations = false 
+$h2k_locations = H2KWth.read_weather_dir(h2k_src_path+"\\Dat\\Wth2020.dir")
 #=====================================================================================
 # Parse command-line switches.
+
+
+
 #=====================================================================================
 optparse = OptionParser.new do |opts|
 
@@ -1654,6 +1659,14 @@ optparse = OptionParser.new do |opts|
       $gLEEPPathwayExport = true 
      
    end
+
+opts.separator " "
+   opts.on("--list-locations","List supported weather locations ") do 
+   
+     list_weather_locations = true 
+
+   end 
+
 opts.separator " "
    opts.on("-a", "--include_audit_data", "Include detailed audit data for costing ", "calculations in JSON output. Slows HTAP down,",
                                          "and make json output unwieldy on",
@@ -1675,7 +1688,7 @@ opts.separator " "
    #end
 
    opts.separator "\n Debugging options: "
-opts.separator " "
+   opts.separator " "
    opts.on("--stop-on-error", "Terminate run upon first error encountered.") do
 
       $StopOnError = true
@@ -1727,6 +1740,17 @@ if ARGV.empty? then
    ARGV.push "-h"
 end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
+
+if ( list_weather_locations ) 
+
+  H2KWth.list_locations(h2k_locations)
+  exit
+end 
+
+
+
+
+
 
 stream_out(drawRuler("A simple parallel run manager for HTAP"))
 reportSRC($branch_name, $revision_number)
@@ -1844,10 +1868,12 @@ else
   #  - First parse the *.run file
 
   stream_out ("    - Reading HTAP run definition from #{$gRunDefinitionsFile}... \n")
-
+  h2k_locations = H2KWth.read_weather_dir(h2k_src_path+"\\Dat\\Wth2020.dir")
+  
   parse_def_file($gRunDefinitionsFile)
 
   options = HTAPData.getOptionsData()
+  options["Opt-Location"] = h2k_locations
   bErr = false 
 
 
@@ -1867,16 +1893,21 @@ else
     end 
   end 
 
-  devmsg_out ("Need validate weather")
-  #$gLocations.each do | location | 
-  #   if ( not HTAPData.isChoiceValid(options, "Opt-Location", location) ) 
-  #      err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")
-  #      bErr = true 
-  #   end
-  #end 
 
 
 
+
+  devmsg_out ("Need to validate weather")
+
+  # Get the hot2000 weather library. (fi)
+
+  $gLocations.each do | location | 
+    debug_out "Test locaitons: #{location}"
+     if ( not HTAPData.isChoiceValid(options, "Opt-Location", location) ) 
+        err_out( "Unknown location '#{location}' for attribute 'Opt-Location'")
+        bErr = true 
+     end
+  end 
 
   fatalerror("Attributes and choices do not match those in options file") if bErr
   options.clear

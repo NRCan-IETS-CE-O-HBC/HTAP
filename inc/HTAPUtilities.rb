@@ -148,7 +148,7 @@ module HTAPData
     order = Array.new
 
     # ===============================================
-    fCHOICES = File.new(filename, "r")
+    fCHOICES = File.open(filename, "rb:ISO-8859-1")
     if fCHOICES == nil then
        err_out("Could not read #{filename}.\n")
        fatalerror(" ")
@@ -287,17 +287,20 @@ module HTAPData
   end 
 
   def HTAPData.isChoiceValid(options, attrib, choice)
-    #debug_on 
+ 
     #debug_on # if (attrib =~ /DHW/ )
     debug_out " > options for #{attrib}:\n #{options[attrib].pretty_inspect}\n"
     if $DoNotValidateOptions.include?(attrib) then 
       return true
     end 
 
+    debug_out "CHOICE encoding: #{choice.encoding}"
     debug_out "options[#{attrib}] contains #{choice}?"
     if ( options[attrib]["options"][choice].nil? ||
          options[attrib]["options"][choice].empty?  ) then
+      
       return false
+
     else
            
       return true
@@ -306,7 +309,7 @@ module HTAPData
   end
 
   def HTAPData.valdate(options,passed_choices)
-    #debug_on 
+    debug_on 
     # A) go through the list of choices, and resolve aliases if any. 
     resolved_choices = Hash.new 
     parseOK = TRUE 
@@ -365,6 +368,7 @@ module HTAPData
         err_out("Choice #{attribute}=#{value} does not match valid entries in the option file")
         bError = TRUE
         parseOK = FALSE
+        debug_pause()
       end 
 
       if (not bError ) then 

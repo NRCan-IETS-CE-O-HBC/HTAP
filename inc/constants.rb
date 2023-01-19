@@ -1,5 +1,5 @@
 
-
+Default_h2k_install_dir = "C:\\H2K-CLI-Min"
 
 # Constants in Ruby start with upper case letters and, by convention, all upper case
 R_PER_RSI = 5.678263

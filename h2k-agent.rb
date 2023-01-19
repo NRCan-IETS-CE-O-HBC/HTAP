@@ -1,3 +1,4 @@
+Encoding::ISO_8859_1
 require 'rexml/document'
 require 'optparse'
 require 'timeout'
@@ -23,6 +24,7 @@ choice_file = ""
 option_file = ""
 base_h2k_file = ""
 
+
 $locale = {
   "location" => "",
   "hdds"     => 0, 
@@ -38,7 +40,7 @@ $cmdlineopts = Hash.new
 bLookForArchetype = FALSE 
 
 
-h2k_src_path = "C:\\H2K-CLI-Min"
+h2k_src_path = Default_h2k_install_dir
 
 
 # Get the hot2000 weather library. (fi)
@@ -246,14 +248,9 @@ stream_out ("         HOT2000 source folder: #{h2k_src_path} \n")
 
 
 if ($cmdlineopts["list_locations"]) then 
-  stream_out drawRuler("Printing a list of valid location keywords")
-  stream_out ("\n Locations:\n")
-  h2k_locations["options"].keys.each do | location |
-    stream_out "  - Key: #{location}  (Region: #{h2k_locations["options"][location]["h2kMap"]["base"]["region_name"]})\n"
-  end 
 
-  stream_out ("\n  -> To use these locations, specify `Opt-Location = KEYWORD `\n\n" )
-  #pp h2k_locations
+  H2KWth.list_locations(h2k_locations)
+
   exit
 end 
 
