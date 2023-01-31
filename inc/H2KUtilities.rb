@@ -12,9 +12,9 @@ module H2KWth
 
   def H2KWth.read_weather_dir(wfile)
 
-    debug_off
+    debug_on
     debug_out "Parsing weather data from #{wfile}"
-
+    debug_off 
     prov_names = Array.new 
     prov_links = Array.new
     loc_names = Array.new 
