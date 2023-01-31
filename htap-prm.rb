@@ -109,13 +109,17 @@ h2k_src_path = Default_h2k_install_dir
 
 
 def parse_def_file(filepath)
-  #debug_on
+
+  debug_on
   bError = false 
   $runParamsOpen = false;
   $runScopeOpen  = false;
   $UpgradesOpen  = false;
 
   $WildCardsInUse = false;
+  file_encoding = File.read(filepath).encoding.name
+  debug_out("File #{filepath}, encoding: #{file_encoding}")
+
   rundefs = File.open(filepath, "rb:ISO-8859-1")
   rulesetsHASH = Hash.new
   jsonRawOptions = Hash.new
@@ -399,7 +403,7 @@ def parse_def_file(filepath)
   #debug_out ("Final locations: #{$gLocations.pretty_inspect}")
   #debug_out ("Final Upgrades: #{$gRunUpgrades.pretty_inspect}")
 
-  
+
 end # def parse_def_file(filepath)
 
 
@@ -1742,8 +1746,7 @@ end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
 if ( list_weather_locations ) 
-
-  H2KWth.list_locations(h2k_locations)
+  H2KWth.list_locations($h2k_locations)
   exit
 end 
 
