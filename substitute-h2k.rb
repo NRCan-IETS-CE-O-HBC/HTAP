@@ -5467,6 +5467,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         $gResults[$outputHCode] = H2KOutput.parse_results($outputHCode,h2kPostElements)
 
         debug_on
+        log_out("Query: #{$outputHCode} ? > #{$gResults[$outputHCode]["found"]}\n")
         debug_out "Query: #{$outputHCode} ? > #{$gResults[$outputHCode]["found"]}\n"
 
 
