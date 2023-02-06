@@ -5466,13 +5466,12 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         
         $gResults[$outputHCode] = H2KOutput.parse_results($outputHCode,h2kPostElements)
 
-        debug_on
-        log_out("Query: #{$outputHCode} ? > #{$gResults[$outputHCode]["found"]}\n")
+        debug_off
         debug_out "Query: #{$outputHCode} ? > #{$gResults[$outputHCode]["found"]}\n"
 
 
         # Start with ERS mode results:
-        if (  ! $outputHCode =~ /General/ ) then 
+        if (  $outputHCode !~ /General/ ) then 
           if ( ! $gResults[$outputHCode]["found"] ) then 
             warn_out "HOT2000 did not produce result set \'#{$outputHCode}\'"
             # Fall back to general, if needed 
