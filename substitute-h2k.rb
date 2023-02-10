@@ -2177,6 +2177,35 @@ def processFile(h2kElements)
               end
             end
 
+          elsif ( tag =~ /Opt-H2K-Type1IsRadiant/ &&  value != "NA" )
+            if( value == "true")
+              # Type one system is radiant. Add the relevant data
+              h2kElements["HouseFile/House/HeatingCooling"].add_element("RadiantHeating")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("AtticCeiling")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AtticCeiling"].attributes["effectiveTemperature"] = "31"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AtticCeiling"].attributes["fractionOfArea"] = "0"
+
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("FlatRoof")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/FlatRoof"].attributes["effectiveTemperature"] = "31"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/FlatRoof"].attributes["fractionOfArea"] = "0"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("AboveCrawlspace")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveCrawlspace"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveCrawlspace"].attributes["fractionOfArea"] = "90"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("SlabOnGrade")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/SlabOnGrade"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/SlabOnGrade"].attributes["fractionOfArea"] = "90"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("AboveBasement")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveBasement"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveBasement"].attributes["fractionOfArea"] = "90"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("Basement")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/Basement"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/Basement"].attributes["fractionOfArea"] = "90"
+
+            end
           elsif ( tag =~ /Opt-H2K-Type1CapOpt/ &&  value != "NA" )
             sysType1.each do |sysType1Name|
               if ( sysType1Name != "P9" )
