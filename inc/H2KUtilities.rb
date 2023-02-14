@@ -12,9 +12,8 @@ module H2KWth
 
   def H2KWth.read_weather_dir(wfile)
 
-    debug_on
+    debug_off()
     debug_out "Parsing weather data from #{wfile}"
-    debug_off 
     prov_names = Array.new 
     prov_links = Array.new
     loc_names = Array.new 
@@ -22,7 +21,7 @@ module H2KWth
     # Default array for HOT2000 locations
     h2k_locations = {
       "structure" => "tree",
-      "costed" => FALSE,
+      "costed" => false,
       "options" => {
         "NA" => { 
           "h2kMap" => {
@@ -36,7 +35,7 @@ module H2KWth
         }
       },
       "default" => "NA",
-      "stop-on-error" => TRUE,
+      "stop-on-error" => true,
       "h2kSchema" => [
         "OPT-H2K-WTH-FILE",
         "OPT-H2K-Region",
@@ -44,10 +43,10 @@ module H2KWth
       ]
     }
 
-    firstLine = TRUE
-    read_prov_names = FALSE 
-    read_prov_links = FALSE
-    read_loc_names  = FALSE
+    firstLine = true
+    read_prov_names = false 
+    read_prov_links = false
+    read_loc_names  = false
     loc_count = 0 
     prov_count = 0 
     loc_count = 0 
@@ -68,8 +67,8 @@ module H2KWth
 
         debug_out "# regions: #{prov_count}\n"
         debug_out "# locations: #{loc_count}\n"
-        firstLine = FALSE
-        read_prov_names = TRUE 
+        firstLine = false
+        read_prov_names = true 
         next 
         
       end 
@@ -81,8 +80,8 @@ module H2KWth
         end 
         debug_out ("LEN: #{prov_names.length} / #{ prov_count.to_i} ")
         if ( prov_names.length == prov_count.to_i ) then 
-          read_prov_names = FALSE 
-          read_prov_links = TRUE
+          read_prov_names = false 
+          read_prov_links = true
           next  
         end 
 
@@ -95,20 +94,21 @@ module H2KWth
         end 
         debug_out ("LEN: #{prov_links.length} / #{ loc_count.to_i} ")
         if ( prov_links.length == loc_count.to_i ) then 
-          read_prov_links = FALSE 
-          read_loc_names = TRUE
+          read_prov_links = false 
+          read_loc_names = true
           next  
         end 
       end 
 
       if read_loc_names
         debug_out "[prov-name] #{line}"
-        line.split(/ {2,}/).each do | name |
+        line.split(/ {3,}/).each do | name |
+          debug_out ("+-> #{name}")
           loc_names.push(name)
         end 
         debug_out ("LEN: #{loc_names.length} / #{ loc_count.to_i} ")
         if ( loc_names.length == loc_count.to_i ) then  
-          read_loc_names = FALSE
+          read_loc_names = false
           next  
         end 
       end 
@@ -136,6 +136,19 @@ module H2KWth
           }
         }
       }
+
+    end 
+  
+    if debug_status() 
+      filename = "debug-wthr-map.json"
+      debug_out "Creating debugging file - #{filename}"
+      fJsonOut = File.open(filename, "w")
+      if ( fJsonOut.nil? )then
+        fatalerror("Could not create #{filename}")
+      end
+  
+      fJsonOut.puts JSON.pretty_generate(h2k_locations)
+      fJsonOut.close
 
     end 
 
@@ -232,7 +245,7 @@ module H2KFile
       log_out ("saving copy of the pre-h2k version (file-post-sub.h2k)")
       debug_out ("saving a copy of the pre-h2k version (file-post-sub.h2k)\n")
       newXMLFile = File.open("file-postsub.h2k", "w")
-      $XMLdoc.write(:output=>newXMLFile, :ie_hack => TRUE)
+      $XMLdoc.write(:output=>newXMLFile, :ie_hack => true)
       newXMLFile.close
     rescue
       warn_out ("Could not create debugging file - file-postsub.h2k")
@@ -4089,7 +4102,7 @@ module H2Kexec
     max_tries = 3 
     maxRunTime = 60
     pid = 0 
-    run_ok = FALSE 
+    run_ok = false 
     
 
     run_path = $gMasterPath + "/H2K"
@@ -4149,8 +4162,8 @@ module H2Kexec
         if status == 0 
           # Successful run!
           stream_out "   -> The run was successful (#{lapsed_time.round(2).to_s} seconds)"
-          keep_trying = FALSE
-          run_ok = TRUE 
+          keep_trying = false
+          run_ok = true 
 
         elsif status == -1 
           warn_out("\n\n Attempt ##{tries}: Timeout on H2K call after #{maxRunTime} seconds." )
@@ -4507,7 +4520,7 @@ module H2Kpost
       "ref_house" => Hash.new 
     } 
 
-    found_the_set = FALSE
+    found_the_set = false
 
     if ( program == "ERS" or  program == "NBC" or program == "ON" )
       code = "SOC"
@@ -4533,7 +4546,7 @@ module H2Kpost
 
       
 
-      found_the_set = TRUE 
+      found_the_set = true 
       debug_out ("Parsing code #{this_set_code}")
 
       myResults["std_output"]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  

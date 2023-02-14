@@ -110,11 +110,11 @@ h2k_src_path = Default_h2k_install_dir
 
 def parse_def_file(filepath)
 
-  debug_on
+  #debug_on
   bError = false 
-  $runParamsOpen = false;
-  $runScopeOpen  = false;
-  $UpgradesOpen  = false;
+  $runParamsOpen = false
+  $runScopeOpen  = false
+  $UpgradesOpen  = false
 
   $WildCardsInUse = false;
   file_encoding = File.read(filepath).encoding.name

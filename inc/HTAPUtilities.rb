@@ -1,4 +1,3 @@
-
 # ===========================================================================
 # HTAPInit: Generic function that sets up HTAP logging and manages the config 
 #           file 
@@ -312,7 +311,7 @@ module HTAPData
     debug_on 
     # A) go through the list of choices, and resolve aliases if any. 
     resolved_choices = Hash.new 
-    parseOK = TRUE 
+    parseOK = true 
     valid_choices = Hash.new 
 
     passed_choices.each do | user_attribute, value | 
@@ -339,7 +338,7 @@ module HTAPData
           log_out("No value specified for #{option}, using default (#{resolved_choices[option]})")
         else 
           err_out("No value specified for #{option}, no default defined in options file")
-          parseOK = FALSE 
+          parseOK = false 
         end 
 
       end 
@@ -351,7 +350,7 @@ module HTAPData
     #debug_on 
     debug_out "CHOICES: \n"
     resolved_choices.each do | user_attribute, value | 
-      bError = FALSE       
+      bError = false       
       # 1) Resolve any aliases, if any 
       attribute = HTAPData.queryAttribAliases( user_attribute ) 
       debug_out(" #{attribute} {#{user_attribute}} -> #{value}\n")
@@ -359,15 +358,15 @@ module HTAPData
       # 3) Check that the attribute is defined in the options!
       if (not HTAPData.isAttribValid(options,attribute)  ) then 
         err_out("Attribute #{attribute} does not match any attribute entry in the options file.")
-        bError = TRUE 
-        parseOK = FALSE
+        bError = true 
+        parseOK = false
       end   
 
       # 4) Check if the choice is valid 
       if (not HTAPData.isChoiceValid(options, attribute, value))
         err_out("Choice #{attribute}=#{value} does not match valid entries in the option file")
-        bError = TRUE
-        parseOK = FALSE
+        bError = true
+        parseOK = false
         debug_pause()
       end 
 

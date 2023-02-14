@@ -37,7 +37,7 @@ $locale = {
 $cmdlineopts = Hash.new 
 
 
-bLookForArchetype = FALSE 
+bLookForArchetype = false
 
 
 h2k_src_path = Default_h2k_install_dir
@@ -114,7 +114,7 @@ optparse = OptionParser.new do |opts|
     if (! File.exist?(base_h2k_file) )
       fatalerror("Base file '#{base_h2k_file}' does not exist in location specified!")
     end
-    bLookForArchetype = FALSE
+    bLookForArchetype = false
   end
 
   #opts.on("--unit-cost-db FILE", "Specified path to unit cost database (e.g. HTAPUnitCosts.json)") do |c|
@@ -384,7 +384,7 @@ stream_out (" Performing substitutions on H2K file...")
 
 #==========================================================
 stream_out(drawRuler("Invoking HOT2000  "))
-run_ok = TRUE 
+run_ok = true 
 run_ok, lapsed_time = H2Kexec.run_a_hot2000_simulation(working_h2k_file)
 
 debug_out ("Lapsed time: #{lapsed_time} s")
