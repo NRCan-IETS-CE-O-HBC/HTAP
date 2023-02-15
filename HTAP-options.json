@@ -2944,8 +2944,8 @@
       "CeilR60": {
         "h2kMap": {
           "base": {
-            "<Opt-Ceiling>": "CeilR60",
-            "OPT-H2K-EffRValue": "NA"
+            "<Opt-Ceiling>": "NA",
+            "OPT-H2K-EffRValue": "60"
           }
         },
         "costs": {
@@ -10831,7 +10831,7 @@
       "none": {
         "h2kMap": {
           "base": {
-            "Opt-H2K-HasDWHR": "NA",
+            "Opt-H2K-HasDWHR": "false",
             "Opt-H2K-DWHR-preheatShowerTank": "NA",
             "Opt-H2K-DWHR-Manufacturer": "NA",
             "Opt-H2K-DWHR-Model": "NA",
