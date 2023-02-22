@@ -1,4 +1,3 @@
-
 # ==========================================
 # H2KUtilities.rb: functions used
 # to query, manipulate hot2000 files and
@@ -365,6 +364,10 @@ module H2KFile
 
     return myHouseFrontOrientString
   end
+
+
+
+
 
   # AAAA
 
@@ -1383,6 +1386,103 @@ module H2KFile
     end 
   
   end 
+
+  def H2KFile.heatedCrawlspace(h2kElements)
+    isCrawlHeated = false
+
+
+    if h2kElements["HouseFile/House/Components/Crawlspace"] != nil
+      if h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] =~ /true/
+        isCrawlHeated = true
+      end
+    end
+
+    return isCrawlHeated
+  end
+
+  # =========================================================================================
+  # Get primary heating system type and fuel
+  # =========================================================================================
+  def H2KFile.getPrimaryHeatSys(elements)
+
+    if elements["HouseFile/House/HeatingCooling/Type1/Baseboards"] != nil
+      #sysType1 = "Baseboards"
+      fuelName = "electricity"
+    elsif elements["HouseFile/House/HeatingCooling/Type1/Furnace"] != nil
+      #sysType1 = "Furnace"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1/Furnace/Equipment/EnergySource/English"].text
+    elsif elements["HouseFile/House/HeatingCooling/Type1/Boiler"] != nil
+      #sysType1 = "Boiler"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1/Boiler/Equipment/EnergySource/English"].text
+    elsif elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw"] != nil
+      #sysType1 = "Combo"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1/ComboHeatDhw/Equipment/EnergySource/English"].text
+    elsif elements["HouseFile/House/HeatingCooling/Type1/P9"] != nil
+      #sysType1 = "P9"
+      fuelName = elements["HouseFile/House/HeatingCooling/Type1//TestData/EnergySource/English"].text
+    end
+
+    return fuelName
+  end
+
+  # =========================================================================================
+  # Get secondary heating system type
+  # =========================================================================================
+  def H2KFile.getSecondaryHeatSys(elements)
+
+    sysType2 = "NA"
+
+    if elements["HouseFile/House/HeatingCooling/Type2/AirHeatPump"] != nil
+      sysType2 = "AirHeatPump"
+    elsif elements["HouseFile/House/HeatingCooling/Type2/WaterHeatPump"] != nil
+      sysType2 = "WaterHeatPump"
+    elsif elements["HouseFile/House/HeatingCooling/Type2/GroundHeatPump"] != nil
+      sysType2 = "GroundHeatPump"
+    elsif elements["HouseFile/House/HeatingCooling/Type2/AirConditioning"] != nil
+      sysType2 = "AirConditioning"
+    end
+
+    return sysType2
+  end
+
+  # =========================================================================================
+  # Get primary DHW system type and fuel
+  # =========================================================================================
+  def H2KFile.getPrimaryDHWSys(elements)
+
+    fuelName = elements["HouseFile/House/Components/HotWater/Primary/EnergySource/English"].text
+    #tankType1 = elements["HouseFile/House/Components/HotWater/Primary/TankType"].attributes["code"]
+
+    return fuelName
+  end
+
+  # =====================================================================================
+  # Get Ventilation system
+  # =====================================================================================
+  def H2KFile.get_vent_sys_type(elements)
+
+    bHRV_found = false 
+    bERV_found = false 
+
+    location_txt = "HouseFile/House/Ventilation/WholeHouseVentilatorList/*"
+ 
+    elements.each(location_txt) do | this_vent_sys |
+
+      if ( this_vent_sys.name =~ /hrv/i )
+        bHRV_found = true 
+      elsif ( this_vent_sys.name =~ /hrv/i )
+        bERV_found = true 
+      end 
+    end 
+
+
+
+    return "ERV" if bERV_found 
+    return "HRV" if bHRV_found
+    return "fans"
+
+  end 
+
 
 end 
 
@@ -4207,7 +4307,7 @@ module H2Kpost
   # it into a digestable/outputable hash.
   def H2Kpost.handle_sim_results(h2k_file_name,choices,agent_data)
     stream_out("  -> Loading XML elements from #{h2k_file_name}\n")
-    #debug_on
+    debug_on
     
     code = "SOC"
     res_e = H2KFile.open_xml_as_elements(h2k_file_name)
@@ -4423,7 +4523,7 @@ module H2Kpost
     #      "Util-Bill-Wood"    => $gResults[$outputHCode]['avgFuelCostsWood$'].round(2),
     #      "Energy-PV-kWh"     => $gResults[$outputHCode]['avgElecPVGenkWh'].round(0),
     #      "Gross-HeatLoss-GJ" => $gResults[$outputHCode]['avgGrossHeatLossGJ'].round(1),
-    #      "Infil-VentHeatLoss-GJ" => $gResults[$outputHCode]["avgVentAndInfilGJ"].round(1),
+    #      "Infil-VentHeatLoss-GJ" => $gResults[$outputHCode]["VentAndInfilGJ"].round(1),
     #      "Useful-Solar-Gain-GJ" => $gResults[$outputHCode]['avgSolarGainsUtilized'].round(1),
     #      "Energy-HeatingGJ"  => $gResults[$outputHCode]['avgEnergyHeatingGJ'].round(1),
     #      "ERSRefHouse_Energy-HeatingGJ"   => $gResults[$outputHCode]["ERS_Ref_EnergyHeatingGJ"].round(1),
@@ -4511,8 +4611,10 @@ module H2Kpost
 
   # Recover simulation results from the h2k file 
   def H2Kpost.get_results_from_elements(res_e,program)
-
+    debug_on 
     xmlpath = "HouseFile/AllResults"
+
+    monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
 
     myResults = {
       "std_output" => Hash.new,
@@ -4529,8 +4631,11 @@ module H2Kpost
     end 
 
     #debug_on
-    debug_out ("Paring results for code: #{program} / #{code}")
+    debug_out ("Parsing results for code: #{program} / #{code}")
     
+
+    compute_nbc_compliance = false 
+
     res_e["HouseFile/AllResults"].elements.each do |element|
 
       this_set_code = element.attributes["houseCode"]
@@ -4549,14 +4654,16 @@ module H2Kpost
       found_the_set = true 
       debug_out ("Parsing code #{this_set_code}")
 
-      myResults["std_output"]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  
-      myResults["std_output"]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f  
-      myResults["std_output"]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
-      myResults["std_output"]["avgVentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
-      myResults["std_output"]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f  
-      myResults["std_output"]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f  
-      myResults["std_output"]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f  
-      myResults["std_output"]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f  
+      myResults["std_output"]["EnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  
+      myResults["std_output"]["EnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f  
+      myResults["std_output"]["GrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+      myResults["std_output"]["VentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
+      myResults["std_output"]["EnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f  
+      myResults["std_output"]["EnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f  
+      myResults["std_output"]["EnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f  
+      myResults["std_output"]["EnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f  
+      myResults["std_output"]["HeatLossGrossEnvelopeGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+
       myResults["extra_output"]["EnvHLTotalGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
       myResults["extra_output"]["EnvHLCeilingGJ"] = element.elements[".//Annual/HeatLoss"].attributes["ceiling"].to_f  
       myResults["extra_output"]["EnvHLMainWallsGJ"] = element.elements[".//Annual/HeatLoss"].attributes["mainWalls"].to_f  
@@ -4576,11 +4683,11 @@ module H2Kpost
       myResults["std_output"]["Design_Heating_Load_W"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f  
       myResults["std_output"]["Design_Cooling_Load_W"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f  
 
-      myResults["std_output"]["avgOthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f  
-      myResults["extra_output"]["avgVntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f  
-      myResults["extra_output"]["avgVntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f  
-      myResults["extra_output"]["avgSolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f  
-      myResults["extra_output"]["avgVntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f  
+      myResults["std_output"]["OthSeasonalHeatEff"] = element.elements[".//Other"].attributes["seasonalHeatEfficiency"].to_f  
+      myResults["extra_output"]["VntAirChangeRateNatural"] = element.elements[".//Annual/AirChangeRate"].attributes["natural"].to_f  
+      myResults["extra_output"]["VntAirChangeRateTotal"] = element.elements[".//Annual/AirChangeRate"].attributes["total"].to_f  
+      myResults["extra_output"]["SolarGainsUtilized"] = element.elements[".//Annual/UtilizedSolarGains"].attributes["value"].to_f  
+      myResults["extra_output"]["VntMinAirChangeRate"] = element.elements[".//Other/Ventilation"].attributes["minimumAirChangeRate"].to_f  
 
       myResults["std_output"]["AnnSpcHeatElecGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["spaceHeating"].to_f  
       myResults["std_output"]["AnnSpcHeatHPGJ"] = element.elements[".//Annual/Consumption/Electrical"].attributes["heatPump"].to_f  
@@ -4595,26 +4702,31 @@ module H2Kpost
       myResults["std_output"]["AnnHotWaterWoodGJ"] = element.elements[".//Annual/Consumption/Wood"].attributes["hotWater"].to_f  
 
       
-      myResults["std_output"]["avgFueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f  
-      myResults["std_output"]["avgFueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f  
-      myResults["std_output"]["avgFueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f  
-      myResults["std_output"]["avgFuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f  
-      myResults["std_output"]["avgFueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f  
+      myResults["std_output"]["FueluseElecGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["total"].to_f  
+      myResults["std_output"]["FueluseNatGasGJ"]  = element.elements[".//Annual/Consumption/NaturalGas"].attributes["total"].to_f  
+      myResults["std_output"]["FueluseOilGJ"]     = element.elements[".//Annual/Consumption/Oil"].attributes["total"].to_f  
+      myResults["std_output"]["FuelusePropaneGJ"] = element.elements[".//Annual/Consumption/Propane"].attributes["total"].to_f  
+      myResults["std_output"]["FueluseWoodGJ"]    = element.elements[".//Annual/Consumption/Wood"].attributes["total"].to_f  
 
-      myResults["std_output"]["avgFueluseEleckWh"]  = myResults["std_output"]["avgFueluseElecGJ"] * 277.77777778
-      myResults["std_output"]["avgFueluseNatGasM3"] = myResults["std_output"]["avgFueluseNatGasGJ"] * 26.853
-      myResults["std_output"]["avgFueluseOilL"]     = myResults["std_output"]["avgFueluseOilGJ"]  * 25.9576
-      myResults["std_output"]["avgFuelusePropaneL"] = myResults["std_output"]["avgFuelusePropaneGJ"] / 25.23 * 1000
-      myResults["std_output"]["avgFueluseWoodcord"] = myResults["std_output"]["avgFueluseWoodGJ"] / 18.30
-
-      monthArr = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
-      debug_out (" Picking up  AUX energy requirement from each result set. \n")
+      myResults["std_output"]["FueluseEleckWh"]  = myResults["std_output"]["FueluseElecGJ"] * 277.77777778
+      myResults["std_output"]["FueluseNatGasM3"] = myResults["std_output"]["FueluseNatGasGJ"] * 26.853
+      myResults["std_output"]["FueluseOilL"]     = myResults["std_output"]["FueluseOilGJ"]  * 25.9576
+      myResults["std_output"]["FuelusePropaneL"] = myResults["std_output"]["FuelusePropaneGJ"] / 25.23 * 1000
+      myResults["std_output"]["FueluseWoodcord"] = myResults["std_output"]["FueluseWoodGJ"] / 18.30
+      #debug_out (" Picking up  AUX energy requirement from each result set. \n")
 
       myResults["std_output"]["auxEnergyHeatingGJ"] = 0
       $MonthlyAuxHeatingMJ = 0
       monthArr.each do |mth|
         myResults["std_output"]["auxEnergyHeatingGJ"] += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
       end
+
+      myResults["std_output"]["regulatedEnergyUseGJ"] =  
+        myResults["std_output"]["EnergyWaterHeatingGJ"] + 
+        myResults["std_output"]["EnergyHeatingGJ"] + 
+        myResults["std_output"]["EnergyCoolingGJ"] + 
+        myResults["std_output"]["EnergyVentilationGJ"] 
+
 
     end
 
@@ -4625,33 +4737,53 @@ module H2Kpost
         next if (this_set_code != "Reference")
             
         debug_out "Getting reference house data from result set '#{this_set_code}'"
-        myResults["ref_house"]["avgEnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  
-        myResults["ref_house"]["avgEnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f  
-        myResults["ref_house"]["avgGrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
-        myResults["ref_house"]["avgVentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
-        myResults["ref_house"]["avgEnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f  
-        myResults["ref_house"]["avgEnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f  
-        myResults["ref_house"]["avgEnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f  
-        myResults["ref_house"]["avgEnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f  
+        myResults["ref_house"]["EnergyTotalGJ"]        = element.elements[".//Annual/Consumption"].attributes["total"].to_f  
+        myResults["ref_house"]["EnergyHeatingGJ"]      = element.elements[".//Annual/Consumption/SpaceHeating"].attributes["total"].to_f  
+        myResults["ref_house"]["GrossHeatLossGJ"]      = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+        myResults["ref_house"]["VentAndInfilGJ"]       = element.elements[".//Annual/HeatLoss"].attributes["airLeakageAndNaturalVentilation"].to_f  
+        myResults["ref_house"]["EnergyCoolingGJ"]      = element.elements[".//Annual/Consumption/Electrical"].attributes["airConditioning"].to_f  
+        myResults["ref_house"]["EnergyVentilationGJ"]  = element.elements[".//Annual/Consumption/Electrical"].attributes["ventilation"].to_f  
+        myResults["ref_house"]["EnergyEquipmentGJ"]    = element.elements[".//Annual/Consumption/Electrical"].attributes["baseload"].to_f  
+        myResults["ref_house"]["EnergyWaterHeatingGJ"] = element.elements[".//Annual/Consumption/HotWater"].attributes["total"].to_f  
 
         myResults["ref_house"]["Design_Heating_Load_W"] = element.elements[".//Other"].attributes["designHeatLossRate"].to_f  
         myResults["ref_house"]["Design_Cooling_Load_W"] = element.elements[".//Other"].attributes["designCoolLossRate"].to_f  
           
-
+        myResults["ref_house"]["auxEnergyHeatingGJ"] = 0
+        monthArr.each do |mth|
+          myResults["ref_house"]["auxEnergyHeatingGJ"] += element.elements[".//Monthly/UtilizedAuxiliaryHeatRequired"].attributes[mth].to_f / 1000
+        end 
         
+        myResults["ref_house"]["regulatedEnergyUseGJ"] = 
+          myResults["ref_house"]["EnergyWaterHeatingGJ"] +
+          myResults["ref_house"]["EnergyHeatingGJ"] +
+          myResults["ref_house"]["EnergyCoolingGJ"] +
+          myResults["ref_house"]["EnergyVentilationGJ"] 
+
+        myResults["ref_house"]["HeatLossGrossEnvelopeGJ"] = element.elements[".//Annual/HeatLoss"].attributes["total"].to_f  
+
+        compute_nbc_compliance = true 
+
+        myResults["ref_house"]["nbcEnvelopeImprovement"] = 
+          (  myResults["ref_house"]["HeatLossGrossEnvelopeGJ"] - myResults["std_output"]["HeatLossGrossEnvelopeGJ"] ) / myResults["ref_house"]["HeatLossGrossEnvelopeGJ"]
+        myResults["ref_house"]["nbcOverallImprovement"]  = (  myResults["ref_house"]["regulatedEnergyUseGJ"] -  myResults["std_output"]["regulatedEnergyUseGJ"] ) / myResults["ref_house"]["regulatedEnergyUseGJ"]
+
+
+
+
       end 
 
     else 
       
       debug_out "Setting reference house data to nil "
-      myResults["ref_house"]["avgEnergyTotalGJ"]        = " " 
-      myResults["ref_house"]["avgEnergyHeatingGJ"]      = " "
-      myResults["ref_house"]["avgGrossHeatLossGJ"]      = " "
-      myResults["ref_house"]["avgVentAndInfilGJ"]       = " " 
-      myResults["ref_house"]["avgEnergyCoolingGJ"]      = " "
-      myResults["ref_house"]["avgEnergyVentilationGJ"]  = " "
-      myResults["ref_house"]["avgEnergyEquipmentGJ"]    = " "
-      myResults["ref_house"]["avgEnergyWaterHeatingGJ"] = " "
+      myResults["ref_house"]["EnergyTotalGJ"]        = " " 
+      myResults["ref_house"]["EnergyHeatingGJ"]      = " "
+      myResults["ref_house"]["GrossHeatLossGJ"]      = " "
+      myResults["ref_house"]["VentAndInfilGJ"]       = " " 
+      myResults["ref_house"]["EnergyCoolingGJ"]      = " "
+      myResults["ref_house"]["EnergyVentilationGJ"]  = " "
+      myResults["ref_house"]["EnergyEquipmentGJ"]    = " "
+      myResults["ref_house"]["EnergyWaterHeatingGJ"] = " "
       myResults["ref_house"]["Design_Heating_Load_W"]   = " "
       myResults["ref_house"]["Design_Cooling_Load_W"]   = " "
         

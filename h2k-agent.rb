@@ -8,6 +8,7 @@ require 'json'
 require 'set'
 require 'pp'
 
+
 include REXML
 
 require_relative 'inc/msgs'
@@ -15,6 +16,7 @@ require_relative 'inc/H2KUtilities'
 require_relative 'inc/HTAPUtilities'
 require_relative 'inc/constants'
 require_relative 'inc/rulesets'
+require_relative 'inc/nbc'
 
 $program = "h2k-agent.rb"
 prm_call = true 
@@ -48,6 +50,7 @@ h2k_locations = H2KWth.read_weather_dir(h2k_src_path+"\\Dat\\Wth2020.dir")
 
 $gTest_params["verbosity"] = "quiet"
 
+$dev_msgs_on = true 
 
 #=======================================================================================
 # h2k-user agent: main flow.
@@ -246,31 +249,29 @@ stream_out ("         Base model: #{base_h2k_file} \n")
 stream_out ("         HOT2000 source folder: #{h2k_src_path} \n")
 
 
-
+# Optionally generate a (long) list of supported HOT2000 locations, and then exit
 if ($cmdlineopts["list_locations"]) then 
-
   H2KWth.list_locations(h2k_locations)
-
+  devmsg_out ("Should consider saving this to a text file.")
   exit
 end 
-
-
 
 # =====================================================================
 # Read inputs
 stream_out drawRuler("Parsing input data")
 stream_out "\n"
+
 # 1) Options file
 stream_out(" -> Parsing options data from #{option_file} ...")
 options = HTAPData.getOptionsData(option_file)
 options["Opt-Location"] = h2k_locations
-
 stream_out(" (done) \n") if ($allok)
 
 #2) Choices file
 stream_out(" -> Reading user-defined choices from #{choice_file} ...")
 user_choices, user_choice_order = HTAPData.parse_choice_file(choice_file)
 stream_out(" (done) \n") if ($allok)
+
 stream_out("\n")
 
 stream_out ( " Specified choices: \n")
@@ -288,12 +289,12 @@ if (not parseOK) then
   fatalerror("Options, Choices could not be validated")
 end 
 
+#======================================================================
+# Maybe apply pgkgs?
 stream_out(drawRuler("Verifying Upgrade packages"))
+devmsg_out("Note - upgrade packages are not yet supported ")
 
 
-stream_out(drawRuler("Verifying rulesets"))
-
-processed_choices = valid_choices
 #===============================================================================
 # Configure h2k run folders
 stream_out(drawRuler("Setting up HOT2000 environment"))
@@ -344,14 +345,22 @@ stream_out(drawRuler("Reading HOT2000 file"))
 stream_out("\n -> Parsing a copy of HOT2000 model (#{working_h2k_file}) for optimization work...")
 h2k_file_contents = H2KFile.open_xml_as_elements(working_h2k_file)
 stream_out("done.")
-
 err_options = false 
+
+
+#=====================================================================
+# Apply rulesets 
+stream_out(drawRuler("Verifying rulesets"))
+devmsg_out("Rulesets are underdeveloppment")
+
+ruleset_choices = HTAPFunc.apply_ruleset(options, valid_choices, h2k_file_contents)
+parseOK, processed_choices = HTAPData.valdate(options,ruleset_choices)
 
 #==========================================================
 stream_out(drawRuler("Manipulating HOT2000 file "))
 H2KFile.write_elements_as_xml("presub.h2k")
 
-mods_ok = H2KEdit.modify_contents(h2k_file_contents,options, valid_choices)
+mods_ok = H2KEdit.modify_contents(h2k_file_contents,options, processed_choices)
 H2KEdit.delete_results(h2k_file_contents)
 
 

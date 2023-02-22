@@ -718,7 +718,8 @@ def run_these_cases(current_task_files)
   $RunsDone = false
 
   $csvColumns = Array.new
-
+  validColNames = Hash.new
+  inconsistent_column_warnings = Array.new
   # Loop until all files have been processed.
   $GiveUp = false
 
@@ -1333,25 +1334,53 @@ def run_these_cases(current_task_files)
       # CSV OUTPUT.
       outputlines = ""
       headerLine = ""
+      headerParsed = false 
       batchSuccessCount = 0
 
       update_run_status(action: "Writing CSV output" )
       #stream_out("        -> Writing csv output to HTAP-prm-output.csv ... ")
-
-            #-Loop though all instances, and compute 
+      
+      #-Loop though all instances, and compute 
       $RunResults.each do |run,data|
-
+        
         debug_out "Run - #{run}\n"
         # Only write out data from successful runs - this helps prevent corrupted database
         next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ || data["status"]["success"] == false )
         batchSuccessCount += 1
-        debug_out "processing:\n"
-        debug_out "  #{data.pretty_inspect}\n\n"
-        debug_off
+        #debug_out "processing:\n"
+        #debug_out "  #{data.pretty_inspect}\n\n"
+        
         data.keys.sort.each do | section |
-          data[section].keys.sort.each do |subsection|
-            debug_out " . location #{section} : #{subsection} \n"
+          # next if (section != "input")
+          validColNames[section] = Array.new if (! headerOut )
 
+          data[section].keys.sort.each do |subsection|
+            
+            validColNames[section].append(subsection) if (! headerOut )
+
+            if ( headerOut )
+              #debug_out ( "Searcing for #{section} in #{validColNames.keys.pretty_inspect} = #{validColNames.keys.include? section}?")
+              sec_ok = validColNames.keys.include? section
+              #pp validColNames.keys
+              subsec_ok = validColNames[section].include? subsection if (sec_ok)
+
+
+              if ( ! sec_ok || ! subsec_ok )
+
+                warning = "Output contains inconsistent format (extra column: #{section} / #{subsection} Some data will be dropped"
+                if ( ! inconsistent_column_warnings.include? warning)  
+                #debug_out ("SEC: #{sec_ok} \ #{subsec_ok}")
+                  warn_out("Output contains inconsistent format (extra column: #{section} / #{subsection} Some data will be dropped" )
+                  inconsistent_column_warnings.append(warning)
+                end 
+                next 
+
+              end 
+
+            end   
+            #debug_on 
+            #debug_out " . location #{section} : #{subsection} \n"
+            #debug_off 
             contents = data[section][subsection]
 
             if ( section =~ /cost-estimates/ &&
@@ -1359,16 +1388,16 @@ def run_these_cases(current_task_files)
                 subsection =~ /byBuildingComponent/
               )
               ) then
-              debug_out " . location #{section} : #{subsection} \n"
+              #debug_out " . location #{section} : #{subsection} \n"
               contents.each do | colName, colValue |
 
                 headerLine.concat("#{section}|#{subsection}|#{colName},") if ( ! headerOut)
 
                 if ( colValue.is_a?(Hash) || colValue.is_a?(Array) ) then
-                  debug_out "> extended output only\n"
+                  # debug_out "> extended output only\n"
                   result = "Details in JSON output"
                 else
-                  debug_out "> core output \n#{colValue}\n"
+                  #debug_out "> core output \n#{colValue}\n"
                   result = colValue
                 end
                 outputlines.concat("#{result},")
@@ -1379,10 +1408,10 @@ def run_these_cases(current_task_files)
               headerLine.concat("#{section}|#{subsection},") if ( ! headerOut)
 
               if ( contents.is_a?(Hash) || contents.is_a?(Array) ) then
-                debug_out "> extended output only\n"
+                #debug_out "> extended output only\n"
                 result = "Details in JSON output"
               else
-                debug_out "> core output \n#{contents}\n"
+                #debug_out "> core output \n#{contents}\n"
                 result = contents
               end
 

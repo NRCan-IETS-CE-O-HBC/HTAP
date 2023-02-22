@@ -539,7 +539,194 @@ module HTAPData
 
 end
 
+module HTAPFunc
 
+  def HTAPFunc.apply_ruleset(options, choices, house_data)
+    debug_on
+    debug_out ("Applying rulesets! #{choices["Opt-Ruleset"]}")
+    devmsg_out("Note that conditons are stripped out of the ruleset tag here - need to preserve elsewhere.")
+    ruleset_specs = Hash.new 
+    ruleset_choices = Hash.new 
+
+    if (debug_status)
+      debug_out ("Passed choices:\n#{choices.pretty_inspect}")
+    end 
+
+    # get ruleset: 
+    ruleset_name = choices["Opt-Ruleset"]
+    ruleset_args = choices["Opt-Ruleset"]
+
+  
+    #ruleset_args.gsub!(/^.+\[(.+)\].*$/,"\\1")
+    #ruleset_args.split(/;/).each do |arg|
+    #  condition = arg.split(/>/)[0]
+    #  set = arg.split(/>/)[1]
+    #  ruleset_specs[condition]=set
+    #end 
+
+    # Stubs for now. 
+    ruleset_specs=Hash.new 
+    ruleset_specs["fuel"] = "NA"
+    ruleset_specs["vent"] = "NA"
+    locale_HDD = 5672
+    cityName = "Heresville"
+
+    params_for_ruleset = HTAPFunc.get_hse_params_for_rulesets(house_data,ruleset_specs,locale_HDD, cityName)
+
+
+    if (debug_status)
+      debug_out("Ruleset params: #{params_for_ruleset.pretty_inspect}")
+    end 
+
+    ruleset_name.gsub!(/\[.*$/,"")
+    case(ruleset_name)
+    when "NA" , "as-found"
+
+      # do nothing
+      debug_out ("nothing needs to be done! ")
+    when "NBC_9.36.7_2020"
+      debug_out("Calling NBC 9.36.7 reference house requirements.")
+      ruleset_choices = NBC.apply_936p7("2020", params_for_ruleset)
+
+    else 
+      fatalerror("Ruleset #{ruleset_name} not supported")
+
+    end 
+
+    if ( debug_status )
+      debug_out("Ruleset: #{ruleset_name}")
+      debug_out(" specs:#{ruleset_specs.pretty_inspect}")
+      debug_out(" choices: #{ruleset_choices.pretty_inspect}")
+    end 
+
+    result = Hash.new 
+
+    ruleset_choices.keys().each do |key|
+
+      result[key] = "ruleset"
+
+    end 
+
+    choices.each do |key,value|
+
+      if (value != "NA" )
+
+        result[key] = "user  "
+
+      end 
+
+    end 
+
+    if (debug_status )
+      debug_out("RESULT: #{result.pretty_inspect}")
+    end 
+
+    final_choices = Hash.new
+
+
+    debug_out ("Result of applying ruleset #{ruleset_name}")
+    result.each do | key, src | 
+
+      if (src == "user  ")
+        value = choices[key]
+      else 
+        value = ruleset_choices[key]
+      end 
+      final_choices[key] = value 
+      if (debug_status)
+        debug_out "SRC: #{src} | VAL: #{final_choices[key]}"
+      end 
+
+    end 
+
+    return final_choices
+  end 
+
+  #========================================================
+  # Get key house parameters from HSE file and format them 
+  # in a hash that can be used to apply right code requirements.
+  # Also: Call routine 'overide_hse_params...' to determine 
+  #       if user has spec'd alternate compliance paths. 
+  def HTAPFunc.get_hse_params_for_rulesets(elements,ruleSpecs,locale_HDD, cityName)
+    debug_on() 
+    
+    debug_out("Ruleset specifications:\n")
+    debug_out(ruleSpecs.pretty_inspect())
+    
+    params_for_code = {
+        "SH_type_1"         => H2KFile.getPrimaryHeatSys( elements ) ,
+        "SH_type_2"         => H2KFile.getSecondaryHeatSys( elements ),
+        "DHW_type"          => H2KFile.getPrimaryDHWSys( elements ),
+        "house_type"        => H2KFile.getHouseType(elements), 
+        "heated_crawlspace" => H2KFile.heatedCrawlspace(elements), 
+        "vent_sys_type"     => H2KFile.get_vent_sys_type(elements),
+        "cityName"          => cityName         }
+    
+    if ( locale_HDD < 3000 )
+        cz = "cz4"
+    elsif (locale_HDD >= 3000 && locale_HDD < 3999 )
+        cz = "cz5"
+    elsif (locale_HDD >= 4000 && locale_HDD < 4999 )
+        cz = "cz6"
+    elsif (locale_HDD >= 5000 && locale_HDD < 5999 )
+        cz = "cz7a"
+    elsif (locale_HDD >= 6000 && locale_HDD < 6999 )
+        cz = "cz7b"    
+    elsif (locale_HDD >= 7000 )
+        cz = "cz8"
+    end 
+    
+    params_for_code["climate_zone"] = cz
+    
+    debug_out("HSE PARAMS:\n")
+    debug_out(params_for_code.pretty_inspect())
+    
+    
+    params_for_code = HTAPFunc.overide_hse_params_for_rulesets(ruleSpecs,params_for_code)
+    
+    
+    debug_out("Final PARAMS:\n")
+    debug_out(params_for_code.pretty_inspect())
+    
+    return params_for_code
+    
+  end
+  # ============================================================= 
+  # Possibly overwrite code params with items set in input file
+  def HTAPFunc.overide_hse_params_for_rulesets(ruleSpecs,params_for_code)
+      
+    debug_on 
+    
+    if ( ruleSpecs["fuel"] =~ /elec/i ) then 
+        params_for_code["SH_type_1"] = "electricity" 
+        params_for_code["SH_type_2"] = "electricity" 
+        params_for_code["DHW_type"]  = "electricity" 
+    end 
+    if ( ruleSpecs["fuel"] =~ /gas/i ) then 
+        params_for_code["SH_type_1"] = "gas" 
+        params_for_code["SH_type_2"] = "gas" 
+        params_for_code["DHW_type"]  = "gas" 
+    end 
+    
+    if ( ruleSpecs["fuel"] =~ /oil/i ) then 
+        params_for_code["SH_type_1"] = "oil" 
+        params_for_code["SH_type_2"] = "oil" 
+        params_for_code["DHW_type"]  = "oil" 
+    end 
+    
+    if ( ruleSpecs["vent"] =~ /HRV/i ) then 
+        params_for_code["vent_sys_type"] = "HRV"
+    end 
+    
+    if ( ruleSpecs["vent"] =~ /noHRV/ ) then 
+        params_for_code["vent_sys_type"] = "noHRV"
+    end 
+    
+    return params_for_code
+    
+  end 
+
+end
 
 
 
