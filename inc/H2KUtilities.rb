@@ -451,6 +451,129 @@ module H2KFile
     # Height             HouseFile/House/Components/*/Components/Window/Measurements/[height]
     # Width              HouseFile/House/Components/*/Components/Window/Measurements/[width]
 
+    # ====================================================================================
+    # ====================================================================================
+    # ====================================================================================
+    # Calculate area-weighted U-value of the envelope START
+    envelope_area = 0.0
+    envelope_uavalue = 0.0
+    # ------------------------------------------------------------------------------------
+    ##### Ceiling
+    ceiling_path = "HouseFile/House/Components/Ceiling"
+    elements.each(ceiling_path) do |ceiling|
+     ceiling_area = 0.0
+     ceiling_area = ceiling.elements["Measurements"].attributes["area"].to_f
+     ceiling_rvalue = ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
+     ceiling_uavalue = ceiling_area / ceiling_rvalue
+     envelope_area += ceiling_area
+     envelope_uavalue += ceiling_uavalue
+#      puts "ceiling_area is #{ceiling_area}"
+#      puts "ceiling_rvalue is #{ceiling_rvalue}"
+#      puts "ceiling_uavalue is #{ceiling_uavalue}"
+#      puts "envelope_uavalue is #{envelope_uavalue}"
+    end
+    # ------------------------------------------------------------------------------------
+    ##### Wall
+    wall_path = "HouseFile/House/Components/Wall"
+    elements.each(wall_path) do |wall|
+#         puts "wall name is #{wall}"
+        wall_height = wall.elements["Measurements"].attributes["height"].to_f
+        wall_perimeter = wall.elements["Measurements"].attributes["perimeter"].to_f
+        wall_width = 0.5 * wall_perimeter - wall_height
+        wall_area_gross = wall_width * wall_height
+        wall_area_net = wall_area_gross
+        wall_rvalue = wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+        envelope_area += wall_area_gross
+#         puts "wall_width is #{wall_width}"
+#         puts "wall_area_gross is #{wall_area_gross}"
+#         puts "wall_rvalue is #{wall_rvalue}"
+
+        # ------------------------------------------------------------------------------------
+        # Wall: Window
+        window_path = wall_path+"/Components/Window"
+        elements.each(window_path) do |window|
+#             puts "window name is #{window}"
+            window_area = 0.0
+            # [Height (mm) * Width (mm)] * No of Windows
+            window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+            window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+            window_uavalue = window_area / window_rvalue
+            wall_area_net -= window_area
+            envelope_uavalue += window_uavalue
+#             puts "window_area is #{window_area}"
+#             puts "window_rvalue is #{window_rvalue}"
+#             puts "window_uavalue is #{window_uavalue}"
+        end #elements.each(window_path) do |window|
+        # ------------------------------------------------------------------------------------
+        # Wall: Door
+        door_path = wall_path+"/Components/Door"
+        elements.each(door_path) do |door|
+#             puts "door name is #{door}"
+            # Door
+            door_area_gross = 0.0
+            door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
+            door_area_net = door_area_gross
+            door_rvalue = door.attributes["rValue"].to_f
+            wall_area_net -= door_area_gross
+#             puts "door_area_gross is #{door_area_gross}"
+#             puts "door_rvalue is #{door_rvalue}"
+
+            # Door: Window
+            window_path = door_path+"/Components/Window"
+            elements.each(window_path) do |window|
+#                 puts "window name is #{window}"
+                window_area = 0.0
+                # [Height (mm) * Width (mm)] * No of Windows
+                window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                window_uavalue = window_area / window_rvalue
+                door_area_net -= window_area
+                envelope_uavalue += window_uavalue
+#                 puts "window_area is #{window_area}"
+#                 puts "window_rvalue is #{window_rvalue}"
+#                 puts "window_uavalue is #{window_uavalue}"
+            end #elements.each(window_path) do |window|
+
+            # calculate UA-Value of door_area_net (i.e. excluding windows)
+            door_uavalue = door_area_net / door_rvalue
+            envelope_uavalue += door_uavalue
+
+        end #elements.each(door_path) do |door|
+
+        # calculate UA-Value of wall_area_net (i.e. excluding doors and windows)
+        wall_uavalue = wall_area_net / wall_rvalue
+        envelope_uavalue += wall_uavalue
+
+    end #elements.each(wall_path) do |wall|
+
+    # ------------------------------------------------------------------------------------
+    ##### Basement: Floor
+    floor_path = "HouseFile/House/Components/Basement/Floor"
+    elements.each(floor_path) do |floor|
+#         puts "floor name is #{floor}"
+        floor_area = 0.0
+        floor_area = floor.elements["Measurements"].attributes["area"].to_f
+        floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
+        floor_uavalue = floor_area / floor_rvalue
+        envelope_area += floor_area
+        envelope_uavalue += floor_uavalue
+#         puts "floor_area is #{floor_area}"
+#         puts "floor_rvalue is #{floor_rvalue}"
+#         puts "floor_uavalue is #{floor_uavalue}"
+#         puts "envelope_uavalue is #{envelope_uavalue}"
+    end
+    # ------------------------------------------------------------------------------------
+    ##### Basement: Wall
+#     x_path = "HouseFile/House/Components/Basement/Wall"
+
+    # ------------------------------------------------------------------------------------
+    ##### Whole house
+
+    # Calculate area-weighted U-value of the envelope END
+    # ====================================================================================
+    # ====================================================================================
+    # ====================================================================================
+
 
     env_info = {
       "windows" => {
