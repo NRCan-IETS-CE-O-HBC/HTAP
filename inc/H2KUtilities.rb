@@ -455,10 +455,20 @@ module H2KFile
     # ====================================================================================
     # ====================================================================================
     # Calculate area-weighted U-value of the envelope START
+    # TODO: Q: I have assumed all r-values are rsi, ok?
+    # Procedure: #TODO: TO BE COMPLETED
+    # 1. Ceiling
+    # 2. Wall: 2.1. Window, 2.2. Door, 2.3. FloorHeader
+    # 3. Basement: Floor (TODO: Q: I have assumed that each house has only one basement, and the one basement has only one Floor under Basement)
+    # 4. Basement: Wall (TODO: Q: same Q)
+    # 5. Crawlspace: Floor (TODO: Q: same Q)
+    # 6. Crawlspace: Wall (TODO: Q: same Q)
+    # 7. Crawlspace: FloorHeader  (TODO: Q: same Q)
+    # 8.
     envelope_area = 0.0
     envelope_uavalue = 0.0
     # ------------------------------------------------------------------------------------
-    ##### Ceiling
+    ##### 1. Ceiling
     ceiling_path = "HouseFile/House/Components/Ceiling"
     elements.each(ceiling_path) do |ceiling|
      ceiling_area = 0.0
@@ -474,7 +484,7 @@ module H2KFile
      debug_out "envelope_uavalue is #{envelope_uavalue}"
     end
     # ------------------------------------------------------------------------------------
-    ##### Wall
+    ##### 2. Wall
     wall_path = "HouseFile/House/Components/Wall"
     elements.each(wall_path) do |wall|
         idWall = wall.attributes["id"].to_i
@@ -494,9 +504,9 @@ module H2KFile
         debug_out "wall_rvalue is #{wall_rvalue}"
 
         # ------------------------------------------------------------------------------------
-        # Wall: Window
-        window_path = wall_path+"/Components/Window"
-        elements.each(window_path) do |window|
+        # 2.1. Wall: Window   #TODO: Q: should I consider 'headerHeight' (e.g. see ERS-1001) in window calculation?
+        wall_window_path = wall_path+"/Components/Window"
+        elements.each(wall_window_path) do |window|
             debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
             if (window.parent.parent.attributes["id"].to_i == idWall)
                 window_area = 0.0
@@ -511,15 +521,15 @@ module H2KFile
                 debug_out "window_uavalue is #{window_uavalue}"
                 debug_out "envelope_uavalue is #{envelope_uavalue}"
             end
-        end #elements.each(window_path) do |window|
+        end #elements.each(wall_window_path) do |window|
         # ------------------------------------------------------------------------------------
-        # Wall: Door
-        door_path = wall_path+"/Components/Door"
-        elements.each(door_path) do |door|
+        # 2.2. Wall: Door
+        wall_door_path = wall_path+"/Components/Door"
+        elements.each(wall_door_path) do |door|
             idDoor = door.attributes["id"].to_i
             debug_out "idDoor is #{idDoor}"
             if (door.parent.parent.attributes["id"].to_i == idWall)
-                # Door
+                # Door (the whole door)
                 door_area_gross = 0.0
                 door_area_net = 0.0
                 door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
@@ -529,9 +539,9 @@ module H2KFile
                 debug_out "door_area_gross is #{door_area_gross}"
                 debug_out "door_rvalue is #{door_rvalue}"
 
-                # Door: Window
-                window_path = door_path+"/Components/Window"
-                elements.each(window_path) do |window|
+                # Door: Window  #TODO: Q: should I consider 'headerHeight' (e.g. see ERS-1001) in door's window calculation?
+                door_window_path = wall_door_path+"/Components/Window"
+                elements.each(door_window_path) do |window|
                     debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
                     if (window.parent.parent.attributes["id"].to_i == idDoor)
                         window_area = 0.0
@@ -546,7 +556,7 @@ module H2KFile
                         debug_out "window_uavalue is #{window_uavalue}"
                         debug_out "envelope_uavalue is #{envelope_uavalue}"
                     end
-                end #elements.each(window_path) do |window|
+                end #elements.each(door_window_path) do |window|
 
                 # calculate UA-Value of door_area_net (i.e. excluding windows)
                 door_uavalue = door_area_net / door_rvalue
@@ -554,8 +564,31 @@ module H2KFile
                 envelope_uavalue += door_uavalue
                 debug_out "envelope_uavalue is #{envelope_uavalue}"
             end
-        end #elements.each(door_path) do |door|
+        end #elements.each(wall_door_path) do |door|
 
+        # ------------------------------------------------------------------------------------
+        # 2.3. Wall: FloorHeader (e.g. ERS-1022)
+        wall_floorheader_path = wall_path+"/Components/FloorHeader"
+        elements.each(wall_floorheader_path) do |floorheader|
+            debug_out "idFloorHeader is #{floorheader.parent.parent.attributes["id"].to_i}"
+            if (floorheader.parent.parent.attributes["id"].to_i == idWall)
+                floorheader_area = 0.0
+                floorheader_height = floorheader.elements["Measurements"].attributes["height"].to_f
+                floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
+                floorheader_width = floorheader_perimeter / 2.0 - floorheader_height
+                floorheader_area = floorheader_width * floorheader_height
+                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                floorheader_uavalue = floorheader_area / floorheader_rvalue
+                wall_area_net -= floorheader_area   #TODO: Q: is this correct that I subtract floorheader area from wall_area_gross to get wall_area_net?. IMPORTANT NOTE: if not ok, I should add floorheader area to 'envelope_area'
+                envelope_uavalue += floorheader_uavalue
+                debug_out "floorheader_area is #{floorheader_area}"
+                debug_out "floorheader_rvalue is #{floorheader_rvalue}"
+                debug_out "floorheader_uavalue is #{floorheader_uavalue}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(wall_floorheader_path) do |floorheader|
+
+        # ------------------------------------------------------------------------------------
         # calculate UA-Value of wall_area_net (i.e. excluding doors and windows)
         wall_uavalue = wall_area_net / wall_rvalue
         envelope_uavalue += wall_uavalue
@@ -567,33 +600,125 @@ module H2KFile
     end #elements.each(wall_path) do |wall|
 
     # ------------------------------------------------------------------------------------
-    ##### Basement: Floor
-    floor_path = "HouseFile/House/Components/Basement/Floor"
-    elements.each(floor_path) do |floor|
-        floor_area = 0.0
-        floor_area = floor.elements["Measurements"].attributes["area"].to_f
-        floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
-        floor_uavalue = floor_area / floor_rvalue
-        envelope_area += floor_area
-        envelope_uavalue += floor_uavalue
-        debug_out "floor_area is #{floor_area}"
-        debug_out "floor_rvalue is #{floor_rvalue}"
-        debug_out "floor_uavalue is #{floor_uavalue}"
+    ##### 3. Basement: Floor (e.g. ERS-1001)
+    basement_floor_path = "HouseFile/House/Components/Basement/Floor"
+    basement_floor_perimeter = 0.0
+    elements.each(basement_floor_path) do |floor|
+        basement_floor_perimeter = floor.elements["Measurements"].attributes["perimeter"].to_f
+        basement_floor_area = 0.0
+        basement_floor_area = floor.elements["Measurements"].attributes["area"].to_f
+        basement_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f #TODO: Q: I assumed they are series of r-value (e.g. ERS-1001); so added them; ok?
+        basement_floor_uavalue = basement_floor_area / basement_floor_rvalue
+        envelope_area += basement_floor_area
+        envelope_uavalue += basement_floor_uavalue
+        debug_out "basement_floor_area is #{basement_floor_area}"
+        debug_out "basement_floor_rvalue is #{basement_floor_rvalue}"
+        debug_out "basement_floor_uavalue is #{basement_floor_uavalue}"
+        debug_out "envelope_area is #{envelope_area}"
         debug_out "envelope_uavalue is #{envelope_uavalue}"
     end
     # ------------------------------------------------------------------------------------
-    ##### Basement: Wall
+    ##### 4. Basement: Wall (e.g. ERS-1001, ERS-1552)  #TODO: Q: should I consider 'ponyWallHeight' (e.g. see ERS-1552) in basement's wall calculation?    #ponyWallHeight
     basement_wall_path = "HouseFile/House/Components/Basement/Wall"
+    debug_out "basement_floor_perimeter is #{basement_floor_perimeter}"
     elements.each(basement_wall_path) do |wall|
-        basement_wall_area = 0.0
-        basement_wall_area = wall.elements["Measurements"].attributes["depth"].to_f * wall.elements["Measurements"].attributes["height"].to_f
-        basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
-        basement_wall_uavalue = basement_wall_area / basement_wall_rvalue
-        envelope_area += basement_wall_area
-        envelope_uavalue += basement_wall_uavalue
-        debug_out "basement_wall_area is #{basement_wall_area}"
-        debug_out "basement_wall_rvalue is #{basement_wall_rvalue}"
-        debug_out "basement_wall_uavalue is #{basement_wall_uavalue}"
+        basement_hasPonyWall = wall.attributes["hasPonyWall"]
+        debug_out "basement_hasPonyWall is #{basement_hasPonyWall}"
+        if basement_hasPonyWall == 'false' #(e.g. ERS-1001)
+            basement_wall_area = 0.0
+            #TODO: Q: Note that in the below line, I have considered 'depth' for the calculation of basement_wall_area as this will lead to a worse u-value, if ok?
+            basement_wall_area = wall.elements["Measurements"].attributes["depth"].to_f * basement_floor_perimeter  #TODO: Q: Note that I have assumed that basement has only one floor, if ok?
+            basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: Q: Note that I have considered 'rsi', not 'nominalRsi', if ok?
+            basement_wall_uavalue = basement_wall_area / basement_wall_rvalue
+            envelope_area += basement_wall_area
+            envelope_uavalue += basement_wall_uavalue
+            debug_out "basement_wall_area is #{basement_wall_area}"
+            debug_out "basement_wall_rvalue is #{basement_wall_rvalue}"
+            debug_out "basement_wall_uavalue is #{basement_wall_uavalue}"
+            debug_out "envelope_area is #{envelope_area}"
+            debug_out "envelope_uavalue is #{envelope_uavalue}"
+        else #(i.e. if basement has hasPonyWall) (e.g. ERS-1552)
+            basement_wall_area = 0.0
+            # basement's whole walls
+            basement_wall_area = 0.0
+            basement_wall_area = wall.elements["Measurements"].attributes["depth"].to_f * basement_floor_perimeter #TODO: same Q: Note that I have assumed that basement has only one floor, if ok?
+            basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: same Q: Note that I have considered 'rsi', not 'nominalRsi', if ok?
+            basement_wall_uavalue = basement_wall_area / basement_wall_rvalue
+            envelope_area += basement_wall_area
+            envelope_uavalue += basement_wall_uavalue
+            debug_out "basement_wall_area is #{basement_wall_area}"
+            debug_out "basement_wall_rvalue is #{basement_wall_rvalue}"
+            debug_out "basement_wall_uavalue is #{basement_wall_uavalue}"
+            debug_out "envelope_area is #{envelope_area}"
+            debug_out "envelope_uavalue is #{envelope_uavalue}"
+
+            # basement's pony walls  #TODO: Q: I have assumed pony wall is an extra wall in the interior part of the basement's wall. So, I have not added its area to 'envelope_area' as it has already been considered in 'envelope_area' (see a few lines above)
+            basement_ponywall_area = 0.0
+            basement_ponywall_area = wall.elements["Measurements"].attributes["ponyWallHeight"].to_f * basement_floor_perimeter #TODO: same Q: Note that I have assumed that basement has only one floor, if ok?
+            basement_ponywall_rvalue = wall.elements["Construction"].elements["PonyWallType"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: same Q: Note that I have considered 'rsi', not 'nominalRsi', if ok?
+            basement_ponywall_uavalue = basement_ponywall_area / basement_ponywall_rvalue
+            envelope_uavalue += basement_ponywall_uavalue
+            debug_out "basement_ponywall_area is #{basement_ponywall_area}"
+            debug_out "basement_ponywall_rvalue is #{basement_ponywall_rvalue}"
+            debug_out "basement_ponywall_uavalue is #{basement_ponywall_uavalue}"
+            debug_out "envelope_area is #{envelope_area}"
+            debug_out "envelope_uavalue is #{envelope_uavalue}"
+        end
+    end #elements.each(basement_wall_path) do |wall|
+
+    # ------------------------------------------------------------------------------------
+    # 5. Crawlspace: Floor (e.g. ERS-1022, ERS-1658, ERS-8020)
+    crawlspace_floor_path = "HouseFile/House/Components/Crawlspace/Floor"
+    crawlspace_floor_perimeter = 0.0
+    elements.each(crawlspace_floor_path) do |floor|
+        crawlspace_floor_perimeter = floor.elements["Measurements"].attributes["perimeter"].to_f
+        crawlspace_floor_area = 0.0
+        crawlspace_floor_area = floor.elements["Measurements"].attributes["area"].to_f
+        crawlspace_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f #TODO: Q: I assumed they are series of r-value (e.g. ERS-1022); so added them; ok?
+        crawlspace_floor_uavalue = crawlspace_floor_area / crawlspace_floor_rvalue
+        envelope_area += crawlspace_floor_area
+        envelope_uavalue += crawlspace_floor_uavalue
+        debug_out "crawlspace_floor_area is #{crawlspace_floor_area}"
+        debug_out "crawlspace_floor_rvalue is #{crawlspace_floor_rvalue}"
+        debug_out "crawlspace_floor_uavalue is #{crawlspace_floor_uavalue}"
+        debug_out "envelope_area is #{envelope_area}"
+        debug_out "envelope_uavalue is #{envelope_uavalue}"
+    end
+
+    # ------------------------------------------------------------------------------------
+    # 6. Crawlspace: Wall #TODO" Q: is there a possibility that a crawlspace's wall has 'hasPonyWall'?
+    crawlspace_wall_path = "HouseFile/House/Components/Crawlspace/Wall"
+    debug_out "crawlspace_floor_perimeter is #{crawlspace_floor_perimeter}"
+    elements.each(crawlspace_wall_path) do |wall|
+        crawlspace_wall_area = 0.0
+        #TODO: Q: Note that in the below line, I have considered 'depth' for the calculation of crawlspace_wall_area as this will lead to a worse u-value, if ok?
+        crawlspace_wall_area = wall.elements["Measurements"].attributes["depth"].to_f * crawlspace_floor_perimeter  #TODO: Q: Note that I have assumed that crawlspace has only one floor, if ok?
+        crawlspace_wall_rvalue = wall.elements["Construction"].elements["Type"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: Q: Note that I have considered 'rsi', not 'nominalRsi', if ok?
+        crawlspace_wall_uavalue = crawlspace_wall_area / crawlspace_wall_rvalue
+        envelope_area += crawlspace_wall_area
+        envelope_uavalue += crawlspace_wall_uavalue
+        debug_out "crawlspace_wall_area is #{crawlspace_wall_area}"
+        debug_out "crawlspace_wall_rvalue is #{crawlspace_wall_rvalue}"
+        debug_out "crawlspace_wall_uavalue is #{crawlspace_wall_uavalue}"
+        debug_out "envelope_area is #{envelope_area}"
+        debug_out "envelope_uavalue is #{envelope_uavalue}"
+    end
+    # ------------------------------------------------------------------------------------
+    # 7. Crawlspace: FloorHeader (e.g. ERS-1022)
+    crawlspace_floorheader_path = "HouseFile/House/Components/Crawlspace/Components/FloorHeader"
+    elements.each(crawlspace_floorheader_path) do |floorheader|
+        crawlspace_floorheader_area = 0.0
+        crawlspace_floorheader_height = floorheader.elements["Measurements"].attributes["height"].to_f
+        crawlspace_floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
+        crawlspace_floorheader_width = crawlspace_floorheader_perimeter / 2.0 - crawlspace_floorheader_height
+        crawlspace_floorheader_area = crawlspace_floorheader_width * crawlspace_floorheader_height
+        crawlspace_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+        crawlspace_floorheader_uavalue = crawlspace_floorheader_area / crawlspace_floorheader_rvalue
+        envelope_area += crawlspace_floorheader_area   #TODO: Q: I have assumed that floorheader area is not part of the crawlspace's wall, ok?
+        envelope_uavalue += crawlspace_floorheader_uavalue
+        debug_out "crawlspace_floorheader_area is #{crawlspace_floorheader_area}"
+        debug_out "crawlspace_floorheader_rvalue is #{crawlspace_floorheader_rvalue}"
+        debug_out "crawlspace_floorheader_uavalue is #{crawlspace_floorheader_uavalue}"
         debug_out "envelope_uavalue is #{envelope_uavalue}"
     end
 
