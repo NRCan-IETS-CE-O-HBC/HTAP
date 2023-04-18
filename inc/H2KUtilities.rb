@@ -468,7 +468,8 @@ module H2KFile
       },
       "ceilings" => {},
       "envelope" => {
-        "areaWeightedUvalue_W_per_m2K" => nil
+        "areaWeightedUvalue_excl_Infiltration_W_per_m2K" => nil,
+        "areaWeightedUvalue_incl_Infiltration_W_per_m2K" => nil
       }
     }
 
@@ -691,6 +692,7 @@ module H2KFile
     # ------------------------------------------------------------------------------------
     ##### 2. Wall
     wall_path = "HouseFile/House/Components/Wall"
+#     wall_area_abovegrade #TODO
     elements.each(wall_path) do |wall|
         idWall = wall.attributes["id"].to_i
         debug_out "idWall is #{idWall}"
@@ -946,14 +948,59 @@ module H2KFile
     end
 
     # ------------------------------------------------------------------------------------
-    ##### Whole house
+    ##### Whole house's area-weighted U-value [W/(m2.K)]
     area_weighted_u = envelope_uavalue / envelope_area #W/(m2.K)
-    env_info["envelope"]["areaWeightedUvalue_W_per_m2K"] = area_weighted_u
+    env_info["envelope"]["areaWeightedUvalue_excl_Infiltration_W_per_m2K"] = area_weighted_u
     debug_out "envelope_area is #{envelope_area}"
     debug_out "envelope_uavalue is #{envelope_uavalue}"
     debug_out "area_weighted_u is #{area_weighted_u}"
-    debug_off
 
+    # ------------------------------------------------------------------------------------
+    ##### Whole house's area-weighted U-value including infiltration [W/(m2.K)]
+    # envelope metric [W/(m2.K)] = sum(Ui.Ai)/sum(Ai) + (NLR@75Pa) x (density of air at standard conditions) x (specific heat capacity of air at standard conditions)
+    # Density of air at standard conditions= 1.204 kg/m3  (REF: https://en.wikipedia.org/wiki/Density_of_air)
+    # Specific heat capacity of air at standard conditions = 1003.5 J/(kg.K)  (REF: https://en.wikipedia.org/wiki/Table_of_specific_heat_capacities)
+
+    # 0. Air properties
+    rho_air = 1.204
+    cp_air = 1003.5
+
+    # 1. Get ACH@50 from .h2k file
+    ach_at_50Pa = H2KFile.getACHRate(elements) #TODO: Q: ok to use this for getting ACH?
+    debug_out "ach_at_50Pa is #{ach_at_50Pa}"
+
+    # 2. Convert ACH@50 to ACH@75 using Equation ACH@75 = ACH@50 / ((50/75)^0.6)
+    # (REF: 'Acceptable Air Tightness of Walls in Passive Houses' @https://www.phius.org/sites/default/files/2022-04/201508-Airtightness-Karagiozis.pdf)
+    # Note: flow exponent (n) has been set as 0.6 as per NECB2020 Section 8.4.2.9.
+    ach_at_75Pa = ach_at_50Pa / ((50.0/75.0)**0.6)
+    debug_out "ach_at_75Pa is #{ach_at_75Pa}"
+
+    # 3. Convert ACH@75 to NLR@75
+    # ACH x Volume x 3.6 / EnvelopeArea = NLR (L/s/m2)
+    x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/House"
+    myHouseVolume = H2KFile.getHouseVolume(elements)
+    house_volume = elements[x_path].attributes["volume"].to_f # m3
+    debug_out "envelope_area is #{envelope_area}"
+    nlr_at_75Pa = (ach_at_75Pa * myHouseVolume * 3.6) / envelope_area  # (L/s/m2)
+    debug_out "house_volume is #{myHouseVolume}"
+    debug_out "nlr_at_75Pa is #{nlr_at_75Pa}"
+
+    # 4. Convert NLR@75 to NLR@typical operating pressure differential of 5Pa as per NECB2020 (REF: NECB2020 Section 8.4.2.9.)
+    wallDimsAG = H2KFile.getAGWallDimensions(elements)
+    wall_area_gross_abovegrade = wallDimsAG["area"]["gross"]
+    debug_out "wallDimsAG is #{wallDimsAG}"
+    debug_out "wall_area_gross_abovegrade is #{wall_area_gross_abovegrade}"
+    nlr_at_typ_opr_p_diff = ((5.00 / 75.0) ** 0.60) * nlr_at_75Pa * envelope_area / wall_area_gross_abovegrade  # [L/(s.m2)] #TODO: Q: I have considered wall_area_gross_abovegrade for NECB's Equation (Section 8.4.2.9.)
+    debug_out "nlr_at_typ_opr_p_diff is #{nlr_at_typ_opr_p_diff}"
+
+    # 5. Calculate Whole house's area-weighted U-value including infiltration [W/(m2.K)]
+    envelope_infiltration_W_per_m2k = nlr_at_typ_opr_p_diff * rho_air * cp_air * 0.001
+    envelope_uavalue_incl_infiltration = area_weighted_u + envelope_infiltration_W_per_m2k
+    env_info["envelope"]["areaWeightedUvalue_incl_Infiltration_W_per_m2K"] = envelope_uavalue_incl_infiltration
+    debug_out "envelope_infiltration_W_per_m2k is #{envelope_infiltration_W_per_m2k}"
+    debug_out "envelope_uavalue_incl_infiltration is #{envelope_uavalue_incl_infiltration}"
+
+    debug_off
     # Calculate area-weighted U-value of the envelope END
     # ====================================================================================
     # ====================================================================================
@@ -4667,8 +4714,8 @@ module H2Kpost
       "Win-SHGC-average"    =>  env_info["windows"]["average_SHGC"],
       "Win-UValue-average"    =>  env_info["windows"]["average_Uvalue"],
       "Win-Area-Total-m2"   =>  env_info["windows"]["total_area"],
-      "AreaWeighted-Uvalue-W-per-m2K"   =>  env_info["envelope"]["areaWeightedUvalue_W_per_m2K"],
-
+      "AreaWeighted-Uvalue-excl-Infiltration-W-per-m2K"   =>  env_info["envelope"]["areaWeightedUvalue_excl_Infiltration_W_per_m2K"],
+      "AreaWeighted-Uvalue-incl-Infiltration-W-per-m2K"   =>  env_info["envelope"]["areaWeightedUvalue_incl_Infiltration_W_per_m2K"]
     }
 
     # Window data 
