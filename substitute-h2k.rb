@@ -2427,8 +2427,28 @@ def processFile(h2kElements)
                 locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                 if ( h2kElements[locationText] != nil )
                   locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
-                  h2kElements[locationText].attributes["isCop"] = "true"
-                  h2kElements[locationText].attributes["value"] = value
+                  if(h2kElements[locationText] != nil )
+                    h2kElements[locationText].attributes["isCop"] = "true"
+                    h2kElements[locationText].attributes["value"] = value
+                  else
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications"].add_element("CoolingEfficiency")
+                    h2kElements[locationText].attributes["isCop"] = "true"
+                    h2kElements[locationText].attributes["value"] = value
+                  end
+                  if(h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"] == nil )
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"].add_element("CoolingParameters")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"].attributes["sensibleHeatRatio"] = "0.76"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"].attributes["openableWindowArea"] = "20"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"].add_element("FansAndPump")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].attributes["flowRate"] = "228.5837"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].attributes["hasEnergyEfficientMotor"] = "false"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].add_element("Mode")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Mode"].attributes["code"] = "1"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Mode"].add_element("English")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Mode"].add_element("French")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].add_element("Power")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Power"].attributes["isCalculated"] = "true"
+                  end
                 end
 
               elsif ( sysType2Name == "AirConditioning" )
