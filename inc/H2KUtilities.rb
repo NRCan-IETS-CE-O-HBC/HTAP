@@ -1147,8 +1147,14 @@ module H2KFile
             debug_out "idSlabFloorParent is #{idSlabFloorParent}"
             if (floor.parent.attributes["id"].to_i == idSlab)
                 slab_floor_area = 0.0
+                debug_out ("#{floor.elements["Construction"].pretty_inspect}")
                 slab_floor_area = floor.elements["Measurements"].attributes["area"].to_f
-                slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?
+                if ( slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].nil? )
+                  # Uninsulated 
+                  slab_floor_rvalue = 0.08806 # ASHRAE appoximation (S.Gilani - confirm?)
+                else 
+                  slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?  
+                end 
                 slab_floor_uavalue = slab_floor_area / slab_floor_rvalue
                 envelope_area += slab_floor_area
                 envelope_uavalue += slab_floor_uavalue
