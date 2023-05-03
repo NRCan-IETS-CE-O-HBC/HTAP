@@ -673,6 +673,7 @@ module H2KFile
     envelope_uavalue = 0.0
     # ------------------------------------------------------------------------------------
     ##### 1. Ceiling
+    debug_on
     ceiling_path = "HouseFile/House/Components/Ceiling"
     elements.each(ceiling_path) do |ceiling|
         ceiling_area = 0.0
@@ -680,8 +681,7 @@ module H2KFile
         ceiling_rvalue = ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
         ceiling_uavalue = ceiling_area / ceiling_rvalue
         envelope_area += ceiling_area
-        envelope_uavalue += ceiling_uavalue
-        debug_on
+        envelope_uavalue += ceiling_uavalue    
         debug_out "ceiling_area is #{ceiling_area}"
         debug_out "ceiling_rvalue is #{ceiling_rvalue}"
         debug_out "ceiling_uavalue is #{ceiling_uavalue}"
@@ -999,9 +999,9 @@ module H2KFile
                 walkout_floor_area = walkout.elements["Measurements"].attributes["l1"].to_f * walkout.elements["Measurements"].attributes["l2"].to_f
                 debug_out "walkout_floor_area is #{walkout_floor_area}"
                 if !floor.elements["Construction"].elements["AddedToSlab"].nil?
-                    walkout_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f
+                    walkout_floor_rvalue =  0.08806 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f
                 else
-                    walkout_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
+                    walkout_floor_rvalue =  0.08806 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
                 end
                 walkout_floor_uavalue = walkout_floor_area / walkout_floor_rvalue
                 envelope_area += walkout_floor_area
@@ -1025,7 +1025,17 @@ module H2KFile
                 walkout_wall_area_gross = 0.0
                 walkout_wall_area_gross = 2 * walkout.elements["Measurements"].attributes["height"].to_f * (walkout.elements["Measurements"].attributes["l1"].to_f + walkout.elements["Measurements"].attributes["l2"].to_f)
                 walkout_wall_area_net = walkout_wall_area_gross
-                walkout_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                if ( ! wall.elements["Construction"].elements["InteriorAddedInsulation"].nil? )
+                  walkout_wall_rvalue_interior = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f 
+                else
+                  walkout_wall_rvalue_interior = 0.16 # ASHRAE appoximation
+                end 
+                if ( ! wall.elements["Construction"].elements["ExteriorAddedInsulation"].nil? )
+                  walkout_wall_rvalue_exterior = wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                else 
+                  walkout_wall_rvalue_exterior = 0.08 # ASHRAE appoximation
+                end 
+                walkout_wall_rvalue = walkout_wall_rvalue_exterior + walkout_wall_rvalue_interior
                 debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
                 debug_out "walkout_wall_rvalue is #{walkout_wall_rvalue}"
                 debug_out "envelope_area is #{envelope_area}"
@@ -1153,7 +1163,8 @@ module H2KFile
                   # Uninsulated 
                   slab_floor_rvalue = 0.08806 # ASHRAE appoximation (S.Gilani - confirm?)
                 else 
-                  slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?  
+                 # pp slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"]
+                  slab_floor_rvalue = 0.08806 + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?  
                 end 
                 slab_floor_uavalue = slab_floor_area / slab_floor_rvalue
                 envelope_area += slab_floor_area
