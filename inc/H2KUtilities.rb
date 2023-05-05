@@ -660,8 +660,6 @@ module H2KFile
     # ====================================================================================
     # ====================================================================================
     # Calculate area-weighted U-value of the envelope START Sara
-    #TODO: Add air film to each U-value
-    #TODO: IMPORTANT Question: the below calculation gives area-weighted U-value of proposed house?
     # Note: All r-values in HOT2000 have been considered as rsi.
     # Procedure:
     # 1. Ceiling
@@ -671,7 +669,17 @@ module H2KFile
     # 5. Walkout: 4.1. Floor, 4.2. Wall, 4.3. Door, 4.4. Windows, 4.5. FloorHeader
     # 6. Slab: 6.1. Floor, 6.2. Wall
 
-    ##### Set initial values
+    # ------------------------------------------------------------------------------------
+    # Air film RSI (m2.K/W)
+    # REF: https://natural-resources.canada.ca/energy/efficiency/housing/new-homes/energy-starr-new-homes-standard/tables-for-calculating-effective-thermal-resistance-opaque-assemblies/14176
+    rsi_airfilm_wall_int = 0.12
+    rsi_airfilm_wall_ext = 0.03
+    rsi_airfilm_roof_int = 0.11
+    rsi_airfilm_roof_ext = 0.03
+    rsi_airfilm_floor_int = 0.16
+    rsi_airfilm_floor_ext = 0.03
+    # ------------------------------------------------------------------------------------
+    ##### Set initial values for envelope area and UA-value
     envelope_area = 0.0
     envelope_uavalue = 0.0
     # ------------------------------------------------------------------------------------
@@ -681,7 +689,7 @@ module H2KFile
     elements.each(ceiling_path) do |ceiling|
         ceiling_area = 0.0
         ceiling_area = ceiling.elements["Measurements"].attributes["area"].to_f
-        ceiling_rvalue = ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f
+        ceiling_rvalue = ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f + rsi_airfilm_roof_int + rsi_airfilm_roof_ext
         ceiling_uavalue = ceiling_area / ceiling_rvalue
         envelope_area += ceiling_area
         envelope_uavalue += ceiling_uavalue    
@@ -703,7 +711,7 @@ module H2KFile
         wall_width = wall_perimeter / 2.0 - wall_height
         wall_area_gross = wall_width * wall_height
         wall_area_net = wall_area_gross
-        wall_rvalue = wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+        wall_rvalue = wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
         envelope_area += wall_area_gross
         debug_out "wall_height is #{wall_height}"
         debug_out "wall_width is #{wall_width}"
@@ -720,7 +728,7 @@ module H2KFile
                 window_area = 0.0
                 # [Height (mm) * Width (mm)] * No of Windows
                 window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #TODO Q: Wall's airfilm RSI values have been used for windows and doors. OK?
                 window_uavalue = window_area / window_rvalue
                 wall_area_net -= window_area
                 envelope_uavalue += window_uavalue
@@ -742,7 +750,7 @@ module H2KFile
                 door_area_net = 0.0
                 door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
                 door_area_net = door_area_gross
-                door_rvalue = door.attributes["rValue"].to_f
+                door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 wall_area_net -= door_area_gross
                 debug_out "door_area_gross is #{door_area_gross}"
                 debug_out "door_rvalue is #{door_rvalue}"
@@ -755,7 +763,7 @@ module H2KFile
                         window_area = 0.0
                         # [Height (mm) * Width (mm)] * No of Windows
                         window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                         window_uavalue = window_area / window_rvalue
                         door_area_net -= window_area
                         envelope_uavalue += window_uavalue
@@ -784,7 +792,7 @@ module H2KFile
                 floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
                 floorheader_width = floorheader_perimeter / 2.0 - floorheader_height
                 floorheader_area = floorheader_width * floorheader_height
-                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #TODO Q: Wall's airfilm RSI values have been used for floorheader. OK?
                 floorheader_uavalue = floorheader_area / floorheader_rvalue
                 envelope_area += floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
                 envelope_uavalue += floorheader_uavalue
@@ -824,9 +832,9 @@ module H2KFile
                 basement_floor_area = 0.0
                 basement_floor_area = floor.elements["Measurements"].attributes["area"].to_f
                 if !floor.elements["Construction"].elements["AddedToSlab"].nil?
-                    basement_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f
+                    basement_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                 else
-                    basement_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
+                    basement_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                 end
                 basement_floor_uavalue = basement_floor_area / basement_floor_rvalue
                 envelope_area += basement_floor_area
@@ -862,9 +870,9 @@ module H2KFile
                 if basement_hasPonyWall == 'false' #(e.g. ERS-1001)
                     basement_wall_area_gross = wall.elements["Measurements"].attributes["height"].to_f * basement_floor_perimeter
                     basement_wall_area_net = basement_wall_area_gross
-                    basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                    basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     if basement_wall_rvalue == 0.0
-                        basement_wall_rvalue = 1.0/(2.0*5.7) # Reference: See above ASHRAE reference for RSI of concrete basement wall TODO: see updated values
+                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall TODO: see updated values
                     end
                     envelope_area += basement_wall_area_gross
                     debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
@@ -874,9 +882,9 @@ module H2KFile
                     # basement's whole walls
                     basement_wall_area_gross = wall.elements["Measurements"].attributes["height"].to_f * basement_floor_perimeter
                     basement_wall_area_net = basement_wall_area_gross
-                    basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                    basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     if basement_wall_rvalue == 0.0
-                        basement_wall_rvalue = 1.0/(2.0*5.7) # Reference: See above ASHRAE reference for RSI of concrete basement wall   TODO: see updated values
+                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall   TODO: see updated values
                     end
                     envelope_area += basement_wall_area_gross
                     debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
@@ -885,12 +893,12 @@ module H2KFile
                     debug_out "envelope_area is #{envelope_area}"
                     debug_out "envelope_uavalue is #{envelope_uavalue}"
 
-                    # basement's pony walls  #TODO Question: I have assumed pony wall is an extra wall in the interior part of the basement's wall. So, I have not added its area to 'envelope_area' as it has already been considered in 'envelope_area' (see a few lines above)
+                    # basement's pony walls  #TODO Question: It has been assumed pony wall is an extra wall in the interior part of the basement's wall. So, it has not been added its area to 'envelope_area' as it has already been considered in 'envelope_area' (see a few lines above)
                     #TODO Question: It has been assumed that ponywall does not have any doors/windows. OK?
                     #TODO Question: ERS-1603 has two ponywall's section in h2k file. what should be done in these cases?
                     basement_ponywall_area = 0.0
                     basement_ponywall_area = wall.elements["Measurements"].attributes["ponyWallHeight"].to_f * basement_floor_perimeter
-                    basement_ponywall_rvalue = wall.elements["Construction"].elements["PonyWallType"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                    basement_ponywall_rvalue = wall.elements["Construction"].elements["PonyWallType"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int #TODO: For ponywall, only rsi_airfilm_wall_int has been considered as rsi_airfilm_wall_ext has been considered as part of the basement's wall above. OK?
                     basement_ponywall_uavalue = basement_ponywall_area / basement_ponywall_rvalue
                     envelope_uavalue += basement_ponywall_uavalue
                     debug_out "basement_ponywall_area is #{basement_ponywall_area}"
@@ -914,7 +922,7 @@ module H2KFile
                 door_area_net = 0.0
                 door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
                 door_area_net = door_area_gross
-                door_rvalue = door.attributes["rValue"].to_f
+                door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 basement_wall_area_net -= door_area_gross
                 debug_out "door_area_gross is #{door_area_gross}"
                 debug_out "door_rvalue is #{door_rvalue}"
@@ -927,7 +935,7 @@ module H2KFile
                         window_area = 0.0
                         # [Height (mm) * Width (mm)] * No of Windows
                         window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                         window_uavalue = window_area / window_rvalue
                         door_area_net -= window_area
                         envelope_uavalue += window_uavalue
@@ -955,7 +963,7 @@ module H2KFile
                 window_area = 0.0
                 # [Height (mm) * Width (mm)] * No of Windows
                 window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 window_uavalue = window_area / window_rvalue
                 basement_wall_area_net -= window_area
                 envelope_uavalue += window_uavalue
@@ -985,7 +993,7 @@ module H2KFile
                 basement_floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
                 basement_floorheader_width = basement_floorheader_perimeter / 2.0 - basement_floorheader_height
                 basement_floorheader_area = basement_floorheader_width * basement_floorheader_height
-                basement_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                basement_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 basement_floorheader_uavalue = basement_floorheader_area / basement_floorheader_rvalue
                 envelope_area += basement_floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
                 envelope_uavalue += basement_floorheader_uavalue
@@ -1026,9 +1034,9 @@ module H2KFile
                     crawlspace_floor_area = 0.0
                     crawlspace_floor_area = floor.elements["Measurements"].attributes["area"].to_f
                     if !floor.elements["Construction"].elements["AddedToSlab"].nil?
-                        crawlspace_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f
+                        crawlspace_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                     else
-                        crawlspace_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
+                        crawlspace_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                     end
                     crawlspace_floor_uavalue = crawlspace_floor_area / crawlspace_floor_rvalue
                     envelope_area += crawlspace_floor_area
@@ -1052,7 +1060,7 @@ module H2KFile
                 if (wall.parent.attributes["id"].to_i == idCrawlspace)
                     crawlspace_wall_area_gross = wall.elements["Measurements"].attributes["height"].to_f * crawlspace_floor_perimeter  #Note: It has been assumed that crawlspace has only one floor.
                     crawlspace_wall_area_net = crawlspace_wall_area_gross
-                    crawlspace_wall_rvalue = wall.elements["Construction"].elements["Type"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                    crawlspace_wall_rvalue = wall.elements["Construction"].elements["Type"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     envelope_area += crawlspace_wall_area_gross
                     debug_out "crawlspace_wall_area_gross is #{crawlspace_wall_area_gross}"
                     debug_out "crawlspace_wall_area_net is #{crawlspace_wall_area_net}"
@@ -1073,7 +1081,7 @@ module H2KFile
                     door_area_net = 0.0
                     door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
                     door_area_net = door_area_gross
-                    door_rvalue = door.attributes["rValue"].to_f
+                    door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     crawlspace_wall_area_net -= door_area_gross
                     debug_out "door_area_gross is #{door_area_gross}"
                     debug_out "door_rvalue is #{door_rvalue}"
@@ -1086,7 +1094,7 @@ module H2KFile
                             window_area = 0.0
                             # [Height (mm) * Width (mm)] * No of Windows
                             window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                            window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                            window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                             window_uavalue = window_area / window_rvalue
                             door_area_net -= window_area
                             envelope_uavalue += window_uavalue
@@ -1115,7 +1123,7 @@ module H2KFile
                     window_area = 0.0
                     # [Height (mm) * Width (mm)] * No of Windows
                     window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                    window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                    window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     window_uavalue = window_area / window_rvalue
                     crawlspace_wall_area_net -= window_area
                     envelope_uavalue += window_uavalue
@@ -1146,7 +1154,7 @@ module H2KFile
                     crawlspace_floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
                     crawlspace_floorheader_width = crawlspace_floorheader_perimeter / 2.0 - crawlspace_floorheader_height
                     crawlspace_floorheader_area = crawlspace_floorheader_width * crawlspace_floorheader_height
-                    crawlspace_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                    crawlspace_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     crawlspace_floorheader_uavalue = crawlspace_floorheader_area / crawlspace_floorheader_rvalue
                     envelope_area += crawlspace_floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
                     envelope_uavalue += crawlspace_floorheader_uavalue
@@ -1177,9 +1185,9 @@ module H2KFile
                 # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.'
                 if !floor.elements["Construction"].elements["AddedToSlab"].nil?
                     #TODO Question: Why concrete slab floor is added to the rest here, but not the same calculation method for walkout
-                    walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f
+                    walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                 else
-                    walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f
+                    walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                 end
                 walkout_floor_uavalue = walkout_floor_area / walkout_floor_rvalue
                 envelope_area += walkout_floor_area
@@ -1205,21 +1213,21 @@ module H2KFile
                 walkout_wall_area_net = walkout_wall_area_gross
                 if ( ! wall.elements["Construction"].elements["InteriorAddedInsulation"].nil? )
                     #TODO: Question I added 1.0/(2.0*5.7) into walkout_wall_rvalue_interior here as well
-                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) + wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) + wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: see above reference for updated value 1.0/(2.0*5.7)
                 else
                     # Reference for RSI of concrete basement wall: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
                     # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.
                     # For basement walls below grade, the temperature difference for winter design conditions is greater than for the floor.
                     # Test results indicate that, at the mid-height of the below-grade portion of the basement wall, the unit area heat loss is approximately twice that of the floor.'
-                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) # 0.16 # ASHRAE appoximation
+                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) # 0.16 # ASHRAE appoximation  #TODO: see above reference for updated value 1.0/(2.0*5.7)
                 end 
                 if ( ! wall.elements["Construction"].elements["ExteriorAddedInsulation"].nil? )
                     #TODO: Question I added 0.08 into walkout_wall_rvalue_exterior here as well; although shouldn't '0.08' be replaced by 1.0/(2.0*5.7)
-                    walkout_wall_rvalue_exterior = 0.08 + wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f
+                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7)  + wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: see above reference for updated value 1.0/(2.0*5.7)
                 else 
-                    walkout_wall_rvalue_exterior = 0.08 # ASHRAE appoximation # TODO: Question: shouldn't it be the same as walkout_wall_rvalue_interior when there is no insulation
+                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7) #0.08 # ASHRAE appoximation # TODO: see above reference for updated value 1.0/(2.0*5.7)
                 end 
-                walkout_wall_rvalue = walkout_wall_rvalue_exterior + walkout_wall_rvalue_interior
+                walkout_wall_rvalue = walkout_wall_rvalue_exterior + walkout_wall_rvalue_interior + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
                 debug_out "walkout_wall_rvalue is #{walkout_wall_rvalue}"
                 debug_out "envelope_area is #{envelope_area}"
@@ -1240,7 +1248,7 @@ module H2KFile
                 door_area_net = 0.0
                 door_area_gross = door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f
                 door_area_net = door_area_gross
-                door_rvalue = door.attributes["rValue"].to_f
+                door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 walkout_wall_area_net -= door_area_gross
                 debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
                 debug_out "door_area_gross is #{door_area_gross}"
@@ -1258,7 +1266,7 @@ module H2KFile
                         window_area = 0.0
                         # [Height (mm) * Width (mm)] * No of Windows
                         window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                         window_uavalue = window_area / window_rvalue
                         door_area_net -= window_area
                         envelope_uavalue += window_uavalue
@@ -1285,7 +1293,7 @@ module H2KFile
             if (window.parent.parent.attributes["id"].to_i == idWalkout)
                 window_area = 0.0
                 window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 window_uavalue = window_area / window_rvalue
                 walkout_wall_area_net -= window_area
                 envelope_area += window_area
@@ -1306,7 +1314,7 @@ module H2KFile
                 floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
                 floorheader_width = floorheader_perimeter / 2.0 - floorheader_height
                 floorheader_area = floorheader_width * floorheader_height
-                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f
+                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 floorheader_uavalue = floorheader_area / floorheader_rvalue
                 envelope_area += floorheader_area # Note: floorheader_area is added to 'envelope_area' as floorheader is a separate component
                 envelope_uavalue += floorheader_uavalue
@@ -1347,10 +1355,10 @@ module H2KFile
                   # Uninsulated
                   # Reference for RSI of concrete basement floors on the ground: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
                   # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.'
-                  slab_floor_rvalue = 1.0/5.7 #0.08806 # ASHRAE appoximation (S.Gilani - confirm? TODO: see updated values)
+                  slab_floor_rvalue = 1.0/5.7 + rsi_airfilm_floor_int + rsi_airfilm_floor_ext #0.08806 # ASHRAE appoximation (S.Gilani - confirm? TODO: see updated values)
                 else 
                  # pp slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"]
-                  slab_floor_rvalue = 1.0/5.7 + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?
+                  slab_floor_rvalue = 1.0/5.7 + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext  #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?
                 end 
                 slab_floor_uavalue = slab_floor_area / slab_floor_rvalue
                 envelope_area += slab_floor_area
@@ -1378,8 +1386,8 @@ module H2KFile
     # ------------------------------------------------------------------------------------
     ##### Whole house's area-weighted U-value [W/(m2.K)]
     area_weighted_u = envelope_uavalue / envelope_area #W/(m2.K)
-    env_info["envelope"]["envelope_area_m2"] = envelope_area
-    env_info["envelope"]["areaWeightedUvalue_excl_Infiltration_W_per_m2K"] = area_weighted_u
+    env_info["envelope"]["envelope_area_m2"] = envelope_area.round(2)
+    env_info["envelope"]["areaWeightedUvalue_excl_Infiltration_W_per_m2K"] = area_weighted_u.round(3)
     debug_out "envelope_area is #{envelope_area}"
     debug_out "envelope_uavalue is #{envelope_uavalue}"
     debug_out "area_weighted_u is #{area_weighted_u}"
@@ -1425,7 +1433,7 @@ module H2KFile
     # 5. Calculate Whole house's area-weighted U-value including infiltration [W/(m2.K)]
     envelope_infiltration_W_per_m2k = nlr_at_typ_opr_p_diff * rho_air * cp_air * 0.001
     envelope_uavalue_incl_infiltration = area_weighted_u + envelope_infiltration_W_per_m2k
-    env_info["envelope"]["areaWeightedUvalue_incl_Infiltration_W_per_m2K"] = envelope_uavalue_incl_infiltration
+    env_info["envelope"]["areaWeightedUvalue_incl_Infiltration_W_per_m2K"] = envelope_uavalue_incl_infiltration.round(3)
     debug_out "envelope_infiltration_W_per_m2k is #{envelope_infiltration_W_per_m2k}"
     debug_out "envelope_uavalue_incl_infiltration is #{envelope_uavalue_incl_infiltration}"
 
