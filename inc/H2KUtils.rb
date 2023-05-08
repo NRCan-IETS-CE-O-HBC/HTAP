@@ -1548,7 +1548,10 @@ module H2KFile
         warn_out "Unknown whole house ventilation type #{ventsys.name}\n"
       end
     end
-    systemInfo["designLoads"] = H2KFile.getDesignLoads( elements )
+
+    unless elements["HouseFile/AllResults"].nil?
+        systemInfo["designLoads"] = H2KFile.getDesignLoads( elements )
+    end
 
     return systemInfo
 

@@ -698,6 +698,40 @@ def processFile(h2kElements)
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
+          elsif( tag =~ /Opt-NLR/ && value != "NA" )
+            # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
+            h2kElements[locationText].attributes["code"] = "x"
+            # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
+            locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
+            if ( h2kElements[locationText] != nil )
+              # Need to remove this section!
+              locationText = "HouseFile/House/NaturalAirInfiltration"
+              h2kElements[locationText].delete_element("AirLeakageTestData")
+              # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
+              locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+              h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            end
+            # Retrieve house volume and exterior surface area
+            fThisVolume = h2kElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
+            fExtSurfArea = h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["exposedFloors"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ponyWall"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["aboveGrade"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["belowGrade"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorHeader"].to_f
+            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Crawlspace"].attributes["floor"].to_f
+            if(h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] == "true")
+                fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Crawlspace"].attributes["wall"].to_f
+            end
+            fThisACH = 3.6*(fExtSurfArea/fThisVolume)*value.to_f
+            
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+            h2kElements[locationText].attributes["airChangeRate"] = sprintf("%0.3f", fThisACH)
+
           elsif( tag =~ /Opt-BuildingSite/ && value != "NA" )
             if(value.to_f < 1 || value.to_f > 8)
               fatalerror("In #{choiceEntry}, invalid building site input #{value}")
@@ -2177,6 +2211,35 @@ def processFile(h2kElements)
               end
             end
 
+          elsif ( tag =~ /Opt-H2K-Type1IsRadiant/ &&  value != "NA" )
+            if( value == "true")
+              # Type one system is radiant. Add the relevant data
+              h2kElements["HouseFile/House/HeatingCooling"].add_element("RadiantHeating")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("AtticCeiling")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AtticCeiling"].attributes["effectiveTemperature"] = "31"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AtticCeiling"].attributes["fractionOfArea"] = "0"
+
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("FlatRoof")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/FlatRoof"].attributes["effectiveTemperature"] = "31"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/FlatRoof"].attributes["fractionOfArea"] = "0"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("AboveCrawlspace")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveCrawlspace"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveCrawlspace"].attributes["fractionOfArea"] = "90"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("SlabOnGrade")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/SlabOnGrade"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/SlabOnGrade"].attributes["fractionOfArea"] = "90"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("AboveBasement")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveBasement"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/AboveBasement"].attributes["fractionOfArea"] = "90"
+              
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating"].add_element("Basement")
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/Basement"].attributes["effectiveTemperature"] = "33"
+              h2kElements["HouseFile/House/HeatingCooling/RadiantHeating/Basement"].attributes["fractionOfArea"] = "90"
+
+            end
           elsif ( tag =~ /Opt-H2K-Type1CapOpt/ &&  value != "NA" )
             sysType1.each do |sysType1Name|
               if ( sysType1Name != "P9" )
@@ -2364,8 +2427,28 @@ def processFile(h2kElements)
                 locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"
                 if ( h2kElements[locationText] != nil )
                   locationText = "HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications/CoolingEfficiency"
-                  h2kElements[locationText].attributes["isCop"] = "true"
-                  h2kElements[locationText].attributes["value"] = value
+                  if(h2kElements[locationText] != nil )
+                    h2kElements[locationText].attributes["isCop"] = "true"
+                    h2kElements[locationText].attributes["value"] = value
+                  else
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/Specifications"].add_element("CoolingEfficiency")
+                    h2kElements[locationText].attributes["isCop"] = "true"
+                    h2kElements[locationText].attributes["value"] = value
+                  end
+                  if(h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"] == nil )
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}"].add_element("CoolingParameters")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"].attributes["sensibleHeatRatio"] = "0.76"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"].attributes["openableWindowArea"] = "20"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters"].add_element("FansAndPump")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].attributes["flowRate"] = "228.5837"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].attributes["hasEnergyEfficientMotor"] = "false"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].add_element("Mode")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Mode"].attributes["code"] = "1"
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Mode"].add_element("English")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Mode"].add_element("French")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump"].add_element("Power")
+                    h2kElements["HouseFile/House/HeatingCooling/Type2/#{sysType2Name}/CoolingParameters/FansAndPump/Power"].attributes["isCalculated"] = "true"
+                  end
                 end
 
               elsif ( sysType2Name == "AirConditioning" )

@@ -7115,6 +7115,30 @@
           "proxy": "xps2.5inEffR12.5"
         }
       },
+      "NBC_936_2.32RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "13.17"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
+      "NBC_936_2.84RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "16.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
       "NBC_936_4.44RSI": {
         "h2kMap": {
           "base": {
@@ -7308,6 +7332,30 @@
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabBelowGradeReff": "11.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
+      "NBC_936_2.32RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "13.17"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
+      "NBC_936_2.84RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabBelowGradeReff": "16.13"
           }
         },
         "costs": {
@@ -7511,6 +7559,18 @@
           "proxy": "xps2.5inEffR12.5"
         }
       },
+      "NBC_936_2.32RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "13.17"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps2.5inEffR12.5"
+        }
+      },
       "NBC_936_2.84RSI": {
         "h2kMap": {
           "base": {
@@ -7527,6 +7587,18 @@
         "h2kMap": {
           "base": {
             "H2K-Fdn-SlabOnGradeReff": "21.13"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "xps4.5inEffR22.5"
+        }
+      },
+      "NBC_936_4.44RSI": {
+        "h2kMap": {
+          "base": {
+            "H2K-Fdn-SlabOnGradeReff": "25.22"
           }
         },
         "costs": {
@@ -9693,83 +9765,6 @@
           "components": []
         }
       },
-      
-      
-      "BaseExpFloor-R31": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "31"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-				"insulation:r31_batt"
-          ]
-        }
-      },
-      "ExpFloorFlash&Batt-R36": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "36"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-				"insulation:spray_foam_2pd_urethane:5.5in_thickness"
-          ]
-        }
-      },
-      "ExpFloorFoamed-R52": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "Foamed-R52",
-            "OPT-H2K-EffRValue": "NA"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-				"insulation:spray_foam:2pound_urethane:7.5in_thickness",
-				"insulation:spray_foam:38mm:r6/inch"
-          ]
-        }
-      },
-      "NWTCrawlFlr": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "30"
-          }
-        },
-        "costs": {
-          "custom-costs": {
-          },
-          "components": [
-
-          ]
-        }
-      },
-      "VintageR30": {
-        "h2kMap": {
-          "base": {
-            "OPT-H2K-CodeName": "NA",
-            "OPT-H2K-EffRValue": "32"
-          }
-        },
-        "costs": {
-          "custom-costs": {},
-          "components": []
-        }
-      },
-      
-      
       "BaseExpFloor-R31": {
         "h2kMap": {
           "base": {
@@ -10929,6 +10924,28 @@
           "proxy": "gas-furnace-psc"
         }
       },
+      "NBC2020-gas-boiler": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Boiler",
+            "Opt-H2K-SysType2": "None",
+            "Opt-H2K-Type1Fuel": "2",
+            "Opt-H2K-Type1EqpType": "5",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "90",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1IsRadiant": "true",
+            "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "proxy": "gas-furnace-psc"
+        }
+      },
       "NBC-gas-furnace-AC": {
         "h2kMap": {
           "base": {
@@ -11506,7 +11523,8 @@
       "Opt-H2K-P9-elecUse100",
       "Opt-H2K-P9-blowPower15",
       "Opt-H2K-P9-blowPower40",
-      "Opt-H2K-P9-blowPower100"
+      "Opt-H2K-P9-blowPower100",
+      "Opt-H2K-Type1IsRadiant"
     ]
   },
   "Opt-HRVspec": {
@@ -12377,6 +12395,63 @@
             "Opt-H2K-TankSize": "189.3",
             "Opt-H2K-EF": "0.9",
             "Opt-H2K-IntHeatPumpCOP": "2.33",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+          ]
+        }
+      },
+      "HotWater_hp_EF_2_35": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "2.61",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+          ]
+        }
+      },
+      "NBC-HotWater_hp_v118Workaround": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "1.75",
+            "Opt-H2K-FlueDiameter": "NA"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+            "dhw_heat_pump_water_heater:50_gal:ef_2.35"
+          ]
+        }
+      },
+      "HotWater_hp_EF_2_35_v118Workaround": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-Fuel": "1",
+            "Opt-H2K-TankType": "7",
+            "Opt-H2K-TankSize": "189.3",
+            "Opt-H2K-EF": "0.9",
+            "Opt-H2K-IntHeatPumpCOP": "1.62",
             "Opt-H2K-FlueDiameter": "NA"
           }
         },
