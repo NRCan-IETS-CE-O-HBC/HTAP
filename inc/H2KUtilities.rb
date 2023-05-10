@@ -659,7 +659,7 @@ module H2KFile
     # ====================================================================================
     # ====================================================================================
     # ====================================================================================
-    # Calculate area-weighted U-value of the envelope START Sara
+    # Calculate area-weighted U-value of the envelope START
     # Note: All r-values in HOT2000 have been considered as rsi.
     # Procedure:
     # 1. Ceiling
@@ -728,7 +728,7 @@ module H2KFile
                 window_area = 0.0
                 # [Height (mm) * Width (mm)] * No of Windows
                 window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
-                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #TODO Q: Wall's airfilm RSI values have been used for windows and doors. OK?
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #Note: Wall's airfilm RSI values have been used for windows and doors.
                 window_uavalue = window_area / window_rvalue
                 wall_area_net -= window_area
                 envelope_uavalue += window_uavalue
@@ -792,7 +792,7 @@ module H2KFile
                 floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
                 floorheader_width = floorheader_perimeter / 2.0 - floorheader_height
                 floorheader_area = floorheader_width * floorheader_height
-                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #TODO Q: Wall's airfilm RSI values have been used for floorheader. OK?
+                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #Note: Wall's airfilm RSI values have been used for floorheader.
                 floorheader_uavalue = floorheader_area / floorheader_rvalue
                 envelope_area += floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
                 envelope_uavalue += floorheader_uavalue
@@ -848,7 +848,6 @@ module H2KFile
         end #elements.each(basement_floor_path) do |floor|
         # ------------------------------------------------------------------------------------
         # 3.2. Basement: Wall (e.g. ERS-1001, ERS-1552)
-        # TODO Question Note: 'ponyWallHeight' (e.g. see ERS-1552) has been considered in the basement's wall area calculation
         # Note: It has been assumed that basements have only one wall object in .h2k file.
         # This assumption is important as basement_wall_area_net and basement_wall_rvalue are used for the calculation of basement's ua value of the net wall area.
         debug_out "basement_floor_perimeter is #{basement_floor_perimeter}"
@@ -872,7 +871,7 @@ module H2KFile
                     basement_wall_area_net = basement_wall_area_gross
                     basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     if basement_wall_rvalue == 0.0
-                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall TODO: see updated values
+                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall
                     end
                     envelope_area += basement_wall_area_gross
                     debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
@@ -884,7 +883,7 @@ module H2KFile
                     basement_wall_area_net = basement_wall_area_gross
                     basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                     if basement_wall_rvalue == 0.0
-                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall   TODO: see updated values
+                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall
                     end
                     envelope_area += basement_wall_area_gross
                     debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
@@ -893,19 +892,35 @@ module H2KFile
                     debug_out "envelope_area is #{envelope_area}"
                     debug_out "envelope_uavalue is #{envelope_uavalue}"
 
-                    # basement's pony walls  #TODO Question: It has been assumed pony wall is an extra wall in the interior part of the basement's wall. So, it has not been added its area to 'envelope_area' as it has already been considered in 'envelope_area' (see a few lines above)
-                    #TODO Question: It has been assumed that ponywall does not have any doors/windows. OK?
-                    #TODO Question: ERS-1603 has two ponywall's section in h2k file. what should be done in these cases?
+                    # basement's pony walls
+                    #Note: It has been assumed pony wall is an extra wall in the interior part of the basement's wall.
+                    #So, its area has not been added to 'envelope_area' as it has already been considered in 'envelope_area' (see a few lines above)
+                    #Note: It has been assumed that ponywall does not have any doors/windows.
                     basement_ponywall_area = 0.0
                     basement_ponywall_area = wall.elements["Measurements"].attributes["ponyWallHeight"].to_f * basement_floor_perimeter
-                    basement_ponywall_rvalue = wall.elements["Construction"].elements["PonyWallType"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int #TODO: For ponywall, only rsi_airfilm_wall_int has been considered as rsi_airfilm_wall_ext has been considered as part of the basement's wall above. OK?
-                    basement_ponywall_uavalue = basement_ponywall_area / basement_ponywall_rvalue
-                    envelope_uavalue += basement_ponywall_uavalue
-                    debug_out "basement_ponywall_area is #{basement_ponywall_area}"
-                    debug_out "basement_ponywall_rvalue is #{basement_ponywall_rvalue}"
-                    debug_out "basement_ponywall_uavalue is #{basement_ponywall_uavalue}"
-                    debug_out "envelope_area is #{envelope_area}"
-                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+                    #Note: For ponywall, only rsi_airfilm_wall_int has been considered as rsi_airfilm_wall_ext has been considered as part of the basement's wall above.
+                    basement_ponywall_path = basement_wall_path + "/Construction/PonyWallType/Composite/Section"
+                    #Note: It has been assumed that basement's ponywall has only two sections objects. This assumption is because the second 'section' does not have the percentage attribute.
+                    basement_ponywall_section_index = 0
+                    basement_ponywall_fraction = 0.0
+                    elements.each(basement_ponywall_path) do |section| #Note: this loop is because some archetypes have more than one section (e.g. ERS-1603)
+                        debug_out "basement_ponywall_section_index is #{basement_ponywall_section_index}"
+                        basement_ponywall_rvalue = section.attributes["rsi"].to_f + rsi_airfilm_wall_int
+                        if basement_ponywall_section_index == 0
+                            basement_ponywall_fraction = section.attributes["percentage"].to_f / 100.0 #percentage
+                        else
+                            basement_ponywall_fraction = 1.0 - basement_ponywall_fraction
+                        end
+
+                        basement_ponywall_uavalue = basement_ponywall_area * basement_ponywall_fraction / basement_ponywall_rvalue
+                        envelope_uavalue += basement_ponywall_uavalue
+                        debug_out "basement_ponywall_area is #{basement_ponywall_area}"
+                        debug_out "basement_ponywall_rvalue is #{basement_ponywall_rvalue}"
+                        debug_out "basement_ponywall_uavalue is #{basement_ponywall_uavalue}"
+                        debug_out "envelope_area is #{envelope_area}"
+                        debug_out "envelope_uavalue is #{envelope_uavalue}"
+                        basement_ponywall_section_index += 1
+                    end
                 end
                 # ------------------------------------------------------------------------------------
             end #if (wall.parent.parent.attributes["id"].to_i == idBasement)
@@ -1184,7 +1199,6 @@ module H2KFile
                 # Reference for RSI of concrete basement floors on the ground: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
                 # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.'
                 if !floor.elements["Construction"].elements["AddedToSlab"].nil?
-                    #TODO Question: Why concrete slab floor is added to the rest here, but not the same calculation method for walkout
                     walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                 else
                     walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
@@ -1192,7 +1206,7 @@ module H2KFile
                 walkout_floor_uavalue = walkout_floor_area / walkout_floor_rvalue
                 envelope_area += walkout_floor_area
                 envelope_uavalue += walkout_floor_uavalue
-#                 debug_out "walkout_floor_area is #{walkout_floor_area}"
+                debug_out "walkout_floor_area is #{walkout_floor_area}"
                 debug_out "walkout_floor_rvalue is #{walkout_floor_rvalue}"
                 debug_out "walkout_floor_uavalue is #{walkout_floor_uavalue}"
                 debug_out "envelope_area is #{envelope_area}"
@@ -1212,20 +1226,18 @@ module H2KFile
                 walkout_wall_area_gross = 2 * walkout.elements["Measurements"].attributes["height"].to_f * (walkout.elements["Measurements"].attributes["l1"].to_f + walkout.elements["Measurements"].attributes["l2"].to_f)
                 walkout_wall_area_net = walkout_wall_area_gross
                 if ( ! wall.elements["Construction"].elements["InteriorAddedInsulation"].nil? )
-                    #TODO: Question I added 1.0/(2.0*5.7) into walkout_wall_rvalue_interior here as well
-                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) + wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: see above reference for updated value 1.0/(2.0*5.7)
+                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) + wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #see above reference for updated the value of 1.0/(2.0*5.7)
                 else
                     # Reference for RSI of concrete basement wall: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
                     # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.
                     # For basement walls below grade, the temperature difference for winter design conditions is greater than for the floor.
                     # Test results indicate that, at the mid-height of the below-grade portion of the basement wall, the unit area heat loss is approximately twice that of the floor.'
-                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) # 0.16 # ASHRAE appoximation  #TODO: see above reference for updated value 1.0/(2.0*5.7)
+                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) # 0.16 # ASHRAE appoximation  #see above reference for the value of 1.0/(2.0*5.7)
                 end 
                 if ( ! wall.elements["Construction"].elements["ExteriorAddedInsulation"].nil? )
-                    #TODO: Question I added 0.08 into walkout_wall_rvalue_exterior here as well; although shouldn't '0.08' be replaced by 1.0/(2.0*5.7)
-                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7)  + wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #TODO: see above reference for updated value 1.0/(2.0*5.7)
+                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7)  + wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #see above reference for updated  the value of 1.0/(2.0*5.7)
                 else 
-                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7) #0.08 # ASHRAE appoximation # TODO: see above reference for updated value 1.0/(2.0*5.7)
+                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7) #see above reference for the value of 1.0/(2.0*5.7)
                 end 
                 walkout_wall_rvalue = walkout_wall_rvalue_exterior + walkout_wall_rvalue_interior + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
                 debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
@@ -1355,10 +1367,9 @@ module H2KFile
                   # Uninsulated
                   # Reference for RSI of concrete basement floors on the ground: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
                   # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.'
-                  slab_floor_rvalue = 1.0/5.7 + rsi_airfilm_floor_int + rsi_airfilm_floor_ext #0.08806 # ASHRAE appoximation (S.Gilani - confirm? TODO: see updated values)
+                  slab_floor_rvalue = 1.0/5.7 + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
                 else 
-                 # pp slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"]
-                  slab_floor_rvalue = 1.0/5.7 + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext  #TODO Question: are there cases with 'FloorsAbove' insulation for slabs?
+                  slab_floor_rvalue = 1.0/5.7 + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext  #Note: it has been assumed that there are not any cases with 'FloorsAbove' insulation for slabs.
                 end 
                 slab_floor_uavalue = slab_floor_area / slab_floor_rvalue
                 envelope_area += slab_floor_area
@@ -1371,16 +1382,7 @@ module H2KFile
             end
         end
         # ------------------------------------------------------------------------------------
-        # 6.2. Slab: Wall #TODO Question: .h2k file does not have height of wall (see e.g. ERS-1690)
-#         slab_wall_path = slab_path+"/Wall"
-#         elements.each(slab_wall_path) do |wall|
-#             idSlabWallParent = wall.parent.attributes["id"].to_i
-#             debug_out "idSlab is #{idSlab}"
-#             debug_out "idSlabWallParent is #{idSlabWallParent}"
-#             if (idSlabWallParent == idSlab)
-# #                 puts "Sara"
-#             end
-#         end
+        # 6.2. Slab: Wall #Note: Slab's wall has not been considered as .h2k file does not have height of wall (see e.g. ERS-1690).
         # ------------------------------------------------------------------------------------
     end
     # ------------------------------------------------------------------------------------
@@ -1403,7 +1405,7 @@ module H2KFile
     cp_air = 1003.5
 
     # 1. Get ACH@50 from .h2k file
-    ach_at_50Pa = H2KFile.getACHRate(elements) #TODO: Question: ok to use this for getting ACH?
+    ach_at_50Pa = H2KFile.getACHRate(elements)
     debug_out "ach_at_50Pa is #{ach_at_50Pa}"
 
     # 2. Convert ACH@50 to ACH@75 using Equation ACH@75 = ACH@50 / ((50/75)^0.6)
@@ -1427,7 +1429,7 @@ module H2KFile
     wall_area_gross_abovegrade = wallDimsAG["area"]["gross"]
     debug_out "wallDimsAG is #{wallDimsAG}"
     debug_out "wall_area_gross_abovegrade is #{wall_area_gross_abovegrade}"
-    nlr_at_typ_opr_p_diff = ((5.00 / 75.0) ** 0.60) * nlr_at_75Pa * envelope_area / wall_area_gross_abovegrade  # [L/(s.m2)] #TODO: Question: I have considered wall_area_gross_abovegrade for NECB's Equation (Section 8.4.2.9.)
+    nlr_at_typ_opr_p_diff = ((5.00 / 75.0) ** 0.60) * nlr_at_75Pa * envelope_area / wall_area_gross_abovegrade  # [L/(s.m2)] #Note: It has been assumed that considered wall_area_gross_abovegrade is the value that should be used in NECB's Equation (Section 8.4.2.9.).
     debug_out "nlr_at_typ_opr_p_diff is #{nlr_at_typ_opr_p_diff}"
 
     # 5. Calculate Whole house's area-weighted U-value including infiltration [W/(m2.K)]
