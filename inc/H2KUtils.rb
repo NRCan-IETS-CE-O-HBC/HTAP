@@ -3555,12 +3555,12 @@ end
     debug_out "ach_at_75Pa is #{ach_at_75Pa}"
 
     # 3. Convert ACH@75 to NLR@75
-    # ACH x Volume x 3.6 / EnvelopeArea = NLR (L/s/m2)
+    # ACH x Volume x (1/3.6) / EnvelopeArea = NLR (L/s/m2)
     x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/House"
     myHouseVolume = H2KFile.GetHouseVolume(elements)
     house_volume = elements[x_path].attributes["volume"].to_f # m3
     debug_out "envelope_area is #{envelope_area}"
-    nlr_at_75Pa = (ach_at_75Pa * myHouseVolume * 3.6) / envelope_area  # (L/s/m2)
+    nlr_at_75Pa = (ach_at_75Pa * myHouseVolume * (1.0/3.6) / envelope_area  # (L/s/m2)
     debug_out "house_volume is #{myHouseVolume}"
     debug_out "nlr_at_75Pa is #{nlr_at_75Pa}"
 
