@@ -3560,7 +3560,7 @@ end
     myHouseVolume = H2KFile.GetHouseVolume(elements)
     house_volume = elements[x_path].attributes["volume"].to_f # m3
     debug_out "envelope_area is #{envelope_area}"
-    nlr_at_75Pa = (ach_at_75Pa * myHouseVolume * (1.0/3.6) / envelope_area  # (L/s/m2)
+    nlr_at_75Pa = (ach_at_75Pa * myHouseVolume * (1.0/3.6)) / envelope_area  # (L/s/m2)
     debug_out "house_volume is #{myHouseVolume}"
     debug_out "nlr_at_75Pa is #{nlr_at_75Pa}"
 
