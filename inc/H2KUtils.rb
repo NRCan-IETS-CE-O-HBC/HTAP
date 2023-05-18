@@ -2794,3 +2794,805 @@ def self.checksum(dir)
     return nil 
   end
 end
+  # =========================================================================================
+  # Return envelope area, area-weighted U-value (excluding and including infiltration)
+  # =========================================================================================
+  def H2KFile.CalculateAreaWeightedUvalue(elements)
+    # ====================================================================================
+    # ====================================================================================
+    # ====================================================================================
+    # Calculate area-weighted U-value of the envelope START
+    # Note: All r-values in HOT2000 have been considered as rsi.
+    # Procedure:
+    # 1. Ceiling
+    # 2. Wall: 2.1. Window, 2.2. Door, 2.3. FloorHeader
+    # 3. Basement: 3.1. Floor, 3.2. Wall, 3.3. Door, 3.4. Windows, 3.5. FloorHeader
+    # 4. Crawlspace: 4.1. Floor, 4.2. Wall, 4.3. Door, 4.4. Windows, 4.5. FloorHeader
+    # 5. Walkout: 4.1. Floor, 4.2. Wall, 4.3. Door, 4.4. Windows, 4.5. FloorHeader
+    # 6. Slab: 6.1. Floor, 6.2. Wall
+
+    # ------------------------------------------------------------------------------------
+    # Air film RSI (m2.K/W)
+    # REF: https://natural-resources.canada.ca/energy/efficiency/housing/new-homes/energy-starr-new-homes-standard/tables-for-calculating-effective-thermal-resistance-opaque-assemblies/14176
+    rsi_airfilm_wall_int = 0.12
+    rsi_airfilm_wall_ext = 0.03
+    rsi_airfilm_roof_int = 0.11
+    rsi_airfilm_roof_ext = 0.03
+    rsi_airfilm_floor_int = 0.16
+    rsi_airfilm_floor_ext = 0.03
+    # ------------------------------------------------------------------------------------
+    ##### Set initial values for envelope area and UA-value
+    envelope_area = 0.0
+    envelope_uavalue = 0.0
+    # ------------------------------------------------------------------------------------
+    ##### 1. Ceiling
+    debug_on
+    ceiling_path = "HouseFile/House/Components/Ceiling"
+    elements.each(ceiling_path) do |ceiling|
+        ceiling_area = 0.0
+        ceiling_area = ceiling.elements["Measurements"].attributes["area"].to_f
+        ceiling_rvalue = ceiling.elements["Construction"].elements["CeilingType"].attributes["rValue"].to_f + rsi_airfilm_roof_int + rsi_airfilm_roof_ext
+        ceiling_uavalue = ceiling_area / ceiling_rvalue
+        envelope_area += ceiling_area
+        envelope_uavalue += ceiling_uavalue
+        debug_out "ceiling_area is #{ceiling_area}"
+        debug_out "ceiling_rvalue is #{ceiling_rvalue}"
+        debug_out "ceiling_uavalue is #{ceiling_uavalue}"
+        debug_out "envelope_uavalue is #{envelope_uavalue}"
+    end
+    # ------------------------------------------------------------------------------------
+    ##### 2. Wall
+    wall_path = "HouseFile/House/Components/Wall"
+    elements.each(wall_path) do |wall|
+        idWall = wall.attributes["id"].to_i
+        debug_out "idWall is #{idWall}"
+        wall_area_gross = 0.0
+        wall_area_net = 0.0
+        wall_height = wall.elements["Measurements"].attributes["height"].to_f
+        wall_perimeter = wall.elements["Measurements"].attributes["perimeter"].to_f
+        wall_width = wall_perimeter / 2.0 - wall_height
+        wall_area_gross = wall_width * wall_height
+        wall_area_net = wall_area_gross
+        wall_rvalue = wall.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+        envelope_area += wall_area_gross
+        debug_out "wall_height is #{wall_height}"
+        debug_out "wall_width is #{wall_width}"
+        debug_out "wall_area_gross is #{wall_area_gross}"
+        debug_out "wall_rvalue is #{wall_rvalue}"
+
+        # ------------------------------------------------------------------------------------
+        # 2.1. Wall: Window
+        # Note: 'headerHeight' (e.g. see ERS-1001) has not been considered in window calculation.
+        wall_window_path = wall_path + "/Components/Window"
+        elements.each(wall_window_path) do |window|
+            debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
+            if (window.parent.parent.attributes["id"].to_i == idWall)
+                window_area = 0.0
+                # [Height (mm) * Width (mm)] * No of Windows
+                window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #Note: Wall's airfilm RSI values have been used for windows and doors.
+                window_uavalue = window_area / window_rvalue
+                wall_area_net -= window_area
+                envelope_uavalue += window_uavalue
+                debug_out "window_area is #{window_area}"
+                debug_out "window_rvalue is #{window_rvalue}"
+                debug_out "window_uavalue is #{window_uavalue}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(wall_window_path) do |window|
+        # ------------------------------------------------------------------------------------
+        # 2.2. Wall: Door
+        wall_door_path = wall_path+"/Components/Door"
+        elements.each(wall_door_path) do |door|
+            idDoor = door.attributes["id"].to_i
+            debug_out "idDoor is #{idDoor}"
+            if (door.parent.parent.attributes["id"].to_i == idWall)
+                # Door (the whole door)
+                door_area_gross = 0.0
+                door_area_net = 0.0
+                door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
+                door_area_net = door_area_gross
+                door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                wall_area_net -= door_area_gross
+                debug_out "door_area_gross is #{door_area_gross}"
+                debug_out "door_rvalue is #{door_rvalue}"
+
+                # Door: Window  #Note: 'headerHeight' (e.g. see ERS-1001) has not been considered in door's window calculation.
+                door_window_path = wall_door_path + "/Components/Window"
+                elements.each(door_window_path) do |window|
+                    debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
+                    if (window.parent.parent.attributes["id"].to_i == idDoor)
+                        window_area = 0.0
+                        # [Height (mm) * Width (mm)] * No of Windows
+                        window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                        window_uavalue = window_area / window_rvalue
+                        door_area_net -= window_area
+                        envelope_uavalue += window_uavalue
+                        debug_out "window_area is #{window_area}"
+                        debug_out "window_rvalue is #{window_rvalue}"
+                        debug_out "window_uavalue is #{window_uavalue}"
+                        debug_out "envelope_uavalue is #{envelope_uavalue}"
+                    end
+                end #elements.each(door_window_path) do |window|
+
+                # calculate UA-Value of door_area_net (i.e. excluding windows)
+                door_uavalue = door_area_net / door_rvalue
+                debug_out "door_uavalue is #{door_uavalue}"
+                envelope_uavalue += door_uavalue
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(wall_door_path) do |door|
+        # ------------------------------------------------------------------------------------
+        # 2.3. Wall: FloorHeader (e.g. ERS-1022)
+        wall_floorheader_path = wall_path + "/Components/FloorHeader"
+        elements.each(wall_floorheader_path) do |floorheader|
+            debug_out "idFloorHeader is #{floorheader.parent.parent.attributes["id"].to_i}"
+            if (floorheader.parent.parent.attributes["id"].to_i == idWall)
+                floorheader_area = 0.0
+                floorheader_height = floorheader.elements["Measurements"].attributes["height"].to_f
+                floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
+                floorheader_width = floorheader_perimeter / 2.0 - floorheader_height
+                floorheader_area = floorheader_width * floorheader_height
+                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext  #Note: Wall's airfilm RSI values have been used for floorheader.
+                floorheader_uavalue = floorheader_area / floorheader_rvalue
+                envelope_area += floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
+                envelope_uavalue += floorheader_uavalue
+                debug_out "floorheader_area is #{floorheader_area}"
+                debug_out "floorheader_rvalue is #{floorheader_rvalue}"
+                debug_out "floorheader_uavalue is #{floorheader_uavalue}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(wall_floorheader_path) do |floorheader|
+
+        # ------------------------------------------------------------------------------------
+        # calculate UA-Value of wall_area_net (i.e. excluding doors and windows)
+        wall_uavalue = wall_area_net / wall_rvalue
+        envelope_uavalue += wall_uavalue
+        debug_out "wall_area_gross is #{wall_area_gross}"
+        debug_out "wall_area_net is #{wall_area_net}"
+        debug_out "wall_uavalue is #{wall_uavalue}"
+        debug_out "envelope_uavalue is #{envelope_uavalue}"
+
+    end #elements.each(wall_path) do |wall|
+
+    # ------------------------------------------------------------------------------------
+    ##### 3. Basement
+    basement_path = "HouseFile/House/Components/Basement"
+    elements.each(basement_path) do |basement|
+        idBasement = basement.attributes["id"].to_i
+        debug_out "idBasement is #{idBasement}"
+        # ------------------------------------------------------------------------------------
+        # 3.1. Basement: Floor (e.g. ERS-1001)
+        # Note: It has been assumed that each basement has only one floor.
+        # This assumption is important as basement_floor_perimeter is used for the calculation of basement's wall area.
+        basement_floor_perimeter = 0.0
+        basement_floor_path = basement_path + "/Floor"
+        elements.each(basement_floor_path) do |floor|
+            if (floor.parent.attributes["id"].to_i == idBasement)
+                basement_floor_perimeter = floor.elements["Measurements"].attributes["perimeter"].to_f
+                basement_floor_area = 0.0
+                basement_floor_area = floor.elements["Measurements"].attributes["area"].to_f
+                if !floor.elements["Construction"].elements["AddedToSlab"].nil?
+                    basement_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                else
+                    basement_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                end
+                basement_floor_uavalue = basement_floor_area / basement_floor_rvalue
+                envelope_area += basement_floor_area
+                envelope_uavalue += basement_floor_uavalue
+                debug_out "basement_floor_area is #{basement_floor_area}"
+                debug_out "basement_floor_rvalue is #{basement_floor_rvalue}"
+                debug_out "basement_floor_uavalue is #{basement_floor_uavalue}"
+                debug_out "envelope_area is #{envelope_area}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(basement_floor_path) do |floor|
+        # ------------------------------------------------------------------------------------
+        # 3.2. Basement: Wall (e.g. ERS-1001, ERS-1552)
+        # Note: It has been assumed that basements have only one wall object in .h2k file.
+        # This assumption is important as basement_wall_area_net and basement_wall_rvalue are used for the calculation of basement's ua value of the net wall area.
+        debug_out "basement_floor_perimeter is #{basement_floor_perimeter}"
+        basement_wall_area_gross = 0.0
+        basement_wall_area_net = 0.0
+        basement_wall_rvalue = 0.0
+        basement_wall_path = basement_path + "/Wall"
+        elements.each(basement_wall_path) do |wall|
+            idBasementWall = wall.parent.attributes["id"].to_i
+            debug_out "idBasement is #{idBasement}"
+            debug_out "idBasementWall is #{idBasementWall}"
+            if (idBasementWall == idBasement)
+                basement_hasPonyWall = wall.attributes["hasPonyWall"]
+                debug_out "basement_hasPonyWall is #{basement_hasPonyWall}"
+                # Reference for RSI of concrete basement wall: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
+                # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.
+                # For basement walls below grade, the temperature difference for winter design conditions is greater than for the floor.
+                # Test results indicate that, at the mid-height of the below-grade portion of the basement wall, the unit area heat loss is approximately twice that of the floor.'
+                if basement_hasPonyWall == 'false' #(e.g. ERS-1001)
+                    basement_wall_area_gross = wall.elements["Measurements"].attributes["height"].to_f * basement_floor_perimeter
+                    basement_wall_area_net = basement_wall_area_gross
+                    basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                    if basement_wall_rvalue == 0.0
+                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall
+                    end
+                    envelope_area += basement_wall_area_gross
+                    debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
+                    debug_out "basement_wall_rvalue is #{basement_wall_rvalue}"
+                    debug_out "envelope_area is #{envelope_area}"
+                else #(i.e. if basement has hasPonyWall) (e.g. ERS-1552)
+                    # basement's whole walls
+                    basement_wall_area_gross = wall.elements["Measurements"].attributes["height"].to_f * basement_floor_perimeter
+                    basement_wall_area_net = basement_wall_area_gross
+                    basement_wall_rvalue = wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                    if basement_wall_rvalue == 0.0
+                        basement_wall_rvalue = 1.0/(2.0*5.7) + rsi_airfilm_wall_int + rsi_airfilm_wall_ext # Reference: See above ASHRAE reference for RSI of concrete basement wall
+                    end
+                    envelope_area += basement_wall_area_gross
+                    debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
+                    debug_out "basement_wall_area_net is #{basement_wall_area_net}"
+                    debug_out "basement_wall_rvalue is #{basement_wall_rvalue}"
+                    debug_out "envelope_area is #{envelope_area}"
+                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+
+                    # basement's pony walls
+                    #Note: It has been assumed pony wall is an extra wall in the interior part of the basement's wall.
+                    #So, its area has not been added to 'envelope_area' as it has already been considered in 'envelope_area' (see a few lines above)
+                    #Note: It has been assumed that ponywall does not have any doors/windows.
+                    basement_ponywall_area = 0.0
+                    basement_ponywall_area = wall.elements["Measurements"].attributes["ponyWallHeight"].to_f * basement_floor_perimeter
+                    #Note: For ponywall, only rsi_airfilm_wall_int has been considered as rsi_airfilm_wall_ext has been considered as part of the basement's wall above.
+                    basement_ponywall_path = basement_wall_path + "/Construction/PonyWallType/Composite/Section"
+                    #Note: It has been assumed that basement's ponywall has only two sections objects. This assumption is because the second 'section' does not have the percentage attribute.
+                    basement_ponywall_section_index = 0
+                    basement_ponywall_fraction = 0.0
+                    elements.each(basement_ponywall_path) do |section| #Note: this loop is because some archetypes have more than one section (e.g. ERS-1603)
+                        debug_out "basement_ponywall_section_index is #{basement_ponywall_section_index}"
+                        basement_ponywall_rvalue = section.attributes["rsi"].to_f + rsi_airfilm_wall_int
+                        if basement_ponywall_section_index == 0
+                            basement_ponywall_fraction = section.attributes["percentage"].to_f / 100.0 #percentage
+                        else
+                            basement_ponywall_fraction = 1.0 - basement_ponywall_fraction
+                        end
+
+                        basement_ponywall_uavalue = basement_ponywall_area * basement_ponywall_fraction / basement_ponywall_rvalue
+                        envelope_uavalue += basement_ponywall_uavalue
+                        debug_out "basement_ponywall_area is #{basement_ponywall_area}"
+                        debug_out "basement_ponywall_rvalue is #{basement_ponywall_rvalue}"
+                        debug_out "basement_ponywall_uavalue is #{basement_ponywall_uavalue}"
+                        debug_out "envelope_area is #{envelope_area}"
+                        debug_out "envelope_uavalue is #{envelope_uavalue}"
+                        basement_ponywall_section_index += 1
+                    end
+                end
+                # ------------------------------------------------------------------------------------
+            end #if (wall.parent.parent.attributes["id"].to_i == idBasement)
+        end #elements.each(basement_wall_path) do |wall|
+        # ------------------------------------------------------------------------------------
+        # 3.3. Basement: Door (e.g. ERS-1603)
+        basement_door_path = basement_path+"/Components/Door"
+        elements.each(basement_door_path) do |door|
+            idDoor = door.attributes["id"].to_i
+            debug_out "idDoor is #{idDoor}"
+            if (door.parent.parent.attributes["id"].to_i == idBasement)
+                # Door (the whole door)
+                door_area_gross = 0.0
+                door_area_net = 0.0
+                door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
+                door_area_net = door_area_gross
+                door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                basement_wall_area_net -= door_area_gross
+                debug_out "door_area_gross is #{door_area_gross}"
+                debug_out "door_rvalue is #{door_rvalue}"
+
+                # Door: Window  #Note: 'headerHeight' (e.g. see ERS-1001) has not been considered in door's window calculation.
+                door_window_path = basement_door_path + "/Components/Window"
+                elements.each(door_window_path) do |window|
+                    debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
+                    if (window.parent.parent.attributes["id"].to_i == idDoor)
+                        window_area = 0.0
+                        # [Height (mm) * Width (mm)] * No of Windows
+                        window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                        window_uavalue = window_area / window_rvalue
+                        door_area_net -= window_area
+                        envelope_uavalue += window_uavalue
+                        debug_out "window_area is #{window_area}"
+                        debug_out "window_rvalue is #{window_rvalue}"
+                        debug_out "window_uavalue is #{window_uavalue}"
+                        debug_out "envelope_area is #{envelope_area}"
+                        debug_out "envelope_uavalue is #{envelope_uavalue}"
+                    end
+                end #elements.each(door_window_path) do |window|
+
+                # calculate UA-Value of door_area_net (i.e. excluding windows)
+                door_uavalue = door_area_net / door_rvalue
+                debug_out "door_uavalue is #{door_uavalue}"
+                envelope_uavalue += door_uavalue
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(basement_door_path) do |door|
+        # ------------------------------------------------------------------------------------
+        # 3.4. Basement: Window (e.g. ERS-1603)
+        basement_window_path = basement_path + "/Components/Window"
+        elements.each(basement_window_path) do |window|
+            debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
+            if (window.parent.parent.attributes["id"].to_i == idBasement)
+                window_area = 0.0
+                # [Height (mm) * Width (mm)] * No of Windows
+                window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                window_uavalue = window_area / window_rvalue
+                basement_wall_area_net -= window_area
+                envelope_uavalue += window_uavalue
+                debug_out "window_area is #{window_area}"
+                debug_out "window_rvalue is #{window_rvalue}"
+                debug_out "window_uavalue is #{window_uavalue}"
+                debug_out "envelope_area is #{envelope_area}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(basement_window_path) do |window|
+        # ------------------------------------------------------------------------------------
+        # Now calculate UA-Value of basement's wall_area_net (i.e. excluding doors and windows)
+        basement_wall_uavalue = basement_wall_area_net / basement_wall_rvalue
+        envelope_uavalue += basement_wall_uavalue
+        debug_out "basement_wall_area_gross is #{basement_wall_area_gross}"
+        debug_out "basement_wall_area_net is #{basement_wall_area_net}"
+        debug_out "basement_wall_uavalue is #{basement_wall_uavalue}"
+        debug_out "envelope_area is #{envelope_area}"
+        debug_out "envelope_uavalue is #{envelope_uavalue}"
+        # ------------------------------------------------------------------------------------
+        # 3.5. Basement: FloorHeader (e.g. ERS-1603)
+        basement_floorheader_path = basement_path + "/Components/FloorHeader"
+        elements.each(basement_floorheader_path) do |floorheader|
+            if (floorheader.parent.parent.attributes["id"].to_i == idBasement)
+                basement_floorheader_area = 0.0
+                basement_floorheader_height = floorheader.elements["Measurements"].attributes["height"].to_f
+                basement_floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
+                basement_floorheader_width = basement_floorheader_perimeter / 2.0 - basement_floorheader_height
+                basement_floorheader_area = basement_floorheader_width * basement_floorheader_height
+                basement_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                basement_floorheader_uavalue = basement_floorheader_area / basement_floorheader_rvalue
+                envelope_area += basement_floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
+                envelope_uavalue += basement_floorheader_uavalue
+                debug_out "basement_floorheader_area is #{basement_floorheader_area}"
+                debug_out "basement_floorheader_rvalue is #{basement_floorheader_rvalue}"
+                debug_out "basement_floorheader_uavalue is #{basement_floorheader_uavalue}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end
+        # ------------------------------------------------------------------------------------
+    end #elements.each(basement_path) do |basement|
+
+    # ------------------------------------------------------------------------------------
+    # 4. Crawlspace (e.g. ERS-1022, ERS-1658, ERS-8020)
+    # Note: It has been assumed that each crawlspace has only one floor.
+    # This assumption is important as crawlspace_floor_perimeter is used for the calculation of crawlspace's wall area.
+    crawlspace_path = "HouseFile/House/Components/Crawlspace"
+    elements.each(crawlspace_path) do |crawlspace|
+        idCrawlspace = crawlspace.attributes["id"].to_i
+        debug_out "idCrawlspace is #{idCrawlspace}"
+        crawlspace_type_code = crawlspace.elements["VentilationType"].attributes["code"]
+        if crawlspace_type_code=='2'
+            crawlspace_type = 'open'
+        elsif crawlspace_type_code=='3'
+            crawlspace_type = 'closed'
+        end
+        debug_out "crawlspace_type_code is #{crawlspace_type_code}"
+        debug_out "crawlspace_type is #{crawlspace_type}"
+        # ------------------------------------------------------------------------------------
+        if crawlspace_type=='closed'
+            # ------------------------------------------------------------------------------------
+            # 4.1. Crawlspace: Floor (e.g. ERS-1022, ERS-1658, ERS-8020)
+            crawlspace_floor_path = crawlspace_path + "/Floor"
+            crawlspace_floor_perimeter = 0.0
+            elements.each(crawlspace_floor_path) do |floor|
+                if (floor.parent.attributes["id"].to_i == idCrawlspace)
+                    crawlspace_floor_perimeter = floor.elements["Measurements"].attributes["perimeter"].to_f
+                    crawlspace_floor_area = 0.0
+                    crawlspace_floor_area = floor.elements["Measurements"].attributes["area"].to_f
+                    if !floor.elements["Construction"].elements["AddedToSlab"].nil?
+                        crawlspace_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                    else
+                        crawlspace_floor_rvalue = floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                    end
+                    crawlspace_floor_uavalue = crawlspace_floor_area / crawlspace_floor_rvalue
+                    envelope_area += crawlspace_floor_area
+                    envelope_uavalue += crawlspace_floor_uavalue
+                    debug_out "crawlspace_floor_area is #{crawlspace_floor_area}"
+                    debug_out "crawlspace_floor_rvalue is #{crawlspace_floor_rvalue}"
+                    debug_out "crawlspace_floor_uavalue is #{crawlspace_floor_uavalue}"
+                    debug_out "envelope_area is #{envelope_area}"
+                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+                end
+            end
+            # ------------------------------------------------------------------------------------
+            # 4.2. Crawlspace: Wall
+            # Note: It has been assumed that crawlspace's wall does not have any ponyWall.
+            crawlspace_wall_area_gross = 0.0
+            crawlspace_wall_area_net = 0.0
+            crawlspace_wall_rvalue = 0.0
+            crawlspace_wall_path = crawlspace_path + "/Wall"
+            debug_out "crawlspace_floor_perimeter is #{crawlspace_floor_perimeter}"
+            elements.each(crawlspace_wall_path) do |wall|
+                if (wall.parent.attributes["id"].to_i == idCrawlspace)
+                    crawlspace_wall_area_gross = wall.elements["Measurements"].attributes["height"].to_f * crawlspace_floor_perimeter  #Note: It has been assumed that crawlspace has only one floor.
+                    crawlspace_wall_area_net = crawlspace_wall_area_gross
+                    crawlspace_wall_rvalue = wall.elements["Construction"].elements["Type"].elements["Composite"].elements["Section"].attributes["rsi"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                    envelope_area += crawlspace_wall_area_gross
+                    debug_out "crawlspace_wall_area_gross is #{crawlspace_wall_area_gross}"
+                    debug_out "crawlspace_wall_area_net is #{crawlspace_wall_area_net}"
+                    debug_out "crawlspace_wall_rvalue is #{crawlspace_wall_rvalue}"
+                    debug_out "envelope_area is #{envelope_area}"
+                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+                end
+            end
+            # ------------------------------------------------------------------------------------
+            # 4.3. Crawlspace: Door (e.g. no ERS)
+            crawlspace_door_path = crawlspace_path+"/Components/Door"
+            elements.each(crawlspace_door_path) do |door|
+                idDoor = door.attributes["id"].to_i
+                debug_out "idDoor is #{idDoor}"
+                if (door.parent.parent.attributes["id"].to_i == idCrawlspace)
+                    # Door (the whole door)
+                    door_area_gross = 0.0
+                    door_area_net = 0.0
+                    door_area_gross = (door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f)
+                    door_area_net = door_area_gross
+                    door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                    crawlspace_wall_area_net -= door_area_gross
+                    debug_out "door_area_gross is #{door_area_gross}"
+                    debug_out "door_rvalue is #{door_rvalue}"
+
+                    # Door: Window  #Note: 'headerHeight' (e.g. see ERS-1001) has not been considered in door's window calculation.
+                    door_window_path = crawlspace_door_path + "/Components/Window"
+                    elements.each(door_window_path) do |window|
+                        debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
+                        if (window.parent.parent.attributes["id"].to_i == idDoor)
+                            window_area = 0.0
+                            # [Height (mm) * Width (mm)] * No of Windows
+                            window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                            window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                            window_uavalue = window_area / window_rvalue
+                            door_area_net -= window_area
+                            envelope_uavalue += window_uavalue
+                            debug_out "window_area is #{window_area}"
+                            debug_out "window_rvalue is #{window_rvalue}"
+                            debug_out "window_uavalue is #{window_uavalue}"
+                            debug_out "envelope_area is #{envelope_area}"
+                            debug_out "envelope_uavalue is #{envelope_uavalue}"
+                        end
+                    end #elements.each(door_window_path) do |window|
+
+                    # calculate UA-Value of door_area_net (i.e. excluding windows)
+                    door_uavalue = door_area_net / door_rvalue
+                    debug_out "door_area_net is #{door_area_net}"
+                    debug_out "door_uavalue is #{door_uavalue}"
+                    envelope_uavalue += door_uavalue
+                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+                end
+            end #elements.each(crawlspace_door_path) do |door|
+            # ------------------------------------------------------------------------------------
+            # 4.4. Crawlspace: Window (e.g. no ERS)
+            crawlspace_window_path = crawlspace_path + "/Components/Window"
+            elements.each(crawlspace_window_path) do |window|
+                debug_out "idWindow is #{window.parent.parent.attributes["id"].to_i}"
+                if (window.parent.parent.attributes["id"].to_i == idCrawlspace)
+                    window_area = 0.0
+                    # [Height (mm) * Width (mm)] * No of Windows
+                    window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                    window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                    window_uavalue = window_area / window_rvalue
+                    crawlspace_wall_area_net -= window_area
+                    envelope_uavalue += window_uavalue
+                    debug_out "window_area is #{window_area}"
+                    debug_out "window_rvalue is #{window_rvalue}"
+                    debug_out "window_uavalue is #{window_uavalue}"
+                    debug_out "envelope_area is #{envelope_area}"
+                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+                end
+            end #elements.each(crawlspace_window_path) do |window|
+
+            # ------------------------------------------------------------------------------------
+            # Now calculate UA-Value of crawlspace's wall_area_net (i.e. excluding doors and windows)
+            crawlspace_wall_uavalue = crawlspace_wall_area_net / crawlspace_wall_rvalue
+            envelope_uavalue += crawlspace_wall_uavalue
+            debug_out "crawlspace_wall_area_gross is #{crawlspace_wall_area_gross}"
+            debug_out "crawlspace_wall_area_net is #{crawlspace_wall_area_net}"
+            debug_out "crawlspace_wall_uavalue is #{crawlspace_wall_uavalue}"
+            debug_out "envelope_area is #{envelope_area}"
+            debug_out "envelope_uavalue is #{envelope_uavalue}"
+            # ------------------------------------------------------------------------------------
+            # 4.5. Crawlspace: FloorHeader (e.g. ERS-1022)
+            crawlspace_floorheader_path = crawlspace_path + "/Components/FloorHeader"
+            elements.each(crawlspace_floorheader_path) do |floorheader|
+                if (floorheader.parent.parent.attributes["id"].to_i == idCrawlspace)
+                    crawlspace_floorheader_area = 0.0
+                    crawlspace_floorheader_height = floorheader.elements["Measurements"].attributes["height"].to_f
+                    crawlspace_floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
+                    crawlspace_floorheader_width = crawlspace_floorheader_perimeter / 2.0 - crawlspace_floorheader_height
+                    crawlspace_floorheader_area = crawlspace_floorheader_width * crawlspace_floorheader_height
+                    crawlspace_floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                    crawlspace_floorheader_uavalue = crawlspace_floorheader_area / crawlspace_floorheader_rvalue
+                    envelope_area += crawlspace_floorheader_area #Note: HOT2000 considers floorheader as a separate componenet. In other words, its area is not part of walls (gross wall area).
+                    envelope_uavalue += crawlspace_floorheader_uavalue
+                    debug_out "crawlspace_floorheader_area is #{crawlspace_floorheader_area}"
+                    debug_out "crawlspace_floorheader_rvalue is #{crawlspace_floorheader_rvalue}"
+                    debug_out "crawlspace_floorheader_uavalue is #{crawlspace_floorheader_uavalue}"
+                    debug_out "envelope_uavalue is #{envelope_uavalue}"
+                end
+            end
+        end #if crawlspace_type=='closed'
+    end
+    # ------------------------------------------------------------------------------------
+    # 5. Walkout (e.g. ERS-1727, ERS-4523, ERS-4540)
+    walkout_path = "HouseFile/House/Components/Walkout"
+    elements.each(walkout_path) do |walkout|
+        idWalkout = walkout.attributes["id"].to_i
+        debug_out "idWalkout is #{idWalkout}"
+        # ------------------------------------------------------------------------------------
+        # 5.1. Walkout: Floor
+        walkout_floor_path = walkout_path+"/Floor"
+        elements.each(walkout_floor_path) do |floor|
+            debug_out "walkout_floor_id #{floor.parent.attributes["id"].to_i}"
+            if (floor.parent.attributes["id"].to_i == idWalkout)
+                walkout_floor_area = 0.0
+                walkout_floor_area = walkout.elements["Measurements"].attributes["l1"].to_f * walkout.elements["Measurements"].attributes["l2"].to_f
+                debug_out "walkout_floor_area is #{walkout_floor_area}"
+                # Reference for RSI of concrete basement floors on the ground: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
+                # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.'
+                if !floor.elements["Construction"].elements["AddedToSlab"].nil?
+                    walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                else
+                    walkout_floor_rvalue =  1.0/5.7 + floor.elements["Construction"].elements["FloorsAbove"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                end
+                walkout_floor_uavalue = walkout_floor_area / walkout_floor_rvalue
+                envelope_area += walkout_floor_area
+                envelope_uavalue += walkout_floor_uavalue
+                debug_out "walkout_floor_area is #{walkout_floor_area}"
+                debug_out "walkout_floor_rvalue is #{walkout_floor_rvalue}"
+                debug_out "walkout_floor_uavalue is #{walkout_floor_uavalue}"
+                debug_out "envelope_area is #{envelope_area}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(walkout_floor_path) do |floor|
+        # ------------------------------------------------------------------------------------
+        # 5.2. Walkout: Wall
+        # Note: it has been assumed that walkouts have only one wall object in HOT2000 files.
+        # This assumption is important as walkout_wall_area_net and associated UA-value are calculated later on after all other things (doors, windows) are calculated for the walkout.
+        walkout_wall_path = walkout_path+"/Wall"
+        walkout_wall_area_net = 0.0
+        walkout_wall_rvalue = 0.0
+        elements.each(walkout_wall_path) do |wall|
+            if (wall.parent.attributes["id"].to_i == idWalkout)
+                walkout_wall_area_gross = 0.0
+                walkout_wall_area_gross = 2 * walkout.elements["Measurements"].attributes["height"].to_f * (walkout.elements["Measurements"].attributes["l1"].to_f + walkout.elements["Measurements"].attributes["l2"].to_f)
+                walkout_wall_area_net = walkout_wall_area_gross
+                if ( ! wall.elements["Construction"].elements["InteriorAddedInsulation"].nil? )
+                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) + wall.elements["Construction"].elements["InteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #see above reference for updated the value of 1.0/(2.0*5.7)
+                else
+                    # Reference for RSI of concrete basement wall: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
+                    # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.
+                    # For basement walls below grade, the temperature difference for winter design conditions is greater than for the floor.
+                    # Test results indicate that, at the mid-height of the below-grade portion of the basement wall, the unit area heat loss is approximately twice that of the floor.'
+                    walkout_wall_rvalue_interior = 1.0/(2.0*5.7) # 0.16 # ASHRAE appoximation  #see above reference for the value of 1.0/(2.0*5.7)
+                end
+                if ( ! wall.elements["Construction"].elements["ExteriorAddedInsulation"].nil? )
+                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7)  + wall.elements["Construction"].elements["ExteriorAddedInsulation"].elements["Composite"].elements["Section"].attributes["rsi"].to_f #see above reference for updated  the value of 1.0/(2.0*5.7)
+                else
+                    walkout_wall_rvalue_exterior = 1.0/(2.0*5.7) #see above reference for the value of 1.0/(2.0*5.7)
+                end
+                walkout_wall_rvalue = walkout_wall_rvalue_exterior + walkout_wall_rvalue_interior + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
+                debug_out "walkout_wall_rvalue is #{walkout_wall_rvalue}"
+                debug_out "envelope_area is #{envelope_area}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(walkout_wall_path) do |wall|
+        # ------------------------------------------------------------------------------------
+        # 5.3. Walkout: Door
+        walkout_door_path = walkout_path+"/Components/Door"
+        elements.each(walkout_door_path) do |door|
+            idWalkoutDoor = door.attributes["id"].to_i
+            debug_out "idWalkoutDoor is #{idWalkoutDoor}"
+            debug_out "#{door.parent.parent.attributes["id"].to_i}"
+            if (door.parent.parent.attributes["id"].to_i == idWalkout)
+
+                # Door (the whole door)
+                door_area_gross = 0.0
+                door_area_net = 0.0
+                door_area_gross = door.elements["Measurements"].attributes["height"].to_f * door.elements["Measurements"].attributes["width"].to_f
+                door_area_net = door_area_gross
+                door_rvalue = door.attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                walkout_wall_area_net -= door_area_gross
+                debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
+                debug_out "door_area_gross is #{door_area_gross}"
+                debug_out "door_rvalue is #{door_rvalue}"
+
+                # Door: Window
+                # Note: 'headerHeight' (e.g. see ERS-1001) has not been considered in window calculation.
+                walkout_door_window_path = walkout_door_path+"/Components/Window"
+                debug_out "walkout_door_window_path is #{walkout_door_window_path}"
+                elements.each(walkout_door_window_path) do |window|
+                    debug_out "window parent id is #{window.parent.parent.attributes["id"].to_i}"
+                    debug_out "idWalkout is #{idWalkout}"
+                    debug_out "idWalkoutDoor is #{idWalkoutDoor}"
+                    if (window.parent.parent.attributes["id"].to_i == idWalkoutDoor)
+                        window_area = 0.0
+                        # [Height (mm) * Width (mm)] * No of Windows
+                        window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                        window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                        window_uavalue = window_area / window_rvalue
+                        door_area_net -= window_area
+                        envelope_uavalue += window_uavalue
+                        debug_out "window_area is #{window_area}"
+                        debug_out "window_rvalue is #{window_rvalue}"
+                        debug_out "window_uavalue is #{window_uavalue}"
+                        debug_out "envelope_uavalue is #{envelope_uavalue}"
+                    end
+                end #elements.each(door_window_path) do |window|
+
+                # calculate UA-Value of door_area_net (i.e. excluding windows)
+                door_uavalue = door_area_net / door_rvalue
+                debug_out "door_area_net is #{door_area_net}"
+                debug_out "door_uavalue is #{door_uavalue}"
+                envelope_area += door_area_gross
+                envelope_uavalue += door_uavalue
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(walkout_door_path) do |door|
+        # ------------------------------------------------------------------------------------
+        # 5.4. Walkout: Window
+        walkout_window_path = walkout_path+"/Components/Window"
+        elements.each(walkout_window_path) do |window|
+            if (window.parent.parent.attributes["id"].to_i == idWalkout)
+                window_area = 0.0
+                window_area = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f) * window.attributes["number"].to_i / 1000000
+                window_rvalue = window.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                window_uavalue = window_area / window_rvalue
+                walkout_wall_area_net -= window_area
+                envelope_area += window_area
+                envelope_uavalue += window_uavalue
+                debug_out "window_area is #{window_area}"
+                debug_out "window_rvalue is #{window_rvalue}"
+                debug_out "window_uavalue is #{window_uavalue}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(wall_window_path) do |window|
+        # ------------------------------------------------------------------------------------
+        # 5.5. Walkout: FloorHeader
+        walkout_floorheader_path = walkout_path+"/Components/FloorHeader"
+        elements.each(walkout_floorheader_path) do |floorheader|
+            if (floorheader.parent.parent.attributes["id"].to_i == idWalkout)
+                floorheader_area = 0.0
+                floorheader_height = floorheader.elements["Measurements"].attributes["height"].to_f
+                floorheader_perimeter = floorheader.elements["Measurements"].attributes["perimeter"].to_f
+                floorheader_width = floorheader_perimeter / 2.0 - floorheader_height
+                floorheader_area = floorheader_width * floorheader_height
+                floorheader_rvalue = floorheader.elements["Construction"].elements["Type"].attributes["rValue"].to_f + rsi_airfilm_wall_int + rsi_airfilm_wall_ext
+                floorheader_uavalue = floorheader_area / floorheader_rvalue
+                envelope_area += floorheader_area # Note: floorheader_area is added to 'envelope_area' as floorheader is a separate component
+                envelope_uavalue += floorheader_uavalue
+                debug_out "floorheader_area is #{floorheader_area}"
+                debug_out "floorheader_rvalue is #{floorheader_rvalue}"
+                debug_out "floorheader_uavalue is #{floorheader_uavalue}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end #elements.each(wall_window_path) do |window|
+        # ------------------------------------------------------------------------------------
+        # Now that walkout_wall_area_net has been calculated, calculate ua-value of the walkout's wall.
+        walkout_wall_uavalue = walkout_wall_area_net / walkout_wall_rvalue
+        envelope_area += walkout_wall_area_net
+        envelope_uavalue += walkout_wall_uavalue
+        debug_out "walkout_wall_area_net is #{walkout_wall_area_net}"
+        debug_out "walkout_wall_rvalue is #{walkout_wall_rvalue}"
+        debug_out "walkout_wall_uavalue is #{walkout_wall_uavalue}"
+        debug_out "envelope_area is #{envelope_area}"
+        debug_out "envelope_uavalue is #{envelope_uavalue}"
+    end #elements.each(walkout_path) do |walkout|
+    # ------------------------------------------------------------------------------------
+    # 6. Slab: Floor (e.g. ERS-1690)
+    slab_path = "HouseFile/House/Components/Slab"
+    elements.each(slab_path) do |slab|
+        idSlab = slab.attributes["id"].to_i
+        debug_out "idSlab is #{idSlab}"
+        # ------------------------------------------------------------------------------------
+        # 6.1. Slab: Floor
+        slab_floor_path = slab_path+"/Floor"
+        elements.each(slab_floor_path) do |floor|
+            idSlabFloorParent = floor.parent.attributes["id"].to_i
+            debug_out "idSlabFloorParent is #{idSlabFloorParent}"
+            if (floor.parent.attributes["id"].to_i == idSlab)
+                slab_floor_area = 0.0
+                debug_out ("#{floor.elements["Construction"].pretty_inspect}")
+                slab_floor_area = floor.elements["Measurements"].attributes["area"].to_f
+                if ( slab_floor_rvalue = floor.elements["Construction"].elements["AddedToSlab"].nil? )
+                  # Uninsulated
+                  # Reference for RSI of concrete basement floors on the ground: ASHRAE Handbook - Fundamentals (SI Edition) > CHAPTER 27 HEAT, AIR, AND MOISTURE CONTROL IN BUILDING ASSEMBLIES—EXAMPLES
+                  # As per above reference: 'A U-factor of 5.7 W/(m2·K) is sometimes used for concrete basement floors on the ground.'
+                  slab_floor_rvalue = 1.0/5.7 + rsi_airfilm_floor_int + rsi_airfilm_floor_ext
+                else
+                  slab_floor_rvalue = 1.0/5.7 + floor.elements["Construction"].elements["AddedToSlab"].attributes["rValue"].to_f + rsi_airfilm_floor_int + rsi_airfilm_floor_ext  #Note: it has been assumed that there are not any cases with 'FloorsAbove' insulation for slabs.
+                end
+                slab_floor_uavalue = slab_floor_area / slab_floor_rvalue
+                envelope_area += slab_floor_area
+                envelope_uavalue += slab_floor_uavalue
+                debug_out "slab_floor_area is #{slab_floor_area}"
+                debug_out "slab_floor_rvalue is #{slab_floor_rvalue}"
+                debug_out "slab_floor_uavalue is #{slab_floor_uavalue}"
+                debug_out "envelope_area is #{envelope_area}"
+                debug_out "envelope_uavalue is #{envelope_uavalue}"
+            end
+        end
+        # ------------------------------------------------------------------------------------
+        # 6.2. Slab: Wall #Note: Slab's wall has not been considered as .h2k file does not have height of wall (see e.g. ERS-1690).
+        # ------------------------------------------------------------------------------------
+    end
+    # ------------------------------------------------------------------------------------
+    ##### Whole house's area-weighted U-value [W/(m2.K)]
+    area_weighted_u = envelope_uavalue / envelope_area #W/(m2.K)
+    debug_out "envelope_area is #{envelope_area}"
+    debug_out "envelope_uavalue is #{envelope_uavalue}"
+    debug_out "area_weighted_u is #{area_weighted_u}"
+
+    # ------------------------------------------------------------------------------------
+    ##### Whole house's area-weighted U-value including infiltration [W/(m2.K)]
+    # envelope metric [W/(m2.K)] = sum(Ui.Ai)/sum(Ai) + (NLR@75Pa) x (density of air at standard conditions) x (specific heat capacity of air at standard conditions)
+    # Density of air at standard conditions= 1.204 kg/m3  (REF: https://en.wikipedia.org/wiki/Density_of_air)
+    # Specific heat capacity of air at standard conditions = 1003.5 J/(kg.K)  (REF: https://en.wikipedia.org/wiki/Table_of_specific_heat_capacities)
+
+    # 0. Air properties
+    rho_air = 1.204
+    cp_air = 1003.5
+
+    # 1. Get ACH@50 from .h2k file
+    ach_at_50Pa = H2KFile.getACHRate(elements)
+    debug_out "ach_at_50Pa is #{ach_at_50Pa}"
+
+    # 2. Convert ACH@50 to ACH@75 using Equation ACH@75 = ACH@50 / ((50/75)^0.6)
+    # (REF: 'Acceptable Air Tightness of Walls in Passive Houses' @https://www.phius.org/sites/default/files/2022-04/201508-Airtightness-Karagiozis.pdf)
+    # Note: flow exponent (n) has been set as 0.6 as per NECB2020 Section 8.4.2.9.
+    ach_at_75Pa = ach_at_50Pa / ((50.0/75.0)**0.6)
+    debug_out "ach_at_75Pa is #{ach_at_75Pa}"
+
+    # 3. Convert ACH@75 to NLR@75
+    # ACH x Volume x (1/3.6) / EnvelopeArea = NLR (L/s/m2)
+    x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/House"
+    myHouseVolume = H2KFile.GetHouseVolume(elements)
+    house_volume = elements[x_path].attributes["volume"].to_f # m3
+    debug_out "envelope_area is #{envelope_area}"
+    nlr_at_75Pa = (ach_at_75Pa * myHouseVolume * (1.0/3.6)) / envelope_area  # (L/s/m2)
+    debug_out "house_volume is #{myHouseVolume}"
+    debug_out "nlr_at_75Pa is #{nlr_at_75Pa}"
+
+    # 4. Convert NLR@75 to NLR@typical operating pressure differential of 5Pa as per NECB2020 (REF: NECB2020 Section 8.4.2.9.)
+    wallDimsAG = H2KFile.getAGWallDimensions(elements)
+    wall_area_gross_abovegrade = wallDimsAG["area"]["gross"]
+    debug_out "wallDimsAG is #{wallDimsAG}"
+    debug_out "wall_area_gross_abovegrade is #{wall_area_gross_abovegrade}"
+    nlr_at_typ_opr_p_diff = ((5.00 / 75.0) ** 0.60) * nlr_at_75Pa * envelope_area / wall_area_gross_abovegrade  # [L/(s.m2)] #Note: It has been assumed that considered wall_area_gross_abovegrade is the value that should be used in NECB's Equation (Section 8.4.2.9.).
+    debug_out "nlr_at_typ_opr_p_diff is #{nlr_at_typ_opr_p_diff}"
+
+    # 5. Calculate Whole house's area-weighted U-value including infiltration [W/(m2.K)]
+    envelope_infiltration_W_per_m2k = nlr_at_typ_opr_p_diff * rho_air * cp_air * 0.001
+    envelope_uavalue_incl_infiltration = area_weighted_u + envelope_infiltration_W_per_m2k
+    debug_out "envelope_infiltration_W_per_m2k is #{envelope_infiltration_W_per_m2k}"
+    debug_out "envelope_uavalue_incl_infiltration is #{envelope_uavalue_incl_infiltration}"
+
+    debug_off
+    # Calculate area-weighted U-value of the envelope END
+    # ====================================================================================
+    # ====================================================================================
+    # ====================================================================================
+    return envelope_area.round(2), area_weighted_u.round(3), envelope_uavalue_incl_infiltration.round(3)
+
+  end # def H2KFile.CalculateAreaWeightedUA(elements)
+
+  # =========================================================================================
+  # Return blower door test value
+  # =========================================================================================
+  def H2KFile.getACHRate(elements)
+    x_path = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+    ach_result = elements[x_path].attributes["airChangeRate"].to_f
+    return ach_result
+  end
+  # =========================================================================================

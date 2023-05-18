@@ -5464,6 +5464,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
                                           ".#{h2kPostElements["HouseFile/Application/Version"].attributes["minor"]}"+
                                           "b#{h2kPostElements["HouseFile/Application/Version"].attributes["build"]}"
         
+        $EnvelopeArea, $EnvelopeUAvalueExcludingInfiltration, $EnvelopeUAvalueIncludingInfiltration = H2KFile.CalculateAreaWeightedUvalue(h2kPostElements)
+
         $gResults[$outputHCode] = H2KOutput.parse_results($outputHCode,h2kPostElements)
 
         debug_off

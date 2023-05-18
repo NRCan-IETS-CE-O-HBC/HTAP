@@ -1138,7 +1138,13 @@ module HTAPData
       "Area-Header-m2"    => "#{$AreaComp['header'].round(3)}",
       "Area-Ceiling-m2"   => "#{$AreaComp['ceiling'].round(3)}",
       "Area-ExposedFloor-m2"     => "#{$AreaComp['floor'].round(3)}",
-      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}"
+      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}",
+
+
+      "envelope_area_m2"  => $EnvelopeArea,
+	  "areaWeightedUvalue_excl_Infiltration_W_per_m2K" => $EnvelopeUAvalueExcludingInfiltration,
+	  "areaWeightedUvalue_incl_Infiltration_W_per_m2K" => $EnvelopeUAvalueIncludingInfiltration
+
     }
 
     if $gReportChoices then
