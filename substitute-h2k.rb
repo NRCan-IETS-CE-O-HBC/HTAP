@@ -1180,15 +1180,15 @@ def processFile(h2kElements)
 
             incSprayFoam = false
             sprayfoamcomponent = ""
-            achCostComponents[0].each do | component |
-              debug_out ("? sprayfoam in #{component}\n")
-              if (component =~ /sprayfoam/i && ( component =~ /rim[_| ]?joist/i || component =~ /floorm[_| ]?header/i ) ) then
-                debug_out "  Yes - add 1.5in spray foam to header R-value"
-                sprayfoamcomponent = component
-                incSprayFoam = true
-              end
-              break if incSprayFoam
-            end
+#            achCostComponents[0].each do | component |
+#              debug_out ("? sprayfoam in #{component}\n")
+#              if (component =~ /sprayfoam/i && ( component =~ /rim[_| ]?joist/i || component =~ /floorm[_| ]?header/i ) ) then
+#                debug_out "  Yes - add 1.5in spray foam to header R-value"
+#                sprayfoamcomponent = component
+#                incSprayFoam = true
+#              end
+#              break if incSprayFoam
+#            end
 
             if ( incSprayFoam )
               headerSprayfoamREff = 1.5 * 6.0
