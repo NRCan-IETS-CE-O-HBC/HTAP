@@ -1098,6 +1098,39 @@ module H2KFile
 
   end # function getWindowArea
 
+  def H2KFile.getVerticalWindowArea(elements)
+
+    windowArea = Hash.new
+    windowArea["total"] = 0
+    windowArea["byOrientation"] = Hash.new
+    windowArea["byOrientation"] = {1=>0,
+      2=>0,
+      3=>0,
+      4=>0,
+      5=>0,
+      6=>0,
+      7=>0,
+      8=>0
+    }
+
+
+    locationText = "HouseFile/House/Components/*/Components/Window"
+    elements.each(locationText) do |window|
+      sParent = window.parent.parent.name
+      next if sParent =~ /Ceiling/ # Skip skylights
+      # Windows orientation:  "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8
+      thisWindowOrient = window.elements["FacingDirection"].attributes["code"].to_i
+      thisWindowArea   = (window.elements["Measurements"].attributes["height"].to_f * window.elements["Measurements"].attributes["width"].to_f)*window.attributes["number"].to_i / 1000000 # [Height (mm) * Width (mm)] * No of Windows
+
+      windowArea["total"] += thisWindowArea
+      windowArea["byOrientation"][thisWindowOrient] += thisWindowArea
+      debug_out "> window - #{thisWindowArea.to_s.ljust(30)} m2\n"
+    end
+    debug_out " TOTAL WINDOW AREA: #{windowArea["total"].to_s.ljust(30)} m2 (#{windowArea["total"]*3.28*3.28} ft2)\n"
+    return windowArea
+
+  end # function getVerticalWindowArea
+
   # ======================================================================================
   # Get skylight dimensions
   # ======================================================================================
@@ -1290,6 +1323,28 @@ module H2KFile
 
   end
 
+  def H2KFile.getBsmtPonyWallArea(elements)
+    fGrossPonyWallArea = 0.0
+    unless elements["HouseFile/House/Components/Basement"].nil?
+      elements.each("HouseFile/House/Components/Basement") do |bsmt|
+        bHasPony = bsmt.elements["Wall"].attributes["hasPonyWall"]
+        if (bHasPony =~ /true/)
+          fGrossPonyWallArea += (bsmt.attributes["exposedSurfacePerimeter"].to_f*bsmt.elements["Wall/Measurements"].attributes["ponyWallHeight"].to_f)
+        end
+      end
+    end
+    return fGrossPonyWallArea
+  end
+
+  def H2KFile.getBsmtAGArea(elements)
+    fGrossAboveGradeWallArea = 0.0
+    unless elements["HouseFile/House/Components/Basement"].nil?
+      elements.each("HouseFile/House/Components/Basement") do |bsmt|
+        fGrossAboveGradeWallArea += (bsmt.attributes["exposedSurfacePerimeter"].to_f*(bsmt.elements["Wall/Measurements"].attributes["height"].to_f-bsmt.elements["Wall/Measurements"].attributes["depth"].to_f))
+      end
+    end
+    return fGrossAboveGradeWallArea
+  end
 
   def H2KFile.getBGDimensions(elements)
 
@@ -1409,7 +1464,7 @@ module H2KFile
     wallDims.each do |wall|
 
       #how many corners belong to this wall?
-#      fracOfCorners = wall["corners"]/wallCornerCount
+      #fracOfCorners = wall["corners"]/wallCornerCount
       if ( wallCornerCount < 1 )
 
         fracOfCorners = 0 
@@ -1433,7 +1488,7 @@ module H2KFile
 
     return bgDims
 
-  end # def H2KFile.getAGWallArea(elements)
+  end # def H2KFile.getBGDimensions(elements)
 
   # Small function that intreprets h2k story codes and returns readable strings
   def self.getNumStoreysString(iVal)
@@ -1616,6 +1671,481 @@ module H2KFile
 
     return myH2KHouseInfo
 
+  end
+
+  def H2KFile.getGrossDoorArea(elements)
+    # Pull elements from results
+    bFound = false
+    fGrossDoor=0.0
+    bIsCrawlHeated = elements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"]
+    elements["HouseFile/AllResults"].elements.each do |element|
+      if (element.attributes["houseCode"] == nil)
+        fGrossDoor += element.elements[".//Other/GrossArea/MainFloors/Door"].attributes["grossArea"].to_f
+        fGrossDoor += element.elements[".//Other/GrossArea/Basement/Door"].attributes["grossArea"].to_f
+        if (bIsCrawlHeated =~ /true/)
+          fGrossDoor += element.elements[".//Other/GrossArea/Crawlspace/Door"].attributes["grossArea"].to_f
+        end
+        break
+      end
+    end
+
+    if (not bFound)
+      fatal_error("Could not find results in H2K file. def getGrossDoorArea")
+    end
+    return fGrossDoor
+  end
+
+  def H2KFile.getGrossVerticalWindowArea(elements)
+    bFound = false
+    fGrossWind=0.0
+    bIsCrawlHeated = elements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"]
+    lFacingKeys = Array["South","SouthEast","East","NorthEast","North","NorthWest","West","SouthWest"]
+    elements.each("HouseFile/AllResults") do |element|
+      if (element.attributes["houseCode"] == nil)
+        lFacingKeys.each do |dir|
+          fGrossWind += element.elements[".//Other/GrossArea/MainFloors/Windows/"+dir].attributes["grossArea"].to_f
+          fGrossWind += element.elements[".//Other/GrossArea/Basement/Windows/"+dir].attributes["grossArea"].to_f
+          if (bIsCrawlHeated =~ /true/)
+            fGrossWind += element.elements[".//Other/GrossArea/Crawlspace/Windows/"+dir].attributes["grossArea"].to_f
+          end
+        end
+        bFound = true
+        break
+      end
+    end
+
+    if (not bFound)
+      fatal_error("Could not find results in H2K file. def getGrossVerticalWindowArea")
+    end
+    # Remove skylight area (included in gross areas for main)
+    fSkyArea = H2KFile.getSkylightArea(elements)
+    fGrossWind -= fSkyArea
+
+    return fGrossWind
+  end
+
+  def H2KFile.getGrossAboveGradeVerticalOpaqueArea(elements)
+    # Returns gross vertical area of the building separating conditioned from unconditioned space, excluding below-grade
+    # Pull elements from results
+    bFound = false
+    fGrossOpaqueVertArea=0.0
+    bIsCrawlHeated = elements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"]
+    elements.each("HouseFile/AllResults") do |element|
+      if (element.attributes["houseCode"] == nil)
+        # Get main zone gross area
+        fGrossOpaqueVertArea = element.elements[".//Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f # Includes child floor header areas
+
+        # Pull basement floor header
+        fGrossOpaqueVertArea += element.elements[".//Other/GrossArea/Basement"].attributes["floorHeader"].to_f
+
+        # If the crawlspace is heated, add the areas of its wall and floor headers
+        if (bIsCrawlHeated =~ /true/)
+          fGrossOpaqueVertArea += element.elements[".//Other/GrossArea/Crawlspace"].attributes["wall"].to_f
+          fGrossOpaqueVertArea += element.elements[".//Other/GrossArea/Crawlspace"].attributes["floorHeader"].to_f
+        end
+
+        bFound = true
+        break
+      end
+    end
+
+    if not bFound
+      fatalerror("Could not find results section in H2K file.")
+    end
+
+    # Basement above-grade area (excluding floor header)
+    fGrossOpaqueVertArea += H2KFile.getBsmtPonyWallArea(elements)
+    fGrossOpaqueVertArea += H2KFile.getBsmtAGArea(elements)
+    
+    # Walkout above-grade area
+    walkDims = H2KFile.getWalkoutDims(elements)
+    fGrossOpaqueVertArea+=(walkDims["ponyExtArea"]+walkDims["AGExtArea"])
+
+    return fGrossOpaqueVertArea
+
+  end
+
+  def H2KFile.getWalkoutDims(elements)
+    fSumAGWallsExt = 0.0
+    fSumPonyExt = 0.0
+    fSumBGWallsExt = 0.0
+    fSumSlabs = 0.0
+    
+    sHouseType = H2KFile.getHouseType(elements)
+    if(not elements["HouseFile/House/Components/Walkout"].nil?)
+      elements.each("HouseFile/House/Components/Walkout") do |walk|
+        # Total bounding areas
+        fPonyAreaTotal=0.0
+        fAGWallAreaTotal=0.0
+        fBGWallAreaTotal=0.0
+        fSlabArea = 0.0
+        fTotalWalls=0.0
+        # Exterior Areas
+        fExtAGWall = 0.0
+        fExtBGWall = 0.0
+        fExtPony = 0.0
+
+        bHasPony = walk.elements[".//Wall"].attributes["hasPonyWall"]
+        bHasSlab = walk.elements[".//Measurements"].attributes["withSlab"]
+
+        fHeight=walk.elements[".//Measurements"].attributes['height'].to_f
+        fd1=walk.elements[".//Measurements"].attributes['d1'].to_f
+        fd2=walk.elements[".//Measurements"].attributes['d2'].to_f
+        fd3=walk.elements[".//Measurements"].attributes['d3'].to_f
+        fd4=walk.elements[".//Measurements"].attributes['d4'].to_f
+        fd5=walk.elements[".//Measurements"].attributes['d5'].to_f
+        fL1=walk.elements[".//Measurements"].attributes['l1'].to_f
+        fL2=walk.elements[".//Measurements"].attributes['l2'].to_f
+        fL3=walk.elements[".//Measurements"].attributes['l3'].to_f
+        fL4=walk.elements[".//Measurements"].attributes['l4'].to_f
+        fBase = fL1-fL3-fL4 # For walkouts with slabs
+
+        fSlabArea += fL1*fL2
+        fTotalWalls += fHeight*2.0*(fL1+fL2)
+
+        if(bHasPony =~ /true/)
+        if(bHasSlab =~ /true/)
+          fBGTriangle=0.5*fBase*fd1
+          fBGWallAreaTotal+=((fd1*fL2)+(2.0*((fd1*fL3)+fBGTriangle)))
+          fPonyA=fHeight-fd1-fd5
+          fPonyB=fHeight-fd5
+          fPonyTrapezoid=0.5*(fPonyA+fPonyB)*fBase
+          fPonyAreaTotal+=((fL2*fPonyA)+(fHeight*fL2)+(2.0*((fPonyA*fL3)+fPonyTrapezoid+(fHeight*fL4))))
+          
+          fAGWallDiag=(fBase*fHeight)-fBGTriangle-fPonyTrapezoid
+          fAGWallAreaTotal+=((fL2*fd5)+(2.0*((fd5*fL3)+fAGWallDiag)))
+        else # No Slab
+          fBGWallAreaTotal+=((fd1*fL2)+(fd2*fL2)) # Left and right
+          fBGWallAreaTotal+=(2.0*(fd1*fL3)) # Front and Back rectangle
+          fBGWallAreaTotal+=(2.0*(0.5*(fd1+fd2)*(fL1-fL3))) # Front and Back trapezoid
+          
+          fPonyHeightFront = fHeight-fd1-fd5
+          fPonyHeightBack = fHeight-fd2-fd5
+          fPonyAreaTotal+=((fPonyHeightFront*fL2)+((fPonyHeightBack)*fL2)) # Left and right
+          fPonyAreaTotal+=(2.0*fPonyHeightFront*fL3) # Front and Back rectangle
+          fPonyAreaTotal+=(2.0*(0.5*(fPonyHeightFront+fPonyHeightBack)*(fL1-fL3))) # Front and Back trapezoid
+          
+          fAGWallAreaTotal+=(fTotalWalls-fBGWallAreaTotal-fPonyAreaTotal)
+        end
+        else # No Pony Wall
+        fBGWallAreaTotal+=(0.5*(fd1+fd4)*fL2) # Left-side
+        fBGWallAreaTotal+=(fd1*fL3) # Front rectangle
+        fBGWallAreaTotal+=(fd4*fL3) # Back rectangle
+
+        if(bHasSlab =~ /true/)
+          fBGWallAreaTotal+=(0.5*fBase*fd1) # Front triangle
+          fBGWallAreaTotal+=(0.5*fBase*fd4) # Back triangle
+        else
+          fBGWallAreaTotal+=(0.5*(fd1+fd2)*(fL1-fL3)) # Front trapezoid
+          fBGWallAreaTotal+=(0.5*(fd4+fd3)*(fL1-fL3)) # Back trapezoid
+          fBGWallAreaTotal+=(0.5*(fd2+fd3)*fL2) # Right-side
+        end
+        fAGWallAreaTotal+=(fTotalWalls-fBGWallAreaTotal)
+        end
+
+        # Now sort out what is exposed
+        bExtSurfElem = false
+        bLocationsElem = false
+
+        elements.each("HouseFile/House/Components/Walkout/ExteriorSurfaces") do |search|
+          bExtSurfElem = true
+        end
+        elements.each("HouseFile/House/Components/Walkout/Locations") do |search|
+          bLocationsElem = true
+        end
+
+        if(sHouseType =~ /SingleDetached/)
+          fExtAGWall += fAGWallAreaTotal
+          fExtBGWall += fBGWallAreaTotal
+          fExtPony += fPonyAreaTotal
+        elsif(bExtSurfElem)
+          fExtBGWall += walk.elements["ExteriorSurfaces"].attributes["belowGradeArea"].to_f
+          fExtPony += (walk.elements["ExteriorSurfaces"].attributes["aboveGradeArea"].to_f)*(fPonyAreaTotal/(fPonyAreaTotal+fAGWallAreaTotal))
+          fExtAGWall += (walk.elements["ExteriorSurfaces"].attributes["aboveGradeArea"].to_f)*(fAGWallAreaTotal/(fPonyAreaTotal+fAGWallAreaTotal))
+        elsif(bLocationsElem)
+          # Exterior facing by location
+          fL11X1 = walk.elements["Locations/L1_1"].attrib["x1"].to_f
+          fL11X2 = walk.elements["Locations/L1_1"].attrib["x2"].to_f
+
+          fL12X1 = walk.elements["Locations/L1_2"].attrib["x1"].to_f
+          fL12X2 = walk.elements["Locations/L1_2"].attrib["x2"].to_f
+          fL21X1 = walk.elements["Locations/L2_1"].attrib["x1"].to_f
+          fL21X2 = walk.elements["Locations/L2_1"].attrib["x2"].to_f
+          fL22X1 = walk.elements["Locations/L2_2"].attrib["x1"].to_f
+          fL22X2 = walk.elements["Locations/L2_2"].attrib["x2"].to_f
+
+          x1 = Array[fL11X1,fL12X1]
+          x2 = Array[fL11X2,fL12X2]
+
+          if (bHasPony =~ /true/)
+          ## Pony wall with slab ##
+          if(bHasSlab =~ /true/)
+            # Start with front and back
+            #####################
+            for idx in 0..1 do
+              if (x1[idx] < fL3)
+                fThisLength = 0.0
+                if(x2[idx] > fL3)
+                  fThisLength = fL3 - x1[idx]
+                else
+                  fThisLength = x2[idx]-x1[idx]
+                end
+
+                fExtPony += fThisLength*(fHeight-fd1-fd5)
+                fExtAGWall += fThisLength*fd5
+                fExtBGWall += fThisLength*fd1
+              end
+
+              if(x2[idx] > fL3 && x1[idx] < (fL1-fL4)) # Part of zone 2 is exposed
+                fZone2BaseLength = fL1-fL3-fL4
+                # Set up local coordinates in zone 2
+                fXLoc1 = 0.0
+                if (x1[idx] < fL3)
+                  fXLoc1 = 0.0
+                else
+                  fXLoc1 = x1[idx] - fL3
+                end
+
+                fXLoc2 = 0.0
+                if (x2[idx] > (fL1-fL4))
+                  fXLoc2 = fL1-fL3-fL3
+                else
+                  fXLoc2 = x2[idx] - fL3
+                end
+
+                fA = (fd1*(fZone2BaseLength-fXLoc1))/fZone2BaseLength
+                fB = (fd1*(fZone2BaseLength-fXLoc2))/fZone2BaseLength
+
+                fExtBGWall += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+                fExtAGWall += fd5*(fXLoc2-fXLoc1)
+
+                # Pony wall
+                fA = fHeight-fA-fd5
+                fB = fHeight-fB-fd5
+                fExtPony += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+              end
+
+              if(x2[idx] > (fL1-fL4)) # Part of zone 3 is exposed
+                # Set up local coordinates in zone 2
+                fXLoc1 = 0.0
+                if(x1[idx] < (fL1-fL4))
+                  fXLoc1 = 0.0
+                else
+                  fXLoc1 = x1[idx]-(fL1-fL4)
+                end
+
+                fXLoc2 = x2[idx]-(fL1-fL4)
+
+                fExtPony += ((fXLoc2-fXLoc1)*fHeight)
+              end
+
+            end
+            # Now right side
+            #####################
+            fLengthExp = fL21X2-fL21X1
+            fExtPony += (fLengthExp*fHeight)
+
+            # Finally left side
+            #####################
+            fLengthExp = fL22X2-fL22X1
+            fExtBGWall += (fLengthExp*fd1)
+            fExtAGWall += (fLengthExp*fd5)
+            fExtPony += (fLengthExp*(fHeight-fd1-fd5))
+          
+          ## Pony wall no slab ##
+          else # No Slab
+            # Start with front and back
+            #####################
+            fPonyHeightLeft = fHeight-fd1-fd5
+            fPonyHeightRight = fHeight-fd2-fd5
+
+            for idx in 0..1 do
+              if (x1[idx] < fL3) # Part of zone 1 is exposed
+                fExpLength = x2[idx]-x1[idx]
+                if (x2[idx] > fL3)
+                  fExpLength = fL3-x1[idx]
+                end
+
+                fExtBGWall+=(fExpLength*fd1)
+                fExtAGWall+=(fExpLength*fd5)
+                fExtPony += (fExpLength*fPonyHeightLeft)
+              end
+
+              if(x2[idx] > fL3) # Part of zone 2 is exposed
+                fExpLength = x2[idx]-fL3
+                fXLoc1=0.0
+                if(x1[idx] > fL3)
+                  fExpLength = x2[idx]-x1[idx]
+                  fXLoc1=x1[idx]-fL3
+                end
+
+                fXLoc2=x2[idx]-fL3
+
+                fZone2BaseLength = fL1-fL3
+                fA = ((fd1-fd2)*(fZone2BaseLength-fXLoc1))/fZone2BaseLength
+                fB = ((fd1-fd2)*(fZone2BaseLength-fXLoc2))/fZone2BaseLength
+                fExtBGWall += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+                fExtBGWall += (fXLoc2-fXLoc1)*fd2 # Additional below-grade portion
+                fExtAGWall += (fd5)*(fXLoc2-fXLoc1)
+                
+                # Pony wall
+                fA = fHeight-fA-fd5-fd2
+                fB = fHeight-fB-fd5-fd2
+                fExtPony += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+              end
+            end
+
+            # Now right side
+            #####################
+            fLengthExp = fL21X2-fL21X1
+            fExtPony += (fLengthExp*fPonyHeightRight)
+            fExtAGWall += (fLengthExp*fd5)
+            fExtBGWall += (fLengthExp*fd2)
+            
+            # Finally left side
+            #####################
+            fLengthExp = fL22X2-fL22X1
+            fExtBGWall += (fLengthExp*fd1)
+            fExtAGWall += (fLengthExp*fd5)
+            fExtPony += (fLengthExp*fPonyHeightLeft)
+          end
+          else # No Pony Wall
+          if(bHasSlab =~ /true/)
+            # Start with front and back
+            #####################
+            fBackHeights = Array[fd1,fd4]
+            for idx in 0..1 do
+              if(x1[idx] < fL3) # Part of zone 1 is exposed
+                fThisLength = x2[idx]-x1[idx]
+                if(x2[idx] > fL3)
+                  fThisLength = fL3 - x1[idx]
+                end
+                fExtAGWall += fThisLength*(fHeight-fBackHeights[idx])
+                fExtBGWall += fThisLength*fBackHeights[idx]
+              end
+              if (x2[idx] > fL3 && x1[idx] < (fL1-fL4)) # Part of zone 2 is exposed
+                fZone2BaseLength = fL1-fL3-fL4
+                # Set up local coordinates in zone 2
+                fXLoc1 = x1[idx] - fL3
+                if(x1[idx] < fL3)
+                  fXLoc1 = 0.0
+                end
+                fXLoc2 = x2[idx] - fL3
+                if(x2[idx] > (fL1-fL4))
+                  fXLoc2 = fL1-fL3-fL3
+                end
+
+                fA = (fBackHeights[idx]*(fZone2BaseLength-fXLoc1))/fZone2BaseLength
+                fB = (fBackHeights[idx]*(fZone2BaseLength-fXLoc2))/fZone2BaseLength
+
+                fExtBGWall += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+                fExtAGWall += ((((2.0*fHeight-fA-fB))/2.0)*(fXLoc2-fXLoc1))
+              end
+              if(x2[idx] > (fL1-fL4)) # Part of zone 3 is exposed
+                # Set up local coordinates in zone 2
+                fXLoc1 = x1[idx]-(fL1-fL4)
+                if (x1[idx] < (fL1-fL4))
+                  fXLoc1 = 0.0
+                end
+                fXLoc2 = x2[idx]-(fL1-fL4)
+                fExtAGWall += ((fXLoc2-fXLoc1)*fHeight)
+              end
+            end
+            # Now right side
+            #####################
+            fLengthExp = fL21X2-fL21X1
+            fExtAGWall += (fLengthExp*fHeight)
+            
+            # Finally left side 
+            #####################
+            fSlope = (fd4-fd1)/fL2
+            fLengthExp = fL22X2-fL22X1
+            fA = (fSlope*fL22X1)+fd1
+            fB = (fSlope*fL22X2)+fd1
+            
+            fExtBGWall += (((fA+fB)/2.0)*fLengthExp)
+            fExtAGWall += ((((2.0*fHeight)-fA-fB)/2.0)*fLengthExp)
+
+          ## No pony wall with slab ##
+          else
+            # Start with front and back
+            #####################
+            fBackHeights = Array[fd1,fd4]
+            fFrontHeights = Array[fd2,fd3]
+            for idx in 0..1 do
+              if( x1[idx] < fL3)
+                fExpLength = x2[idx]-x1[idx]
+                if(x2[idx] > fL3)
+                  fExpLength = fL3-x1[idx]
+                end
+
+                fExtBGWall+=(fExpLength*fBackHeights[idx])
+                fExtAGWall+=(fExpLength*(fHeight-fBackHeights[idx]))
+              end
+              if(x2[idx] > fL3)
+                fExpLength = x2[idx]-fL3
+                fXLoc1=0.0
+                if(x1[idx] > fL3)
+                  fExpLength = x2[idx]-x1[idx]
+                  fXLoc1=x1[idx]-fL3
+                end
+
+                fXLoc2=x2[idx]-fL3
+                            
+                fZone2BaseLength = fL1-fL3
+                fSlope = (fFrontHeights[idx]-fBackHeights[idx])/fZone2BaseLength
+                fA = (fSlope*fXLoc1)+fBackHeights[idx]
+                fB = (fSlope*fXLoc2)+fBackHeights[idx]
+                fExtBGWall += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+                                            
+                fA = fHeight-fA
+                fB = fHeight-fB
+                fExtAGWall += ((fA+fB)/2.0)*(fXLoc2-fXLoc1)
+              end
+            end
+            # Now right side
+            #####################
+            fLengthExp = fL21X2-fL21X1
+            fSlope = (fd3-fd2)/fL2
+            fA = (fSlope*fL21X1)+fd2
+            fB = (fSlope*fL21X2)+fd2
+            fExtBGWall += ((fA+fB)/2.0)*fLengthExp
+            
+            fA = fHeight-fA
+            fB = fHeight-fB
+            fExtAGWall += ((fA+fB)/2.0)*fLengthExp
+
+            # Finally left side
+            #####################
+            fLengthExp = fL22X2-fL22X1
+            fSlope = (fd4-fd1)/fL2
+            fA = (fSlope*fL22X1)+fd1
+            fB = (fSlope*fL22X2)+fd1
+            fExtBGWall += ((fA+fB)/2.0)*fLengthExp
+            
+            fA = fHeight-fA
+            fB = fHeight-fB
+            fExtAGWall += ((fA+fB)/2.0)*fLengthExp
+          end
+          end
+        else
+          fatal_error("Could not determine attachment type for walkout. (Note: list not supported)")
+        end
+      
+        fSumAGWallsExt += fExtAGWall
+        fSumPonyExt += fExtPony
+        fSumBGWallsExt += fExtBGWall
+        fSumSlabs += fSlabArea
+
+      end
+    end
+    hReturn = Hash.new
+    hReturn = { "ponyExtArea"   => fSumPonyExt,
+      "AGExtArea"       => fSumAGWallsExt,
+      "BGExtArea"        => fSumBGWallsExt,
+      "SlabArea"    => fSumSlabs
+    }
+    return hReturn
   end
 
   def H2KFile.deleteAllWin(elements)
