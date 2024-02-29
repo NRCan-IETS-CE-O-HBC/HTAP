@@ -1864,15 +1864,15 @@ module H2KFile
           fExtAGWall += (walk.elements["ExteriorSurfaces"].attributes["aboveGradeArea"].to_f)*(fAGWallAreaTotal/(fPonyAreaTotal+fAGWallAreaTotal))
         elsif(bLocationsElem)
           # Exterior facing by location
-          fL11X1 = walk.elements["Locations/L1_1"].attrib["x1"].to_f
-          fL11X2 = walk.elements["Locations/L1_1"].attrib["x2"].to_f
+          fL11X1 = walk.elements["Locations/L1_1"].attributes["x1"].to_f
+          fL11X2 = walk.elements["Locations/L1_1"].attributes["x2"].to_f
 
-          fL12X1 = walk.elements["Locations/L1_2"].attrib["x1"].to_f
-          fL12X2 = walk.elements["Locations/L1_2"].attrib["x2"].to_f
-          fL21X1 = walk.elements["Locations/L2_1"].attrib["x1"].to_f
-          fL21X2 = walk.elements["Locations/L2_1"].attrib["x2"].to_f
-          fL22X1 = walk.elements["Locations/L2_2"].attrib["x1"].to_f
-          fL22X2 = walk.elements["Locations/L2_2"].attrib["x2"].to_f
+          fL12X1 = walk.elements["Locations/L1_2"].attributes["x1"].to_f
+          fL12X2 = walk.elements["Locations/L1_2"].attributes["x2"].to_f
+          fL21X1 = walk.elements["Locations/L2_1"].attributes["x1"].to_f
+          fL21X2 = walk.elements["Locations/L2_1"].attributes["x2"].to_f
+          fL22X1 = walk.elements["Locations/L2_2"].attributes["x1"].to_f
+          fL22X2 = walk.elements["Locations/L2_2"].attributes["x2"].to_f
 
           x1 = Array[fL11X1,fL12X1]
           x2 = Array[fL11X2,fL12X2]
@@ -1908,7 +1908,7 @@ module H2KFile
 
                 fXLoc2 = 0.0
                 if (x2[idx] > (fL1-fL4))
-                  fXLoc2 = fL1-fL3-fL3
+                  fXLoc2 = fL1-fL3-fL4
                 else
                   fXLoc2 = x2[idx] - fL3
                 end
@@ -2032,7 +2032,7 @@ module H2KFile
                 end
                 fXLoc2 = x2[idx] - fL3
                 if(x2[idx] > (fL1-fL4))
-                  fXLoc2 = fL1-fL3-fL3
+                  fXLoc2 = fL1-fL3-fL4
                 end
 
                 fA = (fBackHeights[idx]*(fZone2BaseLength-fXLoc1))/fZone2BaseLength
