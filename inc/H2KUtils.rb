@@ -1754,7 +1754,7 @@ module H2KFile
     end
 
     # Basement above-grade area (excluding floor header)
-    fGrossOpaqueVertArea += H2KFile.getBsmtPonyWallArea(elements)
+    # fGrossOpaqueVertArea += H2KFile.getBsmtPonyWallArea(elements) # REMOVED: THIS AREA IS PART OF THE TOTAL AREA REPORTED BY getBsmtAGArea
     fGrossOpaqueVertArea += H2KFile.getBsmtAGArea(elements)
     
     # Walkout above-grade area
