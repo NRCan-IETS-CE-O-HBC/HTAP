@@ -3495,35 +3495,14 @@ def processFile(h2kElements)
         #-----------------------------------------------------------------------------------
         elsif (choiceEntry =~ /Opt-WindowDistribution/)
           myH2KHouseInfo=H2KFile.getAllInfo(h2kElements)
-          winAreaOrient = H2KFile.getWindowArea(h2kElements)
+          winAreaOrient = H2KFile.getVerticalWindowArea(h2kElements) # This exculdes skylight area
           winArea = winAreaOrient["total"]
           fCasementHeight = 1500
           fCasementWidth = 600
 
           # Get the gross above
-          wallAreaAG = H2KFile.getAGWallDimensions(h2kElements)
           doorArea = H2KFile.getDoorArea(h2kElements)
-          grossWallArea = wallAreaAG["area"]["gross"].to_f
-          skylightArea = H2KFile.getSkylightArea(h2kElements)
-
-          # Add AG foundation walls
-          locationText = "HouseFile/House/Components/Basement"
-          h2kElements.each(locationText) do |bsmt|
-            fExpPerim = bsmt.attributes["exposedSurfacePerimeter"].to_f
-            fBsmtAGWallHeight = bsmt.elements["Wall/Measurements"].attributes["height"].to_f-bsmt.elements["Wall/Measurements"].attributes["depth"].to_f
-            grossWallArea+=(fExpPerim*fBsmtAGWallHeight)
-            
-            # Add pony wall area
-            fPonyHeight = bsmt.elements["Wall/Measurements"].attributes["ponyWallHeight"].to_f
-            grossWallArea+=(fExpPerim*fPonyHeight)
-            
-            # Add Header Area
-            bsmt.elements.each("Components/FloorHeader") do |header|
-               grossWallArea+=(fExpPerim*header.elements["Measurements"].attributes["height"].to_f)
-            end
-
-          end
-
+          grossWallArea = H2KFile.getGrossAboveGradeVerticalOpaqueArea(h2kElements)
           frontOrientation = H2KFile.getFrontOrientation(h2kElements)
 
           # FDWR
@@ -3534,6 +3513,7 @@ def processFile(h2kElements)
             elsif value == "NBC9.36"
               # NBC9.36 specify a range (i.e. 0.17 < FDWR < 0.22)
               # Keep original if in the range, otherwise set to max or min
+              # Definition for gross wall area in A-9.36.2.3.(2) and (3) and Sentence 9.36.2.3.(2) in NBC 2020
               fDWR = (winArea+doorArea) / grossWallArea
               if (fDWR < 0.17)
                 fDWR = 0.17
@@ -3595,7 +3575,7 @@ def processFile(h2kElements)
             winCode = Hash.new
             tempAreaWin = Hash.new(0)
             maxAreaWin = Hash.new(0)
-            totalNewWinArea = (fDWR * grossWallArea - doorArea - skylightArea)
+            totalNewWinArea = (fDWR * grossWallArea) - doorArea
             iCasementsPerSide = 1
             if value == "EQUAL"
               bIsSameDist = 0
