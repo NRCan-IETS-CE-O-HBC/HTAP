@@ -3190,6 +3190,29 @@
           "custom-costs": {
           }
         }
+      },
+      "VarySHGCByFDWR": {
+        "h2kMap": {
+          "base": {
+            "<Opt-win-S-CON>": "NBC-zone4-window",
+            "<Opt-win-E-CON>": "NBC-zone4-window",
+            "<Opt-win-N-CON>": "NBC-zone4-window",
+            "<Opt-win-W-CON>": "NBC-zone4-window",
+            "<Opt-win-SE-CON>": "NBC-zone4-window",
+            "<Opt-win-SW-CON>": "NBC-zone4-window",
+            "<Opt-win-NE-CON>": "NBC-zone4-window",
+            "<Opt-win-NW-CON>": "NBC-zone4-window",
+            "<FDWR_Low_Limit>" : "0.17",
+            "<Opt-win_Low_Limit>" : "NBC-zone6-window",
+            "<FDWR_High_Limit>" : "0.22",
+            "<Opt-win_High_Limit>" : "NBC-zone8-window"
+          }
+        },
+        "costs": {
+          "proxy": "NC-2g-HG-u1.82",
+          "custom-costs": {
+          }
+        }
       }
     },
     "default": "NA",
@@ -3202,7 +3225,11 @@
       "<Opt-win-SE-CON>",
       "<Opt-win-SW-CON>",
       "<Opt-win-NE-CON>",
-      "<Opt-win-NW-CON>"
+      "<Opt-win-NW-CON>",
+      "<FDWR_Low_Limit>",
+      "<Opt-win_Low_Limit>",
+      "<FDWR_High_Limit>",
+      "<Opt-win_High_Limit>"
     ]
   },
   "Opt-Skylights": {

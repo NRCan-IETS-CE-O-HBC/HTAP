@@ -1362,6 +1362,7 @@ def processFile(h2kElements)
           # Windows (by facing direction)
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-Windows/ )
+
           if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
             ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
             ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
@@ -1394,7 +1395,53 @@ def processFile(h2kElements)
 
           elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
             ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+          
+          elsif (tag =~ /FDWR_Low_Limit/ &&  (!value.empty? && value != "NA"))
+            # Get the FDWR of the root model
+            winAreaOrient = H2KFile.getVerticalWindowArea(h2kElements) # This exculdes skylight area
+            winArea = winAreaOrient["total"]
+            doorArea = H2KFile.getDoorArea(h2kElements)
+            grossWallArea = H2KFile.getGrossAboveGradeVerticalOpaqueArea(h2kElements)
+            fDWR = (winArea+doorArea) / grossWallArea
 
+            fLowFDWR = value.to_f
+            # Find the other inputs
+            for tagIndex in tagHash.keys()
+              if (tagHash[tagIndex] =~ /FDWR_High_Limit/)
+                fHighFDWR = valHash[tagIndex.to_s].to_f
+              elsif (tagHash[tagIndex] =~ /Opt-win_Low_Limit/)
+                sLowWindow = valHash[tagIndex.to_s]
+              elsif (tagHash[tagIndex] =~ /Opt-win_High_Limit/)
+                sHiWindow = valHash[tagIndex.to_s]
+              end
+            end
+
+            bUpdateWindow = false
+            if (fDWR <= fLowFDWR)
+              # Building FDWR less than or equal to threshold. Use Low FDWR window
+              bUpdateWindow = true
+              sThisWindow = sLowWindow
+            elsif (fDWR >= fHighFDWR)
+              # Building FDWR greater than or equal to threshold. Use High FDWR window
+              bUpdateWindow = true
+              sThisWindow = sHiWindow
+            #else
+            #  # Do nothing, previous windows are valid
+            end
+
+            if bUpdateWindow
+              ChangeWinCodeByOrient( "S", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "E", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "N", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "W", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "SE", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "SW", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "NE", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "NW", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif (tag =~ /FDWR_Low_Limit/ || tag =~ /FDWR_High_Limit/ ||  tag =~ /Opt-win_Low_Limit/ || tag =~ /Opt-win_High_Limit/)
+            # Don't change anything. Taken care of last loop pass
           else
             if ( value == "NA" )
               # Don't change anything
@@ -3494,7 +3541,7 @@ def processFile(h2kElements)
         # Delete all windows and redistribute according to the choices
         #-----------------------------------------------------------------------------------
         elsif (choiceEntry =~ /Opt-WindowDistribution/)
-          myH2KHouseInfo=H2KFile.getAllInfo(h2kElements)
+          #myH2KHouseInfo=H2KFile.getAllInfo(h2kElements)
           winAreaOrient = H2KFile.getVerticalWindowArea(h2kElements) # This exculdes skylight area
           winArea = winAreaOrient["total"]
           fCasementHeight = 1500
