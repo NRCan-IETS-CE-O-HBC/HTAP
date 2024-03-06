@@ -1494,9 +1494,9 @@
         "h2kMap": {
           "base": {
             "<Opt-ACH>": "3.0",
-            "Opt-BuildingSite": "NA",
-            "Opt-WallShield": "NA",
-            "Opt-FlueShield": "NA"
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
           }
         },
         "costs": {
@@ -11066,6 +11066,36 @@
             "Opt-H2K-Type1EffVal": "85",
             "Opt-H2K-Type1FanCtl": "1",
             "Opt-H2K-Type1EEMotor": "false"
+          }
+        },
+        "costs": {
+          "custom-costs": {
+          },
+          "components": [
+
+          ]
+        }
+      },
+	  "NBC-oil-heat-AC": {
+        "h2kMap": {
+          "base": {
+            "Opt-H2K-SysType1": "Furnace",
+            "Opt-H2K-SysType2": "AirConditioning",
+            "Opt-H2K-Type1Fuel": "3",
+            "Opt-H2K-Type1EqpType": "4",
+            "Opt-H2K-Type1CapOpt": "2",
+            "Opt-H2K-Type1CapVal": "NA",
+            "Opt-H2K-Type1EffType": "false",
+            "Opt-H2K-Type1EffVal": "85",
+            "Opt-H2K-Type1FanCtl": "1",
+            "Opt-H2K-Type1EEMotor": "false",
+			"Opt-H2K-Type2CCaseH": "0",
+            "Opt-H2K-Type2Func": "2",
+            "Opt-H2K-Type2Type": "1",
+            "Opt-H2K-Type2CapOpt": "2",
+            "Opt-H2K-Type2CapVal": "NA",
+            "Opt-H2K-Type2CoolCOP": "3.095",
+            "Opt-H2K-CoolOperWindow": "NA"
           }
         },
         "costs": {
