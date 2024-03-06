@@ -545,7 +545,7 @@ def processFile(h2kElements)
 
 
   baseOptionCost = 0
-
+  bPreCalcOptWindows = true
   $gChoiceOrder.each do |choiceEntry|
     #debug_on
     next if ( $DoNotValidateOptions.include? choiceEntry )
@@ -1362,74 +1362,111 @@ def processFile(h2kElements)
           # Windows (by facing direction)
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-Windows/ )
-
-          if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-          elsif ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-
-          elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-          
-          elsif (tag =~ /FDWR_Low_Limit/ &&  (!value.empty? && value != "NA"))
-            # Get the FDWR of the root model
-            winAreaOrient = H2KFile.getVerticalWindowArea(h2kElements) # This exculdes skylight area
-            winArea = winAreaOrient["total"]
-            doorArea = H2KFile.getDoorArea(h2kElements)
-            grossWallArea = H2KFile.getGrossAboveGradeVerticalOpaqueArea(h2kElements)
-            fDWR = (winArea+doorArea) / grossWallArea
-
-            fLowFDWR = value.to_f
-            # Find the other inputs
+          if bPreCalcOptWindows
+            # Need to check other inputs
+            bOverride = false
             for tagIndex in tagHash.keys()
-              if (tagHash[tagIndex] =~ /FDWR_High_Limit/)
-                fHighFDWR = valHash[tagIndex.to_s].to_f
-              elsif (tagHash[tagIndex] =~ /Opt-win_Low_Limit/)
-                sLowWindow = valHash[tagIndex.to_s]
-              elsif (tagHash[tagIndex] =~ /Opt-win_High_Limit/)
-                sHiWindow = valHash[tagIndex.to_s]
+              if (tagHash[tagIndex] =~ /FDWR_Low_Limit/)
+                if valHash[tagIndex.to_s].nil?
+                  bOverride = false
+                  break
+                elsif !valHash[tagIndex.to_s].empty? && valHash[tagIndex.to_s] != 'NA'
+                  bOverride = true
+                  break
+                end
               end
             end
 
-            bUpdateWindow = false
-            if (fDWR <= fLowFDWR)
-              # Building FDWR less than or equal to threshold. Use Low FDWR window
-              bUpdateWindow = true
-              sThisWindow = sLowWindow
-            elsif (fDWR >= fHighFDWR)
-              # Building FDWR greater than or equal to threshold. Use High FDWR window
-              bUpdateWindow = true
-              sThisWindow = sHiWindow
-            #else
-            #  # Do nothing, previous windows are valid
+            if bOverride
+              # Check the other parameters to determine which windows to use
+              for tagIndex in tagHash.keys()
+                if (tagHash[tagIndex] =~ /FDWR_High_Limit/)
+                  fHighFDWR = valHash[tagIndex.to_s].to_f
+                elsif (tagHash[tagIndex] =~ /Opt-win_Low_Limit/)
+                  sLowWindow = valHash[tagIndex.to_s]
+                elsif (tagHash[tagIndex] =~ /Opt-win_High_Limit/)
+                  sHiWindow = valHash[tagIndex.to_s]
+                elsif (tagHash[tagIndex] =~ /FDWR_Low_Limit/)
+                  fLowFDWR = valHash[tagIndex.to_s].to_f
+                end
+              end
+
+              # Get the FDWR of the root model
+              winAreaOrient = H2KFile.getVerticalWindowArea(h2kElements) # This exculdes skylight area
+              winArea = winAreaOrient["total"]
+              doorArea = H2KFile.getDoorArea(h2kElements)
+              grossWallArea = H2KFile.getGrossAboveGradeVerticalOpaqueArea(h2kElements)
+              fDWR = (winArea+doorArea) / grossWallArea
+
+              if (fDWR <= fLowFDWR)
+                # Building FDWR less than or equal to threshold. Use Low FDWR window
+                bOverride = true
+                sThisWindow = sLowWindow
+              elsif (fDWR >= fHighFDWR)
+                # Building FDWR greater than or equal to threshold. Use High FDWR window
+                bOverride = true
+                sThisWindow = sHiWindow
+              else
+                # Keep the base windows
+                bOverride = false
+              end
+            end
+            bPreCalcOptWindows = false
+          end
+
+          if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+          elsif ( tag =~ /Opt-win-S-CON/ &&  value != "NA")
+            if !bOverride
+              ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
             end
 
-            if bUpdateWindow
+          elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+
+          elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+            if !bOverride
+              ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+            end
+          
+          elsif (tag =~ /FDWR_Low_Limit/)
+            if bOverride
               ChangeWinCodeByOrient( "S", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
               ChangeWinCodeByOrient( "E", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
               ChangeWinCodeByOrient( "N", sThisWindow, h2kCodeElements, h2kElements, choiceEntry, tag )
