@@ -1637,6 +1637,51 @@
           ]
         }
       },
+      "NLR_0_89": {
+        "h2kMap": {
+          "base": {
+            "Opt-NLR": "0.89",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
+      "NLR_1_17": {
+        "h2kMap": {
+          "base": {
+            "Opt-NLR": "1.17",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
+      "NLR_1_25": {
+        "h2kMap": {
+          "base": {
+            "Opt-NLR": "1.25",
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
       "New-Const-air_seal_to_0.60_ach": {
         "h2kMap": {
           "base": {
@@ -1780,7 +1825,8 @@
       "<Opt-ACH>",
       "Opt-BuildingSite",
       "Opt-WallShield",
-      "Opt-FlueShield"
+      "Opt-FlueShield",
+      "Opt-NLR"
     ]
   },
   "Opt-Windows": {

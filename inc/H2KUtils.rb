@@ -1724,6 +1724,40 @@ module H2KFile
     return fGrossWind
   end
 
+  def H2KFile.getTotalExteriorArea(elements)
+    # Get all the above-grade exterior first
+    fTotalExterior = H2KFile.getGrossAboveGradeVerticalOpaqueArea(elements)
+    # Add the horizontal exposed areas
+    bFound = false
+    elements.each("HouseFile/AllResults") do |element|
+      if (element.attributes["houseCode"] == nil)
+        fTotalExterior += element.elements[".//Other/GrossArea"].attributes["ceiling"].to_f
+        fTotalExterior += element.elements[".//Other/GrossArea"].attributes["exposedFloors"].to_f
+        fTotalExterior += element.elements[".//Other/GrossArea/Basement"].attributes["floorSlab"].to_f
+        fTotalExterior += element.elements[".//Other/GrossArea/Crawlspace"].attributes["floor"].to_f
+        bFound = true
+        break
+      end
+    end
+    if not bFound
+      fatalerror("Could not find results section in H2K file.")
+    end
+
+    # Add the below-grade area of the basement
+    unless elements["HouseFile/House/Components/Basement"].nil?
+      elements.each("HouseFile/House/Components/Basement") do |bsmt|
+        fTotalExterior += (bsmt.attributes["exposedSurfacePerimeter"].to_f*(bsmt.elements["Wall/Measurements"].attributes["depth"].to_f))
+      end
+    end
+
+    # Add the below-grade areas of the walkout (NOTE: Floor slab grabbed by Other/GrossArea/Basement/floorSlab)
+    walkDims = H2KFile.getWalkoutDims(elements)
+    fTotalExterior += walkDims["BGExtArea"]
+
+    return fTotalExterior
+
+  end
+
   def H2KFile.getGrossAboveGradeVerticalOpaqueArea(elements)
     # Returns gross vertical area of the building separating conditioned from unconditioned space, excluding below-grade
     # Pull elements from results

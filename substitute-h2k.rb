@@ -675,7 +675,7 @@ def processFile(h2kElements)
           # Air Infiltration Rate
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-ACH/ )
-          if ( tag =~ /Opt-ACH/ && value != "NA" )
+          if ( tag =~ /Opt-ACH/ && value != "NA" && !value.empty?)
 
             # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
@@ -698,7 +698,7 @@ def processFile(h2kElements)
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
-          elsif( tag =~ /Opt-NLR/ && value != "NA" )
+          elsif( tag =~ /Opt-NLR/ && value != "NA" && !value.empty?)
             # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
             h2kElements[locationText].attributes["code"] = "x"
@@ -714,19 +714,7 @@ def processFile(h2kElements)
             end
             # Retrieve house volume and exterior surface area
             fThisVolume = h2kElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
-            fExtSurfArea = h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ceiling"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["exposedFloors"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["slab"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["ponyWall"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/MainFloors"].attributes["mainWalls"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["aboveGrade"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["belowGrade"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorSlab"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Basement"].attributes["floorHeader"].to_f
-            fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Crawlspace"].attributes["floor"].to_f
-            if(h2kElements["HouseFile/House/Temperatures/Crawlspace"].attributes["heated"] == "true")
-                fExtSurfArea += h2kElements["HouseFile/AllResults/Results/Other/GrossArea/Crawlspace"].attributes["wall"].to_f
-            end
+            fExtSurfArea = H2KFile.getTotalExteriorArea(h2kElements)
             fThisACH = 3.6*(fExtSurfArea/fThisVolume)*value.to_f
             
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
