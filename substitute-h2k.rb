@@ -712,13 +712,17 @@ def processFile(h2kElements)
               locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
               h2kElements[locationText].attributes["isCgsbTest"] = "true"
             end
+            # Set the blower door test value in airChangeRate field
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+
             # Retrieve house volume and exterior surface area
             fThisVolume = h2kElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
             fExtSurfArea = H2KFile.getTotalExteriorArea(h2kElements)
             fThisACH = 3.6*(fExtSurfArea/fThisVolume)*value.to_f
-            
-            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
             h2kElements[locationText].attributes["airChangeRate"] = sprintf("%0.3f", fThisACH)
+
+            h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            h2kElements[locationText].attributes["isCalculated"] = "true"
 
           elsif( tag =~ /Opt-BuildingSite/ && value != "NA" )
             if(value.to_f < 1 || value.to_f > 8)
