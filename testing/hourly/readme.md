@@ -12,7 +12,7 @@ Simple test suite used to develop hourly load shape analysis for htap
   
 ## Example Usage:
 
-     C:\HTAP\htap-prm.rb -o C:\HTAP\HTAP-options.json -r hourly.run -v -t 5 -j -k 
+     C:\HTAP\htap-prm.rb -o C:\HTAP\HTAP-options.json -r hourly.run -v -t 5 -j -k --hourly-output
 
 ## Typical output:
 
