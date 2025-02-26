@@ -2149,9 +2149,21 @@ def processFile(h2kElements)
           # changes made here will be overwritten by the Base Loads user inputs for Water Usage.
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-DWHR/ )
+          # Make sure the house is eligible for DWHR
+          iStoreyCode = h2kElements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_i
+          bBasemnt = h2kElements["HouseFile/House/Components/Basement"]
+          bEligibleDWHR = true
+          if ( iStoreyCode == 1 && bBasemnt == nil)
+            bEligibleDWHR = false
+          end
+
           if ( tag =~ /Opt-H2K-HasDWHR/ &&  value != "NA" )
+            if ( bEligibleDWHR == false)
+              value = "false"
+              warn_out("DWHR was requested, but archetype cannot install vertical DWHR. No DWHR will be adeded.")
+            end
             locationText = "HouseFile/House/Components/HotWater/Primary"
-            if ( value == "true" )
+            if ( value == "true")
               if ( h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] == "false" )
                 # Need to add DWHR XML section!
                 addMissingDWHR( h2kElements )
@@ -2162,58 +2174,58 @@ def processFile(h2kElements)
                 h2kElements[locationText].delete_element("DrainWaterHeatRecovery")
               end
               if ( h2kElements["HouseFile/House/Components/HotWater/Secondary"] != nil )
-			    h2kElements["HouseFile/House/Components/HotWater/Secondary"].delete_element("DrainWaterHeatRecovery")
-				h2kElements["HouseFile/House/Components/HotWater/Secondary"].attributes["hasDrainWaterHeatRecovery"] = "false"
-			  end
+			          h2kElements["HouseFile/House/Components/HotWater/Secondary"].delete_element("DrainWaterHeatRecovery")
+				        h2kElements["HouseFile/House/Components/HotWater/Secondary"].attributes["hasDrainWaterHeatRecovery"] = "false"
+              end
             end
             h2kElements[locationText].attributes["hasDrainWaterHeatRecovery"] = value
             # Flag for DWHR
 
-          elsif ( tag =~ /Opt-H2K-DWHR-showerLength/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-showerLength/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
             h2kElements[locationText].attributes["showerLength"] = value
             # Shower length in minutes (float)
 
-          elsif ( tag =~ /Opt-H2K-DWHR-dailyShowers/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-dailyShowers/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
             h2kElements[locationText].attributes["dailyShowers"] = value
             # Number of daily showers (float)
 
-          elsif ( tag =~ /Opt-H2K-DWHR-preheatShowerTank/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-preheatShowerTank/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
             h2kElements[locationText].attributes["preheatShowerTank"] = value
             # true or false
 
             # Can't modify DWHR Effectiveness rating at 9.5 l/min directly. It is precalculated based on
             # manufacturer name and model (core overrides this value with a calculation)! See Effectiveness6.xls
-          elsif ( tag =~ /Opt-H2K-DWHR-Manufacturer/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-Manufacturer/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation/Manufacturer"
             h2kElements[locationText].text = value
             # DWHR Manufacturer
 
-          elsif ( tag =~ /Opt-H2K-DWHR-Model/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-Model/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/EquipmentInformation/Model"
             h2kElements[locationText].text = value
             # DWHR Model
 
             # THIS DOESN"T APPEAR TO DO ANYTHING! *********************************
-          elsif ( tag =~ /Opt-H2K-DWHR-Efficiency_code/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-Efficiency_code/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/Efficiency"
             h2kElements[locationText].attributes["code"] = value
             # DWHR Efficiency code (1, 2 or 3)
 
             # ASF 05-10-2016- this tag controls effectiveness
-          elsif ( tag =~ /Opt-H2K-DWHR-Effectiveness9p5/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-Effectiveness9p5/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery"
             h2kElements[locationText].attributes["effectivenessAt9.5"] = value  
             # P.55 test result (0->100)
 
-          elsif ( tag =~ /Opt-H2K-DWHR-ShowerTemperature_code/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-ShowerTemperature_code/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerTemperature"
             h2kElements[locationText].attributes["code"] = value
             # DWHR Shower temperature code (1:Cool, 2:Warm or 3:Hot)
 
-          elsif ( tag =~ /Opt-H2K-DWHR-ShowerHead_code/ &&  value != "NA" )
+          elsif ( tag =~ /Opt-H2K-DWHR-ShowerHead_code/ &&  value != "NA" && bEligibleDWHR)
             locationText = "HouseFile/House/Components/HotWater/Primary/DrainWaterHeatRecovery/ShowerHead"
             h2kElements[locationText].attributes["code"] = value
             # DWHR Showerhead code (0, 1, 2, 3 or 4)
