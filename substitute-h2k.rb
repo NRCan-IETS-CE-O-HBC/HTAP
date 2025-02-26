@@ -2152,8 +2152,9 @@ def processFile(h2kElements)
           # Make sure the house is eligible for DWHR
           iStoreyCode = h2kElements["HouseFile/House/Specifications/Storeys"].attributes["code"].to_i
           bBasemnt = h2kElements["HouseFile/House/Components/Basement"]
+          bWalkout = h2kElements["HouseFile/House/Components/Walkout"]
           bEligibleDWHR = true
-          if ( iStoreyCode == 1 && bBasemnt == nil)
+          if ( iStoreyCode == 1 && bBasemnt == nil && bWalkout == nil)
             bEligibleDWHR = false
           end
 
