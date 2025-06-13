@@ -1727,7 +1727,7 @@ if ARGV.empty? then
 end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
-stream_out(drawRuler("A simple parallel run manager for HTAP"))
+stream_out(drawRuler("A simple parallel run manager for HOT2000"))
 reportSRC($branch_name, $revision_number)
 
 $RunNumber = 0
