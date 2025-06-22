@@ -1,0 +1,37 @@
+{
+    "name": "Hot2000 CLI on Linux",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "runArgs": [
+        "--env=LANG=en_US.UTF-8",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt", "seccomp=unconfined",
+        // WSLg support for GUI applications
+        "--env=DISPLAY=:0",
+        "--env=WAYLAND_DISPLAY=wayland-0",
+        "--env=XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir",
+        "--env=PULSE_SERVER=/mnt/wslg/PulseServer",
+        "--volume=/run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix",
+        "--volume=/run/desktop/mnt/host/wslg:/mnt/wslg"
+    ],    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.powershell"
+            ],
+            "settings": {
+                "terminal.integrated.env.linux": {
+                    "WINEARCH": "win32",
+                    "WINEPREFIX": "/home/vscode/.wine_hot2000",
+                    "WINEDEBUG": "-all",
+                    "DISPLAY": ":0"
+                }
+            }
+        }
+    },
+    "remoteUser": "vscode",
+    // This is set as a env variable in the container, but it is also used to set the default shell in the container, just in case. 
+    "postCreateCommand": "if [ \"$(curl -k -o /dev/null -s -w \"%{http_code}\" \"https://intranet.nrcan.gc.ca/\")\" -ge 200 ] && [ \"$(curl -o /dev/null -s -w \"%{http_code}\" \"https://intranet.nrcan.gc.ca/\")\" -lt 400 ]; then echo \"nrcan network detected.\" && git clone https://github.com/canmet-energy/linux_nrcan_certs.git && cd linux_nrcan_certs && ./install_nrcan_certs.sh && cd .. && rm -fr linux_nrcan_certs; fi; wineboot -u && wine /opt/hot2000/installer.exe /DIR=\"C:\\h2kcli\" /VERYSILENT"
+}
+
