@@ -1095,6 +1095,7 @@ module HTAPData
       "Area-Crawl-m2"       =>  "#{$FoundationArea["Crawl"].round(2)}",
       "Floor-Area-m2"     => "#{$FloorArea.round(1)}",
       "House-Volume-m3"   => "#{$HouseVolume.round(1)}",
+      "House-Gross-External-Envelope-Area-m2" => "#{$HouseGrossExternalEnvelopeArea.round(5)}",
       "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
       # "Win-R-value-S"     => "#{$rValueWin[1].round(3)}",
       "Win-Area-m2-S"     => "#{$AreaWin_sum[1].round(1)}",

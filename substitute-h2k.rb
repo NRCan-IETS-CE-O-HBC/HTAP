@@ -5449,6 +5449,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         # Get house heated floor area
         $FloorArea = H2KFile.getHeatedFloorArea( h2kPostElements )
         $HouseVolume= h2kPostElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
+        $HouseGrossExternalEnvelopeArea = H2KFile.getHouseGrossExternalEnvelopeArea( h2kPostElements )
         # ==================== Get results for all h2k calcs from XML file (except above case)
 
         parseDebug = true

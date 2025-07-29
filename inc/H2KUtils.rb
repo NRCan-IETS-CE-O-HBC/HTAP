@@ -659,6 +659,13 @@ module H2KFile
 
   end
 
+  def H2KFile.getHouseGrossExternalEnvelopeArea(elements)
+
+    myHouseGrossExternalEnvelopeArea= elements["HouseFile/AllResults/Results/Other/GrossArea"].attributes["buildingSurfaceArea"].to_f
+
+    return myHouseGrossExternalEnvelopeArea
+
+  end
   # =========================================================================================
   # Get the name of the base file weather city
   # =========================================================================================
