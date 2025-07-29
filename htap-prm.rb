@@ -1338,7 +1338,7 @@ def run_these_cases(current_task_files)
 
         debug_out "Run - #{run}\n"
         # Only write out data from successful runs - this helps prevent corrupted database
-        next if (  data.nil? || data["status"].nil? || data["status"]["success"] =~ /false/ || data["status"]["success"] == false )
+        next if (  data.nil? || data["status"].nil? || data["status"]["success"].to_s =~ /false/ || data["status"]["success"] == false )
         batchSuccessCount += 1
         debug_out "processing:\n"
         debug_out "  #{data.pretty_inspect}\n\n"
@@ -1727,7 +1727,7 @@ if ARGV.empty? then
 end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
 
-stream_out(drawRuler("A simple parallel run manager for HTAP"))
+stream_out(drawRuler("A simple parallel run manager for HOT2000"))
 reportSRC($branch_name, $revision_number)
 
 $RunNumber = 0

@@ -85,7 +85,7 @@ def shortenToLen(msg, len, truncStr=" [...] ")
 
 end
 
-def shortenToTerm(msg,extrashort = 0, truncStr="[...]", newline = TRUE )
+def shortenToTerm(msg,extrashort = 0, truncStr="[...]", newline = true )
 
   setTermSize if ( $termWidth.nil? )
 

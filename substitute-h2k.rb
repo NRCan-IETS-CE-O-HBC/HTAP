@@ -1126,7 +1126,7 @@ def processFile(h2kElements)
 
             # query costing components
             achCostComponents = Hash.new
-            achCostComponents = Costing.getCostComponentList($gOptions,$gChoices,"Opt-ACH",achChoice)
+            achCostComponents, finalChoice = Costing.getCostComponentList($gOptions,$gChoices,"Opt-ACH",achChoice)
 
             #debug_out ("Cost components for OPT-ACH = #{achChoice}:\n #{achCostComponents.pretty_inspect}")
 
@@ -5473,7 +5473,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
 
         # Start with ERS mode results:
-        if (  ! $outputHCode =~ /General/ ) then 
+        if (   $outputHCode !~ /General/ ) then 
           if ( ! $gResults[$outputHCode]["found"] ) then 
             warn_out "HOT2000 did not produce result set \'#{$outputHCode}\'"
             # Fall back to general, if needed 
