@@ -1291,6 +1291,21 @@
           }
         }
       },
+      "NLR_0_89": {
+        "h2kMap": {
+          "base": {
+            "<Opt-NLR>": "0.89"
+            "Opt-BuildingSite": "7",
+            "Opt-WallShield": "4",
+            "Opt-FlueShield": "2"
+          }
+        },
+        "costs": {
+          "proxy": "New-Const-air_seal_to_2.50_ach",
+          "custom-costs": {
+          }
+        }
+      },
       "ACH_10": {
         "h2kMap": {
           "base": {
@@ -1760,6 +1775,7 @@
     "stop-on-error": true,
     "h2kSchema": [
       "<Opt-ACH>",
+	  "<Opt-NLR>",
       "Opt-BuildingSite",
       "Opt-WallShield",
       "Opt-FlueShield"

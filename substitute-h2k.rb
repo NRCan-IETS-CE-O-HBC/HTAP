@@ -698,6 +698,35 @@ def processFile(h2kElements)
 
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
+
+          elsif( tag =~ /Opt-NLR/ && value != "NA" )
+
+            # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
+            h2kElements[locationText].attributes["code"] = "x"
+            # Must also remove "Air Leakage Test Data" section, if present, since it will over-ride user-specified ACH value
+            locationText = "HouseFile/House/NaturalAirInfiltration/AirLeakageTestData"
+            if ( h2kElements[locationText] != nil )
+              # Need to remove this section!
+              locationText = "HouseFile/House/NaturalAirInfiltration"
+              h2kElements[locationText].delete_element("AirLeakageTestData")
+              # Change CGSB attribute to true (was set to "As Operated" by AirLeakageTestData section
+              locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+              h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            end
+            # Set the blower door test value in airChangeRate field
+            locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/BlowerTest"
+
+            # Convert NLR [L/(s∙m2)] to ACH [1/hr]
+            volume_m3 = h2kElements["HouseFile/House/NaturalAirInfiltration/Specifications/House"].attributes["volume"].to_f
+            ext_surf_m2 = H2KFile.getHouseGrossExternalEnvelopeArea(h2kElements).to_f
+            flow_rate_l_per_s = value.to_f * ext_surf_m2 #Note: "value" is NLR and its unit is [L/(s∙m2)]
+            ach_1_per_hr = 3.6 * flow_rate_l_per_s / volume_m3
+            h2kElements[locationText].attributes["airChangeRate"] = ach_1_per_hr
+
+            h2kElements[locationText].attributes["isCgsbTest"] = "true"
+            h2kElements[locationText].attributes["isCalculated"] = "true"
+
           elsif( tag =~ /Opt-BuildingSite/ && value != "NA" )
             if(value.to_f < 1 || value.to_f > 8)
               fatalerror("In #{choiceEntry}, invalid building site input #{value}")
