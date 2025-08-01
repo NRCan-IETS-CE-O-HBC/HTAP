@@ -1294,7 +1294,7 @@
       "NLR_0_89": {
         "h2kMap": {
           "base": {
-            "<Opt-NLR>": "0.89"
+            "<Opt-NLR>": "0.89",
             "Opt-BuildingSite": "7",
             "Opt-WallShield": "4",
             "Opt-FlueShield": "2"
