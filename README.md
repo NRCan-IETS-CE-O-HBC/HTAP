@@ -19,6 +19,9 @@ development. While HTAP is published in the hope others will find it useful,
 NRCan provides no warranty or support  for the software or its users. 
 
 ## Requirements & Installation ##
+**HTAP depends on the HOT2000 command line client (CLI) to perform energy calculations. The CLI is distributed separately and will be discountinued in future versions of HOT2000. While existing HTAP users may continue to use the HOT2000 CLI and the scripts in this repository, NRCan no longer licenses the CLI to new users of the software.**
+
+**NRCan continues to publish HTAP to ensure existing users still benefit from the repository, to and to enable users to continue to use  HTAP scripts and costing data in applications beyond HOT2000 analysis.**
 
 HTAP requires the following components be installed on your computer:
  -  Ruby (http://rubyinstaller.org/)
