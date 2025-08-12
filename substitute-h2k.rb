@@ -699,7 +699,7 @@ def processFile(h2kElements)
             h2kElements[locationText].attributes["isCgsbTest"] = "true"
             h2kElements[locationText].attributes["isCalculated"] = "true"
 
-          elsif( tag =~ /Opt-NLR/ && value != "NA" )
+          elsif( tag =~ /Opt-NLR/ && value != "NA" && !value.empty?)
 
             # Need to set the House/AirTightnessTest code attribute to "Blower door test values" (x)
             locationText = "HouseFile/House/NaturalAirInfiltration/Specifications/House/AirTightnessTest"
