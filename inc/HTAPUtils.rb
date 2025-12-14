@@ -1095,6 +1095,7 @@ module HTAPData
       "Area-Crawl-m2"       =>  "#{$FoundationArea["Crawl"].round(2)}",
       "Floor-Area-m2"     => "#{$FloorArea.round(1)}",
       "House-Volume-m3"   => "#{$HouseVolume.round(1)}",
+      "House-Gross-External-Envelope-Area-m2" => "#{$HouseGrossExternalEnvelopeArea.round(5)}",
       "Win-SHGC-S"        => "#{$SHGCWin[1].round(3)}",
       # "Win-R-value-S"     => "#{$rValueWin[1].round(3)}",
       "Win-Area-m2-S"     => "#{$AreaWin_sum[1].round(1)}",
@@ -1138,7 +1139,13 @@ module HTAPData
       "Area-Header-m2"    => "#{$AreaComp['header'].round(3)}",
       "Area-Ceiling-m2"   => "#{$AreaComp['ceiling'].round(3)}",
       "Area-ExposedFloor-m2"     => "#{$AreaComp['floor'].round(3)}",
-      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}"
+      "Area-House-m2"     => "#{$AreaComp['house'].round(3)}",
+
+
+      "envelope_area_m2"  => $EnvelopeArea,
+	  "areaWeightedUvalue_excl_Infiltration_W_per_m2K" => $EnvelopeUAvalueExcludingInfiltration,
+	  "areaWeightedUvalue_incl_Infiltration_W_per_m2K" => $EnvelopeUAvalueIncludingInfiltration
+
     }
 
     if $gReportChoices then
