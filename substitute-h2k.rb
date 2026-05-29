@@ -2758,7 +2758,7 @@ def processFile(h2kElements)
             sysType1.each do |sysType1Name|
               if ( sysType1Name == "P9" )
                 locationText = "HouseFile/House/HeatingCooling/Type1/#{sysType1Name}/TestData"
-                h2kElements[locationText].attributes["oneHourConc"] = value if ( h2kElements[locationText] != nil )
+                h2kElements[locationText].attributes["oneHourRatingConcurrent"] = value if ( h2kElements[locationText] != nil )
               end
             end
 
@@ -4902,15 +4902,15 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
         elsif ( sysType1Name == "P9" )
           locationText = "HouseFile/House/HeatingCooling/Type1/P9"
-          elements[locationText].attributes["id"] = "0"
+          #elements[locationText].attributes["id"] = "0"
           elements[locationText].attributes["numberOfSystems"] = "1"
-          elements[locationText].attributes["thermalPerformanceFactor"] = "0.9"
+          elements[locationText].attributes["thermalPerformanceFactor"] = "0.8"
           elements[locationText].attributes["annualElectricity"] = "1800"
           elements[locationText].attributes["spaceHeatingCapacity"] = "23900"
           elements[locationText].attributes["spaceHeatingEfficiency"] = "90"
           elements[locationText].attributes["waterHeatingPerformanceFactor"] = "0.9"
           elements[locationText].attributes["burnerInput"] = "0"
-          elements[locationText].attributes["recoveryEfficiency"] = "0"
+          elements[locationText].attributes["recoveryEfficiency"] = "90"
           elements[locationText].attributes["isUserSpecified"] = "true"
           elements[locationText].add_element("EquipmentInformation")
           locationText = "HouseFile/House/HeatingCooling/Type1/P9/EquipmentInformation"
@@ -4935,7 +4935,9 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/EnergySource"
           elements[locationText].attributes["code"] = "2"
           elements[locationText].add_element("English")
+          elements["HouseFile/House/HeatingCooling/Type1/P9/TestData/EnergySource/English"].text = "Natural gas"
           elements[locationText].add_element("French")
+          elements["HouseFile/House/HeatingCooling/Type1/P9/TestData/EnergySource/French"].text = "Gaz naturel"
           locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData"
           elements[locationText].add_element("NetEfficiency")
           locationText = "HouseFile/House/HeatingCooling/Type1/P9/TestData/NetEfficiency"
@@ -4954,6 +4956,11 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           elements[locationText].attributes["loadPerformance15"] = "300"
           elements[locationText].attributes["loadPerformance40"] = "500"
           elements[locationText].attributes["loadPerformance100"] = "800"
+
+          locationText = "HouseFile/House/HeatingCooling/Type1/FansAndPump/Mode"
+          elements[locationText].attributes["code"] = "0"
+          locationText = "HouseFile/House/HeatingCooling/Type1/FansAndPump/Power"
+          elements[locationText].attributes["isCalculated"] = "true"
         end
       end
       # createH2KSysType1

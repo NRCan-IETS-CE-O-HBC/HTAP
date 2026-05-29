@@ -11063,7 +11063,7 @@
             "Opt-H2K-Type1EffType": "false",
             "Opt-H2K-Type1EffVal": "95",
             "Opt-H2K-Type1FanCtl": "1",
-            "Opt-H2K-Type1EEMotor": "true",
+            "Opt-H2K-Type1EEMotor": "false",
             "Opt-H2K-Type2CCaseH": "60",
             "Opt-H2K-Type2Func": "2",
             "Opt-H2K-Type2Type": "1",
